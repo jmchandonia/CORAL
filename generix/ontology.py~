@@ -1,0 +1,133 @@
+class Ontology:
+    def __init__(self, file_name):
+        print('loading...')
+        self.__root = self.__load(file_name)
+        print('inflating...')
+        self._inflate_term_names()
+
+    @property
+    def root(self):
+        return self.__root
+
+    def get_terms(self):
+        terms = []
+        self.__root._populate_terms(terms)
+        return terms
+
+    def _inflate_term_names(self):
+        self.__root._inflate_term_names(self)
+
+    def _inflate_term_name(self, term_name, term):
+        self.__dict__[term_name] = term
+
+    def __load(self, file_name):
+        STATE_NONE = 0
+        STATE_TERM_FOUND = 1
+
+        state = STATE_NONE
+        terms = {}
+
+        term_id = None
+        term_name = None
+        term_aliases = []
+        term_parent_ids = []
+
+        root_term = None
+        with open(file_name, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if state == STATE_NONE:
+                    if line.startswith('[Term]'):
+                        term_id = None
+                        term_name = None
+                        term_aliases = []
+                        term_parent_ids = []
+                        state = STATE_TERM_FOUND
+
+                elif state == STATE_TERM_FOUND:
+                    if line.startswith('id:'):
+                        term_id = line[len('id:'):].strip()
+                    elif line.startswith('name:'):
+                        term_name = line[len('name:'):].strip()
+                    elif line.startswith('is_a:'):
+                        parent_id = line[len('is_a:'):].split('!')[0].strip()
+                        term_parent_ids.append(parent_id)
+                    elif line == '':
+                        term = Term(term_id, term_name,
+                                    term_aliases, term_parent_ids)
+                        terms[term.term_id] = term
+                        if root_term is None:
+                            root_term = term
+                        state = STATE_NONE
+
+        for _, term in terms.items():
+            term.update_parents(terms)
+
+        return root_term
+
+
+class Term:
+    def __init__(self, term_id, term_name, term_aliases, parent_ids):
+        self.__id = term_id
+        self.__name = term_name
+        self.__aliases = []
+        self.__parent_ids = []
+        self.__parents = []
+        self.__children = []
+
+        for alias in term_aliases:
+            self.__aliases.append(alias)
+        for parent_id in parent_ids:
+            self.__parent_ids.append(parent_id)
+
+    @property
+    def term_id(self):
+        return self.__id
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def parents(self):
+        return self.__parents
+
+    @property
+    def children(self):
+        return self.__children
+
+    def get_parent_all_ids(self):
+        #         print('\t doing get_parent_all_ids for ' + self.term_id)
+        parent_all_ids = {}
+        for parent in self.parents:
+            parent._populate_parent_all_ids(parent_all_ids)
+
+        return list(parent_all_ids.keys())
+
+    def _populate_parent_all_ids(self, parent_all_ids):
+        parent_all_ids[self.term_id] = self
+        for parent in self.parents:
+            if parent.term_id not in parent_all_ids:
+                parent._populate_parent_all_ids(parent_all_ids)
+
+    def _populate_terms(self, terms):
+        terms.append(self)
+        for child in self.children:
+            child._populate_terms(terms)
+
+    def _inflate_term_names(self, ontology):
+        iname = '_'.join(self.name.split(' '))
+        ontology._inflate_term_name(iname, self)
+        for child in self.children:
+            iname = '_'.join(child.name.split(' '))
+            self.__dict__[iname] = child
+            child._inflate_term_names(ontology)
+
+    def update_parents(self, terms):
+        for parent_id in self.__parent_ids:
+            parent = terms[parent_id]
+            self.__parents.append(parent)
+            parent.add_child(self)
+
+    def add_child(self, child):
+        self.__children.append(child)
