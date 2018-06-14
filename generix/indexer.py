@@ -65,6 +65,9 @@ class SearchIndexerService:
                             "type": "text",
                             "analyzer": "keyword"
                         },
+                        "data_size": {
+                            "type": "integer"
+                        },
                         "dim_sizes": {
                             "type": "integer"
                         },
@@ -127,6 +130,7 @@ class SearchIndexerService:
         dim_type_term_ids = []
         dim_type_term_names = []
         dim_sizes = []
+        data_size = None
 
         all_term_ids = set()
         all_term_values = set()
@@ -165,12 +169,14 @@ class SearchIndexerService:
                                            all_term_ids, all_term_values, term_id_2_values)
 
         # process dimensions
+        data_size = 1
         for dim in data['dim_context']:
             term = dim['data_type']
             dim_type_term_ids.append(term['oterm_ref'])
             dim_type_term_names.append(term['oterm_name'])
             dim_sizes.append(dim['size'])
             all_term_ids.add(term['oterm_ref'])
+            data_size *= dim['size']
 
             for tv in dim['typed_values']:
                 term_id = tv['value_type']['oterm_ref']
@@ -212,6 +218,7 @@ class SearchIndexerService:
             'dim_type_term_ids': dim_type_term_ids,
             'dim_type_term_names': dim_type_term_names,
             'dim_sizes': dim_sizes,
+            'data_size': data_size,
 
             'all_term_ids': list(all_term_ids),
             'all_term_values': list(all_term_values),
