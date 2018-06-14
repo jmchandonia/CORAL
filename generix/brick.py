@@ -27,7 +27,8 @@ class BrickDescriptorCollection:
                 'data_type': bd.data_type,
                 'value_type': bd.value_type,
                 'n_dimensions': bd.n_dimensions,
-                'shape': bd.shape
+                'shape': bd.shape,
+                'data_size': bd.data_size
             })
         return pn.DataFrame(bd_list)
 
@@ -48,6 +49,10 @@ class BrickDescriptor:
         self.dim_sizes = dim_sizes
         self.value_type_term_id = value_type_term_id
         self.value_type_term_name = value_type_term_name
+
+        self.data_size = 1
+        for ds in self.dim_sizes:
+            self.data_size *= ds
 
     @property
     def data_type(self):
