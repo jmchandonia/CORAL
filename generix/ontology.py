@@ -9,21 +9,11 @@ _ES_OTERM_TYPE = 'oterm'
 _ONTOLOGY_CONFIG = {
     'version': 1,
     'ontologies': {
-        'units': {
-            'name': 'Units',
-            'file_name': 'unit_standalone.obo'
-        },
-        'dtype': {
-            'name': 'Data types',
-            'file_name': 'data_type_ontology.obo'
-        },
-        'enigma': {
-            'name': 'ENIGMA metadata',
-            'file_name': 'enigma_specific_ontology.obo'
-        },
-        'env': {
-            'name': 'ENV',
-            'file_name': 'env.obo'
+
+        'chebi': {
+            'name': 'chebi',
+            'file_name': 'chebi.obo'
+
         },
         'context_measurement': {
             'name': 'context_measurement',
@@ -37,6 +27,22 @@ _ONTOLOGY_CONFIG = {
             'name': 'country',
             'file_name': 'country.obo'
         },
+        'dtype': {
+            'name': 'Data types',
+            'file_name': 'data_type_ontology.obo'
+        },
+        'dimension': {
+            'name': 'dimension',
+            'file_name': 'dimension_type_ontology.obo'
+        },
+        'enigma': {
+            'name': 'ENIGMA metadata',
+            'file_name': 'enigma_specific_ontology.obo'
+        },
+        'env': {
+            'name': 'ENV',
+            'file_name': 'env.obo'
+        },
         'mixs': {
             'name': 'mixs',
             'file_name': 'mixs.obo'
@@ -44,6 +50,10 @@ _ONTOLOGY_CONFIG = {
         'process_ontology': {
             'name': 'process_ontology',
             'file_name': 'process_ontology.obo'
+        },
+        'units': {
+            'name': 'Units',
+            'file_name': 'unit_standalone.obo'
         }
 
         # data/import/ncbitaxon.obo
@@ -126,8 +136,9 @@ class OntologyService:
                             0].strip()
                         term_parent_ids.append(parent_id)
                     elif line == '':
-                        term = Term(self, ont_id, term_id,
-                                    term_name, term_parent_ids)
+                        term = Term(term_id, term_name=term_name,
+                                    ontology_id=ont_id,
+                                    parent_ids=term_parent_ids)
                         terms[term.term_id] = term
                         if root_term is None:
                             root_term = term
@@ -195,7 +206,7 @@ class OntologyService:
 
     @property
     def ont_data_types(self):
-        return Ontology(self, 'dtypes')
+        return Ontology(self, 'dtype')
 
     @property
     def ont_enigma(self):
@@ -226,9 +237,12 @@ class Ontology:
         result_set = self.__ontology_service.search(self.__index_name, query)
         for hit in result_set['hits']['hits']:
             data = hit["_source"]
-            term = Term(self.__ontology_service,
-                        data['ontology_id'], data['term_id'],
-                        data['term_name'], data['parent_term_ids'], data['parent_path_term_ids'],)
+            term = Term(data['term_id'], term_name=data['term_name'],
+                        ontology_id=data['ontology_id'],
+                        parent_ids=data['parent_term_ids'],
+                        parent_path_ids=data['parent_path_term_ids'],
+                        persisted=True)
+
             terms.append(term)
         return terms
 
@@ -240,7 +254,7 @@ class Ontology:
         terms_hash = {}
         terms = self._find_terms(query)
         for term in terms:
-            terms_hash[term.term_name] = term
+            terms_hash[term.term_id] = term
         return terms_hash
 
     def find_id(self, term_id):
@@ -346,70 +360,119 @@ class TermCollection:
     def size(self):
         return len(self.__terms)
 
-    def print(self):
-        print('---------- ')
-        print(' %s terms' % len(self.terms))
-        print('---------- ')
+    def _repr_html_(self):
+        # lines = [
+        #     '---------- ',
+        #     ' %s terms' % len(self.terms),
+        #     '---------- '
+        # ]
+        # for term in self.terms:
+        #     lines.append(str(term))
+        # return '<br>'.join(lines)
+
+        columns = ['Term ID', 'Term Name', 'Ontology', 'Parents']
+        header = '<tr>%s</tr>' % ''.join(['<th>%s</th>' % x for x in columns])
+        rows = []
         for term in self.terms:
-            print(term)
+            rows.append(
+                '<tr>%s%s%s%s</tr>' % (
+                    '<td>%s</td>' % term.term_id,
+                    '<td>%s</td>' % term.term_name,
+                    '<td>%s</td>' % term.ontology_id,
+                    '<td>%s</td>' % term.parent_ids,
+                )
+            )
+
+        table = '<table>%s%s</table>' % (header, ''.join(rows))
+        return '%s <br> %s terms' % (table, len(self.terms))
 
 
 class Term:
-    def __init__(self, ontology_service,  ontology_id, term_id, term_name, parent_ids, parent_path_ids=None):
-        self.__ontology_service = ontology_service
-        self.__ontology_id = ontology_id
+    '''
+        Supports lazzy loading
+    '''
+
+    def __init__(self, term_id, term_name=None, ontology_id=None,
+                 parent_ids=None, parent_path_ids=None, validator_name=None, persisted=False):
+        self.__persisted = persisted
         self.__term_id = term_id
         self.__term_name = term_name
+        self.__ontology_id = ontology_id
         self.__parent_ids = parent_ids
         self.__parent_path_ids = parent_path_ids
+        self.__validator_name = validator_name
         self.__parent_terms = []
-        self.__validator = 'protein_sequence'
 
     def __str__(self):
-        return '%s[%s] = %s  parents:%s' % (self.__ontology_id, self.__term_id, self.__term_name, self.__parent_ids)
+        return '%s [%s]' % (self.term_name, self.term_id)
 
-    def validate_value(self, val):
-        if self.__validator is None:
-            return True
+    def _repr_html_(self):
+        return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' % (self.term_name, self.term_id, self.ontology_id, self.parent_ids)
 
-        validator = services.term_validator.validator(
-            self.__validator)
-        if validator is None:
-            return True
+    def __safe_proeprty(self, prop_name):
+        if self.__dict__[prop_name] is None and not self.__persisted:
+            self.__lazzy_load()
+        return self.__getattribute__(prop_name)
 
-        return validator(val)
-
-    @property
-    def ontology_id(self):
-        return self.__ontology_id
+    def __lazzy_load(self):
+        term = services.ontology.ont_all.find_id(self.term_id)
+        self.__term_name = term.term_name
+        self.__ontology_id = term.ontology_id
+        self.__parent_ids = term.parent_ids
+        self.__parent_path_ids = term.parent_path_ids
+        self.__validator_name = term.validator_name
+        self.__persisted = True
 
     @property
     def term_id(self):
         return self.__term_id
 
     @property
+    def ontology_id(self):
+        return self.__safe_proeprty('_Term__ontology_id')
+
+    @property
     def term_name(self):
-        return self.__term_name
+        return self.__safe_proeprty('_Term__term_name')
+
+    @property
+    def property_name(self):
+        return '_'.join(self.term_name.split(' '))
 
     @property
     def parent_ids(self):
-        return self.__parent_ids
+        return self.__safe_proeprty('_Term__parent_ids')
 
     @property
     def parent_path_ids(self):
-        return self.__parent_path_ids
+        return self.__safe_proeprty('_Term__parent_path_ids')
+
+    @property
+    def validator_name(self):
+        return self.__safe_proeprty('_Term__validator_name')
+
+    def validate_value(self, val):
+        if self.validator_name is None:
+            return True
+
+        validator = services.term_value_validator.validator(
+            self.validator_name)
+        if validator is None:
+            return True
+
+        return validator(val)
+
+    def parents(self):
+        ont = Ontology(services.ontology, self.__ontology_id)
+        return ont.find_ids(self.__parent_ids)
+
+    def children(self):
+        ont = Ontology(services.ontology, self.__ontology_id)
+        return ont.find_parent_ids([self.term_id])
 
     @property
     def _parent_terms(self):
         return self.__parent_terms
-
-    def load_parents(self):
-        ont = Ontology(self.__ontology_service, self.__ontology_id)
-        return ont.find_ids_hash(self.__parent_ids)
-
-    def load_children(self):
-        ont = Ontology(self.__ontology_service, self.__ontology_id)
-        return ont.find_parent_ids([self.term_id])
 
     def _update_parents(self, terms):
         self.__parent_terms = []
