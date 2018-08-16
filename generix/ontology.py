@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
 import os
+import re
 from . import services
 
 _IMPORT_DIR = 'data/import/'
@@ -197,27 +198,23 @@ class OntologyService:
 
         self.__es_client.indices.create(index=index_name, body=settings)
 
-    def search(self, index_name, query):
+    def _search(self, index_name, query):
         return self.__es_client.search(index=index_name, body=query)
 
     @property
-    def ont_units(self):
+    def units(self):
         return Ontology(self, 'units')
 
     @property
-    def ont_data_types(self):
+    def data_types(self):
         return Ontology(self, 'dtype')
 
     @property
-    def ont_enigma(self):
+    def enigma(self):
         return Ontology(self, 'enigma')
 
     @property
-    def ont_env(self):
-        return Ontology(self, 'env')
-
-    @property
-    def ont_all(self):
+    def all(self):
         return Ontology(self, 'all', ontologies_all=True)
 
 
@@ -229,12 +226,18 @@ class Ontology:
             self.__index_name += '*'
         else:
             self.__index_name += ontology_id
+        self.__inflate_root_terms()
+
+    def __inflate_root_terms(self):
+        for term in self.find_root():
+            name = 'ROOT_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
+            self.__dict__[name] = term
 
     def _find_terms(self, query, size=100):
         query['size'] = size
 
         terms = []
-        result_set = self.__ontology_service.search(self.__index_name, query)
+        result_set = self.__ontology_service._search(self.__index_name, query)
         for hit in result_set['hits']['hits']:
             data = hit["_source"]
             term = Term(data['term_id'], term_name=data['term_name'],
@@ -256,6 +259,20 @@ class Ontology:
         for term in terms:
             terms_hash[term.term_id] = term
         return terms_hash
+
+    def find_root(self, size=100):
+        query = {
+            "query": {
+                "bool": {
+                    "must_not": {
+                        "exists": {
+                            "field": "parent_term_ids"
+                        }
+                    }
+                }
+            }
+        }
+        return TermCollection(self._find_terms(query, size))
 
     def find_id(self, term_id):
         query = {
@@ -349,8 +366,11 @@ class TermCollection:
 
     def __inflate_terms(self):
         for term in self.__terms:
-            name = 'TERM_' + '_'.join(term.term_name.split(' '))
+            name = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
             self.__dict__[name] = term
+
+    def __getitem__(self, i):
+        return self.__terms[i]
 
     @property
     def terms(self):
@@ -361,15 +381,6 @@ class TermCollection:
         return len(self.__terms)
 
     def _repr_html_(self):
-        # lines = [
-        #     '---------- ',
-        #     ' %s terms' % len(self.terms),
-        #     '---------- '
-        # ]
-        # for term in self.terms:
-        #     lines.append(str(term))
-        # return '<br>'.join(lines)
-
         columns = ['Term ID', 'Term Name', 'Ontology', 'Parents']
         header = '<tr>%s</tr>' % ''.join(['<th>%s</th>' % x for x in columns])
         rows = []
@@ -407,7 +418,8 @@ class Term:
         return '%s [%s]' % (self.term_name, self.term_id)
 
     def _repr_html_(self):
-        return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' % (self.term_name, self.term_id, self.ontology_id, self.parent_ids)
+        return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' \
+            % (self.term_name, self.term_id, self.ontology_id, self.parent_ids)
 
     def __safe_proeprty(self, prop_name):
         if self.__dict__[prop_name] is None and not self.__persisted:
@@ -415,7 +427,7 @@ class Term:
         return self.__getattribute__(prop_name)
 
     def __lazzy_load(self):
-        term = services.ontology.ont_all.find_id(self.term_id)
+        term = services.ontology.all.find_id(self.term_id)
         self.__term_name = term.term_name
         self.__ontology_id = term.ontology_id
         self.__parent_ids = term.parent_ids
@@ -462,10 +474,19 @@ class Term:
 
         return validator(val)
 
+    @property
     def parents(self):
         ont = Ontology(services.ontology, self.__ontology_id)
         return ont.find_ids(self.__parent_ids)
 
+    @property
+    def parent_path(self):
+        ont = Ontology(services.ontology, self.__ontology_id)
+        id2term = ont.find_ids_hash(self.__parent_path_ids)
+        terms = [id2term[term_id] for term_id in self.__parent_path_ids]
+        return TermCollection(terms)
+
+    @property
     def children(self):
         ont = Ontology(services.ontology, self.__ontology_id)
         return ont.find_parent_ids([self.term_id])
