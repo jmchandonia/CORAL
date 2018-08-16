@@ -15,6 +15,39 @@ class DataProvider:
         return BrickFilter()
 
 
+class PropertyCriterion:
+    def __init__(self, type_name, property_name, operand, value):
+        self.__type_name = type_name
+        self.__property_name = property_name
+        self.__operand = operand
+        self.__value = value
+
+    def __str__(self):
+        return '%s.%s <%s> %s' % (self.__type_name, self.__property_name,
+                                  self.__operand, self.__value)
+
+
+class EntityProperty:
+    def __init__(self, type_name, property_name):
+        self.__type_name = type_name
+        self.__property_name = property_name
+
+    def __eq__(self, value):
+        return PropertyCriterion(self.__type_name, self.__property_name, 'eq', value)
+
+
+class EntityType:
+    def __init__(self, type_name):
+        self.__type_name = type_name
+        self.__inflate_properties()
+
+    def __inflate_properties(self):
+        props = services.es_search.get_entity_properties(
+            self.__type_name)
+        for prop in props:
+            self.__dict__[prop] = EntityProperty(self.__type_name, prop)
+
+
 class BrickFilter:
     def __init__(self):
         self.__es_filters = {}
