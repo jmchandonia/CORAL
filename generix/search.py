@@ -185,6 +185,12 @@ class SearchService:
 
         return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
 
+    def get_entity_properties(self, type_name):
+        index_name = 'generix-' + type_name
+        doc_type = 'brick'
+        doc = self.__es_client.indices.get_mapping(index=index_name)
+        return list(doc[index_name]['mappings'][doc_type]['properties'].keys())
+
     def data_type_terms(self):
         return self.__term_stat('data_type_term_id')
 
