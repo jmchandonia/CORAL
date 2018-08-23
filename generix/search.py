@@ -3,6 +3,7 @@ from .brick import BrickDescriptor, BrickDescriptorCollection
 from . import services
 
 _ES_BRICK_INDEX_NAME = 'generix-brick'
+_ES_ENTITY_INDEX_NAME_PREFIX = 'generix-entity-'
 
 
 class SearchService:
@@ -30,6 +31,37 @@ class SearchService:
         }
         return query
 
+    def _find_entities(self, entity_type, query, size=100):
+        query['size'] = size
+        entity_descriptors = []
+        index_name = self._index_name(entity_type)
+        result_set = self.__es_client.search(
+            index=index_name, body=query)
+
+        # print('entity_type:', entity_type)
+        # print('index_name:', index_name)
+        # print('Query:', query)
+        # print('result_set:', result_set)
+
+        for hit in result_set['hits']['hits']:
+            data = hit["_source"]
+            bd = EntityDescriptor(entity_type, data)
+
+            entity_descriptors.append(bd)
+        return entity_descriptors
+
+    def _find_entity_ids(self, entity_type, id_field_name, query, size=100):
+        query['size'] = size
+        query['_source'] = [id_field_name]
+
+        ids = []
+        index_name = self._index_name(entity_type)
+        result_set = self.__es_client.search(index=index_name, body=query)
+
+        for hit in result_set['hits']['hits']:
+            ids.append(hit["_source"][id_field_name])
+        return ids
+
     def _find_bricks(self, query, size=100):
         query['size'] = size
         query['_source'] = [
@@ -49,6 +81,12 @@ class SearchService:
         brick_descriptors = []
         result_set = self.__es_client.search(
             index=_ES_BRICK_INDEX_NAME, body=query)
+
+        # print('entity_type:', 'brick')
+        # print('index_name:', _ES_BRICK_INDEX_NAME)
+        # print('Query:', query)
+        # print('result_set:', result_set)
+
         for hit in result_set['hits']['hits']:
             data = hit["_source"]
             bd = BrickDescriptor(data['brick_id'], data['name'], data['description'],
@@ -177,7 +215,7 @@ class SearchService:
             })
             term_ids.append(term_id)
 
-        term_ids_hash = services.ontology.ont_all.find_ids_hash(term_ids)
+        term_ids_hash = services.ontology.all.find_ids_hash(term_ids)
 
         for term_stat in term_stats:
             term_id = term_stat['Term ID']
@@ -185,9 +223,17 @@ class SearchService:
 
         return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
 
+    def _index_name(self, doc_type):
+        return _ES_BRICK_INDEX_NAME if doc_type == 'brick' else _ES_ENTITY_INDEX_NAME_PREFIX + doc_type
+
     def get_entity_properties(self, type_name):
-        index_name = 'generix-' + type_name
-        doc_type = 'brick'
+        doc_type = type_name
+        # index_name = 'generix-'
+        # if doc_type != 'brick':
+        #     index_name += 'entity-'
+        # index_name += doc_type
+
+        index_name = self._index_name(doc_type)
         doc = self.__es_client.indices.get_mapping(index=index_name)
         return list(doc[index_name]['mappings'][doc_type]['properties'].keys())
 
@@ -199,3 +245,55 @@ class SearchService:
 
     def value_type_terms(self):
         return self.__term_stat('value_type_term_id')
+
+
+class EntityDescriptorCollection:
+    def __init__(self, entity_descriptors):
+        self.__entity_descriptors = entity_descriptors
+
+    @property
+    def items(self):
+        return self.__entity_descriptors
+
+    @property
+    def size(self):
+        return len(self.__entity_descriptors)
+
+    def __getitem__(self, i):
+        return self.__entity_descriptors[i]
+
+    def df(self):
+        ed_list = []
+        for ed in self.__entity_descriptors:
+            ed_doc = {}
+            for prop in ed.properties:
+                ed_doc[prop] = ed[prop]
+            ed_list.append(ed_doc)
+        return pd.DataFrame(ed_list)
+
+    def _repr_html_(self):
+        return self.df()._repr_html_()
+
+
+class EntityDescriptor:
+    def __init__(self, data_type, doc):
+        self.__properties = []
+
+        self.data_type = data_type
+        self.__properties.append('data_type')
+        for key in doc:
+            self.__dict__[key] = doc[key]
+            self.__properties.append(key)
+
+    def __getitem__(self, property):
+        return self.__dict__[property]
+
+    @property
+    def properties(self):
+        return self.__properties
+
+    def _repr_html_(self):
+        return self.__dict__
+
+    def __str__(self):
+        return self.__dict__
