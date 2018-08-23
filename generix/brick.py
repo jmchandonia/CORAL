@@ -300,7 +300,7 @@ class BrickIndexDocumnet:
 
         # parent path term ids
         all_parent_path_term_ids = set()
-        ont_all = services.ontology.ont_all
+        ont_all = services.ontology.all
         term_collection = ont_all.find_ids(self.all_term_ids)
         for term in term_collection.terms:
             for term_id in term.parent_path_ids:
@@ -325,6 +325,9 @@ class BrickDescriptorCollection:
     @property
     def size(self):
         return len(self.__brick_descriptors)
+
+    def __getitem__(self, i):
+        return self.__brick_descriptors[i]
 
     def df(self):
         bd_list = []
