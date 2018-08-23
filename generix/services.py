@@ -17,6 +17,9 @@ __CONFIG = json.loads(open(__CONFIG_FILE).read())
 __es_config = __CONFIG['ElasticSearch']
 __es_client = Elasticsearch(__es_config['url'])
 
+# temp solution
+_es_client = __es_client
+
 
 __neo4j_config = __CONFIG['Neo4j']
 __neo4j_client = GraphDatabase.driver(
