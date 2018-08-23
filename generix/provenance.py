@@ -83,16 +83,35 @@ def _to_data_frame(tx, query):
     return pd.DataFrame(nodes)
 
 
+def _to_target_ids(tx, query, source_ids):
+    target_ids = []
+    print('source_ids = ', source_ids)
+    for record in tx.run(query, source_ids=source_ids):
+        for _, node in record.items():
+            target_ids.append(node)
+    return target_ids
+
+
 class ProvenanceSearchService:
     def __init__(self, neo4j_client):
         self.__neo4j_client = neo4j_client
 
+    def find_linked_ids(self, source_type_name, source_id_field_name, source_ids, target_type_name, target_id_field_name):
+        query = "match(s:%s)<-[*1..20]-(t:%s) where s.%s in {source_ids} return t.%s" % \
+            (source_type_name, target_type_name,
+             source_id_field_name, target_id_field_name)
+        print(query)
+        with self.__neo4j_client.session() as session:
+            target_ids = session.read_transaction(
+                _to_target_ids, query, source_ids)
+        return target_ids
+
     def brick_ids_from_well(self, well_name):
         query = "match(g:Generic)<-[*1..20]-(w:Well{name:'%s'}) return g" % well_name
-        df = self.__list_data(query)
+        df = self._list_data(query)
         return list(df.id.values)
 
-    def __list_data(self, query):
+    def _list_data(self, query):
         with self.__neo4j_client.session() as session:
             df = session.read_transaction(_to_data_frame, query)
         return df
