@@ -115,8 +115,14 @@ class Query:
         self._add_es_filter(self.__es_filters, criterion)
         return self
 
-    def linked_to(self, type_name, criterion):
-        self.__neo_filters.append({'dtype': type_name, 'criterion': criterion})
+    def linked_up_to(self, type_name, criterion):
+        self.__neo_filters.append(
+            {'dtype': type_name, 'criterion': criterion, 'direct': True})
+        return self
+
+    def linked_down_to(self, type_name, criterion):
+        self.__neo_filters.append(
+            {'dtype': type_name, 'criterion': criterion, 'direct': False})
         return self
 
     def find_ids(self):
@@ -131,6 +137,7 @@ class Query:
         for neo_filter in self.__neo_filters:
             source_type = neo_filter['dtype']
             source_crierion = neo_filter['criterion']
+            direct = neo_filter['direct']
             q = Query(source_type, {})
             q.has(source_crierion)
             source_ids = q.find_ids()
@@ -143,10 +150,10 @@ class Query:
             ) + target_type[1:]
 
             linked_ids = services.neo_search.find_linked_ids(
-                source_type, 'id', source_ids, target_type, 'id')
+                source_type, 'id', source_ids, target_type, 'id', direct=direct)
 
             for linked_id in linked_ids:
-                neo_ids.add(linked_id.lower())
+                neo_ids.add(linked_id)
 
         print('neo_ids', neo_ids)
 
