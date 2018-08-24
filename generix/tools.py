@@ -1,5 +1,7 @@
 import sys
+import pandas as pd
 from . import services
+from .brick import read_brick
 
 
 def load_entity_from_neo_to_esearch(argv):
@@ -34,8 +36,20 @@ def load_entity_from_neo_to_esearch(argv):
             index=es_index_name, doc_type=es_dtype, body=doc)
 
 
-def m2(argv):
-    print('from m2')
+def es_index_bricks():
+
+    services.es_indexer.drop_index()
+    services.es_indexer.create_index()
+
+    df = pd.read_csv('data/import/generic_index.tsv', sep='\t')
+    for file_name in df[df.is_heterogeneous == 0].filename.values:
+        file_name = 'data/import/' + file_name
+
+        print('doing %s' % (file_name))
+        brick = read_brick(0, file_name)
+        brick.id = services.workspace.next_id(
+            'Brick', text_id=brick.name, file_name=file_name)
+        services.es_indexer.index_brick(brick)
 
 
 if __name__ == '__main__':
