@@ -96,9 +96,19 @@ class ProvenanceSearchService:
     def __init__(self, neo4j_client):
         self.__neo4j_client = neo4j_client
 
-    def find_linked_ids(self, source_type_name, source_id_field_name, source_ids, target_type_name, target_id_field_name):
-        query = "match(s:%s)<-[*1..20]-(t:%s) where s.%s in {source_ids} return t.%s" % \
-            (source_type_name, target_type_name,
+    def find_linked_ids(self, source_type_name, source_id_field_name,
+                        source_ids, target_type_name, target_id_field_name,
+                        directed_link=True,
+                        direct=True, steps=20):
+        link = '-[*1..%s]-' % steps
+        if directed_link:
+            if direct:
+                link = link + '>'
+            else:
+                link = '<' + link
+
+        query = "match(s:%s)%s(t:%s) where s.%s in {source_ids} return t.%s" % \
+            (source_type_name, link, target_type_name,
              source_id_field_name, target_id_field_name)
         print(query)
         with self.__neo4j_client.session() as session:
