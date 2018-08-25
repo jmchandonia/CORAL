@@ -1,6 +1,9 @@
+import re
 
 
 class TypeDefService:
+    __term_pattern = re.compile('(.+)<(.+)>')
+
     def __init__(self, file_name):
         self.__validate_value = {
             'text': self.__validate_text,
@@ -20,22 +23,32 @@ class TypeDefService:
     def __load_type_defs(self, file_name):
         pass
 
-    def __check_type_text(self, value):
+    def __check_type_text(self, name, value):
+        if type(value) is not str:
+            raise ValueError(
+                'Wrong property type: the value of "%s" property is not text (%s)' % (name, value))
+
+    def __check_type_float(self, name, value):
+        if type(value) is not float:
+            raise ValueError(
+                'Wrong property type: the value of "%s" property is not float (%s)' % (name, value))
+
+    def __check_type_term(self, name, value):
+        if type(value) is not str or not self.parse_term(value):
+            raise ValueError(
+                'Wrong property type:  the value of "%s" property is not term (%s)' % (name, value))
+
+    def parse_term(self, value):
+        m = TypeDefService.__term_pattern.findall(value)
+        return m is not None
+
+    def __validate_text(self, validator, name, value):
         pass
 
-    def __check_type_float(self, value):
+    def __validate_float(self, validator, name, value):
         pass
 
-    def __check_type_term(self, value):
-        pass
-
-    def __validate_text(self, validator, value):
-        pass
-
-    def __validate_float(self, validator, value):
-        pass
-
-    def __validate_term(self, validator, value):
+    def __validate_term(self, validator, name, value):
         pass
 
     @property
@@ -57,9 +70,11 @@ class TypeDefService:
 
         # check that all properties are present
         for property_def in type_def['properties']:
-            if property_def['required'] and property_def['name'] not in data:
+            property_name = property_def['name']
+
+            if property_def['required'] and property_name not in data:
                 raise ValueError(
-                    'The required property is absent: %s' % property_def['name'])
+                    'The required property is absent: %s' % property_name)
 
         # check that there are no undeclared properties
         property_defs = self.get_property_defs(dtype)
@@ -71,22 +86,24 @@ class TypeDefService:
     def validate_values(self, dtype, data):
         type_def = self.get_type_def(dtype)
         for property_def in type_def['properties']:
+            property_name = property_def['name']
             property_type = property_def['type']
-            value = data.get(property_def['name'])
-            if value is None:
+            property_value = data.get(property_name)
+            if property_value is None:
                 if property_def['required']:
                     raise ValueError(
-                        'The required property is absent: %s' % property_def['name'])
+                        'The required property is absent: %s' % property_name)
                 else:
                     continue
 
             # check value type
-            self.__check_value_type[property_type](value)
+            self.__check_value_type[property_type](
+                property_name, property_value)
 
             # apply validator if defined
             if 'validator' in property_def:
                 self.__validate_value[property_type](
-                    property_def['validator'], value)
+                    property_def['validator'], property_name, property_value)
 
     def validate_entity_process(self, entity_type, process_type, process_data):
         pass
