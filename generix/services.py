@@ -9,8 +9,12 @@ from .indexer import SearchIndexerService
 from .search import SearchService
 from .provenance import ProvenanceIndexerService, ProvenanceSearchService
 from .workspace import Workspace
+from .typedef import TypeDefService
+
 
 __PACKAGE_DIR = os.path.dirname(os.path.dirname(__file__))
+__TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
+
 __CONFIG_FILE = os.path.join(__PACKAGE_DIR, 'var/config.json')
 __CONFIG = json.loads(open(__CONFIG_FILE).read())
 
@@ -37,3 +41,4 @@ neo_search = ProvenanceSearchService(__neo4j_client)
 
 
 term_value_validator = TermValueValidationService()
+typedef = TypeDefService(__TYPEDEF_FILE)
