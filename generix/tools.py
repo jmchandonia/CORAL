@@ -4,6 +4,10 @@ from . import services
 from .brick import read_brick
 
 
+def upload_ontologies(argv):
+    services.ontology._upload_ontologies()
+
+
 def load_entity_from_neo_to_esearch(argv):
     neo_dtype = argv[0]
     es_dtype = neo_dtype.lower()
