@@ -3,7 +3,7 @@ import os
 import re
 from . import services
 
-_IMPORT_DIR = 'data/import/'
+_IMPORT_DIR = '../data/import/'
 _ES_OTERM_INDEX_PREFIX = 'generix-ont-'
 _ES_OTERM_TYPE = 'oterm'
 
@@ -48,7 +48,7 @@ _ONTOLOGY_CONFIG = {
             'name': 'mixs',
             'file_name': 'mixs.obo'
         },
-        'process_ontology': {
+        'process': {
             'name': 'process_ontology',
             'file_name': 'process_ontology.obo'
         },
@@ -425,6 +425,9 @@ class Term:
         if self.__dict__[prop_name] is None and not self.__persisted:
             self.__lazzy_load()
         return self.__getattribute__(prop_name)
+
+    def refresh(self):
+        self.__lazzy_load()
 
     def __lazzy_load(self):
         term = services.ontology.all.find_id(self.term_id)
