@@ -1,4 +1,55 @@
 import re
+from .ontology import Term
+
+
+class TypeDef:
+    def __init__(self, name, doc):
+        self.__name = name
+        self.__property_defs = {}
+        for pdoc in doc['fields']:
+            self.__property_defs[pdoc['name']] = PropertyDef(pdoc)
+
+        self.__process_type_terms = []
+        if 'process_types' in doc:
+            for term_id in doc['process_types']:
+                term = Term(term_id)
+                term.refresh()
+                self.__process_type_terms.append(term)
+
+        self.__process_input_type_names = []
+        if 'process_inputs' in doc:
+            for type_name in doc['process_inputs']:
+                self.__process_input_type_names.append(type_name)
+
+        self.__process_input_type_defs = []
+
+    def _update_process_input_type_defs(self, all_type_defs):
+        for type_name in self.__process_input_type_names:
+            self.__process_input_type_defs.append(all_type_defs[type_name])
+
+    @property
+    def property_names(self):
+        return self.__property_defs.keys()
+
+    def property_def(self, property_name):
+        return self.__property_defs[property_name]
+
+    @property
+    def process_type_terms(self):
+        return self.__process_type_terms
+
+    @property
+    def process_input_type_defs(self):
+        return self.__process_input_type_defs
+
+
+class PropertyDef:
+    def __init__(self, doc):
+        self.__name = doc['name']
+        self.__type = doc['type']
+        self.__required = doc.get('required')
+        self.__contraint = doc.get('contraint')
+        self.__comment = doc.get('comment')
 
 
 class TypeDefService:
