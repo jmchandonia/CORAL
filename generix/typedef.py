@@ -50,6 +50,8 @@ class PropertyDef:
         self.__required = doc.get('required')
         self.__contraint = doc.get('contraint')
         self.__comment = doc.get('comment')
+        self.__pk = 'PK' in doc and doc['PK'] == True
+        self.__fk = 'FK' in doc and doc['FK'] == True
 
 
 class TypeDefService:
