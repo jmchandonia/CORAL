@@ -44,7 +44,7 @@ class TermValidatorService:
             error_type, term, expected_name))
 
     def validate_data_table_terms(self, data_table):
-        ontology = services.ontology.ont_all
+        ontology = services.ontology.all
         self.__f.write('DataTable: %s \n' % data_table.name)
         (id_2_terms, bad_term_values) = data_table.get_all_terms()
 
@@ -67,7 +67,7 @@ class TermValidatorService:
         self.__f.write('\n')
 
     def validate_brick_terms(self, brick):
-        ontology = services.ontology.ont_all
+        ontology = services.ontology.all
 
         self.__f.write('Brick: %s \n' % brick.name)
 
