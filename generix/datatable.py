@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 from .ontology import Term
+from .utils import parse_term
 
 
 class _DataTableIterator:
@@ -70,13 +71,6 @@ class DataTable:
         val = self.__df.iloc[0][column]
         return type(val)
 
-    def parse_term(self, text):
-        m = DataTable.__term_pattern.findall(text)
-        term = None
-        if m:
-            term = Term(m[0][1].strip(), term_name=m[0][0].strip())
-        return term
-
     def iterator(self):
         return _DataTableIterator(self)
 
@@ -87,7 +81,7 @@ class DataTable:
             row = self.row(i)
             for column in self.term_columns:
                 val = row[column]
-                term = self.parse_term(val)
+                term = parse_term(val)
                 if term is not None:
                     id_2_terms[term.term_id] = term
                 else:
