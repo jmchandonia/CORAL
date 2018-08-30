@@ -89,7 +89,7 @@ class TypeDef:
         if 'process_types' in type_def_doc:
             for term_id in type_def_doc['process_types']:
                 term = Term(term_id)
-                # term.refresh()
+                term.refresh()
                 self.__process_type_terms.append(term)
 
         self.__process_input_type_names = []
