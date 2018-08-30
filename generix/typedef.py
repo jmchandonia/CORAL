@@ -1,35 +1,95 @@
 import re
+import json
+from .utils import check_term_format
 from .ontology import Term
 
 
+def _text_type_validate(property_name, property_value):
+    if type(property_value) is not str:
+        raise ValueError(
+            'Wrong property type: the value of "%s" property is not text (%s)'
+            % (property_name, property_value))
+
+
+def _float_type_validate(property_name, property_value):
+    if type(property_value) is not float:
+        raise ValueError(
+            'Wrong property type: the value of "%s" property is not float (%s)'
+            % (property_name, property_value))
+
+
+def _term_type_validate(property_name, property_value):
+    if type(property_value) is not str or not check_term_format(property_value):
+        raise ValueError(
+            'Wrong property type: the value of "%s" property is not term (%s)'
+            % (property_name, property_value))
+
+
+def _text_value_validate(property_name, property_value, constraint):
+    pass
+
+
+def _float_value_validate(property_name, property_value, constraint):
+    pass
+
+
+def _term_value_validate(property_name, property_value, constraint):
+    pass
+
+
+_PROPERTY_TYPE_VALIDATORS = {
+    "text": _text_type_validate,
+    "float": _float_type_validate,
+    "term": _term_type_validate,
+    "[ref]": None
+}
+
+_PROPERTY_VALUE_VALIDATORS = {
+    "text": _text_value_validate,
+    "float": _float_value_validate,
+    "term": _term_value_validate,
+    "[ref]": None
+}
+
+
 class TypeDef:
-    def __init__(self, name, doc):
+    def __init__(self, name, type_def_doc):
         self.__name = name
         self.__property_defs = {}
-        for pdoc in doc['fields']:
+        for pdoc in type_def_doc['fields']:
             self.__property_defs[pdoc['name']] = PropertyDef(pdoc)
 
         self.__process_type_terms = []
-        if 'process_types' in doc:
-            for term_id in doc['process_types']:
+        if 'process_types' in type_def_doc:
+            for term_id in type_def_doc['process_types']:
                 term = Term(term_id)
-                term.refresh()
+                # term.refresh()
                 self.__process_type_terms.append(term)
 
         self.__process_input_type_names = []
-        if 'process_inputs' in doc:
-            for type_name in doc['process_inputs']:
+        if 'process_inputs' in type_def_doc:
+            for type_name in type_def_doc['process_inputs']:
                 self.__process_input_type_names.append(type_name)
 
         self.__process_input_type_defs = []
+
+    def _repr_html_(self):
+        rows = ['<b>' + self.__name + '</b>']
+        for pdef in self.__property_defs.values():
+            rows.append('* ' + str(pdef))
+        return '<br>'.join(rows)
 
     def _update_process_input_type_defs(self, all_type_defs):
         for type_name in self.__process_input_type_names:
             self.__process_input_type_defs.append(all_type_defs[type_name])
 
     @property
+    def name(self):
+        return self.__name
+
+    @property
     def property_names(self):
-        return self.__property_defs.keys()
+        return list(self.__property_defs.keys())
 
     def property_def(self, property_name):
         return self.__property_defs[property_name]
@@ -42,121 +102,108 @@ class TypeDef:
     def process_input_type_defs(self):
         return self.__process_input_type_defs
 
+    def validate_data(self, data):
+        # check property values
+        for pname, pdef in self.__property_defs:
+            value = data.get(pname)
+            if value is None:
+                if pdef.required:
+                    raise ValueError(
+                        'The required property "%s" is absent' % pname)
+            else:
+                pdef.validate_type(value)
+                pdef.validate_value(value)
+
+        # check that there are no undeclared properties
+        for pname in data:
+            if pname not in self.__property_defs:
+                raise ValueError(
+                    'The object has undeclared property: %s' % pname)
+
 
 class PropertyDef:
-    def __init__(self, doc):
-        self.__name = doc['name']
-        self.__type = doc['type']
-        self.__required = doc.get('required')
-        self.__contraint = doc.get('contraint')
-        self.__comment = doc.get('comment')
-        self.__pk = 'PK' in doc and doc['PK'] == True
-        self.__fk = 'FK' in doc and doc['FK'] == True
+    def __init__(self, pdef_doc):
+        self.__name = pdef_doc['name']
+        self.__type = pdef_doc['type']
+        self.__required = pdef_doc['required'] if 'required' in pdef_doc else False
+        self.__constraint = pdef_doc.get('constraint')
+        self.__comment = pdef_doc.get('comment')
+        self.__pk = 'PK' in pdef_doc and pdef_doc['PK'] == True
+        self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
+
+        self.__type_validator = _PROPERTY_TYPE_VALIDATORS[self.__type]
+        self.__value_validator = _PROPERTY_VALUE_VALIDATORS[
+            self.__type] if self.__constraint else None
+
+    def _repr_html_(self):
+        return str(self)
+
+    def __str__(self):
+        return self.__name \
+            + ' ' + self.__type \
+            + (' required' if self.__required else '') \
+            + (' constraint="' + str(self.__constraint) + '"' if self.__constraint else '') \
+            + (' comment="' + self.__comment + '"' if self.__comment else '') \
+            + (' PK' if self.__pk else '') \
+            + (' FK' if self.__fk else '')
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def type(self):
+        return self.__type
+
+    @property
+    def required(self):
+        return self.__required
+
+    @property
+    def constraint(self):
+        return self.__constraint
+
+    @property
+    def comment(self):
+        return self.__comment
+
+    @property
+    def is_pk(self):
+        return self.__pk
+
+    @property
+    def is_fk(self):
+        return self.__fk
+
+    def validate_type(self, value):
+        self.__type_validator(self.__name, value)
+
+    def validate_value(self, value):
+        if self.__value_validator is not None:
+            self.__value_validator(self.__name, value, self.__constraint)
+
+    # TODO
+    # validate FK format
+    # validate_entity_process(self, entity_type, process_type, process_data):
 
 
 class TypeDefService:
-    __term_pattern = re.compile('(.+)<(.+)>')
 
     def __init__(self, file_name):
-        self.__validate_value = {
-            'text': self.__validate_text,
-            'float': self.__validate_float,
-            'term': self.__validate_term
-        }
-
-        self.__check_value_type = {
-            'text': self.__check_type_text,
-            'float': self.__check_type_float,
-            'term': self.__check_type_term
-        }
-
         self.__type_defs = {}
         self.__load_type_defs(file_name)
 
     def __load_type_defs(self, file_name):
-        pass
+        with open(file_name, 'r') as f:
+            doc = json.loads(f.read())
+        for type_name, type_def_doc in doc.items():
+            self.__type_defs[type_name] = TypeDef(type_name, type_def_doc)
 
-    def __check_type_text(self, name, value):
-        if type(value) is not str:
-            raise ValueError(
-                'Wrong property type: the value of "%s" property is not text (%s)' % (name, value))
+        for type_def in self.__type_defs.values():
+            type_def._update_process_input_type_defs(self.__type_defs)
 
-    def __check_type_float(self, name, value):
-        if type(value) is not float:
-            raise ValueError(
-                'Wrong property type: the value of "%s" property is not float (%s)' % (name, value))
+    def get_type_names(self):
+        return list(self.__type_defs.keys())
 
-    def __check_type_term(self, name, value):
-        if type(value) is not str or not self.parse_term(value):
-            raise ValueError(
-                'Wrong property type:  the value of "%s" property is not term (%s)' % (name, value))
-
-    def parse_term(self, value):
-        m = TypeDefService.__term_pattern.findall(value)
-        return m is not None
-
-    def __validate_text(self, validator, name, value):
-        pass
-
-    def __validate_float(self, validator, name, value):
-        pass
-
-    def __validate_term(self, validator, name, value):
-        pass
-
-    @property
-    def types(self):
-        return self.__type_defs.keys()
-
-    def get_type_def(self, dtype):
-        return self.__type_defs[dtype]
-
-    def get_property_defs(self, dtype):
-        property_defs = {}
-        type_def = self.get_type_def(dtype)
-        for prop in type_def['properties']:
-            property_defs[prop['name']] = prop
-        return property_defs
-
-    def validate_type(self, dtype, data):
-        type_def = self.get_type_def(dtype)
-
-        # check that all properties are present
-        for property_def in type_def['properties']:
-            property_name = property_def['name']
-
-            if property_def['required'] and property_name not in data:
-                raise ValueError(
-                    'The required property is absent: %s' % property_name)
-
-        # check that there are no undeclared properties
-        property_defs = self.get_property_defs(dtype)
-        for prop_name in data:
-            if prop_name not in property_defs:
-                raise ValueError(
-                    'The object has undeclared property: %s' % prop_name)
-
-    def validate_values(self, dtype, data):
-        type_def = self.get_type_def(dtype)
-        for property_def in type_def['properties']:
-            property_name = property_def['name']
-            property_type = property_def['type']
-            property_value = data.get(property_name)
-            if property_value is None:
-                if property_def['required']:
-                    raise ValueError(
-                        'The required property is absent: %s' % property_name)
-                else:
-                    continue
-
-            # check value type
-            self.__check_value_type[property_type](
-                property_name, property_value)
-
-            # apply validator if defined
-            if 'validator' in property_def:
-                self.__validate_value[property_type](
-                    property_def['validator'], property_name, property_value)
-
-    def validate_entity_process(self, entity_type, process_type, process_data):
-        pass
+    def get_type_def(self, type_name):
+        return self.__type_defs[type_name]
