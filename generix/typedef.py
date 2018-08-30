@@ -4,77 +4,119 @@ from .utils import check_term_format, parse_term
 from .ontology import Term
 
 
-def _text_type_validate(property_name, property_value):
-    if type(property_value) is not str:
-        raise ValueError(
-            'Wrong property type: the value of "%s" property is not text (%s)'
-            % (property_name, property_value))
+class PropertyValidator:
+    '''' abstract vase validator class '''
+
+    def __init__(self, constraint=None):
+        self.__constraint = constraint
+
+    @property
+    def validatable(self):
+        return self.__constraint is not None
+
+    def validate(self, property_name, property_value):
+        self.validate_type(property_name, property_value)
+        if self.validatable:
+            self.validate_value(property_name, property_value)
+
+    def validate_type(self, property_name, property_value):
+        pass
+
+    def validate_value(self, property_name, property_value):
+        pass
 
 
-def _float_type_validate(property_name, property_value):
-    if type(property_value) is not float:
-        raise ValueError(
-            'Wrong property type: the value of "%s" property is not float (%s)'
-            % (property_name, property_value))
+class PropertyTextValidator(PropertyValidator):
+    def __init__(self, reg_expression_constrint):
+        super().__init__(reg_expression_constrint)
+
+        self.__pattern = None
+        if self.validatable:
+            self.__pattern = re.compile(reg_expression_constrint)
+
+    def validate_type(self, property_name, property_value):
+        if type(property_value) is not str:
+            raise ValueError(
+                'Wrong property type: the value of "%s" property is not text (%s)'
+                % (property_name, property_value))
+
+    def validate_value(self, property_name, property_value):
+        if self.validatable:
+            if not self.__pattern.match(property_value):
+                raise ValueError(
+                    'The value (%s) of the "%s" property does not follow the property constraint'
+                    % (property_value, property_name))
 
 
-def _term_type_validate(property_name, property_value):
-    if type(property_value) is not str or not check_term_format(property_value):
-        raise ValueError(
-            'Wrong property type: the value of "%s" property is not term (%s)'
-            % (property_name, property_value))
+class PropertyFloatValidator(PropertyValidator):
+    def __init__(self, min_max_validator):
+        super().__init__(min_max_validator)
+
+        self.__min_value = None
+        self.__max_value = None
+        if self.validatable:
+            self.__min_value = min_max_validator[0]
+            self.__max_value = min_max_validator[1]
+
+    def validate_type(self, property_name, property_value):
+        if type(property_value) is not float:
+            raise ValueError(
+                'Wrong property type: the value of "%s" property is not float (%s)'
+                % (property_name, property_value))
+
+    def validate_value(self, property_name, property_value):
+        if self.validatable:
+            if property_value < self.__min_value or property_value > self.__max_value:
+                raise ValueError(
+                    'The value (%s) of the "%s" property does not follow the property constraint'
+                    % (property_value, property_name))
 
 
-def _text_value_validate(property_name, property_value, constraint):
-    ''' we expect that the constraint is the regular expression '''
-    pattern = re.compile(constraint)
-    if not pattern.match(property_value):
-        raise ValueError(
-            'The value (%s) of the "%s" property does not follow the property constraint'
-            % (property_value, property_name))
+class PropertyTermValidator(PropertyValidator):
+    def __init__(self, root_term_array_validator):
+        super().__init__(root_term_array_validator)
+
+        self.__root_terms = []
+        if self.validatable:
+            for term_str in root_term_array_validator:
+                term = parse_term(term_str)
+                term.refresh()
+                self.__root_terms.append(term)
+
+    def validate_type(self, property_name, property_value):
+        if type(property_value) is not str or not check_term_format(property_value):
+            raise ValueError(
+                'Wrong property type: the value of "%s" property is not term (%s)'
+                % (property_name, property_value))
+
+    def validate_value(self, property_name, property_value):
+        if self.validatable:
+            term = parse_term(property_value)
+            term.refresh()
+
+            validated = False
+            for root_term in self.__root_terms:
+                if term.term_id == root_term.term_id:
+                    validated = True
+                    break
+                for parent_term_id in term.parent_path_ids:
+                    if parent_term_id == root_term.term_id:
+                        validated = True
+                        break
+                if validated:
+                    break
+
+            if not validated:
+                raise ValueError(
+                    'The value (%s) of the "%s" property does not follow the property constraint'
+                    % (property_value, property_name))
 
 
-def _float_value_validate(property_name, property_value, constraint):
-    ''' we expect that the constraint is an array of min and max values '''
-    if property_value < constraint[0] or property_value > constraint[1]:
-        raise ValueError(
-            'The value (%s) of the "%s" property does not follow the property constraint'
-            % (property_value, property_name))
-
-
-def _term_value_validate(property_name, property_value, constraint):
-    ''' we expect that the value constraint is an array of root terms '''
-    term = parse_term(property_value)
-    term.refresh()
-
-    validated = False
-    for cterm_str in constraint:
-        cterm = parse_term(cterm_str)
-        for p_id in term.parent_path_ids:
-            if p_id == cterm.term_id:
-                validated = True
-                break
-        if validated:
-            break
-
-    if not validated:
-        raise ValueError(
-            'The value (%s) of the "%s" property does not follow the property constraint'
-            % (property_value, property_name))
-
-
-_PROPERTY_TYPE_VALIDATORS = {
-    "text": _text_type_validate,
-    "float": _float_type_validate,
-    "term": _term_type_validate,
-    "[ref]": None
-}
-
-_PROPERTY_VALUE_VALIDATORS = {
-    "text": _text_value_validate,
-    "float": _float_value_validate,
-    "term": _term_value_validate,
-    "[ref]": None
+_PROPERTY_VALIDATORS = {
+    'text': PropertyTextValidator,
+    'float': PropertyFloatValidator,
+    'term': PropertyTermValidator,
+    '[ref]': PropertyValidator
 }
 
 
@@ -137,8 +179,7 @@ class TypeDef:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
             else:
-                pdef.validate_type(value)
-                pdef.validate_value(value)
+                pdef.validate(value)
 
         # check that there are no undeclared properties
         for pname in data:
@@ -157,9 +198,8 @@ class PropertyDef:
         self.__pk = 'PK' in pdef_doc and pdef_doc['PK'] == True
         self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
 
-        self.__type_validator = _PROPERTY_TYPE_VALIDATORS[self.__type]
-        self.__value_validator = _PROPERTY_VALUE_VALIDATORS[
-            self.__type] if self.__constraint else None
+        self.__property_validator = _PROPERTY_VALIDATORS[self.__type](
+            self.__constraint)
 
     def _repr_html_(self):
         return str(self)
@@ -201,12 +241,8 @@ class PropertyDef:
     def is_fk(self):
         return self.__fk
 
-    def validate_type(self, value):
-        self.__type_validator(self.__name, value)
-
-    def validate_value(self, value):
-        if self.__value_validator is not None:
-            self.__value_validator(self.__name, value, self.__constraint)
+    def validate(self, value):
+        self.__property_validator.validate(self.__name, value)
 
     # TODO
     # validate FK format
