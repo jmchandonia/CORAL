@@ -1,6 +1,6 @@
 import re
 import json
-from .utils import check_term_format
+from .utils import check_term_format, parse_term
 from .ontology import Term
 
 
@@ -43,7 +43,24 @@ def _float_value_validate(property_name, property_value, constraint):
 
 
 def _term_value_validate(property_name, property_value, constraint):
-    pass
+    ''' we expect that the value constraint is an array of root terms '''
+    term = parse_term(property_value)
+    term.refresh()
+
+    validated = False
+    for cterm_str in constraint:
+        cterm = parse_term(cterm_str)
+        for p_id in term.parent_path_ids:
+            if p_id == cterm.term_id:
+                validated = True
+                break
+        if validated:
+            break
+
+    if not validated:
+        raise ValueError(
+            'The value (%s) of the "%s" property does not follow the property constraint'
+            % (property_value, property_name))
 
 
 _PROPERTY_TYPE_VALIDATORS = {
