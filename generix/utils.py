@@ -13,4 +13,6 @@ def parse_term(value):
     m = __TERM_PATTERN.findall(value)
     if m:
         term = Term(m[0][1].strip(), term_name=m[0][0].strip())
+    else:
+        raise ValueError('Can not parse term from value: %s' % value)
     return term
