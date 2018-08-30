@@ -5,10 +5,14 @@ from .ontology import Term
 
 
 class PropertyValidator:
-    '''' abstract vase validator class '''
+    '''' abstract base validator class '''
 
     def __init__(self, constraint=None):
         self.__constraint = constraint
+
+    @property
+    def constraint(self):
+        return self.__constraint
 
     @property
     def validatable(self):
@@ -68,20 +72,18 @@ class PropertyFloatValidator(PropertyValidator):
         if self.validatable:
             if property_value < self.__min_value or property_value > self.__max_value:
                 raise ValueError(
-                    'The value (%s) of the "%s" property does not follow the property constraint'
-                    % (property_value, property_name))
+                    'The value (%s) of the "%s" property is not in the rage [%s, %s]'
+                    % (property_value, property_name, self.__min_value, self.__max_value))
 
 
 class PropertyTermValidator(PropertyValidator):
-    def __init__(self, root_term_array_validator):
-        super().__init__(root_term_array_validator)
+    def __init__(self, root_term_id_validator):
+        super().__init__(root_term_id_validator)
 
-        self.__root_terms = []
+        self.__root_term = None
         if self.validatable:
-            for term_str in root_term_array_validator:
-                term = parse_term(term_str)
-                term.refresh()
-                self.__root_terms.append(term)
+            self.__root_term = Term(root_term_id_validator)
+            self.__root_term.refresh()
 
     def validate_type(self, property_name, property_value):
         if type(property_value) is not str or not check_term_format(property_value):
@@ -94,22 +96,18 @@ class PropertyTermValidator(PropertyValidator):
             term = parse_term(property_value)
             term.refresh()
 
-            validated = False
-            for root_term in self.__root_terms:
-                if term.term_id == root_term.term_id:
-                    validated = True
-                    break
+            root_term_id = self.__root_term.term_id
+            validated = term.term_id == root_term_id
+            if not validated:
                 for parent_term_id in term.parent_path_ids:
-                    if parent_term_id == root_term.term_id:
+                    if parent_term_id == root_term_id:
                         validated = True
                         break
-                if validated:
-                    break
 
             if not validated:
                 raise ValueError(
-                    'The value (%s) of the "%s" property does not follow the property constraint'
-                    % (property_value, property_name))
+                    'The term "%s" of the "%s" property is not a child term of "%s"'
+                    % (str(term), property_name, str(self.__root_term)))
 
 
 _PROPERTY_VALIDATORS = {
