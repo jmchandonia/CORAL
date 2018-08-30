@@ -26,11 +26,20 @@ def _term_type_validate(property_name, property_value):
 
 
 def _text_value_validate(property_name, property_value, constraint):
-    pass
+    ''' we expect that the constraint is the regular expression '''
+    pattern = re.compile(constraint)
+    if not pattern.match(property_value):
+        raise ValueError(
+            'The value (%s) of the "%s" property does not follow the property constraint'
+            % (property_value, property_name))
 
 
 def _float_value_validate(property_name, property_value, constraint):
-    pass
+    ''' we expect that the constraint is an array of min and max values '''
+    if property_value < constraint[0] or property_value > constraint[1]:
+        raise ValueError(
+            'The value (%s) of the "%s" property does not follow the property constraint'
+            % (property_value, property_name))
 
 
 def _term_value_validate(property_name, property_value, constraint):
