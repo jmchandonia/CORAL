@@ -431,6 +431,8 @@ class Term:
 
     def __lazzy_load(self):
         term = services.ontology.all.find_id(self.term_id)
+        if term is None:
+            raise ValueError('Can not find term with id: %s' % self.term_id)
         self.__term_name = term.term_name
         self.__ontology_id = term.ontology_id
         self.__parent_ids = term.parent_ids
