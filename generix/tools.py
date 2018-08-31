@@ -2,10 +2,37 @@ import sys
 import pandas as pd
 from . import services
 from .brick import read_brick
+from .provenance import _FILES
 
 
 def upload_ontologies(argv):
     services.ontology._upload_ontologies()
+
+
+def upload_entities(argv):
+    for file_def in _FILES['entities']:
+        file_name = '../' + file_def['file']
+        type_name = file_def['dtype']
+        type_def = services.typedef.get_type_def(type_name)
+
+        print('Doing %s: %s' % (type_name, file_name))
+        df = pd.read_csv(file_name, sep='\t')
+        for _, row in df.iterrows():
+            data = row.to_dict()
+            type_def.validate_data(data)
+
+
+def upload_processes(argv):
+    for file_def in _FILES['processes']:
+        file_name = '../' + file_def['file']
+        type_name = 'Process'
+        type_def = services.typedef.get_type_def(type_name)
+
+        print('Doing %s: %s' % (type_name, file_name))
+        df = pd.read_csv(file_name, sep='\t')
+        for _, row in df.iterrows():
+            data = row.to_dict()
+            type_def.validate_data(data)
 
 
 def load_entity_from_neo_to_esearch(argv):
