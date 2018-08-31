@@ -128,6 +128,17 @@ class TypeDef:
         for pdoc in type_def_doc['fields']:
             self.__property_defs[pdoc['name']] = PropertyDef(pdoc)
 
+        self.__pk_property_def = None
+        for pdef in self.__property_defs.values():
+            if pdef.is_pk:
+                self.__pk_property_def = pdef
+                break
+
+        self.__fk_property_defs = []
+        for pdef in self.__property_defs.values():
+            if pdef.is_fk:
+                self.__fk_property_defs.append(pdef)
+
         self.__process_type_terms = []
         if 'process_types' in type_def_doc:
             for term_id in type_def_doc['process_types']:
@@ -159,6 +170,14 @@ class TypeDef:
     @property
     def property_names(self):
         return list(self.__property_defs.keys())
+
+    @property
+    def pk_property_def(self):
+        self.__pk_property_def
+
+    @property
+    def fk_property_defs(self):
+        return self.__fk_property_defs
 
     def property_def(self, property_name):
         return self.__property_defs[property_name]
