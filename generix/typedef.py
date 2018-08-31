@@ -172,6 +172,10 @@ class TypeDef:
         return list(self.__property_defs.keys())
 
     @property
+    def property_defs(self):
+        return list(self.__property_defs.values())
+
+    @property
     def pk_property_def(self):
         self.__pk_property_def
 
