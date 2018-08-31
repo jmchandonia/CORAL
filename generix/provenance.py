@@ -45,24 +45,24 @@ _FILES = {
             'file': 'data/import/samples_all.tsv',
             'dtype': 'Sample',
         },
-        {
-            'file': 'data/import/taxa_isolates.tsv',
-            'dtype': 'Taxon',
-        },
-        {
-            'file': 'data/import/communities_isolates.tsv',
-            'dtype': 'Community',
-        }
+        # {
+        #     'file': 'data/import/taxa_isolates.tsv',
+        #     'dtype': 'Taxon',
+        # },
+        # {
+        #     'file': 'data/import/communities_isolates.tsv',
+        #     'dtype': 'Community',
+        # }
     ],
     'processes': [
-        {
-            'file': 'data/import/process_assay_growth.tsv',
-            'ptype': 'Assay Growth'
-        },
-        {
-            'file': 'data/import/process_isolates.tsv',
-            'ptype': 'Isolation'
-        },
+        # {
+        #     'file': 'data/import/process_assay_growth.tsv',
+        #     'ptype': 'Assay Growth'
+        # },
+        # {
+        #     'file': 'data/import/process_isolates.tsv',
+        #     'ptype': 'Isolation'
+        # },
         {
             'file': 'data/import/process_sampling_all.tsv',
             'ptype': 'Sampling'
