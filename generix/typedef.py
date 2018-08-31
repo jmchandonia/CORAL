@@ -63,7 +63,7 @@ class PropertyFloatValidator(PropertyValidator):
             self.__max_value = min_max_validator[1]
 
     def validate_type(self, property_name, property_value):
-        if type(property_value) is not float:
+        if type(property_value) is not float and type(property_value) is not int:
             raise ValueError(
                 'Wrong property type: the value of "%s" property is not float (%s)'
                 % (property_name, property_value))
@@ -170,9 +170,9 @@ class TypeDef:
 
     def validate_data(self, data):
         # check property values
-        for pname, pdef in self.__property_defs:
+        for pname, pdef in self.__property_defs.items():
             value = data.get(pname)
-            if value is None:
+            if value is None or value == 'null':
                 if pdef.required:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
