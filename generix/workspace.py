@@ -186,14 +186,14 @@ class Workspace:
         self.__enigma_db.get_collection(
             data_holder.type_name).insert_one(data_holder.data)
 
-    def _index_es_brick(self, entity):
+    def _index_es_brick(self, data_holder):
         pass
 
-    def _index_es_entity(self, entity):
-        pass
+    def _index_es_entity(self, data_holder):
+        services.es_service.index_data(data_holder)
 
-    def _index_es_process(self, process):
-        pass
+    def _index_es_process(self, data_holder):
+        services.es_service.index_data(data_holder)
 
     def _mark_as_indexed_es(self, entity_or_process):
         pass
