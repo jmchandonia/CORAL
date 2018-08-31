@@ -4,6 +4,9 @@ from .utils import check_term_format, parse_term
 from .ontology import Term
 
 
+PROCESS_TYPE_NAME = 'Process'
+
+
 class PropertyValidator:
     '''' abstract base validator class '''
 
