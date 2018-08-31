@@ -6,7 +6,7 @@ from .typedef import PROCESS_TYPE_NAME
 class EntityDataHolder:
     def __init__(self, type_name, data, file_name=None):
         self.__type_name = type_name
-        self.__type_def = services.typedef.get_type_def(type_name)
+        self.__type_def = services.typedef.get_type_def(self.__type_name)
         self.__data = data
         self.__file_name = file_name
         self.__guid = None
@@ -26,6 +26,38 @@ class EntityDataHolder:
     @property
     def file_name(self):
         return self.__file_name
+
+    @property
+    def guid(self):
+        return self.__guid
+
+    def set_guid(self, val):
+        self.__guid = val
+
+
+class ProcessDataHolder:
+    def __init__(self, process_type_name, data):
+        self.__type_name = PROCESS_TYPE_NAME
+        self.__process_type_name = process_type_name
+        self.__type_def = services.typedef.get_type_def(self.__type_name)
+        self.__data = data
+        self.__guid = None
+
+    @property
+    def type_name(self):
+        return self.__type_name
+
+    @property
+    def type_def(self):
+        return self.__type_def
+
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def process_type_name(self):
+        return self.__process_type_name
 
     @property
     def guid(self):
