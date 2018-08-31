@@ -1,8 +1,42 @@
 from .brick import read_brick
+from . import services
+from .typedef import PROCESS_TYPE_NAME
+
+
+class EntityDataHolder:
+    def __init__(self, type_name, data, file_name=None):
+        self.__type_name = type_name
+        self.__type_def = services.typedef.get_type_def(type_name)
+        self.__data = data
+        self.__file_name = file_name
+        self.__guid = None
+
+    @property
+    def type_name(self):
+        return self.__type_name
+
+    @property
+    def type_def(self):
+        return self.__type_def
+
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def file_name(self):
+        return self.__file_name
+
+    @property
+    def guid(self):
+        return self.__guid
+
+    def set_guid(self, val):
+        self.__guid = val
 
 
 class Workspace:
-    ID_PATTERN = '%s%07d'
+    __ID_PATTERN = '%s%07d'
 
     def __init__(self):
         self.__dtype_2_id_offset = {}
@@ -18,7 +52,7 @@ class Workspace:
         id_offset += 1
         self.__dtype_2_id_offset[dtype] = id_offset
 
-        obj_id = Workspace.ID_PATTERN % (dtype, id_offset)
+        obj_id = Workspace.__ID_PATTERN % (dtype, id_offset)
 
         if text_id is not None:
             self.__text_id_2_id[text_id] = obj_id
@@ -45,7 +79,7 @@ class Workspace:
 
     def _get_ids(self, dtype):
         id_offset = self.__dtype_2_id_offset[dtype]
-        return [Workspace.ID_PATTERN % (dtype, x) for x in range(1, id_offset + 1)]
+        return [Workspace.__ID_PATTERN % (dtype, x) for x in range(1, id_offset + 1)]
 
     def get_brick(self, brick_id):
         file_name = self._get_file_name(brick_id)
