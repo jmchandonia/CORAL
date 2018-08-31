@@ -15,6 +15,9 @@ def upload_entities(argv):
     for file_def in _FILES['entities']:
         file_name = '../' + file_def['file']
         type_name = file_def['dtype']
+        services.es_service.drop_index(type_name)
+        services.es_service.create_index(
+            services.typedef.get_type_def(type_name))
 
         print('Doing %s: %s' % (type_name, file_name))
         df = pd.read_csv(file_name, sep='\t')
@@ -70,20 +73,20 @@ def load_entity_from_neo_to_esearch(argv):
             index=es_index_name, doc_type=es_dtype, body=doc)
 
 
-def es_index_bricks():
+# def es_index_bricks():
 
-    services.es_indexer.drop_index()
-    services.es_indexer.create_index()
+#     services.es_indexer.drop_index()
+#     services.es_indexer.create_index()
 
-    df = pd.read_csv('data/import/generic_index.tsv', sep='\t')
-    for file_name in df[df.is_heterogeneous == 0].filename.values:
-        file_name = 'data/import/' + file_name
+#     df = pd.read_csv('data/import/generic_index.tsv', sep='\t')
+#     for file_name in df[df.is_heterogeneous == 0].filename.values:
+#         file_name = 'data/import/' + file_name
 
-        print('doing %s' % (file_name))
-        brick = read_brick(0, file_name)
-        brick.id = services.workspace.next_id(
-            'Brick', text_id=brick.name, file_name=file_name)
-        services.es_indexer.index_brick(brick)
+#         print('doing %s' % (file_name))
+#         brick = read_brick(0, file_name)
+#         brick.id = services.workspace.next_id(
+#             'Brick', text_id=brick.name, file_name=file_name)
+#         services.es_indexer.index_brick(brick)
 
 
 if __name__ == '__main__':
