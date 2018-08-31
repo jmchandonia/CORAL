@@ -117,114 +117,48 @@ class Workspace:
         file_name = self._get_file_name(brick_id)
         return read_brick(brick_id, file_name)
 
-    def save(self, doc):
-        '''
-            expected format of doc:
-            {
-                'entity':{
-                    # required
-                    'type': ...,
-                    'data': {...},
+    def save(self, entity_data_holders=None, process_data_holder=None):
 
-                    # optional (for brick)
-                    'file_name': ...
+        # process entities
+        if entity_data_holders is not None:
+            for data_holder in entity_data_holders:
 
-                    # will be added in this method
-                    'type_def': {},
-                    'guid': ...
-                },
-                'process':{
-                    # required
-                    'type': ...,
-                    'data': {...},
+                self._generate_guid(data_holder)
+                self._validate_entity(data_holder)
+                self._store_entity(data_holder)
 
-                    # optional (for brick)
-                    'file_name': ...
+                self._index_es_entity(data_holder)
+                self._index_neo_entity(data_holder)
 
-                    # will be added in this method
-                    'type_def': {},
-                    'guid': ...
-                }
-            }
-            Either entity, or process, or both should be provided 
-        '''
+        # process processes
+        if process_data_holder is not None:
+            data_holder = process_data_holder
+            self._generate_guid(data_holder)
+            self._validate_process(data_holder)
+            self._store_process(data_holder)
 
-        try:
-            entity = doc.get('entity')
-            process = doc.get('process')
+            self._index_es_process(data_holder)
+            self._index_neo_process(data_holder)
 
-            # attach type definition
-            if entity is not None:
-                self._attach_type_def(entity)
-            if process is not None:
-                self._attach_type_def(process)
+    def _generate_guid(self, data_holder):
+        file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
+        pk_def = data_holder.type_def.pk_property_def
+        text_id = data_holder.data[pk_def.name] if pk_def is not None else None
+        guid = self.next_id(data_holder.type_name,
+                            text_id=text_id, file_name=file_name)
+        data_holder.set_guid(guid)
 
-            # generate GUID
-            if entity is not None:
-                self._generate_guid(entity)
-            if process is not None:
-                self._generate_guid(process)
+    # def _validate_brick(self, entity):
+    #     pass
 
-            # validate
-            if entity is not None:
-                if entity['type'] == 'Brick':
-                    self._validate_brick(entity)
-                else:
-                    self._validate_entity(entity)
-            if process is not None:
-                self._validate_process(process)
+    def _validate_entity(self, data_holder):
+        data_holder.type_def.validate_data(data_holder.data)
 
-            # store
-            if entity is not None:
-                if entity['type'] == 'Brick':
-                    self._store_brick(entity)
-                else:
-                    self._store_entity(entity)
+    def _validate_process(self, data_holder):
+        data_holder.type_def.validate_data(data_holder.data)
 
-            if process is not None:
-                self._store_process(process)
-
-            # index in elastic search
-            if entity is not None:
-                if entity['type'] == 'Brick':
-                    self._index_es_brick(entity)
-                else:
-                    self._index_es_entity(entity)
-                self._mark_as_indexed_es(entity)
-
-            if process is not None:
-                self._index_es_process(process)
-                self._mark_as_indexed_es(process)
-
-            # index in neo4j (brick and entity are treated the same)
-            if entity is not None:
-                self._index_neo_entity(entity)
-                self._mark_as_indexed_neo(entity)
-
-            if process is not None:
-                self._index_neo_process(process)
-                self._mark_as_indexed_neo(process)
-
-        except:
-            pass
-
-    def _attach_type_def(self, entity_or_process):
-        pass
-
-    def _generate_guid(self, entity_or_process):
-        pass
-
-    def _validate_brick(self, entity):
-        pass
-
-    def _validate_entity(self, entity):
-        pass
-
-    def _validate_process(self, process):
-        pass
-
-    def _store_brick(self, entity):
-        pass
+    # def _store_brick(self, entity):
+    #     pass
 
     def _store_entity(self, entity):
         pass
