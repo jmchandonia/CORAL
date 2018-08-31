@@ -3,12 +3,11 @@ from . import services
 from .typedef import PROCESS_TYPE_NAME
 
 
-class EntityDataHolder:
-    def __init__(self, type_name, data, file_name=None):
+class DataHolder:
+    def __init__(self, type_name, data):
         self.__type_name = type_name
         self.__type_def = services.typedef.get_type_def(self.__type_name)
         self.__data = data
-        self.__file_name = file_name
         self.__guid = None
 
     @property
@@ -22,49 +21,34 @@ class EntityDataHolder:
     @property
     def data(self):
         return self.__data
+
+    @property
+    def guid(self):
+        return self.__guid
+
+    def set_guid(self, val):
+        self.__guid = val
+        self.__data['guid'] = self.__guid
+
+
+class EntityDataHolder(DataHolder):
+    def __init__(self, type_name, data, file_name=None):
+        super().__init__(type_name, data)
+        self.__file_name = file_name
 
     @property
     def file_name(self):
         return self.__file_name
 
-    @property
-    def guid(self):
-        return self.__guid
 
-    def set_guid(self, val):
-        self.__guid = val
-
-
-class ProcessDataHolder:
+class ProcessDataHolder(DataHolder):
     def __init__(self, process_type_name, data):
-        self.__type_name = PROCESS_TYPE_NAME
+        super().__init__(PROCESS_TYPE_NAME, data)
         self.__process_type_name = process_type_name
-        self.__type_def = services.typedef.get_type_def(self.__type_name)
-        self.__data = data
-        self.__guid = None
-
-    @property
-    def type_name(self):
-        return self.__type_name
-
-    @property
-    def type_def(self):
-        return self.__type_def
-
-    @property
-    def data(self):
-        return self.__data
 
     @property
     def process_type_name(self):
         return self.__process_type_name
-
-    @property
-    def guid(self):
-        return self.__guid
-
-    def set_guid(self, val):
-        self.__guid = val
 
 
 class Workspace:
@@ -192,11 +176,15 @@ class Workspace:
     # def _store_brick(self, entity):
     #     pass
 
-    def _store_entity(self, entity):
-        pass
+    def _store_entity(self, data_holder):
+        self._store(data_holder)
 
-    def _store_process(self, process):
-        pass
+    def _store_process(self, data_holder):
+        self._store(data_holder)
+
+    def _store(self, data_holder):
+        self.__enigma_db.get_collection(
+            data_holder.type_name).insert_one(data_holder.data)
 
     def _index_es_brick(self, entity):
         pass
