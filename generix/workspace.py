@@ -70,52 +70,83 @@ class ProcessDataHolder:
 class Workspace:
     __ID_PATTERN = '%s%07d'
 
-    def __init__(self):
+    def __init__(self, mongo_client):
+        self.__mongo_client = mongo_client
+        self.__enigma_db = self.__mongo_client.enigma
         self.__dtype_2_id_offset = {}
-        self.__id_2_file_name = {}
-        self.__id_2_text_id = {}
-        self.__file_name_2_id = {}
-        self.__text_id_2_id = {}
+        self.__init_id_offsets()
+        print('Workspace initialized!')
 
-    def next_id(self, dtype, text_id=None, file_name=None):
-        id_offset = self.__dtype_2_id_offset.get(dtype)
-        if id_offset is None:
-            id_offset = 0
+        # self.__dtype_2_id_offset = {}
+        # self.__id_2_file_name = {}
+        # self.__id_2_text_id = {}
+        # self.__file_name_2_id = {}
+        # self.__text_id_2_id = {}
+
+    def __init_id_offsets(self):
+        registered_type_names = set()
+
+        rows = self.__enigma_db.guid.find({})
+        for row in rows:
+            type_name = row['dtype']
+            registered_type_names.add(type_name)
+            self.__dtype_2_id_offset[type_name] = row['id_offset']
+
+        for type_name in services.typedef.get_type_names():
+            if type_name not in registered_type_names:
+                self.__enigma_db.guid.insert_one(
+                    {'dtype': type_name, 'id_offset': 0})
+                self.__dtype_2_id_offset[type_name] = 0
+
+    def next_guid(self, type_name):
+        id_offset = self.__dtype_2_id_offset[type_name]
         id_offset += 1
-        self.__dtype_2_id_offset[dtype] = id_offset
+        self.__enigma_db.guid.update_one(
+            {"dtype": type_name},
+            {"$set": {"id_offset": id_offset}}
+        )
+        self.__dtype_2_id_offset[type_name] = id_offset
+        return Workspace.__ID_PATTERN % (type_name, id_offset)
 
-        obj_id = Workspace.__ID_PATTERN % (dtype, id_offset)
+    # def next_id(self, dtype, text_id=None, file_name=None):
+    #     id_offset = self.__dtype_2_id_offset.get(dtype)
+    #     if id_offset is None:
+    #         id_offset = 0
+    #     id_offset += 1
+    #     self.__dtype_2_id_offset[dtype] = id_offset
 
-        if text_id is not None:
-            self.__text_id_2_id[text_id] = obj_id
-            self.__id_2_text_id[obj_id] = text_id
-        if file_name is not None:
-            self.__file_name_2_id[file_name] = obj_id
-            self.__id_2_file_name[obj_id] = file_name
+    #     obj_id = Workspace.__ID_PATTERN % (dtype, id_offset)
 
-        return obj_id
+    #     # if text_id is not None:
+    #     #     self.__text_id_2_id[text_id] = obj_id
+    #     #     self.__id_2_text_id[obj_id] = text_id
+    #     # if file_name is not None:
+    #     #     self.__file_name_2_id[file_name] = obj_id
+    #     #     self.__id_2_file_name[obj_id] = file_name
 
-    def _get_file_name(self, obj_id):
-        return self.__id_2_file_name.get(obj_id)
+    #     # return obj_id
 
-    def _get_text_id(self, obj_id):
-        return self.__id_2_text_id.get(obj_id)
+    # def _get_file_name(self, obj_id):
+    #     return self.__id_2_file_name.get(obj_id)
 
-    def _get_id(self, text_id=None, file_name=None):
-        if text_id is not None:
-            return self.__text_id_2_id.get(text_id)
-        elif file_name is not None:
-            return self.__file_name_2_id.get(file_name)
+    # def _get_text_id(self, obj_id):
+    #     return self.__id_2_text_id.get(obj_id)
 
-        return None
+    # def _get_id(self, text_id=None, file_name=None):
+    #     if text_id is not None:
+    #         return self.__text_id_2_id.get(text_id)
+    #     elif file_name is not None:
+    #         return self.__file_name_2_id.get(file_name)
 
-    def _get_ids(self, dtype):
-        id_offset = self.__dtype_2_id_offset[dtype]
-        return [Workspace.__ID_PATTERN % (dtype, x) for x in range(1, id_offset + 1)]
+    #     return None
 
-    def get_brick(self, brick_id):
-        file_name = self._get_file_name(brick_id)
-        return read_brick(brick_id, file_name)
+    # def _get_ids(self, dtype):
+    #     id_offset = self.__dtype_2_id_offset[dtype]
+    #     return [Workspace.__ID_PATTERN % (dtype, x) for x in range(1, id_offset + 1)]
+
+    # def get_brick(self, brick_id):
+    #     file_name = self._get_file_name(brick_id)
+    #     return read_brick(brick_id, file_name)
 
     def save(self, entity_data_holders=None, process_data_holder=None):
 
@@ -141,11 +172,12 @@ class Workspace:
             self._index_neo_process(data_holder)
 
     def _generate_guid(self, data_holder):
-        file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
-        pk_def = data_holder.type_def.pk_property_def
-        text_id = data_holder.data[pk_def.name] if pk_def is not None else None
-        guid = self.next_id(data_holder.type_name,
-                            text_id=text_id, file_name=file_name)
+        # file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
+        # pk_def = data_holder.type_def.pk_property_def
+        # text_id = data_holder.data[pk_def.name] if pk_def is not None else None
+        # guid = self.next_id(data_holder.type_name,
+        #                     text_id=text_id, file_name=file_name)
+        guid = self.next_guid(data_holder.type_name)
         data_holder.set_guid(guid)
 
     # def _validate_brick(self, entity):
