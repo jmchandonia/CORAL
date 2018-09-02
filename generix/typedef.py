@@ -117,7 +117,8 @@ _PROPERTY_VALIDATORS = {
     'text': PropertyTextValidator,
     'float': PropertyFloatValidator,
     'term': PropertyTermValidator,
-    '[ref]': PropertyValidator
+    '[ref]': PropertyValidator,
+    '[text]': PropertyValidator
 }
 
 
@@ -160,8 +161,10 @@ class TypeDef:
         return '<br>'.join(rows)
 
     def _update_process_input_type_defs(self, all_type_defs):
-        for type_name in self.__process_input_type_names:
-            self.__process_input_type_defs.append(all_type_defs[type_name])
+        pass
+        # TODO
+        # for type_name in self.__process_input_type_names:
+        #     self.__process_input_type_defs.append(all_type_defs[type_name])
 
     @property
     def name(self):
