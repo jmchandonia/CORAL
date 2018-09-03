@@ -137,11 +137,9 @@ class Workspace:
         # process entities
         if entity_data_holders is not None:
             for data_holder in entity_data_holders:
-
                 self._generate_guid(data_holder)
                 self._validate_entity(data_holder)
                 self._store_entity(data_holder)
-
                 self._index_es_entity(data_holder)
                 self._index_neo_entity(data_holder)
 
@@ -198,8 +196,8 @@ class Workspace:
     def _mark_as_indexed_es(self, entity_or_process):
         pass
 
-    def _index_neo_entity(self, entity):
-        pass
+    def _index_neo_entity(self, data_holder):
+        services.neo_service.index_entities(data_holder)
 
     def _index_neo_process(self, process):
         pass
