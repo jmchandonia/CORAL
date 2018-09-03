@@ -180,7 +180,7 @@ class TypeDef:
 
     @property
     def pk_property_def(self):
-        self.__pk_property_def
+        return self.__pk_property_def
 
     @property
     def fk_property_defs(self):
