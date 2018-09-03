@@ -7,22 +7,22 @@ from .typedef import PROCESS_TYPE_NAME
 
 _FILES = {
     'entities': [
-        # {
-        #     'file': 'data/import/wells_all.tsv',
-        #     'dtype': 'Well',
-        # },
-        # {
-        #     'file': 'data/import/samples_all.tsv',
-        #     'dtype': 'Sample',
-        # },
         {
-            'file': 'data/import/taxa_isolates.tsv',
-            'dtype': 'Taxon',
+            'file': 'data/import/wells_all.tsv',
+            'dtype': 'Well',
         },
         {
-            'file': 'data/import/communities_isolates.tsv',
-            'dtype': 'Community',
-        }
+            'file': 'data/import/samples_all.tsv',
+            'dtype': 'Sample',
+        },
+        # {
+        #     'file': 'data/import/taxa_isolates.tsv',
+        #     'dtype': 'Taxon',
+        # },
+        # {
+        #     'file': 'data/import/communities_isolates.tsv',
+        #     'dtype': 'Community',
+        # }
     ],
     'processes': [
         {
@@ -45,6 +45,11 @@ def upload_ontologies(argv):
     services.ontology._upload_ontologies()
 
 
+def neo_delete(argv):
+    type_name = argv[0]
+    services.neo_service.delete_all(type_name)
+
+
 def upload_entities(argv):
     ws = services.workspace
     for file_def in _FILES['entities']:
@@ -59,10 +64,20 @@ def upload_entities(argv):
 
         print('Doing %s: %s' % (type_name, file_name))
         df = pd.read_csv(file_name, sep='\t')
+        i = 0
+        print('size=%s' % df.shape[0])
         for _, row in df.iterrows():
+            i = i + 1
+            if i % 10 == 0:
+                print('.', end='', flush=True)
+            if i % 100 == 0:
+                print(i)
+
             data = row.to_dict()
             data_holder = EntityDataHolder(type_name, data)
             ws.save(entity_data_holders=[data_holder])
+        print('Done!')
+        print()
 
 
 def upload_processes(argv):
