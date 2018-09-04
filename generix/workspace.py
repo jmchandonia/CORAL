@@ -8,7 +8,7 @@ class DataHolder:
         self.__type_name = type_name
         self.__type_def = services.typedef.get_type_def(self.__type_name)
         self.__data = data
-        self.__guid = None
+        self.__id = None
 
     @property
     def type_name(self):
@@ -23,12 +23,12 @@ class DataHolder:
         return self.__data
 
     @property
-    def guid(self):
-        return self.__guid
+    def id(self):
+        return self.__id
 
-    def set_guid(self, val):
-        self.__guid = val
-        self.__data['guid'] = self.__guid
+    def set_id(self, val):
+        self.__id = val
+        self.__data['id'] = self.__id
 
 
 class EntityDataHolder(DataHolder):
@@ -70,7 +70,7 @@ class Workspace:
     def __init_id_offsets(self):
         registered_type_names = set()
 
-        rows = self.__enigma_db.guid.find({})
+        rows = self.__enigma_db.id.find({})
         for row in rows:
             type_name = row['dtype']
             registered_type_names.add(type_name)
@@ -78,14 +78,14 @@ class Workspace:
 
         for type_name in services.typedef.get_type_names():
             if type_name not in registered_type_names:
-                self.__enigma_db.guid.insert_one(
+                self.__enigma_db.id.insert_one(
                     {'dtype': type_name, 'id_offset': 0})
                 self.__dtype_2_id_offset[type_name] = 0
 
-    def next_guid(self, type_name):
+    def next_id(self, type_name):
         id_offset = self.__dtype_2_id_offset[type_name]
         id_offset += 1
-        self.__enigma_db.guid.update_one(
+        self.__enigma_db.id.update_one(
             {"dtype": type_name},
             {"$set": {"id_offset": id_offset}}
         )
@@ -137,7 +137,7 @@ class Workspace:
         # process entities
         if entity_data_holders is not None:
             for data_holder in entity_data_holders:
-                self._generate_guid(data_holder)
+                self._generate_id(data_holder)
                 self._validate_entity(data_holder)
                 self._store_entity(data_holder)
                 self._index_es_entity(data_holder)
@@ -146,21 +146,21 @@ class Workspace:
         # process processes
         if process_data_holder is not None:
             data_holder = process_data_holder
-            self._generate_guid(data_holder)
+            self._generate_id(data_holder)
             self._validate_process(data_holder)
             self._store_process(data_holder)
 
             self._index_es_process(data_holder)
             self._index_neo_process(data_holder)
 
-    def _generate_guid(self, data_holder):
+    def _generate_id(self, data_holder):
         # file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
         # pk_def = data_holder.type_def.pk_property_def
         # text_id = data_holder.data[pk_def.name] if pk_def is not None else None
-        # guid = self.next_id(data_holder.type_name,
+        # id = self.next_id(data_holder.type_name,
         #                     text_id=text_id, file_name=file_name)
-        guid = self.next_guid(data_holder.type_name)
-        data_holder.set_guid(guid)
+        id = self.next_id(data_holder.type_name)
+        data_holder.set_id(id)
 
     # def _validate_brick(self, entity):
     #     pass
