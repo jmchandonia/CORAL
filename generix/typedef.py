@@ -135,6 +135,12 @@ class TypeDef:
                 self.__pk_property_def = pdef
                 break
 
+        self.__upk_property_def = None
+        for pdef in self.__property_defs.values():
+            if pdef.is_upk:
+                self.__upk_property_def = pdef
+                break
+
         self.__fk_property_defs = []
         for pdef in self.__property_defs.values():
             if pdef.is_fk:
@@ -183,6 +189,10 @@ class TypeDef:
         return self.__pk_property_def
 
     @property
+    def upk_property_def(self):
+        return self.__upk_property_def
+
+    @property
     def fk_property_defs(self):
         return self.__fk_property_defs
 
@@ -224,6 +234,7 @@ class PropertyDef:
         self.__comment = pdef_doc.get('comment')
         self.__pk = 'PK' in pdef_doc and pdef_doc['PK'] == True
         self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
+        self.__upk = 'UPK' in pdef_doc and pdef_doc['UPK'] == True
 
         self.__property_validator = _PROPERTY_VALIDATORS[self.__type](
             self.__constraint)
@@ -267,6 +278,10 @@ class PropertyDef:
     @property
     def is_fk(self):
         return self.__fk
+
+    @property
+    def is_upk(self):
+        return self.__upk
 
     def validate(self, value):
         self.__property_validator.validate(self.__name, value)
