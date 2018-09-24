@@ -1,37 +1,35 @@
 import json
 import numpy as np
-import pandas as pn
+import pandas as pd
 import xarray as xr
 import re
 from .ontology import Term
 from . import services
 
 
-class PropertyValue:
-    def __init__(self, name=None, type_term=None, units_term=None, scalar_type='str', value=None):
-        if type_term is None:
-            raise ValueError('type_term can not be None')
-        if type(type_term) is not Term:
-            raise ValueError('type_term should be instance of Term')
-        
-        self.type_term = type_term
-        
-        if units_term is not None and type(units_term) is not Term:
-            raise ValueError('units_term should be instance of Term')
-        self.units_term = units_term
+def __collect_all_term_values(term_id_2_values, term_id, data_values):
+    values = term_id_2_values.get(term_id)
+    if values is None:
+        values = set()
+        term_id_2_values[term_id] = values
+    for val in data_values:
+        if type(val) is str:
+            values.add(val)
+        elif type(val) is Term:
+            values.add(val.term_name)
 
-        #TODO validate scalar_type and the value
-        self.scalar_type = scalar_type
+def __parse_property_value(json_data):
+    term = json_data['value_type']
+    type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+    value_type = json_data['value']['scalar_type']
+    if value_type == 'oterm_ref':
+        value = Term(json_data['value'][value_type])
+    else:
+        value_type += '_value'
+        value = json_data['value'][value_type]     
         
-        self.value = value
-        self.name = name if name is not None else type_term.term_name   
-
-    def __str__(self):
-        name = str(self.type_term)
-        if self.name != self.type_term.term_name:
-            name =  '%s (%s)' % (self.name, name)  
-        return '%s [%s]: %s' % (name, self.units_term, self.value)
-
+    return PropertyValue( type_term=type_term, value=value )
 
 def load_brick(brick_id, file_name):
     json_data = json.loads(open(file_name).read())    
@@ -51,8 +49,6 @@ def load_brick(brick_id, file_name):
     term = json_data['data_type']
     ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
 
-    
-    
     # Do context
     # ds.attrs['__attr_count'] = 2
     # ds.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'ENIMGA Campaign'), value=Term('AA:146', 'Metal')  )
@@ -60,21 +56,9 @@ def load_brick(brick_id, file_name):
 
     ds.attrs['__attr_count'] = 0
     for prop_data in json_data['array_context']:
-        term = prop_data['value_type']
-        type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
-        value_type = prop_data['value']['scalar_type']
-        if value_type == 'oterm_ref':
-            value = Term(prop_data['value'][value_type])
-        else:
-            value_type += '_value'
-            value = prop_data['value'][value_type]        
-    
         ds.attrs['__attr_count'] += 1
         attr_name = '__attr%s' % ds.attrs['__attr_count'] 
-        ds.attrs[attr_name] = PropertyValue( type_term=type_term, value=value )
-    
-    
+        ds.attrs[attr_name] = __parse_property_value(prop_data)        
     
     # do dimensions
     # ds.attrs['__dim_count'] = dim_count    
@@ -97,6 +81,7 @@ def load_brick(brick_id, file_name):
         
         ds.attrs[dim_name + '_term'] = dim_type_term        
         
+        # Do variables
         ds.attrs[dim_name + '_var_count'] = 0
         for var_json in vars_json:
             ds.attrs[dim_name + '_var_count'] += 1
@@ -134,7 +119,19 @@ def load_brick(brick_id, file_name):
             var.attrs['__units_term'] = var_unit_term
             var.attrs['__name'] = vr_type_term.property_name
             var.attrs['__scalar_type'] = var_scalar_type
+            
+            # Do attributes            
+            # value_context
+            # [{'value': {'oterm_ref': 'CHEBI:17632', 'scalar_type': 'oterm_ref', 'string_value': 'nitrate'}, 
+            #   'value_type': {'oterm_name': 'Molecule', 'oterm_ref': 'ME:0000027', 'term_name': 'molecule'}}]            
+            
             var.attrs['__attr_count'] = 0     
+            if 'value_context' in var_json:
+                for attr_json in var_json['value_context']:
+                    var.attrs['__attr_count'] += 1
+                    attr_name = '__attr%s' % var.attrs['__attr_count'] 
+                    var.attrs[attr_name] = __parse_property_value(attr_json)
+            
             
             var_name = '%s_var%s' % (dim_name, ds.attrs[dim_name + '_var_count'])
             ds[var_name] = var
@@ -178,12 +175,55 @@ def load_brick(brick_id, file_name):
     da.attrs['__scalar_type'] = value_scalar_type
     da.attrs['__attr_count'] = 0
     
+    if 'value_context' in values_json:
+        for attr_json in values_json['value_context']:
+            da.attrs['__attr_count'] += 1
+            attr_name = '__attr%s' % var.attrs['__attr_count'] 
+            da.attrs[attr_name] = __parse_property_value(attr_json)
+    
     ds['__data_var'] = da
     return Brick(ds)
     
     
 DATA_EXAMPLE_SIZE = 5
     
+class PropertyValue:
+    def __init__(self, name=None, type_term=None, units_term=None, scalar_type='str', value=None):
+        if type_term is None:
+            raise ValueError('type_term can not be None')
+        if type(type_term) is not Term:
+            raise ValueError('type_term should be instance of Term')
+        
+        self.type_term = type_term
+        
+        if units_term is not None and type(units_term) is not Term:
+            raise ValueError('units_term should be instance of Term')
+        self.units_term = units_term
+
+        #TODO validate scalar_type and the value
+        self.scalar_type = scalar_type
+        
+        self.value = value
+        self.name = name if name is not None else type_term.term_name   
+
+    def _collect_property_terms(self, id2terms):
+        id2terms[self.type_term.term_id] = self.type_term
+
+
+    def _collect_value_terms(self, id2terms):
+        if self.value is not None and type(self.value) is Term:
+            id2terms[self.value.term_id] = self.value
+
+    def _collect_all_term_values(self, term_id_2_values):
+        __collect_all_term_values(term_id_2_values, self.type_term.term_id, [self.value])
+ 
+
+    def __str__(self):
+        name = str(self.type_term)
+        if self.name != self.type_term.term_name:
+            name =  '%s (%s)' % (self.name, name)  
+        return '%s [%s]: %s' % (name, self.units_term, self.value)
+
 class Brick:
     def __init__(self, xds):
         self.__xds = xds
@@ -197,8 +237,7 @@ class Brick:
        
     def __get_attr(self, name):
         return self.__xds.attrs[name]
-    
-    
+        
     @property
     def shape(self):
         sh = []
@@ -221,18 +260,15 @@ class Brick:
     @property
     def description(self):
         return self.__get_attr('__description')
-
     
     @property
     def type_term(self):
-        return self.__get_attr('__type_term')
-    
+        return self.__get_attr('__type_term')    
     
     @property
     def dims(self):
         return self.__dims          
-    
-    
+        
     @property
     def data(self):
         return self.__data_var
@@ -244,8 +280,7 @@ class Brick:
             attr_key = '__attr%s' % (i+1)
             items.append( self.__get_attr(attr_key) )
         return items       
-        
-    
+            
     @property
     def properties_df(self):
         names = ['Id', 'Name', 'Description']
@@ -263,11 +298,7 @@ class Brick:
             'Type': types,
             'Units': units,
             'Value': values
-        })[[ 'Property', 'Value', 'Units']]
-        
-    def _repr_html_(self):
-        return self.properties_df._repr_html_()
-        
+        })[[ 'Property', 'Value', 'Units']]                    
 
     def _repr_html_(self):
         def _row2_header(c):
@@ -321,7 +352,56 @@ class Brick:
             rows.append( _row2(attr.type_term.term_name, attr.value)  )
             
         return '<table>%s</table>' % ''.join(rows)   
-        
+
+    def _get_all_term_ids(self):
+        term_ids = set()
+        for term in self._get_property_terms():
+            term_ids.add(term.term_id)
+
+        for term in self._get_value_terms():
+            term_ids.add(term.term_id)
+
+        return term_ids
+
+    def _get_property_terms(self):
+        id2terms = {}
+        id2terms[self.type_term.term_id] = self.type_term
+        id2terms[self.data.type_term.term_id] = self.data.type_term
+        if self.data.units_term:
+            id2terms[self.data.units_term.term_id] = self.data.units_term
+
+        for attr in self.attrs:
+            attr._collect_property_terms(id2terms)
+
+        for dim in self.dims:
+            dim._collect_property_terms(id2terms)
+
+        return list(id2terms.values())
+
+    def _get_value_terms(self):
+        id2terms = {}
+        for attr in self.attrs:
+            attr._collect_value_terms(id2terms)
+
+        for dim in self.dims:
+            dim._collect_value_terms(id2terms)
+        return list(id2terms.values())
+
+    def _get_term_id_2_values(self):
+        term_id_2_values = {}
+        for attr in self.attrs:
+            attr._collect_all_term_values(term_id_2_values)
+        for d in self.dims:
+            d._collect_all_term_values(term_id_2_values)
+        return term_id_2_values
+
+    def _get_all_term_values(self):
+        values = set()
+        term_id_2_values = self._get_term_id_2_values()
+        for term_vals in term_id_2_values.values():
+            for val in term_vals:
+                values.add(val)
+        return values        
         
         
 class BrickDimension:
@@ -377,7 +457,19 @@ class BrickDimension:
         xds = self.__xds.isel(kwargs)
         return Brick(xds)    
     
-    
+    def _collect_property_terms(self, id2terms):
+        id2terms[self.type_term.term_id] = self.type_term
+        for v in self.vars:
+            v._collect_property_terms(id2terms)
+
+    def _collect_value_terms(self, id2terms):
+        for v in self.vars:
+            v._collect_value_terms(id2terms)
+
+    def _collect_all_term_values(self, term_id_2_values):
+        for v in self.vars:
+            v._collect_all_term_values(term_id_2_values)    
+
     def _repr_html_(self):
         def _row2_header(c):
             return '<tr><td colspan=2 style="text-align:left;">%s</td></tr>' % (c)       
@@ -465,7 +557,18 @@ class BrickVariable:
     def __le__(self,val):
         return (self.__xds[self.__var_prefix] <= val).data
 
-    
+    def _collect_property_terms(self, id2terms):
+        id2terms[self.type_term.term_id] = self.type_term
+
+    def _collect_value_terms(self, id2terms):
+        for val in self.data:
+            if type(val) is Term:
+                term = val
+                id2terms[term.term_id] = term
+
+    def _collect_all_term_values(self, term_id_2_values):
+        __collect_all_term_values(term_id_2_values, self.type_term.term_id, self.data)
+
     def _repr_html_(self):
         def _row2_header(c):
             return '<tr><td colspan=2 style="text-align:left;">%s</td></tr>' % (c)       
@@ -486,6 +589,14 @@ class BrickVariable:
             _row2('Size', len(self.data)),
             _row2('Values', data)          
         ]
+        if len(self.attrs) > 0:
+            rows.append(_row2_header('<i>Attributes:</i>'))
+            for attr in self.attrs:
+                name = attr.type_term.term_name
+                val = attr.value
+                if attr.units_term is not None:
+                    val += ' (%s)' % attr.units_term.term_name
+                rows.append( _row2(name, val) )        
         
         return '<table>%s</table>' % ''.join(rows) 
 
@@ -767,19 +878,19 @@ class BrickIndexDocumnet:
         self.brick_id = brick.id
         self.name = brick.name
         self.description = brick.description
-        self.n_dimensions = len(brick.dimensions)
-        self.data_type_term_id = brick.data_type_term.term_id
-        self.data_type_term_name = brick.data_type_term.term_name
-        self.value_type_term_id = brick.value_type_term.term_id
-        self.value_type_term_name = brick.value_type_term.term_name
+        self.n_dimensions = len(brick.dims)
+        self.data_type_term_id = brick.type_term.term_id
+        self.data_type_term_name = brick.type_term.term_name
+        self.value_type_term_id = brick.data.type_term.term_id
+        self.value_type_term_name = brick.data.type_term.term_name
         self.dim_type_term_ids = [
-            d.dim_type_term.term_id for d in brick.dimensions]
+            d.type_term.term_id for d in brick.dims]
         self.dim_type_term_names = [
-            d.dim_type_term.term_name for d in brick.dimensions]
+            d.type_term.term_name for d in brick.dims]
         self.dim_sizes = [
-            d.dim_size for d in brick.dimensions]
+            d.size for d in brick.dimensiodimsns]
 
-        # all term ids and values
+        # TODO: all term ids and values
         self.all_term_ids = list(brick.get_all_term_ids())
         self.all_term_values = list(brick.get_all_term_values())
 
@@ -826,7 +937,7 @@ class BrickDescriptorCollection:
                 'shape': bd.shape,
                 'data_size': bd.data_size
             })
-        return pn.DataFrame(bd_list)
+        return pd.DataFrame(bd_list)
 
     def _repr_html_(self):
         return self.df()._repr_html_()
