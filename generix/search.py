@@ -2,8 +2,8 @@ import pandas as pd
 from .brick import BrickDescriptor, BrickDescriptorCollection
 from . import services
 
-_ES_BRICK_INDEX_NAME = 'generix-brick'
-_ES_ENTITY_INDEX_NAME_PREFIX = 'generix-entity-'
+_ES_BRICK_INDEX_NAME = 'generix-data-brick'
+_ES_ENTITY_INDEX_NAME_PREFIX = 'generix-data-'
 
 
 class SearchService:
@@ -226,16 +226,16 @@ class SearchService:
     def _index_name(self, doc_type):
         return _ES_BRICK_INDEX_NAME if doc_type == 'brick' else _ES_ENTITY_INDEX_NAME_PREFIX + doc_type
 
-    def get_entity_properties(self, type_name):
-        doc_type = type_name
-        # index_name = 'generix-'
-        # if doc_type != 'brick':
-        #     index_name += 'entity-'
-        # index_name += doc_type
+    # def get_entity_properties(self, type_name):
+    #     doc_type = type_name
+    #     # index_name = 'generix-'
+    #     # if doc_type != 'brick':
+    #     #     index_name += 'entity-'
+    #     # index_name += doc_type
 
-        index_name = self._index_name(doc_type)
-        doc = self.__es_client.indices.get_mapping(index=index_name)
-        return list(doc[index_name]['mappings'][doc_type]['properties'].keys())
+    #     index_name = self._index_name(doc_type)
+    #     doc = self.__es_client.indices.get_mapping(index=index_name)
+    #     return list(doc[index_name]['mappings'][doc_type]['properties'].keys())
 
     def data_type_terms(self):
         return self.__term_stat('data_type_term_id')
@@ -262,7 +262,7 @@ class EntityDescriptorCollection:
     def __getitem__(self, i):
         return self.__entity_descriptors[i]
 
-    def df(self):
+    def to_df(self):
         ed_list = []
         for ed in self.__entity_descriptors:
             ed_doc = {}
@@ -272,7 +272,7 @@ class EntityDescriptorCollection:
         return pd.DataFrame(ed_list)
 
     def _repr_html_(self):
-        return self.df()._repr_html_()
+        return self.to_df()._repr_html_()
 
 
 class EntityDescriptor:
@@ -293,7 +293,21 @@ class EntityDescriptor:
         return self.__properties
 
     def _repr_html_(self):
-        return self.__dict__
+        def _row2_header(c):
+            return '<tr><td colspan=2 style="text-align:left;">%s</td></tr>' % (c)
+
+        def _row2(c1, c2):
+            cell = '<td style="padding-left:20px; text-align:left">%s</td>'
+            patterm = '<tr>' + ''.join([cell for i in range(2)]) + '</tr>'
+            return patterm % (c1, c2)
+
+        rows = []
+        for prop in self.__dict__:
+            if prop.startswith('_'):
+                continue
+            rows.append(_row2(prop, self.__dict__[prop]))
+
+        return '<table>%s</table>' % ''.join(rows)
 
     def __str__(self):
         return self.__dict__
