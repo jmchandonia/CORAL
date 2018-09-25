@@ -1,42 +1,73 @@
 import sys
 import pandas as pd
 from . import services
-from .brick import read_brick
 from .workspace import EntityDataHolder, ProcessDataHolder
 from .typedef import PROCESS_TYPE_NAME
+# from .brick import read_brick
+
 
 _FILES = {
+    'import_dir': 'data/import/',
+    'bricks': [
+        {
+            'file': 'generic_taxonomic_abundance_fw215_02_100ws.json'
+        }, {
+            'file': 'generic_mt123_growth_carbon_sources.json'
+        }, {
+            'file': 'generic_mt94_metals_growth.json'
+        }, {
+            'file': 'generic_metals_pH_growth.json'
+        }, {
+            'file': 'generic_tnseq_N2E2.json'
+        }, {
+            'file': 'generic_field_data_adams.json'
+        }, {
+            'file': 'generic_otu_id_zhou_100ws.json'
+        }, {
+            'file': 'generic_otu_count_zhou_100ws.json'
+        }, {
+            'file': 'generic_otu_id_zhou_corepilot.json'
+        }, {
+            'file': 'generic_otu_count_zhou_corepilot_271.json'
+        }, {
+            'file': 'generic_otu_count_zhou_corepilot_106.json'
+        }, {
+            'file': 'generic_adams_corepilot_271.json'
+        }, {
+            'file': 'generic_adams_corepilot_106.json'
+        }
+    ],
     'entities': [
         {
-            'file': 'data/import/wells_all.tsv',
+            'file': 'wells_all.tsv',
             'dtype': 'Well',
         },
         {
-            'file': 'data/import/samples_all.tsv',
+            'file': 'samples_all.tsv',
             'dtype': 'Sample',
         },
-        # {
-        #     'file': 'data/import/taxa_isolates.tsv',
-        #     'dtype': 'Taxon',
-        # },
-        # {
-        #     'file': 'data/import/communities_isolates.tsv',
-        #     'dtype': 'Community',
-        # }
+        {
+            'file': 'taxa_isolates.tsv',
+            'dtype': 'Taxon',
+        },
+        {
+            'file': 'communities_isolates.tsv',
+            'dtype': 'Community',
+        }
     ],
     'processes': [
         {
-            'file': 'data/import/process_assay_growth.tsv',
+            'file': 'process_assay_growth.tsv',
             'ptype': 'Assay Growth'
         },
         {
-            'file': 'data/import/process_isolates.tsv',
+            'file': 'process_isolates.tsv',
             'ptype': 'Isolation'
         },
-        # {
-        #     'file': 'data/import/process_sampling_all.tsv',
-        #     'ptype': 'Sampling'
-        # }
+        {
+            'file': 'process_sampling_all.tsv',
+            'ptype': 'Sampling'
+        }
     ]
 }
 
@@ -53,7 +84,7 @@ def neo_delete(argv):
 def upload_entities(argv):
     ws = services.workspace
     for file_def in _FILES['entities']:
-        file_name = '../' + file_def['file']
+        file_name = '../' + _FILES['import_dir'] + file_def['file']
         type_name = file_def['dtype']
         try:
             services.es_service.drop_index(type_name)
@@ -89,7 +120,7 @@ def upload_processes(argv):
 
     for file_def in _FILES['processes']:
         process_type = file_def['ptype']
-        file_name = '../' + file_def['file']
+        file_name = '../' + _FILES['import_dir'] + file_def['file']
 
         print('Doing %s: %s' % (process_type, file_name))
         df = pd.read_csv(file_name, sep='\t')
