@@ -26,10 +26,10 @@ def __parse_property_value(json_data):
     if value_type == 'oterm_ref':
         value = Term(json_data['value'][value_type])
     else:
-        value_type += '_value'
-        value = json_data['value'][value_type]     
+        value = json_data['value'][value_type + '_value']     
         
-    return PropertyValue( type_term=type_term, value=value )
+    # TODO: units    
+    return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
 
 def load_brick(brick_id, file_name):
     json_data = json.loads(open(file_name).read())    
@@ -99,13 +99,11 @@ def load_brick(brick_id, file_name):
             
             var_scalar_type = var_json['values']['scalar_type']
             if var_scalar_type == 'oterm_ref':
-                var_scalar_type = 'oterm_refs'
                 var_values = []
-                for term_id in var_json['values'][var_scalar_type]:
+                for term_id in var_json['values']['oterm_refs']:
                     var_values.append(Term(term_id))
             else:
-                var_scalar_type += '_values'
-                var_values = var_json['values'][var_scalar_type]
+                var_values = var_json['values'][var_scalar_type + '_values']
 
             # da11 = xr.DataArray([i for i in range(dim1_size)], dims=dim1)
             # da11.attrs['__type_term'] = Term('AA:123', 'Time')
@@ -299,6 +297,222 @@ class Brick:
             'Units': units,
             'Value': values
         })[[ 'Property', 'Value', 'Units']]                    
+
+    def to_json(self):
+        data = {}
+
+        # ds.attrs['__id'] = brick_id
+        # ds.attrs['__name'] = json_data['name']
+        # ds.attrs['__description'] = json_data['description']        
+        data['brick_id'] = self.id
+        data['name'] = self.name
+        data['description'] = self.description
+
+        # term = json_data['data_type']
+        # ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
+        data['data_type'] = {
+            'oterm_ref': self.type_term.term_id,
+            'oterm_name': self.type_term.term_name
+        }
+
+        # Do context
+        # ds.attrs['__attr_count'] = 0
+        # for prop_data in json_data['array_context']:
+        #     ds.attrs['__attr_count'] += 1
+        #     attr_name = '__attr%s' % ds.attrs['__attr_count'] 
+        #     ds.attrs[attr_name] = _parse_property_value(prop_data)
+
+        # term = json_data['value_type']
+        # type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+        # value_type = json_data['value']['scalar_type']
+        # if value_type == 'oterm_ref':
+        #     value = Term(json_data['value'][value_type])
+        # else:
+        #     value_type += '_value'
+        #     value = json_data['value'][value_type]     
+            
+        # return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
+
+
+        # TODO: units
+        data['array_context'] = []
+        for attr in self.attrs:
+            value_key = ''
+            value_val = ''
+            if attr.value is not None and type(attr.value) is Term:
+                value_key = attr.scalar_type
+                value_val = attr.value.term_id
+            else:
+                value_key = attr.scalar_type + '_value'
+                value_val = attr.value
+
+            data['array_context'].append({
+                'value_type':{
+                    'oterm_ref': attr.type_term.term_id,
+                    'oterm_name': attr.type_term.term_name
+                },
+                'value':{
+                    'scalar_type': attr.scalar_type,
+                    value_key : value_val
+                }
+            })
+
+
+        # do dimensions
+        data['dim_context'] = []
+
+        # term = dim_json['data_type']
+        # dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+        # dim_size = dim_json['size']
+        # dim_sizes.append(dim_size)
+        # vars_json = dim_json['typed_values']
+
+        for dim in self.dims:
+            dim_data = {}
+            data['dim_context'].append(dim_data)
+
+            dim_data['data_type'] = {
+                'oterm_ref': dim.type_term.term_id,
+                'oterm_name': dim.type_term.term_name
+            }
+            dim_data['size'] = dim.size
+            dim_data['typed_values'] = []
+
+            # # Do variables
+            # ds.attrs[dim_name + '_var_count'] = 0
+            # for var_json in vars_json:
+            #     ds.attrs[dim_name + '_var_count'] += 1
+                            
+            #     term = var_json['value_type']
+            #     vr_type_term = Term(
+            #         term['oterm_ref'], term_name=term['oterm_name'])
+                
+            #     if 'value_units' in var_json:
+            #         term = var_json['value_units']
+            #         var_unit_term = Term(
+            #             term['oterm_ref'], term_name=term['oterm_name'])
+            #     else:
+            #         var_unit_term = None
+                
+            #     var_scalar_type = var_json['values']['scalar_type']
+            #     if var_scalar_type == 'oterm_ref':
+            #         var_values = []
+            #         for term_id in var_json['values']['oterm_refs']:
+            #             var_values.append(Term(term_id))
+            #     else:
+            #         var_values = var_json['values'][var_scalar_type + '_values']
+
+
+            for var in dim.vars:
+
+                # Do type and values
+                value_key = ''
+                value_vals = []
+                if var.scalar_type == 'oterm_ref':
+                    value_key = 'oterm_refs'
+                    value_vals = [t.term_id for t in var.data]
+                else:
+                    value_key = var.scalar_type + '_values'
+                    value_vals = list(var.data)
+    
+                var_data = {
+                    'value_type': {
+                        'oterm_ref': var.type_term.term_id,
+                        'oterm_name': var.type_term.term_name
+                    },
+                    'values': {
+                        'scalar_type': var.scalar_type,
+                        value_key: value_vals
+                    },
+                    'value_context': []
+                }
+
+                # Do units
+                if var.units_term is not None:
+                    var_data['value_units'] = {
+                        'oterm_ref': var.units_term.term_id,
+                        'oterm_name': var.units_term.term_name
+                    }
+
+                # Do attributes
+                for attr in var.attrs:
+                    value_key = ''
+                    value_val = ''
+                    if attr.value is not None and type(attr.value) is Term:
+                        value_key = attr.scalar_type
+                        value_val = attr.value.term_id
+                    else:
+                        value_key = attr.scalar_type + '_value'
+                        value_val = attr.value
+
+                    var_data['value_context'].append({
+                        'value_type':{
+                            'oterm_ref': attr.type_term.term_id,
+                            'oterm_name': attr.type_term.term_name
+                        },
+                        'value':{
+                            'scalar_type': attr.scalar_type,
+                            value_key : value_val
+                        }
+                    })
+                dim_data['typed_values'].append(var_data)
+            
+        # do data
+        vard = self.data
+        value_key = ''
+        value_vals = []
+        if vard.scalar_type == 'oterm_ref':
+            value_key = 'oterm_refs'
+            value_vals = [t.term_id for t in vard.data]
+        else:
+            value_key = vard.scalar_type + '_values'
+            value_vals = list(vard.data)
+
+        values_data = {
+            'value_type': {
+                'oterm_ref': vard.type_term.term_id,
+                'oterm_name': vard.type_term.term_name
+            },
+            'values': {
+                'scalar_type': vard.scalar_type,
+                value_key: value_vals
+            },
+            'value_context': []
+        }
+
+        # Do units
+        if vard.units_term is not None:
+            values_data['value_units'] = {
+                'oterm_ref': vard.units_term.term_id,
+                'oterm_name': vard.units_term.term_name
+            }
+
+        # Do attributes
+        for attr in vard.attrs:
+            value_key = ''
+            value_val = ''
+            if attr.value is not None and type(attr.value) is Term:
+                value_key = attr.scalar_type
+                value_val = attr.value.term_id
+            else:
+                value_key = attr.scalar_type + '_value'
+                value_val = attr.value
+
+            values_data['value_context'].append({
+                'value_type':{
+                    'oterm_ref': attr.type_term.term_id,
+                    'oterm_name': attr.type_term.term_name
+                },
+                'value':{
+                    'scalar_type': attr.scalar_type,
+                    value_key : value_val
+                }
+            })
+
+        data['typed_values'] = values_data
+        return json.dumps(data)
+
 
     def _repr_html_(self):
         def _row2_header(c):
