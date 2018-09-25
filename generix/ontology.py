@@ -230,7 +230,7 @@ class Ontology:
 
     def __inflate_root_terms(self):
         for term in self.find_root():
-            name = 'ROOT_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
+            name = 'ROOT_' + term.property_name
             self.__dict__[name] = term
 
     def _find_terms(self, query, size=100):
@@ -452,9 +452,9 @@ class Term:
     def term_name(self):
         return self.__safe_proeprty('_Term__term_name')
 
-    @property
-    def property_name(self):
-        return '_'.join(self.term_name.split(' '))
+    # @property
+    # def property_name(self):
+    #     return '_'.join(self.term_name.split(' '))
 
     @property
     def parent_ids(self):
@@ -467,6 +467,10 @@ class Term:
     @property
     def validator_name(self):
         return self.__safe_proeprty('_Term__validator_name')
+
+    @property
+    def property_name(self):
+        return re.sub('[^A-Za-z0-9]+', '_', self.term_name)
 
     def validate_value(self, val):
         if self.validator_name is None:
