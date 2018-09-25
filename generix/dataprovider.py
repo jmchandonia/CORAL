@@ -7,20 +7,15 @@ from .search import EntityDescriptorCollection
 
 class DataProvider:
     def __init__(self):
-        pass
-        # self.__load_dtypes()
-
-    # def __load_dtypes(self):
-    #     self.__dict__['TYPE_Taxonomic_Abundance'] = DataType('DA:0000028')
-    #     self.__dict__['TYPE_Microbial_GROWTH'] = DataType('DA:0000019')
+        self.__etities_provider = EntitiesProvider()
 
     @property
     def ontology(self):
         return services.ontology
 
     @property
-    def entities(self):
-        return EntitiesProvider()
+    def data(self):
+        return self.__etities_provider
 
     # def find_bricks(self):
     #     return BrickFilter()
@@ -31,9 +26,10 @@ class EntitiesProvider:
         self.__load_entity_providers()
 
     def __load_entity_providers(self):
-        self.__dict__['brick'] = EntityProvider('brick')
-        self.__dict__['well'] = EntityProvider('well')
-        self.__dict__['sample'] = EntityProvider('sample')
+        type_names = services.es_service.get_type_names()
+        print('type_names: ', type_names)
+        for type_name in type_names:
+            self.__dict__[type_name] = EntityProvider(type_name)
 
 
 class EntityProvider:
@@ -47,7 +43,7 @@ class EntityProvider:
 
     def __get_properties(self):
         properties = {}
-        props = services.es_search.get_entity_properties(
+        props = services.es_service.get_entity_properties(
             self.__type_name)
         for prop in props:
             key = 'PROPERTY_' + re.sub('[^A-Za-z0-9]+', '_', prop)
@@ -154,8 +150,6 @@ class Query:
 
             for linked_id in linked_ids:
                 neo_ids.add(linked_id)
-
-        print('neo_ids', neo_ids)
 
         es_filter = {}
         if len(self.__neo_filters) > 0:
