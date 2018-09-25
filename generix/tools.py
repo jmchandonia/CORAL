@@ -1,9 +1,9 @@
 import sys
 import pandas as pd
 from . import services
-from .workspace import EntityDataHolder, ProcessDataHolder
-from .typedef import PROCESS_TYPE_NAME
-# from .brick import read_brick
+from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
+from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
+from .brick import Brick
 
 
 _FILES = {
@@ -23,8 +23,8 @@ _FILES = {
             'file': 'generic_field_data_adams.json'
         }, {
             'file': 'generic_otu_id_zhou_100ws.json'
-        }, {
-            'file': 'generic_otu_count_zhou_100ws.json'
+            # }, {
+            #     'file': 'generic_otu_count_zhou_100ws.json'
         }, {
             'file': 'generic_otu_id_zhou_corepilot.json'
         }, {
@@ -81,6 +81,24 @@ def neo_delete(argv):
     services.neo_service.delete_all(type_name)
 
 
+def upload_bricks(argv):
+    ws = services.workspace
+    type_name = TYPE_NAME_BRICK
+    try:
+        services.es_service.drop_index(type_name)
+    except:
+        pass
+    services.es_service.create_brick_index()
+
+    for file_def in _FILES['bricks']:
+        file_name = '../' + _FILES['import_dir'] + file_def['file']
+
+        print('Doing %s: %s' % ('Brick', file_name))
+        brick = Brick.read_json(None, file_name)
+        data_holder = BrickDataHolder(brick)
+        ws.save(object_data_holders=[data_holder])
+
+
 def upload_entities(argv):
     ws = services.workspace
     for file_def in _FILES['entities']:
@@ -106,14 +124,14 @@ def upload_entities(argv):
 
             data = row.to_dict()
             data_holder = EntityDataHolder(type_name, data)
-            ws.save(entity_data_holders=[data_holder])
+            ws.save(object_data_holders=[data_holder])
         print('Done!')
         print()
 
 
 def upload_processes(argv):
     ws = services.workspace
-    type_name = PROCESS_TYPE_NAME
+    type_name = TYPE_NAME_PROCESS
     services.es_service.drop_index(type_name)
     services.es_service.create_index(
         services.typedef.get_type_def(type_name))
