@@ -7,7 +7,18 @@ from .ontology import Term
 from . import services
 
 
-def __collect_all_term_values(term_id_2_values, term_id, data_values):
+class NPEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.float):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(NPEncoder, self).default(obj)
+
+def _collect_all_term_values(term_id_2_values, term_id, data_values):
     values = term_id_2_values.get(term_id)
     if values is None:
         values = set()
@@ -18,169 +29,6 @@ def __collect_all_term_values(term_id_2_values, term_id, data_values):
         elif type(val) is Term:
             values.add(val.term_name)
 
-def __parse_property_value(json_data):
-    term = json_data['value_type']
-    type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
-    value_type = json_data['value']['scalar_type']
-    if value_type == 'oterm_ref':
-        value = Term(json_data['value'][value_type])
-    else:
-        value = json_data['value'][value_type + '_value']     
-        
-    # TODO: units    
-    return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
-
-def load_brick(brick_id, file_name):
-    json_data = json.loads(open(file_name).read())    
-        
-    ds = xr.Dataset()        
-    
-    # Do general properties
-    # ds.attrs['__id'] = 'Brick000023'
-    # ds.attrs['__type_term'] = Term('AA:145', 'Growth Data')
-    # ds.attrs['__name'] = 'Object name'
-    # ds.attrs['__description'] = 'Object description'    
-    
-    ds.attrs['__id'] = brick_id
-    ds.attrs['__name'] = json_data['name']
-    ds.attrs['__description'] = json_data['description']
-
-    term = json_data['data_type']
-    ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
-    # Do context
-    # ds.attrs['__attr_count'] = 2
-    # ds.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'ENIMGA Campaign'), value=Term('AA:146', 'Metal')  )
-    # ds.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Genome'), value='E.coli'  )
-
-    ds.attrs['__attr_count'] = 0
-    for prop_data in json_data['array_context']:
-        ds.attrs['__attr_count'] += 1
-        attr_name = '__attr%s' % ds.attrs['__attr_count'] 
-        ds.attrs[attr_name] = __parse_property_value(prop_data)        
-    
-    # do dimensions
-    # ds.attrs['__dim_count'] = dim_count    
-    ds.attrs['__dim_count'] = 0
-    dim_names  = []
-    dim_sizes = []
-    for dim_json in json_data['dim_context']:
-        ds.attrs['__dim_count'] += 1
-        dim_name = '__dim%s' % ds.attrs['__dim_count']
-        dim_names.append(dim_name)
-        
-        # ds.attrs['__dim1_term'] = dim1_term
-        # ds.attrs['__dim1_var_count'] = 2
-        
-        term = dim_json['data_type']
-        dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-        dim_size = dim_json['size']
-        dim_sizes.append(dim_size)
-        vars_json = dim_json['typed_values']
-        
-        ds.attrs[dim_name + '_term'] = dim_type_term        
-        
-        # Do variables
-        ds.attrs[dim_name + '_var_count'] = 0
-        for var_json in vars_json:
-            ds.attrs[dim_name + '_var_count'] += 1
-                        
-            term = var_json['value_type']
-            vr_type_term = Term(
-                term['oterm_ref'], term_name=term['oterm_name'])
-            
-            if 'value_units' in var_json:
-                term = var_json['value_units']
-                var_unit_term = Term(
-                    term['oterm_ref'], term_name=term['oterm_name'])
-            else:
-                var_unit_term = None
-            
-            var_scalar_type = var_json['values']['scalar_type']
-            if var_scalar_type == 'oterm_ref':
-                var_values = []
-                for term_id in var_json['values']['oterm_refs']:
-                    var_values.append(Term(term_id))
-            else:
-                var_values = var_json['values'][var_scalar_type + '_values']
-
-            # da11 = xr.DataArray([i for i in range(dim1_size)], dims=dim1)
-            # da11.attrs['__type_term'] = Term('AA:123', 'Time')
-            # da11.attrs['__units_term'] = Term('UI:5', 'seconds')
-            # da11.attrs['__name'] = 'Time0'
-            # da11.attrs['__scalar_type'] = 'float'
-            # da11.attrs['__attr_count'] = 0            
-            
-            var = xr.DataArray(var_values, dims=dim_name)
-            var.attrs['__type_term'] = vr_type_term
-            var.attrs['__units_term'] = var_unit_term
-            var.attrs['__name'] = vr_type_term.property_name
-            var.attrs['__scalar_type'] = var_scalar_type
-            
-            # Do attributes            
-            # value_context
-            # [{'value': {'oterm_ref': 'CHEBI:17632', 'scalar_type': 'oterm_ref', 'string_value': 'nitrate'}, 
-            #   'value_type': {'oterm_name': 'Molecule', 'oterm_ref': 'ME:0000027', 'term_name': 'molecule'}}]            
-            
-            var.attrs['__attr_count'] = 0     
-            if 'value_context' in var_json:
-                for attr_json in var_json['value_context']:
-                    var.attrs['__attr_count'] += 1
-                    attr_name = '__attr%s' % var.attrs['__attr_count'] 
-                    var.attrs[attr_name] = __parse_property_value(attr_json)
-            
-            
-            var_name = '%s_var%s' % (dim_name, ds.attrs[dim_name + '_var_count'])
-            ds[var_name] = var
-
-    
-
-    # Do data
-    values_json = json_data['typed_values']
-    term = values_json['value_type']
-    value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
-    if 'value_units' in values_json:
-        term = values_json['value_units']
-        value_unit_term = Term(
-            term['oterm_ref'], term_name=term['oterm_name'])
-    else:
-        value_unit_term = None
-
-    value_scalar_type = values_json['values']['scalar_type']
-    if value_scalar_type == 'oterm_ref':
-        value_scalar_type = 'oterm_refs'
-    else:
-        value_scalar_type += '_values'
-    data = np.array(values_json['values'][value_scalar_type])
-    data = data.reshape(dim_sizes)    
-    
-    # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
-    # da.attrs['__type_term'] = Term('AA:154', 'Optical Density')
-    # da.attrs['__units_term'] = None
-    # da.attrs['__name'] = 'OD'
-    # da.attrs['__scalar_type'] = 'float'
-
-    # da.attrs['__attr_count'] = 2
-    # da.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:146', 'Arg')  )
-    # da.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:147', 'Lys')  )
-    
-    da = xr.DataArray(data, dims=dim_names)
-    da.attrs['__type_term'] = value_type_term
-    da.attrs['__units_term'] = value_unit_term
-    da.attrs['__name'] = value_type_term.property_name
-    da.attrs['__scalar_type'] = value_scalar_type
-    da.attrs['__attr_count'] = 0
-    
-    if 'value_context' in values_json:
-        for attr_json in values_json['value_context']:
-            da.attrs['__attr_count'] += 1
-            attr_name = '__attr%s' % var.attrs['__attr_count'] 
-            da.attrs[attr_name] = __parse_property_value(attr_json)
-    
-    ds['__data_var'] = da
-    return Brick(ds)
     
     
 DATA_EXAMPLE_SIZE = 5
@@ -204,6 +52,23 @@ class PropertyValue:
         self.value = value
         self.name = name if name is not None else type_term.term_name   
 
+    @staticmethod
+    def read_json(json_data):
+        term = json_data['value_type']
+        type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+        value_type = json_data['value']['scalar_type']
+        if value_type == 'oterm_ref':
+            value = Term(json_data['value'][value_type])
+        else:
+            value = json_data['value'][value_type + '_value']     
+            
+        # TODO: units    
+        return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
+
+
+
+
     def _collect_property_terms(self, id2terms):
         id2terms[self.type_term.term_id] = self.type_term
 
@@ -213,7 +78,7 @@ class PropertyValue:
             id2terms[self.value.term_id] = self.value
 
     def _collect_all_term_values(self, term_id_2_values):
-        __collect_all_term_values(term_id_2_values, self.type_term.term_id, [self.value])
+        _collect_all_term_values(term_id_2_values, self.type_term.term_id, [self.value])
  
 
     def __str__(self):
@@ -223,6 +88,165 @@ class PropertyValue:
         return '%s [%s]: %s' % (name, self.units_term, self.value)
 
 class Brick:
+
+    @staticmethod
+    def read_json(brick_id, file_name):
+        json_data = json.loads(open(file_name).read())    
+        return Brick.read_dict(brick_id, json_data)
+
+
+    @staticmethod
+    def read_dict(brick_id, json_data):            
+        ds = xr.Dataset()        
+        
+        # Do general properties
+        # ds.attrs['__id'] = 'Brick000023'
+        # ds.attrs['__type_term'] = Term('AA:145', 'Growth Data')
+        # ds.attrs['__name'] = 'Object name'
+        # ds.attrs['__description'] = 'Object description'    
+        
+        ds.attrs['__id'] = brick_id
+        ds.attrs['__name'] = json_data['name']
+        ds.attrs['__description'] = json_data['description']
+
+        term = json_data['data_type']
+        ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+        # Do context
+        # ds.attrs['__attr_count'] = 2
+        # ds.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'ENIMGA Campaign'), value=Term('AA:146', 'Metal')  )
+        # ds.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Genome'), value='E.coli'  )
+
+        ds.attrs['__attr_count'] = 0
+        for prop_data in json_data['array_context']:
+            ds.attrs['__attr_count'] += 1
+            attr_name = '__attr%s' % ds.attrs['__attr_count'] 
+            ds.attrs[attr_name] = PropertyValue.read_json(prop_data)        
+        
+        # do dimensions
+        # ds.attrs['__dim_count'] = dim_count    
+        ds.attrs['__dim_count'] = 0
+        dim_names  = []
+        dim_sizes = []
+        for dim_json in json_data['dim_context']:
+            ds.attrs['__dim_count'] += 1
+            dim_name = '__dim%s' % ds.attrs['__dim_count']
+            dim_names.append(dim_name)
+            
+            # ds.attrs['__dim1_term'] = dim1_term
+            # ds.attrs['__dim1_var_count'] = 2
+            
+            term = dim_json['data_type']
+            dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+            dim_size = dim_json['size']
+            dim_sizes.append(dim_size)
+            vars_json = dim_json['typed_values']
+            
+            ds.attrs[dim_name + '_term'] = dim_type_term        
+            
+            # Do variables
+            ds.attrs[dim_name + '_var_count'] = 0
+            for var_json in vars_json:
+                ds.attrs[dim_name + '_var_count'] += 1
+                            
+                term = var_json['value_type']
+                vr_type_term = Term(
+                    term['oterm_ref'], term_name=term['oterm_name'])
+                
+                if 'value_units' in var_json:
+                    term = var_json['value_units']
+                    var_unit_term = Term(
+                        term['oterm_ref'], term_name=term['oterm_name'])
+                else:
+                    var_unit_term = None
+                
+                var_scalar_type = var_json['values']['scalar_type']
+                if var_scalar_type == 'oterm_ref':
+                    var_values = []
+                    for term_id in var_json['values']['oterm_refs']:
+                        var_values.append(Term(term_id))
+                else:
+                    var_values = var_json['values'][var_scalar_type + '_values']
+
+                # da11 = xr.DataArray([i for i in range(dim1_size)], dims=dim1)
+                # da11.attrs['__type_term'] = Term('AA:123', 'Time')
+                # da11.attrs['__units_term'] = Term('UI:5', 'seconds')
+                # da11.attrs['__name'] = 'Time0'
+                # da11.attrs['__scalar_type'] = 'float'
+                # da11.attrs['__attr_count'] = 0            
+                
+                var = xr.DataArray(var_values, dims=dim_name)
+                var.attrs['__type_term'] = vr_type_term
+                var.attrs['__units_term'] = var_unit_term
+                var.attrs['__name'] = vr_type_term.property_name
+                var.attrs['__scalar_type'] = var_scalar_type
+                
+                # Do attributes            
+                # value_context
+                # [{'value': {'oterm_ref': 'CHEBI:17632', 'scalar_type': 'oterm_ref', 'string_value': 'nitrate'}, 
+                #   'value_type': {'oterm_name': 'Molecule', 'oterm_ref': 'ME:0000027', 'term_name': 'molecule'}}]            
+                
+                var.attrs['__attr_count'] = 0     
+                if 'value_context' in var_json:
+                    for attr_json in var_json['value_context']:
+                        var.attrs['__attr_count'] += 1
+                        attr_name = '__attr%s' % var.attrs['__attr_count'] 
+                        var.attrs[attr_name] = PropertyValue.read_json(attr_json)
+                
+                
+                var_name = '%s_var%s' % (dim_name, ds.attrs[dim_name + '_var_count'])
+                ds[var_name] = var
+
+        
+
+        # Do data
+        values_json = json_data['typed_values']
+        term = values_json['value_type']
+        value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+        if 'value_units' in values_json:
+            term = values_json['value_units']
+            value_unit_term = Term(
+                term['oterm_ref'], term_name=term['oterm_name'])
+        else:
+            value_unit_term = None
+
+        value_scalar_type = values_json['values']['scalar_type']
+        if value_scalar_type == 'oterm_ref':
+            value_scalar_type = 'oterm_refs'
+        else:
+            value_scalar_type += '_values'
+        data = np.array(values_json['values'][value_scalar_type])
+        data = data.reshape(dim_sizes)    
+        
+        # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
+        # da.attrs['__type_term'] = Term('AA:154', 'Optical Density')
+        # da.attrs['__units_term'] = None
+        # da.attrs['__name'] = 'OD'
+        # da.attrs['__scalar_type'] = 'float'
+
+        # da.attrs['__attr_count'] = 2
+        # da.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:146', 'Arg')  )
+        # da.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:147', 'Lys')  )
+        
+        da = xr.DataArray(data, dims=dim_names)
+        da.attrs['__type_term'] = value_type_term
+        da.attrs['__units_term'] = value_unit_term
+        da.attrs['__name'] = value_type_term.property_name
+        da.attrs['__scalar_type'] = value_scalar_type
+        da.attrs['__attr_count'] = 0
+        
+        if 'value_context' in values_json:
+            for attr_json in values_json['value_context']:
+                da.attrs['__attr_count'] += 1
+                attr_name = '__attr%s' % da.attrs['__attr_count'] 
+                da.attrs[attr_name] = PropertyValue.read_json(attr_json)
+        
+        ds['__data_var'] = da
+        return Brick(ds)    
+
+
+
     def __init__(self, xds):
         self.__xds = xds
         self.__dims = []
@@ -251,6 +275,9 @@ class Brick:
     def id(self):
         return self.__get_attr('__id')
     
+    def set_id(self, id):
+        self.__xds.attrs['__id'] = id
+
     @property
     def name(self):
         return self.__get_attr('__name')
@@ -299,6 +326,9 @@ class Brick:
         })[[ 'Property', 'Value', 'Units']]                    
 
     def to_json(self):
+        return json.dumps(self.to_dict(), cls=NPEncoder)
+
+    def to_dict(self):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -511,7 +541,7 @@ class Brick:
             })
 
         data['typed_values'] = values_data
-        return json.dumps(data)
+        return data
 
 
     def _repr_html_(self):
@@ -781,7 +811,7 @@ class BrickVariable:
                 id2terms[term.term_id] = term
 
     def _collect_all_term_values(self, term_id_2_values):
-        __collect_all_term_values(term_id_2_values, self.type_term.term_id, self.data)
+        _collect_all_term_values(term_id_2_values, self.type_term.term_id, self.data)
 
     def _repr_html_(self):
         def _row2_header(c):
@@ -1101,12 +1131,11 @@ class BrickIndexDocumnet:
             d.type_term.term_id for d in brick.dims]
         self.dim_type_term_names = [
             d.type_term.term_name for d in brick.dims]
-        self.dim_sizes = [
-            d.size for d in brick.dimensiodimsns]
+        self.dim_sizes = [d.size for d in brick.dims]
 
         # TODO: all term ids and values
-        self.all_term_ids = list(brick.get_all_term_ids())
-        self.all_term_values = list(brick.get_all_term_values())
+        self.all_term_ids = list(brick._get_all_term_ids())
+        self.all_term_values = list(brick._get_all_term_values())
 
         # parent path term ids
         all_parent_path_term_ids = set()
@@ -1118,7 +1147,7 @@ class BrickIndexDocumnet:
         self.all_parent_path_term_ids = list(all_parent_path_term_ids)
 
         # values per ontology term
-        term_id_2_values = brick.get_term_id_2_values()
+        term_id_2_values = brick._get_term_id_2_values()
         for term_id, values in term_id_2_values.items():
             prop = 'ont_' + '_'.join(term_id.split(':'))
             self.__dict__[prop] = list(values)
