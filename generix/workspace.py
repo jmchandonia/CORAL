@@ -29,6 +29,10 @@ class DataHolder:
 
     def set_id(self, val):
         self.__id = val
+        self._set_data_id(val)
+
+    def _set_data_id(self, val):
+        self.__data['id'] = val
 
 
 class EntityDataHolder(DataHolder):
@@ -40,10 +44,6 @@ class EntityDataHolder(DataHolder):
     def file_name(self):
         return self.__file_name
 
-    def set_id(self, val):
-        super().set_id(val)
-        self.__data['id'] = self.__id
-
 
 class ProcessDataHolder(DataHolder):
     def __init__(self, process_type_name, data):
@@ -54,10 +54,6 @@ class ProcessDataHolder(DataHolder):
     def process_type_name(self):
         return self.__process_type_name
 
-    def set_id(self, val):
-        super().set_id(val)
-        self.__data['id'] = self.__id
-
 
 class BrickDataHolder(DataHolder):
     def __init__(self, brick):
@@ -67,9 +63,8 @@ class BrickDataHolder(DataHolder):
     def brick(self):
         return self.data
 
-    def set_id(self, id):
-        super().set_id(id)
-        self.brick.set_id(id)
+    def _set_data_id(self, val):
+        self.brick.set_id(val)
 
 
 class Workspace:
