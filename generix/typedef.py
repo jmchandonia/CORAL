@@ -4,7 +4,8 @@ from .utils import check_term_format, parse_term
 from .ontology import Term
 
 
-PROCESS_TYPE_NAME = 'Process'
+TYPE_NAME_PROCESS = 'Process'
+TYPE_NAME_BRICK = 'Brick'
 
 
 class PropertyValidator:
@@ -305,6 +306,8 @@ class TypeDefService:
 
         for type_def in self.__type_defs.values():
             type_def._update_process_input_type_defs(self.__type_defs)
+
+        self.__type_defs[TYPE_NAME_BRICK] = None
 
     def get_type_names(self):
         return list(self.__type_defs.keys())
