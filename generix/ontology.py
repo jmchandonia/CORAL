@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
 import os
 import re
+from .utils import to_var_name
 from . import services
 
 _IMPORT_DIR = '../data/import/'
@@ -11,11 +12,10 @@ _ONTOLOGY_CONFIG = {
     'version': 1,
     'ontologies': {
 
-        'chebi': {
-            'name': 'chebi',
-            'file_name': 'chebi.obo'
-
-        },
+        # 'chebi': {
+        #     'name': 'chebi',
+        #     'file_name': 'chebi.obo'
+        # },
         'context_measurement': {
             'name': 'context_measurement',
             'file_name': 'context_measurement_ontology.obo'
@@ -366,7 +366,8 @@ class TermCollection:
 
     def __inflate_terms(self):
         for term in self.__terms:
-            name = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
+            name = to_var_name('TERM_', term.term_name)
+            # name = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
             self.__dict__[name] = term
 
     def __getitem__(self, i):
@@ -398,6 +399,9 @@ class TermCollection:
         return '%s <br> %s terms' % (table, len(self.terms))
 
 
+__TERM_PATTERN = re.compile('(.+)<(.+)>')
+
+
 class Term:
     '''
         Supports lazzy loading
@@ -413,6 +417,20 @@ class Term:
         self.__parent_path_ids = parent_path_ids
         self.__validator_name = validator_name
         self.__parent_terms = []
+
+    @staticmethod
+    def check_term_format(value):
+        m = __TERM_PATTERN.findall(value)
+        return m is not None
+
+    @staticmethod
+    def parse_term(value):
+        m = __TERM_PATTERN.findall(value)
+        if m:
+            term = Term(m[0][1].strip(), term_name=m[0][0].strip())
+        else:
+            raise ValueError('Can not parse term from value: %s' % value)
+        return term
 
     def __str__(self):
         return '%s [%s]' % (self.term_name, self.term_id)
@@ -470,7 +488,8 @@ class Term:
 
     @property
     def property_name(self):
-        return re.sub('[^A-Za-z0-9]+', '_', self.term_name)
+        # return re.sub('[^A-Za-z0-9]+', '_', self.term_name)
+        return to_var_name('', self.term_name)
 
     def validate_value(self, val):
         if self.validator_name is None:
