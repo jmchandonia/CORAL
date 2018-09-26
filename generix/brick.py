@@ -295,6 +295,21 @@ class Brick:
         return self.__dims          
         
     @property
+    def dims_df(self):
+        data = {
+            'name' :[],
+            'term_id': [],
+            'size' :[],
+            'var_count': []
+        }
+        for dim in self.dims:
+            data['name'].append(dim.name)
+            data['term_id'].append(dim.type_term.term_id)
+            data['size'].append(dim.size)
+            data['var_count'].append(dim.var_count)
+        return pd.DataFrame(data)
+
+    @property
     def data(self):
         return self.__data_var
     
