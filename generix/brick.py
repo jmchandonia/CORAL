@@ -5,6 +5,7 @@ import xarray as xr
 import re
 from .ontology import Term
 from . import services
+from .utils import to_var_name
 
 
 class NPEncoder(json.JSONEncoder):
@@ -558,6 +559,12 @@ class Brick:
         data['typed_values'] = values_data
         return data
 
+    @property
+    def type(self):
+        dim_types = [dim.type_term.term_name for dim in self.dims]
+        full_type = '%s<%s>' % ( self.type_term.term_name, ', '.join(dim_types))
+        return full_type
+
 
     def _repr_html_(self):
         def _row2_header(c):
@@ -674,7 +681,7 @@ class BrickDimension:
             
             bv = BrickVariable(xds, var_prefix) 
             self.__vars.append(bv)
-            self.__dict__['VAR%s_%s' %(i+1, bv.name)] = bv
+            self.__dict__['VAR%s_%s' %(i+1, bv.var_name)] = bv
             
     def __get_attr(self, suffix):
         return self.__xds.attrs[self.__dim_prefix + suffix]
@@ -705,10 +712,7 @@ class BrickDimension:
     def vars_df(self):
         data = {}
         for var in self.vars:
-            name = var.name
-            if var.units_term is not None:
-                name = '%s (%s)' % (name, var.units_term.term_name)
-            data[name] = var.data
+            data[var.long_name] = var.data
         return pd.DataFrame(data)
     
     def where(self, bool_array):
@@ -795,8 +799,45 @@ class BrickVariable:
     def data(self):
         return self.__xds[self.__var_prefix].data
         
-    def data_df(self):
-        return pd.DataFrame(self.data, columns=[self.name])
+    @property
+    def long_name(self):
+        items = []
+        items.append(self.type_term.term_name)
+        if self.has_attrs():
+            items.append('of')
+            for attr in self.attrs:
+                val  = attr.value
+                if type(val) is Term:
+                    val = val.term_name
+                items.append(val)
+
+        if self.has_units():
+            items.append( '(%s)' % self.units_term.term_name )
+
+        return ' '.join(items)
+
+    @property
+    def var_name(self):
+        items = []
+        items.append(self.type_term.term_name)
+        if self.has_attrs():
+            items.append('of')
+            for attr in self.attrs:
+                val  = attr.value
+                if type(val) is Term:
+                    val = val.term_name
+                items.append(val)
+
+        return to_var_name('',' '.join(items))
+
+    def has_units(self):
+        return self.units_term is not None
+
+    def has_attrs(self):
+        return self.__get_attr('__attr_count') > 0
+
+    # def data_df(self):
+    #     return pd.DataFrame(self.data, columns=[self.name])
         
     def __eq__(self,val):
         return (self.__xds[self.__var_prefix] == val).data
