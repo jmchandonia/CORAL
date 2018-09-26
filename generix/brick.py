@@ -257,6 +257,7 @@ class Brick:
             self.__dict__['DIM%s_%s' %(i+1, dim.name) ] = dim
             
         self.__data_var = BrickVariable(xds, '__data_var')
+        self.__dict__['DATA1_%s' % self.__data_var.var_name] = self.__data_var
        
     def __get_attr(self, name):
         return self.__xds.attrs[name]
@@ -311,8 +312,8 @@ class Brick:
         return pd.DataFrame(data)
 
     @property
-    def data(self):
-        return self.__data_var
+    def data_vars(self):
+        return [self.__data_var]
     
     @property
     def attrs(self):
@@ -457,10 +458,10 @@ class Brick:
                 value_vals = []
                 if var.scalar_type == 'oterm_ref':
                     value_key = 'oterm_refs'
-                    value_vals = [t.term_id for t in var.data]
+                    value_vals = [t.term_id for t in var.values]
                 else:
                     value_key = var.scalar_type + '_values'
-                    value_vals = list(var.data)
+                    value_vals = list(var.values)
     
                 var_data = {
                     'value_type': {
@@ -505,15 +506,15 @@ class Brick:
                 dim_data['typed_values'].append(var_data)
             
         # do data
-        vard = self.data
+        vard = self.data_vars[0]
         value_key = ''
         value_vals = []
         if vard.scalar_type == 'oterm_ref':
             value_key = 'oterm_refs'
-            value_vals = [t.term_id for t in vard.data]
+            value_vals = [t.term_id for t in vard.values]
         else:
             value_key = vard.scalar_type + '_values'
-            value_vals = list(vard.data)
+            value_vals = list(vard.values)
 
         values_data = {
             'value_type': {
@@ -589,33 +590,33 @@ class Brick:
         ]
         
         # Data
+        data_var = self.data_vars[0]
         rows.append(_row2_header('<i>Data:</i>'))
-        rows.append( _row2('Type', self.data.type_term)  )
-        rows.append( _row2('Units', self.data.units_term)  )
-        rows.append( _row2('Sclar type', self.data.scalar_type)  )
+        rows.append( _row2('Type', data_var.type_term)  )
+        rows.append( _row2('Units', data_var.units_term)  )
+        rows.append( _row2('Sclar type', data_var.scalar_type)  )
                               
         # Dimensions
         rows.append(_row2_header('<i>Dimensions:</i>'))
         for i, dim in enumerate(self.dims):
             var_names = []
             for var in dim.vars:
-                vanme = var.type_term.term_name
-                if var.units_term is not None:
-                    vanme += ' (%s)' % var.units_term.term_name
-                    
-                data_example = ', '.join( str(v) for v in var.data[:DATA_EXAMPLE_SIZE] )
+                data_example = ', '.join( str(v) for v in var.values[:DATA_EXAMPLE_SIZE] )
                 data_suffix = ' ...' if dim.size > DATA_EXAMPLE_SIZE else ''
                 data = '[%s%s]' % (data_example, data_suffix)
 
-            var_names.append(vanme + ' ' + data)
+                var_names.append(var.long_name + ':  ' + data)
             
             rows.append( _row2( '%s. %s: %s' % (i +1, dim.type_term.term_name, dim.size),  
-                              'Variables:<br> %s' % '<br>'.join(var_names) ))
+                              '<i>Variables:</i><br> %s' % '<br>'.join(var_names) ))
 
         # Attributes
         rows.append(_row2_header('<i>Attributes:</i>'))
         for attr in self.attrs:
-            rows.append( _row2(attr.type_term.term_name, attr.value)  )
+            val = attr.value
+            if attr.units_term is not None:
+                val = '%s (%s)' % (val, attr.units_term.term_name)
+            rows.append( _row2(attr.type_term.term_name, val)  )
             
         return '<table>%s</table>' % ''.join(rows)   
 
@@ -632,9 +633,11 @@ class Brick:
     def _get_property_terms(self):
         id2terms = {}
         id2terms[self.type_term.term_id] = self.type_term
-        id2terms[self.data.type_term.term_id] = self.data.type_term
-        if self.data.units_term:
-            id2terms[self.data.units_term.term_id] = self.data.units_term
+
+        data_var = self.data_vars[0]        
+        id2terms[data_var.type_term.term_id] = data_var.type_term
+        if data_var.units_term:
+            id2terms[data_var.units_term.term_id] = data_var.units_term
 
         for attr in self.attrs:
             attr._collect_property_terms(id2terms)
@@ -712,7 +715,7 @@ class BrickDimension:
     def vars_df(self):
         data = {}
         for var in self.vars:
-            data[var.long_name] = var.data
+            data[var.long_name] = var.values
         return pd.DataFrame(data)
     
     def where(self, bool_array):
@@ -751,11 +754,8 @@ class BrickDimension:
         ]
                                   
         for var in self.vars:
-            name = var.name
-            if var.units_term is not None:
-                name = '%s (%s)' % (name, var.units_term.term_name)
-                
-            data_example = ', '.join( str(v) for v in var.data[:DATA_EXAMPLE_SIZE] )
+            name = var.long_name                
+            data_example = ', '.join( str(v) for v in var.values[:DATA_EXAMPLE_SIZE] )
             data_suffix = ' ...' if self.size > DATA_EXAMPLE_SIZE else ''
             data = '[%s%s]' % (data_example, data_suffix)
             rows.append(_row2(name, data))
@@ -796,7 +796,7 @@ class BrickVariable:
         return items
 
     @property
-    def data(self):
+    def values(self):
         return self.__xds[self.__var_prefix].data
         
     @property
@@ -861,13 +861,13 @@ class BrickVariable:
         id2terms[self.type_term.term_id] = self.type_term
 
     def _collect_value_terms(self, id2terms):
-        for val in self.data:
+        for val in self.values:
             if type(val) is Term:
                 term = val
                 id2terms[term.term_id] = term
 
     def _collect_all_term_values(self, term_id_2_values):
-        _collect_all_term_values(term_id_2_values, self.type_term.term_id, self.data)
+        _collect_all_term_values(term_id_2_values, self.type_term.term_id, self.values)
 
     def _repr_html_(self):
         def _row2_header(c):
@@ -877,8 +877,8 @@ class BrickVariable:
             patterm = '<tr>' + ''.join([ cell for i in range(2) ] ) + '</tr>'
             return patterm % (c1,c2)
                         
-        data_example = '<br>'.join( str(v) for v in self.data[:DATA_EXAMPLE_SIZE] )
-        data_suffix = '<br> ...' if len(self.data) > DATA_EXAMPLE_SIZE else ''
+        data_example = '<br>'.join( str(v) for v in self.values[:DATA_EXAMPLE_SIZE] )
+        data_suffix = '<br> ...' if len(self.values) > DATA_EXAMPLE_SIZE else ''
         data = '%s%s' % (data_example, data_suffix)
         
         rows = [
@@ -886,7 +886,7 @@ class BrickVariable:
             _row2('Name', self.name),
             _row2('Type', self.type_term),
             _row2('Units', self.units_term),
-            _row2('Size', len(self.data)),
+            _row2('Size', len(self.values)),
             _row2('Values', data)          
         ]
         if len(self.attrs) > 0:
@@ -1181,8 +1181,11 @@ class BrickIndexDocumnet:
         self.n_dimensions = len(brick.dims)
         self.data_type_term_id = brick.type_term.term_id
         self.data_type_term_name = brick.type_term.term_name
-        self.value_type_term_id = brick.data.type_term.term_id
-        self.value_type_term_name = brick.data.type_term.term_name
+
+        data_var = brick.data_vars[0]
+        self.value_type_term_id = data_var.type_term.term_id
+        self.value_type_term_name = data_var.type_term.term_name
+
         self.dim_type_term_ids = [
             d.type_term.term_id for d in brick.dims]
         self.dim_type_term_names = [
@@ -1274,6 +1277,9 @@ class BrickDescriptor:
     @property
     def shape(self):
         return self.dim_sizes
+
+    def load(self):
+        return services.workspace.get_brick(self.brick_id)
 
     def __str__(self):
         return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.data_type, self.shape)
