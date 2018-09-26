@@ -360,3 +360,6 @@ class TypeDefService:
                 return prop_def
 
         return None
+
+    def get_term_prop_defs(self, term_id):
+        return self.__term_2_prop_defs.get(term_id)
