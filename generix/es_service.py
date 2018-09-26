@@ -1,22 +1,11 @@
-from .utils import parse_term
+# from .utils import parse_term
 from .brick import BrickIndexDocumnet
 from .typedef import TYPE_NAME_BRICK
+from .ontology import Term
+from .utils import to_es_type_name
 
 
 ES_INDEX_NAME_PREFIX = 'generix-data-'
-
-
-def to_es_type_name(type_name):
-    chars = list(type_name)
-    es_name = []
-    for ch in chars:
-        if ch.isupper():
-            if len(es_name) > 0:
-                es_name.append('_')
-            es_name.append(ch.lower())
-        else:
-            es_name.append(ch)
-    return ''.join(es_name)
 
 
 class ElasticSearchService:
@@ -134,7 +123,7 @@ class ElasticSearchService:
             if pname in data_holder.data:
                 value = data_holder.data[pname]
                 if pdef.type == 'term':
-                    term = parse_term(value)
+                    term = Term.parse_term(value)
                     term.refresh()
                     doc[pname + '_term_id'] = term.term_id
                     doc[pname + '_term_name'] = term.term_name
