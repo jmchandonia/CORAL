@@ -1,11 +1,12 @@
 import re
 import json
-from .utils import check_term_format, parse_term
+from .utils import to_es_type_name
 from .ontology import Term
 
 
 TYPE_NAME_PROCESS = 'Process'
 TYPE_NAME_BRICK = 'Brick'
+ES_TYPE_NAME_BRICK = to_es_type_name(TYPE_NAME_BRICK)
 
 
 class PropertyValidator:
@@ -90,14 +91,14 @@ class PropertyTermValidator(PropertyValidator):
             self.__root_term.refresh()
 
     def validate_type(self, property_name, property_value):
-        if type(property_value) is not str or not check_term_format(property_value):
+        if type(property_value) is not str or not Term.check_term_format(property_value):
             raise ValueError(
                 'Wrong property type: the value of "%s" property is not term (%s)'
                 % (property_name, property_value))
 
     def validate_value(self, property_name, property_value):
         if self.validatable:
-            term = parse_term(property_value)
+            term = Term.parse_term(property_value)
             term.refresh()
 
             root_term_id = self.__root_term.term_id
