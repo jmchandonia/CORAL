@@ -3,6 +3,9 @@ from .ontology import Term
 from . import services
 from .brick import BrickDescriptorCollection
 from .search import EntityDescriptorCollection
+from .utils import to_var_name
+from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
+from .utils import to_var_name
 
 
 class DataProvider:
@@ -17,9 +20,6 @@ class DataProvider:
     def data(self):
         return self.__etities_provider
 
-    # def find_bricks(self):
-    #     return BrickFilter()
-
 
 class EntitiesProvider:
     def __init__(self):
@@ -27,56 +27,29 @@ class EntitiesProvider:
 
     def __load_entity_providers(self):
         type_names = services.es_service.get_type_names()
-        print('type_names: ', type_names)
         for type_name in type_names:
-            self.__dict__[type_name] = EntityProvider(type_name)
+            self.__dict__[type_name] = BrickProvider() if type_name == ES_TYPE_NAME_BRICK \
+                else EntityProvider(type_name)
 
 
 class EntityProvider:
     def __init__(self, type_name):
         self.__type_name = type_name
         self.__properties = self.__get_properties()
-
         self.__inflate_properties(self.__properties)
-        # self.__properties = None
-        # self.__load_properties()
 
     def __get_properties(self):
         properties = {}
         props = services.es_service.get_entity_properties(
             self.__type_name)
         for prop in props:
-            key = 'PROPERTY_' + re.sub('[^A-Za-z0-9]+', '_', prop)
+            key = to_var_name('PROPERTY_', prop)
             properties[key] = prop
         return properties
 
     def __inflate_properties(self, properties):
-        # if self.__type_name == 'brick':
-        #     props = services.es_search.get_entity_properties(
-        #         self.__type_name)
-        # else:
-        #     props = ['id', 'name']
-
         for key in properties:
             self.__dict__[key] = properties[key]
-
-        # props = services.es_search.get_entity_properties(
-        #     self.__type_name)
-        # for prop in props:
-        #     key = 'PROPERTY_' + re.sub('[^A-Za-z0-9]+', '_', prop)
-        #     self.__dict__[key] = prop
-
-    # def __load_properties(self):
-    #     if self.__type_name == 'brick':
-    #         self.__properties = EntityProperties(self.__type_name)
-    #         # self.__properties = services.es_search.get_entity_properties(
-    #         #     self.__type_name)
-    #     else:
-    #         self.__properties = ['id', 'name', 'description']
-
-    # @property
-    # def properties(self):
-    #     return self.__properties
 
     def find(self, criterion):
         return self.query().has(criterion).find()
@@ -86,6 +59,14 @@ class EntityProvider:
 
     def query(self):
         return Query(self.__type_name, self.__properties)
+
+
+class BrickProvider(EntityProvider):
+    def __init__(self):
+        super().__init__(ES_TYPE_NAME_BRICK)
+
+    def load(self, brick_id):
+        return services.workspace.get_brick(brick_id)
 
 
 class Query:
@@ -175,10 +156,11 @@ class EntityProperties:
         self.__inflate_properties()
 
     def __inflate_properties(self):
-        self.__properties = services.es_search.get_entity_properties(
+        self.__properties = services.es_service.get_entity_properties(
             self.__type_name)
         for prop in self.__properties:
-            key = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', prop)
+            # key = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', prop)
+            key = to_var_name('TERM_', prop)
             self.__dict__[key] = prop
 
     def _repr_html_(self):
