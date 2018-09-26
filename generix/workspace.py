@@ -184,22 +184,48 @@ class Workspace:
 
     def _validate_object(self, data_holder):
         if type(data_holder) is EntityDataHolder:
-            data_holder.type_def.validate_data(data_holder.data)
+            pass
+            # data_holder.type_def.validate_data(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
             pass
 
     def _validate_process(self, data_holder):
-        data_holder.type_def.validate_data(data_holder.data)
+        pass
+        # data_holder.type_def.validate_data(data_holder.data)
 
     def _store_object(self, data_holder):
+        type_name = data_holder.type_name
+        pk_id = data_holder.id
+        upk_id = None
+
         if type(data_holder) is EntityDataHolder:
+            upk_prop_name = data_holder.type_def.upk_property_def.name
+            upk_id = data_holder.data[upk_prop_name]
+
             self.__enigma_db.get_collection(
                 data_holder.type_name).insert_one(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
+            upk_id = data_holder.brick.name
             data_json = data_holder.brick.to_json()
             data = json.loads(data_json)
             self.__enigma_db.get_collection(
                 data_holder.type_name).insert_one(data)
+
+        self._store_object_type_ids(type_name, pk_id, upk_id)
+
+    def _get_pk_id(self, type_name, upk_id):
+        res = self.__enigma_db.get_collection('object_type_ids').find_one({
+            "type_name": type_name,
+            "upk_id": upk_id
+        })
+        return res['pk_id']
+
+    def _store_object_type_ids(self, type_name, pk_id, upk_id):
+        self.__enigma_db.get_collection('object_type_ids').insert_one({
+            'type_name': type_name,
+            'pk_id': pk_id,
+            'upk_id': upk_id
+        })
 
     def _store_process(self, data_holder):
         self.__enigma_db.get_collection(
@@ -223,8 +249,8 @@ class Workspace:
         elif type(data_holder) is BrickDataHolder:
             services.neo_service.index_brick(data_holder)
 
-    def _index_neo_process(self, process):
-        pass
+    def _index_neo_process(self, data_holder):
+        services.neo_service.index_processes(data_holder)
 
     def _mark_as_indexed_neo(self, entity_or_process):
         pass
