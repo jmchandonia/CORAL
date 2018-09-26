@@ -1,4 +1,6 @@
 
+from . import services
+
 
 class Neo4JService:
     def __init__(self, neo4j_client):
@@ -33,27 +35,36 @@ class Neo4JService:
         create_query_items.append('(p:Process{id:"%s"})' % ('1'))
 
         # match input objects
-        for i, input_object in enumerate([]):
-            type_name = ''
-            obj_id = ''
+        for i, input_object in enumerate(data_holder.data['input_objects'].split(',')):
+            type_name, upk_id = input_object.split(':')
+            type_name = type_name.strip()
+            upk_id = upk_id.strip()
+            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+
             match_query_items.append(
-                '(s%s: %s{id:"%s"})' % (i, type_name, obj_id))
+                '(s%s: %s{id:"%s"})' % (i, type_name, pk_id))
             create_query_items.append(
-                '(p)<-[:PARAM_IN]-(s%s),' % i)
+                '(p)<-[:PARAM_IN]-(s%s)' % i)
 
         # match ouput objects
-        for i, output_object in enumerate([]):
-            type_name = ''
-            obj_id = ''
+        for i, output_object in enumerate(data_holder.data['output_objects'].split(',')):
+            type_name, upk_id = output_object.split(':')
+            type_name = type_name.strip()
+            upk_id = upk_id.strip()
+            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+
             match_query_items.append(
-                '(r%s: %s{id:"%s"})' % (i, type_name, obj_id))
+                '(r%s: %s{id:"%s"})' % (i, type_name, pk_id))
             create_query_items.append(
-                '(p)-[:HAS_OUTPUT]->(r%s),' % i)
+                '(p)-[:HAS_OUTPUT]->(r%s)' % i)
 
         query = 'match %s create %s ' % (
             ','.join(match_query_items), ','.join(create_query_items))
-        with self.__neo4j_client.session() as session:
-            session.run(query)
+
+        print('--- Query --')
+        print(query)
+        # with self.__neo4j_client.session() as session:
+        #     session.run(query)
 
 
 # match
