@@ -132,7 +132,10 @@ def upload_entities(argv):
 def upload_processes(argv):
     ws = services.workspace
     type_name = TYPE_NAME_PROCESS
-    services.es_service.drop_index(type_name)
+    try:
+        services.es_service.drop_index(type_name)
+    except:
+        pass
     services.es_service.create_index(
         services.typedef.get_type_def(type_name))
 
@@ -148,36 +151,36 @@ def upload_processes(argv):
             ws.save(process_data_holder=data_holder)
 
 
-def load_entity_from_neo_to_esearch(argv):
-    neo_dtype = argv[0]
-    es_dtype = neo_dtype.lower()
-    print('from load_entity_from_neo_to_esearch:', neo_dtype)
+# def load_entity_from_neo_to_esearch(argv):
+#     neo_dtype = argv[0]
+#     es_dtype = neo_dtype.lower()
+#     print('from load_entity_from_neo_to_esearch:', neo_dtype)
 
-    es_index_name = 'generix-entity-' + es_dtype
+#     es_index_name = 'generix-entity-' + es_dtype
 
-    # drop index
-    es_client = services._es_client
-    try:
-        es_client.indices.delete(index=es_index_name)
-    except:
-        pass
+#     # drop index
+#     es_client = services._es_client
+#     try:
+#         es_client.indices.delete(index=es_index_name)
+#     except:
+#         pass
 
-    # get data
-    df = services.neo_search._list_data('match(t:%s) return t' % neo_dtype)
+#     # get data
+#     df = services.neo_search._list_data('match(t:%s) return t' % neo_dtype)
 
-    # upload data
-    for _, row in df.iterrows():
-        doc = row.to_dict()
-        try:
-            del doc['_id']
-        except:
-            pass
-        if 'id' in doc:
-            doc['entity_id'] = doc['id']
-            del doc['id']
+#     # upload data
+#     for _, row in df.iterrows():
+#         doc = row.to_dict()
+#         try:
+#             del doc['_id']
+#         except:
+#             pass
+#         if 'id' in doc:
+#             doc['entity_id'] = doc['id']
+#             del doc['id']
 
-        es_client.index(
-            index=es_index_name, doc_type=es_dtype, body=doc)
+#         es_client.index(
+#             index=es_index_name, doc_type=es_dtype, body=doc)
 
 
 # def es_index_bricks():
