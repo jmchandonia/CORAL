@@ -13,7 +13,12 @@ from .workspace import Workspace
 from .typedef import TypeDefService
 from .es_service import ElasticSearchService
 from .neo_service import Neo4JService
+from .dataprovider import Query
 
+QQuery = Query
+
+
+IN_ONTOLOGY_LOAD_MODE = False
 
 __PACKAGE_DIR = os.path.dirname(os.path.dirname(__file__))
 __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
