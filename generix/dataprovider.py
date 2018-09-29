@@ -11,14 +11,30 @@ from .utils import to_var_name
 class DataProvider:
     def __init__(self):
         self.__etities_provider = EntitiesProvider()
+        self.__generics_provider = GenericsProvider()
 
     @property
     def ontology(self):
         return services.ontology
 
     @property
-    def data(self):
+    def core_types(self):
         return self.__etities_provider
+
+    @property
+    def genx_types(self):
+        return self.__generics_provider
+
+
+class GenericsProvider:
+    def __init__(self):
+        self.__load_providers()
+
+    def __load_providers(self):
+        type_names = services.es_service.get_type_names()
+        for type_name in type_names:
+            if type_name == ES_TYPE_NAME_BRICK:
+                self.__dict__[type_name] = BrickProvider()
 
 
 class EntitiesProvider:
@@ -28,8 +44,8 @@ class EntitiesProvider:
     def __load_entity_providers(self):
         type_names = services.es_service.get_type_names()
         for type_name in type_names:
-            self.__dict__[type_name] = BrickProvider() if type_name == ES_TYPE_NAME_BRICK \
-                else EntityProvider(type_name)
+            if type_name != ES_TYPE_NAME_BRICK:
+                self.__dict__[type_name] = EntityProvider(type_name)
 
 
 class EntityProvider:
@@ -71,6 +87,8 @@ class BrickProvider(EntityProvider):
 
 class Query:
     def __init__(self, type_name, properties):
+
+        # print('Query type_name: ' + type_name)
         self.__type_name = type_name
         self.__es_filters = {}
         self.__neo_filters = []
@@ -104,7 +122,7 @@ class Query:
 
     def find_ids(self):
         es_query = services.es_search._build_query(self.__es_filters)
-        id_field_name = 'brick_id' if self.__type_name == 'brick' else 'entity_id'
+        id_field_name = 'brick_id' if self.__type_name == 'brick' else 'id'
         return services.es_search._find_entity_ids(self.__type_name, id_field_name, es_query)
 
     def find(self):
@@ -119,11 +137,11 @@ class Query:
             q.has(source_crierion)
             source_ids = q.find_ids()
 
-            source_type = 'Generic' if source_type == 'brick' else source_type[0:1].upper(
+            source_type = 'Brick' if source_type == 'brick' else source_type[0:1].upper(
             ) + source_type[1:]
 
             target_type = self.__type_name
-            target_type = 'Generic' if target_type == 'brick' else target_type[0:1].upper(
+            target_type = 'Brick' if target_type == 'brick' else target_type[0:1].upper(
             ) + target_type[1:]
 
             linked_ids = services.neo_search.find_linked_ids(
@@ -134,7 +152,7 @@ class Query:
 
         es_filter = {}
         if len(self.__neo_filters) > 0:
-            id_filed_name = 'brick_id' if self.__type_name == 'brick' else 'entity_id'
+            id_filed_name = 'brick_id' if self.__type_name == 'brick' else 'id'
             self._add_es_filter(es_filter, {id_filed_name: list(neo_ids)})
         for key in self.__es_filters:
             es_filter[key] = self.__es_filters[key]
