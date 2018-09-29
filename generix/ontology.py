@@ -143,7 +143,16 @@ class OntologyService:
                         terms[term.term_id] = term
                         if root_term is None:
                             root_term = term
+                        term_id = None
                         state = STATE_NONE
+
+        if term_id is not None:
+            term = Term(term_id, term_name=term_name,
+                        ontology_id=ont_id,
+                        parent_ids=term_parent_ids)
+            terms[term.term_id] = term
+            if root_term is None:
+                root_term = term
 
         for _, term in terms.items():
             term._update_parents(terms)
@@ -399,7 +408,7 @@ class TermCollection:
         return '%s <br> %s terms' % (table, len(self.terms))
 
 
-__TERM_PATTERN = re.compile('(.+)<(.+)>')
+_TERM_PATTERN = re.compile('(.+)<(.+)>')
 
 
 class Term:
@@ -420,12 +429,12 @@ class Term:
 
     @staticmethod
     def check_term_format(value):
-        m = __TERM_PATTERN.findall(value)
+        m = _TERM_PATTERN.findall(value)
         return m is not None
 
     @staticmethod
     def parse_term(value):
-        m = __TERM_PATTERN.findall(value)
+        m = _TERM_PATTERN.findall(value)
         if m:
             term = Term(m[0][1].strip(), term_name=m[0][0].strip())
         else:
