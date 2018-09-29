@@ -41,16 +41,13 @@ _FILES = {
         {
             'file': 'wells_all.tsv',
             'dtype': 'Well',
-        },
-        {
+        }, {
             'file': 'samples_all.tsv',
             'dtype': 'Sample',
-        },
-        {
-            'file': 'taxa_isolates.tsv',
-            'dtype': 'Taxon',
-        },
-        {
+        }, {
+            'file': 'strains_isolates.tsv',
+            'dtype': 'Strain',
+        }, {
             'file': 'communities_isolates.tsv',
             'dtype': 'Community',
         }
@@ -59,21 +56,26 @@ _FILES = {
         {
             'file': 'process_assay_growth.tsv',
             'ptype': 'Assay Growth'
-        },
-        {
+        }, {
             'file': 'process_isolates.tsv',
             'ptype': 'Isolation'
-        },
-        {
+        }, {
             'file': 'process_sampling_all.tsv',
             'ptype': 'Sampling'
+        }, {
+            'file': 'process_environmental_measurements_adams.tsv',
+            'ptype': 'Environmental Measurements'
         }
     ]
 }
 
 
 def upload_ontologies(argv):
-    services.ontology._upload_ontologies()
+    services.IN_ONTOLOGY_LOAD_MODE = True
+    try:
+        services.ontology._upload_ontologies()
+    finally:
+        services.IN_ONTOLOGY_LOAD_MODE = False
 
 
 def neo_delete(argv):
@@ -116,15 +118,19 @@ def upload_entities(argv):
         i = 0
         print('size=%s' % df.shape[0])
         for _, row in df.iterrows():
-            i = i + 1
-            if i % 10 == 0:
-                print('.', end='', flush=True)
-            if i % 100 == 0:
-                print(i)
+            try:
+                i = i + 1
+                if i % 10 == 0:
+                    print('.', end='', flush=True)
+                if i % 100 == 0:
+                    print(i)
 
-            data = row.to_dict()
-            data_holder = EntityDataHolder(type_name, data)
-            ws.save(object_data_holders=[data_holder])
+                data = row.to_dict()
+                data_holder = EntityDataHolder(type_name, data)
+                ws.save(object_data_holders=[data_holder])
+            except Exception as e:
+                print(e)
+
         print('Done!')
         print()
 
@@ -146,9 +152,12 @@ def upload_processes(argv):
         print('Doing %s: %s' % (process_type, file_name))
         df = pd.read_csv(file_name, sep='\t')
         for _, row in df.iterrows():
-            data = row.to_dict()
-            data_holder = ProcessDataHolder(process_type, data)
-            ws.save(process_data_holder=data_holder)
+            try:
+                data = row.to_dict()
+                data_holder = ProcessDataHolder(process_type, data)
+                ws.save(process_data_holder=data_holder)
+            except Exception as e:
+                print(e)
 
 
 # def load_entity_from_neo_to_esearch(argv):
