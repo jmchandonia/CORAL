@@ -1,6 +1,7 @@
 import pandas as pd
 from .brick import BrickDescriptor, BrickDescriptorCollection
 from . import services
+from .utils import to_es_type_name
 
 _ES_BRICK_INDEX_NAME = 'generix-data-brick'
 _ES_ENTITY_INDEX_NAME_PREFIX = 'generix-data-'
@@ -56,6 +57,8 @@ class SearchService:
 
         ids = []
         index_name = self._index_name(entity_type)
+
+        # print('Doing index name:' + index_name)
         result_set = self.__es_client.search(index=index_name, body=query)
 
         for hit in result_set['hits']['hits']:
@@ -224,6 +227,7 @@ class SearchService:
         return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
 
     def _index_name(self, doc_type):
+        doc_type = to_es_type_name(doc_type)
         return _ES_BRICK_INDEX_NAME if doc_type == 'brick' else _ES_ENTITY_INDEX_NAME_PREFIX + doc_type
 
     # def get_entity_properties(self, type_name):
