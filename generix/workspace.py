@@ -218,6 +218,10 @@ class Workspace:
             "type_name": type_name,
             "upk_id": upk_id
         })
+        if res is None:
+            raise ValueError('Can not find pk_id for %s: %s' %
+                             (type_name, upk_id))
+
         return res['pk_id']
 
     def _store_object_type_ids(self, type_name, pk_id, upk_id):
