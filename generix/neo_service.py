@@ -32,13 +32,19 @@ class Neo4JService:
         create_query_items = []
 
         # create process
-        create_query_items.append('(p:Process{id:"%s"})' % ('1'))
+        create_query_items.append('(p:Process{id:"%s"})' % (data_holder.id))
 
         # match input objects
         for i, input_object in enumerate(data_holder.data['input_objects'].split(',')):
             type_name, upk_id = input_object.split(':')
             type_name = type_name.strip()
             upk_id = upk_id.strip()
+            # TODO hack
+            if type_name == 'Condition':
+                continue
+            if type_name == 'Generic':
+                type_name = 'Brick'
+
             pk_id = services.workspace._get_pk_id(type_name, upk_id)
 
             match_query_items.append(
@@ -51,6 +57,13 @@ class Neo4JService:
             type_name, upk_id = output_object.split(':')
             type_name = type_name.strip()
             upk_id = upk_id.strip()
+
+            # TODO hack
+            if type_name == 'Condition':
+                continue
+            if type_name == 'Generic':
+                type_name = 'Brick'
+
             pk_id = services.workspace._get_pk_id(type_name, upk_id)
 
             match_query_items.append(
@@ -61,10 +74,10 @@ class Neo4JService:
         query = 'match %s create %s ' % (
             ','.join(match_query_items), ','.join(create_query_items))
 
-        print('--- Query --')
-        print(query)
-        # with self.__neo4j_client.session() as session:
-        #     session.run(query)
+        # print('--- Query --')
+        # print(query)
+        with self.__neo4j_client.session() as session:
+            session.run(query)
 
 
 # match
