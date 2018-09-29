@@ -5,7 +5,8 @@ import xarray as xr
 import re
 from .ontology import Term
 from . import services
-from .utils import to_var_name
+from .utils import to_var_name, to_es_type_name
+# from .dataprovider import Query
 
 
 class NPEncoder(json.JSONEncoder):
@@ -561,7 +562,7 @@ class Brick:
         return data
 
     @property
-    def type(self):
+    def full_type(self):
         dim_types = [dim.type_term.term_name for dim in self.dims]
         full_type = '%s<%s>' % ( self.type_term.term_name, ', '.join(dim_types))
         return full_type
@@ -723,6 +724,140 @@ class BrickDimension:
         xds = self.__xds.isel(kwargs)
         return Brick(xds)    
     
+    def add_core_type_var(self, core_type, core_prop_name):
+        type_def = services.typedef.get_type_def(core_type)
+        if type_def is None:
+            raise ValueError('Core type %s does not exist' % core_type)
+
+        try:
+            prop_def = type_def.property_def(core_prop_name)
+        except:
+            raise ValueError('There are no property %s in the core type %s' % (core_prop_name, core_type))
+
+        # check if dim has variable with term id which is PK of the 
+        # core type
+
+        pk_def = None
+        pk_var = None
+        for var in self.vars:
+            pk_prop_def = services.typedef.get_term_pk_prop_def(var.type_term.term_id)
+            if pk_prop_def is not None and pk_prop_def.type_def.name == core_type:
+                pk_var = var
+                pk_def = pk_prop_def
+                break
+
+        if pk_def is None:
+            raise ValueError('There is no variable which is PK for the core type. Please do map_to_core_type first.' % core_type)
+
+
+        values = []
+        for val in pk_var.values:
+            if val is not None:
+                values.append(val)
+
+        pk_prop_name =  pk_def.name
+        type_name = to_es_type_name(core_type)
+        q = services.QQuery(type_name ,{})
+        q.has({pk_def.name:values})
+        rs = q.find()
+
+        # Build variable
+
+        # build data
+        pk2val = {}
+        for item in rs.items:
+            pk_val = item[pk_def.name]
+            prop_value = item[core_prop_name]
+            pk2val[pk_val] = prop_value 
+
+        data = []
+        for val in pk_var.values:
+            if val is None:
+                data.append(None)
+            else:
+                data.append( pk2val.get(val) )
+
+        # print('data = ', data)
+        # print('dims = ', self.size)
+        prop_var = xr.DataArray(data, dims=self.__dim_prefix)
+
+        term = Term(prop_def.term_id)
+        term.refresh()
+
+        prop_var.attrs['__type_term'] = term
+        prop_var.attrs['__units_term'] = None
+        prop_var.attrs['__name'] = term.term_name
+        prop_var.attrs['__scalar_type'] = prop_def.type
+        prop_var.attrs['__attr_count'] = 0
+
+        # add variable to xds
+        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
+        var_name = self.__dim_prefix + '_var%s'  % self.var_count
+        self.__xds[var_name] = prop_var
+
+        # create BrickVariable            
+        bv = BrickVariable(self.__xds, var_name) 
+        self.__vars.append(bv)
+        self.__dict__['VAR%s_%s' %(self.var_count, bv.var_name)] = bv
+
+        return self.vars_df.head(10)
+
+    def map_to_core_type(self, dim_var, core_type, core_prop_name):
+        values = set() 
+        for val in dim_var.values:
+            if val is not None:
+                values.add(val)
+
+        type_def = services.typedef.get_type_def(core_type)
+        pk_prop_name =  type_def.pk_property_def.name
+        type_name = to_es_type_name(core_type)
+        q = services.QQuery(type_name ,{})
+        q.has({core_prop_name:  list(values)})
+        rs = q.find()
+
+        # Build variable
+
+        # build data
+        prop2pk_ids = {}
+        for item in rs.items:
+            prop_value = item[core_prop_name]
+            pk_value = item[pk_prop_name]
+            prop2pk_ids[prop_value] = pk_value 
+
+        data = []
+        for val in dim_var.values:
+            if val is not None:
+                pk_val = prop2pk_ids.get(val)
+            else:
+                pk_val = None
+            data.append(pk_val)
+
+        # print('data = ', data)
+        # print('dims = ', self.size)
+        pk_var = xr.DataArray(data, dims=self.__dim_prefix)
+
+        term = Term(type_def.pk_property_def.term_id)
+        term.refresh()
+
+        pk_var.attrs['__type_term'] = term
+        pk_var.attrs['__units_term'] = None
+        pk_var.attrs['__name'] = term.term_name
+        pk_var.attrs['__scalar_type'] = type_def.pk_property_def.type
+        pk_var.attrs['__attr_count'] = 0
+
+        # add variable to xds
+        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
+        var_name = self.__dim_prefix + '_var%s'  % self.var_count
+        self.__xds[var_name] = pk_var
+
+        # create BrickVariable            
+        bv = BrickVariable(self.__xds, var_name) 
+        self.__vars.append(bv)
+        self.__dict__['VAR%s_%s' %(self.var_count, bv.var_name)] = bv
+
+        return self.vars_df.head(10)
+
+
     def _collect_property_terms(self, id2terms):
         id2terms[self.type_term.term_id] = self.type_term
         for v in self.vars:
@@ -829,6 +964,12 @@ class BrickVariable:
                 items.append(val)
 
         return to_var_name('',' '.join(items))
+
+    def is_none(self):
+        return [  val is None for val in  self.values]
+
+    def is_not_none(self):
+        return [  val is not None for val in  self.values]
 
     def has_units(self):
         return self.units_term is not None
@@ -1227,7 +1368,7 @@ class BrickDescriptorCollection:
     def __getitem__(self, i):
         return self.__brick_descriptors[i]
 
-    def df(self):
+    def to_df(self):
         bd_list = []
         for bd in self.__brick_descriptors:
             bd_list.append({
@@ -1239,10 +1380,11 @@ class BrickDescriptorCollection:
                 'shape': bd.shape,
                 'data_size': bd.data_size
             })
-        return pd.DataFrame(bd_list)
+        columns = ['brick_id', 'data_type', 'n_dimensions', 'shape', 'value_type', 'brick_name', 'data_size']
+        return pd.DataFrame(bd_list)[columns]
 
     def _repr_html_(self):
-        return self.df()._repr_html_()
+        return self.to_df()._repr_html_()
 
 
 class BrickDescriptor:
