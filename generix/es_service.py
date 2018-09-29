@@ -145,7 +145,7 @@ class ElasticSearchService:
         properties = {}
         for pdef in type_def.property_defs:
             pname = pdef.name
-            if pdef.is_pk:
+            if pdef.is_pk or pdef.is_upk or pdef.is_fk:
                 properties[pname] = {
                     'type': 'text',
                     'analyzer': 'keyword'
@@ -155,9 +155,10 @@ class ElasticSearchService:
                     'type': 'text',
                     'analyzer': 'standard'
                 }
-            elif pdef.type == 'text':
+            elif pdef.type == 'float':
+                # TODO: why float does not work...?
                 properties[pname] = {
-                    'type': 'float'
+                    'type': 'text'
                 }
             elif pdef.type == 'term':
                 properties[pname + '_term_id'] = {
@@ -221,7 +222,7 @@ class ElasticSearchService:
     def get_entity_properties(self, type_name):
         es_type = to_es_type_name(type_name)
         index_name = ES_INDEX_NAME_PREFIX + es_type
-        print('From get_entity_properties:', es_type, index_name)
+        # print('From get_entity_properties:', es_type, index_name)
 
         doc = self.__es_client.indices.get_mapping(index=index_name)
         return list(doc[index_name]['mappings'][es_type]['properties'].keys())
