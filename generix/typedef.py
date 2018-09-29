@@ -2,7 +2,7 @@ import re
 import json
 from .utils import to_es_type_name
 from .ontology import Term
-
+from . import services
 
 TYPE_NAME_PROCESS = 'Process'
 TYPE_NAME_BRICK = 'Brick'
@@ -152,7 +152,10 @@ class TypeDef:
         if 'process_types' in type_def_doc:
             for term_id in type_def_doc['process_types']:
                 term = Term(term_id)
-                term.refresh()
+
+                if not services.IN_ONTOLOGY_LOAD_MODE:
+                    term.refresh()
+
                 self.__process_type_terms.append(term)
 
         self.__process_input_type_names = []
@@ -238,7 +241,7 @@ class PropertyDef:
         self.__pk = 'PK' in pdef_doc and pdef_doc['PK'] == True
         self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
         self.__upk = 'UPK' in pdef_doc and pdef_doc['UPK'] == True
-        self.__term_id = pdef_doc['term_id'] if 'term_id' in pdef_doc else False
+        self.__term_id = pdef_doc['term'] if 'term' in pdef_doc else False
 
         self.__property_validator = _PROPERTY_VALIDATORS[self.__type](
             self.__constraint)
