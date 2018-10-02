@@ -98,7 +98,7 @@ def upload_bricks(argv):
         print('Doing %s: %s' % ('Brick', file_name))
         brick = Brick.read_json(None, file_name)
         data_holder = BrickDataHolder(brick)
-        ws.save(object_data_holders=[data_holder])
+        ws.save_data(data_holder)
 
 
 def upload_entities(argv):
@@ -127,7 +127,7 @@ def upload_entities(argv):
 
                 data = row.to_dict()
                 data_holder = EntityDataHolder(type_name, data)
-                ws.save(object_data_holders=[data_holder])
+                ws.save_data(data_holder)
             except Exception as e:
                 print(e)
 
@@ -154,9 +154,9 @@ def upload_processes(argv):
         for _, row in df.iterrows():
             try:
                 data = row.to_dict()
-                data_holder = ProcessDataHolder(process_type, data)
+                data_holder = ProcessDataHolder(data)
                 data_holder.update_object_ids()
-                ws.save(process_data_holder=data_holder)
+                ws.save_process(data_holder)
             except Exception as e:
                 print(e)
 
