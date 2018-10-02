@@ -155,6 +155,7 @@ def upload_processes(argv):
             try:
                 data = row.to_dict()
                 data_holder = ProcessDataHolder(process_type, data)
+                data_holder.update_object_ids()
                 ws.save(process_data_holder=data_holder)
             except Exception as e:
                 print(e)
