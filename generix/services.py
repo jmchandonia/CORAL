@@ -13,7 +13,8 @@ from .workspace import Workspace
 from .typedef import TypeDefService
 from .es_service import ElasticSearchService
 from .neo_service import Neo4JService
-from .dataprovider import Query
+from .dataprovider import Query, BrickProvider
+from .user_profile import UserProfile
 
 QQuery = Query
 
@@ -54,3 +55,6 @@ neo_search = ProvenanceSearchService(__neo4j_client)
 neo_service = Neo4JService(__neo4j_client)
 
 term_value_validator = TermValueValidationService()
+brick_provider = BrickProvider()
+
+user_profile = UserProfile()
