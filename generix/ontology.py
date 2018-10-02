@@ -226,6 +226,54 @@ class OntologyService:
     def all(self):
         return Ontology(self, 'all', ontologies_all=True)
 
+    def custom_list(self, list_name):
+        term_ids = set()
+        if list_name == 'ENIGMA_dims':
+            bp = services.brick_provider
+            bricks = bp.find({})
+            for brd in bricks.items:
+                for term_id in brd.dim_type_term_ids:
+                    term_ids.add(term_id)
+        elif list_name == 'ENIGMA_types':
+            bp = services.brick_provider
+            bricks = bp.find({})
+            for brd in bricks.items:
+                term_ids.add(brd.data_type_term_id)
+
+        elif list_name == 'ENIGMA_var_types':
+            bp = services.brick_provider
+            bricks = bp.find({})
+            for brd in bricks.items:
+                br = bp.load(brd.brick_id)
+                for dim in br.dims:
+                    for var in dim.vars:
+                        term_ids.add(var.type_term.term_id)
+                for data_var in br.data_vars:
+                    term_ids.add(data_var.type_term.term_id)
+
+        elif list_name == 'ENIGMA_units':
+            bp = services.brick_provider
+            bricks = bp.find({})
+            for brd in bricks.items:
+                br = bp.load(brd.brick_id)
+                for dim in br.dims:
+                    for var in dim.vars:
+                        if var.units_term is not None:
+                            term_ids.add(var.units_term.term_id)
+                for data_var in br.data_vars:
+                    if data_var.units_term is not None:
+                        term_ids.add(data_var.units_term.term_id)
+
+        terms = []
+        for term_id in term_ids:
+            try:
+                term = Term(term_id, refresh=True)
+                terms.append(term)
+            except:
+                print('Can not find term: %s' % term_id)
+        terms.sort(key=lambda x: x.term_name)
+        return TermCollection(terms)
+
 
 class Ontology:
     def __init__(self, ontology_service, ontology_id, ontologies_all=False):
@@ -417,7 +465,7 @@ class Term:
     '''
 
     def __init__(self, term_id, term_name=None, ontology_id=None,
-                 parent_ids=None, parent_path_ids=None, validator_name=None, persisted=False):
+                 parent_ids=None, parent_path_ids=None, validator_name=None, persisted=False, refresh=False):
         self.__persisted = persisted
         self.__term_id = term_id
         self.__term_name = term_name
@@ -426,6 +474,8 @@ class Term:
         self.__parent_path_ids = parent_path_ids
         self.__validator_name = validator_name
         self.__parent_terms = []
+        if refresh:
+            self.refresh()
 
     @staticmethod
     def check_term_format(value):
