@@ -3,10 +3,11 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 import re
+import datetime
 from .ontology import Term
+from .workspace import BrickDataHolder, ProcessDataHolder
 from . import services
 from .utils import to_var_name, to_es_type_name
-# from .dataprovider import Query
 
 
 class NPEncoder(json.JSONEncoder):
@@ -704,6 +705,38 @@ class Brick:
                 values.add(val)
         return values        
         
+    def save(self, process_term=None, person_term=None, campaign_term=None, input_obj_ids=None):
+
+        if process_term is None:
+            raise ValueError('process_term should be specified')
+        
+        if input_obj_ids is None:
+            raise ValueError('input_obj_ids should be specified')
+
+
+        user_profile = services.user_profile
+        if person_term is None:
+            person_term = user_profile.default_person
+        
+        if campaign_term is None:
+            campaign_term = user_profile.default_campaign
+
+        brick_data_holder = BrickDataHolder(self)
+        services.workspace.save_data(brick_data_holder)
+
+
+        process_data = {
+            'person': str(person_term),
+            'process': str(process_term),
+            'campaign': str(campaign_term),
+            'date_start': datetime.datetime.today().strftime('%Y-%m-%d'),
+            'date_end': datetime.datetime.today().strftime('%Y-%m-%d'),
+            'input_objects': input_obj_ids,
+            'output_objects': '%s:%s' % ( 'Brick', brick_data_holder.id) 
+        }
+        services.workspace.save_process(ProcessDataHolder(process_data)) 
+
+
         
 class BrickDimension:
     def __init__(self, xds, dim_index):
@@ -1472,7 +1505,7 @@ class BrickDescriptor:
         return self.dim_sizes
 
     def load(self):
-        return services.workspace.get_brick(self.brick_id)
+        return Brick.read_dict(self.brick_id,  services.workspace.get_brick_data(self.brick_id))
 
     def __str__(self):
         return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.data_type, self.shape)
