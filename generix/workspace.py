@@ -44,6 +44,9 @@ class EntityDataHolder(DataHolder):
     def file_name(self):
         return self.__file_name
 
+    def update_fk_ids(self):
+        pass
+
 
 class ProcessDataHolder(DataHolder):
     def __init__(self, process_type_name, data):
@@ -53,6 +56,27 @@ class ProcessDataHolder(DataHolder):
     @property
     def process_type_name(self):
         return self.__process_type_name
+
+    def __update_object_ids(self, ids_prop_name):
+        obj_ids = []
+        for i, input_object in enumerate(self.data[ids_prop_name].split(',')):
+            type_name, upk_id = input_object.split(':')
+            type_name = type_name.strip()
+            upk_id = upk_id.strip()
+            # TODO hack
+            if type_name == 'Condition':
+                continue
+            if type_name == 'Generic':
+                type_name = 'Brick'
+
+            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+            obj_ids.append('%s:%s' % (type_name, pk_id))
+
+        self.data[ids_prop_name] = ','.join(obj_ids)
+
+    def update_object_ids(self):
+        self.__update_object_ids('input_objects')
+        self.__update_object_ids('output_objects')
 
 
 class BrickDataHolder(DataHolder):
@@ -112,66 +136,41 @@ class Workspace:
         data = self.__enigma_db.Brick.find_one({'brick_id': brick_id})
         return Brick.read_dict(brick_id, data)
 
-    # def next_id(self, dtype, text_id=None, file_name=None):
-    #     id_offset = self.__dtype_2_id_offset.get(dtype)
-    #     if id_offset is None:
-    #         id_offset = 0
-    #     id_offset += 1
-    #     self.__dtype_2_id_offset[dtype] = id_offset
+    def save_process(self, data_holder):
+        self._generate_id(data_holder)
+        self._validate_process(data_holder)
+        self._store_process(data_holder)
 
-    #     obj_id = Workspace.__ID_PATTERN % (dtype, id_offset)
+        self._index_es_process(data_holder)
+        self._index_neo_process(data_holder)
 
-    #     # if text_id is not None:
-    #     #     self.__text_id_2_id[text_id] = obj_id
-    #     #     self.__id_2_text_id[obj_id] = text_id
-    #     # if file_name is not None:
-    #     #     self.__file_name_2_id[file_name] = obj_id
-    #     #     self.__id_2_file_name[obj_id] = file_name
+    def save_data(self, data_holder):
+        self._generate_id(data_holder)
+        self._validate_object(data_holder)
+        self._store_object(data_holder)
+        self._index_es_object(data_holder)
+        self._index_neo_object(data_holder)
 
-    #     # return obj_id
+    # def save(self, object_data_holders=None, process_data_holder=None):
 
-    # def _get_file_name(self, obj_id):
-    #     return self.__id_2_file_name.get(obj_id)
+    #     # process objects
+    #     if object_data_holders is not None:
+    #         for data_holder in object_data_holders:
+    #             self._generate_id(data_holder)
+    #             self._validate_object(data_holder)
+    #             self._store_object(data_holder)
+    #             self._index_es_object(data_holder)
+    #             self._index_neo_object(data_holder)
 
-    # def _get_text_id(self, obj_id):
-    #     return self.__id_2_text_id.get(obj_id)
+    #     # process processes
+    #     if process_data_holder is not None:
+    #         data_holder = process_data_holder
+    #         self._generate_id(data_holder)
+    #         self._validate_process(data_holder)
+    #         self._store_process(data_holder)
 
-    # def _get_id(self, text_id=None, file_name=None):
-    #     if text_id is not None:
-    #         return self.__text_id_2_id.get(text_id)
-    #     elif file_name is not None:
-    #         return self.__file_name_2_id.get(file_name)
-
-    #     return None
-
-    # def _get_ids(self, dtype):
-    #     id_offset = self.__dtype_2_id_offset[dtype]
-    #     return [Workspace.__ID_PATTERN % (dtype, x) for x in range(1, id_offset + 1)]
-
-    # def get_brick(self, brick_id):
-    #     file_name = self._get_file_name(brick_id)
-    #     return read_brick(brick_id, file_name)
-
-    def save(self, object_data_holders=None, process_data_holder=None):
-
-        # process objects
-        if object_data_holders is not None:
-            for data_holder in object_data_holders:
-                self._generate_id(data_holder)
-                self._validate_object(data_holder)
-                self._store_object(data_holder)
-                self._index_es_object(data_holder)
-                self._index_neo_object(data_holder)
-
-        # process processes
-        if process_data_holder is not None:
-            data_holder = process_data_holder
-            self._generate_id(data_holder)
-            self._validate_process(data_holder)
-            self._store_process(data_holder)
-
-            self._index_es_process(data_holder)
-            self._index_neo_process(data_holder)
+    #         self._index_es_process(data_holder)
+    #         self._index_neo_process(data_holder)
 
     def _generate_id(self, data_holder):
         # file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
