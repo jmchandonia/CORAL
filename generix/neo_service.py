@@ -36,17 +36,18 @@ class Neo4JService:
 
         # match input objects
         for i, input_object in enumerate(data_holder.data['input_objects'].split(',')):
-            type_name, upk_id = input_object.split(':')
-            type_name = type_name.strip()
-            upk_id = upk_id.strip()
-            # TODO hack
-            if type_name == 'Condition':
-                continue
-            if type_name == 'Generic':
-                type_name = 'Brick'
+            # type_name, upk_id = input_object.split(':')
+            # type_name = type_name.strip()
+            # upk_id = upk_id.strip()
+            # # TODO hack
+            # if type_name == 'Condition':
+            #     continue
+            # if type_name == 'Generic':
+            #     type_name = 'Brick'
 
-            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+            # pk_id = services.workspace._get_pk_id(type_name, upk_id)
 
+            type_name, pk_id = input_object.split(':')
             match_query_items.append(
                 '(s%s: %s{id:"%s"})' % (i, type_name, pk_id))
             create_query_items.append(
@@ -54,18 +55,19 @@ class Neo4JService:
 
         # match ouput objects
         for i, output_object in enumerate(data_holder.data['output_objects'].split(',')):
-            type_name, upk_id = output_object.split(':')
-            type_name = type_name.strip()
-            upk_id = upk_id.strip()
+            # type_name, upk_id = output_object.split(':')
+            # type_name = type_name.strip()
+            # upk_id = upk_id.strip()
 
-            # TODO hack
-            if type_name == 'Condition':
-                continue
-            if type_name == 'Generic':
-                type_name = 'Brick'
+            # # TODO hack
+            # if type_name == 'Condition':
+            #     continue
+            # if type_name == 'Generic':
+            #     type_name = 'Brick'
 
-            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+            # pk_id = services.workspace._get_pk_id(type_name, upk_id)
 
+            type_name, pk_id = output_object.split(':')
             match_query_items.append(
                 '(r%s: %s{id:"%s"})' % (i, type_name, pk_id))
             create_query_items.append(
