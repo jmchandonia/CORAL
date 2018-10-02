@@ -25,6 +25,10 @@ class DataProvider:
     def genx_types(self):
         return self.__generics_provider
 
+    @property
+    def profile(self):
+        return services.user_profile
+
 
 class GenericsProvider:
     def __init__(self):
