@@ -1,7 +1,6 @@
 import json
 from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
-from .brick import Brick
 
 
 class DataHolder:
@@ -49,13 +48,8 @@ class EntityDataHolder(DataHolder):
 
 
 class ProcessDataHolder(DataHolder):
-    def __init__(self, process_type_name, data):
+    def __init__(self, data):
         super().__init__(TYPE_NAME_PROCESS, data)
-        self.__process_type_name = process_type_name
-
-    @property
-    def process_type_name(self):
-        return self.__process_type_name
 
     def __update_object_ids(self, ids_prop_name):
         obj_ids = []
@@ -132,9 +126,9 @@ class Workspace:
         self.__dtype_2_id_offset[type_name] = id_offset
         return Workspace.__ID_PATTERN % (type_name, id_offset)
 
-    def get_brick(self, brick_id):
-        data = self.__enigma_db.Brick.find_one({'brick_id': brick_id})
-        return Brick.read_dict(brick_id, data)
+    def get_brick_data(self, brick_id):
+        return self.__enigma_db.Brick.find_one({'brick_id': brick_id})
+        # return Brick.read_dict(brick_id, data)
 
     def save_process(self, data_holder):
         self._generate_id(data_holder)
