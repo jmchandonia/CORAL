@@ -249,7 +249,13 @@ class Brick:
 
 
 
-    def __init__(self, xds):
+    def __init__(self, data, type_term=None, value_type_term=None, value_units_term=None, scalar_type='text', dim_terms=None,):
+
+        if type(data) is np.ndarray:
+            xds = self.__build_xds(data, type_term, value_type_term, value_units_term, scalar_type, dim_terms)
+        else:
+            xds = data
+
         self.__xds = xds
         self.__dims = []
         for i in range( self.dim_count ):
@@ -260,6 +266,31 @@ class Brick:
         self.__data_var = BrickVariable(xds, '__data_var')
         self.__dict__['DATA1_%s' % self.__data_var.var_name] = self.__data_var
        
+
+    def __build_xds(self, data, type_term, value_type_term, value_units_term, scalar_type, dim_terms):
+        ds = xr.Dataset()                
+        ds.attrs['__id'] = ''
+        ds.attrs['__name'] = type_term.term_name
+        ds.attrs['__description'] = ''
+        ds.attrs['__type_term'] = type_term
+        ds.attrs['__attr_count'] = 0        
+        ds.attrs['__dim_count'] = len(dim_terms)
+        dim_names = []
+        for i, term in enumerate(dim_terms):
+            dim_name = '__dim%s' % (i+1)
+            ds.attrs[dim_name + '_term'] = term
+            ds.attrs[dim_name + '_var_count'] = 0
+            dim_names.append(dim_name)
+
+        da = xr.DataArray(data, dims=dim_names)
+        da.attrs['__type_term'] = value_type_term
+        da.attrs['__units_term'] = value_units_term
+        da.attrs['__name'] = value_type_term.property_name
+        da.attrs['__scalar_type'] = scalar_type
+        da.attrs['__attr_count'] = 0                
+        ds['__data_var'] = da
+        return ds    
+
     def __get_attr(self, name):
         return self.__xds.attrs[name]
         
@@ -724,6 +755,26 @@ class BrickDimension:
         xds = self.__xds.isel(kwargs)
         return Brick(xds)    
     
+    def add_var(self, type_term, units_term, values, scalar_type='text'):
+        var = xr.DataArray(values, dims=self.__dim_prefix)
+        var.attrs['__type_term'] = type_term
+        var.attrs['__units_term'] = units_term
+        var.attrs['__name'] = type_term.term_name
+        var.attrs['__scalar_type'] = scalar_type
+        var.attrs['__attr_count'] = 0
+
+        # add variable to xds
+        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
+        var_name = self.__dim_prefix + '_var%s'  % self.var_count
+        self.__xds[var_name] = var
+
+        bv = BrickVariable(self.__xds, var_name) 
+        self.__vars.append(bv)
+        self.__dict__['VAR%s_%s' %( self.var_count , bv.var_name)] = bv
+
+
+
+
     def add_core_type_var(self, core_type, core_prop_name):
         type_def = services.typedef.get_type_def(core_type)
         if type_def is None:
