@@ -492,7 +492,7 @@ class Term:
         return term
 
     def __str__(self):
-        return '%s [%s]' % (self.term_name, self.term_id)
+        return '%s <%s>' % (self.term_name, self.term_id)
 
     def _repr_html_(self):
         return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' \
