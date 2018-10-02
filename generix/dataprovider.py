@@ -1,7 +1,7 @@
 import re
 from .ontology import Term
 from . import services
-from .brick import BrickDescriptorCollection
+from .brick import Brick, BrickDescriptorCollection
 from .search import EntityDescriptorCollection
 from .utils import to_var_name
 from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
@@ -86,7 +86,7 @@ class BrickProvider(EntityProvider):
         super().__init__(ES_TYPE_NAME_BRICK)
 
     def load(self, brick_id):
-        return services.workspace.get_brick(brick_id)
+        return Brick.read_dict(brick_id,  services.workspace.get_brick_data(brick_id))
 
 
 class Query:
