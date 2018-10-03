@@ -754,6 +754,72 @@ class Brick:
         self.__data_vars.append(var)
         self.__inflate_data_vars()
 
+    def mean(self, dim):
+        dim_index = dim.dim_index
+        # print('Dim index = ', dim_index)
+
+        dim_prfix = '__dim%s' % (dim_index + 1)
+
+        # build new dim names
+        new_dim_names = [ '__dim%s' %(i+1) for i in range(self.dim_count -1)  ]
+
+
+        #------    
+        # Build xds
+        xds = xr.Dataset()
+
+        # add all attributes 
+        for attr_name in self.__xds.attrs:
+            if attr_name == '__dim_count':
+                xds.attrs[attr_name] = self.dim_count - 1
+            elif attr_name.startswith('__dim'):
+                # skip the dim data with dim_index amd decrese dim indexes
+                attr_name_vals = attr_name[len('__dim'):].split('_')
+                di = int(attr_name_vals[0])
+                # print( 'attr_name', attr_name)
+                # print('\tattr_name_vals', attr_name_vals)
+                # print('\tdi', di)
+                if di == dim_index + 1:
+                    continue
+                elif di > dim_index + 1:
+                    attr_name_vals[0] = str(di - 1)
+                
+                new_attr_name = '__dim' +  '_'.join(attr_name_vals)
+                # print('\tnew_attr_name', new_attr_name)
+
+                xds.attrs[new_attr_name] = self.__xds.attrs[attr_name]
+            else:
+                xds.attrs[attr_name] = self.__xds.attrs[attr_name]
+
+
+        # do dim variables
+        new_dim_index = 0
+        for i, dim in enumerate(self.dims):
+            # skip dimvars with dim_index
+            if i == dim_index:
+                continue
+            prev_dim_prefix = '__dim%s' % (i + 1) 
+            new_dim_prefix = '__dim%s' % (new_dim_index + 1)
+            new_dim_index += 1
+            for var_index, var in enumerate(dim.vars):
+                prev_var_prefix = '%s_var%s' % (prev_dim_prefix, var_index + 1) 
+                new_var_prefix = '%s_var%s' % (new_dim_prefix, var_index + 1)
+                xds[new_var_prefix] = xr.DataArray(var.values, dims=new_dim_prefix)
+                for attr_name in self.__xds[prev_var_prefix].attrs:
+                    xds[new_var_prefix].attrs[attr_name] = self.__xds[prev_var_prefix].attrs[attr_name]
+        
+        # do data vars
+        for i, data_var in enumerate(self.data_vars):
+            var_prefix = '__data_var%s' % (i+1)
+            values = self.__xds[var_prefix].mean(dim=dim_prfix).values
+            xds[var_prefix] = xr.DataArray(values, dims=new_dim_names)
+            for attr_name in self.__xds[var_prefix].attrs:
+                xds[var_prefix].attrs[attr_name] = self.__xds[var_prefix].attrs[attr_name]
+
+        return Brick(xds=xds)
+
+
+
 
     def save(self, process_term=None, person_term=None, campaign_term=None, input_obj_ids=None):
 
@@ -805,7 +871,11 @@ class BrickDimension:
             
     def __get_attr(self, suffix):
         return self.__xds.attrs[self.__dim_prefix + suffix]
-            
+
+    @property
+    def dim_index(self):
+        return self.__dim_index
+
     @property
     def var_count(self):
         return self.__get_attr('_var_count') 
