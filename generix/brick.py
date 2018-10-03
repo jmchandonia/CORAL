@@ -203,79 +203,115 @@ class Brick:
         
 
         # Do data
-        values_json = json_data['typed_values']
-        term = values_json['value_type']
-        value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+        ds.attrs['__data_var_count'] = 0
 
-        if 'value_units' in values_json:
-            term = values_json['value_units']
-            value_unit_term = Term(
-                term['oterm_ref'], term_name=term['oterm_name'])
-        else:
-            value_unit_term = None
+        values_jsons = json_data['typed_values']
+        if type(values_jsons) is not list:
+            values_jsons = [values_jsons]
+        for values_json in values_jsons:
+            term = values_json['value_type']
+            if 'oterm_ref' in term:
+                value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+            else:
+                value_type_term = Term(term['term_ref'], term_name=term['term_name'])
 
-        value_scalar_type = values_json['values']['scalar_type']
-        if value_scalar_type == 'oterm_ref':
-            value_scalar_type = 'oterm_refs'
-        else:
-            value_scalar_type += '_values'
-        data = np.array(values_json['values'][value_scalar_type])
-        data = data.reshape(dim_sizes)    
-        
-        # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
-        # da.attrs['__type_term'] = Term('AA:154', 'Optical Density')
-        # da.attrs['__units_term'] = None
-        # da.attrs['__name'] = 'OD'
-        # da.attrs['__scalar_type'] = 'float'
+            if 'value_units' in values_json:
+                term = values_json['value_units']
+                value_unit_term = Term(
+                    term['oterm_ref'], term_name=term['oterm_name'])
+            else:
+                value_unit_term = None
 
-        # da.attrs['__attr_count'] = 2
-        # da.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:146', 'Arg')  )
-        # da.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:147', 'Lys')  )
-        
-        da = xr.DataArray(data, dims=dim_names)
-        da.attrs['__type_term'] = value_type_term
-        da.attrs['__units_term'] = value_unit_term
-        da.attrs['__name'] = value_type_term.property_name
-        da.attrs['__scalar_type'] = value_scalar_type
-        da.attrs['__attr_count'] = 0
-        
-        if 'value_context' in values_json:
-            for attr_json in values_json['value_context']:
-                da.attrs['__attr_count'] += 1
-                attr_name = '__attr%s' % da.attrs['__attr_count'] 
-                da.attrs[attr_name] = PropertyValue.read_json(attr_json)
-        
-        ds['__data_var'] = da
-        return Brick(ds)    
+            value_scalar_type = values_json['values']['scalar_type']
+            if value_scalar_type == 'oterm_ref':
+                value_scalar_type = 'oterm_refs'
+            else:
+                value_scalar_type += '_values'
+            data = np.array(values_json['values'][value_scalar_type])
+            data = data.reshape(dim_sizes)    
+            
+            # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
+            # da.attrs['__type_term'] = Term('AA:154', 'Optical Density')
+            # da.attrs['__units_term'] = None
+            # da.attrs['__name'] = 'OD'
+            # da.attrs['__scalar_type'] = 'float'
 
+            # da.attrs['__attr_count'] = 2
+            # da.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:146', 'Arg')  )
+            # da.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Chemical'), value=Term('AA:147', 'Lys')  )
+            
+            da = xr.DataArray(data, dims=dim_names)
+            da.attrs['__type_term'] = value_type_term
+            da.attrs['__units_term'] = value_unit_term
+            da.attrs['__name'] = value_type_term.property_name
+            da.attrs['__scalar_type'] = value_scalar_type
+            da.attrs['__attr_count'] = 0
+            
+            if 'value_context' in values_json:
+                for attr_json in values_json['value_context']:
+                    da.attrs['__attr_count'] += 1
+                    attr_name = '__attr%s' % da.attrs['__attr_count'] 
+                    da.attrs[attr_name] = PropertyValue.read_json(attr_json)
+            
+            ds.attrs['__data_var_count'] += 1
+            data_var_name = '__data_var%s' % ds.attrs['__data_var_count']
 
+            ds[data_var_name] = da
+        return Brick(xds=ds)    
 
-    def __init__(self, data, type_term=None, value_type_term=None, value_units_term=None, scalar_type='text', dim_terms=None,):
+    
+    def __inflate_data_vars(self):
+        for i,var in enumerate(self.data_vars):
+            self.__dict__['DATA%s_%s' %( i+1 , var.var_name)] = var
 
-        if type(data) is np.ndarray:
-            xds = self.__build_xds(data, type_term, value_type_term, value_units_term, scalar_type, dim_terms)
-        else:
-            xds = data
+    @staticmethod
+    def _xds_build_var(brick, dim, xds, xds_var_prefix, dim_names, type_term, units_term, values, scalar_type):
+        var = xr.DataArray(values, dims=dim_names)
+        var.attrs['__type_term'] = type_term
+        var.attrs['__units_term'] = units_term
+        var.attrs['__name'] = type_term.term_name
+        var.attrs['__scalar_type'] = scalar_type
+        var.attrs['__attr_count'] = 0
+
+        # add variable to xds
+        var_count = xds.attrs[xds_var_prefix + '_var_count']
+        var_count += 1
+        xds.attrs[xds_var_prefix + '_var_count'] = var_count
+        var_name = '%s_var%s'  % (xds_var_prefix, var_count )
+        xds[var_name] = var
+
+        return BrickVariable(brick, dim, xds, var_name) 
+
+    def __init__(self, xds=None, type_term=None, dim_terms=None, shape=None, id='', name='', description=''):
+
+        if xds is None:
+            xds = self.__build_xds(type_term, dim_terms, shape, id=id, name=name, description=description)
 
         self.__xds = xds
         self.__dims = []
         for i in range( self.dim_count ):
-            dim = BrickDimension(xds, i)
+            dim = BrickDimension(self, xds, i)
             self.__dims.append( dim )
             self.__dict__['DIM%s_%s' %(i+1, dim.name) ] = dim
             
-        self.__data_var = BrickVariable(xds, '__data_var')
-        self.__dict__['DATA1_%s' % self.__data_var.var_name] = self.__data_var
+        self.__data_vars = []
+        for i in range( self.data_var_count):            
+            data_var = BrickVariable(self, None, xds, '__data_var%s' % (i+1))
+            self.__data_vars.append(data_var)
+
+        self.__inflate_data_vars()
        
 
-    def __build_xds(self, data, type_term, value_type_term, value_units_term, scalar_type, dim_terms):
+    def __build_xds(self, type_term, dim_terms, shape, id='', name='', description=''):
         ds = xr.Dataset()                
-        ds.attrs['__id'] = ''
-        ds.attrs['__name'] = type_term.term_name
-        ds.attrs['__description'] = ''
+        ds.attrs['__id'] = id
+        ds.attrs['__name'] = name
+        ds.attrs['__description'] = description
         ds.attrs['__type_term'] = type_term
         ds.attrs['__attr_count'] = 0        
         ds.attrs['__dim_count'] = len(dim_terms)
+        ds.attrs['__data_var_count'] = 0        
+        
         dim_names = []
         for i, term in enumerate(dim_terms):
             dim_name = '__dim%s' % (i+1)
@@ -283,13 +319,10 @@ class Brick:
             ds.attrs[dim_name + '_var_count'] = 0
             dim_names.append(dim_name)
 
-        da = xr.DataArray(data, dims=dim_names)
-        da.attrs['__type_term'] = value_type_term
-        da.attrs['__units_term'] = value_units_term
-        da.attrs['__name'] = value_type_term.property_name
-        da.attrs['__scalar_type'] = scalar_type
-        da.attrs['__attr_count'] = 0                
-        ds['__data_var'] = da
+
+
+        ds['_'] = xr.DataArray(np.zeros(shape), dims=dim_names)
+
         return ds    
 
     def __get_attr(self, name):
@@ -306,6 +339,10 @@ class Brick:
     def dim_count(self):
         return self.__get_attr('__dim_count')
     
+    @property
+    def data_var_count(self):
+        return self.__get_attr('__data_var_count')
+
     @property
     def id(self):
         return self.__get_attr('__id')
@@ -346,7 +383,7 @@ class Brick:
 
     @property
     def data_vars(self):
-        return [self.__data_var]
+        return self.__data_vars
     
     @property
     def attrs(self):
@@ -539,58 +576,59 @@ class Brick:
                 dim_data['typed_values'].append(var_data)
             
         # do data
-        vard = self.data_vars[0]
-        value_key = ''
-        value_vals = []
-        if vard.scalar_type == 'oterm_ref':
-            value_key = 'oterm_refs'
-            value_vals = [t.term_id for t in vard.values]
-        else:
-            value_key = vard.scalar_type + '_values'
-            value_vals = list(vard.values)
+        data['typed_values'] = []
+        for vard in self.data_vars:
+            value_key = ''
+            value_vals = []
+            if vard.scalar_type == 'oterm_ref':
+                value_key = 'oterm_refs'
+                value_vals = [t.term_id for t in vard.values]
+            else:
+                value_key = vard.scalar_type + '_values'
+                value_vals = list(vard.values)
 
-        values_data = {
-            'value_type': {
-                'oterm_ref': vard.type_term.term_id,
-                'oterm_name': vard.type_term.term_name
-            },
-            'values': {
-                'scalar_type': vard.scalar_type,
-                value_key: value_vals
-            },
-            'value_context': []
-        }
-
-        # Do units
-        if vard.units_term is not None:
-            values_data['value_units'] = {
-                'oterm_ref': vard.units_term.term_id,
-                'oterm_name': vard.units_term.term_name
+            values_data = {
+                'value_type': {
+                    'oterm_ref': vard.type_term.term_id,
+                    'oterm_name': vard.type_term.term_name
+                },
+                'values': {
+                    'scalar_type': vard.scalar_type,
+                    value_key: value_vals
+                },
+                'value_context': []
             }
 
-        # Do attributes
-        for attr in vard.attrs:
-            value_key = ''
-            value_val = ''
-            if attr.value is not None and type(attr.value) is Term:
-                value_key = attr.scalar_type
-                value_val = attr.value.term_id
-            else:
-                value_key = attr.scalar_type + '_value'
-                value_val = attr.value
-
-            values_data['value_context'].append({
-                'value_type':{
-                    'oterm_ref': attr.type_term.term_id,
-                    'oterm_name': attr.type_term.term_name
-                },
-                'value':{
-                    'scalar_type': attr.scalar_type,
-                    value_key : value_val
+            # Do units
+            if vard.units_term is not None:
+                values_data['value_units'] = {
+                    'oterm_ref': vard.units_term.term_id,
+                    'oterm_name': vard.units_term.term_name
                 }
-            })
 
-        data['typed_values'] = values_data
+            # Do attributes
+            for attr in vard.attrs:
+                value_key = ''
+                value_val = ''
+                if attr.value is not None and type(attr.value) is Term:
+                    value_key = attr.scalar_type
+                    value_val = attr.value.term_id
+                else:
+                    value_key = attr.scalar_type + '_value'
+                    value_val = attr.value
+
+                values_data['value_context'].append({
+                    'value_type':{
+                        'oterm_ref': attr.type_term.term_id,
+                        'oterm_name': attr.type_term.term_name
+                    },
+                    'value':{
+                        'scalar_type': attr.scalar_type,
+                        value_key : value_val
+                    }
+                })
+
+        data['typed_values'].append(values_data)
         return data
 
     @property
@@ -623,11 +661,13 @@ class Brick:
         ]
         
         # Data
-        data_var = self.data_vars[0]
         rows.append(_row2_header('<i>Data:</i>'))
-        rows.append( _row2('Type', data_var.type_term)  )
-        rows.append( _row2('Units', data_var.units_term)  )
-        rows.append( _row2('Sclar type', data_var.scalar_type)  )
+        for data_var in self.data_vars:
+            rows.append( _row2( data_var.long_name, '' ))
+
+        # rows.append( _row2('Type', data_var.type_term)  )
+        # rows.append( _row2('Units', data_var.units_term)  )
+        # rows.append( _row2('Sclar type', data_var.scalar_type)  )
                               
         # Dimensions
         rows.append(_row2_header('<i>Dimensions:</i>'))
@@ -667,10 +707,11 @@ class Brick:
         id2terms = {}
         id2terms[self.type_term.term_id] = self.type_term
 
-        data_var = self.data_vars[0]        
-        id2terms[data_var.type_term.term_id] = data_var.type_term
-        if data_var.units_term:
-            id2terms[data_var.units_term.term_id] = data_var.units_term
+
+        for data_var in self.data_vars:        
+            id2terms[data_var.type_term.term_id] = data_var.type_term
+            if data_var.units_term:
+                id2terms[data_var.units_term.term_id] = data_var.units_term
 
         for attr in self.attrs:
             attr._collect_property_terms(id2terms)
@@ -705,6 +746,15 @@ class Brick:
                 values.add(val)
         return values        
         
+    def add_data_var(self, type_term, units_term, values, scalar_type='text'):
+        dim_names = [ '__dim%s'%(i+1)  for i in range(self.dim_count) ]
+        var = Brick._xds_build_var(self, None, self.__xds, '__data', dim_names, 
+            type_term, units_term, values, scalar_type)
+
+        self.__data_vars.append(var)
+        self.__inflate_data_vars()
+
+
     def save(self, process_term=None, person_term=None, campaign_term=None, input_obj_ids=None):
 
         if process_term is None:
@@ -739,17 +789,19 @@ class Brick:
 
         
 class BrickDimension:
-    def __init__(self, xds, dim_index):
+    def __init__(self, brick,  xds, dim_index):
         self.__xds = xds
+        self.__brick = brick
         self.__dim_index = dim_index
         self.__dim_prefix = '__dim%s' % (dim_index+1)
         self.__vars = []
         for i in range( self.var_count ):
             var_prefix =  '%s_var%s' % (self.__dim_prefix, i+1)
             
-            bv = BrickVariable(xds, var_prefix) 
+            bv = BrickVariable(brick, self,  xds, var_prefix) 
             self.__vars.append(bv)
-            self.__dict__['VAR%s_%s' %(i+1, bv.var_name)] = bv
+        
+        self.__inflate_vars()
             
     def __get_attr(self, suffix):
         return self.__xds.attrs[self.__dim_prefix + suffix]
@@ -786,24 +838,41 @@ class BrickDimension:
     def where(self, bool_array):
         kwargs = {self.__dim_prefix: bool_array}
         xds = self.__xds.isel(kwargs)
-        return Brick(xds)    
+        return Brick(xds=xds)    
     
+
+    def  __inflate_vars(self):
+        for i,var in enumerate(self.vars):        
+           self.__dict__['VAR%s_%s' %(i+1, var.var_name)] = var
+
+
     def add_var(self, type_term, units_term, values, scalar_type='text'):
-        var = xr.DataArray(values, dims=self.__dim_prefix)
-        var.attrs['__type_term'] = type_term
-        var.attrs['__units_term'] = units_term
-        var.attrs['__name'] = type_term.term_name
-        var.attrs['__scalar_type'] = scalar_type
-        var.attrs['__attr_count'] = 0
+        var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
+            type_term, units_term, values, scalar_type)
 
-        # add variable to xds
-        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
-        var_name = self.__dim_prefix + '_var%s'  % self.var_count
-        self.__xds[var_name] = var
+        self.__vars.append(var)
+        self.__inflate_vars()
 
-        bv = BrickVariable(self.__xds, var_name) 
-        self.__vars.append(bv)
-        self.__dict__['VAR%s_%s' %( self.var_count , bv.var_name)] = bv
+    def add_brick_data_var(self, match_src_var, match_dst_var, data_var):
+        # index dst values
+        val_2_index = {}
+        for i,val in enumerate(match_dst_var.values):
+            val_2_index[val] = i
+        
+        # build values
+        values = []
+        for val in match_src_var.values:
+            dst_index = val_2_index.get(val)
+            values.append(  data_var.values[dst_index] if dst_index is not None else None  )
+        
+        # build variable
+        var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
+            data_var.type_term, data_var.units_term, values, data_var.scalar_type)
+
+        self.__vars.append(var)
+        self.__inflate_vars()
+
+        return self.vars_df.head(10)
 
 
 
@@ -834,18 +903,16 @@ class BrickDimension:
             raise ValueError('There is no variable which is PK for the core type. Please do map_to_core_type first.' % core_type)
 
 
+        # build query
         values = []
         for val in pk_var.values:
             if val is not None:
                 values.append(val)
 
-        pk_prop_name =  pk_def.name
         type_name = to_es_type_name(core_type)
         q = services.QQuery(type_name ,{})
         q.has({pk_def.name:values})
         rs = q.find()
-
-        # Build variable
 
         # build data
         pk2val = {}
@@ -861,32 +928,22 @@ class BrickDimension:
             else:
                 data.append( pk2val.get(val) )
 
-        # print('data = ', data)
-        # print('dims = ', self.size)
-        prop_var = xr.DataArray(data, dims=self.__dim_prefix)
+        # Build variable
+        type_term = Term(prop_def.term_id, refresh=True)
+        units_term = None
+        scalar_type = prop_def.type
 
-        term = Term(prop_def.term_id)
-        term.refresh()
+        var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
+            type_term, units_term, data, scalar_type)
 
-        prop_var.attrs['__type_term'] = term
-        prop_var.attrs['__units_term'] = None
-        prop_var.attrs['__name'] = term.term_name
-        prop_var.attrs['__scalar_type'] = prop_def.type
-        prop_var.attrs['__attr_count'] = 0
-
-        # add variable to xds
-        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
-        var_name = self.__dim_prefix + '_var%s'  % self.var_count
-        self.__xds[var_name] = prop_var
-
-        # create BrickVariable            
-        bv = BrickVariable(self.__xds, var_name) 
-        self.__vars.append(bv)
-        self.__dict__['VAR%s_%s' %(self.var_count, bv.var_name)] = bv
+        self.__vars.append(var)
+        self.__inflate_vars()
 
         return self.vars_df.head(10)
 
     def map_to_core_type(self, dim_var, core_type, core_prop_name):
+
+        # build query
         values = set() 
         for val in dim_var.values:
             if val is not None:
@@ -898,8 +955,6 @@ class BrickDimension:
         q = services.QQuery(type_name ,{})
         q.has({core_prop_name:  list(values)})
         rs = q.find()
-
-        # Build variable
 
         # build data
         prop2pk_ids = {}
@@ -916,31 +971,18 @@ class BrickDimension:
                 pk_val = None
             data.append(pk_val)
 
-        # print('data = ', data)
-        # print('dims = ', self.size)
-        pk_var = xr.DataArray(data, dims=self.__dim_prefix)
+        # Build variable
+        type_term = Term(type_def.pk_property_def.term_id, refresh=True)
+        units_term = None
+        scalar_type = type_def.pk_property_def.type
 
-        term = Term(type_def.pk_property_def.term_id)
-        term.refresh()
+        var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
+            type_term, units_term, data, scalar_type)
 
-        pk_var.attrs['__type_term'] = term
-        pk_var.attrs['__units_term'] = None
-        pk_var.attrs['__name'] = term.term_name
-        pk_var.attrs['__scalar_type'] = type_def.pk_property_def.type
-        pk_var.attrs['__attr_count'] = 0
-
-        # add variable to xds
-        self.__xds.attrs[self.__dim_prefix + '_var_count'] += 1
-        var_name = self.__dim_prefix + '_var%s'  % self.var_count
-        self.__xds[var_name] = pk_var
-
-        # create BrickVariable            
-        bv = BrickVariable(self.__xds, var_name) 
-        self.__vars.append(bv)
-        self.__dict__['VAR%s_%s' %(self.var_count, bv.var_name)] = bv
+        self.__vars.append(var)
+        self.__inflate_vars()
 
         return self.vars_df.head(10)
-
 
     def _collect_property_terms(self, id2terms):
         id2terms[self.type_term.term_id] = self.type_term
@@ -982,7 +1024,9 @@ class BrickDimension:
         return '<table>%s</table>' % ''.join(rows)     
     
 class BrickVariable:
-    def __init__(self, xds, var_prefix):
+    def __init__(self, brick, dim,  xds, var_prefix):
+        self.__brick = brick
+        self.__dim = dim
         self.__xds = xds
         self.__var_prefix = var_prefix
         
@@ -1003,8 +1047,7 @@ class BrickVariable:
     
     @property    
     def scalar_type(self):
-        return self.__get_attr('__scalar_type')
-    
+        return self.__get_attr('__scalar_type')    
         
     @property
     def attrs(self):
@@ -1048,6 +1091,11 @@ class BrickVariable:
                 items.append(val)
 
         return to_var_name('',' '.join(items))
+
+
+    def map_to_core_type(self, core_type, core_prop_name):
+        return self.__dim.map_to_core_type(self, core_type, core_prop_name)
+
 
     def is_none(self):
         return [  val is None for val in  self.values]
