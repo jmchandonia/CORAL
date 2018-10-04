@@ -124,17 +124,18 @@ class ElasticSearchService:
                 value = data_holder.data[pname]
                 if pdef.type == 'term':
                     term = Term.parse_term(value)
-                    term.refresh()
+                    # term.refresh()
                     doc[pname + '_term_id'] = term.term_id
                     doc[pname + '_term_name'] = term.term_name
-                    all_term_ids.add(term.term_id)
-                    for pid in term.parent_path_ids:
-                        all_parent_path_term_ids.add(pid)
+
+                    # all_term_ids.add(term.term_id)
+                    # for pid in term.parent_path_ids:
+                    #     all_parent_path_term_ids.add(pid)
                 else:
                     doc[pname] = value
 
-        doc['all_term_ids'] = list(all_term_ids)
-        doc['all_parent_path_term_ids'] = list(all_parent_path_term_ids)
+        # doc['all_term_ids'] = list(all_term_ids)
+        # doc['all_parent_path_term_ids'] = list(all_parent_path_term_ids)
 
         self.__es_client .index(
             index=index_name, doc_type=es_type, body=doc)
@@ -224,5 +225,10 @@ class ElasticSearchService:
         index_name = ES_INDEX_NAME_PREFIX + es_type
         # print('From get_entity_properties:', es_type, index_name)
 
-        doc = self.__es_client.indices.get_mapping(index=index_name)
-        return list(doc[index_name]['mappings'][es_type]['properties'].keys())
+        try:
+            doc = self.__es_client.indices.get_mapping(index=index_name)
+            props = list(doc[index_name]['mappings']
+                         [es_type]['properties'].keys())
+        except:
+            props = []
+        return props
