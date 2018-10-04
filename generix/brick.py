@@ -61,6 +61,7 @@ class PropertyValue:
         type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
 
         value_type = json_data['value']['scalar_type']
+
         if value_type == 'oterm_ref':
             value = Term(json_data['value'][value_type])
         else:
@@ -122,9 +123,13 @@ class Brick:
 
         ds.attrs['__attr_count'] = 0
         for prop_data in json_data['array_context']:
-            ds.attrs['__attr_count'] += 1
-            attr_name = '__attr%s' % ds.attrs['__attr_count'] 
-            ds.attrs[attr_name] = PropertyValue.read_json(prop_data)        
+            try:
+                pv = PropertyValue.read_json(prop_data)        
+                ds.attrs['__attr_count'] += 1
+                attr_name = '__attr%s' % ds.attrs['__attr_count'] 
+                ds.attrs[attr_name] = pv
+            except:
+                print('Error: can not read property')
         
         # do dimensions
         # ds.attrs['__dim_count'] = dim_count    
@@ -141,7 +146,14 @@ class Brick:
             
             term = dim_json['data_type']
             dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+
+
             dim_size = dim_json['size']
+
+            # # TODO: it is a hack... check if heterogeneous
+            # if type(json_data['typed_values']) is list:
+            #     dim_size = 1
+
             dim_sizes.append(dim_size)
             vars_json = dim_json['typed_values']
             
@@ -192,9 +204,13 @@ class Brick:
                 var.attrs['__attr_count'] = 0     
                 if 'value_context' in var_json:
                     for attr_json in var_json['value_context']:
-                        var.attrs['__attr_count'] += 1
-                        attr_name = '__attr%s' % var.attrs['__attr_count'] 
-                        var.attrs[attr_name] = PropertyValue.read_json(attr_json)
+                        try:
+                            pv = PropertyValue.read_json(attr_json)
+                            var.attrs['__attr_count'] += 1
+                            attr_name = '__attr%s' % var.attrs['__attr_count'] 
+                            var.attrs[attr_name] = pv
+                        except:
+                            print('Error: can not read property')
                 
                 
                 var_name = '%s_var%s' % (dim_name, ds.attrs[dim_name + '_var_count'])
@@ -210,10 +226,7 @@ class Brick:
             values_jsons = [values_jsons]
         for values_json in values_jsons:
             term = values_json['value_type']
-            if 'oterm_ref' in term:
-                value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-            else:
-                value_type_term = Term(term['term_ref'], term_name=term['term_name'])
+            value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
 
             if 'value_units' in values_json:
                 term = values_json['value_units']
@@ -249,10 +262,15 @@ class Brick:
             
             if 'value_context' in values_json:
                 for attr_json in values_json['value_context']:
-                    da.attrs['__attr_count'] += 1
-                    attr_name = '__attr%s' % da.attrs['__attr_count'] 
-                    da.attrs[attr_name] = PropertyValue.read_json(attr_json)
-            
+                    try:
+                        pv = PropertyValue.read_json(attr_json)
+
+                        da.attrs['__attr_count'] += 1
+                        attr_name = '__attr%s' % da.attrs['__attr_count'] 
+                        da.attrs[attr_name] = pv
+                    except:
+                        print('Error: can not read property')
+
             ds.attrs['__data_var_count'] += 1
             data_var_name = '__data_var%s' % ds.attrs['__data_var_count']
 
@@ -628,7 +646,7 @@ class Brick:
                     }
                 })
 
-        data['typed_values'].append(values_data)
+            data['typed_values'].append(values_data)
         return data
 
     @property
