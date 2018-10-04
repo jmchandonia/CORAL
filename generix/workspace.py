@@ -224,6 +224,11 @@ class Workspace:
             'upk_id': upk_id
         })
 
+    def delete_all(self):
+        for collection_name in self.__enigma_db.collection_names():
+            print('drop collection %s' % collection_name)
+            self.__enigma_db.drop_collection(collection_name)
+
     def _store_process(self, data_holder):
         self.__enigma_db.get_collection(
             data_holder.type_name).insert_one(data_holder.data)
@@ -242,7 +247,8 @@ class Workspace:
 
     def _index_neo_object(self, data_holder):
         if type(data_holder) is EntityDataHolder:
-            services.neo_service.index_entity(data_holder)
+            if data_holder.type_def.for_provenance:
+                services.neo_service.index_entity(data_holder)
         elif type(data_holder) is BrickDataHolder:
             services.neo_service.index_brick(data_holder)
 
