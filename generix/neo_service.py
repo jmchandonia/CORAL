@@ -6,9 +6,13 @@ class Neo4JService:
     def __init__(self, neo4j_client):
         self.__neo4j_client = neo4j_client
 
-    def delete_all(self, type_name):
-        with self.__neo4j_client.session() as session:
-            session.run('MATCH (n : %s) DETACH DELETE n' % type_name)
+    def delete_all(self, type_name=None):
+        if type_name is None:
+            with self.__neo4j_client.session() as session:
+                session.run('MATCH (n) DETACH DELETE n')
+        else:
+            with self.__neo4j_client.session() as session:
+                session.run('MATCH (n : %s) DETACH DELETE n' % type_name)
 
     def index_entity(self, data_holder):
         type_def = data_holder.type_def
