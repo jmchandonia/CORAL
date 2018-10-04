@@ -82,23 +82,26 @@ class SearchService:
         ]
 
         brick_descriptors = []
-        result_set = self.__es_client.search(
-            index=_ES_BRICK_INDEX_NAME, body=query)
+        try:
+            result_set = self.__es_client.search(
+                index=_ES_BRICK_INDEX_NAME, body=query)
 
-        # print('entity_type:', 'brick')
-        # print('index_name:', _ES_BRICK_INDEX_NAME)
-        # print('Query:', query)
-        # print('result_set:', result_set)
+            # print('entity_type:', 'brick')
+            # print('index_name:', _ES_BRICK_INDEX_NAME)
+            # print('Query:', query)
+            # print('result_set:', result_set)
 
-        for hit in result_set['hits']['hits']:
-            data = hit["_source"]
-            bd = BrickDescriptor(data['brick_id'], data['name'], data['description'],
-                                 data['data_type_term_id'], data['data_type_term_name'],
-                                 data['n_dimensions'],
-                                 data['dim_type_term_ids'], data['dim_type_term_names'], data['dim_sizes'],
-                                 data['value_type_term_id'], data['value_type_term_name'])
+            for hit in result_set['hits']['hits']:
+                data = hit["_source"]
+                bd = BrickDescriptor(data['brick_id'], data['name'], data['description'],
+                                     data['data_type_term_id'], data['data_type_term_name'],
+                                     data['n_dimensions'],
+                                     data['dim_type_term_ids'], data['dim_type_term_names'], data['dim_sizes'],
+                                     data['value_type_term_id'], data['value_type_term_name'])
 
-            brick_descriptors.append(bd)
+                brick_descriptors.append(bd)
+        except:
+            print('Error: can not get bricks')
         return brick_descriptors
 
     def find_ids(self, brick_ids):
