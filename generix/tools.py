@@ -5,12 +5,13 @@ from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
 from .brick import Brick
 
-
 _FILES = {
     'import_dir': 'data/import/',
     'bricks': [
         {
             'file': 'generic_taxonomic_abundance_fw215_02_100ws.json'
+        }, {
+            'file': 'generic_isolates_16S.json'
         }, {
             'file': 'generic_mt123_growth_carbon_sources.json'
         }, {
@@ -19,18 +20,29 @@ _FILES = {
             'file': 'generic_metals_pH_growth.json'
         }, {
             'file': 'generic_tnseq_N2E2.json'
+            # }, {
+            #KeyError: 'oterm_ref'
+            #     'file': 'generic_field_data_hazen_post100ws.json'
         }, {
             'file': 'generic_field_data_adams.json'
         }, {
             'file': 'generic_otu_id_zhou_100ws.json'
-            # }, {
-            #     'file': 'generic_otu_count_zhou_100ws.json'
         }, {
-            'file': 'generic_otu_id_zhou_corepilot.json'
+            #            'file': 'generic_otu_count_zhou_100ws.json'
+            #        }, {
+            #	    'file': 'generic_otu_id_zhou_corepilot.json'
+            #	}, {
+            #	    'file': 'generic_otu_count_zhou_corepilot_271.json'
+            #	}, {
+            #	    'file': 'generic_otu_count_zhou_corepilot_106.json'
+            #	}, {
+
+            # ValueError: cannot reshape array of size 5910 into shape (6,5910)
+            'file': 'generic_hazen_aquatroll600_300.json'
         }, {
-            'file': 'generic_otu_count_zhou_corepilot_271.json'
-        }, {
-            'file': 'generic_otu_count_zhou_corepilot_106.json'
+
+            # ValueError: cannot reshape array of size 3475 into shape (6,3475)
+            'file': 'generic_hazen_aquatroll600_835.json'
         }, {
             'file': 'generic_adams_corepilot_271.json'
         }, {
@@ -39,17 +51,59 @@ _FILES = {
     ],
     'entities': [
         {
-            'file': 'wells_all.tsv',
-            'dtype': 'Well',
-        }, {
-            'file': 'samples_all.tsv',
-            'dtype': 'Sample',
-        }, {
-            'file': 'strains_isolates.tsv',
-            'dtype': 'Strain',
-        }, {
-            'file': 'communities_isolates.tsv',
-            'dtype': 'Community',
+            #     'file': 'wells_all.tsv',
+            #     'dtype': 'Well'
+            # }, {
+            #     'file': 'samples_all.tsv',
+            #     'dtype': 'Sample'
+            # }, {
+            #     'file': 'strains_isolates.tsv',
+            #     'dtype': 'Strain'
+            # }, {
+            #     'file': 'communities_isolates.tsv',
+            #     'dtype': 'Community'
+            # }, {
+            #     'file': 'taxa_zhou_100ws.tsv',
+            #     'dtype': 'Taxon'
+            # }, {
+            #     'file': 'taxa_zhou_corepilot.tsv',
+            #     'dtype': 'Taxon'
+            # }, {
+            #     'file': 'otus_zhou_100ws.tsv',
+            #     'dtype': 'OTU'
+            # }, {
+            'file': 'otu_zhou_corepilot.tsv',
+            'dtype': 'OTU'
+            # }, {
+            #     'file': 'condition_tnseq.tsv',
+            #     'dtype': 'Condition'
+            # }, {
+            #     'file': 'condition_isolates.tsv',
+            #     'dtype': 'Condition'
+            # }, {
+            #     'file': 'condition_filters.tsv',
+            #     'dtype': 'Condition'
+            # }, {
+            #     'file': 'kbase_reads_isolates.tsv',
+            #     'dtype': 'KBase_Reads'
+            # }, {
+            #     'file': 'kbase_reads_wgs.tsv',
+            #     'dtype': 'KBase_Reads'
+            # }, {
+            #     'file': 'kbase_reads_100ws.tsv',
+            #     'dtype': 'KBase_Reads'
+            # }, {
+            #     'file': 'kbase_assemblies.tsv',
+            #     'dtype': 'KBase_Assembly'
+            # }, {
+            #     'file': 'kbase_genomes.tsv',
+            #     'dtype': 'KBase_Genome'
+            # }, {
+            #     'file': 'kbase_genes_isolates.tsv',
+            #     'dtype': 'KBase_Gene'
+            # }, {
+            #     'file': 'tnseq_library.tsv',
+            #     'dtype': 'TnSeq_Library'
         }
     ],
     'processes': [
@@ -63,11 +117,117 @@ _FILES = {
             'file': 'process_sampling_all.tsv',
             'ptype': 'Sampling'
         }, {
+            'file': 'process_annotate_isolates.tsv',
+            'ptype': 'Genome Annotation'
+        }, {
+            'file': 'process_assemble_isolates.tsv',
+            'ptype': 'Genome Assembly'
+        }, {
+            'file': 'process_assay_tnseq.tsv',
+            'ptype': 'Assay Fitness'
+        }, {
+            'file': 'process_otu_inference.tsv',
+            'ptype': 'Taxonomic Inference'
+        }, {
+            'file': 'process_sequencing_16S_isolates.tsv',
+            'ptype': '16S Sequencing'
+        }, {
+            'file': 'process_sequencing_shotgun.tsv',
+            'ptype': 'Shotgun Sequencing'
+        }, {
+            'file': 'process_tnseq.tsv',
+            'ptype': 'Build TnSeq Library'
+        }, {
+            'file': 'process_assay_tnseq.tsv',
+            'ptype': 'Assay Fitness'
+        }, {
+            'file': 'process_sequence_100ws_16S.tsv',
+            'ptype': '16S Sequencing'
+        }, {
+            'file': 'process_filter_100ws.tsv',
+            'ptype': 'Filter'
+        }, {
+            'file': 'process_otu_inference_zhou_100ws.tsv',
+            'ptype': 'Classify OTUs'
+        }, {
+            'file': 'process_hazen_aquatroll.tsv',
+            'ptype': 'Assay Geochemistry'
+        }, {
+            'file': 'process_environmental_measurements_hazen_post100ws.tsv',
+            'ptype': 'Assay Geochemistry'
+        }, {
+            'file': 'process_environmental_measurements_adams_corepilot.tsv',
+            'ptype': 'Assay Environment'
+        }, {
             'file': 'process_environmental_measurements_adams.tsv',
-            'ptype': 'Environmental Measurements'
+            'ptype': 'Assay Environment'
         }
     ]
 }
+
+
+# _FILES = {
+#     'import_dir': 'data/import/',
+#     'bricks': [
+#         {
+#             'file': 'generic_taxonomic_abundance_fw215_02_100ws.json'
+#         }, {
+#             'file': 'generic_mt123_growth_carbon_sources.json'
+#         }, {
+#             'file': 'generic_mt94_metals_growth.json'
+#         }, {
+#             'file': 'generic_metals_pH_growth.json'
+#         }, {
+#             'file': 'generic_tnseq_N2E2.json'
+#         }, {
+#             'file': 'generic_field_data_adams.json'
+#         }, {
+#             'file': 'generic_otu_id_zhou_100ws.json'
+#             # }, {
+#             #     'file': 'generic_otu_count_zhou_100ws.json'
+#         }, {
+#             'file': 'generic_otu_id_zhou_corepilot.json'
+#         }, {
+#             'file': 'generic_otu_count_zhou_corepilot_271.json'
+#         }, {
+#             'file': 'generic_otu_count_zhou_corepilot_106.json'
+#         }, {
+#             'file': 'generic_adams_corepilot_271.json'
+#         }, {
+#             'file': 'generic_adams_corepilot_106.json'
+#         }
+#     ],
+#     'entities': [
+#         {
+#             'file': 'wells_all.tsv',
+#             'dtype': 'Well',
+#         }, {
+#             'file': 'samples_all.tsv',
+#             'dtype': 'Sample',
+#         }, {
+#             'file': 'strains_isolates.tsv',
+#             'dtype': 'Strain',
+#         }, {
+#             'file': 'communities_isolates.tsv',
+#             'dtype': 'Community',
+#         }
+#     ],
+#     'processes': [
+#         {
+#             'file': 'process_assay_growth.tsv',
+#             'ptype': 'Assay Growth'
+#         }, {
+#             'file': 'process_isolates.tsv',
+#             'ptype': 'Isolation'
+#         }, {
+#             'file': 'process_sampling_all.tsv',
+#             'ptype': 'Sampling'
+#         }, {
+#             'file': 'process_environmental_measurements_adams.tsv',
+#             'ptype': 'Environmental Measurements'
+#         }
+#     ]
+# }
 
 
 def upload_ontologies(argv):
@@ -79,8 +239,14 @@ def upload_ontologies(argv):
 
 
 def neo_delete(argv):
-    type_name = argv[0]
-    services.neo_service.delete_all(type_name)
+    if len(argv) > 0:
+        services.neo_service.delete_all(type_name=argv[0])
+    else:
+        services.neo_service.delete_all()
+
+
+def mongo_delete(argv):
+    services.workspace.delete_all()
 
 
 def upload_bricks(argv):
@@ -104,32 +270,35 @@ def upload_bricks(argv):
 def upload_entities(argv):
     ws = services.workspace
     for file_def in _FILES['entities']:
-        file_name = '../' + _FILES['import_dir'] + file_def['file']
-        type_name = file_def['dtype']
         try:
-            services.es_service.drop_index(type_name)
-        except:
-            pass
-        services.es_service.create_index(
-            services.typedef.get_type_def(type_name))
-
-        print('Doing %s: %s' % (type_name, file_name))
-        df = pd.read_csv(file_name, sep='\t')
-        i = 0
-        print('size=%s' % df.shape[0])
-        for _, row in df.iterrows():
+            file_name = '../' + _FILES['import_dir'] + file_def['file']
+            type_name = file_def['dtype']
             try:
-                i = i + 1
-                if i % 10 == 0:
-                    print('.', end='', flush=True)
-                if i % 100 == 0:
-                    print(i)
+                services.es_service.drop_index(type_name)
+            except:
+                pass
+            services.es_service.create_index(
+                services.typedef.get_type_def(type_name))
 
-                data = row.to_dict()
-                data_holder = EntityDataHolder(type_name, data)
-                ws.save_data(data_holder)
-            except Exception as e:
-                print(e)
+            print('Doing %s: %s' % (type_name, file_name))
+            df = pd.read_csv(file_name, sep='\t')
+            i = 0
+            print('size=%s' % df.shape[0])
+            for _, row in df.iterrows():
+                try:
+                    i = i + 1
+                    if i % 50 == 0:
+                        print('.', end='', flush=True)
+                    if i % 500 == 0:
+                        print(i)
+
+                    data = row.to_dict()
+                    data_holder = EntityDataHolder(type_name, data)
+                    ws.save_data(data_holder)
+                except Exception as e:
+                    print('Error:', e)
+        except Exception as e:
+            print('Error:', e)
 
         print('Done!')
         print()
@@ -146,19 +315,31 @@ def upload_processes(argv):
         services.typedef.get_type_def(type_name))
 
     for file_def in _FILES['processes']:
-        process_type = file_def['ptype']
-        file_name = '../' + _FILES['import_dir'] + file_def['file']
+        try:
+            process_type = file_def['ptype']
+            file_name = '../' + _FILES['import_dir'] + file_def['file']
 
-        print('Doing %s: %s' % (process_type, file_name))
-        df = pd.read_csv(file_name, sep='\t')
-        for _, row in df.iterrows():
-            try:
-                data = row.to_dict()
-                data_holder = ProcessDataHolder(data)
-                data_holder.update_object_ids()
-                ws.save_process(data_holder)
-            except Exception as e:
-                print(e)
+            print('Doing %s: %s' % (process_type, file_name))
+            df = pd.read_csv(file_name, sep='\t')
+            i = 0
+            for _, row in df.iterrows():
+                try:
+                    i = i + 1
+                    if i % 50 == 0:
+                        print('.', end='', flush=True)
+                    if i % 500 == 0:
+                        print(i)
+
+                    data = row.to_dict()
+                    data_holder = ProcessDataHolder(data)
+                    data_holder.update_object_ids()
+                    ws.save_process(data_holder)
+                except Exception as e:
+                    print('Error:', e)
+        except Exception as e:
+            print('Error:', e)
+        print('Done!')
+        print()
 
 
 # def load_entity_from_neo_to_esearch(argv):
