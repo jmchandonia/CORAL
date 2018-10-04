@@ -26,7 +26,7 @@ class DataProvider:
         return self.__generics_provider
 
     @property
-    def profile(self):
+    def user_profile(self):
         return services.user_profile
 
 
