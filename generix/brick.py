@@ -58,12 +58,15 @@ class PropertyValue:
     @staticmethod
     def read_json(json_data):
         term = json_data['value_type']
-        type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+        type_term = services.term_provider.get_term(term['oterm_ref'])
+        # type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
 
         value_type = json_data['value']['scalar_type']
 
         if value_type == 'oterm_ref':
-            value = Term(json_data['value'][value_type])
+            # value = Term(json_data['value'][value_type])
+            value = services.term_provider.get_term(json_data['value'][value_type])
+
         else:
             value = json_data['value'][value_type + '_value']     
             
@@ -114,8 +117,9 @@ class Brick:
         ds.attrs['__description'] = json_data['description']
 
         term = json_data['data_type']
-        ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
+        # ds.attrs['__type_term'] = Term(term['oterm_ref'], term_name=term['oterm_name'])
+        ds.attrs['__type_term'] = services.term_provider.get_term(term['oterm_ref'])
+        
         # Do context
         # ds.attrs['__attr_count'] = 2
         # ds.attrs['__attr1'] = PropertyValue( type_term=Term('AA:145', 'ENIMGA Campaign'), value=Term('AA:146', 'Metal')  )
@@ -145,8 +149,8 @@ class Brick:
             # ds.attrs['__dim1_var_count'] = 2
             
             term = dim_json['data_type']
-            dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
+            # dim_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+            dim_type_term = services.term_provider.get_term(term['oterm_ref'])
 
             dim_size = dim_json['size']
 
@@ -165,13 +169,13 @@ class Brick:
                 ds.attrs[dim_name + '_var_count'] += 1
                             
                 term = var_json['value_type']
-                vr_type_term = Term(
-                    term['oterm_ref'], term_name=term['oterm_name'])
+                # vr_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+                vr_type_term = services.term_provider.get_term(term['oterm_ref'])    
                 
                 if 'value_units' in var_json:
                     term = var_json['value_units']
-                    var_unit_term = Term(
-                        term['oterm_ref'], term_name=term['oterm_name'])
+                    # var_unit_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+                    var_unit_term = services.term_provider.get_term(term['oterm_ref'])
                 else:
                     var_unit_term = None
                 
@@ -179,7 +183,8 @@ class Brick:
                 if var_scalar_type == 'oterm_ref':
                     var_values = []
                     for term_id in var_json['values']['oterm_refs']:
-                        var_values.append(Term(term_id))
+                        # var_values.append(Term(term_id))
+                        var_values.append(services.term_provider.get_term(term_id))                        
                 else:
                     var_values = var_json['values'][var_scalar_type + '_values']
 
@@ -226,12 +231,13 @@ class Brick:
             values_jsons = [values_jsons]
         for values_json in values_jsons:
             term = values_json['value_type']
-            value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+            # value_type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+            value_type_term = services.term_provider.get_term(term['oterm_ref'])
 
             if 'value_units' in values_json:
                 term = values_json['value_units']
-                value_unit_term = Term(
-                    term['oterm_ref'], term_name=term['oterm_name'])
+                # value_unit_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
+                value_unit_term = services.term_provider.get_term(term['oterm_ref'])                
             else:
                 value_unit_term = None
 
@@ -1017,7 +1023,8 @@ class BrickDimension:
                 data.append( pk2val.get(val) )
 
         # Build variable
-        type_term = Term(prop_def.term_id, refresh=True)
+        # type_term = Term(prop_def.term_id, refresh=True)
+        type_term = services.term_provider.get_term(prop_def.term_id) 
         units_term = None
         scalar_type = prop_def.type
 
@@ -1060,7 +1067,8 @@ class BrickDimension:
             data.append(pk_val)
 
         # Build variable
-        type_term = Term(type_def.pk_property_def.term_id, refresh=True)
+        # type_term = Term(type_def.pk_property_def.term_id, refresh=True)
+        type_term = services.term_provider.get_term(type_def.pk_property_def.term_id)
         units_term = None
         scalar_type = type_def.pk_property_def.type
 
@@ -1576,6 +1584,7 @@ class BrickIndexDocumnet:
 class BrickDescriptorCollection:
     def __init__(self, brick_descriptors):
         self.__brick_descriptors = brick_descriptors
+        self.__brick_descriptors.sort( key = lambda d: d.brick_type)
 
     @property
     def items(self):
@@ -1584,6 +1593,9 @@ class BrickDescriptorCollection:
     @property
     def size(self):
         return len(self.__brick_descriptors)
+
+    def head(self, count=5):
+        return BrickDescriptorCollection(self.__brick_descriptors[:count])
 
     def __getitem__(self, i):
         return self.__brick_descriptors[i]
@@ -1594,17 +1606,18 @@ class BrickDescriptorCollection:
             bd_list.append({
                 'brick_id': bd.brick_id,
                 'brick_name': bd.name,
-                'data_type': bd.data_type,
+                'brick_type': bd.brick_type,
+                'dim_types': bd.dim_types,
                 'value_type': bd.value_type,
                 'n_dimensions': bd.n_dimensions,
                 'shape': bd.shape,
                 'data_size': bd.data_size
             })
-        columns = ['brick_id', 'data_type', 'n_dimensions', 'shape', 'value_type', 'brick_name', 'data_size']
-        return pd.DataFrame(bd_list)[columns]
+        return pd.DataFrame(bd_list)
 
     def _repr_html_(self):
-        return self.to_df()._repr_html_()
+        columns = ['brick_id', 'brick_type', 'shape', 'dim_types', 'value_type', 'brick_name']
+        return self.to_df()[columns]._repr_html_()
 
 
 class BrickDescriptor:
@@ -1629,8 +1642,18 @@ class BrickDescriptor:
             self.data_size *= ds
 
     @property
-    def data_type(self):
+    def brick_type(self):
+        return self.data_type_term_name
+
+
+    @property
+    def full_type(self):
         return '%s<%s>' % (self.data_type_term_name, ','.join(self.dim_type_term_names))
+
+    @property
+    def dim_types(self):
+        return self.dim_type_term_names
+
 
     @property
     def value_type(self):
@@ -1644,4 +1667,4 @@ class BrickDescriptor:
         return Brick.read_dict(self.brick_id,  services.workspace.get_brick_data(self.brick_id))
 
     def __str__(self):
-        return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.data_type, self.shape)
+        return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.full_type, self.shape)
