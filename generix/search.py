@@ -32,7 +32,7 @@ class SearchService:
         }
         return query
 
-    def _find_entities(self, entity_type, query, size=100):
+    def _find_entities(self, entity_type, query, size=10000):
         query['size'] = size
         entity_descriptors = []
         index_name = self._index_name(entity_type)
