@@ -128,9 +128,9 @@ class ElasticSearchService:
                     doc[pname + '_term_id'] = term.term_id
                     doc[pname + '_term_name'] = term.term_name
 
-                    # all_term_ids.add(term.term_id)
-                    # for pid in term.parent_path_ids:
-                    #     all_parent_path_term_ids.add(pid)
+                    all_term_ids.add(term.term_id)
+                    for pid in term.parent_path_ids:
+                        all_parent_path_term_ids.add(pid)
                 else:
                     doc[pname] = value
 
