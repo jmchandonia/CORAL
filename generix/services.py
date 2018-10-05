@@ -4,7 +4,7 @@ from elasticsearch import Elasticsearch
 from neo4j.v1 import GraphDatabase
 from pymongo import MongoClient
 
-from .ontology import OntologyService
+from .ontology import OntologyService, CashedTermProvider
 from .validator import TermValueValidationService
 from .indexer import SearchIndexerService
 from .search import SearchService
@@ -58,3 +58,4 @@ term_value_validator = TermValueValidationService()
 brick_provider = BrickProvider()
 
 user_profile = UserProfile()
+term_provider = CashedTermProvider()
