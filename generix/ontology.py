@@ -267,7 +267,8 @@ class OntologyService:
         terms = []
         for term_id in term_ids:
             try:
-                term = Term(term_id, refresh=True)
+                # term = Term(term_id, refresh=True)
+                term = services.term_provider.get_term(term_id)
                 terms.append(term)
             except:
                 print('Can not find term: %s' % term_id)
@@ -486,7 +487,8 @@ class Term:
     def parse_term(value):
         m = _TERM_PATTERN.findall(value)
         if m:
-            term = Term(m[0][1].strip(), term_name=m[0][0].strip())
+            # term = Term(m[0][1].strip(), term_name=m[0][0].strip())
+            term = services.term_provider.get_term(m[0][1].strip())
         else:
             raise ValueError('Can not parse term from value: %s' % value)
         return term
@@ -587,3 +589,20 @@ class Term:
         for pid in self.__parent_ids:
             term = terms[pid]
             self.__parent_terms.append(term)
+
+
+class CashedTermProvider:
+    def __init__(self):
+        self.__id_2_term = {}
+
+    def get_term(self, term_id):
+        term = self.__id_2_term.get(term_id)
+        if term is None:
+            term = services.ontology.all.find_id(term_id)
+            if term is None:
+                raise ValueError(
+                    'Can not find a term with id: %s' % term_id)
+
+            self.__id_2_term[term_id] = term
+
+        return term
