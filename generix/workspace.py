@@ -177,8 +177,7 @@ class Workspace:
 
     def _validate_object(self, data_holder):
         if type(data_holder) is EntityDataHolder:
-            pass
-            # data_holder.type_def.validate_data(data_holder.data)
+            data_holder.type_def.validate_data(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
             pass
 
