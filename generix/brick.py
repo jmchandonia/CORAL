@@ -1013,8 +1013,8 @@ class BrickDimension:
             data[var.long_name] = var.values
         return pd.DataFrame(data)
     
-    def where(self, bool_array):
-        kwargs = {self.__dim_prefix: bool_array}
+    def where(self, dim_filter):
+        kwargs = {self.__dim_prefix: dim_filter.bool_array}
         xds = self.__xds.isel(kwargs)
         return Brick(xds=xds)    
     
@@ -1293,22 +1293,28 @@ class BrickVariable:
     #     return pd.DataFrame(self.data, columns=[self.name])
         
     def __eq__(self,val):
-        return (self.__xds[self.__var_prefix] == val).data
-    
+        bool_array = (self.__xds[self.__var_prefix] == val).data
+        return DimensionFilter(self.__dim, None, bool_array)
+
     def __ne__(self,val):
-        return (self.__xds[self.__var_prefix] != val).data
+        bool_array = (self.__xds[self.__var_prefix] != val).data
+        return DimensionFilter(self.__dim, None, bool_array)
     
     def __gt__(self,val):
-        return (self.__xds[self.__var_prefix] > val).data
+        bool_array = (self.__xds[self.__var_prefix] > val).data
+        return DimensionFilter(self.__dim, None, bool_array)
 
     def __ge__(self,val):
-        return (self.__xds[self.__var_prefix] >= val).data
+        bool_array = (self.__xds[self.__var_prefix] >= val).data
+        return DimensionFilter(self.__dim, None, bool_array)
     
     def __lt__(self,val):
-        return (self.__xds[self.__var_prefix] < val).data
+        bool_array = (self.__xds[self.__var_prefix] < val).data
+        return DimensionFilter(self.__dim, None, bool_array)
     
     def __le__(self,val):
-        return (self.__xds[self.__var_prefix] <= val).data
+        bool_array = (self.__xds[self.__var_prefix] <= val).data
+        return DimensionFilter(self.__dim, None, bool_array)
 
     def _collect_property_terms(self, id2terms):
         id2terms[self.type_term.term_id] = self.type_term
@@ -1479,3 +1485,48 @@ class BrickDescriptor:
 
     def __str__(self):
         return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.full_type, self.shape)
+
+class DimensionFilter:
+    def __init__(self, brick_dim, provenance, bool_array):
+        self.__brick_dim = brick_dim
+        self.__provenance = [provenance]
+        self.__bool_array = bool_array
+    
+    @property
+    def brick_dim(self):
+        return self.__brick_dim
+    
+    @property
+    def provenance(self):
+        return self.__provenance
+    
+    @property
+    def bool_array(self):
+        return self.__bool_array
+
+    
+    def __and__(self, dim_filter):
+        if self.__brick_dim != dim_filter.brick_dim:
+            raise ValueError('Error: can not operate on different dimensions')
+        
+        for prov in dim_filter.provenance:
+            self.__provenance.append(prov)
+        
+        for i, bool_val in enumerate(dim_filter.bool_array):
+            self.__bool_array[i] = self.__bool_array[i] and bool_val
+
+        return self
+
+    def __or__(self, dim_filter):
+        if self.__brick_dim != dim_filter.brick_dim:
+            raise ValueError('Error: can not operate on different dimensions')
+        
+        for prov in dim_filter.provenance:
+            self.__provenance.append(prov)
+        
+        for i, bool_val in enumerate(dim_filter.bool_array):
+            self.__bool_array[i] = self.__bool_array[i] or bool_val
+
+        return self
+
+    
