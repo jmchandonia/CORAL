@@ -8,7 +8,6 @@ from .ontology import OntologyService, CashedTermProvider
 from .validator import TermValueValidationService
 from .indexer import SearchIndexerService
 from .search import SearchService
-from .provenance import ProvenanceIndexerService, ProvenanceSearchService
 from .workspace import Workspace
 from .typedef import TypeDefService
 from .es_service import ElasticSearchService
@@ -50,8 +49,6 @@ es_indexer = SearchIndexerService(__es_client)
 es_search = SearchService(__es_client)
 es_service = ElasticSearchService(__es_client)
 
-neo_indexer = ProvenanceIndexerService()
-neo_search = ProvenanceSearchService(__neo4j_client)
 neo_service = Neo4JService(__neo4j_client)
 
 term_value_validator = TermValueValidationService()
