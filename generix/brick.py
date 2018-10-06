@@ -325,6 +325,90 @@ class Brick:
 
         self.__inflate_data_vars()
        
+    def __getitem__(self, selectors):
+
+        # check dimensions
+        if self.dim_count == 1:
+            if not np.isscalar(selectors):
+                raise ValueError('The selector for one-dimensional array should be a scalar')
+        else:
+            if type(selectors) is not tuple:
+                raise ValueError('The selector for multi-dimensional array should be a tuple')
+            if len(selectors) !=  self.dim_count:
+                raise ValueError('The selector should have %s items' % self.dim_count)
+
+        # check variable names
+        for dim_index, selector in enumerate(selectors):
+            dim = self.dims[dim_index]
+            if type(selector) is dict:
+                for value_name in selector:
+                    name_found = False
+                    for var in dim.vars:
+                        if value_name == var.type_term.term_name:
+                            name_found = True
+                            break
+                    if name_found == False:
+                        raise ValueError('Variable %s is not found in the %s dimension' % (value_name, dim.name))
+            else: 
+                if np.isscalar(selector):
+                    if dim.var_count > 1:
+                        raise ValueError('Selector[%s] must sepcify the name of the variable since there are more than one variables in this dimension' % dim_index)            
+                else:
+                    raise ValueError('Selector[%s] must be either scalar or dict' % dim_index)            
+
+        # build selectors
+        kwargs = {}
+        for dim_index, selector in enumerate(selectors):
+            dim = self.dims[dim_index]
+            dim_prefix = '__dim%s' % (dim_index + 1)
+            var_prefix = '%s_var1' % dim_prefix
+
+            bool_array = [True]*dim.size
+            if type(selector) is dict:
+                for var_name in selector:
+                    for var_index, var in enumerate(dim.vars):
+                        if var_name == var.name:
+                            var_prefix = '%s_var%s' % ( dim_prefix, var_index + 1 ) 
+                            break
+                    
+
+                    ba = self.__xds[var_prefix] == selector[var_name]
+                    for i, b in enumerate(ba):
+                       bool_array[i] = bool_array[i] and b 
+            else:
+                bool_array = self.__xds[var_prefix] == selector
+            
+            kwargs[dim_prefix] = bool_array
+
+        xds = self.__xds.isel(kwargs)
+        brick = Brick(xds=xds)
+        
+        return  brick._shrink_dims()    
+
+    def _shrink_dims(self):
+        # find dim indeces with dim size = 1
+        dim_indeces = []
+        for dim_index, dim in enumerate(self.dims):
+            if dim.size == 1:
+                dim_indeces.append(dim_index)
+
+        # add properties from dim variables
+        for dim_index in dim_indeces:
+            dim = self.dims[dim_index]
+            for var in dim.vars:
+                self.add_attr( var.type_term, var.units_term, var.scalar_type, var.values[0] )
+            
+        br = self
+        for i,dim_index in enumerate(dim_indeces):
+            br = br.mean( br.dims[  dim_index - i  ] )
+
+        return br
+
+    def add_attr(self, type_term, units_term, scalar_type, value):
+        pv = PropertyValue( type_term=type_term, units_term=units_term, scalar_type=scalar_type, value=value )        
+        self.__xds.attrs['__attr_count'] += 1
+        attr_name = '__attr%s' % self.__xds.attrs['__attr_count'] 
+        self.__xds.attrs[attr_name] = pv
 
     def __build_xds(self, type_term, dim_terms, shape, id='', name='', description=''):
         ds = xr.Dataset()                
