@@ -266,6 +266,9 @@ class EntityDescriptorCollection:
     def size(self):
         return len(self.__entity_descriptors)
 
+    def head(self, count=5):
+        return EntityDescriptorCollection(self.__entity_descriptors[:count])
+
     def __getitem__(self, i):
         return self.__entity_descriptors[i]
 
