@@ -1,5 +1,27 @@
 
+import pandas as pd
 from . import services
+
+
+def _to_data_frame(tx, query):
+    nodes = []
+    for record in tx.run(query):
+        items = {}
+        for _, node in record.items():
+            items['_id'] = node.id
+            for entry in node.items():
+                items[entry[0]] = entry[1]
+        nodes.append(items)
+    return pd.DataFrame(nodes)
+
+
+def _to_target_ids(tx, query, source_ids):
+    target_ids = []
+    # print('source_ids = ', source_ids)
+    for record in tx.run(query, source_ids=source_ids):
+        for _, node in record.items():
+            target_ids.append(node)
+    return target_ids
 
 
 class Neo4JService:
@@ -13,6 +35,26 @@ class Neo4JService:
         else:
             with self.__neo4j_client.session() as session:
                 session.run('MATCH (n : %s) DETACH DELETE n' % type_name)
+
+    def find_linked_ids(self, source_type_name, source_id_field_name,
+                        source_ids, target_type_name, target_id_field_name,
+                        directed_link=True,
+                        direct=True, steps=20):
+        link = '-[*1..%s]-' % steps
+        if directed_link:
+            if direct:
+                link = link + '>'
+            else:
+                link = '<' + link
+
+        query = "match(s:%s)%s(t:%s) where s.%s in {source_ids} return t.%s" % \
+            (source_type_name, link, target_type_name,
+             source_id_field_name, target_id_field_name)
+        # print(query)
+        with self.__neo4j_client.session() as session:
+            target_ids = session.read_transaction(
+                _to_target_ids, query, source_ids)
+        return target_ids
 
     def index_entity(self, data_holder):
         type_def = data_holder.type_def
