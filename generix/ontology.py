@@ -519,6 +519,16 @@ class Term:
         self.__validator_name = term.validator_name
         self.__persisted = True
 
+    def __eq__(self, value):
+        if type(value) is Term:
+            return self.term_id == value.term_id
+
+        if type(value) is str:
+            value = value.strip()
+            return value == self.term_id or value.lower() == self.term_name.lower().strip()
+
+        return False
+
     @property
     def term_id(self):
         return self.__term_id
