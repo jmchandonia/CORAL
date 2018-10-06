@@ -12,6 +12,7 @@ class DataProvider:
     def __init__(self):
         self.__etities_provider = EntitiesProvider()
         self.__generics_provider = GenericsProvider()
+        self.__reports = DataReports()
 
     @property
     def ontology(self):
@@ -28,6 +29,27 @@ class DataProvider:
     @property
     def user_profile(self):
         return services.user_profile
+
+    @property
+    def reports(self):
+        return self.__reports
+
+
+class DataReports:
+    def __init__(self):
+        pass
+
+    @property
+    def brick_types(self):
+        return services.es_search.data_type_terms()
+
+    @property
+    def brick_dim_types(self):
+        return services.es_search.dim_type_terms()
+
+    @property
+    def brick_data_var_types(self):
+        return services.es_search.value_type_terms()
 
 
 class GenericsProvider:
