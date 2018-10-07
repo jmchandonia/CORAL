@@ -1117,7 +1117,7 @@ class BrickDimension:
                 values.append(val)
 
         type_name = to_es_type_name(core_type)
-        q = services.QQuery(type_name ,{})
+        q = services.Query(type_name ,{})
         q.has({pk_def.name:values})
         rs = q.find()
 
@@ -1169,7 +1169,7 @@ class BrickDimension:
         type_def = services.typedef.get_type_def(core_type)
         pk_prop_name =  type_def.pk_property_def.name
         type_name = to_es_type_name(core_type)
-        q = services.QQuery(type_name ,{})
+        q = services.Query(type_name ,{})
         q.has({core_prop_name:  list(values)})
         rs = q.find()
 
@@ -1486,8 +1486,12 @@ class BrickDescriptorCollection:
         return pd.DataFrame(bd_list)
 
     def _repr_html_(self):
-        columns = ['brick_id', 'brick_type', 'shape', 'dim_types', 'value_type', 'brick_name']
-        return self.to_df()[columns]._repr_html_()
+        df = self.to_df()
+        if df.shape != (0,0):
+            columns = ['brick_id', 'brick_type', 'shape', 'dim_types', 'value_type', 'brick_name']
+            df =  df[columns]
+
+        return df._repr_html_()
 
 
 class BrickDescriptor:
