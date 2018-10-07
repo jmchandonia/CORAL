@@ -12,10 +12,11 @@ from .workspace import Workspace
 from .typedef import TypeDefService
 from .es_service import ElasticSearchService
 from .neo_service import Neo4JService
-from .dataprovider import Query, BrickProvider
 from .user_profile import UserProfile
+from .dataprovider import BrickProvider
+from .dataprovider import Query as _Query
 
-QQuery = Query
+Query = _Query
 
 
 IN_ONTOLOGY_LOAD_MODE = False
