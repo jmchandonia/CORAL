@@ -1,7 +1,7 @@
 import re
 from .ontology import Term
 from . import services
-from .brick import Brick, BrickDescriptorCollection
+from .brick import Brick, BrickDescriptorCollection, BrickProvenance
 from .search import EntityDescriptorCollection
 from .utils import to_var_name
 from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
@@ -108,7 +108,11 @@ class BrickProvider(EntityProvider):
         super().__init__(ES_TYPE_NAME_BRICK)
 
     def load(self, brick_id):
-        return Brick.read_dict(brick_id,  services.workspace.get_brick_data(brick_id))
+        brick = Brick.read_dict(
+            brick_id,  services.workspace.get_brick_data(brick_id))
+        provenance = BrickProvenance('loaded', ['brick_id:%s' % brick.id])
+        brick.provenance.provenance_items.append(provenance)
+        return brick
 
 
 class Query:
@@ -169,7 +173,7 @@ class Query:
             target_type = 'Brick' if target_type == 'brick' else target_type[0:1].upper(
             ) + target_type[1:]
 
-            linked_ids = services.neo_search.find_linked_ids(
+            linked_ids = services.neo_service.find_linked_ids(
                 source_type, 'id', source_ids, target_type, 'id', direct=direct)
 
             for linked_id in linked_ids:
