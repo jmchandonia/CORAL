@@ -4,6 +4,7 @@ import pandas as pd
 import xarray as xr
 import re
 import datetime
+from time import gmtime, strftime
 from .ontology import Term
 from .workspace import BrickDataHolder, ProcessDataHolder
 from . import services
@@ -312,6 +313,8 @@ class Brick:
             xds = self.__build_xds(type_term, dim_terms, shape, id=id, name=name, description=description)
 
         self.__xds = xds
+        self.__provenance = BrickProvenance('-',[])
+
         self.__dims = []
         for i in range( self.dim_count ):
             dim = BrickDimension(self, xds, i)
@@ -519,6 +522,10 @@ class Brick:
             'Units': units,
             'Value': values
         })[[ 'Property', 'Value', 'Units']]                    
+
+    @property
+    def provenance(self):
+        return self.__provenance
 
     def to_json(self):
         return json.dumps(self.to_dict(), cls=NPEncoder)
@@ -864,6 +871,7 @@ class Brick:
 
     def mean(self, dim):
         dim_index = dim.dim_index
+        dim_name = dim.name
         # print('Dim index = ', dim_index)
 
         dim_prfix = '__dim%s' % (dim_index + 1)
@@ -924,10 +932,16 @@ class Brick:
             for attr_name in self.__xds[var_prefix].attrs:
                 xds[var_prefix].attrs[attr_name] = self.__xds[var_prefix].attrs[attr_name]
 
-        return Brick(xds=xds)
+        brick = Brick(xds=xds)
+        b_prov = BrickProvenance('parent brick', ['brick:%s' % self.id])
+        for prov in self.__provenance.provenance_items:
+            b_prov.provenance_items.append(prov)
+        
+        mean_prov = BrickProvenance('mean', ['dim_index:%s' % dim_index, 'dim_name:%s' % dim_name])
+        b_prov.provenance_items.append(mean_prov)
+        brick.provenance.provenance_items.append(b_prov)
 
-
-
+        return brick
 
     def save(self, process_term=None, person_term=None, campaign_term=None, input_obj_ids=None):
 
@@ -1016,7 +1030,22 @@ class BrickDimension:
     def where(self, dim_filter):
         kwargs = {self.__dim_prefix: dim_filter.bool_array}
         xds = self.__xds.isel(kwargs)
-        return Brick(xds=xds)    
+
+        
+        b_prov = BrickProvenance('parent brick', ['brick:%s' % self.__brick.id])
+        for prov in self.__brick.provenance.provenance_items:
+            b_prov.provenance_items.append(prov)
+
+        where_prov = BrickProvenance('where', ['dim:%s' % self.name])
+        for prov in dim_filter.provenance_items:
+            where_prov.provenance_items.append(prov)
+        
+        b_prov.provenance_items.append(where_prov)
+
+        brick = Brick(xds=xds)
+        brick.provenance.provenance_items.append(b_prov)
+
+        return brick 
     
 
     def  __inflate_vars(self):
@@ -1118,6 +1147,15 @@ class BrickDimension:
         self.__vars.append(var)
         self.__inflate_vars()
 
+
+        prov = BrickProvenance('add_core_type_var', 
+            ['core_type:%s' % core_type, 
+            'core_prop_name:%s' % core_prop_name,
+            'dim_index:%s' % self.dim_index,
+            'dim_name:%s' % self.name])
+
+        self.__brick.provenance.provenance_items.append(prov)
+
         return self.vars_df.head(10)
 
     def map_to_core_type(self, dim_var, core_type, core_prop_name):
@@ -1161,6 +1199,15 @@ class BrickDimension:
 
         self.__vars.append(var)
         self.__inflate_vars()
+
+        prov = BrickProvenance('map_to_core_type', 
+            ['core_type:%s' % core_type, 
+            'core_prop_name:%s' % core_prop_name,
+            'dim_index:%s' % self.dim_index,
+            'dim_name:%s' % self.name,
+            'var_name:%s' % dim_var.name])
+
+        self.__brick.provenance.provenance_items.append(prov)
 
         return self.vars_df.head(10)
 
@@ -1294,27 +1341,33 @@ class BrickVariable:
         
     def __eq__(self,val):
         bool_array = (self.__xds[self.__var_prefix] == val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__eq__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
 
     def __ne__(self,val):
         bool_array = (self.__xds[self.__var_prefix] != val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__ne__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
     
     def __gt__(self,val):
         bool_array = (self.__xds[self.__var_prefix] > val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__gt__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
 
     def __ge__(self,val):
         bool_array = (self.__xds[self.__var_prefix] >= val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__ge__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
     
     def __lt__(self,val):
         bool_array = (self.__xds[self.__var_prefix] < val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__lt__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
     
     def __le__(self,val):
         bool_array = (self.__xds[self.__var_prefix] <= val).data
-        return DimensionFilter(self.__dim, None, bool_array)
+        provenance = BrickProvenance('__le__', ['var:%s' % self.name, val])
+        return DimensionFilter(self.__dim, provenance, bool_array)
 
     def _collect_property_terms(self, id2terms):
         id2terms[self.type_term.term_id] = self.type_term
@@ -1481,15 +1534,55 @@ class BrickDescriptor:
         return self.dim_sizes
 
     def load(self):
-        return Brick.read_dict(self.brick_id,  services.workspace.get_brick_data(self.brick_id))
+        brick =  Brick.read_dict(self.brick_id,  services.workspace.get_brick_data(self.brick_id))
+        provenance = BrickProvenance('loaded', ['brick_id:%s' % brick.id])
+        brick.provenance.provenance_items.append(provenance)
+        return brick
 
     def __str__(self):
         return 'Name: %s;  Type: %s; Shape: %s' % (self.name, self.full_type, self.shape)
 
+
+class BrickProvenance:
+    def __init__(self, operation, args):
+        self.__operation = operation
+        self.__args = args
+        self.__provenance_items = []
+        self.__timestamp = gmtime()
+    
+    @property
+    def operation(self):
+        return self.__operation
+
+    @property
+    def args(self):
+        return self.__args
+
+    @property
+    def provenance_items(self):
+        return self.__provenance_items
+
+    def _html_rows(self, level):
+        rows = []
+
+        rows.append('<div style="margin-left:20px">')
+        rows.append( '%s: %s - <span style="color:gray">%s</span> ' % (self.operation, self.args, strftime("%d/%m/%Y %H:%M:%S", self.__timestamp)) )
+        for prov in self.provenance_items:
+            p_rows = prov._html_rows(level +1)
+            for p_row in p_rows:
+                rows.append(p_row)
+
+        rows.append('</div>') 
+        return rows
+
+    def _repr_html_(self):
+        return  ''.join(self._html_rows(0)) 
+
+
 class DimensionFilter:
     def __init__(self, brick_dim, provenance, bool_array):
         self.__brick_dim = brick_dim
-        self.__provenance = [provenance]
+        self.__provenance_items = [provenance]
         self.__bool_array = bool_array
     
     @property
@@ -1497,8 +1590,8 @@ class DimensionFilter:
         return self.__brick_dim
     
     @property
-    def provenance(self):
-        return self.__provenance
+    def provenance_items(self):
+        return self.__provenance_items
     
     @property
     def bool_array(self):
@@ -1509,8 +1602,14 @@ class DimensionFilter:
         if self.__brick_dim != dim_filter.brick_dim:
             raise ValueError('Error: can not operate on different dimensions')
         
-        for prov in dim_filter.provenance:
-            self.__provenance.append(prov)
+        new_prov = BrickProvenance('__and__',[])
+        for prov in self.__provenance_items:
+            new_prov.provenance_items.append(prov)
+
+        for prov in dim_filter.provenance_items:
+            new_prov.provenance_items.append(prov)
+        
+        self.__provenance_items = [new_prov]
         
         for i, bool_val in enumerate(dim_filter.bool_array):
             self.__bool_array[i] = self.__bool_array[i] and bool_val
@@ -1521,8 +1620,14 @@ class DimensionFilter:
         if self.__brick_dim != dim_filter.brick_dim:
             raise ValueError('Error: can not operate on different dimensions')
         
-        for prov in dim_filter.provenance:
-            self.__provenance.append(prov)
+        new_prov = BrickProvenance('__or__',[])
+        for prov in self.__provenance_items:
+            new_prov.provenance_items.append(prov)
+
+        for prov in dim_filter.provenance_items:
+            new_prov.provenance_items.append(prov)
+        
+        self.__provenance_items = [new_prov]
         
         for i, bool_val in enumerate(dim_filter.bool_array):
             self.__bool_array[i] = self.__bool_array[i] or bool_val
