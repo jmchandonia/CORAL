@@ -30,7 +30,7 @@ class ElasticSearchService:
             "mappings": {
                 es_type: {
                     "properties": {
-                        "brick_id": {
+                        "id": {
                             "type": "text",
                             "analyzer": "keyword"
                         },
