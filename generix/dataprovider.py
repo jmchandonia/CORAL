@@ -1,8 +1,8 @@
 import re
 from .ontology import Term
 from . import services
-from .brick import Brick, BrickDescriptorCollection, BrickProvenance
-from .search import EntityDescriptorCollection
+from .brick import Brick, BrickProvenance
+from .search import DataDescriptorCollection
 from .utils import to_var_name
 from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
 from .utils import to_var_name
@@ -188,12 +188,15 @@ class Query:
 
         es_query = services.es_search._build_query(es_filter)
         if self.__type_name == 'brick':
-            return BrickDescriptorCollection(services.es_search._find_bricks(es_query))
+            return DataDescriptorCollection(services.es_search._find_bricks(es_query))
         else:
-            return EntityDescriptorCollection(services.es_search._find_entities(self.__type_name, es_query))
+            return DataDescriptorCollection(services.es_search._find_entities(self.__type_name, es_query))
 
     def find_one(self):
-        pass
+        ddc = self.find()
+        if ddc.size > 0:
+            return ddc[0]
+        return None
 
 
 class EntityProperties:
