@@ -50,14 +50,14 @@ class Neo4JService:
         return items
 
     def get_input_type_ids(self, process_id):
-        query = 'match(p)-[:HAS_OUTPUT]-(t) where p.id = {process_id}  return t'
+        query = 'match(p)-[:PARAM_IN]-(t) where p.id = {process_id}  return t'
         with self.__neo4j_client.session() as session:
             type_items = session.read_transaction(
                 Neo4JService._get_type_ids, query, process_id)
         return type_items
 
     def get_output_type_ids(self, process_id):
-        query = 'match(p)-[:PARAM_IN]-(t) where p.id = {process_id}  return t'
+        query = 'match(p)-[:HAS_OUTPUT]-(t) where p.id = {process_id}  return t'
         with self.__neo4j_client.session() as session:
             type_items = session.read_transaction(
                 Neo4JService._get_type_ids, query, process_id)
