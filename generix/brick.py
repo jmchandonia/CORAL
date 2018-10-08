@@ -313,7 +313,7 @@ class Brick:
             xds = self.__build_xds(type_term, dim_terms, shape, id=id, name=name, description=description)
 
         self.__xds = xds
-        self.__provenance = BrickProvenance('-',[])
+        self.__session_provenance = BrickProvenance('-',[])
 
         self.__dims = []
         for i in range( self.dim_count ):
@@ -524,8 +524,14 @@ class Brick:
         })[[ 'Property', 'Value', 'Units']]                    
 
     @property
-    def provenance(self):
-        return self.__provenance
+    def session_provenance(self):
+        return self.__session_provenance
+    
+    @property
+    def descriptor(self):
+        q = services.Query('brick',{})
+        q.has({'id': self.id})
+        return q.find_one()
 
     def to_json(self):
         return json.dumps(self.to_dict(), cls=NPEncoder)
@@ -536,7 +542,7 @@ class Brick:
         # ds.attrs['__id'] = brick_id
         # ds.attrs['__name'] = json_data['name']
         # ds.attrs['__description'] = json_data['description']        
-        data['brick_id'] = self.id
+        data['id'] = self.id
         data['name'] = self.name
         data['description'] = self.description
 
@@ -934,12 +940,12 @@ class Brick:
 
         brick = Brick(xds=xds)
         b_prov = BrickProvenance('parent brick', ['brick:%s' % self.id])
-        for prov in self.__provenance.provenance_items:
+        for prov in self.__session_provenance.provenance_items:
             b_prov.provenance_items.append(prov)
         
         mean_prov = BrickProvenance('mean', ['dim_index:%s' % dim_index, 'dim_name:%s' % dim_name])
         b_prov.provenance_items.append(mean_prov)
-        brick.provenance.provenance_items.append(b_prov)
+        brick.session_provenance.provenance_items.append(b_prov)
 
         return brick
 
@@ -961,7 +967,7 @@ class Brick:
 
         brick_data_holder = BrickDataHolder(self)
         services.workspace.save_data(brick_data_holder)
-
+        self.set_id(brick_data_holder.id)
 
         process_data = {
             'person': str(person_term),
@@ -1033,7 +1039,7 @@ class BrickDimension:
 
         
         b_prov = BrickProvenance('parent brick', ['brick:%s' % self.__brick.id])
-        for prov in self.__brick.provenance.provenance_items:
+        for prov in self.__brick.session_provenance.provenance_items:
             b_prov.provenance_items.append(prov)
 
         where_prov = BrickProvenance('where', ['dim:%s' % self.name])
@@ -1043,7 +1049,7 @@ class BrickDimension:
         b_prov.provenance_items.append(where_prov)
 
         brick = Brick(xds=xds)
-        brick.provenance.provenance_items.append(b_prov)
+        brick.session_provenance.provenance_items.append(b_prov)
 
         return brick 
     
@@ -1154,7 +1160,7 @@ class BrickDimension:
             'dim_index:%s' % self.dim_index,
             'dim_name:%s' % self.name])
 
-        self.__brick.provenance.provenance_items.append(prov)
+        self.__brick.session_provenance.provenance_items.append(prov)
 
         return self.vars_df.head(10)
 
@@ -1207,7 +1213,7 @@ class BrickDimension:
             'dim_name:%s' % self.name,
             'var_name:%s' % dim_var.name])
 
-        self.__brick.provenance.provenance_items.append(prov)
+        self.__brick.session_provenance.provenance_items.append(prov)
 
         return self.vars_df.head(10)
 
@@ -1414,7 +1420,7 @@ class BrickVariable:
 
 class BrickIndexDocumnet:
     def __init__(self, brick):
-        self.brick_id = brick.id
+        self.id = brick.id
         self.name = brick.name
         self.description = brick.description
         self.n_dimensions = len(brick.dims)
