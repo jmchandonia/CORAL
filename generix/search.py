@@ -336,18 +336,19 @@ class EntityDescriptor(DataDescriptor):
         super().__init__(data_type, doc)
 
     def get_up_process(self):
-        pass
-        # entity_id = self['id']
-        # process_id = services.neo_service.get_up_process_id(entity_id)
-        # q = services.Query('Process', {'id': process_id})
-        # return q.find()
+        entity_id = self['id']
+        process_id = services.neo_service.get_up_process_id(entity_id)
+
+        q = services.Query('process', {})
+        q.has({'id': process_id})
+        return q.find()
 
     def get_down_processes(self):
-        pass
-        # entity_id = self['id']
-        # process_ids = services.neo_service.get_down_process_ids(entity_id)
-        # q = services.Query('Process', {'id': process_ids})
-        # return q.find()
+        entity_id = self['id']
+        process_ids = services.neo_service.get_down_process_ids(entity_id)
+        q = services.Query('process', {})
+        q.has({'id': process_ids})
+        return q.find()
 
 
 class ProcessDescriptor(DataDescriptor):
@@ -355,34 +356,35 @@ class ProcessDescriptor(DataDescriptor):
         super().__init__('Process', doc)
 
     def get_input_data_descriptors(self):
-        pass
-        # ddc = DataDescriptorCollection()
+        ddc = DataDescriptorCollection()
 
-        # process_id = self['id']
-        # entity_type_ids = services.neo_service.get_input_type_ids(process_id)
+        process_id = self['id']
+        entity_type_ids = services.neo_service.get_input_type_ids(process_id)
 
-        # for etype in entity_type_ids:
-        #     q = services.Query(etype, {'id': entity_type_ids[etype]})
-        #     ddc.add_data_descriptors(q.find())
+        for etype in entity_type_ids:
+            q = services.Query(to_es_type_name(etype), {})
+            q.has({'id': entity_type_ids[etype]})
+            ddc.add_data_descriptors(q.find())
 
-        # return ddc
+        return ddc
 
     def get_output_data_descriptors(self):
-        pass
-        # ddc = DataDescriptorCollection()
+        ddc = DataDescriptorCollection()
 
-        # process_id = self['id']
-        # entity_type_ids = services.neo_service.get_output_type_ids(process_id)
+        process_id = self['id']
+        entity_type_ids = services.neo_service.get_output_type_ids(process_id)
 
-        # for etype in entity_type_ids:
-        #     q = services.Query(etype, {'id': entity_type_ids[etype]})
-        #     ddc.add_data_descriptors(q.find())
+        for etype in entity_type_ids:
+            q = services.Query(to_es_type_name(etype), {})
+            q.has({'id': entity_type_ids[etype]})
+            ddc.add_data_descriptors(q.find())
 
-        # return ddc
+        return ddc
 
 
-class BrickDescriptor(DataDescriptor):
+class BrickDescriptor(EntityDescriptor):
     def __init__(self, data):
+        data['id'] = data['brick_id']
         data['brick_name'] = data['name']
         data['brick_type'] = data['data_type_term_name']
         data['dim_types'] = data['dim_type_term_names']
