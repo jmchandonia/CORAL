@@ -36,6 +36,47 @@ class Neo4JService:
             with self.__neo4j_client.session() as session:
                 session.run('MATCH (n : %s) DETACH DELETE n' % type_name)
 
+    @staticmethod
+    def _get_type_ids(tx, query, process_id):
+        items = {}
+        for record in tx.run(query, process_id=process_id):
+            for _, node in record.items():
+                for dtype in node.labels:
+                    ids = items.get(dtype)
+                    if ids is None:
+                        ids = []
+                        items[dtype] = ids
+                    ids.append(node.properties['id'])
+        return items
+
+    def get_input_type_ids(self, process_id):
+        query = 'match(p)-[:HAS_OUTPUT]-(t) where p.id = {process_id}  return t'
+        with self.__neo4j_client.session() as session:
+            type_items = session.read_transaction(
+                Neo4JService._get_type_ids, query, process_id)
+        return type_items
+
+    def get_output_type_ids(self, process_id):
+        query = 'match(p)-[:PARAM_IN]-(t) where p.id = {process_id}  return t'
+        with self.__neo4j_client.session() as session:
+            type_items = session.read_transaction(
+                Neo4JService._get_type_ids, query, process_id)
+        return type_items
+
+    def get_up_process_id(self, entity_id):
+        query = 'match(t)-[:HAS_OUTPUT]-(p) where t.id in {source_ids} return p.id'
+        with self.__neo4j_client.session() as session:
+            target_ids = session.read_transaction(
+                _to_target_ids, query, [entity_id])
+        return target_ids[0] if len(target_ids) > 0 else None
+
+    def get_down_process_ids(self, entity_id):
+        query = 'match(t)-[:PARAM_IN]-(p) where t.id in {source_ids} return p.id'
+        with self.__neo4j_client.session() as session:
+            target_ids = session.read_transaction(
+                _to_target_ids, query, [entity_id])
+        return target_ids
+
     def find_linked_ids(self, source_type_name, source_id_field_name,
                         source_ids, target_type_name, target_id_field_name,
                         directed_link=True,
