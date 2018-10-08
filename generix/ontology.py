@@ -244,7 +244,7 @@ class OntologyService:
             bp = services.brick_provider
             bricks = bp.find({})
             for brd in bricks.items:
-                br = bp.load(brd.brick_id)
+                br = bp.load(brd.id)
                 for dim in br.dims:
                     for var in dim.vars:
                         term_ids.add(var.type_term.term_id)
@@ -255,7 +255,7 @@ class OntologyService:
             bp = services.brick_provider
             bricks = bp.find({})
             for brd in bricks.items:
-                br = bp.load(brd.brick_id)
+                br = bp.load(brd.id)
                 for dim in br.dims:
                     for var in dim.vars:
                         if var.units_term is not None:
