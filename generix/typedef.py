@@ -1,7 +1,7 @@
 import re
 import json
-from .ontology import Term
-from . import services
+# from .ontology import Term
+# from . import services
 
 TYPE_NAME_PROCESS = 'Process'
 TYPE_NAME_BRICK = 'Brick'

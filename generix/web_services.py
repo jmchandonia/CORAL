@@ -59,7 +59,7 @@ def core_types():
 
     ctypes.sort()
     for ctype in ctypes:
-        props = services.es_service.get_entity_properties(ctype)        
+        props = services.arango_service.get_entity_properties(ctype)        
         res.append( { 'type' :ctype, 'props': props} )
     return  json.dumps({
         'results': res
