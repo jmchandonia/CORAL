@@ -1,0 +1,370 @@
+{
+    "types":[
+        {
+            "text":"Taxonomic Abundance",
+            "children": [
+                {
+                    "id": "M1", 
+                    "text" : "OTU Counts <Sample, OTU>", 
+                    "properties":[
+                        {
+                            "property":{"id": "ENIGMA:0000002", "text":"ENIGMA Campaign"},
+                            "value":{"id": "ENIGMA:0000021", "text":"Core Pilot"},
+                            "units":{"id": "", "text":""},
+			                "required": true
+                        },
+                        {
+                            "property":{"id": "ENIGMA:0000029", "text":"ENIGMA Labs and Personnel"},
+                            "value":{"id": "ENIGMA:0000090", "text":"Zhou Lab"},
+                            "units":{"id": "", "text":""},
+			                "required": true
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"ME:0000184", "text":"OTU"},
+                            "dim_vars":[
+                                {
+                                    "type":{ "id":"ME:0000222", "text":"OTU ID"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"},
+				                "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000100", "text":"Environmental Sample"},
+                            "dim_vars":[
+                                {
+                                    "type":{ "id":"ME:0000102", "text":"Environmental Sample ID"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"},
+				                    "required": true
+                                }
+                            ]
+                        }
+                    ],
+                    "processs":{"id":"PROCESS:0000031","text":"Classify OTUs"}
+                }
+            ]
+          },{
+            "text":"Physical Measurement",
+            "children": [
+                {
+                    "id": "P1", 
+                    "text" : "Aquatroll Data",
+		            "data_type": "DA:0000002",
+		            "heterogenous": true,
+                    "properties":[
+                        {
+                            "property":{"id": "ENIGMA:0000002", "text":"ENIGMA Campaign"},
+                            "value":{"id": "ENIGMA:0000095", "text":"Field Sampling"},
+                            "units":{"id": "", "text":""},
+			    "required": true			 
+                        },
+                        {
+                            "property":{"id": "ENIGMA:0000029", "text":"ENIGMA Labs and Personnel"},
+                            "value":{"id": "ENIGMA:0000066", "text":"Hazen Lab"},
+                            "units":{"id": "", "text":""},
+			    "required": true
+                        },
+                        {
+                            "property":{"id": "ME:0000012", "text":"Instrument"},
+                            "value":{"id": "", "text":"AquaTroll 600"},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ME:0000228", "text":"Environmental Sample Location ID"},
+                            "value":{"id": "", "text":""},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ME:0000293", "text":"Data Variables Type"},
+                            "value":{"id": "ME:0000259", "text":"Environmental Measurement"},
+                            "units":{"id": "", "text":""},
+			    "required": true,
+			    "hidden": true
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"ME:0000004", "text":"Time Series"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+                                    "type":{ "id":"ME:0000122", "text":"Time"},
+                                    "units":{ "id":"UO:0000010", "text":"second"},
+                                    "scalar_type":{ "id":"int", "text":"int"}
+                                },
+                                {
+                                    "type":{ "id":"ME:0000180", "text":"DateTime"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        }
+                    ],
+                    "processs":{"id":"PROCESS:0000004","text":"Assay Environment"}
+                },
+                {
+                    "id": "P2", 
+                    "text" : "Weather Station Data",
+		    "data_type": "DA:0000002",
+		    "heterogenous": true,
+                    "properties":[
+                        {
+                            "property":{"id": "ENIGMA:0000002", "text":"ENIGMA Campaign"},
+                            "value":{"id": "ENIGMA:0000095", "text":"Field Sampling"},
+                            "units":{"id": "", "text":""},
+			    "required": true			 
+                        },
+                        {
+                            "property":{"id": "ENIGMA:0000029", "text":"ENIGMA Labs and Personnel"},
+                            "value":{"id": "ENIGMA:0000066", "text":"Hazen Lab"},
+                            "units":{"id": "", "text":""},
+			    "required": true
+                        },
+                        {
+                            "property":{"id": "ME:0000012", "text":"Instrument"},
+                            "value":{"id": "", "text":"HOBO"},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ME:0000228", "text":"Environmental Sample Location ID"},
+                            "value":{"id": "", "text":""},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ME:0000293", "text":"Data Variables Type"},
+                            "value":{"id": "ME:0000259", "text":"Environmental Measurement"},
+                            "units":{"id": "", "text":""},
+			    "required": true,
+			    "hidden": true
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"ME:0000004", "text":"Time Series"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+                                    "type":{ "id":"ME:0000122", "text":"Time"},
+                                    "units":{ "id":"UO:0000010", "text":"second"},
+                                    "scalar_type":{ "id":"int", "text":"int"}
+                                },
+                                {
+                                    "type":{ "id":"ME:0000180", "text":"DateTime"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        }
+                    ],
+                    "processs":{"id":"PROCESS:0000004","text":"Assay Environment"}
+                }
+            ]
+          },{
+            "text":"Chemical Measurement",
+            "children": [
+                {
+                    "id": "T1", 
+                    "text" : "Chemical Measurement <Time series, ...>", 
+                    "properties":[
+                        {
+                            "property":{"id": "", "text":""},
+                            "value":{"id": "", "text":""},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "", "text":""},
+                            "value":{"id": "", "text":""},
+                            "units":{"id": "", "text":""}
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"", "text":""},
+                            "dim_vars":[
+                                {
+                                    "type":{ "id":"", "text":""},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"", "text":""}
+                                },
+                                {
+                                    "type":{ "id":"", "text":""},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"", "text":""}
+                                }
+                            ]
+                        }
+                    ],
+                    "processs":{"id":"","text":""}
+                },
+                {
+                    "id": "T2", 
+                    "text" : "Soil Metals Data",
+		    "data_type": "DA:0000005",
+                    "properties":[
+                        {
+                            "property":{"id": "ENIGMA:0000002", "text":"ENIGMA Campaign"},
+                            "value":{"id": "ENIGMA:0000021", "text":"Core Pilot"},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ENIGMA:0000029", "text":"ENIGMA Labs and Personnel"},
+                            "value":{"id": "ENIGMA:0000030", "text":"Adams Lab"},
+                            "units":{"id": "", "text":""}
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"ME:0000100", "text":"Environmental Sample"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000228", "text":"Environmental Sample Location Name"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000027", "text":"Molecule"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000297", "text":"Molecule Name"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000037", "text":"State"},
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000037", "text":"State"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000146", "text":"Statistic"},
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000146", "text":"Statistic"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        }
+		    ],
+                    "processs":{"id":"PROCESS:0000005","text":"Assay Geochemistry"}
+                },
+                {
+                    "id": "T3", 
+                    "text" : "Groundwater Metals Data",
+		    "data_type": "DA:0000005",
+                    "properties":[
+                        {
+                            "property":{"id": "ENIGMA:0000002", "text":"ENIGMA Campaign"},
+                            "value":{"id": "ENIGMA:0000003", "text":"100 Well Survey"},
+                            "units":{"id": "", "text":""}
+                        },
+                        {
+                            "property":{"id": "ENIGMA:0000029", "text":"ENIGMA Labs and Personnel"},
+                            "value":{"id": "ENIGMA:0000030", "text":"Adams Lab"},
+                            "units":{"id": "", "text":""}
+                        }
+                    ],
+                    "dims":[
+                        {
+                            "type":{ "id":"ME:0000100", "text":"Environmental Sample"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000228", "text":"Environmental Sample Location Name"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000027", "text":"Molecule"},
+			    "required": true,
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000297", "text":"Molecule Name"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000037", "text":"State"},
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000037", "text":"State"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        },
+                        {
+                            "type":{ "id":"ME:0000146", "text":"Statistic"},
+                            "dim_vars":[
+                                {
+
+                                    "type":{ "id":"ME:0000146", "text":"Statistic"},
+                                    "units":{ "id":"", "text":""},
+                                    "scalar_type":{ "id":"string", "text":"string"}
+                                }
+                            ]
+                        }
+		    ],
+                    "processs":{"id":"PROCESS:0000005","text":"Assay Geochemistry"}
+                },
+                {
+                    "id": "T4", 
+                    "text" : "Chemical Measurement: custom",
+                    "properties":[],
+                    "dims":[],
+                    "processs":{"id":"","text":""}
+                }
+            ]
+          },{
+            "text":"Gene Knockout Fitness",
+            "children": [
+                {
+                    "id": "T5", 
+                    "text" : "Gene Knockout Fitness: default",
+                    "properties":[],
+                    "dims":[],
+                    "processs":{"id":"","text":""}
+
+                },
+                {   "id": "T6", 
+                    "text" : "Super Gene Knockout Fitness",
+                    "properties":[],
+                    "dims":[],
+                    "processs":{"id":"","text":""}
+                },
+                {
+                    "id": "T7", 
+                    "text" : "Gene Knockout Fitness: custom",
+                    "properties":[],
+                    "dims":[],
+                    "processs":{"id":"","text":""}
+                }
+            ]
+        }
+    ]
+}
