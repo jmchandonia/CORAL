@@ -55,16 +55,15 @@ class ArangoService:
     def drop_index(self, type_name):
         pass
 
-    def get_type_names(self):
-        pass
-    #     names = []
-    #     for name in self.__es_client.indices.get_alias(ES_INDEX_NAME_PREFIX + '*').keys():
-    #         name = name[len(ES_INDEX_NAME_PREFIX):]
-    #         names.append(name)
-    #     return names
+    def get_type_names(self):        
+        names = []
+        # for name in self.__es_client.indices.get_alias(ES_INDEX_NAME_PREFIX + '*').keys():
+        #     name = name[len(ES_INDEX_NAME_PREFIX):]
+        #     names.append(name)
+        return names
 
     def get_entity_properties(self, type_name):
-        pass
+        props = []
     #     es_type = to_es_type_name(type_name)
     #     index_name = ES_INDEX_NAME_PREFIX + es_type
     #     # print('From get_entity_properties:', es_type, index_name)
@@ -75,4 +74,4 @@ class ArangoService:
     #                      [es_type]['properties'].keys())
     #     except:
     #         props = []
-    #     return props
+        return props

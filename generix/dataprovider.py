@@ -4,8 +4,7 @@ from . import services
 from .brick import Brick, BrickProvenance
 from .search import DataDescriptorCollection
 from .utils import to_var_name
-from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
-from .utils import to_var_name, to_es_type_name
+from .typedef import TYPE_NAME_BRICK
 
 
 class DataProvider:
@@ -36,11 +35,10 @@ class DataProvider:
 
     def _get_type_provider(self, type_name):
         provider = None
-        es_type_name = to_es_type_name(type_name)
-        if es_type_name == ES_TYPE_NAME_BRICK:
+        if type_name == TYPE_NAME_BRICK:
             provider = BrickProvider()        
         else:
-            provider = EntityProvider(es_type_name)
+            provider = EntityProvider(type_name)
         return provider
 
 
@@ -66,9 +64,9 @@ class GenericsProvider:
         self.__load_providers()
 
     def __load_providers(self):
-        type_names = services.es_service.get_type_names()
+        type_names = services.arango_service.get_type_names()
         for type_name in type_names:
-            if type_name == ES_TYPE_NAME_BRICK:
+            if type_name == TYPE_NAME_BRICK:
                 self.__dict__[type_name] = BrickProvider()
 
 
@@ -77,9 +75,9 @@ class EntitiesProvider:
         self.__load_entity_providers()
 
     def __load_entity_providers(self):
-        type_names = services.es_service.get_type_names()
+        type_names = services.arango_service.get_type_names()
         for type_name in type_names:
-            if type_name != ES_TYPE_NAME_BRICK:
+            if type_name != TYPE_NAME_BRICK:
                 self.__dict__[type_name] = EntityProvider(type_name)
 
 
@@ -91,7 +89,7 @@ class EntityProvider:
 
     def __get_properties(self):
         properties = {}
-        props = services.es_service.get_entity_properties(
+        props = services.arango_service.get_entity_properties(
             self.__type_name)
         for prop in props:
             key = to_var_name('PROPERTY_', prop)
@@ -114,7 +112,7 @@ class EntityProvider:
 
 class BrickProvider(EntityProvider):
     def __init__(self):
-        super().__init__(ES_TYPE_NAME_BRICK)
+        super().__init__(TYPE_NAME_BRICK)
 
     def load(self, brick_id):
         brick = Brick.read_dict(
