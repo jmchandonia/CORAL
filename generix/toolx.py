@@ -238,10 +238,10 @@ def upload_bricks(argv):
     ws = services.workspace
     type_name = TYPE_NAME_BRICK
     try:
-        services.es_service.drop_index(type_name)
+        services.arango_service.drop_index(type_name)
     except:
         pass
-    services.es_service.create_brick_index()
+    services.arango_service.create_brick_index()
 
     for file_def in _FILES['bricks']:
         try:
@@ -262,10 +262,10 @@ def upload_entities(argv):
             file_name =  _FILES['import_dir'] + file_def['file']
             type_name = file_def['dtype']
             try:
-                services.es_service.drop_index(type_name)
+                services.arango_service.drop_index(type_name)
             except:
                 pass
-            services.es_service.create_index(
+            services.arango_service.create_index(
                 services.typedef.get_type_def(type_name))
 
             print('Doing %s: %s' % (type_name, file_name))
@@ -296,10 +296,10 @@ def upload_processes(argv):
     ws = services.workspace
     type_name = TYPE_NAME_PROCESS
     try:
-        services.es_service.drop_index(type_name)
+        services.arango_service.drop_index(type_name)
     except:
         pass
-    services.es_service.create_index(
+    services.arango_service.create_index(
         services.typedef.get_type_def(type_name))
 
     for file_def in _FILES['processes']:

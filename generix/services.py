@@ -10,7 +10,6 @@ from .validator import TermValueValidationService
 from .search import SearchService
 from .workspace import Workspace
 from .typedef import TypeDefService
-from .es_service import ElasticSearchService
 from .neo_service import Neo4JService
 from .arango_service import ArangoService
 
@@ -56,7 +55,6 @@ typedef = TypeDefService(__TYPEDEF_FILE)
 workspace = Workspace(__mongo_client)
 
 es_search = SearchService(__es_client)
-es_service = ElasticSearchService(__es_client)
 
 neo_service = Neo4JService(__neo4j_client)
 
