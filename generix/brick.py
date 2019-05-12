@@ -373,7 +373,6 @@ class Brick:
                         if var_name == var.name:
                             var_prefix = '%s_var%s' % ( dim_prefix, var_index + 1 ) 
                             break
-                    
 
                     ba = self.__xds[var_prefix] == selector[var_name]
                     for i, b in enumerate(ba):
@@ -411,7 +410,7 @@ class Brick:
         pv = PropertyValue( type_term=type_term, units_term=units_term, scalar_type=scalar_type, value=value )        
         self.__xds.attrs['__attr_count'] += 1
         attr_name = '__attr%s' % self.__xds.attrs['__attr_count'] 
-        self.__xds.attrs[attr_name] = pv
+        self.__xds.attrs[attr_name] = pv    
 
     def __build_xds(self, type_term, dim_terms, shape, id='', name='', description=''):
         ds = xr.Dataset()                
@@ -761,9 +760,9 @@ class Brick:
 
     def _repr_html_(self):
         def _row2_header(c):
-            return '<tr><td colspan=2 style="text-align:left;">%s</td></tr>' % (c)       
+            return '<tr><td bgcolor="#F5F5FF" colspan=2 style="text-align:left;">%s</td></tr>' % (c)       
         def _row2(c1, c2):
-            cell = '<td style="padding-left:20px; text-align:left">%s</td>'
+            cell = '<td bgcolor="#FFFFFF" style="padding-left:20px; text-align:left">%s</td>'
             patterm = '<tr>' + ''.join([ cell for i in range(2) ] ) + '</tr>'
             return patterm % (c1,c2)
         
@@ -775,10 +774,10 @@ class Brick:
             _row2_header('<b>DataBrick: </b> %s' % full_type),
             _row2_header('<i>Properties:</i>'),               
             _row2('Id', self.id),
-            _row2('Name', self.name),
-            _row2('Description', self.description),
             _row2('Type', self.type_term),
-            _row2('Shape', self.shape)
+            _row2('Shape', self.shape),
+            _row2('Name', self.name)
+            # _row2('Description', self.description),
         ]
         
         # Data
@@ -801,7 +800,7 @@ class Brick:
 
                 var_names.append(var.long_name + ':  ' + data)
             
-            rows.append( _row2( '%s. %s: %s' % (i +1, dim.type_term.term_name, dim.size),  
+            rows.append( _row2( '%s. %s, size=%s' % (i +1, dim.type_term.term_name, dim.size),  
                               '<i>Variables:</i><br> %s' % '<br>'.join(var_names) ))
 
         # Attributes
@@ -939,15 +938,20 @@ class Brick:
                 xds[var_prefix].attrs[attr_name] = self.__xds[var_prefix].attrs[attr_name]
 
         brick = Brick(xds=xds)
-        b_prov = BrickProvenance('parent brick', ['brick:%s' % self.id])
-        for prov in self.__session_provenance.provenance_items:
-            b_prov.provenance_items.append(prov)
-        
+        b_prov = self.get_base_session_provenance()        
         mean_prov = BrickProvenance('mean', ['dim_index:%s' % dim_index, 'dim_name:%s' % dim_name])
         b_prov.provenance_items.append(mean_prov)
         brick.session_provenance.provenance_items.append(b_prov)
 
         return brick
+
+    def get_base_session_provenance(self):
+        base_prov = BrickProvenance('parent brick', ['brick:%s' % self.id])
+        for prov in self.__session_provenance.provenance_items:
+            base_prov.provenance_items.append(prov)
+        return base_prov
+
+
 
     def save(self, process_term=None, person_term=None, campaign_term=None, input_obj_ids=None):
 
@@ -958,12 +962,12 @@ class Brick:
             raise ValueError('input_obj_ids should be specified')
 
 
-        user_profile = services.user_profile
-        if person_term is None:
-            person_term = user_profile.default_person
+        # user_profile = services.user_profile
+        # if person_term is None:
+        #     person_term = user_profile.default_person
         
-        if campaign_term is None:
-            campaign_term = user_profile.default_campaign
+        # if campaign_term is None:
+        #     campaign_term = user_profile.default_campaign
 
         brick_data_holder = BrickDataHolder(self)
         services.workspace.save_data(brick_data_holder)
@@ -1031,16 +1035,13 @@ class BrickDimension:
         data = {}
         for var in self.vars:
             data[var.long_name] = var.values
-        return pd.DataFrame(data)
-    
+        return pd.DataFrame(data)    
+
     def where(self, dim_filter):
         kwargs = {self.__dim_prefix: dim_filter.bool_array}
         xds = self.__xds.isel(kwargs)
 
-        
-        b_prov = BrickProvenance('parent brick', ['brick:%s' % self.__brick.id])
-        for prov in self.__brick.session_provenance.provenance_items:
-            b_prov.provenance_items.append(prov)
+        b_prov = self.__brick.get_base_session_provenance()
 
         where_prov = BrickProvenance('where', ['dim:%s' % self.name])
         for prov in dim_filter.provenance_items:
@@ -1492,6 +1493,50 @@ class BrickProvenance:
     def _repr_html_(self):
         return  ''.join(self._html_rows(0)) 
 
+class DataFilter:
+    def __init__(self, brick, provenance, bool_array):
+        self.__brick = brick
+        self.__provenance_items = [provenance]
+        self.__bool_array = bool_array
+
+    @property
+    def brick(self):
+        return self.__brick
+    
+    @property
+    def provenance_items(self):
+        return self.__provenance_items
+    
+    @property
+    def bool_array(self):
+        return self.__bool_array
+
+
+    def __logical_trasnform(self, data_filter, trasnform_name, trasnform_method):
+        if self.__brick != data_filter.brick:
+            raise ValueError('Error: bricks are different')
+        
+        new_prov = BrickProvenance(trasnform_name,[])
+        for prov in self.__provenance_items:
+            new_prov.provenance_items.append(prov)
+
+        for prov in data_filter.provenance_items:
+            new_prov.provenance_items.append(prov)
+        
+        self.__provenance_items = [new_prov]        
+        self.__bool_array = trasnform_method(self.__bool_array, data_filter.bool_array)
+
+        return self
+
+
+    def __and__(self, data_filter):
+        return self.__logical_trasnform(data_filter, '__and__', np.logical_and)
+
+    def __or__(self, data_filter):
+        return self.__logical_trasnform(data_filter, '__or__', np.logical_or)
+
+
+
 
 class DimensionFilter:
     def __init__(self, brick_dim, provenance, bool_array):
@@ -1510,13 +1555,12 @@ class DimensionFilter:
     @property
     def bool_array(self):
         return self.__bool_array
-
     
-    def __and__(self, dim_filter):
+    def __logical_trasnform(self, dim_filter, trasnform_name, trasnform_method):
         if self.__brick_dim != dim_filter.brick_dim:
             raise ValueError('Error: can not operate on different dimensions')
         
-        new_prov = BrickProvenance('__and__',[])
+        new_prov = BrickProvenance(trasnform_name,[])
         for prov in self.__provenance_items:
             new_prov.provenance_items.append(prov)
 
@@ -1524,28 +1568,15 @@ class DimensionFilter:
             new_prov.provenance_items.append(prov)
         
         self.__provenance_items = [new_prov]
-        
-        for i, bool_val in enumerate(dim_filter.bool_array):
-            self.__bool_array[i] = self.__bool_array[i] and bool_val
+        self.__bool_array = trasnform_method(self.__bool_array, dim_filter.bool_array)
 
         return self
 
-    def __or__(self, dim_filter):
-        if self.__brick_dim != dim_filter.brick_dim:
-            raise ValueError('Error: can not operate on different dimensions')
-        
-        new_prov = BrickProvenance('__or__',[])
-        for prov in self.__provenance_items:
-            new_prov.provenance_items.append(prov)
 
-        for prov in dim_filter.provenance_items:
-            new_prov.provenance_items.append(prov)
-        
-        self.__provenance_items = [new_prov]
-        
-        for i, bool_val in enumerate(dim_filter.bool_array):
-            self.__bool_array[i] = self.__bool_array[i] or bool_val
+    def __and__(self, data_filter):
+        return self.__logical_trasnform(data_filter, '__and__', np.logical_and)
 
-        return self
+    def __or__(self, data_filter):
+        return self.__logical_trasnform(data_filter, '__or__', np.logical_or)
 
     

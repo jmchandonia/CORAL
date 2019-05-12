@@ -27,7 +27,7 @@ class SearchIndexerService:
             "mappings": {
                 _ES_BRICK_TYPE: {
                     "properties": {
-                        "brick_id": {
+                        "id": {
                             "type": "text",
                             "analyzer": "keyword"
                         },

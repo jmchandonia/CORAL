@@ -24,6 +24,8 @@ IN_ONTOLOGY_LOAD_MODE = False
 __PACKAGE_DIR = os.path.dirname(os.path.dirname(__file__))
 __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
 
+_BRICK_TYPE_TEMPLATES_FILE = os.path.join(__PACKAGE_DIR, 'var/brick_type_templates.json')
+
 __CONFIG_FILE = os.path.join(__PACKAGE_DIR, 'var/config.json')
 __CONFIG = json.loads(open(__CONFIG_FILE).read())
 

@@ -4,7 +4,7 @@ import re
 from .utils import to_var_name
 from . import services
 
-_IMPORT_DIR = '../data/import/'
+_IMPORT_DIR = '../../data/import/'
 _ES_OTERM_INDEX_PREFIX = 'generix-ont-'
 _ES_OTERM_TYPE = 'oterm'
 
@@ -12,10 +12,10 @@ _ONTOLOGY_CONFIG = {
     'version': 1,
     'ontologies': {
 
-        # 'chebi': {
-        #     'name': 'chebi',
-        #     'file_name': 'chebi.obo'
-        # },
+        'chebi': {
+            'name': 'chebi',
+            'file_name': 'chebi.obo'
+        },
         'context_measurement': {
             'name': 'context_measurement',
             'file_name': 'context_measurement_ontology.obo'
@@ -284,7 +284,7 @@ class Ontology:
             self.__index_name += '*'
         else:
             self.__index_name += ontology_id
-        self.__inflate_root_terms()
+        # self.__inflate_root_terms()
 
     def __inflate_root_terms(self):
         for term in self.find_root():
@@ -366,7 +366,7 @@ class Ontology:
         }
         return self._find_term(query)
 
-    def find_name_prefix(self, term_name_prefix):
+    def find_name_pattern(self, term_name_prefix):
         query = {
             "query": {
                 "prefix": {
@@ -432,12 +432,19 @@ class TermCollection:
         return self.__terms[i]
 
     @property
+    def term_ids(self):
+        return [t.term_id for t in self.__terms]
+
+    @property
     def terms(self):
         return self.__terms
 
     @property
     def size(self):
         return len(self.__terms)
+
+    def head(self, n=5):
+        return TermCollection(self.__terms[:n])
 
     def _repr_html_(self):
         columns = ['Term ID', 'Term Name', 'Ontology', 'Parents']

@@ -1,5 +1,6 @@
 import re
 import json
+import numpy as np
 from .utils import to_es_type_name
 from .ontology import Term
 from . import services
@@ -222,13 +223,24 @@ class TypeDef:
 
     def validate_data(self, data):
         # check property values
+
+        # print( len(self.__property_defs.items()) )
         for pname, pdef in self.__property_defs.items():
+
             value = data.get(pname)
-            if value is None or value == 'null':
+            # print('[%s] = %s' % (pname, value) )
+            # print ('QQQ')
+            if value is None or value == 'null'  or value != value:
+                # print ('QQQ1')
+                # print('%s  is None: %s' % (pname, value))
                 if pdef.required:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
+                else:
+                    data[pname] = None
             else:
+                # print ('QQQ2')
+                # print('---------Validating %s ' % pname)
                 pdef.validate(value)
 
         # check that there are no undeclared properties
