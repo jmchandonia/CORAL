@@ -217,7 +217,7 @@ class EntityProperties:
         self.__inflate_properties()
 
     def __inflate_properties(self):
-        self.__properties = services.es_service.get_entity_properties(
+        self.__properties = services.arango_service.get_entity_properties(
             self.__type_name)
         for prop in self.__properties:
             key = to_var_name('TERM_', prop)

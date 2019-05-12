@@ -238,12 +238,12 @@ class Workspace:
 
     def _index_es_object(self, data_holder):
         if type(data_holder) is EntityDataHolder:
-            services.es_service.index_data(data_holder)
+            services.arango_service.index_data(data_holder)
         elif type(data_holder) is BrickDataHolder:
-            services.es_service.index_brick(data_holder)
+            services.arango_service.index_brick(data_holder)
 
     def _index_es_process(self, data_holder):
-        services.es_service.index_data(data_holder)
+        services.arango_service.index_data(data_holder)
 
     def _mark_as_indexed_es(self, entity_or_process):
         pass
