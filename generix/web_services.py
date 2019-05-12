@@ -43,7 +43,7 @@ def core_types():
     res = []
     
     ctypes = []
-    for ctype in services.es_service.get_type_names():
+    for ctype in services.arango_service.get_type_names():
         cType = []
         wordStart = True
         for c in ctype:
