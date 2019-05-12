@@ -1,13 +1,10 @@
 import re
 import json
-import numpy as np
-from .utils import to_es_type_name
 from .ontology import Term
 from . import services
 
 TYPE_NAME_PROCESS = 'Process'
 TYPE_NAME_BRICK = 'Brick'
-ES_TYPE_NAME_BRICK = to_es_type_name(TYPE_NAME_BRICK)
 
 
 class PropertyValidator:
