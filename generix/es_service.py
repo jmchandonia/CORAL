@@ -32,7 +32,8 @@ class ElasticSearchService:
                     "properties": {
                         "id": {
                             "type": "text",
-                            "analyzer": "keyword"
+                            "analyzer": "keyword",
+                            "fielddata": True
                         },
                         "name": {
                             "type": "text",
@@ -52,7 +53,8 @@ class ElasticSearchService:
                         },
                         "data_type_term_name": {
                             "type": "text",
-                            "analyzer": "keyword"
+                            "analyzer": "keyword",
+                            "fielddata": True
                         },
                         "value_type_term_id": {
                             "type": "text",

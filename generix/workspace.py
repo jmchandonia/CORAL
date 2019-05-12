@@ -1,3 +1,4 @@
+import numpy as np
 import json
 from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
@@ -181,8 +182,12 @@ class Workspace:
             pass
 
     def _validate_process(self, data_holder):
-        pass
         # data_holder.type_def.validate_data(data_holder.data)
+
+        # Check for NaN
+        for key, value in data_holder.data.items():
+            if value != value:
+                data_holder.data[key] = None
 
     def _store_object(self, data_holder):
         type_name = data_holder.type_name

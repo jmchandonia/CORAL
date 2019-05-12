@@ -5,7 +5,7 @@ from .brick import Brick, BrickProvenance
 from .search import DataDescriptorCollection
 from .utils import to_var_name
 from .typedef import TYPE_NAME_BRICK, ES_TYPE_NAME_BRICK
-from .utils import to_var_name
+from .utils import to_var_name, to_es_type_name
 
 
 class DataProvider:
@@ -33,6 +33,15 @@ class DataProvider:
     @property
     def reports(self):
         return self.__reports
+
+    def _get_type_provider(self, type_name):
+        provider = None
+        es_type_name = to_es_type_name(type_name)
+        if es_type_name == ES_TYPE_NAME_BRICK:
+            provider = BrickProvider()        
+        else:
+            provider = EntityProvider(es_type_name)
+        return provider
 
 
 class DataReports:
