@@ -3,6 +3,7 @@ import json
 from elasticsearch import Elasticsearch
 from neo4j.v1 import GraphDatabase
 from pymongo import MongoClient
+from pyArango.connection import Connection
 
 from .ontology import OntologyService, CashedTermProvider
 from .validator import TermValueValidationService
@@ -11,6 +12,8 @@ from .workspace import Workspace
 from .typedef import TypeDefService
 from .es_service import ElasticSearchService
 from .neo_service import Neo4JService
+from .arango_service import ArangoService
+
 from .user_profile import UserProfile
 from .dataprovider import BrickProvider
 from .dataprovider import Query as _Query
@@ -41,6 +44,12 @@ __neo4j_client = GraphDatabase.driver(
 
 
 __mongo_client = MongoClient(port=27017)
+
+
+__arango_config = __CONFIG['ArangoDB']
+__arango_conn = Connection(arangoURL=__arango_config['url'],username=__arango_config['user'], password=__arango_config['password'])
+arango_service = ArangoService(__arango_conn, __arango_config['db'])
+
 
 ontology = OntologyService(__es_client)
 typedef = TypeDefService(__TYPEDEF_FILE)
