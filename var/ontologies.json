@@ -1,0 +1,56 @@
+{
+    "version": 1,
+    "source_dir": "../../data/import/",
+    "ontologies": {
+
+        "chebi": {
+            "name": "chebi",
+            "file_name": "chebi.obo"
+        },
+        "context_measurement": {
+            "name": "context_measurement",
+            "file_name": "context_measurement_ontology.obo"
+        },
+        "continent": {
+            "name": "continent",
+            "file_name": "continent.obo"
+        },
+        "country": {
+            "name": "country",
+            "file_name": "country.obo"
+        },
+        "dtype": {
+            "name": "Data types",
+            "file_name": "data_type_ontology.obo"
+        },
+        "dimension": {
+            "name": "dimension",
+            "file_name": "dimension_type_ontology.obo"
+        },
+        "enigma": {
+            "name": "ENIGMA metadata",
+            "file_name": "enigma_specific_ontology.obo"
+        },
+        "env": {
+            "name": "ENV",
+            "file_name": "env.obo"
+        },
+        "mixs": {
+            "name": "mixs",
+            "file_name": "mixs.obo"
+        },
+        "process": {
+            "name": "process_ontology",
+            "file_name": "process_ontology.obo"
+        },
+        "units": {
+            "name": "Units",
+            "file_name": "unit_standalone.obo"
+        },
+        "taxonomy":{
+            "name": "taxonomy",
+            "file_name": "ncbitaxon.obo",
+            "ignore": true
+        }
+    }
+}
