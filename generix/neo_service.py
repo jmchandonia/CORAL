@@ -63,12 +63,12 @@ class Neo4JService:
                 Neo4JService._get_type_ids, query, process_id)
         return type_items
 
-    def get_up_process_id(self, entity_id):
+    def get_up_process_ids(self, entity_id):
         query = 'match(t)-[:HAS_OUTPUT]-(p) where t.id in {source_ids} return p.id'
         with self.__neo4j_client.session() as session:
             target_ids = session.read_transaction(
                 _to_target_ids, query, [entity_id])
-        return target_ids[0] if len(target_ids) > 0 else None
+        return target_ids
 
     def get_down_process_ids(self, entity_id):
         query = 'match(t)-[:PARAM_IN]-(p) where t.id in {source_ids} return p.id'

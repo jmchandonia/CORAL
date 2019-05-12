@@ -60,7 +60,7 @@ class SearchService:
             ids.append(hit["_source"][id_field_name])
         return ids
 
-    def _find_bricks(self, query, size=100):
+    def _find_bricks(self, query, size=1000):
         query['size'] = size
         query['_source'] = [
             'id',
@@ -75,6 +75,7 @@ class SearchService:
             'value_type_term_id',
             'value_type_term_name'
         ]
+        query['sort'] = ['data_type_term_name', 'id']
 
         brick_descriptors = []
         try:
@@ -299,7 +300,15 @@ class DataDescriptor:
         return self.__dict__[property]
 
     def table_view_properties(self):
-        return list(self.__dict__.keys())
+        props = []
+        if 'id' in self.__dict__:
+            props.append('id')
+
+        for prop in self.__dict__.keys():
+            if prop.startswith('_') or prop == 'id' or prop == 'data_type':
+                continue
+            props.append(prop)
+        return props
 
     @property
     def properties(self):
@@ -331,23 +340,33 @@ class EntityDescriptor(DataDescriptor):
         super().__init__(data_type, doc)
         self.__provenance = DataDescriptorProvenance(self)
 
-    def get_up_process(self):
+    def get_up_processes(self):
         entity_id = self['id']
-        process_id = services.neo_service.get_up_process_id(entity_id)
+        process_ids = services.neo_service.get_up_process_ids(entity_id)
 
-        pd = None
-        if process_id is not None:
+        pdc = None
+        if process_ids is None:
+            pdc = DataDescriptorCollection()
+        else:
             q = services.Query('process', {})
-            q.has({'id': process_id})
-            pd = q.find_one()
-        return pd
+            q.has({'id': process_ids})
+            pdc = q.find()
+
+        return pdc
 
     def get_down_processes(self):
         entity_id = self['id']
         process_ids = services.neo_service.get_down_process_ids(entity_id)
-        q = services.Query('process', {})
-        q.has({'id': process_ids})
-        return q.find()
+
+        pdc = None
+        if process_ids is None:
+            pdc = DataDescriptorCollection()
+        else:
+            q = services.Query('process', {})
+            q.has({'id': process_ids})
+            pdc = q.find()
+
+        return pdc
 
     def provenance(self):
         return self.__provenance
@@ -360,8 +379,7 @@ class DataDescriptorProvenance:
     @staticmethod
     def _provenance_rows(data_descriptor):
         rows = []
-        pd = data_descriptor.get_up_process()
-        if pd is not None:
+        for pd in data_descriptor.get_up_processes():
             rows.append('<div style="margin-left:20px">')
             rows.append('&uarr;')
             rows.append('<div>')
