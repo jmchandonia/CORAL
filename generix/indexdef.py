@@ -21,6 +21,10 @@ class IndexTypeDef:
     @property
     def property_defs(self):
         return self.__prop_defs
+    
+    @property
+    def property_names(self):
+        return [pd.name for pd in self.__prop_defs]
 
 
 class IndexPropertyDef:
