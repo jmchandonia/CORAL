@@ -78,6 +78,12 @@ class IndexTypeDefService:
         
         return type_defs
 
+    def get_type_def(self, type_name):
+        for type_def in self.__type_defs:
+            if type_def.name == type_name:
+                return type_def
+        return None
+
 
 
 
