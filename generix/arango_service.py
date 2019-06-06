@@ -5,10 +5,6 @@ from .ontology import Term
 from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor
 
 
-
-
-
-
 class ArangoService:
     def __init__(self, connection, db_name):
         self.__connection = connection
@@ -66,29 +62,6 @@ class ArangoService:
 
     def drop_index(self, type_name):
         pass
-    
-    def get_type_names(self, type_category):        
-        names = []
-
-        # for cname in self.__db.collections:
-        #     if cname.startswith(type_category):
-        #         names.append(cname[len(type_category):] )
-        return names
-
-    def get_entity_properties(self, type_category, type_name):
-        props = []
-    #     es_type = to_es_type_name(type_name)
-    #     index_name = ES_INDEX_NAME_PREFIX + es_type
-    #     # print('From get_entity_properties:', es_type, index_name)
-
-    #     try:
-    #         doc = self.__es_client.indices.get_mapping(index=index_name)
-    #         props = list(doc[index_name]['mappings']
-    #                      [es_type]['properties'].keys())
-    #     except:
-    #         props = []
-        return props
-
 
     # def _build_query(self, key_values):
     #     items = []

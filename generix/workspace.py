@@ -113,7 +113,7 @@ class Workspace:
             registered_type_names.add(type_name)
             self.__dtype_2_id_offset[type_name] = row['id_offset']
 
-        for type_name in services.typedef.get_type_names():
+        for type_name in services.indexdef.get_type_names():
             if type_name not in registered_type_names:
                 self.__enigma_db.id.insert_one(
                     {'dtype': type_name, 'id_offset': 0})
