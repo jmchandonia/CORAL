@@ -9,6 +9,7 @@ from .ontology import OntologyService, CashedTermProvider
 # from .validator import TermValueValidationService
 from .workspace import Workspace
 from .typedef import TypeDefService
+from .indexdef import IndexTypeDefService
 # from .neo_service import Neo4JService
 from .arango_service import ArangoService
 
@@ -52,6 +53,7 @@ arango_service = ArangoService(__arango_conn, __arango_config['db'])
 
 ontology = OntologyService(arango_service)
 typedef = TypeDefService(__TYPEDEF_FILE)
+indexdef = IndexTypeDefService()
 workspace = Workspace(arango_service)
 
 # neo_service = Neo4JService(__neo4j_client)

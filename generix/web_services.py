@@ -6,6 +6,7 @@ import pandas as pd
 from . import services
 from .brick import Brick
 from .dataprovider import DataProvider
+from .typedef import TYPE_CATEGORY_STATIC
 
 app = Flask(__name__)
 CORS(app)
@@ -43,7 +44,7 @@ def core_types():
     res = []
     
     ctypes = []
-    for ctype in services.arango_service.get_type_names():
+   for ctype in services.indexdef.get_type_names(category=TYPE_CATEGORY_STATIC):
         cType = []
         wordStart = True
         for c in ctype:

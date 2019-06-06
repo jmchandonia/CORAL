@@ -3,7 +3,8 @@ from .ontology import Term
 from . import services
 from .brick import Brick, BrickProvenance
 from .utils import to_var_name
-from .typedef import TYPE_NAME_BRICK
+from .descriptor import DataDescriptorCollection
+from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 
 
 class DataProvider:
@@ -33,11 +34,13 @@ class DataProvider:
         return self.__reports
 
     def _get_type_provider(self, type_name):
-        provider = None
+
+        type_def = services.indexdef.get_type_def(type_name)
+        provider = None        
         if type_name == TYPE_NAME_BRICK:
-            provider = BrickProvider()        
+            provider = BrickProvider(type_def)        
         else:
-            provider = EntityProvider(type_name)
+            provider = EntityProvider(type_def)
         return provider
 
 
@@ -63,10 +66,10 @@ class GenericsProvider:
         self.__load_providers()
 
     def __load_providers(self):
-        type_names = services.arango_service.get_type_names()
-        for type_name in type_names:
-            if type_name == TYPE_NAME_BRICK:
-                self.__dict__[type_name] = BrickProvider()
+        type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
+        for type_def in type_defs:
+            if type_def.name == TYPE_NAME_BRICK:
+                self.__dict__[type_def.name] = BrickProvider(type_def)
 
 
 class EntitiesProvider:
@@ -74,30 +77,20 @@ class EntitiesProvider:
         self.__load_entity_providers()
 
     def __load_entity_providers(self):
-        type_names = services.arango_service.get_type_names()
-        for type_name in type_names:
-            if type_name != TYPE_NAME_BRICK:
-                self.__dict__[type_name] = EntityProvider(type_name)
+        type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
+        for type_def in type_defs:
+            self.__dict__[type_def.name] = EntityProvider(type_def)
 
 
 class EntityProvider:
-    def __init__(self, type_name):
-        self.__type_name = type_name
-        self.__properties = self.__get_properties()
-        self.__inflate_properties(self.__properties)
+    def __init__(self, type_def):
+        self.__type_def = type_def
+        self.__inflate_properties()
 
-    def __get_properties(self):
-        properties = {}
-        props = services.arango_service.get_entity_properties(
-            self.__type_name)
-        for prop in props:
-            key = to_var_name('PROPERTY_', prop)
-            properties[key] = prop
-        return properties
-
-    def __inflate_properties(self, properties):
-        for key in properties:
-            self.__dict__[key] = properties[key]
+    def __inflate_properties(self):
+        for prop_def in self.__type_def.property_defs:
+            key = to_var_name('PROPERTY_', prop_def.name)
+            self.__dict__[key] = prop_def
 
     def find(self, criterion):
         return self.query().has(criterion).find()
@@ -106,12 +99,14 @@ class EntityProvider:
         return self.query().has(criterion).find_one()
 
     def query(self):
-        return Query(self.__type_name, self.__properties)
+        pass
+        # TODO
+        # return Query(self.__type_name, self.__properties)
 
 
 class BrickProvider(EntityProvider):
-    def __init__(self):
-        super().__init__(TYPE_NAME_BRICK)
+    def __init__(self, type_def):
+        super().__init__(type_def)
 
     def load(self, brick_id):
         brick = Brick.read_dict(
@@ -164,7 +159,7 @@ class Query:
         # return services.es_search._find_entity_ids(self.__type_name, 'id', es_query)
 
     def find(self):
-        return []
+        return DataDescriptorCollection(data_descriptors=[])
         # TODO
         # neo_ids = set()
 
@@ -212,19 +207,3 @@ class Query:
         #     return ddc[0]
         # return None
 
-
-class EntityProperties:
-    def __init__(self, type_name):
-        self.__type_name = type_name
-        self.__properties = []
-        self.__inflate_properties()
-
-    def __inflate_properties(self):
-        self.__properties = services.arango_service.get_entity_properties(
-            self.__type_name)
-        for prop in self.__properties:
-            key = to_var_name('TERM_', prop)
-            self.__dict__[key] = prop
-
-    def _repr_html_(self):
-        self.__properties
