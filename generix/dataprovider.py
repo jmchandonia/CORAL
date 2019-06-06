@@ -2,7 +2,6 @@ import re
 from .ontology import Term
 from . import services
 from .brick import Brick, BrickProvenance
-from .search import DataDescriptorCollection
 from .utils import to_var_name
 from .typedef import TYPE_NAME_BRICK
 
@@ -48,15 +47,15 @@ class DataReports:
 
     @property
     def brick_types(self):
-        return services.es_search.data_type_terms()
+        return services.ontology.data_type_terms()
 
     @property
     def brick_dim_types(self):
-        return services.es_search.dim_type_terms()
+        return services.ontology.dim_type_terms()
 
     @property
     def brick_data_var_types(self):
-        return services.es_search.value_type_terms()
+        return services.ontology.value_type_terms()
 
 
 class GenericsProvider:
@@ -157,55 +156,61 @@ class Query:
         return self
 
     def find_ids(self):
-        es_query = services.es_search._build_query(self.__es_filters)
-        # id_field_name = 'brick_id' if self.__type_name == 'brick' else 'id'
-        # return services.es_search._find_entity_ids(self.__type_name, id_field_name, es_query)
-        return services.es_search._find_entity_ids(self.__type_name, 'id', es_query)
+        return []
+        # TODO
+        # es_query = services.es_search._build_query(self.__es_filters)
+        # # id_field_name = 'brick_id' if self.__type_name == 'brick' else 'id'
+        # # return services.es_search._find_entity_ids(self.__type_name, id_field_name, es_query)
+        # return services.es_search._find_entity_ids(self.__type_name, 'id', es_query)
 
     def find(self):
-        neo_ids = set()
+        return []
+        # TODO
+        # neo_ids = set()
 
-        # collect ids based on links
-        for neo_filter in self.__neo_filters:
-            source_type = neo_filter['dtype']
-            source_crierion = neo_filter['criterion']
-            direct = neo_filter['direct']
-            q = Query(source_type, {})
-            q.has(source_crierion)
-            source_ids = q.find_ids()
+        # # collect ids based on links
+        # for neo_filter in self.__neo_filters:
+        #     source_type = neo_filter['dtype']
+        #     source_crierion = neo_filter['criterion']
+        #     direct = neo_filter['direct']
+        #     q = Query(source_type, {})
+        #     q.has(source_crierion)
+        #     source_ids = q.find_ids()
 
-            source_type = 'Brick' if source_type == 'brick' else source_type[0:1].upper(
-            ) + source_type[1:]
+        #     source_type = 'Brick' if source_type == 'brick' else source_type[0:1].upper(
+        #     ) + source_type[1:]
 
-            target_type = self.__type_name
-            target_type = 'Brick' if target_type == 'brick' else target_type[0:1].upper(
-            ) + target_type[1:]
+        #     target_type = self.__type_name
+        #     target_type = 'Brick' if target_type == 'brick' else target_type[0:1].upper(
+        #     ) + target_type[1:]
 
-            linked_ids = services.neo_service.find_linked_ids(
-                source_type, 'id', source_ids, target_type, 'id', direct=direct)
+        #     linked_ids = services.neo_service.find_linked_ids(
+        #         source_type, 'id', source_ids, target_type, 'id', direct=direct)
 
-            for linked_id in linked_ids:
-                neo_ids.add(linked_id)
+        #     for linked_id in linked_ids:
+        #         neo_ids.add(linked_id)
 
-        es_filter = {}
-        if len(self.__neo_filters) > 0:
-            # id_filed_name = 'brick_id' if self.__type_name == 'brick' else 'id'
-            # self._add_es_filter(es_filter, {id_filed_name: list(neo_ids)})
-            self._add_es_filter(es_filter, {'id': list(neo_ids)})
-        for key in self.__es_filters:
-            es_filter[key] = self.__es_filters[key]
+        # es_filter = {}
+        # if len(self.__neo_filters) > 0:
+        #     # id_filed_name = 'brick_id' if self.__type_name == 'brick' else 'id'
+        #     # self._add_es_filter(es_filter, {id_filed_name: list(neo_ids)})
+        #     self._add_es_filter(es_filter, {'id': list(neo_ids)})
+        # for key in self.__es_filters:
+        #     es_filter[key] = self.__es_filters[key]
 
-        es_query = services.es_search._build_query(es_filter)
-        if self.__type_name == 'brick':
-            return DataDescriptorCollection(data_descriptors=services.es_search._find_bricks(es_query))
-        else:
-            return DataDescriptorCollection(data_descriptors=services.es_search._find_entities(self.__type_name, es_query))
+        # es_query = services.es_search._build_query(es_filter)
+        # if self.__type_name == 'brick':
+        #     return DataDescriptorCollection(data_descriptors=services.es_search._find_bricks(es_query))
+        # else:
+        #     return DataDescriptorCollection(data_descriptors=services.es_search._find_entities(self.__type_name, es_query))
 
     def find_one(self):
-        ddc = self.find()
-        if ddc.size > 0:
-            return ddc[0]
-        return None
+        pass
+        # TODO
+        # ddc = self.find()
+        # if ddc.size > 0:
+        #     return ddc[0]
+        # return None
 
 
 class EntityProperties:

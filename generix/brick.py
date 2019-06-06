@@ -10,7 +10,6 @@ from .workspace import BrickDataHolder, ProcessDataHolder
 from . import services
 from .utils import to_var_name, to_es_type_name
 
-
 class NPEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
@@ -527,7 +526,7 @@ class Brick:
         return self.__session_provenance
     
     @property
-    def descriptor(self):
+    def descriptor(self):        
         q = services.Query('brick',{})
         q.has({'id': self.id})
         return q.find_one()
@@ -1420,6 +1419,25 @@ class BrickVariable:
         return '<table>%s</table>' % ''.join(rows) 
 
 class BrickIndexDocumnet:
+    @staticmethod
+    def properties():
+        return { 
+            'id': 'int',
+            'name': 'text',
+            'description': 'text',
+            'n_dimensions': 'int',
+            'data_type_term_id': 'text',
+            'data_type_term_name': 'text',
+            'value_type_term_id': 'text',
+            'value_type_term_name': 'text',
+            'dim_type_term_ids': '[text]',
+            'dim_type_term_names': '[text]',
+            'dim_sizes': '[int]',
+            'all_term_ids': '[text]',
+            'all_term_values': '[text]',
+            'all_parent_path_term_ids': '[text]'
+        }
+
     def __init__(self, brick):
         self.id = brick.id
         self.name = brick.name
