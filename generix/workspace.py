@@ -90,11 +90,13 @@ class Workspace:
     __ID_PATTERN = '%s%07d'
 
     def __init__(self, mongo_client):
-        self.__mongo_client = mongo_client
-        self.__enigma_db = self.__mongo_client.enigma
-        self.__dtype_2_id_offset = {}
-        self.__init_id_offsets()
+        # TODO
+        # self.__mongo_client = mongo_client
+        # self.__enigma_db = self.__mongo_client.enigma
+        # self.__dtype_2_id_offset = {}
+        # self.__init_id_offsets()
         print('Workspace initialized!')
+
 
         # self.__dtype_2_id_offset = {}
         # self.__id_2_file_name = {}

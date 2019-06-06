@@ -4,18 +4,21 @@ import re
 def to_var_name(prefix, name):
     return prefix + re.sub('[^A-Za-z0-9]+', '_', name)
 
-
 def to_es_type_name(type_name):
-    chars = list(type_name)
-    es_name = []
-    for ch in chars:
-        if ch.isupper():
-            if len(es_name) > 0:
-                es_name.append('_')
-            es_name.append(ch.lower())
-        else:
-            es_name.append(ch)
-    return ''.join(es_name)
+    return type_name
+
+
+# def to_es_type_name(type_name):
+#     chars = list(type_name)
+#     es_name = []
+#     for ch in chars:
+#         if ch.isupper():
+#             if len(es_name) > 0:
+#                 es_name.append('_')
+#             es_name.append(ch.lower())
+#         else:
+#             es_name.append(ch)
+#     return ''.join(es_name)
 
 
 # from .ontology import Term
