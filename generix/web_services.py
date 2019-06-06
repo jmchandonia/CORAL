@@ -43,25 +43,29 @@ def brick_type_templates():
 def core_types():
     res = []
     
-    ctypes = []
-   for ctype in services.indexdef.get_type_names(category=TYPE_CATEGORY_STATIC):
-        cType = []
-        wordStart = True
-        for c in ctype:
-            if c == '_':
-                wordStart = True
-                continue
+    # ctypes = []
+    # for ctype in services.indexdef.get_type_names(category=TYPE_CATEGORY_STATIC):
+    #     cType = []
+    #     wordStart = True
+    #     for c in ctype:
+    #         if c == '_':
+    #             wordStart = True
+    #             continue
             
-            if wordStart:
-                c = c.upper()
-                wordStart = False
-            cType.append(c)
-        ctypes.append( ''.join(cType) )
+    #         if wordStart:
+    #             c = c.upper()
+    #             wordStart = False
+    #         cType.append(c)
+    #     ctypes.append( ''.join(cType) )
 
-    ctypes.sort()
-    for ctype in ctypes:
-        props = services.arango_service.get_entity_properties(ctype)        
-        res.append( { 'type' :ctype, 'props': props} )
+    # ctypes.sort()
+    # for ctype in ctypes:
+    #     props = services.arango_service.get_entity_properties(ctype)        
+    #     res.append( { 'type' :ctype, 'props': props} )
+
+    type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
+    res = [ {'type': td.name, 'props': td.property_names} for td in type_defs]
+
     return  json.dumps({
         'results': res
     })
