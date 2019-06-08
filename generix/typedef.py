@@ -352,13 +352,13 @@ class TypeDefService:
             doc = json.loads(f.read())
 
         # Do static types
-        for type_def_doc in doc['static_types'].items():
+        for type_def_doc in doc['static_types']:
             type_name = type_def_doc['name']
             category_name = TYPE_CATEGORY_STATIC
             self.__type_defs[type_name] = TypeDef(type_name, category_name, type_def_doc)
 
         # Do static types
-        for type_def_doc in doc['system_types'].items():
+        for type_def_doc in doc['system_types']:
             type_name = type_def_doc['name']
             category_name = TYPE_CATEGORY_SYSTEM
             self.__type_defs[type_name] = TypeDef(type_name, category_name, type_def_doc)
