@@ -38,7 +38,7 @@ class DataProvider:
         type_def = services.indexdef.get_type_def(type_name)
         provider = None        
         if type_name == TYPE_NAME_BRICK:
-            provider = BrickProvider(type_def)        
+            provider = BrickProvider()        
         else:
             provider = EntityProvider(type_def)
         return provider
@@ -69,7 +69,7 @@ class GenericsProvider:
         type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
         for type_def in type_defs:
             if type_def.name == TYPE_NAME_BRICK:
-                self.__dict__[type_def.name] = BrickProvider(type_def)
+                self.__dict__[type_def.name] = BrickProvider()
 
 
 class EntitiesProvider:
@@ -105,8 +105,8 @@ class EntityProvider:
 
 
 class BrickProvider(EntityProvider):
-    def __init__(self, type_def):
-        super().__init__(type_def)
+    def __init__(self):
+        super().__init__(services.indexdef.get_type_def(TYPE_NAME_BRICK) )
 
     def load(self, brick_id):
         brick = Brick.read_dict(
