@@ -6,7 +6,7 @@ import json
 from pyArango.connection import Connection
 
 from .ontology import OntologyService, CashedTermProvider
-# from .validator import TermValueValidationService
+from .validator import TermValueValidationService
 from .workspace import Workspace
 from .typedef import TypeDefService
 from .indexdef import IndexTypeDefService
@@ -14,7 +14,7 @@ from .indexdef import IndexTypeDefService
 from .arango_service import ArangoService
 
 from .user_profile import UserProfile
-# from .dataprovider import BrickProvider
+from .dataprovider import BrickProvider
 from .dataprovider import Query as _Query
 
 Query = _Query
@@ -58,8 +58,8 @@ workspace = Workspace(arango_service)
 
 # neo_service = Neo4JService(__neo4j_client)
 
-# term_value_validator = TermValueValidationService()
-# brick_provider = BrickProvider()
+term_value_validator = TermValueValidationService()
+brick_provider = BrickProvider()
 
 user_profile = UserProfile()
 term_provider = CashedTermProvider()
