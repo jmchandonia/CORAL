@@ -1,4 +1,4 @@
-from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_ONTOLOGY, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK
+from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK
 from .brick import BrickIndexDocumnet
 from . import services
 
@@ -56,7 +56,7 @@ class IndexTypeDefService:
 
         # do dynamic types: Brick
         index_prop_defs = []
-        for prop_name, prop_scalar_type in BrickIndexDocumnet.properties.items():
+        for prop_name, prop_scalar_type in BrickIndexDocumnet.properties().items():
             index_prop_defs.append( IndexPropertyDef(prop_name, prop_scalar_type) )
         index_type_def = IndexTypeDef(TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, index_prop_defs)
         self.__type_defs.append(index_type_def)
