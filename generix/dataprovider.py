@@ -3,8 +3,9 @@ from .ontology import Term
 from . import services
 from .brick import Brick, BrickProvenance
 from .utils import to_var_name
-from .descriptor import DataDescriptorCollection
+from .descriptor import DataDescriptorCollection, EntityDescriptor
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
+from .indexdef import IndexPropertyDef
 
 
 class DataProvider:
@@ -66,10 +67,10 @@ class GenericsProvider:
         self.__load_providers()
 
     def __load_providers(self):
-        type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
-        for type_def in type_defs:
-            if type_def.name == TYPE_NAME_BRICK:
-                self.__dict__[type_def.name] = BrickProvider()
+        index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
+        for index_type_def in index_type_defs:
+            if index_type_def.name == TYPE_NAME_BRICK:
+                self.__dict__[TYPE_NAME_BRICK] = BrickProvider()
 
 
 class EntitiesProvider:
@@ -77,20 +78,20 @@ class EntitiesProvider:
         self.__load_entity_providers()
 
     def __load_entity_providers(self):
-        type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
-        for type_def in type_defs:
-            self.__dict__[type_def.name] = EntityProvider(type_def)
+        index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
+        for index_type_def in index_type_defs:
+            self.__dict__[index_type_def.name] = EntityProvider(index_type_def)
 
 
 class EntityProvider:
-    def __init__(self, type_def):
-        self.__type_def = type_def
+    def __init__(self, index_type_def):
+        self.__index_type_def = index_type_def
         self.__inflate_properties()
 
     def __inflate_properties(self):
-        for prop_def in self.__type_def.property_defs:
-            key = to_var_name('PROPERTY_', prop_def.name)
-            self.__dict__[key] = prop_def
+        for index_prop_def in self.__index_type_def.property_defs:
+            key = to_var_name('PROPERTY_', index_prop_def.name)
+            self.__dict__[key] = index_prop_def
 
     def find(self, criterion):
         return self.query().has(criterion).find()
@@ -99,9 +100,7 @@ class EntityProvider:
         return self.query().has(criterion).find_one()
 
     def query(self):
-        pass
-        # TODO
-        # return Query(self.__type_name, self.__properties)
+        return Query(self.__index_type_def)
 
 
 class BrickProvider(EntityProvider):
@@ -117,38 +116,62 @@ class BrickProvider(EntityProvider):
 
 
 class Query:
-    def __init__(self, type_name, properties):
+    def __init__(self, index_type_def):
 
-        self.__type_name = type_name
-        self.__es_filters = {}
-        self.__neo_filters = []
-        for key in properties:
-            self.__dict__[key] = properties[key]
+        self.__index_type_def = index_type_def
+        self.__eq_filters = {}
+        # self.__es_filters = {}
+        # self.__neo_filters = []
+        for index_prop_def in index_type_def.property_defs:
+            key = to_var_name('PROPERTY_', index_prop_def.name)            
+            self.__dict__[key] = index_prop_def
 
-    def _add_es_filter(self, es_filters, criterion):
+    def _check_property(self, prop_name):
+        key = to_var_name('PROPERTY_', prop_name)
+        if key not in self.__dict__:
+            raise ValueError('Unknown property %s' % prop_name)
+
+    def _add_eq_filters(self, criterion):
         if type(criterion) is dict:
-            for key in criterion:
-                if type(criterion[key]) is list:
-                    prefix = 'terms'
-                else:
-                    prefix = 'term'
-                es_filters[prefix + '.' + key] = criterion[key]
+            for prop in criterion:
+                prop_name = prop
+                if type(prop) is IndexPropertyDef:
+                    prop_name = prop.name
+
+                self._check_property(prop_name)
+                self.__eq_filters[prop_name] = criterion[prop]
         else:
             print('Error: Criterion should be a dict')
 
+
+    # def _add_es_filter(self, es_filters, criterion):
+    #     if type(criterion) is dict:
+    #         for key in criterion:
+    #             if type(criterion[key]) is list:
+    #                 prefix = 'terms'
+    #             else:
+    #                 prefix = 'term'
+    #             es_filters[prefix + '.' + key] = criterion[key]
+    #     else:
+    #         print('Error: Criterion should be a dict')
+
     def has(self, criterion):
-        self._add_es_filter(self.__es_filters, criterion)
+        self._add_eq_filters(criterion)
         return self
 
     def linked_up_to(self, type_name, criterion):
-        self.__neo_filters.append(
-            {'dtype': type_name, 'criterion': criterion, 'direct': True})
-        return self
+        pass
+        # TODO
+        # self.__neo_filters.append(
+        #     {'dtype': type_name, 'criterion': criterion, 'direct': True})
+        # return self
 
     def linked_down_to(self, type_name, criterion):
-        self.__neo_filters.append(
-            {'dtype': type_name, 'criterion': criterion, 'direct': False})
-        return self
+        pass
+        # TODO
+        # self.__neo_filters.append(
+        #     {'dtype': type_name, 'criterion': criterion, 'direct': False})
+        # return self
 
     def find_ids(self):
         return []
@@ -159,7 +182,28 @@ class Query:
         # return services.es_search._find_entity_ids(self.__type_name, 'id', es_query)
 
     def find(self):
-        return DataDescriptorCollection(data_descriptors=[])
+
+        aql_filter = ['1==1']
+        aql_bind = { '@collection': self.__index_type_def.collection_name}
+
+        i = 0
+        for prop_name in self.__eq_filters:
+            i += 1
+            aql_filter.append( 'x.%s==@_p%s' %(prop_name, i) )
+            aql_bind[ '_p%s' % i ] = self.__eq_filters[prop_name]
+        
+        aql = 'FOR x IN @@collection FILTER %s RETURN x' % (' and '.join(aql_filter) )
+
+        print('aql = ', aql)
+        print('aql_bind = ', aql_bind)
+
+        data_descriptors = []
+        rs = services.arango_service.find(aql, aql_bind)
+        for row in rs:
+            ed = EntityDescriptor(self.__index_type_def, row)
+            data_descriptors.append(ed)
+
+        return DataDescriptorCollection(data_descriptors=data_descriptors)
         # TODO
         # neo_ids = set()
 

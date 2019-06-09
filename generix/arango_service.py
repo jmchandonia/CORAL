@@ -3,6 +3,7 @@ from .brick import BrickIndexDocumnet
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
 from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor
+from . import services
 
 
 class ArangoService:
@@ -16,7 +17,9 @@ class ArangoService:
         return self.__db
 
     def create_brick_index(self):
-        pass
+        type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
+        self.__db.createCollection(name=type_def.collection_name)
+
 
     def index_doc(self, doc, collection, category):
         bind = {'doc': doc, '@collection': category + collection}
@@ -57,9 +60,9 @@ class ArangoService:
 
         self.index_doc(doc, type_def.name, TYPE_CATEGORY_STATIC)
 
-    def find_all(self, collection, category):
+    def find_all(self, type_name, category):
         aql = 'FOR x IN @@collection RETURN x'        
-        aql_bind = {'@collection': category + collection}
+        aql_bind = {'@collection': category + type_name}
         print('aql_bind:', aql_bind )
 
         return self.find(aql, aql_bind, 1000)
@@ -69,10 +72,10 @@ class ArangoService:
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
     def create_index(self, type_def):
-        pass
+        self.__db.createCollection(name=type_def.collection_name)
 
-    def drop_index(self, type_name):
-        pass
+    def drop_index(self, type_def):
+        self.__db[type_def.collection_name].delete()
 
     # def _build_query(self, key_values):
     #     items = []

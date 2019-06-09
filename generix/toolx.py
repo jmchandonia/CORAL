@@ -2,11 +2,12 @@ import sys
 import pandas as pd
 from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
-from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
+from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_STATIC
 from .brick import Brick
 
 _FILES = {
-    'import_dir': '../../data/import/',
+    # 'import_dir': '../../data/import/',
+    'import_dir': 'data/import/',
     'bricks': [
         {
             'file': 'generic_taxonomic_abundance_fw215_02_100ws.json'
@@ -216,32 +217,48 @@ _FILES = {
 
 
 def upload_ontologies(argv):
-    services.IN_ONTOLOGY_LOAD_MODE = True
-    try:
-        services.ontology._upload_ontologies()
-    finally:
-        services.IN_ONTOLOGY_LOAD_MODE = False
+    pass
+    # TODO
+    # services.IN_ONTOLOGY_LOAD_MODE = True
+    # try:
+    #     services.ontology._upload_ontologies()
+    # finally:
+    #     services.IN_ONTOLOGY_LOAD_MODE = False
 
 
 def neo_delete(argv):
-    if len(argv) > 0:
-        services.neo_service.delete_all(type_name=argv[0])
-    else:
-        services.neo_service.delete_all()
+    pass
+    # TODO
+    # if len(argv) > 0:
+    #     services.neo_service.delete_all(type_name=argv[0])
+    # else:
+    #     services.neo_service.delete_all()
 
 
-def mongo_delete(argv):
-    services.workspace.delete_all()
+def delete_core(argv):
+    for type_def in services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC):
+        print('Removing %s ' % type_def.collection_name)
+        try:
+            services.arango_service.drop_index(type_def)
+        except:
+            pass
+
+
+def delete_bricks(argv):
+    type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
+    try:
+        services.arango_service.drop_index(type_def)
+    except:
+        pass
 
 
 def upload_bricks(argv):
     ws = services.workspace
-    type_name = TYPE_NAME_BRICK
     try:
-        services.arango_service.drop_index(type_name)
+        services.arango_service.create_brick_index()
     except:
-        pass
-    services.arango_service.create_brick_index()
+        print('\t Collection is present')
+
 
     for file_def in _FILES['bricks']:
         try:
@@ -255,18 +272,17 @@ def upload_bricks(argv):
             print('Error: ', e)
 
 
-def upload_entities(argv):
+def upload_core(argv):
     ws = services.workspace
     for file_def in _FILES['entities']:
         try:
             file_name =  _FILES['import_dir'] + file_def['file']
             type_name = file_def['dtype']
+            type_def = services.indexdef.get_type_def(type_name)
             try:
-                services.arango_service.drop_index(type_name)
+                services.arango_service.create_index(type_def)
             except:
-                pass
-            services.arango_service.create_index(
-                services.typedef.get_type_def(type_name))
+                print('\t Collection is present')
 
             print('Doing %s: %s' % (type_name, file_name))
             df = pd.read_csv(file_name, sep='\t')
@@ -296,9 +312,12 @@ def upload_processes(argv):
     ws = services.workspace
     type_name = TYPE_NAME_PROCESS
     try:
+        # TODO: switch to type_def
         services.arango_service.drop_index(type_name)
     except:
         pass
+
+    # TODO: switch to type_def
     services.arango_service.create_index(
         services.typedef.get_type_def(type_name))
 
