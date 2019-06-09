@@ -1,8 +1,9 @@
 import numpy as np
 import json
 from . import services
-from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK
+from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM
 
+_COLLECTION_ID = 'ID'
 
 class DataHolder:
     def __init__(self, type_name, data):
@@ -89,12 +90,13 @@ class BrickDataHolder(DataHolder):
 class Workspace:
     __ID_PATTERN = '%s%07d'
 
-    def __init__(self, mongo_client):
+    def __init__(self, arango_service):
+        self.__arango_service = arango_service
+        self.__dtype_2_id_offset = {}
+        self.__init_id_offsets()
         # TODO
         # self.__mongo_client = mongo_client
         # self.__enigma_db = self.__mongo_client.enigma
-        # self.__dtype_2_id_offset = {}
-        # self.__init_id_offsets()
         print('Workspace initialized!')
 
 
@@ -107,7 +109,8 @@ class Workspace:
     def __init_id_offsets(self):
         registered_type_names = set()
 
-        rows = self.__enigma_db.id.find({})
+        rows = self.__arango_service.find_all(_COLLECTION_ID, TYPE_CATEGORY_SYSTEM)
+
         for row in rows:
             type_name = row['dtype']
             registered_type_names.add(type_name)
@@ -115,22 +118,35 @@ class Workspace:
 
         for type_name in services.indexdef.get_type_names():
             if type_name not in registered_type_names:
-                self.__enigma_db.id.insert_one(
-                    {'dtype': type_name, 'id_offset': 0})
+                self.__arango_service.index_doc(
+                    {'dtype': type_name, 'id_offset': 0},
+                    _COLLECTION_ID, 
+                    TYPE_CATEGORY_SYSTEM)
                 self.__dtype_2_id_offset[type_name] = 0
 
     def next_id(self, type_name):
         id_offset = self.__dtype_2_id_offset[type_name]
         id_offset += 1
-        self.__enigma_db.id.update_one(
-            {"dtype": type_name},
-            {"$set": {"id_offset": id_offset}}
-        )
+
+        aql = """
+            FOR x IN @@collection
+            FILTER x.dtype == @dtype
+            UPDATE x WITH @doc IN @@collection
+        """
+        aql_bind = {
+            '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_ID,
+            'doc': {'id_offset':id_offset},
+            'dtype':  type_name}
+        self.__arango_service.db.AQLQuery(aql, bindVars=aql_bind)
         self.__dtype_2_id_offset[type_name] = id_offset
         return Workspace.__ID_PATTERN % (type_name, id_offset)
 
+
     def get_brick_data(self, brick_id):
-        return self.__enigma_db.Brick.find_one({'id': brick_id})
+        file_name = services._DATA_DIR + '/' + brick_id
+        with open(file_name, 'r') as f:
+            doc = json.loads(f.read())
+        return doc
 
     def save_process(self, data_holder):
         self._generate_id(data_holder)
