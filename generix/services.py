@@ -23,6 +23,7 @@ IN_ONTOLOGY_LOAD_MODE = False
 
 __PACKAGE_DIR = os.path.dirname(os.path.dirname(__file__))
 __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
+_DATA_DIR = os.path.join(__PACKAGE_DIR, 'data')
 
 _BRICK_TYPE_TEMPLATES_FILE = os.path.join(__PACKAGE_DIR, 'var/brick_type_templates.json')
 
