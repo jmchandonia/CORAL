@@ -196,6 +196,10 @@ class TypeDef:
         return self.__category
 
     @property
+    def collection_name(self):
+        return self.__category + self.__name
+        
+    @property
     def property_names(self):
         return list(self.__property_defs.keys())
 

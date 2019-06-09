@@ -17,6 +17,10 @@ class IndexTypeDef:
     @property
     def category(self):
         return self.__category
+
+    @property
+    def collection_name(self):
+        return self.__category + self.__name
     
     @property
     def property_defs(self):

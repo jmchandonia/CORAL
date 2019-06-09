@@ -43,17 +43,16 @@ class DataDescriptorCollection:
 
 
 class DataDescriptor:
-    def __init__(self, data_type, doc):
+    def __init__(self, index_type_def, doc):
         self.__properties = []
 
-        self.data_type = data_type
-        self.__properties.append('data_type')
+        self.__index_type_def = index_type_def
         for key in doc:
             self.__dict__[key] = doc[key]
             self.__properties.append(key)
 
-    def __getitem__(self, property):
-        return self.__dict__[property]
+    def __getitem__(self, property_name):
+        return self.__dict__[property_name]
 
     def table_view_properties(self):
         props = []
@@ -61,7 +60,7 @@ class DataDescriptor:
             props.append('id')
 
         for prop in self.__dict__.keys():
-            if prop.startswith('_') or prop == 'id' or prop == 'data_type':
+            if prop.startswith('_') or prop == 'id':
                 continue
             props.append(prop)
         return props
@@ -92,37 +91,40 @@ class DataDescriptor:
 
 
 class EntityDescriptor(DataDescriptor):
-    def __init__(self, data_type, doc):
-        super().__init__(data_type, doc)
+    def __init__(self, index_type_def, doc):
+        super().__init__(index_type_def, doc)
         self.__provenance = DataDescriptorProvenance(self)
 
     def get_up_processes(self):
-        entity_id = self['id']
-        process_ids = services.neo_service.get_up_process_ids(entity_id)
+        pass
+        # TODO
+        # entity_id = self['id']
+        # process_ids = services.neo_service.get_up_process_ids(entity_id)
 
-        pdc = None
-        if process_ids is None:
-            pdc = DataDescriptorCollection()
-        else:
-            q = services.Query('process', {})
-            q.has({'id': process_ids})
-            pdc = q.find()
+        # pdc = None
+        # if process_ids is None:
+        #     pdc = DataDescriptorCollection()
+        # else:
+        #     q = services.Query('process', {})
+        #     q.has({'id': process_ids})
+        #     pdc = q.find()
 
-        return pdc
+        # return pdc
 
     def get_down_processes(self):
-        entity_id = self['id']
-        process_ids = services.neo_service.get_down_process_ids(entity_id)
+        pass
+        # TODO
+        # entity_id = self['id']
+        # process_ids = services.neo_service.get_down_process_ids(entity_id)
 
-        pdc = None
-        if process_ids is None:
-            pdc = DataDescriptorCollection()
-        else:
-            q = services.Query('process', {})
-            q.has({'id': process_ids})
-            pdc = q.find()
-
-        return pdc
+        # pdc = None
+        # if process_ids is None:
+        #     pdc = DataDescriptorCollection()
+        # else:
+        #     q = services.Query('process', {})
+        #     q.has({'id': process_ids})
+        #     pdc = q.find()
+        # return pdc
 
     def provenance(self):
         return self.__provenance
