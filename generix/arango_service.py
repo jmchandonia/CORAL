@@ -1,6 +1,6 @@
 import pandas as pd
 from .brick import BrickIndexDocumnet
-from .typedef import TYPE_NAME_BRICK
+from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
 from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor
 
@@ -11,11 +11,15 @@ class ArangoService:
         self.__db_name = db_name
         self.__db = self.__connection[self.__db_name]
     
+    @property
+    def db(self):
+        return self.__db
+
     def create_brick_index(self):
         pass
 
-    def index_doc(self, doc, collection):
-        bind = {'doc': doc, '@collection': collection}
+    def index_doc(self, doc, collection, category):
+        bind = {'doc': doc, '@collection': category + collection}
         aql = 'INSERT @doc INTO @@collection'
         self.__db.AQLQuery(aql, bindVars=bind)
 
@@ -23,7 +27,7 @@ class ArangoService:
     def index_brick(self, data_holder):
         bid = BrickIndexDocumnet(data_holder.brick)
         doc = vars(bid)
-        self.index_doc(doc, data_holder.type_name)
+        self.index_doc(doc, TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC)
 
 
     def index_data(self, data_holder):
@@ -51,7 +55,14 @@ class ArangoService:
         # doc['all_term_ids'] = list(all_term_ids)
         # doc['all_parent_path_term_ids'] = list(all_parent_path_term_ids)
 
-        self.index_doc(doc, type_def.name)
+        self.index_doc(doc, type_def.name, TYPE_CATEGORY_STATIC)
+
+    def find_all(self, collection, category):
+        aql = 'FOR x IN @@collection RETURN x'        
+        aql_bind = {'@collection': category + collection}
+        print('aql_bind:', aql_bind )
+
+        return self.find(aql, aql_bind, 1000)
 
 
     def find(self, aql, aql_bind, size=100):
