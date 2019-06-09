@@ -4,6 +4,7 @@ from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM
 
 _COLLECTION_ID = 'ID'
+_COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
 
 class DataHolder:
     def __init__(self, type_name, data):
@@ -152,44 +153,22 @@ class Workspace:
         self._generate_id(data_holder)
         self._validate_process(data_holder)
         self._store_process(data_holder)
+        self._index_process(data_holder)
 
-        self._index_es_process(data_holder)
-        self._index_neo_process(data_holder)
+        # self._index_es_process(data_holder)
+        # self._index_neo_process(data_holder)
 
     def save_data(self, data_holder):
         self._generate_id(data_holder)
         self._validate_object(data_holder)
         self._store_object(data_holder)
-        self._index_es_object(data_holder)
-        self._index_neo_object(data_holder)
+        self._index_object(data_holder)
 
-    # def save(self, object_data_holders=None, process_data_holder=None):
+        # self._index_es_object(data_holder)
+        # self._index_neo_object(data_holder)
 
-    #     # process objects
-    #     if object_data_holders is not None:
-    #         for data_holder in object_data_holders:
-    #             self._generate_id(data_holder)
-    #             self._validate_object(data_holder)
-    #             self._store_object(data_holder)
-    #             self._index_es_object(data_holder)
-    #             self._index_neo_object(data_holder)
-
-    #     # process processes
-    #     if process_data_holder is not None:
-    #         data_holder = process_data_holder
-    #         self._generate_id(data_holder)
-    #         self._validate_process(data_holder)
-    #         self._store_process(data_holder)
-
-    #         self._index_es_process(data_holder)
-    #         self._index_neo_process(data_holder)
 
     def _generate_id(self, data_holder):
-        # file_name = data_holder.file_name if data_holder.type_name == 'Brick' else None
-        # pk_def = data_holder.type_def.pk_property_def
-        # text_id = data_holder.data[pk_def.name] if pk_def is not None else None
-        # id = self.next_id(data_holder.type_name,
-        #                     text_id=text_id, file_name=file_name)
         id = self.next_id(data_holder.type_name)
         data_holder.set_id(id)
 
@@ -207,6 +186,7 @@ class Workspace:
             if value != value:
                 data_holder.data[key] = None
 
+
     def _store_object(self, data_holder):
         type_name = data_holder.type_name
         pk_id = data_holder.id
@@ -216,65 +196,84 @@ class Workspace:
             upk_prop_name = data_holder.type_def.upk_property_def.name
             upk_id = data_holder.data[upk_prop_name]
 
-            self.__enigma_db.get_collection(
-                data_holder.type_name).insert_one(data_holder.data)
+            # self.__enigma_db.get_collection(
+            #     data_holder.type_name).insert_one(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
             upk_id = data_holder.brick.name
+            brick_id = data_holder.brick.id
             data_json = data_holder.brick.to_json()
             data = json.loads(data_json)
-            self.__enigma_db.get_collection(
-                data_holder.type_name).insert_one(data)
+
+            file_name = services._DATA_DIR + '/' + brick_id
+            with open(file_name, 'w') as outfile:  
+                json.dump(data, outfile)
 
         self._store_object_type_ids(type_name, pk_id, upk_id)
 
     def _get_pk_id(self, type_name, upk_id):
-        res = self.__enigma_db.get_collection('object_type_ids').find_one({
-            "type_name": type_name,
-            "upk_id": upk_id
-        })
+
+        aql = 'FOR x IN @@collection FILTER type_name == @type_name and upk_id == @upk_id return x'
+        aql_bind = {
+            '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_OBJECT_TYPE_ID,
+            'type_name': type_name,
+            'upk_id': upk_id
+        }
+
+        res = self.__arango_service.find(aql,aql_bind)
         if res is None:
             raise ValueError('Can not find pk_id for %s: %s' %
                              (type_name, upk_id))
-
+        res = res[0]
         return res['pk_id']
 
     def _store_object_type_ids(self, type_name, pk_id, upk_id):
-        self.__enigma_db.get_collection('object_type_ids').insert_one({
+        self.__arango_service.index_doc(
+            {
             'type_name': type_name,
             'pk_id': pk_id,
             'upk_id': upk_id
-        })
-
-    def delete_all(self):
-        for collection_name in self.__enigma_db.collection_names():
-            print('drop collection %s' % collection_name)
-            self.__enigma_db.drop_collection(collection_name)
+            },
+            _COLLECTION_OBJECT_TYPE_ID,
+            TYPE_CATEGORY_SYSTEM
+        )
 
     def _store_process(self, data_holder):
-        self.__enigma_db.get_collection(
-            data_holder.type_name).insert_one(data_holder.data)
+        pass
+        # TODO
+        # self.__enigma_db.get_collection(
+        #     data_holder.type_name).insert_one(data_holder.data)
 
-    def _index_es_object(self, data_holder):
+    def _index_object(self, data_holder):
         if type(data_holder) is EntityDataHolder:
             services.arango_service.index_data(data_holder)
         elif type(data_holder) is BrickDataHolder:
             services.arango_service.index_brick(data_holder)
 
-    def _index_es_process(self, data_holder):
-        services.arango_service.index_data(data_holder)
-
-    def _mark_as_indexed_es(self, entity_or_process):
+    def _index_process(self, data_holder):
         pass
 
-    def _index_neo_object(self, data_holder):
-        if type(data_holder) is EntityDataHolder:
-            if data_holder.type_def.for_provenance:
-                services.neo_service.index_entity(data_holder)
-        elif type(data_holder) is BrickDataHolder:
-            services.neo_service.index_brick(data_holder)
 
-    def _index_neo_process(self, data_holder):
-        services.neo_service.index_processes(data_holder)
+    # def _index_es_object(self, data_holder):
+    #     if type(data_holder) is EntityDataHolder:
+    #         services.arango_service.index_data(data_holder)
+    #     elif type(data_holder) is BrickDataHolder:
+    #         services.arango_service.index_brick(data_holder)
 
-    def _mark_as_indexed_neo(self, entity_or_process):
-        pass
+    # def _index_es_process(self, data_holder):
+    #     services.arango_service.index_data(data_holder)
+
+    # def _mark_as_indexed_es(self, entity_or_process):
+    #     pass
+
+    # def _index_neo_object(self, data_holder):
+    #     if type(data_holder) is EntityDataHolder:
+    #         if data_holder.type_def.for_provenance:
+    #             services.neo_service.index_entity(data_holder)
+    #     elif type(data_holder) is BrickDataHolder:
+    #         services.neo_service.index_brick(data_holder)
+
+    # def _index_neo_process(self, data_holder):
+    #     services.neo_service.index_processes(data_holder)
+
+    # def _mark_as_indexed_neo(self, entity_or_process):
+    #     pass
