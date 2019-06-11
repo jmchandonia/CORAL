@@ -3,7 +3,7 @@ from .ontology import Term
 from . import services
 from .brick import Brick, BrickProvenance
 from .utils import to_var_name
-from .descriptor import DataDescriptorCollection, EntityDescriptor
+from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .indexdef import IndexPropertyDef
 
@@ -93,10 +93,10 @@ class EntityProvider:
             key = to_var_name('PROPERTY_', index_prop_def.name)
             self.__dict__[key] = index_prop_def
 
-    def find(self, criterion):
+    def find(self, criterion=None):
         return self.query().has(criterion).find()
 
-    def find_one(self, criterion):
+    def find_one(self, criterion=None):
         return self.query().has(criterion).find_one()
 
     def query(self):
@@ -114,14 +114,19 @@ class BrickProvider(EntityProvider):
         brick.session_provenance.provenance_items.append(provenance)
         return brick
 
+FILTER_FULLTEXT = 'FULLTEXT'
+FILTER_EQ = ' == '
+FILTER_LT = ' < '
+FILTER_LE = ' <= '
+FILTER_MT = ' > '
+FILTER_ME = ' >= '
 
 class Query:
     def __init__(self, index_type_def):
 
         self.__index_type_def = index_type_def
-        self.__eq_filters = {}
-        # self.__es_filters = {}
-        # self.__neo_filters = []
+        self.__filters = {}
+
         for index_prop_def in index_type_def.property_defs:
             key = to_var_name('PROPERTY_', index_prop_def.name)            
             self.__dict__[key] = index_prop_def
@@ -131,7 +136,7 @@ class Query:
         if key not in self.__dict__:
             raise ValueError('Unknown property %s' % prop_name)
 
-    def _add_eq_filters(self, criterion):
+    def _add_filters(self, criterion, filter_type):
         if type(criterion) is dict:
             for prop in criterion:
                 prop_name = prop
@@ -139,7 +144,14 @@ class Query:
                     prop_name = prop.name
 
                 self._check_property(prop_name)
-                self.__eq_filters[prop_name] = criterion[prop]
+                filters = self.__filters.get(filter_type)
+                if filters is None:
+                    filters = []
+                    self.__filters[filter_type] = filters
+                    filters.append({
+                        'name': prop_name,
+                        'value': criterion[prop]
+                    })
         else:
             print('Error: Criterion should be a dict')
 
@@ -155,8 +167,34 @@ class Query:
     #     else:
     #         print('Error: Criterion should be a dict')
 
+    def eq(self, criterion):
+        self._add_filters(criterion, FILTER_EQ)
+        return self
+
+    def lt(self, criterion):
+        self._add_filters(criterion, FILTER_LT)
+        return self
+
+    def le(self, criterion):
+        self._add_filters(criterion, FILTER_LE)
+        return self
+
+    def mt(self, criterion):
+        self._add_filters(criterion, FILTER_MT)
+        return self
+
+    def me(self, criterion):
+        self._add_filters(criterion, FILTER_ME)
+        return self
+
+    def fulltext(self, criterion):
+        self._add_filters(criterion, FILTER_FULLTEXT)
+        return self
+
     def has(self, criterion):
-        self._add_eq_filters(criterion)
+        if criterion is None:
+            criterion = {}
+        self._add_filters(criterion, FILTER_EQ)
         return self
 
     def linked_up_to(self, type_name, criterion):
@@ -187,10 +225,12 @@ class Query:
         aql_bind = { '@collection': self.__index_type_def.collection_name}
 
         i = 0
-        for prop_name in self.__eq_filters:
-            i += 1
-            aql_filter.append( 'x.%s==@_p%s' %(prop_name, i) )
-            aql_bind[ '_p%s' % i ] = self.__eq_filters[prop_name]
+        for filter_type, filters in self.__filters.items():
+            if filter_type in [FILTER_EQ, FILTER_LT, FILTER_LE, FILTER_MT, FILTER_ME]:
+                for ft in filters:
+                    i += 1
+                    aql_filter.append( 'x.%s %s @_p%s' %(ft['name'], filter_type, i) )
+                    aql_bind[ '_p%s' % i ] = ft['value']
         
         aql = 'FOR x IN @@collection FILTER %s RETURN x' % (' and '.join(aql_filter) )
 
@@ -200,8 +240,11 @@ class Query:
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind)
         for row in rs:
-            ed = EntityDescriptor(self.__index_type_def, row)
-            data_descriptors.append(ed)
+            if self.__index_type_def.name == TYPE_NAME_BRICK:
+                dd = BrickDescriptor(row)
+            else:
+                dd = EntityDescriptor(self.__index_type_def, row)
+            data_descriptors.append(dd)
 
         return DataDescriptorCollection(data_descriptors=data_descriptors)
         # TODO
