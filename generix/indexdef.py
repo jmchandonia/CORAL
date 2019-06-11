@@ -30,6 +30,12 @@ class IndexTypeDef:
     def property_names(self):
         return [pd.name for pd in self.__prop_defs]
 
+    def get_property_def(self, name):
+        for pd in self.__prop_defs:
+            if pd.name == name:
+                return pd
+        return None
+
 
 class IndexPropertyDef:
     def __init__(self, prop_name, prop_scalar_type):
