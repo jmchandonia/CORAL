@@ -11,9 +11,12 @@ from .arango_service import ArangoService
 
 from .user_profile import UserProfile
 from .dataprovider import BrickProvider
-from .dataprovider import Query as _Query
 
-Query = _Query
+
+
+# from .dataprovider import Query as _Query
+# Query = _Query
+
 
 IN_ONTOLOGY_LOAD_MODE = False
 

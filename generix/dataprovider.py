@@ -221,6 +221,7 @@ class Query:
 
     def find(self):
 
+        aql_source = '@@collection'
         aql_filter = ['1==1']
         aql_bind = { '@collection': self.__index_type_def.collection_name}
 
@@ -231,8 +232,14 @@ class Query:
                     i += 1
                     aql_filter.append( 'x.%s %s @_p%s' %(ft['name'], filter_type, i) )
                     aql_bind[ '_p%s' % i ] = ft['value']
+            elif filter_type == FILTER_FULLTEXT:
+                for ft in filters:
+                    aql_source = 'FULLTEXT(@@collection, @ft_prop_name, @ft_prop_value)'
+                    aql_bind[ 'ft_prop_name' ] = ft['name']
+                    aql_bind[ 'ft_prop_value' ] = ft['value']
+
         
-        aql = 'FOR x IN @@collection FILTER %s RETURN x' % (' and '.join(aql_filter) )
+        aql = 'FOR x IN %s FILTER %s RETURN x' % (aql_source, ' and '.join(aql_filter) )
 
         print('aql = ', aql)
         print('aql_bind = ', aql_bind)
