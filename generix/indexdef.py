@@ -29,6 +29,10 @@ class IndexTypeDef:
     def property_names(self):
         return [pd.name for pd in self.__prop_defs]
 
+    def has_property(self, name):
+        pdef = self.get_property_def(name)
+        return pdef is not None
+
     def get_property_def(self, name):
         for pd in self.__prop_defs:
             if pd.name == name:
