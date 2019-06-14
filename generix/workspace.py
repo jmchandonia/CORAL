@@ -265,7 +265,7 @@ class Workspace:
                 {
                     '_from': '%s/%s' % (type_def.collection_name, obj_id),
                     '_to': process_db_id
-                }, 'ProcessInput', 'SYS_'
+                }, 'ProcessInput', TYPE_CATEGORY_SYSTEM
             )      
 
         # Do ouput objects
@@ -275,7 +275,7 @@ class Workspace:
 
             self.__arango_service.index_doc(
                 {
-                    '_from': '%s/%s' % (type_def.collection_name, obj_id),
-                    '_to': process_db_id
-                }, 'ProcessOutput', 'SYS_'
+                    '_from': process_db_id,
+                    '_to': '%s/%s' % (type_def.collection_name, obj_id) 
+                }, 'ProcessOutput', TYPE_CATEGORY_SYSTEM
             )      
