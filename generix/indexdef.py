@@ -1,7 +1,6 @@
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK
-from .brick import BrickIndexDocumnet
+from .descriptor import BrickIndexDocumnet
 from . import services
-
 
 
 class IndexTypeDef:
@@ -52,11 +51,15 @@ class IndexPropertyDef:
 
 
 class IndexTypeDefService:
+    PK_PROPERTY_NAME = '_key'    
+
     def __init__(self):
         self.__type_defs = []
 
-        # do static types
-        for name in services.typedef.get_type_names(TYPE_CATEGORY_STATIC):
+        # do static & system types
+        for name in services.typedef.get_type_names():
+
+            print('Doing type %s' % name)
             type_def = services.typedef.get_type_def(name)
             index_prop_defs = []
             for prop_def in  type_def.property_defs:
@@ -70,6 +73,7 @@ class IndexTypeDefService:
             index_prop_defs.append( IndexPropertyDef(prop_name, prop_scalar_type) )
         index_type_def = IndexTypeDef(TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, index_prop_defs)
         self.__type_defs.append(index_type_def)
+
 
 
     def get_type_names(self, category=None):

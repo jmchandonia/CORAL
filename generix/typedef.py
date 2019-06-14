@@ -361,7 +361,7 @@ class TypeDefService:
             category_name = TYPE_CATEGORY_STATIC
             self.__type_defs[type_name] = TypeDef(type_name, category_name, type_def_doc)
 
-        # Do static types
+        # Do system types
         for type_def_doc in doc['system_types']:
             type_name = type_def_doc['name']
             category_name = TYPE_CATEGORY_SYSTEM
@@ -379,7 +379,7 @@ class TypeDefService:
                         self.__term_2_prop_defs[prop_def.term_id] = term_props
                     term_props.append(prop_def)
 
-        self.__type_defs[TYPE_NAME_BRICK] = None
+        # self.__type_defs[TYPE_NAME_BRICK] = None
 
     def get_type_names(self, category=None):
         names = []

@@ -7,6 +7,7 @@ import datetime
 from time import gmtime, strftime
 from .ontology import Term
 from .workspace import BrickDataHolder, ProcessDataHolder
+from .typedef import TYPE_NAME_BRICK
 from . import services
 from .utils import to_var_name, to_es_type_name
 
@@ -979,7 +980,7 @@ class Brick:
             'date_start': datetime.datetime.today().strftime('%Y-%m-%d'),
             'date_end': datetime.datetime.today().strftime('%Y-%m-%d'),
             'input_objects': input_obj_ids,
-            'output_objects': '%s:%s' % ( 'Brick', brick_data_holder.id) 
+            'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK, brick_data_holder.id)]
         }
         services.workspace.save_process(ProcessDataHolder(process_data)) 
 
@@ -1418,62 +1419,6 @@ class BrickVariable:
         
         return '<table>%s</table>' % ''.join(rows) 
 
-class BrickIndexDocumnet:
-    @staticmethod
-    def properties():
-        return { 
-            'id': 'int',
-            'name': 'text',
-            'description': 'text',
-            'n_dimensions': 'int',
-            'data_type_term_id': 'text',
-            'data_type_term_name': 'text',
-            'value_type_term_id': 'text',
-            'value_type_term_name': 'text',
-            'dim_type_term_ids': '[text]',
-            'dim_type_term_names': '[text]',
-            'dim_sizes': '[int]',
-            'all_term_ids': '[text]',
-            'all_term_values': '[text]',
-            'all_parent_path_term_ids': '[text]'
-        }
-
-    def __init__(self, brick):
-        self.id = brick.id
-        self.name = brick.name
-        self.description = brick.description
-        self.n_dimensions = len(brick.dims)
-        self.data_type_term_id = brick.type_term.term_id
-        self.data_type_term_name = brick.type_term.term_name
-
-        data_var = brick.data_vars[0]
-        self.value_type_term_id = data_var.type_term.term_id
-        self.value_type_term_name = data_var.type_term.term_name
-
-        self.dim_type_term_ids = [
-            d.type_term.term_id for d in brick.dims]
-        self.dim_type_term_names = [
-            d.type_term.term_name for d in brick.dims]
-        self.dim_sizes = [d.size for d in brick.dims]
-
-        # TODO: all term ids and values
-        self.all_term_ids = list(brick._get_all_term_ids())
-        self.all_term_values = list(brick._get_all_term_values())
-
-        # parent path term ids
-        all_parent_path_term_ids = set()
-        ont_all = services.ontology.all
-        term_collection = ont_all.find_ids(self.all_term_ids)
-        for term in term_collection.terms:
-            for term_id in term.parent_path_ids:
-                all_parent_path_term_ids.add(term_id)
-        self.all_parent_path_term_ids = list(all_parent_path_term_ids)
-
-        # values per ontology term
-        term_id_2_values = brick._get_term_id_2_values()
-        for term_id, values in term_id_2_values.items():
-            prop = 'ont_' + '_'.join(term_id.split(':'))
-            self.__dict__[prop] = list(values)
 
 
 class BrickProvenance:
