@@ -1,8 +1,7 @@
 import pandas as pd
-from .brick import BrickIndexDocumnet
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
-from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor
+from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor, IndexDocument, BrickIndexDocumnet
 from . import services
 
 
@@ -21,8 +20,8 @@ class ArangoService:
         self.__db.createCollection(name=type_def.collection_name)
 
 
-    def index_doc(self, doc, collection, category):
-        bind = {'doc': doc, '@collection': category + collection}
+    def index_doc(self, doc, type_name, category):
+        bind = {'doc': doc, '@collection': category + type_name}
         aql = 'INSERT @doc INTO @@collection'
         self.__db.AQLQuery(aql, bindVars=bind)
 
@@ -34,31 +33,10 @@ class ArangoService:
 
 
     def index_data(self, data_holder):
-        type_def = data_holder.type_def
-
-        doc = {}
-        all_term_ids = set()
-        all_parent_path_term_ids = set()
-        for pdef in type_def.property_defs:
-            pname = pdef.name
-            if pname in data_holder.data:
-                value = data_holder.data[pname]
-                if pdef.type == 'term':
-                    term = Term.parse_term(value)
-                    # term.refresh()
-                    doc[pname + '_term_id'] = term.term_id
-                    doc[pname + '_term_name'] = term.term_name
-
-                    all_term_ids.add(term.term_id)
-                    for pid in term.parent_path_ids:
-                        all_parent_path_term_ids.add(pid)
-                else:
-                    doc[pname] = value
-
-        # doc['all_term_ids'] = list(all_term_ids)
-        # doc['all_parent_path_term_ids'] = list(all_parent_path_term_ids)
-
-        self.index_doc(doc, type_def.name, TYPE_CATEGORY_STATIC)
+        type_name = data_holder.type_def.name 
+        index_type_def = services.indexdef.get_type_def(type_name)
+        doc = IndexDocument.build_index_doc(data_holder)
+        self.index_doc(doc, index_type_def.name, index_type_def.category)
 
     def find_all(self, type_name, category):
         aql = 'FOR x IN @@collection RETURN x'        

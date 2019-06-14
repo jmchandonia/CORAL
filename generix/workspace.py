@@ -9,7 +9,11 @@ _COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
 class DataHolder:
     def __init__(self, type_name, data):
         self.__type_name = type_name
-        self.__type_def = services.typedef.get_type_def(self.__type_name)
+        self.__type_def = None 
+        try:
+            self.__type_def = services.typedef.get_type_def(self.__type_name)
+        except:
+            print ('No typedef for %s' % type_name)
         self.__data = data
         self.__id = None
 
@@ -95,9 +99,6 @@ class Workspace:
         self.__arango_service = arango_service
         self.__dtype_2_id_offset = {}
         self.__init_id_offsets()
-        # TODO
-        # self.__mongo_client = mongo_client
-        # self.__enigma_db = self.__mongo_client.enigma
         print('Workspace initialized!')
 
 
@@ -155,17 +156,11 @@ class Workspace:
         self._store_process(data_holder)
         self._index_process(data_holder)
 
-        # self._index_es_process(data_holder)
-        # self._index_neo_process(data_holder)
-
     def save_data(self, data_holder):
         self._generate_id(data_holder)
         self._validate_object(data_holder)
         self._store_object(data_holder)
         self._index_object(data_holder)
-
-        # self._index_es_object(data_holder)
-        # self._index_neo_object(data_holder)
 
 
     def _generate_id(self, data_holder):
@@ -250,30 +245,37 @@ class Workspace:
             services.arango_service.index_brick(data_holder)
 
     def _index_process(self, data_holder):
-        pass
+        print('_index_process:', 
+            data_holder.type_name,
+            data_holder.type_def
+        )
+        
+        # create a record in the SYS_Process table
+        self.__arango_service.index_data(data_holder)
 
+        process = data_holder.data
+        process_db_id = '%s/%s' % (data_holder.type_def.collection_name, data_holder.id) 
 
-    # def _index_es_object(self, data_holder):
-    #     if type(data_holder) is EntityDataHolder:
-    #         services.arango_service.index_data(data_holder)
-    #     elif type(data_holder) is BrickDataHolder:
-    #         services.arango_service.index_brick(data_holder)
+        # Do input objects
+        for input_object in process['input_objects']:
+            type_name, obj_id = input_object.split(':')
+            type_def = services.indexdef.get_type_def(type_name)
 
-    # def _index_es_process(self, data_holder):
-    #     services.arango_service.index_data(data_holder)
+            self.__arango_service.index_doc(
+                {
+                    '_from': '%s/%s' % (type_def.collection_name, obj_id),
+                    '_to': process_db_id
+                }, 'ProcessInput', 'SYS_'
+            )      
 
-    # def _mark_as_indexed_es(self, entity_or_process):
-    #     pass
+        # Do ouput objects
+        for output_object in process['output_objects']:
+            type_name, obj_id = output_object.split(':')
+            type_def = services.indexdef.get_type_def(type_name)
 
-    # def _index_neo_object(self, data_holder):
-    #     if type(data_holder) is EntityDataHolder:
-    #         if data_holder.type_def.for_provenance:
-    #             services.neo_service.index_entity(data_holder)
-    #     elif type(data_holder) is BrickDataHolder:
-    #         services.neo_service.index_brick(data_holder)
-
-    # def _index_neo_process(self, data_holder):
-    #     services.neo_service.index_processes(data_holder)
-
-    # def _mark_as_indexed_neo(self, entity_or_process):
-    #     pass
+            self.__arango_service.index_doc(
+                {
+                    '_from': '%s/%s' % (type_def.collection_name, obj_id),
+                    '_to': process_db_id
+                }, 'ProcessOutput', 'SYS_'
+            )      
