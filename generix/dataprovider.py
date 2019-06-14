@@ -257,10 +257,8 @@ class Query:
         return DataDescriptorCollection(data_descriptors=data_descriptors)
 
     def find_one(self):
-        pass
-        # TODO
-        # ddc = self.find()
-        # if ddc.size > 0:
-        #     return ddc[0]
-        # return None
+        ddc = self.find(size=1)
+        if ddc.size > 0:
+            return ddc[0]
+        return None
 
