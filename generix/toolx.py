@@ -1,4 +1,5 @@
 import sys
+import traceback
 import pandas as pd
 from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
@@ -311,15 +312,15 @@ def upload_core(argv):
 def upload_processes(argv):
     ws = services.workspace
     type_name = TYPE_NAME_PROCESS
-    try:
-        # TODO: switch to type_def
-        services.arango_service.drop_index(type_name)
-    except:
-        pass
+    # try:
+    #     # TODO: switch to type_def
+    #     services.arango_service.drop_index(type_name)
+    # except:
+    #     pass
 
-    # TODO: switch to type_def
-    services.arango_service.create_index(
-        services.typedef.get_type_def(type_name))
+    # # TODO: switch to type_def
+    # services.arango_service.create_index(
+    #     services.typedef.get_type_def(type_name))
 
     for file_def in _FILES['processes']:
         try:
@@ -343,8 +344,10 @@ def upload_processes(argv):
                     ws.save_process(data_holder)
                 except Exception as e:
                     print('Error:', e)
+                    traceback.print_exc()
         except Exception as e:
             print('Error:', e)
+            traceback.print_exc()
         print('Done!')
         print()
 
