@@ -9,14 +9,6 @@ from .typedef import TypeDefService
 from .indexdef import IndexTypeDefService
 from .arango_service import ArangoService
 
-from .user_profile import UserProfile
-from .dataprovider import BrickProvider
-
-
-
-# from .dataprovider import Query as _Query
-# Query = _Query
-
 
 IN_ONTOLOGY_LOAD_MODE = False
 
@@ -34,14 +26,11 @@ print('__arango_config', __arango_config)
 __arango_conn = Connection(arangoURL=__arango_config['url'],username=__arango_config['user'], password=__arango_config['password'])
 arango_service = ArangoService(__arango_conn, __arango_config['db'])
 
-
 ontology = OntologyService(arango_service)
 typedef = TypeDefService(__TYPEDEF_FILE)
 indexdef = IndexTypeDefService()
-workspace = Workspace(arango_service)
 
 term_value_validator = TermValueValidationService()
-brick_provider = BrickProvider()
-
-# user_profile = UserProfile()
 term_provider = CashedTermProvider()
+
+workspace = Workspace(arango_service)
