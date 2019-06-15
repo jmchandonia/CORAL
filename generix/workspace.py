@@ -60,7 +60,8 @@ class ProcessDataHolder(DataHolder):
 
     def __update_object_ids(self, ids_prop_name):
         obj_ids = []
-        for i, input_object in enumerate(self.data[ids_prop_name].split(',')):
+
+        for _, input_object in enumerate(self.data[ids_prop_name].split(',')):
             type_name, upk_id = input_object.split(':')
             type_name = type_name.strip()
             upk_id = upk_id.strip()
@@ -73,7 +74,7 @@ class ProcessDataHolder(DataHolder):
             pk_id = services.workspace._get_pk_id(type_name, upk_id)
             obj_ids.append('%s:%s' % (type_name, pk_id))
 
-        self.data[ids_prop_name] = ','.join(obj_ids)
+        self.data[ids_prop_name] = obj_ids
 
     def update_object_ids(self):
         self.__update_object_ids('input_objects')
@@ -207,7 +208,7 @@ class Workspace:
 
     def _get_pk_id(self, type_name, upk_id):
 
-        aql = 'FOR x IN @@collection FILTER type_name == @type_name and upk_id == @upk_id return x'
+        aql = 'FOR x IN @@collection FILTER x.type_name == @type_name and x.upk_id == @upk_id return x'
         aql_bind = {
             '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_OBJECT_TYPE_ID,
             'type_name': type_name,
@@ -215,9 +216,13 @@ class Workspace:
         }
 
         res = self.__arango_service.find(aql,aql_bind)
-        if res is None:
+        if len(res) == 0:
             raise ValueError('Can not find pk_id for %s: %s' %
                              (type_name, upk_id))
+        if len(res) > 1:
+            raise ValueError('There is more than one pk_id for %s: %s' %
+                             (type_name, upk_id))
+
         res = res[0]
         return res['pk_id']
 
@@ -245,10 +250,6 @@ class Workspace:
             services.arango_service.index_brick(data_holder)
 
     def _index_process(self, data_holder):
-        print('_index_process:', 
-            data_holder.type_name,
-            data_holder.type_def
-        )
         
         # create a record in the SYS_Process table
         self.__arango_service.index_data(data_holder)
