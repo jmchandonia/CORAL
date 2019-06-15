@@ -49,7 +49,7 @@ class DataDescriptor:
 
         self.__index_type_def = index_type_def
         for key in doc:
-            
+
             self.__dict__[key] = doc[key]
             self.__properties.append(key)
 
@@ -89,7 +89,7 @@ class DataDescriptor:
         return '<table>%s</table>' % ''.join(rows)
 
     def __str__(self):
-        return self.__dict__
+        return str(self.__dict__)
 
 
 class EntityDescriptor(DataDescriptor):
