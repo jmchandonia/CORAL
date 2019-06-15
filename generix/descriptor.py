@@ -217,7 +217,6 @@ class BrickDescriptor(EntityDescriptor):
 
     def load(self):
         return dataprovider.BrickProvider._load_brick(self['id'])
-        # return services.brick_provider.load(self['id'])
 
     def __str__(self):
         return 'Name: %s;  Type: %s; Shape: %s' % (self['name'], self.full_type, self['shape'])
