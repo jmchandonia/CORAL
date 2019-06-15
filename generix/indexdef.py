@@ -63,7 +63,7 @@ class IndexTypeDefService:
         # do static & system types
         for name in services.typedef.get_type_names():
 
-            print('Doing type %s' % name)
+            #print('Doing type %s' % name)
             type_def = services.typedef.get_type_def(name)
             index_prop_defs = []
             for prop_def in  type_def.property_defs:
