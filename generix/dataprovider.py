@@ -4,6 +4,7 @@ from .utils import to_var_name
 from .brick import Brick, BrickProvenance
 from .query import Query
 from .user_profile import UserProfile
+from .report import DataReports
 
 class DataProvider:
     def __init__(self, user_name='psnovichkov'):
@@ -42,25 +43,6 @@ class DataProvider:
         else:
             provider = EntityProvider(type_def)
         return provider
-
-
-class DataReports:
-
-    @property
-    def brick_types(self):
-        return self.__brick_term_stat('data_type_term_id' )
-        
-    @property
-    def brick_dim_types(self):
-        return self.__brick_term_stat('dim_type_term_ids' )
-
-    @property
-    def brick_data_var_types(self):
-        return self.__brick_term_stat('value_type_term_id' )
-
-    def __brick_term_stat(self, term_id_prop_name):
-        itd = services.indexdef.get_type_def(TYPE_NAME_BRICK)
-        return services.ontology.term_stat( itd, term_id_prop_name)
 
 class GenericsProvider:
     def __init__(self):
