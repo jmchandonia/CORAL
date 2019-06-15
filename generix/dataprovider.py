@@ -75,10 +75,13 @@ class BrickProvider(EntityProvider):
     def __init__(self):
         super().__init__(services.indexdef.get_type_def(TYPE_NAME_BRICK) )
 
-    def load(self, brick_id):
+    @staticmethod
+    def _load_brick(brick_id):
         brick = Brick.read_dict(
             brick_id,  services.workspace.get_brick_data(brick_id))
         provenance = BrickProvenance('loaded', ['id:%s' % brick.id])
         brick.session_provenance.provenance_items.append(provenance)
         return brick
 
+    def load(self, brick_id):
+        return BrickProvider._load_brick(brick_id)
