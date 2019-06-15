@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import pandas as pd
 from .utils import to_var_name
 from . import services
 
@@ -182,49 +183,47 @@ class OntologyService:
     def all(self):
         return Ontology(self.__arango_service, 'all', ontologies_all=True)
 
-    def __term_stat(self, term_field_name):
-        pass
-    # TODO
-    #     query = {
-    #         "aggs": {
-    #             "term_stat": {
-    #                 "terms": {"field": term_field_name, "size": 10000}
-    #             }
-    #         },
-    #         "size": 0
-    #     }
+    def term_stat(self, index_type_def, term_id_prop_name):
+        term_ids = []
+        term_stats = []
 
-    #     term_ids = []
-    #     term_stats = []
-    #     result_set = self.__es_client.search(
-    #         index=_ES_BRICK_INDEX_NAME, body=query)
-    #     for hit in result_set['aggregations']['term_stat']['buckets']:
-    #         term_id = hit['key']
-    #         doc_count = hit['doc_count']
-    #         term_stats.append({
-    #             'Term ID': term_id,
-    #             'Bricks count': doc_count
-    #         })
-    #         term_ids.append(term_id)
+        index_prop_def = index_type_def.get_property_def(term_id_prop_name)
 
-    #     term_ids_hash = services.ontology.all.find_ids_hash(term_ids)
+        aql_collect = ''
+        if index_prop_def.scalar_type.startswith('['):
+            aql_collect = '''
+                FOR terms IN x.%s
+                COLLECT term_id = terms 
+            ''' % index_prop_def.name
+        else:
+            aql_collect = 'COLLECT term_id = x.%s ' % index_prop_def.name
 
-    #     for term_stat in term_stats:
-    #         term_id = term_stat['Term ID']
-    #         term_stat['Term Name'] = term_ids_hash[term_id].term_name
+        aql = '''
+            FOR x IN @@collection
+            %s
+            WITH COUNT INTO term_count
+            SORT term_count DESC
+            RETURN {term_id, term_count}
+        ''' % aql_collect
+        aql_bind = {'@collection': index_type_def.collection_name}
 
-    #     return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
+        rs = services.arango_service.find(aql,aql_bind)
+        for row in rs:
+            term_id = row['term_id']
+            term_count = row['term_count']
+            term_stats.append({
+                'Term ID': term_id,
+                'Bricks count': term_count
+            })
+            term_ids.append(term_id)
 
+        term_ids_hash = services.ontology.all.find_ids_hash(term_ids)
 
+        for term_stat in term_stats:
+            term_id = term_stat['Term ID']
+            term_stat['Term Name'] = term_ids_hash[term_id].term_name
 
-    def data_type_terms(self):
-        return self.__term_stat('data_type_term_id')
-
-    def dim_type_terms(self):
-        return self.__term_stat('dim_type_term_ids')
-
-    def value_type_terms(self):
-        return self.__term_stat('value_type_term_id')
+        return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
 
 
     def custom_list(self, list_name):
