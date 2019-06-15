@@ -19,6 +19,13 @@ class ArangoService:
         type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
         self.__db.createCollection(name=type_def.collection_name)
 
+    def upsert_doc(self, upsert_condition, doc, type_name, category):
+        aql = 'UPSERT @upsert INSERT @doc REPLACE @doc IN @@collection'
+        aql_bind = {
+            'doc': doc, 
+            'upsert': upsert_condition,  
+            '@collection': category + type_name}
+        self.__db.AQLQuery(aql, bindVars=aql_bind)
 
     def index_doc(self, doc, type_name, category):
         bind = {'doc': doc, '@collection': category + type_name}

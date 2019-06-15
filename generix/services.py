@@ -43,5 +43,5 @@ workspace = Workspace(arango_service)
 term_value_validator = TermValueValidationService()
 brick_provider = BrickProvider()
 
-user_profile = UserProfile()
+# user_profile = UserProfile()
 term_provider = CashedTermProvider()
