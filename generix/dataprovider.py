@@ -3,12 +3,15 @@ from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATI
 from .utils import to_var_name
 from .brick import Brick, BrickProvenance
 from .query import Query
+from .user_profile import UserProfile
 
 class DataProvider:
-    def __init__(self):
+    def __init__(self, user_name='psnovichkov'):
+        self.__user_name = user_name
         self.__etities_provider = EntitiesProvider()
         self.__generics_provider = GenericsProvider()
         self.__reports = DataReports()
+        self.__user_profile = UserProfile(self.__user_name)
 
     @property
     def ontology(self):
@@ -24,7 +27,7 @@ class DataProvider:
 
     @property
     def user_profile(self):
-        return services.user_profile
+        return self.__user_profile
 
     @property
     def reports(self):
