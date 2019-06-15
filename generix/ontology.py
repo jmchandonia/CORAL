@@ -397,7 +397,6 @@ class TermCollection:
     def __inflate_terms(self):
         for term in self.__terms:
             name = to_var_name('TERM_', term.term_name)
-            # name = 'TERM_' + re.sub('[^A-Za-z0-9]+', '_', term.term_name)
             self.__dict__[name] = term
 
     def __getitem__(self, i):
@@ -414,6 +413,19 @@ class TermCollection:
     @property
     def size(self):
         return len(self.__terms)
+
+    '''
+        term_id_name can be one of:
+        . instance of Term
+        . term_id in the format QQQ:1234234
+        . exact term name
+    '''
+    def add_term(self, term_id_name):
+        term = Term.get_term(term_id_name)
+        
+        self.__terms.append(term)
+        name = to_var_name('TERM_', term.term_name)
+        self.__dict__[name] = term
 
     def head(self, n=5):
         return TermCollection(self.__terms[:n])
@@ -436,7 +448,8 @@ class TermCollection:
         return '%s <br> %s terms' % (table, len(self.terms))
 
 
-_TERM_PATTERN = re.compile('(.+)<(.+)>')
+_TERM_PATTERN = re.compile('(.+)<(\w+:\d+)>')
+_TERM_ID_PATTERN = re.compile('\w+:\d+')
 
 
 class Term:
@@ -456,6 +469,32 @@ class Term:
         self.__parent_terms = []
         if refresh:
             self.refresh()
+
+    '''
+        term_id_name can be one of:
+        . instance of Term
+        . term_id in the format QQQ:1234234
+        . exact term name
+    '''
+    @staticmethod
+    def get_term(term_id_name):
+        term = None
+        if type(term_id_name) is Term:
+            term = term_id_name
+        elif type(term_id_name) is str:
+            if _TERM_ID_PATTERN.match(term_id_name) is not None:
+                try:
+                    term = Term(term_id_name)
+                    term.refresh()
+                except:
+                    raise ValueError('Wrong term id: %s' % term_id_name)
+            else:
+                term = services.ontology.all.find_name(term_id_name)
+                if term is None:
+                    raise ValueError('Wrong term name: %s' % term_id_name)
+        else:
+            raise ValueError('Wrong term value: %s' % term_id_name)
+        return term
 
     @staticmethod
     def check_term_format(value):
