@@ -9,30 +9,12 @@ from .report import DataReports
 class DataProvider:
     def __init__(self, user_name='psnovichkov'):
         self.__user_name = user_name
-        self.__etities_provider = EntitiesProvider()
-        self.__generics_provider = GenericsProvider()
-        self.__reports = DataReports()
-        self.__user_profile = UserProfile(self.__user_name)
 
-    @property
-    def ontology(self):
-        return services.ontology
-
-    @property
-    def core_types(self):
-        return self.__etities_provider
-
-    @property
-    def genx_types(self):
-        return self.__generics_provider
-
-    @property
-    def user_profile(self):
-        return self.__user_profile
-
-    @property
-    def reports(self):
-        return self.__reports
+        self.__dict__['ontology'] = services.ontology
+        self.__dict__['core_types'] = EntitiesProvider()
+        self.__dict__['genx_types'] = GenericsProvider()
+        self.__dict__['reports'] = DataReports()
+        self.__dict__['user_profile'] = UserProfile(self.__user_name)
 
     def _get_type_provider(self, type_name):
 
