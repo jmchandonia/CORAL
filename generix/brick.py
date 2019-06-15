@@ -8,6 +8,7 @@ from time import gmtime, strftime
 from .ontology import Term
 from .workspace import BrickDataHolder, ProcessDataHolder
 from .typedef import TYPE_NAME_BRICK
+from .query import Query
 from . import services
 from .utils import to_var_name, to_es_type_name
 
@@ -528,7 +529,7 @@ class Brick:
     
     @property
     def descriptor(self):        
-        q = services.Query('brick',{})
+        q = Query(services.indexdef.get_type_def(TYPE_NAME_BRICK))
         q.has({'id': self.id})
         return q.find_one()
 
@@ -1123,9 +1124,8 @@ class BrickDimension:
             if val is not None:
                 values.append(val)
 
-        type_name = to_es_type_name(core_type)
-        q = services.Query(type_name ,{})
-        q.has({pk_def.name:values})
+        q = Query(services.indexdef.get_type_def(core_type))
+        q.has({pk_def.name:{'in':values}})
         rs = q.find()
 
         # build data
@@ -1175,9 +1175,8 @@ class BrickDimension:
 
         type_def = services.typedef.get_type_def(core_type)
         pk_prop_name =  type_def.pk_property_def.name
-        type_name = to_es_type_name(core_type)
-        q = services.Query(type_name ,{})
-        q.has({core_prop_name:  list(values)})
+        q = Query(services.indexdef.get_type_def(core_type))
+        q.has({core_prop_name: {'in': list(values)} })
         rs = q.find()
 
         # build data
