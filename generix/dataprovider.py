@@ -4,7 +4,6 @@ from .utils import to_var_name
 from .brick import Brick, BrickProvenance
 from .query import Query
 from .user_profile import UserProfile
-from .report import DataReports
 
 class DataProvider:
     def __init__(self, user_name='psnovichkov'):
@@ -13,7 +12,7 @@ class DataProvider:
         self.__dict__['ontology'] = services.ontology
         self.__dict__['core_types'] = EntitiesProvider()
         self.__dict__['genx_types'] = GenericsProvider()
-        self.__dict__['reports'] = DataReports()
+        self.__dict__['reports'] = services.reports
         self.__dict__['user_profile'] = UserProfile(self.__user_name)
 
     def _get_type_provider(self, type_name):
