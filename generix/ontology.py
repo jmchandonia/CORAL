@@ -457,6 +457,19 @@ class Term:
             self.refresh()
 
     '''
+        term_id_names is an array. The elements of this array can be one of:
+        . instance of Term
+        . term_id in the format QQQ:1234234
+        . exact term name
+    '''
+    @staticmethod
+    def get_terms(term_id_names):
+        terms = []
+        for term_id_name in term_id_names:
+            terms.append( Term.get_term(term_id_name) )
+        return terms
+
+    '''
         term_id_name can be one of:
         . instance of Term
         . term_id in the format QQQ:1234234
