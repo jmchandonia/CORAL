@@ -184,9 +184,6 @@ class OntologyService:
         return Ontology(self.__arango_service, 'all', ontologies_all=True)
 
     def term_stat(self, index_type_def, term_id_prop_name):
-        term_ids = []
-        term_stats = []
-
         index_prop_def = index_type_def.get_property_def(term_id_prop_name)
 
         aql_collect = ''
@@ -208,72 +205,61 @@ class OntologyService:
         aql_bind = {'@collection': index_type_def.collection_name}
 
         rs = services.arango_service.find(aql,aql_bind)
-        for row in rs:
-            term_id = row['term_id']
-            term_count = row['term_count']
-            term_stats.append({
-                'Term ID': term_id,
-                'Bricks count': term_count
-            })
-            term_ids.append(term_id)
 
+        term_ids = [row['term_id'] for row in rs]
         term_ids_hash = services.ontology.all.find_ids_hash(term_ids)
-
-        for term_stat in term_stats:
-            term_id = term_stat['Term ID']
-            term_stat['Term Name'] = term_ids_hash[term_id].term_name
-
-        return pd.DataFrame(term_stats)[['Term Name', 'Term ID', 'Bricks count']]
+        return [  ( term_ids_hash.get(row['term_id']), row['term_count'] ) 
+            for row in rs  ]    
 
 
-    def custom_list(self, list_name):
-        term_ids = set()
-        if list_name == CUSTOM_LIST_ENIGMA_DIMS:
-            bp = services.brick_provider
-            bricks = bp.find({})
-            for brd in bricks.items:
-                for term_id in brd.dim_type_term_ids:
-                    term_ids.add(term_id)                    
-        elif list_name == CUSTOM_LIST_ENIGMA_TYPES:
-            bp = services.brick_provider
-            bricks = bp.find({})
-            for brd in bricks.items:
-                term_ids.add(brd.data_type_term_id)
+    # def custom_list(self, list_name):
+    #     term_ids = set()
+    #     if list_name == CUSTOM_LIST_ENIGMA_DIMS:
+    #         bp = services.brick_provider
+    #         bricks = bp.find({})
+    #         for brd in bricks.items:
+    #             for term_id in brd.dim_type_term_ids:
+    #                 term_ids.add(term_id)                    
+    #     elif list_name == CUSTOM_LIST_ENIGMA_TYPES:
+    #         bp = services.brick_provider
+    #         bricks = bp.find({})
+    #         for brd in bricks.items:
+    #             term_ids.add(brd.data_type_term_id)
 
-        elif list_name == CUSTOM_LIST_ENIGMA_VAR_TYPES:
-            bp = services.brick_provider
-            bricks = bp.find({})
-            for brd in bricks.items:
-                br = bp.load(brd.id)
-                for dim in br.dims:
-                    for var in dim.vars:
-                        term_ids.add(var.type_term.term_id)
-                for data_var in br.data_vars:
-                    term_ids.add(data_var.type_term.term_id)
+    #     elif list_name == CUSTOM_LIST_ENIGMA_VAR_TYPES:
+    #         bp = services.brick_provider
+    #         bricks = bp.find({})
+    #         for brd in bricks.items:
+    #             br = bp.load(brd.id)
+    #             for dim in br.dims:
+    #                 for var in dim.vars:
+    #                     term_ids.add(var.type_term.term_id)
+    #             for data_var in br.data_vars:
+    #                 term_ids.add(data_var.type_term.term_id)
 
-        elif list_name == CUSTOM_LIST_ENIGMA_UNITS:
-            bp = services.brick_provider
-            bricks = bp.find({})
-            for brd in bricks.items:
-                br = bp.load(brd.id)
-                for dim in br.dims:
-                    for var in dim.vars:
-                        if var.units_term is not None:
-                            term_ids.add(var.units_term.term_id)
-                for data_var in br.data_vars:
-                    if data_var.units_term is not None:
-                        term_ids.add(data_var.units_term.term_id)
+    #     elif list_name == CUSTOM_LIST_ENIGMA_UNITS:
+    #         bp = services.brick_provider
+    #         bricks = bp.find({})
+    #         for brd in bricks.items:
+    #             br = bp.load(brd.id)
+    #             for dim in br.dims:
+    #                 for var in dim.vars:
+    #                     if var.units_term is not None:
+    #                         term_ids.add(var.units_term.term_id)
+    #             for data_var in br.data_vars:
+    #                 if data_var.units_term is not None:
+    #                     term_ids.add(data_var.units_term.term_id)
 
-        terms = []
-        for term_id in term_ids:
-            try:
-                # term = Term(term_id, refresh=True)
-                term = services.term_provider.get_term(term_id)
-                terms.append(term)
-            except:
-                print('Can not find term: %s' % term_id)
-        terms.sort(key=lambda x: x.term_name)
-        return TermCollection(terms)
+    #     terms = []
+    #     for term_id in term_ids:
+    #         try:
+    #             # term = Term(term_id, refresh=True)
+    #             term = services.term_provider.get_term(term_id)
+    #             terms.append(term)
+    #         except:
+    #             print('Can not find term: %s' % term_id)
+    #     terms.sort(key=lambda x: x.term_name)
+    #     return TermCollection(terms)
 
 
 class Ontology:

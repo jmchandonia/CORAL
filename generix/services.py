@@ -8,6 +8,7 @@ from .workspace import Workspace
 from .typedef import TypeDefService
 from .indexdef import IndexTypeDefService
 from .arango_service import ArangoService
+from .report import ReportBuilderService
 
 
 IN_ONTOLOGY_LOAD_MODE = False
@@ -34,3 +35,4 @@ term_value_validator = TermValueValidationService()
 term_provider = CashedTermProvider()
 
 workspace = Workspace(arango_service)
+reports = ReportBuilderService()
