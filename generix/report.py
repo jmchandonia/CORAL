@@ -7,15 +7,15 @@ class ReportBuilderService:
 
     @property
     def brick_types(self):
-        return self.__brick_term_stat_report( 'Data types of bricks', 'data_type_term_id' )
+        return self.__brick_term_stat_report( 'Data types of bricks', 'data_type' )
         
     @property
     def brick_dim_types(self):
-        return self.__brick_term_stat_report( 'Dimension types of bricks', 'dim_type_term_ids' )
+        return self.__brick_term_stat_report( 'Dimension types of bricks', 'dim_types' )
 
     @property
     def brick_data_var_types(self):
-        return self.__brick_term_stat_report( 'Data value types of bricks', 'value_type_term_id' )
+        return self.__brick_term_stat_report( 'Data value types of bricks', 'value_type' )
 
 
     @property
@@ -88,12 +88,12 @@ class ReportBuilderService:
 
 
 
-    def __brick_term_stat_report(self, report_name, term_id_prop_name):
+    def __brick_term_stat_report(self, report_name, term_prop_name):
         itype_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
-        return self.__term_stat_report(report_name, itype_def, term_id_prop_name)
+        return self.__term_stat_report(report_name, itype_def, term_prop_name)
 
-    def __term_stat_report(self, report_name, index_type_def, term_id_prop_name):        
-        term_counts = services.ontology.term_stat( index_type_def, term_id_prop_name)
+    def __term_stat_report(self, report_name, index_type_def, term_prop_name):        
+        term_counts = services.ontology.term_stat( index_type_def, term_prop_name)
         report_items = []
         for term_count in term_counts:
             term = term_count[0]
