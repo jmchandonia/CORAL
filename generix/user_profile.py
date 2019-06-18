@@ -30,8 +30,10 @@ class UserProfile:
                 self.__named_terms[tname] = None
 
         # inflate collections and terms
-        self.__dict__.update(self.__named_terms)
-        self.__dict__.update(self.__named_term_collections)
+        for tname, term in self.__named_terms.items():
+            self.__dict__['TERM_' + tname] = term
+        for tcname, terms in self.__named_term_collections.items():
+            self.__dict__['TERMS_' + tcname] = terms
 
     def add_term_collection(self, collection_name):
         if collection_name in self.__named_term_collections:
@@ -40,7 +42,7 @@ class UserProfile:
 
         term_collection = TermCollection([])
         self.__named_term_collections[collection_name] = term_collection
-        self.__dict__[collection_name] = term_collection
+        self.__dict__['TERMS_' + collection_name] = term_collection
         return term_collection
 
     def add_term(self, term_name, term_id_name):
@@ -51,7 +53,7 @@ class UserProfile:
         
         term = Term.get_term(term_id_name)
         self.__named_terms[term_name] = term
-        self.__dict__[term_name] = term
+        self.__dict__['TERM_' + term_name] = term
         return term
 
     def __load_profile(self):
