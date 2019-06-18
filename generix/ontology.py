@@ -5,14 +5,8 @@ import pandas as pd
 from .utils import to_var_name
 from . import services
 
-
 OTERM_TYPE = 'OTerm'
 ONTOLOGY_COLLECTION_NAME_PREFIX = 'generix-ont-'
-
-CUSTOM_LIST_ENIGMA_DIMS = 'ENIGMA_dims'
-CUSTOM_LIST_ENIGMA_TYPES = 'ENIGMA_types'
-CUSTOM_LIST_ENIGMA_VAR_TYPES = 'ENIGMA_var_types'
-CUSTOM_LIST_ENIGMA_UNITS = 'ENIGMA_units'
 
 class OntologyService:
     def __init__(self, arango_service):
@@ -210,57 +204,6 @@ class OntologyService:
         term_ids_hash = services.ontology.all.find_ids_hash(term_ids)
         return [  ( term_ids_hash.get(row['term_id']), row['term_count'] ) 
             for row in rs  ]    
-
-
-    # def custom_list(self, list_name):
-    #     term_ids = set()
-    #     if list_name == CUSTOM_LIST_ENIGMA_DIMS:
-    #         bp = services.brick_provider
-    #         bricks = bp.find({})
-    #         for brd in bricks.items:
-    #             for term_id in brd.dim_type_term_ids:
-    #                 term_ids.add(term_id)                    
-    #     elif list_name == CUSTOM_LIST_ENIGMA_TYPES:
-    #         bp = services.brick_provider
-    #         bricks = bp.find({})
-    #         for brd in bricks.items:
-    #             term_ids.add(brd.data_type_term_id)
-
-    #     elif list_name == CUSTOM_LIST_ENIGMA_VAR_TYPES:
-    #         bp = services.brick_provider
-    #         bricks = bp.find({})
-    #         for brd in bricks.items:
-    #             br = bp.load(brd.id)
-    #             for dim in br.dims:
-    #                 for var in dim.vars:
-    #                     term_ids.add(var.type_term.term_id)
-    #             for data_var in br.data_vars:
-    #                 term_ids.add(data_var.type_term.term_id)
-
-    #     elif list_name == CUSTOM_LIST_ENIGMA_UNITS:
-    #         bp = services.brick_provider
-    #         bricks = bp.find({})
-    #         for brd in bricks.items:
-    #             br = bp.load(brd.id)
-    #             for dim in br.dims:
-    #                 for var in dim.vars:
-    #                     if var.units_term is not None:
-    #                         term_ids.add(var.units_term.term_id)
-    #             for data_var in br.data_vars:
-    #                 if data_var.units_term is not None:
-    #                     term_ids.add(data_var.units_term.term_id)
-
-    #     terms = []
-    #     for term_id in term_ids:
-    #         try:
-    #             # term = Term(term_id, refresh=True)
-    #             term = services.term_provider.get_term(term_id)
-    #             terms.append(term)
-    #         except:
-    #             print('Can not find term: %s' % term_id)
-    #     terms.sort(key=lambda x: x.term_name)
-    #     return TermCollection(terms)
-
 
 class Ontology:
     def __init__(self, arango_service, ontology_id, ontologies_all=False):        
