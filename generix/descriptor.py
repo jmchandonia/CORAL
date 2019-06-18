@@ -159,33 +159,26 @@ class ProcessDescriptor(DataDescriptor):
         super().__init__('Process', doc)
 
     def get_input_data_descriptors(self):
-        pass
-        # TODO
-        # ddc = DataDescriptorCollection()
-
-        # process_id = self['id']
-        # entity_type_ids = services.neo_service.get_input_type_ids(process_id)
-        # for etype in entity_type_ids:
-        #     q = services.Query(etype, {})
-        #     q.has({'id': entity_type_ids[etype]})
-        #     ddc.add_data_descriptors(q.find())
-
-        # return ddc
+        process_id = self['id']
+        type2docs = services.arango_service.get_process_inputs(process_id)
+        return self.__to_type2descriptors(type2docs)
 
     def get_output_data_descriptors(self):
-        pass
-        # TODO
-        # ddc = DataDescriptorCollection()
+        process_id = self['id']
+        type2docs = services.arango_service.get_process_outputs(process_id)
+        return self.__to_type2descriptors(type2docs)
 
-        # process_id = self['id']
-        # entity_type_ids = services.neo_service.get_output_type_ids(process_id)
-
-        # for etype in entity_type_ids:
-        #     q = services.Query(etype, {})
-        #     q.has({'id': entity_type_ids[etype]})
-        #     ddc.add_data_descriptors(q.find())
-
-        # return ddc
+    def __to_type2descriptors(self, type2docs):
+        type2descriptors = {}
+        for type_name, docs in type2docs.items():
+            itd = services.indexdef.get_type_def(type_name)
+            if type_name == TYPE_NAME_BRICK:
+                dds = [ BrickDescriptor(doc) for doc in docs ]
+            else:
+                dds = [ EntityDescriptor(itd, doc) for doc in docs ]
+            
+            type2descriptors[type_name] = DataDescriptorCollection(dds)
+        return type2descriptors
 
 
 class BrickDescriptor(EntityDescriptor):
