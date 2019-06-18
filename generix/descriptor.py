@@ -97,7 +97,7 @@ class EntityDescriptor(DataDescriptor):
         super().__init__(index_type_def, doc)
         self.__provenance = DataDescriptorProvenance(self)
 
-    def get_up_processes(self):
+    def get_up_process(self):
         pass
         # TODO
         # entity_id = self['id']
