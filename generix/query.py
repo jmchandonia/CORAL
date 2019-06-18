@@ -2,7 +2,7 @@ from .utils import to_var_name
 from .ontology import Term
 from .indexdef import IndexPropertyDef
 from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
-from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor
+from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor, ProcessDescriptor
 from . import services
 
 FILTER_FULLTEXT = 'FULLTEXT'
@@ -134,12 +134,12 @@ class Query:
         self.__add_filters(criterion, self.__has_filters, self.__index_type_def)
         return self
 
-    def input_of_process(self, criterion):
+    def is_input_of_process(self, criterion):
         index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
         self.__add_filters(criterion, self.__input_of_process_filters, index_type_def)
         return self
 
-    def output_of_process(self, criterion):
+    def is_output_of_process(self, criterion):
         index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
         self.__add_filters(criterion, self.__output_of_process_filters, index_type_def)
         return self
@@ -223,6 +223,8 @@ class Query:
     def __to_descriptor(self, row):
         if self.__index_type_def.name == TYPE_NAME_BRICK:
             dd = BrickDescriptor(row)
+        elif self.__index_type_def.name == TYPE_NAME_PROCESS: 
+            dd = ProcessDescriptor(row)
         else:
             dd = EntityDescriptor(self.__index_type_def, row)
         return dd
