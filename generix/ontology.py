@@ -183,17 +183,17 @@ class OntologyService:
     def all(self):
         return Ontology(self.__arango_service, 'all', ontologies_all=True)
 
-    def term_stat(self, index_type_def, term_id_prop_name):
-        index_prop_def = index_type_def.get_property_def(term_id_prop_name)
+    def term_stat(self, index_type_def, term_prop_name):
+        index_prop_def = index_type_def.get_property_def(term_prop_name)
 
         aql_collect = ''
         if index_prop_def.scalar_type.startswith('['):
             aql_collect = '''
                 FOR terms IN x.%s
                 COLLECT term_id = terms 
-            ''' % index_prop_def.name
+            ''' % (index_prop_def.name[:-1] + '_term_ids')
         else:
-            aql_collect = 'COLLECT term_id = x.%s ' % index_prop_def.name
+            aql_collect = 'COLLECT term_id = x.%s ' % (index_prop_def.name + '_term_id')
 
         aql = '''
             FOR x IN @@collection
