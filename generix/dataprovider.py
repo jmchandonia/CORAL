@@ -1,5 +1,5 @@
 from . import services
-from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
+from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC, TYPE_CATEGORY_SYSTEM
 from .utils import to_var_name
 from .brick import Brick, BrickProvenance
 from .query import Query
@@ -9,9 +9,10 @@ class DataProvider:
     def __init__(self, user_name='psnovichkov'):
         self.__user_name = user_name
 
-        self.__dict__['ontology'] = services.ontology
         self.__dict__['core_types'] = EntitiesProvider()
         self.__dict__['genx_types'] = GenericsProvider()
+        self.__dict__['help_types'] = SystemsProvider()        
+        self.__dict__['ontology'] = services.ontology
         self.__dict__['reports'] = services.reports
         self.__dict__['user_profile'] = UserProfile(self.__user_name)
 
@@ -44,6 +45,16 @@ class EntitiesProvider:
         index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
         for index_type_def in index_type_defs:
             self.__dict__[index_type_def.name] = EntityProvider(index_type_def)
+
+class SystemsProvider:
+    def __init__(self):
+        self.__load_providers()
+
+    def __load_providers(self):
+        index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_SYSTEM)
+        for index_type_def in index_type_defs:
+            self.__dict__[index_type_def.name] = EntityProvider(index_type_def)
+
 
 
 class EntityProvider:
