@@ -1,9 +1,21 @@
 import pandas as pd
 from . import services
-from .typedef import TYPE_NAME_BRICK
+from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS
 
 
 class ReportBuilderService:           
+
+    @property
+    def process_types(self):
+        return self.__process_term_stat_report( 'Types of processes', 'process' )
+
+    @property
+    def process_persons(self):
+        return self.__process_term_stat_report( 'Persons of processes', 'person' )
+
+    @property
+    def process_campaigns(self):
+        return self.__process_term_stat_report( 'Campaigns of processes', 'campaign' )
 
     @property
     def brick_types(self):
@@ -85,21 +97,22 @@ class ReportBuilderService:
             'Bricks count',
             group_items)
 
-
-
+    def __process_term_stat_report(self, report_name, term_prop_name):
+        itype_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        return self.__term_stat_report(report_name, itype_def, term_prop_name, 'Processes count')
 
     def __brick_term_stat_report(self, report_name, term_prop_name):
         itype_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
-        return self.__term_stat_report(report_name, itype_def, term_prop_name)
+        return self.__term_stat_report(report_name, itype_def, term_prop_name, 'Bricks count')
 
-    def __term_stat_report(self, report_name, index_type_def, term_prop_name):        
+    def __term_stat_report(self, report_name, index_type_def, term_prop_name, count_name):        
         term_counts = services.ontology.term_stat( index_type_def, term_prop_name)
         report_items = []
         for term_count in term_counts:
             term = term_count[0]
             report_items.append(ReportItem( [term.term_name, term.term_id], term_count[1] ))
 
-        return PlainReport(report_name, ['Term Name', 'Term ID'], 'Bricks count', report_items)
+        return PlainReport(report_name, ['Term Name', 'Term ID'], count_name, report_items)
 
 
 class PlainReport:
