@@ -62,8 +62,29 @@ class ArangoService:
     def drop_index(self, type_def):
         self.__db[type_def.collection_name].delete()
 
+    def get_up_processes(self, index_type_def, obj_id, size = 100):
+        aql = '''
+                FOR spo IN SYS_ProcessOutput FILTER spo._to == @id
+                FOR x IN SYS_Process FILTER spo._from == x._id
+                RETURN DISTINCT x
+        '''
+        aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
+    def get_dn_processes(self, index_type_def, obj_id, size = 100):
+        aql = '''
+                FOR spi IN SYS_ProcessInput FILTER spi._from == @id
+                FOR x IN SYS_Process FILTER spi._to == x._id
+                RETURN DISTINCT x
+        '''
+        aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
+    def get_process_inputs(self, process_id):
+        pass
+
+    def get_process_outputs(self, process_id):
+        pass
 
 
 
