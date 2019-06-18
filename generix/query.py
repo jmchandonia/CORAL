@@ -1,7 +1,7 @@
 from .utils import to_var_name
 from .ontology import Term
 from .indexdef import IndexPropertyDef
-from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
+from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor
 from . import services
 
@@ -40,6 +40,8 @@ class Query:
         self.__has_filters = {}
         self.__linked_up_filters = []
         self.__linked_dn_filters = []
+        self.__input_of_process_filters = {}
+        self.__output_of_process_filters = {}
         self.__tmp_index = 0
 
         for index_prop_def in index_type_def.property_defs:
@@ -132,6 +134,16 @@ class Query:
         self.__add_filters(criterion, self.__has_filters, self.__index_type_def)
         return self
 
+    def input_of_process(self, criterion):
+        index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        self.__add_filters(criterion, self.__input_of_process_filters, index_type_def)
+        return self
+
+    def output_of_process(self, criterion):
+        index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        self.__add_filters(criterion, self.__output_of_process_filters, index_type_def)
+        return self
+
     def linked_up_to(self, type_name, criterion):
         index_type_def = services.indexdef.get_type_def(type_name)
         filters = {}
@@ -220,17 +232,63 @@ class Query:
         self.__has_filters = {}
         self.__linked_up_filters = []
         self.__linked_dn_filters = []
+        self.__input_of_process_filters = {}
+        self.__output_of_process_filters = {}
 
 
     def find(self, size = 100):
         var_name = 'x'
         aql_source, aql_filter, aql_bind = self.__build_aql_trio(self.__has_filters, self.__index_type_def, var_name)
+        
+        process_itd = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        pr_aqls = []
+        if self.__input_of_process_filters:
+            pi_var_name = 'pi'
+            pi_aql_source, pi_aql_filter, pi_aql_bind = self.__build_aql_trio(
+                    self.__input_of_process_filters, 
+                    process_itd, 
+                    pi_var_name)
+            pi_aql = '''
+                FOR spi IN SYS_ProcessInput FILTER %s._id == spi._from
+                FOR %s IN %s FILTER spi._to == %s._id and %s               
+            ''' % (
+                var_name, 
+                pi_var_name, 
+                pi_aql_source,
+                pi_var_name, 
+                ' and '.join(pi_aql_filter),
+                )
+            aql_bind.update(pi_aql_bind)
+            pr_aqls.append(pi_aql)
+
+
+        if self.__output_of_process_filters:
+            po_var_name = 'po'
+            po_aql_source, po_aql_filter, po_aql_bind = self.__build_aql_trio(
+                    self.__output_of_process_filters, 
+                    process_itd, 
+                    po_var_name)
+            po_aql = '''
+                FOR spo IN SYS_ProcessOutput FILTER %s._id == spo._to
+                FOR %s IN %s FILTER spo._from == %s._id and %s               
+            ''' % (
+                var_name, 
+                po_var_name, 
+                po_aql_source,
+                po_var_name, 
+                ' and '.join(po_aql_filter),
+                )
+            aql_bind.update(po_aql_bind)
+            pr_aqls.append(po_aql)
+
 
         if len(self.__linked_up_filters) == 0 and len(self.__linked_dn_filters) == 0:
-            aql = 'FOR %s IN %s FILTER %s RETURN %s' % (
+
+            aql = 'FOR %s IN %s FILTER %s %s RETURN distinct %s' % (
                 var_name, 
                 aql_source, 
                 ' and '.join(aql_filter),
+                ' '.join(pr_aqls),
                 var_name)
         else:
             var_aqls = []
@@ -254,6 +312,7 @@ class Query:
                     FOR %s IN %s FILTER %s 
                     FOR %s in 1..10 OUTBOUND s SYS_ProcessInput, SYS_ProcessOutput
                     FILTER %s
+                    %s
                     return distinct %s 
                 ''' % ( 
                     u_var_name,
@@ -261,6 +320,7 @@ class Query:
                     ' and '.join(u_aql_filter), 
                     var_name,
                     ' and '.join(_aql_filter),
+                    ' '.join(pr_aqls),
                     var_name)
                 
                 aql_var = self.__param_name('a')
@@ -269,8 +329,7 @@ class Query:
                     'aql': 'let %s = (%s) ' % (aql_var, uaql) 
                 })
 
-                for key, value in u_aql_bind.items():
-                    aql_bind[key] = value
+                aql_bind.update(u_aql_bind)
 
             # Do dn filters
             for dn_filters in self.__linked_dn_filters:
@@ -290,6 +349,7 @@ class Query:
                     FOR %s IN %s FILTER %s 
                     FOR %s in 1..10 INBOUND s SYS_ProcessInput, SYS_ProcessOutput
                     FILTER %s
+                    %s
                     return distinct %s
                 ''' % ( 
                     d_var_name,
@@ -297,6 +357,7 @@ class Query:
                     ' and '.join(d_aql_filter), 
                     var_name,
                     ' and '.join(_aql_filter),
+                    ' '.join(pr_aqls),
                     var_name)
                 
                 aql_var = self.__param_name('a')
@@ -305,9 +366,7 @@ class Query:
                     'aql': 'let %s = (%s) ' % (aql_var, daql) 
                 })
 
-
-                for key, value in d_aql_bind.items():
-                    aql_bind[key] = value
+                aql_bind.update(d_aql_bind)
             
             # build final aql
 
