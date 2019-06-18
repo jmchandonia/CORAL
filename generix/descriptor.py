@@ -262,16 +262,13 @@ class BrickIndexDocumnet:
             'name': 'text',
             'description': 'text',
             'n_dimensions': 'int',
-            'data_type_term_id': 'text',
-            'data_type_term_name': 'text',
-            'value_type_term_id': 'text',
-            'value_type_term_name': 'text',
-            'dim_type_term_ids': '[text]',
-            'dim_type_term_names': '[text]',
+            'data_type': 'term',
+            'value_type': 'term',
+            'dim_types': '[term]',
             'dim_sizes': '[int]',
-            'all_term_ids': '[text]',
+            'all_terms': '[term]',
             'all_term_values': '[text]',
-            'all_parent_path_term_ids': '[text]'
+            'all_parent_path_terms': '[term]'
         }
 
     def __init__(self, brick):
