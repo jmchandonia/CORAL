@@ -1,5 +1,5 @@
 import pandas as pd
-from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
+from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
 from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor, IndexDocument, BrickIndexDocumnet
 from . import services
@@ -80,11 +80,44 @@ class ArangoService:
         aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
-    def get_process_inputs(self, process_id):
-        pass
+    def get_process_inputs(self, process_id, size = 100):
+        process_itd = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        aql = '''
+            for pi in SYS_ProcessInput filter pi._to == @id
+            return distinct document(pi._from)        
+        '''
+        aql_bind = {'id': process_itd.collection_name  + '/' + process_id}
+        rs = self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+        return self.__to_type2objects(rs)
 
-    def get_process_outputs(self, process_id):
-        pass
+    def get_process_outputs(self, process_id, size = 10000):
+        process_itd = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+        aql = '''
+            for po in SYS_ProcessOutput filter po._from == @id
+            return distinct document(po._to)        
+        '''
+        aql_bind = {'id': process_itd.collection_name  + '/' + process_id}
+
+        print('aql', aql)
+        print('aql_bind', aql_bind)
+        rs = self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+        return self.__to_type2objects(rs)
+
+    
+    def __to_type2objects(self, aql_rs):
+        type2objects = {}
+        for row in aql_rs:
+            _id = row['_id']
+            type_name = _id.split('/')[0][4:]
+        
+            objs = type2objects.get(type_name)
+            if objs is None:
+                objs = []
+                type2objects[type_name] = objs
+            objs.append(row)
+
+        return type2objects
+
 
 
 
