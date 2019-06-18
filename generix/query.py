@@ -1,4 +1,5 @@
 from .utils import to_var_name
+from .ontology import Term
 from .indexdef import IndexPropertyDef
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor
@@ -11,6 +12,7 @@ FILTER_LTE = '<='
 FILTER_GT = '>'
 FILTER_GTE = '>='
 FILTER_IN = 'IN'
+FILTER_ARR_IN = '@IN'
 
 
 _OPERATIONS = {
@@ -26,9 +28,9 @@ _OPERATIONS = {
     '<=': FILTER_LTE,
     'lte':FILTER_LTE,
     'fulltext': FILTER_FULLTEXT,
-    'FULLTEXT': FILTER_FULLTEXT,
-    'in': FILTER_IN,
-    'IN': FILTER_IN
+    'match': FILTER_FULLTEXT,
+    'like': FILTER_FULLTEXT,
+    'in': FILTER_IN
 }
 
 class Query:
@@ -64,18 +66,65 @@ class Query:
                 }
 
             for operation, value in operaion_value_pairs.items():
+
+                # check and polish operation
+                operation = operation.lower()
                 if operation not in _OPERATIONS:
                     raise ValueError('Unknown operation: %s' % operation)
-
                 operation = _OPERATIONS[operation]
+
+                # polish value and prop_name
+                ip_def = index_type_def.get_property_def(prop_name)
+
+                if ip_def.scalar_type in ['term', '[term]'] :
+                    # build term_ids
+                    term_ids = []
+                    if type(value) is str:
+                        if operation == FILTER_FULLTEXT:
+                            tc = services.ontology.all.find_name_pattern(value)
+                            if tc.size == 0:
+                                raise ValueError('Can not find a term with pattern: %s' % value)
+                            term_ids = tc.term_ids
+                        else:
+                            term_ids.append( Term.get_term(value).term_id )
+                    elif type(value) is list:
+                        term_ids = [t.term_id for t in Term.get_terms(value) ]
+                    elif type(value) is Term:
+                        term_ids.append(value.term_id)
+                    else:
+                        raise ValueError('Wrong type of the value for the %s property' & prop_name )                 
+
+                    # update operation, prop_name and value
+                    if ip_def.scalar_type == 'term':
+                        prop_name = prop_name + '_term_id'
+                        if len(term_ids) == 1:
+                            operation = FILTER_EQ
+                            value = term_ids[0]
+                        else:
+                            operation = FILTER_IN
+                            value = term_ids
+                    elif ip_def.scalar_type == '[term]':
+                        prop_name = prop_name[:-1] + '_ids'                
+                        if len(term_ids) == 1:
+                            operation = FILTER_ARR_IN
+                            value = term_ids[0]
+                        else:
+                            operation = FILTER_ARR_IN
+                            value = term_ids
+                else:
+                    if ip_def.scalar_type.startswith('['):
+                        operation = FILTER_ARR_IN
+
+                # get operation filters
                 operation_filters = filters.get(operation)
                 if operation_filters is None:
                     operation_filters = []
-                    filters[operation] = operation_filters
-                    operation_filters.append({
-                        'name': prop_name,
-                        'value': value
-                    })
+                    filters[operation] = operation_filters                
+
+                operation_filters.append({
+                    'name': prop_name,
+                    'value': value
+                })
 
     def has(self, criterion):
         if criterion is None:
@@ -133,6 +182,15 @@ class Query:
                         value = [value]
                     aql_filter.append( '%s.%s IN @%s' %(var_name, ft['name'], pname) )
                     aql_bind[ pname ] = value
+            elif filter_type == FILTER_ARR_IN:
+                for ft in filters:
+                    pname = self.__param_name()
+                    aql_bind[ pname ] = ft['value']
+                    if type(ft['value']) is list:
+                        aql_filter.append('length(intersection(%s.%s, @%s)) > 0' % (var_name, ft['name'], pname) )
+                    else:
+                        aql_filter.append( '@%s IN %s.%s' %(pname, var_name, ft['name']) )
+
             elif filter_type == FILTER_FULLTEXT:
                 for ft in filters:
                     pname = self.__param_name()
