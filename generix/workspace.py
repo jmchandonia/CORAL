@@ -10,10 +10,11 @@ class DataHolder:
     def __init__(self, type_name, data):
         self.__type_name = type_name
         self.__type_def = None 
-        try:
-            self.__type_def = services.typedef.get_type_def(self.__type_name)
-        except:
-            print ('No typedef for %s' % type_name)
+        if self.__type_name not in [TYPE_NAME_BRICK]:
+            try:
+                self.__type_def = services.typedef.get_type_def(self.__type_name)
+            except:
+                print ('No typedef for %s' % type_name)
         self.__data = data
         self.__id = None
 
