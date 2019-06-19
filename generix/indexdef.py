@@ -1,6 +1,8 @@
-from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK
+import traceback
+from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_SYSTEM, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK, TYPE_NAME_PROCESS
 from .descriptor import BrickIndexDocumnet
 from . import services
+
 
 
 class IndexTypeDef:
@@ -28,6 +30,25 @@ class IndexTypeDef:
     @property
     def property_names(self):
         return [pd.name for pd in self.__prop_defs]
+
+    def _init_index(self):
+        try:
+            services.arango_service.create_collection(self.collection_name)
+            if self.type_name == TYPE_NAME_PROCESS:
+                services.arango_service.create_edge_collection(
+                    TYPE_CATEGORY_SYSTEM + 'ProcessInput')
+                services.arango_service.create_edge_collection(
+                    TYPE_CATEGORY_SYSTEM + 'ProcessOutput')
+
+            # TODO: create indices
+
+        except:
+            print('Can not create a collection for type %s' % self.name )
+            traceback.print_exc()
+
+
+
+
 
     def has_property(self, name):
         pdef = self.get_property_def(name)

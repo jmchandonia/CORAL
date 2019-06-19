@@ -218,22 +218,11 @@ _FILES = {
 
 
 def upload_ontologies(argv):
-    pass
-    # TODO
-    # services.IN_ONTOLOGY_LOAD_MODE = True
-    # try:
-    #     services.ontology._upload_ontologies()
-    # finally:
-    #     services.IN_ONTOLOGY_LOAD_MODE = False
-
-
-def neo_delete(argv):
-    pass
-    # TODO
-    # if len(argv) > 0:
-    #     services.neo_service.delete_all(type_name=argv[0])
-    # else:
-    #     services.neo_service.delete_all()
+    services.IN_ONTOLOGY_LOAD_MODE = True
+    try:
+        services.ontology._upload_ontologies(config_fname=argv[0])
+    finally:
+        services.IN_ONTOLOGY_LOAD_MODE = False
 
 
 def delete_core(argv):
@@ -279,9 +268,9 @@ def upload_core(argv):
         try:
             file_name =  _FILES['import_dir'] + file_def['file']
             type_name = file_def['dtype']
-            type_def = services.indexdef.get_type_def(type_name)
+            index_type_def = services.indexdef.get_type_def(type_name)
             try:
-                services.arango_service.create_index(type_def)
+                services.arango_service.create_index(index_type_def)
             except:
                 print('\t Collection is present')
 
@@ -311,16 +300,11 @@ def upload_core(argv):
 
 def upload_processes(argv):
     ws = services.workspace
-    type_name = TYPE_NAME_PROCESS
-    # try:
-    #     # TODO: switch to type_def
-    #     services.arango_service.drop_index(type_name)
-    # except:
-    #     pass
-
-    # # TODO: switch to type_def
-    # services.arango_service.create_index(
-    #     services.typedef.get_type_def(type_name))
+    index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+    try:
+        index_type_def._init_index()
+    except:
+        pass
 
     for file_def in _FILES['processes']:
         try:
