@@ -16,17 +16,29 @@ class OntologyService:
     def __init__(self, arango_service):
         self.__arango_service = arango_service
 
-    def _init_ontologies(self):
-        services.arango_service.create_collection(OTERM_COLLECTION_NAME)
-        # TODO: build indices
+    def _ensure_ontology_ready(self):
+        try:
+            services.arango_service.create_collection(OTERM_COLLECTION_NAME)
+        except:
+            print('Ontology collection is present already')
+        
+        # build indices
+        print('Ensure ontoloy indices')
+        collection = services.arango_service.db[OTERM_COLLECTION_NAME]
+        collection.ensureFulltextIndex(['term_name'],minLength=3)
+        collection.ensureHashIndex(['term_id'], unique=True)
+        collection.ensureHashIndex(['ontology'])
+
 
     def _upload_ontologies(self, config_fname):
-        self._init_ontologies()
+        self._ensure_ontology_ready()
         with open(config_fname, 'r') as f:
             doc = json.loads(f.read())
             for ont in doc['ontologies']:
                 print('Doing ontology: ' + ont['name'])
-                self._upload_ontology(doc['source_dir'], ont)
+                if 'ignore' in ont and ont['ignore']:
+                    continue
+                self._upload_ontology(services._IMPORT_DIR_ONTOLOGY, ont)
  
     def _upload_ontology(self, dir_name, ont):
         self._clean_ontology(ont['name'])
@@ -42,11 +54,13 @@ class OntologyService:
                 'ontology_id': ont_id,
                 'term_id': term.term_id,
                 'term_name': term.term_name,
-                'term_name_prefix': term.term_name,
                 'parent_term_ids': term.parent_ids,
                 'parent_path_term_ids': list(all_parent_ids.keys())
             }
-            self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
+            try:
+                self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
+            except:
+                print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']) )
 
 
     def _collect_all_parent_ids(self, term, all_parent_ids):
@@ -66,11 +80,13 @@ class OntologyService:
 
         term_id = None
         term_name = None
+
+        # TODO: index term_aliases as well
         term_aliases = []
         term_parent_ids = []
 
         root_term = None
-        with open(dir_name + file_name, 'r') as f:
+        with open( os.path.join(dir_name, file_name) , 'r') as f:
             for line in f:
                 line = line.strip()
                 if state == STATE_NONE:
@@ -115,60 +131,6 @@ class OntologyService:
 
     def _clean_ontology(self, ont_name):
         pass
-
-    # def _drop_index(self, index_name):
-    #     try:
-    #         self.__es_client.indices.delete(index=index_name)
-    #     except:
-    #         pass
-
-    # def _create_index(self, index_name):
-    #     settings = {
-    #         "settings": {
-    #             "analysis": {
-    #                 "analyzer": {
-    #                     "keyword": {
-    #                         "type": "custom",
-    #                         "tokenizer": "keyword"
-    #                     }
-    #                 }
-    #             }
-    #         },
-    #         "mappings": {
-    #             _ES_OTERM_TYPE: {
-    #                 "properties": {
-    #                     "term_id": {
-    #                         "type": "text",
-    #                         "analyzer": "keyword"
-    #                     },
-    #                     "parent_term_ids": {
-    #                         "type": "text",
-    #                         "analyzer": "keyword"
-    #                     },
-    #                     "parent_path_term_ids": {
-    #                         "type": "text",
-    #                         "analyzer": "keyword"
-    #                     },
-    #                     "term_name": {
-    #                         "type": "text",
-    #                         "analyzer": "keyword"
-    #                     },
-    #                     "term_name_prefix": {
-    #                         "type": "text",
-    #                         "analyzer": "standard"
-    #                     }
-    #                 }
-    #             }
-    #         }
-    #     }
-
-    #     self.__es_client.indices.create(index=index_name, body=settings)
-
-
-    # def __find(self, aql_filter, aql_bind):
-    #     aql = 'FOR x IN %s FILTER %s RETURN x' % (OTERM_TYPE, aql_filter )
-    #     return self.__arango_service.find(aql, aql_bind)
-
 
     @property
     def units(self):
@@ -296,8 +258,8 @@ class Ontology:
         aql_filter = 'x.term_name == @term_name'
         return self.__find_term(aql_filter, aql_bind)
 
-    def find_name_pattern(self, term_name_prefix, size=100):
-        aql_bind = {'@collection': 'OTerm', 'property_name': 'term_name_prefix', 'property_value': term_name_prefix}
+    def find_name_pattern(self, value, size=100):
+        aql_bind = {'@collection': 'OTerm', 'property_name': 'term_name', 'property_value': value}
         aql_filter = ''
         aql_fulltext = 'FULLTEXT(@@collection, @property_name, @property_value)'
         return TermCollection(self.__find_terms(aql_filter, aql_bind, 
