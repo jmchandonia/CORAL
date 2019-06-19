@@ -5,14 +5,23 @@ import pandas as pd
 from .utils import to_var_name
 from . import services
 
+
 OTERM_TYPE = 'OTerm'
+TYPE_CATEGORY_ONTOLOGY = ''
+OTERM_COLLECTION_NAME = TYPE_CATEGORY_ONTOLOGY + OTERM_TYPE
+
 ONTOLOGY_COLLECTION_NAME_PREFIX = 'generix-ont-'
 
 class OntologyService:
     def __init__(self, arango_service):
         self.__arango_service = arango_service
 
+    def _init_ontologies(self):
+        services.arango_service.create_collection(OTERM_COLLECTION_NAME)
+        # TODO: build indices
+
     def _upload_ontologies(self, config_fname):
+        self._init_ontologies()
         with open(config_fname, 'r') as f:
             doc = json.loads(f.read())
             for ont in doc['ontologies']:
@@ -37,7 +46,7 @@ class OntologyService:
                 'parent_term_ids': term.parent_ids,
                 'parent_path_term_ids': list(all_parent_ids.keys())
             }
-            self.__arango_service.index_doc(doc, OTERM_TYPE)
+            self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
 
 
     def _collect_all_parent_ids(self, term, all_parent_ids):
@@ -235,7 +244,7 @@ class Ontology:
             aql_bind['ontology_id'] = self.__ontology_id
 
         if aql_fulltext is None:
-            aql = 'FOR x IN %s FILTER %s RETURN x' % (OTERM_TYPE, aql_filter )
+            aql = 'FOR x IN %s FILTER %s RETURN x' % (OTERM_COLLECTION_NAME, aql_filter )
         else:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (aql_fulltext, aql_filter )
 
