@@ -93,7 +93,7 @@ class PropertyTermValidator(PropertyValidator):
         self.__root_term = None
         if self.validatable:
             self.__root_term = Term(root_term_id_validator)
-            self.__root_term.refresh()
+            #self.__root_term.refresh()
 
     def validate_type(self, property_name, property_value):
         if type(property_value) is not str or not Term.check_term_format(property_value):
