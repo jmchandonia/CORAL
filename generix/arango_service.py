@@ -15,9 +15,23 @@ class ArangoService:
     def db(self):
         return self.__db
 
+
+    def create_collection(self, collection_name):
+        self.__db.createCollection(name=collection_name)
+
+    def create_edge_collection(self, collection_name):
+        self.__db.createCollection(name=collection_name, className='Edges')
+
     def create_brick_index(self):
         type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
-        self.__db.createCollection(name=type_def.collection_name)
+        self.create_collection(type_def.collection_name)
+
+    def create_index(self, type_def):
+        self.create_collection(type_def.collection_name)
+
+    def drop_index(self, type_def):
+        self.__db[type_def.collection_name].delete()
+
 
     def upsert_doc(self, upsert_condition, doc, type_name, category):
         aql = 'UPSERT @upsert INSERT @doc REPLACE @doc IN @@collection'
@@ -55,12 +69,6 @@ class ArangoService:
 
     def find(self, aql, aql_bind, size=100):
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
-
-    def create_index(self, type_def):
-        self.__db.createCollection(name=type_def.collection_name)
-
-    def drop_index(self, type_def):
-        self.__db[type_def.collection_name].delete()
 
     def get_up_processes(self, index_type_def, obj_id, size = 100):
         aql = '''
