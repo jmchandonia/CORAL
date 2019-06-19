@@ -1,3 +1,4 @@
+import os
 from . import services
 from .typedef import TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC, TYPE_CATEGORY_SYSTEM
 from .utils import to_var_name
@@ -6,8 +7,13 @@ from .query import Query
 from .user_profile import UserProfile
 
 class DataProvider:
-    def __init__(self, user_name='psnovichkov'):
-        self.__user_name = user_name
+    def __init__(self):
+        services._init_db_connection()
+        services._init_services()
+
+        self.__user_name = 'default'
+        if 'USER' in os.environ:
+            self.__user_name = os.environ['USER']
 
         self.__dict__['core_types'] = EntitiesProvider()
         self.__dict__['genx_types'] = GenericsProvider()
