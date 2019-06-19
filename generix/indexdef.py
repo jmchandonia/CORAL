@@ -31,10 +31,10 @@ class IndexTypeDef:
     def property_names(self):
         return [pd.name for pd in self.__prop_defs]
 
-    def _init_index(self):
+    def _ensure_init_index(self):
         try:
             services.arango_service.create_collection(self.collection_name)
-            if self.type_name == TYPE_NAME_PROCESS:
+            if self.name == TYPE_NAME_PROCESS:
                 services.arango_service.create_edge_collection(
                     TYPE_CATEGORY_SYSTEM + 'ProcessInput')
                 services.arango_service.create_edge_collection(
@@ -44,7 +44,7 @@ class IndexTypeDef:
 
         except:
             print('Can not create a collection for type %s' % self.name )
-            traceback.print_exc()
+            # traceback.print_exc()
 
 
 
