@@ -23,7 +23,7 @@ class OntologyService:
             print('Ontology collection is present already')
         
         # build indices
-        print('Ensure ontoloy indices')
+        print('Ensure ontology indices')
         collection = services.arango_service.db[OTERM_COLLECTION_NAME]
         collection.ensureFulltextIndex(['term_name'],minLength=3)
         collection.ensureHashIndex(['term_id'], unique=True)
@@ -37,6 +37,7 @@ class OntologyService:
             for ont in doc['ontologies']:
                 print('Doing ontology: ' + ont['name'])
                 if 'ignore' in ont and ont['ignore']:
+                    print(' (skipping because of ignore directive)')
                     continue
                 self._upload_ontology(services._IMPORT_DIR_ONTOLOGY, ont)
  
@@ -49,18 +50,21 @@ class OntologyService:
     def _index_terms(self, ont_id, terms):
         for _, term in terms.items():
             all_parent_ids = {}
-            self._collect_all_parent_ids(term, all_parent_ids)
-            doc = {
-                'ontology_id': ont_id,
-                'term_id': term.term_id,
-                'term_name': term.term_name,
-                'parent_term_ids': term.parent_ids,
-                'parent_path_term_ids': list(all_parent_ids.keys())
-            }
             try:
-                self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
+                self._collect_all_parent_ids(term, all_parent_ids)
+                doc = {
+                    'ontology_id': ont_id,
+                    'term_id': term.term_id,
+                    'term_name': term.term_name,
+                    'parent_term_ids': term.parent_ids,
+                    'parent_path_term_ids': list(all_parent_ids.keys())
+                }
+                try:
+                    self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
+                except:
+                    print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']) )
             except:
-                print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']) )
+                print('ERROR: could not look up term %s' % term.term_id)
 
 
     def _collect_all_parent_ids(self, term, all_parent_ids):
@@ -130,7 +134,11 @@ class OntologyService:
         return terms
 
     def _clean_ontology(self, ont_name):
-        pass
+        print("Deleting terms in %s" % ont_name)
+        services.arango_service.db.AQLQuery(
+            'FOR term IN OTerm FILTER term.ontology_id==@value REMOVE term in OTerm',
+            bindVars={'value': ont_name}
+        )
 
     @property
     def units(self):
@@ -354,7 +362,7 @@ _TERM_ID_PATTERN = re.compile('\w+:\d+')
 
 class Term:
     '''
-        Supports lazzy loading
+        Supports lazy loading
     '''
 
     def __init__(self, term_id, term_name=None, ontology_id=None,
@@ -431,15 +439,15 @@ class Term:
         return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' \
             % (self.term_name, self.term_id, self.ontology_id, self.parent_ids)
 
-    def __safe_proeprty(self, prop_name):
+    def __safe_property(self, prop_name):
         if self.__dict__[prop_name] is None and not self.__persisted:
-            self.__lazzy_load()
+            self.__lazy_load()
         return self.__getattribute__(prop_name)
 
     def refresh(self):
-        self.__lazzy_load()
+        self.__lazy_load()
 
-    def __lazzy_load(self):
+    def __lazy_load(self):
         term = services.ontology.all.find_id(self.term_id)
         if term is None:
             raise ValueError('Can not find term with id: %s' % self.term_id)
@@ -466,11 +474,11 @@ class Term:
 
     @property
     def ontology_id(self):
-        return self.__safe_proeprty('_Term__ontology_id')
+        return self.__safe_property('_Term__ontology_id')
 
     @property
     def term_name(self):
-        return self.__safe_proeprty('_Term__term_name')
+        return self.__safe_property('_Term__term_name')
 
     # @property
     # def property_name(self):
@@ -478,15 +486,15 @@ class Term:
 
     @property
     def parent_ids(self):
-        return self.__safe_proeprty('_Term__parent_ids')
+        return self.__safe_property('_Term__parent_ids')
 
     @property
     def parent_path_ids(self):
-        return self.__safe_proeprty('_Term__parent_path_ids')
+        return self.__safe_property('_Term__parent_path_ids')
 
     @property
     def validator_name(self):
-        return self.__safe_proeprty('_Term__validator_name')
+        return self.__safe_property('_Term__validator_name')
 
     @property
     def property_name(self):

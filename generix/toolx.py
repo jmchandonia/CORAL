@@ -10,20 +10,28 @@ from .brick import Brick
 
 
 def init_system(argv=None):
+    print('Init system collections')
     init_system_collections()
+    print('Deleting old data')
+    delete_processes()
+    delete_bricks()
+    delete_core()
+    print('Uploading new data')
     upload_ontologies()
-    upload_bricks()
     upload_core()
     upload_processes()
+    upload_bricks()
 
 def init_system_collections(argv=None):
     services._init_db_connection()    
+    _try_truncate_collection('SYS_ID')
     _try_init_collection('SYS_ID',[
         {   
             'fields':['dtype'],
             'type':'hash',
             'unique': True
         }])
+    _try_truncate_collection('SYS_ObjectTypeID')
     _try_init_collection('SYS_ObjectTypeID',[
         {   
             'fields':['type_name', 'upk_id'],
@@ -45,6 +53,15 @@ def _try_init_collection(collection_name, indices):
     for ind in indices:
         if ind['type'] == 'hash':
             collection.ensureHashIndex(ind['fields'], unique=ind['unique'])
+
+def _try_truncate_collection(collection_name):
+    print('Truncate system collection: %s' % collection_name)
+    db = services.arango_service.db
+    try:
+        collection = db.collections[collection_name]
+        collection.truncate()
+    except Exception as e:
+        print('Error: ', e)
         
 def upload_ontologies(argv=None):
     services._init_services()
@@ -155,6 +172,7 @@ def upload_processes(argv=None):
         print()
 
 def delete_core(argv=None):
+    services._init_services()
     for type_def in services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC):
         print('Removing %s ' % type_def.collection_name)
         try:
@@ -164,7 +182,19 @@ def delete_core(argv=None):
 
 
 def delete_bricks(argv=None):
+    services._init_services()
     type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
+    print('Removing %s ' % type_def.collection_name)
+    try:
+        services.arango_service.drop_index(type_def)
+    except:
+        pass
+
+
+def delete_processes(argv=None):
+    services._init_services()
+    type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+    print('Removing %s ' % type_def.collection_name)
     try:
         services.arango_service.drop_index(type_def)
     except:
