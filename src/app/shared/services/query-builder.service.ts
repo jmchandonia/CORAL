@@ -7,12 +7,21 @@ import { Subject } from 'rxjs';
 })
 export class QueryBuilderService {
 
-  private _queryBuilder: QueryBuilder;
-  public queryBuilderSub = new Subject<any>();
+  private queryBuilderObject: QueryBuilder;
+  public queryBuilderSub = new Subject<QueryBuilder>();
 
   constructor() { }
 
-  getQueryBuilder() {
-    return this._queryBuilder;
+  getCurrentObject() {
+    if (!this.queryBuilderObject) {
+      this.queryBuilderObject = new QueryBuilder();
+      return this.queryBuilderObject;
+    } else {
+      return this.queryBuilderObject;
+    }
+  }
+
+  getUpdatedObject() {
+    return this.queryBuilderSub.asObservable();
   }
 }

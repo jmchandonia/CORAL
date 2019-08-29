@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
+import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
 
 @Component({
   selector: 'app-query-builder',
@@ -8,7 +9,14 @@ import { Select2OptionData } from 'ng2-select2';
 })
 export class QueryBuilderComponent implements OnInit {
 
+
+  @Input() queryMatch: QueryMatch;
+
   private dataTypeList: Array<Select2OptionData> = [
+    {
+      id: '',
+      text: ''
+    },
     {
       id: '0',
       text: 'N-dimensional array'
@@ -36,6 +44,17 @@ export class QueryBuilderComponent implements OnInit {
   ngOnInit() {
   }
 
+  updateObjectDataType(event) {
+    if (!this.queryMatch) {
+      this.queryMatch = new QueryMatch(event.data[0].text);
+      // add logic here that will disable propertyParams fields until this is selected
+    } else {
+      this.queryMatch.dataType = event.data[0].text;
+      // here is where we would want to dereference all propertyParams if data type gets updated
+    }
+    // add some logic here that will call getAttributes http method
+  }
+
   removePropertyParam(param) {
     if (this.propertyParams.length === 1) {
       Object.assign(this.propertyParams[0], {
@@ -48,12 +67,8 @@ export class QueryBuilderComponent implements OnInit {
     }
   }
 
-  addPropertyParam() {
-    this.propertyParams.push({
-      type: '',
-      match: 'contains',
-      keyword: ''
-    })
+  addPropertyParam(param) {
+    this.queryMatch.params.push(param);
   }
 
 }

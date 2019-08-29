@@ -1,24 +1,48 @@
 <div class="row mt-1">
   <div class="col-3">
     <select2
+      ngDefaultControl
+      name="attributes"
       [cssImport]="true"
-      [options]="{ width: '100%'}"
+      [options]="{ width: '100%', placeholder: 'Attributes' }"
+      [data]="propertyTypes"
+      [(ngModel)]="attributeBuilder"
+      (valueChanged)="attributeBuilder = $event.data[0].text"
     ></select2>
   </div>
   <div class="col-3">
     <select2
+      ngDefaultControl
+      name="matchType"
       [cssImport]="true"
-      [options]="{ width: '100%'}"
+      [options]="{ width: '100%', placeholder: 'Match Type' }"
+      [data]="propertyTypes"
+      [(ngModel)]="matchTypeBuilder"
+      (valueChanged)="matchTypeBuilder = $event.data[0].text"
     ></select2>
   </div>
   <div class="col-5">
     <select2
+      ngDefaultControl
+      name="keywords"
       [cssImport]="true"
-      [options]="{ width: '100%'}"
+      [options]="{ width: '100%', placeholder: 'Keyword(s)'}"
+      [data]="propertyTypes"
+      [(ngModel)]="keywordBuilder"
+      (valueChanged)="keywordBuilder = $event.data[0].text"
     ></select2>
   </div>
   <div class="col-1">
-    <i class="material-icons add-remove" (click)="removeParam()">remove_circle_outline</i>
+    <i 
+      class="material-icons add-remove" 
+      (click)="removeParam()"
+      *ngIf="!isEmpty()"
+      >remove_circle_outline</i>
+    <i
+      class="material-icons add-remove"
+      (click)="addParam()"
+      *ngIf="isEmpty()"
+    >add_circle_outline</i>
   </div>
   <hr style="color: green; margin-bottom: 10px; width: 95%">
 </div>

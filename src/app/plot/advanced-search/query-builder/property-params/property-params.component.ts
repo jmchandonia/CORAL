@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
+import { QueryParam } from '../../../../shared/models/QueryBuilder';
 
 @Component({
   selector: 'app-property-params',
@@ -9,8 +10,19 @@ import { Select2OptionData } from 'ng2-select2';
 export class PropertyParamsComponent implements OnInit {
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
+  @Output() added: EventEmitter<QueryParam> = new EventEmitter();
+
+  private queryParam: QueryParam;
+
+  private matchTypeBuilder = '';
+  private attributeBuilder = '';
+  private keywordBuilder = '';
 
   private propertyTypes: Array<Select2OptionData> = [
+    {
+      id: '',
+      text: ''
+    },
     {
       id: '0',
       text: 'name'
@@ -37,10 +49,8 @@ export class PropertyParamsComponent implements OnInit {
     }
   ]
 
-  @Input() data = {
-    type: '', 
-    match: 'contains',
-    keyword: ''
+  @Input() set data(param) {
+    this.queryParam = Object.create(param || null);
   }
 
   constructor() { }
@@ -48,8 +58,22 @@ export class PropertyParamsComponent implements OnInit {
   ngOnInit() {
   }
 
+  addParam() {
+    // here we can check for valid data before adding it to our query constructor
+    Object.assign(this.queryParam, new QueryParam(
+      this.attributeBuilder,
+      this.keywordBuilder,
+      this.matchTypeBuilder
+    ));
+    this.added.emit(this.queryParam);
+  }
+
   removeParam() {
     this.removed.emit();
+  }
+
+  isEmpty() {
+    return Object.keys(this.queryParam).length === 0;
   }
 
 }

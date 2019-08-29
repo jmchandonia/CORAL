@@ -1,24 +1,26 @@
 <div class="query-container">
   <label for="data-type">Data Type</label>
   <select2
-    [options]="{ width: '100%' }"
+    [options]="{ width: '100%', placeholder: 'Select a data type stored in our system' }"
     [cssImport]="true"
     [data]="dataTypeList"
     name="data-type"
+    (valueChanged)="updateObjectDataType($event)"
   >
 </select2>
   <label class="mt-2">Property Parameters</label>
   <app-property-params 
-    *ngFor="let param of propertyParams" 
+    *ngFor="let param of queryMatch?.params" 
     [data]="param"
     (removed)="removePropertyParam(param)"
   >
   </app-property-params>
-  <div class="row mt-1">
+  <app-property-params [data]="null" (added)="addPropertyParam($event)"></app-property-params>
+  <!-- <div class="row mt-1">
     <div class="col-1 offset-11">
       <i class="material-icons" (click)="addPropertyParam()">
         add_circle_outline
       </i>
     </div>
-  </div>
+  </div> -->
 </div>

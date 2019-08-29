@@ -7,6 +7,8 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
 import { Select2Module } from 'ng2-select2';
 import { QueryBuilderComponent } from './advanced-search/query-builder/query-builder.component';
 import { PropertyParamsComponent } from './advanced-search/query-builder/property-params/property-params.component';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { PropertyParamsComponent } from './advanced-search/query-builder/propert
   imports: [
     CommonModule,
     PlotRoutingModule,
-    Select2Module
+    Select2Module,
+    FormsModule
   ]
 })
 export class PlotModule { }
