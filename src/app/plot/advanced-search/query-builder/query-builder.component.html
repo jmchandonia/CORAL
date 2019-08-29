@@ -1,0 +1,24 @@
+<div class="query-container">
+  <label for="data-type">Data Type</label>
+  <select2
+    [options]="{ width: '100%' }"
+    [cssImport]="true"
+    [data]="dataTypeList"
+    name="data-type"
+  >
+</select2>
+  <label class="mt-2">Property Parameters</label>
+  <app-property-params 
+    *ngFor="let param of propertyParams" 
+    [data]="param"
+    (removed)="removePropertyParam(param)"
+  >
+  </app-property-params>
+  <div class="row mt-1">
+    <div class="col-1 offset-11">
+      <i class="material-icons" (click)="addPropertyParam()">
+        add_circle_outline
+      </i>
+    </div>
+  </div>
+</div>
