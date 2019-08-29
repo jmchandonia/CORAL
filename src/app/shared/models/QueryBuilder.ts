@@ -8,14 +8,24 @@ export class QueryBuilder {
 }
 
 export class QueryMatch {
-    constructor() { }
+    constructor(dType?: string) { 
+        this.dataType = dType;
+    }
     public dataType: string;
-    public params: QueryParam[];
+    public params: QueryParam[] = [];
 }
 
 export class QueryParam {
-    constructor() { }
-    public attribute: string;
-    public matchType: string;
-    public keyword: string;
+    constructor(
+        attr?: string,
+        match?: string,
+        key?: string
+    ) { 
+        this.attribute = attr;
+        this.matchType = match;
+        this.keyword = key;
+    }
+    public attribute: string = '';
+    public matchType: string = '';
+    public keyword: string = '';
 }

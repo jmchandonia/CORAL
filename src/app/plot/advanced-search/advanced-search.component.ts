@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
+import { QueryBuilderService } from '../../shared/services/query-builder.service';
+import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
 
 @Component({
   selector: 'app-advanced-search',
@@ -23,9 +25,21 @@ export class AdvancedSearchComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  private queryBuilderObject: QueryBuilder;
+
+  constructor(private queryBuilder: QueryBuilderService) { }
 
   ngOnInit() {
+
+    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+
+    this.queryBuilder.getUpdatedObject().subscribe(object => {
+      Object.assign(this.queryBuilderObject, object);
+    })
+  }
+
+  testObject() {
+    alert(JSON.stringify(this.queryBuilderObject));
   }
 
 }
