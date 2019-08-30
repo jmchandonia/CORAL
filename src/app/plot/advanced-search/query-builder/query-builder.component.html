@@ -15,12 +15,11 @@
     (removed)="removePropertyParam(param)"
   >
   </app-property-params>
-  <app-property-params [data]="null" (added)="addPropertyParam($event)"></app-property-params>
-  <!-- <div class="row mt-1">
-    <div class="col-1 offset-11">
-      <i class="material-icons" (click)="addPropertyParam()">
-        add_circle_outline
-      </i>
-    </div>
-  </div> -->
+  <app-property-params [isEmpty]="true" (added)="addPropertyParam($event)" style="color: orange!important"></app-property-params>
+  <!-- <app-property-params 
+    *ngFor="let param of queryMatch?.params" 
+    [data]="param"
+    (removed)="removePropertyParam(param)"
+  > -->
+  <!-- </app-property-params> -->
 </div>
