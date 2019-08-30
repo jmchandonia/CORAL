@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 })
 export class QueryBuilderService {
 
-  private queryBuilderObject: QueryBuilder;
+  private queryBuilderObject: QueryBuilder = new QueryBuilder();
   public queryBuilderSub = new Subject<QueryBuilder>();
 
   constructor() { }
@@ -24,4 +24,10 @@ export class QueryBuilderService {
   getUpdatedObject() {
     return this.queryBuilderSub.asObservable();
   }
+
+  updateQueryMatch(connection, queryMatch) {
+    this.queryBuilderObject[connection] = queryMatch;
+  }
+
+
 }
