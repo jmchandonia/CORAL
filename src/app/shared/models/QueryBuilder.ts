@@ -3,8 +3,8 @@ export class QueryBuilder {
     public queryMatch: QueryMatch;
     public connectsUpTo: QueryMatch;
     public connectsDownTo: QueryMatch;
-    public processesUp: QueryParam[];
-    public processesDown: QueryParam[];
+    public processesUp: QueryParam[] = [];
+    public processesDown: QueryParam[] = [];
 }
 
 export class QueryMatch {
