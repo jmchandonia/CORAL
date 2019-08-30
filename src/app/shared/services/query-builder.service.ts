@@ -27,6 +27,23 @@ export class QueryBuilderService {
 
   updateQueryMatch(connection, queryMatch) {
     this.queryBuilderObject[connection] = queryMatch;
+    this.queryBuilderSub.next(this.queryBuilderObject);
+  }
+
+  addProcessParam(process, queryParam) {
+    this.queryBuilderObject[process].push(queryParam);
+    this.queryBuilderSub.next(this.queryBuilderObject); 
+  }
+
+  updateProcessParam(process, index, queryParam) {
+    this.queryBuilderObject[process][index] = queryParam;
+    this.queryBuilderSub.next(this.queryBuilderObject);
+  }
+
+  removeProcessParam(process, queryParam) {
+    this.queryBuilderObject[process] = this.queryBuilderObject[process]
+      .filter(param => param !== queryParam);
+    this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
 

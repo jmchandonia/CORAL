@@ -1,8 +1,47 @@
+<div class="data-information-header">
+    <h5>Data Information</h5>
+</div>
 <app-query-builder
-    [connection]="'queryMatch'"
- ></app-query-builder>
+    [connection]="'queryMatch'"></app-query-builder>
+ <div class="data-information-header">
+    <h5>Parent Connections</h5>
+</div>
 <app-query-builder
     [connection]="'connectsUpTo'"></app-query-builder>
+<div class="data-information-header">
+    <h5>Child Connections</h5>
+</div>
 <app-query-builder 
     [connection]="'connectsDownto'"></app-query-builder>
+<div class="data-information-header">
+    <h5>Parent Processes</h5>
+</div>
+<div class="advanced-search-container">
+    <app-property-params
+        *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
+        [data]="queryMatch"
+        (updated)="updateProcess('processesUp', idx, $event)"
+        (removed)="removeProcess('processesUp', $event)"
+        ></app-property-params>
+    <app-property-params
+        [isEmpty]="true"
+        (added)="addProcess('processesUp', $event)"
+        ></app-property-params>
+</div>
+<div class="data-information-header">
+    <h5>Child Processes</h5>
+</div>
+<div class="advanced-search-container">
+    <app-property-params
+        *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
+        [data]="queryMatch"
+        (updated)="updateProcess('processesDown', idx, $event)"
+        (removed)="removeProcess('processesDown', $event)"
+        ></app-property-params>
+    <app-property-params
+        [isEmpty]="true"
+        (added)="addProcess('processesDown', $event)"
+        ></app-property-params>
+</div>
+
 <button (click)="testObject()">TestButton</button>

@@ -10,21 +10,6 @@ import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryB
 })
 export class AdvancedSearchComponent implements OnInit {
 
-  private dataTypeList: Array<Select2OptionData> = [
-    {
-      id: '0',
-      text: 'N-dimensional array'
-    },
-    {
-      id: '1',
-      text: 'Graph'
-    },
-    {
-      id: '2',
-      text: 'Cluster'
-    }
-  ]
-
   private queryBuilderObject: QueryBuilder;
 
   constructor(private queryBuilder: QueryBuilderService) { }
@@ -36,6 +21,18 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilder.getUpdatedObject().subscribe(object => {
       Object.assign(this.queryBuilderObject, object);
     });
+  }
+
+  addProcess(process, queryParam) {
+    this.queryBuilder.addProcessParam(process, queryParam);
+  }
+
+  updateProcess(process, index, queryParam) {
+    this.queryBuilder.updateProcessParam(process, index, queryParam);
+  }
+
+  removeProcess(process, queryParam) {
+    this.queryBuilder.removeProcessParam(process, queryParam);
   }
 
   testObject() {
