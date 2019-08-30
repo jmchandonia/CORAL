@@ -11,9 +11,9 @@ export class PropertyParamsComponent implements OnInit {
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
   @Output() added: EventEmitter<QueryParam> = new EventEmitter();
+  @Input() isEmpty = false;
 
   private queryParam: QueryParam;
-
   private matchTypeBuilder = '';
   private attributeBuilder = '';
   private keywordBuilder = '';
@@ -50,7 +50,10 @@ export class PropertyParamsComponent implements OnInit {
   ]
 
   @Input() set data(param) {
-    this.queryParam = Object.create(param || null);
+    this.matchTypeBuilder = param.matchType;
+    this.attributeBuilder = param.attribute;
+    this.keywordBuilder = param.keyword;
+    // TODO: figure out a way to bind builder values with select2 dropdown items
   }
 
   constructor() { }
@@ -60,20 +63,29 @@ export class PropertyParamsComponent implements OnInit {
 
   addParam() {
     // here we can check for valid data before adding it to our query constructor
-    Object.assign(this.queryParam, new QueryParam(
+    // Object.assign(this.queryParam, new QueryParam(
+    //   this.attributeBuilder,
+    //   this.keywordBuilder,
+    //   this.matchTypeBuilder
+    // ));
+    this.added.emit(new QueryParam(
       this.attributeBuilder,
-      this.keywordBuilder,
-      this.matchTypeBuilder
+      this.matchTypeBuilder,
+      this.keywordBuilder
     ));
-    this.added.emit(this.queryParam);
+  }
+
+  findDropdownValue(builder) {
+    return this.propertyTypes.find(item => item.text = builder);
   }
 
   removeParam() {
     this.removed.emit();
+    // you need to clear the builders here
   }
 
-  isEmpty() {
-    return Object.keys(this.queryParam).length === 0;
-  }
+  // isEmpty() {
+  //   return Object.keys(this.queryParam).length === 0;
+  // }
 
 }
