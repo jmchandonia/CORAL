@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Select2OptionData } from 'ng2-select2';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Select2OptionData, Select2Component } from 'ng2-select2';
 import { QueryParam } from '../../../../shared/models/QueryBuilder';
 
 @Component({
@@ -11,7 +11,9 @@ export class PropertyParamsComponent implements OnInit {
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
   @Output() added: EventEmitter<QueryParam> = new EventEmitter();
+  @Output() updated: EventEmitter<any> = new EventEmitter();
   @Input() isEmpty = false;
+  @ViewChild(Select2Component) attribute: ElementRef;
 
   private queryParam: QueryParam;
   private matchTypeBuilder = '';
@@ -62,30 +64,27 @@ export class PropertyParamsComponent implements OnInit {
   }
 
   addParam() {
-    // here we can check for valid data before adding it to our query constructor
-    // Object.assign(this.queryParam, new QueryParam(
-    //   this.attributeBuilder,
-    //   this.keywordBuilder,
-    //   this.matchTypeBuilder
-    // ));
     this.added.emit(new QueryParam(
       this.attributeBuilder,
       this.matchTypeBuilder,
       this.keywordBuilder
     ));
+    this.attributeBuilder = '';
+    this.matchTypeBuilder = '';
+    this.keywordBuilder = '';
   }
 
   findDropdownValue(builder) {
-    return this.propertyTypes.find(item => item.text = builder);
+    return this.propertyTypes.find(item => item.text === builder).id
+  }
+
+  updateParam(builder, event) {
+    this.updated.emit({key: builder, value: event});
   }
 
   removeParam() {
     this.removed.emit();
     // you need to clear the builders here
   }
-
-  // isEmpty() {
-  //   return Object.keys(this.queryParam).length === 0;
-  // }
 
 }

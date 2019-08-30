@@ -10,9 +10,10 @@ export class QueryBuilder {
 export class QueryMatch {
     constructor(dType?: string) { 
         this.dataType = dType;
+        this.params = [];
     }
     public dataType: string;
-    public params: QueryParam[] = [];
+    public params: QueryParam[];
 }
 
 export class QueryParam {

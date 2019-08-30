@@ -35,11 +35,11 @@ export class AdvancedSearchComponent implements OnInit {
 
     this.queryBuilder.getUpdatedObject().subscribe(object => {
       Object.assign(this.queryBuilderObject, object);
-    })
+    });
   }
 
   testObject() {
-    alert(JSON.stringify(this.queryBuilderObject));
+    console.log('QBO -> ',  JSON.stringify(this.queryBuilderObject));
   }
 
 }
