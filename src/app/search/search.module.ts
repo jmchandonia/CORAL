@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlotRoutingModule } from './plot-routing.module';
-import { PlotComponent } from './plot.component';
+import { SearchRoutingModule } from './search-routing.module';
+import { SearchComponent } from './search.component';
 import { SimpleSearchComponent } from './simple-search/simple-search.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import { Select2Module } from 'ng2-select2';
@@ -12,16 +12,16 @@ import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    PlotComponent, 
+    SearchComponent, 
     SimpleSearchComponent, 
     AdvancedSearchComponent, 
     QueryBuilderComponent, PropertyParamsComponent
   ],
   imports: [
     CommonModule,
-    PlotRoutingModule,
+    SearchRoutingModule,
     Select2Module,
     FormsModule
   ]
 })
-export class PlotModule { }
+export class SearchModule { }
