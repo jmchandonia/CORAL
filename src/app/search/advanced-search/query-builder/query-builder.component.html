@@ -10,16 +10,11 @@
 </select2>
   <label class="mt-2">Property Parameters</label>
   <app-property-params 
-    *ngFor="let param of queryMatch?.params" 
+    *ngFor="let param of queryMatch?.params; let idx = index;" 
     [data]="param"
     (removed)="removePropertyParam(param)"
+    (updated)="updatePropertyParam(idx, $event)"
   >
   </app-property-params>
   <app-property-params [isEmpty]="true" (added)="addPropertyParam($event)" style="color: orange!important"></app-property-params>
-  <!-- <app-property-params 
-    *ngFor="let param of queryMatch?.params" 
-    [data]="param"
-    (removed)="removePropertyParam(param)"
-  > -->
-  <!-- </app-property-params> -->
 </div>

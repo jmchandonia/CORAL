@@ -1,4 +1,8 @@
-<app-query-builder [queryMatch]="queryBuilderObject?.queryMatch"></app-query-builder>
-<app-query-builder [queryMatch]="queryBuilderObject?.connectsUpTo"></app-query-builder>
-<app-query-builder [queryMatch]="queryBuilderObject?.connectsDownTo"></app-query-builder>
+<app-query-builder
+    [connection]="'queryMatch'"
+ ></app-query-builder>
+<app-query-builder
+    [connection]="'connectsUpTo'"></app-query-builder>
+<app-query-builder 
+    [connection]="'connectsDownto'"></app-query-builder>
 <button (click)="testObject()">TestButton</button>

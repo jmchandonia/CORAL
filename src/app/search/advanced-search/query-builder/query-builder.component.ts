@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
+import { QueryBuilderService } from '../../../shared/services/query-builder.service';
 
 @Component({
   selector: 'app-query-builder',
@@ -9,8 +10,12 @@ import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
 })
 export class QueryBuilderComponent implements OnInit {
 
+  private queryMatch: QueryMatch = new QueryMatch();
+  // make queryMatch input a set function that assigns data value to this.queryMatch
+  // @Input() set data(qMatch: QueryMatch) { this.queryMatch = qMatch }
+  @Input() connection: string;
+  @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
 
-  @Input() queryMatch: QueryMatch;
 
   private dataTypeList: Array<Select2OptionData> = [
     {
@@ -39,36 +44,35 @@ export class QueryBuilderComponent implements OnInit {
     }
   ]
 
-  constructor() { }
+  constructor(private queryBuilder: QueryBuilderService) { }
 
   ngOnInit() {
   }
 
   updateObjectDataType(event) {
-    if (!this.queryMatch) {
-      this.queryMatch = new QueryMatch(event.data[0].text);
-      // add logic here that will disable propertyParams fields until this is selected
-    } else {
-      this.queryMatch.dataType = event.data[0].text;
-      // here is where we would want to dereference all propertyParams if data type gets updated
-    }
-    // add some logic here that will call getAttributes http method
+    this.queryMatch.dataType = event.data[0].text;
+    // make dropdown for propertyparams disabled until this is selected
+    // remove old propertyparam references is a new type is selected
+    this.updateQueryMatch();
+  }
+
+  updatePropertyParam(index, event) {
+    this.queryMatch.params[index][event.key] = event.value.text;
+    this.updateQueryMatch();
   }
 
   removePropertyParam(param) {
-    if (this.propertyParams.length === 1) {
-      Object.assign(this.propertyParams[0], {
-        type: '',
-        match: 'contains',
-        keyword: ''
-      });
-    } else {
-      this.propertyParams = this.propertyParams.filter(item => item !== param);
-    }
+    this.queryMatch.params = this.queryMatch.params.filter(p => p !== param);
+    this.updateQueryMatch();
   }
 
   addPropertyParam(param) {
     this.queryMatch.params.push(param);
+    this.updateQueryMatch();
+  }
+
+  updateQueryMatch() {
+    this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
   }
 
 }
