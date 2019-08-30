@@ -21,6 +21,11 @@ export class QueryBuilderService {
     }
   }
 
+  resetObject() {
+    delete this.queryBuilderObject;
+    this.queryBuilderObject = new QueryBuilder();
+  }
+
   getUpdatedObject() {
     return this.queryBuilderSub.asObservable();
   }
