@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PlotComponent } from './plot.component';
+import { SearchComponent } from './search.component';
 import { SimpleSearchComponent } from './simple-search/simple-search.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 
 const routes: Routes = [
   { 
-    path: 'plot', component: PlotComponent, children: [
+    path: 'search', component: SearchComponent, children: [
       {path: '', redirectTo: 'search', pathMatch: 'full'},
       {path: 'search', component: SimpleSearchComponent},
       {path: 'search/advanced', component: AdvancedSearchComponent}
@@ -21,4 +21,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class PlotRoutingModule { }
+export class SearchRoutingModule { }

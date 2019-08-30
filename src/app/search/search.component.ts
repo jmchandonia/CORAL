@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
-  selector: 'app-plot',
-  templateUrl: './plot.component.html',
-  styleUrls: ['./plot.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
-export class PlotComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
   currentUrl = '';
 
