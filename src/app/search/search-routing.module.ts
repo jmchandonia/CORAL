@@ -3,13 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { SearchComponent } from './search.component';
 import { SimpleSearchComponent } from './simple-search/simple-search.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
+import { SearchResultComponent } from './search-result/search-result.component';
 
 const routes: Routes = [
   { 
     path: 'search', component: SearchComponent, children: [
       {path: '', redirectTo: 'simple', pathMatch: 'full'},
       {path: 'simple', component: SimpleSearchComponent},
-      {path: 'advanced', component: AdvancedSearchComponent}
+      {path: 'advanced', component: AdvancedSearchComponent},
+      {path: 'result', component: SearchResultComponent},
     ]
  }
 ];

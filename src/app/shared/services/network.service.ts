@@ -28,6 +28,10 @@ export class NetworkService {
     });
   }
 
+  submitQuery() {
+    return this._http.get('https://jsonplaceholder.typicode.com/posts');
+  }
+
   getPropertyValuesDirect(connection) {
     return connection ? 
       this.dataTypeStore[connection]

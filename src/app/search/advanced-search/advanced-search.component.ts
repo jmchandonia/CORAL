@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-advanced-search',
@@ -12,7 +13,10 @@ export class AdvancedSearchComponent implements OnInit {
 
   private queryBuilderObject: QueryBuilder;
 
-  constructor(private queryBuilder: QueryBuilderService) { }
+  constructor(
+    private queryBuilder: QueryBuilderService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
 
