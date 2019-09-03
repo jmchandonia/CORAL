@@ -2,12 +2,12 @@
 <div class="search-options-container">
   <span 
   [ngClass]="currentUrl.includes('advanced') ? 'search-option' : 'search-option-selected'"
-  [routerLink]="['search']"
+  [routerLink]="['simple']"
   >Simple Search</span>
   <span class="search-option"> | </span>
   <span 
     [ngClass]="currentUrl.includes('advanced') ? 'search-option-selected' : 'search-option'"
-    [routerLink]="['search/advanced']"
+    [routerLink]="['advanced']"
   >Advanced Search</span>
 </div>
 

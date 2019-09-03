@@ -31,6 +31,10 @@ export class PropertyParamsComponent implements OnInit {
 
   private matchTypes: Array<Select2OptionData> = [
     {
+      id: '',
+      text: ''
+    },
+    {
       id: '0',
       text: 'Match'
     },
@@ -61,7 +65,10 @@ export class PropertyParamsComponent implements OnInit {
     } else {
       this.network.getPropertyValues()
       .subscribe(data => {
-        if (data.connection === this.connection) {
+        if (
+            data.connection === this.connection 
+            || (!this.connection && data.connection === 'queryMatch')
+          ) {
          const newData = data.results.map(item => {
            return { id: item.id.toString(), text: item.title }
          });

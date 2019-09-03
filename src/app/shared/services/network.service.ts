@@ -29,7 +29,9 @@ export class NetworkService {
   }
 
   getPropertyValuesDirect(connection) {
-    return this.dataTypeStore[connection];
+    return connection ? 
+      this.dataTypeStore[connection]
+      : this.dataTypeStore.queryMatch;
   }
 
   getPropertyValues() {
