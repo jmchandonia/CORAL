@@ -15,3 +15,15 @@
 .data-information-header h5 {
     margin-left: 20px;
 }
+
+.data-divider {
+    width: 90%;
+    max-width: 800px;
+    margin: 0px auto;
+    margin-bottom: 10px;
+}
+
+.search-button-footer {
+    max-width: 800px;
+    margin: 0px auto;
+}
