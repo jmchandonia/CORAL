@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
+import { NetworkService } from '../../../shared/services/network.service';
 import { QueryBuilderService } from '../../../shared/services/query-builder.service';
 
 @Component({
@@ -44,7 +45,10 @@ export class QueryBuilderComponent implements OnInit {
     }
   ]
 
-  constructor(private queryBuilder: QueryBuilderService) { }
+  constructor(
+    private queryBuilder: QueryBuilderService,
+    private network: NetworkService
+  ) { }
 
   ngOnInit() {
   }
@@ -53,6 +57,7 @@ export class QueryBuilderComponent implements OnInit {
     this.queryMatch.dataType = event.data[0].text;
     // make dropdown for propertyparams disabled until this is selected
     // remove old propertyparam references is a new type is selected
+    this.network.getDataTypeProperties(this.queryMatch.dataType, this.connection);
     this.updateQueryMatch();
   }
 
