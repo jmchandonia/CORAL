@@ -12,6 +12,10 @@ import { Router } from '@angular/router';
 export class AdvancedSearchComponent implements OnInit {
 
   private queryBuilderObject: QueryBuilder;
+  private showConnectionsUp = false;
+  private showConnectionsDown = false;
+  private showProcessesUp = false;
+  private showProcessesDown = false;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -37,10 +41,6 @@ export class AdvancedSearchComponent implements OnInit {
 
   removeProcess(process, queryParam) {
     this.queryBuilder.removeProcessParam(process, queryParam);
-  }
-
-  testObject() {
-    console.log('QBO -> ',  JSON.stringify(this.queryBuilderObject));
   }
 
 }
