@@ -17,7 +17,7 @@
       name="matchType"
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Match Type' }"
-      [data]="propertyTypes"
+      [data]="matchTypes"
       [value]="findDropdownValue(matchTypeBuilder)"
       (valueChanged)="updateParam('matchType', $event)"
     ></select2>
@@ -45,7 +45,7 @@
       *ngIf="isEmpty"
     >add_circle_outline</i>
   </div>
-  <hr style="color: green; margin-bottom: 10px; width: 95%">
+  <hr style="margin-bottom: 10px; width: 95%">
 </div>
 
 <div class="row mt-1" *ngIf="isEmpty">
@@ -66,7 +66,7 @@
       name="matchType"
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Match Type' }"
-      [data]="propertyTypes"
+      [data]="matchTypes"
       [(ngModel)]="matchTypeBuilder"
       (valueChanged)="matchTypeBuilder = $event.data[0].text"
     ></select2>

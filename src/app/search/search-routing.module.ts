@@ -7,9 +7,9 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
 const routes: Routes = [
   { 
     path: 'search', component: SearchComponent, children: [
-      {path: '', redirectTo: 'search', pathMatch: 'full'},
-      {path: 'search', component: SimpleSearchComponent},
-      {path: 'search/advanced', component: AdvancedSearchComponent}
+      {path: '', redirectTo: 'simple', pathMatch: 'full'},
+      {path: 'simple', component: SimpleSearchComponent},
+      {path: 'advanced', component: AdvancedSearchComponent}
     ]
  }
 ];
