@@ -7,7 +7,7 @@
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Attributes' }"
       [data]="propertyTypes"
-      [value]="findDropdownValue(attributeBuilder)"
+      [value]="findDropdownValue(attributeBuilder, 'propertyTypes')"
       (valueChanged)="updateParam('attribute', $event)"
     ></select2>
   </div>
@@ -18,7 +18,7 @@
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Match Type' }"
       [data]="matchTypes"
-      [value]="findDropdownValue(matchTypeBuilder)"
+      [value]="findDropdownValue(matchTypeBuilder, 'matchTypes')"
       (valueChanged)="updateParam('matchType', $event)"
     ></select2>
   </div>
@@ -29,7 +29,7 @@
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Keyword(s)'}"
       [data]="propertyTypes"
-      [value]="findDropdownValue(keywordBuilder)"
+      [value]="findDropdownValue(keywordBuilder, 'propertyTypes')"
       (valueChanged)="updateParam('keyword', $event)"
     ></select2>
   </div>

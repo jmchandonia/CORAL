@@ -8,6 +8,7 @@ import { Select2Module } from 'ng2-select2';
 import { QueryBuilderComponent } from './advanced-search/query-builder/query-builder.component';
 import { PropertyParamsComponent } from './advanced-search/query-builder/property-params/property-params.component';
 import { FormsModule } from '@angular/forms';
+import { SearchResultComponent } from './search-result/search-result.component';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { FormsModule } from '@angular/forms';
     SearchComponent, 
     SimpleSearchComponent, 
     AdvancedSearchComponent, 
-    QueryBuilderComponent, PropertyParamsComponent
+    QueryBuilderComponent, PropertyParamsComponent, SearchResultComponent
   ],
   imports: [
     CommonModule,

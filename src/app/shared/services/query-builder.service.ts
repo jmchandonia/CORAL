@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
+import { NetworkService } from './network.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class QueryBuilderService {
   private queryBuilderObject: QueryBuilder = new QueryBuilder();
   public queryBuilderSub = new Subject<QueryBuilder>();
 
-  constructor() { }
+  constructor(private network: NetworkService) { }
 
   getCurrentObject() {
     if (!this.queryBuilderObject) {
@@ -49,6 +50,10 @@ export class QueryBuilderService {
     this.queryBuilderObject[process] = this.queryBuilderObject[process]
       .filter(param => param !== queryParam);
     this.queryBuilderSub.next(this.queryBuilderObject);
+  }
+
+  submitQuery() {
+    return this.network.submitQuery()
   }
 
 

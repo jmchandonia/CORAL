@@ -1,4 +1,5 @@
-
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
 
 .btn-primary {
     background-color:#00365C!important; 

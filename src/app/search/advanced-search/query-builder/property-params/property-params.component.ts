@@ -89,8 +89,10 @@ export class PropertyParamsComponent implements OnInit {
     this.keywordBuilder = '';
   }
 
-  findDropdownValue(builder) {
-    return this.propertyTypes.find(item => item.text === builder).id
+  findDropdownValue(builder, dropDownType) {
+    return this.propertyTypes.length > 1 ? 
+    this[dropDownType].find(item => item.text === builder).id
+    : '';
   }
 
   updateParam(builder, event) {
