@@ -9,7 +9,7 @@ export class NetworkService {
 
   private networkSub: Subject<any> = new Subject();
 
-  private dataTypeStore = {
+  private dataModelStore = {
     queryMatch: [],
     connectsUpTo: [],
     connectsDownTo: [],
@@ -17,10 +17,10 @@ export class NetworkService {
 
   constructor(private _http: HttpClient) { }
 
-  getDataTypeProperties(dataType, connection) {
+  getDataModelProperties(dataModel, connection) {
     this._http.get('https://jsonplaceholder.typicode.com/posts')
     .subscribe(results => {
-      this.dataTypeStore[connection] = results;
+      this.dataModelStore[connection] = results;
       this.networkSub.next({
         connection: connection,
         results: results
@@ -34,8 +34,8 @@ export class NetworkService {
 
   getPropertyValuesDirect(connection) {
     return connection ? 
-      this.dataTypeStore[connection]
-      : this.dataTypeStore.queryMatch;
+      this.dataModelStore[connection]
+      : this.dataModelStore.queryMatch;
   }
 
   getPropertyValues() {

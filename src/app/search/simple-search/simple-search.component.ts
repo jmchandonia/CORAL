@@ -10,7 +10,7 @@ import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryB
 })
 export class SimpleSearchComponent implements OnInit {
 
-  private dataTypeList: Array<Select2OptionData> = [
+  private dataModelList: Array<Select2OptionData> = [
     {
       id: '0',
       text: 'N-dimensional array'
@@ -60,8 +60,8 @@ export class SimpleSearchComponent implements OnInit {
     this.queryBuilderObject = this.queryBuilder.getCurrentObject();
   }
 
-  updateDataType(event) {
-    this.queryMatch.dataType = event.data[0].text;
+  updateDataModel(event) {
+    this.queryMatch.dataModel = event.data[0].text;
   }
 
   updateKeywords(event) {

@@ -8,10 +8,15 @@ export class QueryBuilder {
 }
 
 export class QueryMatch {
-    constructor(dType?: string) { 
+    constructor(
+        dType?: string, 
+        dModel?: string
+    ) { 
         this.dataType = dType;
+        this.dataModel = dModel;
         this.params = [];
     }
+    public dataModel: string;
     public dataType: string;
     public params: QueryParam[];
 }

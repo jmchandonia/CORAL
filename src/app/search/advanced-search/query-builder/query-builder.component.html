@@ -3,9 +3,9 @@
   <select2
     [options]="{ width: '100%', placeholder: 'Select a data type stored in our system' }"
     [cssImport]="true"
-    [data]="dataTypeList"
+    [data]="dataModelList"
     name="data-type"
-    (valueChanged)="updateObjectDataType($event)"
+    (valueChanged)="updateObjectDataModel($event)"
   >
 </select2>
   <label class="mt-2">Property Parameters</label>
