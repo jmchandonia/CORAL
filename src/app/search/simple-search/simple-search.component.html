@@ -3,10 +3,10 @@
   <label for="data-type-selector">Data Type</label>
   <select2 
     [options]="select2Options" 
-    [data]="dataTypeList" 
+    [data]="dataModelList" 
     [cssImport]="true"
     [value]="'Select Data Type'"
-    (valueChanged)="updateDataType($event)"
+    (valueChanged)="updateDataModel($event)"
     name="data-type-selector"></select2>
   <label for="keyword-selector" style="margin-top: 10px;">Keywords</label>
   <select2

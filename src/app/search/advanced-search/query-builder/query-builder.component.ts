@@ -11,14 +11,14 @@ import { QueryBuilderService } from '../../../shared/services/query-builder.serv
 })
 export class QueryBuilderComponent implements OnInit {
 
-  private queryMatch: QueryMatch = new QueryMatch();
+  private queryMatch: QueryMatch = new QueryMatch('core'); // need to program in dataType
   // make queryMatch input a set function that assigns data value to this.queryMatch
   // @Input() set data(qMatch: QueryMatch) { this.queryMatch = qMatch }
   @Input() connection: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
 
 
-  private dataTypeList: Array<Select2OptionData> = [
+  private dataModelList: Array<Select2OptionData> = [
     {
       id: '',
       text: ''
@@ -53,11 +53,11 @@ export class QueryBuilderComponent implements OnInit {
   ngOnInit() {
   }
 
-  updateObjectDataType(event) {
-    this.queryMatch.dataType = event.data[0].text;
+  updateObjectDataModel(event) {
+    this.queryMatch.dataModel = event.data[0].text;
     // make dropdown for propertyparams disabled until this is selected
     // remove old propertyparam references is a new type is selected
-    this.network.getDataTypeProperties(this.queryMatch.dataType, this.connection);
+    this.network.getDataModelProperties(this.queryMatch.dataModel, this.connection);
     this.updateQueryMatch();
   }
 
