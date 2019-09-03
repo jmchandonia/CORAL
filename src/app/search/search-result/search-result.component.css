@@ -2,3 +2,10 @@
     color: #00365C;
     cursor: pointer;
 }
+
+.query-container {
+    border-radius: 20px;
+    background-color: rgb(211, 209, 208);
+    color: #00365C;
+    padding: 20px;
+}
