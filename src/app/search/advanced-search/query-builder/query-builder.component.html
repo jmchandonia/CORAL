@@ -12,9 +12,17 @@
   <app-property-params 
     *ngFor="let param of queryMatch?.params; let idx = index;" 
     [data]="param"
+    [isEmpty]="false"
+    [connection]="connection"
     (removed)="removePropertyParam(param)"
     (updated)="updatePropertyParam(idx, $event)"
   >
   </app-property-params>
-  <app-property-params [isEmpty]="true" (added)="addPropertyParam($event)" style="color: orange!important"></app-property-params>
+  <app-property-params
+    [isEmpty]="true" 
+    [connection]="connection" 
+    (added)="addPropertyParam($event)" 
+    style="color: orange!important"
+  >
+  </app-property-params>
 </div>

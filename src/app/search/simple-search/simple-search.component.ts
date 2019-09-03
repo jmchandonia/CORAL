@@ -69,7 +69,7 @@ export class SimpleSearchComponent implements OnInit {
   }
 
   submitSearch() {
-    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch));
+    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch))
   }
 
 }
