@@ -62,7 +62,7 @@ export class QueryBuilderComponent implements OnInit {
   }
 
   updatePropertyParam(index, event) {
-    this.queryMatch.params[index][event.key] = event.value.text;
+    this.queryMatch.params[index][event.key] = event.value.data[0].text;
     this.updateQueryMatch();
   }
 

@@ -15,6 +15,7 @@ export class SearchResultComponent implements OnInit {
   private results = [];
   private dataTable: any;
   private searchQuery: QueryBuilder;
+  private showQuery = false;
 
   constructor(
     private queryBuilder: QueryBuilderService,
