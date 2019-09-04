@@ -1,0 +1,25 @@
+
+<div class="simple-search-container">
+  <label for="data-type-selector">Data Type</label>
+  <select2 
+    [options]="select2Options" 
+    [data]="dataModelList" 
+    [cssImport]="true"
+    [value]="'Select Data Type'"
+    (valueChanged)="updateDataModel($event)"
+    name="data-type-selector"></select2>
+  <label for="keyword-selector" style="margin-top: 10px;">Keywords</label>
+  <select2
+    [options]="select2Options"
+    [data]="keywordList"
+    [cssImport]="true"
+    [value]="null"
+    (valueChanged)="updateKeywords($event)"
+    name="keyword-selector"
+    ></select2>
+    <div class="row">
+      <div class="col-2 offset-10">
+          <button (click)="submitSearch()" class="btn btn-primary" style="margin-top: 10px; margin-left: -10px;">Search</button>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.search-options-container {
+    width: 500px;
+    margin: 0px auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.search-option {
+    color: #A09E9D;
+}
+
+.search-option-selected {
+    color: #00365C;
+    font-weight: bold;
+}
