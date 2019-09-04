@@ -1,0 +1,66 @@
+<div class="data-information-header">
+    <h5 style="display: inline-block">Data Information</h5>
+</div>
+<app-query-builder
+    [connection]="'queryMatch'"></app-query-builder>
+ <div class="data-information-header" (click)="showConnectionsUp = !showConnectionsUp">
+    <i class="material-icons" *ngIf="!showConnectionsUp" style="font-size: 1.25rem;">arrow_right</i>
+    <i class="material-icons" *ngIf="showConnectionsUp" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Parent Connections</h5>
+</div>
+<hr class="data-divider" *ngIf="!showConnectionsUp" />
+<app-query-builder
+    [connection]="'connectsUpTo'" [hidden]="!showConnectionsUp"
+    ></app-query-builder>
+<div class="data-information-header" (click)="showConnectionsDown = !showConnectionsDown">
+    <i class="material-icons" *ngIf="!showConnectionsDown" style="font-size: 1.25rem;">arrow_right</i>
+    <i class="material-icons" *ngIf="showConnectionsDown" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Child Connections</h5>
+</div>
+<hr class="data-divider" *ngIf="!showConnectionsDown" />
+<app-query-builder 
+    [connection]="'connectsDownto'" [hidden]="!showConnectionsDown"
+    ></app-query-builder>
+<div class="data-information-header" (click)="showProcessesUp = !showProcessesUp">
+    <i class="material-icons" *ngIf="!showProcessesUp" style="font-size: 1.25rem;">arrow_right</i>
+    <i class="material-icons" *ngIf="showProcessesUp" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Parent Processes</h5>
+</div>
+<hr class="data-divider" *ngIf="!showProcessesUp" />
+<div class="advanced-search-container" [hidden]="!showProcessesUp">
+    <app-property-params
+        *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
+        [data]="queryMatch"
+        (updated)="updateProcess('processesUp', idx, $event)"
+        (removed)="removeProcess('processesUp', $event)"
+        ></app-property-params>
+    <app-property-params
+        [isEmpty]="true"
+        (added)="addProcess('processesUp', $event)"
+        ></app-property-params>
+</div>
+<div class="data-information-header" (click)="showProcessesDown = !showProcessesDown">
+        <i class="material-icons" *ngIf="!showProcessesDown" style="font-size: 1.25rem;">arrow_right</i>
+        <i class="material-icons" *ngIf="showProcessesDown" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Child Processes</h5>
+</div>
+<hr class="data-divider" *ngIf="!showProcessesDown" />
+<div class="advanced-search-container" [hidden]="!showProcessesDown">
+    <app-property-params
+        *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
+        [data]="queryMatch"
+        (updated)="updateProcess('processesDown', idx, $event)"
+        (removed)="removeProcess('processesDown', $event)"
+        ></app-property-params>
+    <app-property-params
+        [isEmpty]="true"
+        (added)="addProcess('processesDown', $event)"
+        ></app-property-params>
+</div>
+<div class="search-button-footer">
+    <div class="row">
+        <div class="col-2 offset-10">
+            <button class="btn btn-primary" [routerLink]="['../result']">Search</button>
+        </div>
+    </div>
+</div>

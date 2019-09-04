@@ -1,0 +1,14 @@
+
+<div class="search-options-container" *ngIf="!currentUrl.includes('result')">
+  <span 
+  [ngClass]="currentUrl.includes('advanced') ? 'search-option' : 'search-option-selected'"
+  [routerLink]="['simple']"
+  >Simple Search</span>
+  <span class="search-option"> | </span>
+  <span 
+    [ngClass]="currentUrl.includes('advanced') ? 'search-option-selected' : 'search-option'"
+    [routerLink]="['advanced']"
+  >Advanced Search</span>
+</div>
+
+<router-outlet></router-outlet>
