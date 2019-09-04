@@ -62,7 +62,7 @@ class ArangoService:
     def find_all(self, type_name, category):
         aql = 'FOR x IN @@collection RETURN x'        
         aql_bind = {'@collection': category + type_name}
-        print('aql_bind:', aql_bind )
+        # print('aql_bind:', aql_bind )
 
         return self.find(aql, aql_bind, 1000)
 

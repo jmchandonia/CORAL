@@ -101,7 +101,7 @@ class Workspace:
         self.__arango_service = arango_service
         self.__dtype_2_id_offset = {}
         self.__init_id_offsets()
-        print('Workspace initialized!')
+        # print('Workspace initialized!')
 
 
         # self.__dtype_2_id_offset = {}
