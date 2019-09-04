@@ -3,14 +3,18 @@ from flask import Response
 from flask import request
 from flask_cors import CORS
 import pandas as pd
-from . import services
-from .brick import Brick
+
+# from . import services
+# from .brick import Brick
+
 from .dataprovider import DataProvider
-from .typedef import TYPE_CATEGORY_STATIC
+from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 
 app = Flask(__name__)
 CORS(app)
-
+dp = DataProvider()
+svs = dp._get_services()
+cns = dp._get_constants()
 
 @app.route("/")
 def hello():
@@ -19,21 +23,21 @@ def hello():
 @app.route("/search_ont_dtypes/<value>", methods=['GET'])
 def search_ont_dtypes(value):
     # value = request.args.get('term')
-    return _search_oterms(services.ontology.data_types, value)
+    return _search_oterms(svs['ontology'].data_types, value)
 
 @app.route("/search_ont_all/<value>", methods=['GET'])
 def search_ont_all(value):
     # value = request.args.get('term')
-    return _search_oterms(services.ontology.all, value)
+    return _search_oterms(svs['ontology'].all, value)
 
 @app.route("/search_ont_units/<value>", methods=['GET'])
 def search_ont_units(value):
     # value = request.args.get('term')
-    return _search_oterms(services.ontology.units, value)
+    return _search_oterms(svs['ontology'].units, value)
 
 @app.route("/brick_type_templates", methods=['GET'])
 def brick_type_templates():
-    file_contxt = open(services._BRICK_TYPE_TEMPLATES_FILE).read()
+    file_contxt = open(cns['_BRICK_TYPE_TEMPLATES_FILE']).read()
     res = json.loads( file_contxt )
     return  json.dumps( {
         'results': res['types']
@@ -63,8 +67,15 @@ def core_types():
     #     props = services.arango_service.get_entity_properties(ctype)        
     #     res.append( { 'type' :ctype, 'props': props} )
 
-    type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
-    res = [ {'type': td.name, 'props': td.property_names} for td in type_defs]
+
+    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
+    for td in type_defs:
+        res.append({'type': td.name, 'props': td.property_names})
+
+    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+    # res = [ {'type': td.name, 'props': td.property_names} for td in type_defs]
+    for td in type_defs:
+        res.append({'type': td.name, 'props': td.property_names})
 
     return  json.dumps({
         'results': res
@@ -116,14 +127,32 @@ def do_search():
         print('Searching data')
         print(search_data)
 
-        dp = DataProvider()
+        # dp = DataProvider()
         provider = dp._get_type_provider(search_data['dataType'])
         q = provider.query()
         for criterion in search_data['criteriaHas']:
             # print('criterion = ', criterion)
             if 'property' not in criterion:
                 continue
-            q.has({criterion['property']: criterion['value']})
+
+            prop_name = criterion['property']
+            value = criterion['value']
+
+            # update value
+            itype_def = svs['indexdef'].get_type_def(search_data['dataType'])
+            iprop_def = itype_def.get_property_def(prop_name)
+            if iprop_def.scalar_type == 'int':
+                value = int(value)
+            if iprop_def.scalar_type == 'float':
+                value = float(value)            
+
+            q.has({prop_name: {criterion['operation']: value}})
+
+        for criterion in search_data['criteriaProcessOutput']:
+            prop_name = criterion['property']
+            value = criterion['value']
+            q.is_output_of_process({prop_name: {criterion['operation']: value}})
+
         res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
         print(res)
         
@@ -147,11 +176,25 @@ def do_search():
             'res': res
     } )
 
+@app.route("/brick/<brick_id>", methods=['GET'])
+def get_brick(brick_id):
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    
+    return json.dumps( {
+            'status': 'success',
+            'res': br.to_dict()
+    } )
+
+
+
+
 @app.route("/do_report/<value>", methods=['GET'])
 def do_report(value):
-    dp = DataProvider()
-    df = getattr(dp.reports, value)
-    res = df.head(n=100).to_json(orient="table", index=False)
+    report = getattr(svs['reports'], value)
+    # res = df.head(n=100).to_json(orient="table", index=False)
+    res = report.to_df().head(n=100).to_json(orient="table", index=False)
+    # res = df._repr_html_()
 
     return  json.dumps( {
             'status': 'success',
@@ -258,7 +301,7 @@ def _create_brick(brick_data):
         print('Dim size = %s' % dim_size)
         
     #TODO: get type term 
-    brick_type_term = services.ontology.data_types.find_id('DA:0000028')
+    brick_type_term = svs['ontology'].data_types.find_id('DA:0000028')
     brick_name = brick_data['name'] if "name" in brick_data else ""
     br = Brick(type_term=brick_type_term, 
         dim_terms = dim_type_terms, 
@@ -295,7 +338,7 @@ def _create_brick(brick_data):
 
 
 def _get_term(term_data):
-    return services.ontology.all.find_id( term_data['id'] ) if term_data['id'] != '' else None
+    return svs['ontology'].all.find_id( term_data['id'] ) if term_data['id'] != '' else None
 
 
 def _search_oterms(ontology, value):

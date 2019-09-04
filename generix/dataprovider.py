@@ -8,7 +8,6 @@ from .user_profile import UserProfile
 
 class DataProvider:
     def __init__(self):
-        services._init_db_connection()
         services._init_services()
 
         self.__user_name = 'default'
@@ -31,6 +30,17 @@ class DataProvider:
         else:
             provider = EntityProvider(type_def)
         return provider
+
+    def _get_services(self):
+        return {
+            'ontology': services.ontology,
+            'reports' : services.reports,
+            'indexdef': services.indexdef
+        }
+    def _get_constants(self):
+        return {
+            '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE
+        }
 
 class GenericsProvider:
     def __init__(self):
