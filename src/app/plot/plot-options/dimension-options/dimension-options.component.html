@@ -1,0 +1,53 @@
+<div class="data-information-header">
+  <h5>{{dimension}} direction</h5>
+</div>
+<div class="option-container">
+  <div class="row">
+    <div class="col-6">
+      <label for="fromDimension">From Dimension</label>
+      <select2
+        name="fromDimension"
+        [cssImport]="true"
+        [options]="{width: '100%'}"
+      ></select2>
+    </div>
+    <div class="col-6">
+      <div class="form-check offset-1">
+        <input class="form-check-input" type="checkbox" value="" id="axisTitle" />
+        <label class="form-check-label" for="axisTitle">Axis Title</label>
+      </div>
+      <input class="form-control">
+    </div>
+  </div>
+  <div class="row">
+    <p class="header">Display Values From:</p>
+    <div class="display-values-container">
+      <div class="form-check ml-5" *ngFor="let v of dimensionVariables; let i = index;">
+        <input class="form-check-input" type="checkbox" value="" [id]="v" />
+        <label class="form-check-label" [for]="v">{{v}}</label>
+      </div>
+    </div>
+  </div>
+  <div class="row label-display-options">
+    <div class="col-4">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="axisLabels" />
+        <label class="form-check-label" for="axisLabels">Display axis labels as</label>
+      </div>
+    </div>
+    <div class="col-8">
+      <input class="form-control" />
+    </div>
+  </div>
+  <div class="row label-display-options">
+    <div class="col-4">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="hoverLabels" />
+        <label class="form-check-label" for="hoverLabels">Display hover Labels: </label> 
+      </div>
+    </div>
+    <div class="col-8">
+      <input class="form-control" />
+    </div>
+  </div>
+</div>

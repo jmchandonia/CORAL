@@ -8,6 +8,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class PlotOptionsComponent implements OnInit {
 
+  private dimensions = ['X', 'Y'];
+
   constructor(private route: ActivatedRoute) { }
   private objectId: string;
 
