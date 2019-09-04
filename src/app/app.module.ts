@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component'; 
 import { Select2Module } from 'ng2-select2';
 import { HttpClientModule } from '@angular/common/http';
+import { PlotModule } from './plot/plot.module';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
     SearchModule,
     HttpClientModule,
     Select2Module,
+    PlotModule
   ],
   providers: [],
   bootstrap: [AppComponent]
