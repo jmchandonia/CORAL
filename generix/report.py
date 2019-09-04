@@ -139,6 +139,20 @@ class PlainReport:
         )
         return html
 
+    def to_df(self):
+        rows = []
+        for item in self.__report_items:
+            row = {}
+            for i, prop_name in enumerate(self.__prop_names):
+                row[prop_name] = item.value(i)
+            row[self.__prop_count_name] = item.count
+            rows.append(row)
+        
+        names = self.__prop_names.copy()
+        names.append(self.__prop_count_name)
+        return pd.DataFrame(rows)[names]
+
+
 class GroupReport:
     def __init__(self, report_name, group_prop_names, group_prop_count_name, prop_names, prop_count_name, group_items):
         self.__report_name = report_name

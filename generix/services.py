@@ -2,6 +2,15 @@ import os
 import json
 
 from pyArango.connection import Connection
+# from . import ontology as ontology_mudule
+# from . import validator as validator_module
+# from . import workspace as workspace_module
+# from . import typedef as typedef_module
+# from . import indexdef as indexdef_module
+# from . import arango_service as arango_service_module
+# from . import report as report_module
+
+
 from .ontology import OntologyService, CashedTermProvider
 from .validator import TermValueValidationService
 from .workspace import Workspace
