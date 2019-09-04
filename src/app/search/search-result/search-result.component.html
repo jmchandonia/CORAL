@@ -1,0 +1,46 @@
+<div class="row mb-3 mt-3">
+  <div class="offset-1" [routerLink]="['../']">
+    <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
+    <span class="menu-option">Go Back</span>
+  </div>
+  <span 
+    class="menu-option col-2" 
+    (click)="showQuery = true"
+    *ngIf="!showQuery"
+    >| &nbsp;&nbsp;Show Query</span>
+  <span
+    class="menu-option col-2"
+    (click)="showQuery = false"
+    *ngIf="showQuery"
+    >| &nbsp;&nbsp;Hide Query</span>
+</div>
+<div class="row justify-content-center" *ngIf="showQuery">
+  <div class="query-container col-10">
+    <pre>{{ searchQuery | json }}</pre>
+  </div>
+</div>
+<hr />
+<div class="row justify-content-center">
+  <div class="table-container col-10">
+    <table class="table table-hover" cellspacing="1">
+      <thead>
+        <tr>
+          <th>a</th>
+          <th>b</th>
+          <th>c</th>
+          <th>options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let result of results">
+          <td>{{result.title}}</td>
+          <td>{{result.body}}</td>
+          <td>{{result.userId}}</td>
+          <td>
+            <button class="btn btn-primary">View Data</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
