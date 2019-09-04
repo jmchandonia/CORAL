@@ -5,3 +5,31 @@
   </div>
 </div>
 <hr />
+<div class="data-information-header">
+  <h5>Data Plotting Options</h5>
+</div>
+<div class="option-container">
+  <div class="row">
+      <div class="col-4">
+          <label for="graphType">Graph Type</label>
+          <select2
+          name="graphType"
+          [cssImport]="true"
+          [options]="{width: '100%'}"
+          >
+          </select2>
+        </div>
+        <div class="col-8">
+          <label for="graphTitle">Graph Title</label>
+          <input class="form-control" type="text" name="graphTitle" />
+        </div>
+  </div>
+</div>
+<app-dimension-options
+  *ngFor="let d of dimensions; let i = index;"
+  [dimension]="d"
+  (valueChanged)="updateDimensions(i)"
+  ></app-dimension-options>
+<div class="row bottom-button-row">
+  <button class="btn btn-primary offset-10">Plot Graph</button>
+</div>
