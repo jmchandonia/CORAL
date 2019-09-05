@@ -21,6 +21,7 @@
     "@angular/router": "~7.2.0",
     "@types/jquery": "^3.3.31",
     "bootstrap": "4.0.0-beta.2",
+    "class-transformer": "^0.2.3",
     "core-js": "^2.5.4",
     "datatables.net": "^1.10.19",
     "datatables.net-bs4": "^1.10.19",

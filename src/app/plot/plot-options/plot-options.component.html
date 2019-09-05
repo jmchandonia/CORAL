@@ -16,6 +16,7 @@
           name="graphType"
           [cssImport]="true"
           [options]="{width: '100%'}"
+          [data]="plotTypeOptions"
           >
           </select2>
         </div>
@@ -26,8 +27,9 @@
   </div>
 </div>
 <app-dimension-options
-  *ngFor="let d of dimensions; let i = index;"
-  [dimension]="d"
+  *ngFor="let _ of plotObject.dimensions; let i = index;"
+  [dimensions]="plotObject.dimensions"
+  [dimensionLabel]="dimensions[i]"
   (valueChanged)="updateDimensions(i)"
   ></app-dimension-options>
 <div class="row bottom-button-row">
