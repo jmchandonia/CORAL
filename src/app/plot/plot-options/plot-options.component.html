@@ -1,37 +1,42 @@
-<div class="row mb-3 mt-3">
-  <div class="offset-1" [routerLink]="['../../search/result']">
-    <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
-    <span class="menu-option">Back to Results</span>
+<form [formGroup]="plotForm">
+  <div class="row mb-3 mt-3">
+    <div class="offset-1" [routerLink]="['../../search/result']">
+      <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
+      <span class="menu-option">Back to Results</span>
+    </div>
   </div>
-</div>
-<hr />
-<div class="data-information-header">
-  <h5>Data Plotting Options</h5>
-</div>
-<div class="option-container">
-  <div class="row">
-      <div class="col-4">
-          <label for="graphType">Graph Type</label>
-          <select2
-          name="graphType"
-          [cssImport]="true"
-          [options]="{width: '100%'}"
-          [data]="plotTypeOptions"
-          >
-          </select2>
-        </div>
-        <div class="col-8">
-          <label for="graphTitle">Graph Title</label>
-          <input class="form-control" type="text" name="graphTitle" />
-        </div>
+  <hr />
+  <div class="data-information-header">
+    <h5>Data Plotting Options</h5>
   </div>
-</div>
-<app-dimension-options
-  *ngFor="let _ of plotObject.dimensions; let i = index;"
-  [dimensions]="plotObject.dimensions"
-  [dimensionLabel]="dimensions[i]"
-  (valueChanged)="updateDimensions(i)"
-  ></app-dimension-options>
-<div class="row bottom-button-row">
-  <button class="btn btn-primary offset-10">Plot Graph</button>
-</div>
+  <div class="option-container">
+    <div class="row">
+        <div class="col-4">
+            <label for="graphType">Graph Type</label>
+            <select2
+            [cssImport]="true"
+            [options]="{width: '100%'}"
+            [data]="plotTypeOptions"
+            ngDefaultControl
+            (valueChanged)="updatePlotType($event)"
+            formControlName="plotType"
+            >
+            </select2>
+          </div>
+          <div class="col-8">
+            <label for="graphTitle">Graph Title</label>
+            <input class="form-control" type="text" formControlName="graphTitle" />
+          </div>
+    </div>
+  </div>
+  <app-dimension-options
+    *ngFor="let _ of plotObject.dimensions; let i = index;"
+    [dimensions]="plotObject.dimensions"
+    [dimensionLabel]="dimensions[i]"
+    [index]="i"
+    [form]="plotForm"
+    ></app-dimension-options>
+  <div class="row bottom-button-row">
+    <button (click)="submit()" class="btn btn-primary offset-10">Plot Graph</button>
+  </div>
+</form>

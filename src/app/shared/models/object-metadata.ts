@@ -36,6 +36,7 @@ export class Dimension {
         Object.assign(this, args);
     }
     public type: string;
+    public index: number;
     // tslint:disable-next-line:variable-name
     public dim_vars: any[];
 }

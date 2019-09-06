@@ -1,7 +1,7 @@
 <div class="data-information-header">
   <h5>{{dimensionLabel.toUpperCase()}} dimension</h5>
 </div>
-<div class="option-container">
+<div class="option-container" [formGroup]="dimensionForm">
   <div class="row">
     <div class="col-6">
       <label for="fromDimension">From Dimension</label>
@@ -15,41 +15,46 @@
     </div>
     <div class="col-6">
       <div class="form-check offset-1">
-        <input class="form-check-input" type="checkbox" value="" id="axisTitle" />
+        <input class="form-check-input" formControlName="displayAxisTitle" type="checkbox" value="" id="axisTitle" />
         <label class="form-check-label" for="axisTitle">Axis Title</label>
       </div>
-      <input class="form-control">
+      <input formControlName="axisTitle" class="form-control">
     </div>
   </div>
   <div class="row" *ngIf="selectedValue">
     <p class="header">Display Values From:</p>
     <div class="display-values-container">
-      <div class="form-check ml-5" *ngFor="let d of selectedValue.dim_vars; let i = index;">
-        <input class="form-check-input" type="checkbox" value="" [id]="v" />
-        <label class="form-check-label" [for]="v">{{d}}</label>
+      <div class="form-check ml-5" formArrayName="displayValuesFrom" *ngFor="let d of displayValues.controls; let i = index;">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          [checked]="selectedValue.dim_vars.length === 1 ? 'checked' : ''"
+          [formControlName]="i"
+           />
+        <label class="form-check-label" [for]="v">{{selectedValue.dim_vars[i]}}</label>
       </div>
     </div>
   </div>
   <div class="row label-display-options">
     <div class="col-4">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="axisLabels" />
+        <input class="form-check-input" formControlName="displayAxisLabels" type="checkbox" value="" id="axisLabels" />
         <label class="form-check-label" for="axisLabels">Display axis labels as</label>
       </div>
     </div>
     <div class="col-8">
-      <input class="form-control" />
+      <input formControlName="displayAxisLabelsAs" class="form-control" />
     </div>
   </div>
   <div class="row label-display-options">
     <div class="col-4">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="hoverLabels" />
+        <input class="form-check-input" formControlName="displayHoverLabels" type="checkbox" value="" id="hoverLabels" />
         <label class="form-check-label" for="hoverLabels">Display hover Labels: </label> 
       </div>
     </div>
     <div class="col-8">
-      <input class="form-control" />
+      <input formControlName="displayHoverLabelsAs" class="form-control" />
     </div>
   </div>
 </div>

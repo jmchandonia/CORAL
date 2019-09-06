@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NetworkService } from './network.service';
 import { ObjectMetadata, ObjectDataInfo, Dimension } from '../models/object-metadata';
 import { DataQuery } from '../models/data-query';
+import { FormGroup, FormArray } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,21 @@ selectedObject = new ObjectMetadata({
 
   setDimension(axis, dimension) {
     this.dataQuery[axis] = parseInt(dimension, 10);
+  }
+
+  submitNewPlot(plot: FormGroup) {
+    const dims = plot.get('dimensions') as FormArray;
+    const obj = this.selectedObject;
+    const body: any = {
+      id: this.selectedObject.id,
+      x_dimension: {
+        dimension: obj.dimensions.indexOf(dims[0].get('fromDimension')),
+        dim_vars: this.selectedObject.dimensions.filter(d => dims[0].get('displayValuesFrom'))
+      }
+    };
+    if (dims[2]) {
+      body.z_direction = this.selectedObject.dimensions.indexOf(dims[2]);
+    }
   }
 
 }
