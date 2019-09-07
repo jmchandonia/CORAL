@@ -355,13 +355,11 @@ def _search_oterms(ontology, value):
         'results': res
     })
 
-
-
 if __name__ == "__main__":
-    
-    if cns['_HTTPS']['active']:
-        app.run(host='0.0.0.0', port=8081, 
-            ssl_context = (cns['_HTTPS']['cert_pem'], cns['_HTTPS']['key_pem']) )
+    port = cns['_WEB_SERVICE']['port']
+    if cns['_WEB_SERVICE']['https']:
+        app.run(host='0.0.0.0', port=port, 
+            ssl_context = (cns['_WEB_SERVICE']['cert_pem'], cns['_WEB_SERVICE']['key_pem']) )
     else:
-        app.run(host='0.0.0.0', port=8081)
+        app.run(host='0.0.0.0', port=port)
 
