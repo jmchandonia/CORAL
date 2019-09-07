@@ -39,7 +39,8 @@ class DataProvider:
         }
     def _get_constants(self):
         return {
-            '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE
+            '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE,
+            '_HTTPS': services._HTTPS
         }
 
 class GenericsProvider:
