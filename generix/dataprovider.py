@@ -112,3 +112,13 @@ class BrickProvider(EntityProvider):
 
     def load(self, brick_id):
         return BrickProvider._load_brick(brick_id)
+
+    def type_names(self):
+        names = []
+        itype_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)        
+        term_counts = services.ontology.term_stat( itype_def, 'data_type')        
+        for term_count in term_counts:
+            term = term_count[0]
+            names.append(term.term_name)
+        names.sort()
+        return names
