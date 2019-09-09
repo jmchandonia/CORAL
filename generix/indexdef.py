@@ -111,7 +111,7 @@ class IndexTypeDefService:
         
         return names
     
-    def get_type_defs(self, category):
+    def get_type_defs(self, category=None):
         type_defs = []
         for type_def in self.__type_defs:
             if category is not None and type_def.category != category:
