@@ -56,7 +56,7 @@ export class PlotOptionsComponent implements OnInit {
       fromDimension: '',
       displayValuesFrom: this.fb.array([]),
       displayAxisLabels: false,
-      displayAxisLabelsAs: '',
+      displayAxisLabelsAs: this.fb.array([]),
       displayHoverLabels: false,
       displayHoverLabelsAs: '',
       displayAxisTitle: false,
@@ -69,7 +69,8 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submit() {
-    this.objectGraphMap.submitNewPlot(this.plotForm);
+    // this.objectGraphMap.submitNewPlot(this.plotForm);
+    console.log('plot form', this.plotForm);
   }
 
 }

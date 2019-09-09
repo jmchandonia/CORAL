@@ -31,12 +31,17 @@ export class DimensionOptionsComponent implements OnInit {
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
   dimensionForm: FormGroup;
   displayValuesFrom: FormArray;
+  displayAxisLabelsAs: FormArray;
+  isLabelChecked = [];
 
   constructor(
     private objectGraphMap: ObjectGraphMapService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log('DIMENSION FORM', this.dimensionForm);
+    this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisValuesAs') as FormArray;
+   }
 
   setSelectedDimension(event) {
     this.selectedValue = this.allDimensions[event.value];
@@ -46,6 +51,9 @@ export class DimensionOptionsComponent implements OnInit {
 
   addDimensionVariables()  {
     this.displayValuesFrom = this.dimensionForm.get('displayValuesFrom') as FormArray;
+    console.log('DISPLAY VALUES FROM', this.displayValuesFrom);
+    this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisLabelsAs') as FormArray;
+    console.log('WHY DO YOU FORGET VARIABLE NAMES', this.displayAxisLabelsAs);
 
     // clear form value on select
     while (this.displayValuesFrom.length) {
@@ -62,6 +70,36 @@ export class DimensionOptionsComponent implements OnInit {
     }
   }
 
+  isChecked(index) {
+    return this.displayValuesFrom.at(index).value;
+  }
+
+  editAxisLabels(index) {
+    this.resetAxisLabels();
+    const newVar = this.selectedValue.dim_vars[index] + '=';
+    if (this.isChecked(index)) {
+      this.isLabelChecked.push(newVar);
+      this.displayAxisLabelsAs.push(new FormControl(newVar));
+    } else {
+      this.isLabelChecked = this.isLabelChecked.filter(item => {
+        return item !== newVar;
+      });
+      this.isLabelChecked.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
+    }
+    console.log('UPDATED DISPLAYAXISLABELSAS', this.displayAxisLabelsAs);
+    console.log(this.isLabelChecked);
+  }
+
+  findVariableNumber(value) {
+    return this.isLabelChecked.indexOf(value + '=') + 1;
+  }
+
+  resetAxisLabels() {
+    while (this.displayAxisLabelsAs.length) {
+      this.displayAxisLabelsAs.removeAt(0);
+    }
+  }
+
   get displayValues() {
     return this.displayValuesFrom;
   }
@@ -74,7 +112,11 @@ export class DimensionOptionsComponent implements OnInit {
     return this.dimensionForm.get('displayHoverLabels').value;
   }
 
-  updateDimensionVariable(event) {
+  setNewLabels(labels) {
+    while (this.displayAxisLabelsAs.length) {
+      this.displayAxisLabelsAs.removeAt(0);
+    }
+    labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
   }
 
 }

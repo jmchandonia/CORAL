@@ -30,8 +30,13 @@
           type="checkbox" 
           [checked]="selectedValue.dim_vars.length === 1 ? 'checked' : ''"
           [formControlName]="i"
+          (change)="editAxisLabels(i)"
            />
         <label class="form-check-label" [for]="v">{{selectedValue.dim_vars[i]}}</label>
+        <span
+          class="badge badge-pill badge-primary ml-1"
+          *ngIf="isChecked(i)"
+        >V{{ findVariableNumber(selectedValue.dim_vars[i]) }}</span>
       </div>
     </div>
   </div>
@@ -43,7 +48,8 @@
       </div>
     </div>
     <div class="col-8">
-      <input formControlName="displayAxisLabelsAs" class="form-control" />
+      <!-- <input formControlName="displayAxisLabelsAs" class="form-control" /> -->
+      <app-axis-labeler [values]="isLabelChecked" (labelsChanged)="setNewLabels($event)"></app-axis-labeler>
     </div>
   </div>
   <div class="row label-display-options">

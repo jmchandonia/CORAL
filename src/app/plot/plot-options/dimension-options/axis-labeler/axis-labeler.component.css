@@ -1,0 +1,38 @@
+.container {
+    min-height: 28px;
+    background-color: white;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
+}
+
+input {
+    height: 28px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.label-item {
+    display: block;
+}
+
+.container span {
+    margin-top: 5px;
+}
+
+.display-options { 
+    position: relative;
+}
+
+.display-options input {
+    width: 80%;
+    margin-left: 15px;
+}
+
+.edit-button {
+    position: relative;
+    left: 400px;
+    font-size: 0.8rem;
+    color: blue;
+}

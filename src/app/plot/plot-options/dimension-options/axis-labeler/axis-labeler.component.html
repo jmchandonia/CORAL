@@ -1,0 +1,21 @@
+<div class="container col-12">
+  <span
+    class="label-item"
+    *ngFor="let value of valueLabels; let i = index;"
+  >{{value}}<span class="badge badge-pill badge-primary">V{{i+1}}</span>, 
+  </span>
+  <span 
+    *ngIf="valueLabels.length" 
+    class="edit-button"
+    (click)="toggleDisplayOptions()"
+    >Edit</span>
+  <hr *ngIf=displayOptions />
+  <div class="display-options" *ngIf="displayOptions">
+    <label for="edit-text-format">Format: </label>
+    <input
+      class="edit-text-format"
+      id="edit-text-format"
+      [(ngModel)]="format"
+      />
+  </div>
+</div>
