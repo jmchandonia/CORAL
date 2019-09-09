@@ -355,6 +355,38 @@ def _search_oterms(ontology, value):
         'results': res
     })
 
+######## 
+## NEW VERSION
+########
+
+@app.route("/generix/data_types", methods=['GET'])
+def generix_data_types():
+    res = []
+    
+    # Core types
+    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+    for td in type_defs:
+        res.append({
+            'dataType': td.name, 
+            'dataModel': td.name,
+            'category': TYPE_CATEGORY_STATIC
+            })
+
+    # Dynamic types
+    bp = dp._get_type_provider('Brick')
+    for dt_name in bp.type_names():
+        res.append({
+            'dataType': dt_name, 
+            'dataModel': 'Brick',
+            'category': TYPE_CATEGORY_DYNAMIC
+        })
+
+    res.sort(key=lambda x: x['dataType']) 
+    return  json.dumps({
+        'results': res
+    })
+
+
 if __name__ == "__main__":
     port = cns['_WEB_SERVICE']['port']
     if cns['_WEB_SERVICE']['https']:
