@@ -382,9 +382,49 @@ def generix_data_types():
         })
 
     res.sort(key=lambda x: x['dataType']) 
-    return  json.dumps({
-        'results': res
-    })
+    return  json.dumps({'results': res})
+
+@app.route("/generix/data_models", methods=['GET'])
+def generix_data_models():
+    res = {}
+
+    type_defs = svs['indexdef'].get_type_defs()
+    for td in type_defs:
+
+        pdefs = []
+        for pdef in td.property_defs:
+            pdefs.append( {'name': pdef.name, 'scalar_type': pdef.scalar_type} )
+
+        res[td.name] = {
+            'dataModel': td.name,
+            'category': td.category,
+            'properties': pdefs
+        }
+
+    return  json.dumps({'results': res})
+
+
+@app.route("/generix/search_operations", methods=['GET'])
+def generix_search_operations():
+    # '=':  FILTER_EQ,
+    # '==': FILTER_EQ,
+    # 'eq': FILTER_EQ,
+    # '>':  FILTER_GT,
+    # 'gt': FILTER_GT,
+    # '<':  FILTER_LT,
+    # 'lt': FILTER_LT,
+    # '>=': FILTER_LTE,
+    # 'gte':FILTER_LTE,
+    # '<=': FILTER_LTE,
+    # 'lte':FILTER_LTE,
+    # 'fulltext': FILTER_FULLTEXT,
+    # 'match': FILTER_FULLTEXT,
+    # 'like': FILTER_FULLTEXT,
+    # 'in': FILTER_IN    
+
+    res = ['=','>','<','>=','<=','like']
+    return  json.dumps({'results': res})
+
 
 
 if __name__ == "__main__":
