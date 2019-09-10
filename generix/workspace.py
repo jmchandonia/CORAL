@@ -147,7 +147,7 @@ class Workspace:
 
 
     def get_brick_data(self, brick_id):
-        file_name = services._DATA_DIR + '/' + brick_id
+        file_name = services._DATA_DIR + brick_id
         with open(file_name, 'r') as f:
             doc = json.loads(f.read())
         return doc
