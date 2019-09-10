@@ -533,10 +533,13 @@ class Brick:
         q.has({'id': self.id})
         return q.find_one()
 
-    def to_json(self):
-        return json.dumps(self.to_dict(), cls=NPEncoder)
+    def to_json(self, exclude_data_values=False, typed_values_property_name=True):
+        return json.dumps(
+            self.to_dict(exclude_data_values=exclude_data_values,
+                typed_values_property_name=typed_values_property_name ), 
+            cls=NPEncoder)
 
-    def to_dict(self):
+    def to_dict(self, exclude_data_values=False, typed_values_property_name=True):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -584,6 +587,9 @@ class Brick:
             else:
                 value_key = attr.scalar_type + '_value'
                 value_val = attr.value
+
+            if not typed_values_property_name:
+                value_key = 'value'
 
             data['array_context'].append({
                 'value_type':{
@@ -653,7 +659,11 @@ class Brick:
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
-    
+
+                if not typed_values_property_name:
+                    value_key = 'values'
+
+
                 var_data = {
                     'value_type': {
                         'oterm_ref': var.type_term.term_id,
@@ -684,6 +694,9 @@ class Brick:
                         value_key = attr.scalar_type + '_value'
                         value_val = attr.value
 
+                    if not typed_values_property_name:
+                        value_key = 'value'
+
                     var_data['value_context'].append({
                         'value_type':{
                             'oterm_ref': attr.type_term.term_id,
@@ -708,17 +721,21 @@ class Brick:
                 value_key = vard.scalar_type + '_values'
                 value_vals = list(vard.values)
 
+            if not typed_values_property_name:
+                value_key = 'values'
+
             values_data = {
                 'value_type': {
                     'oterm_ref': vard.type_term.term_id,
                     'oterm_name': vard.type_term.term_name
-                },
-                'values': {
-                    'scalar_type': vard.scalar_type,
-                    value_key: value_vals
-                },
+                },                
                 'value_context': []
             }
+            if not exclude_data_values:
+                values_data['values'] = {
+                    'scalar_type': vard.scalar_type,
+                    value_key: value_vals
+                }
 
             # Do units
             if vard.units_term is not None:
@@ -737,6 +754,9 @@ class Brick:
                 else:
                     value_key = attr.scalar_type + '_value'
                     value_val = attr.value
+
+                if not typed_values_property_name:
+                    value_key = 'value'
 
                 values_data['value_context'].append({
                     'value_type':{
