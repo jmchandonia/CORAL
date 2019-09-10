@@ -135,10 +135,16 @@ class OntologyService:
 
     def _clean_ontology(self, ont_name):
         print("Deleting terms in %s" % ont_name)
-        services.arango_service.db.AQLQuery(
-            'FOR term IN OTerm FILTER term.ontology_id==@value REMOVE term in OTerm',
-            bindVars={'value': ont_name}
-        )
+        aql = """
+            FOR x IN @@collection
+            FILTER x.ontology_id==@value
+            REMOVE x in @@collection
+        """
+        aql_bind = {
+            '@collection': OTERM_COLLECTION_NAME,
+            'value': ont_name
+        }
+        self.__arango_service.db.AQLQuery(aql, bindVars=aql_bind)
 
     @property
     def units(self):
