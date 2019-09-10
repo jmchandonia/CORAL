@@ -31,8 +31,17 @@ selectedObject = new ObjectMetadata({
     shape: [1, 2],
     name: 'microbial growth',
     data: this.objectdata1,
-    dimensions: [this.dimension2, this.dimension1]
+    dimensions: [this.dimension1]
 });
+
+  measurements = {
+    // tslint:disable-next-line:whitespace
+    x: [1,2,3,4,5,6,7,8,9,10],
+    // tslint:disable-next-line:whitespace
+    y: [12,13,56,7,34,25,18,4],
+    // tslint: disable-next-line:whitespace
+    z: [1, 4, 5, 6, 8, 12, 13, 3, 14]
+  };
 
 
   // private selectedObject: ObjectMetadata = new ObjectMetadata(object1);

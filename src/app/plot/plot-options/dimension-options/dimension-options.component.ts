@@ -39,7 +39,6 @@ export class DimensionOptionsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('DIMENSION FORM', this.dimensionForm);
     this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisValuesAs') as FormArray;
    }
 
@@ -51,9 +50,7 @@ export class DimensionOptionsComponent implements OnInit {
 
   addDimensionVariables()  {
     this.displayValuesFrom = this.dimensionForm.get('displayValuesFrom') as FormArray;
-    console.log('DISPLAY VALUES FROM', this.displayValuesFrom);
     this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisLabelsAs') as FormArray;
-    console.log('WHY DO YOU FORGET VARIABLE NAMES', this.displayAxisLabelsAs);
 
     // clear form value on select
     while (this.displayValuesFrom.length) {
@@ -86,8 +83,6 @@ export class DimensionOptionsComponent implements OnInit {
       });
       this.isLabelChecked.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
     }
-    console.log('UPDATED DISPLAYAXISLABELSAS', this.displayAxisLabelsAs);
-    console.log(this.isLabelChecked);
   }
 
   findVariableNumber(value) {
