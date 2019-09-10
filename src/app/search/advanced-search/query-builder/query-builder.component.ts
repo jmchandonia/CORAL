@@ -65,7 +65,6 @@ export class QueryBuilderComponent implements OnInit {
   ngOnInit() {
     this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
       .subscribe((data: any) => {
-        console.log('DATA_MODELS_RESULT', data);
         this.dataModels = data.results;
       });
 
@@ -75,7 +74,6 @@ export class QueryBuilderComponent implements OnInit {
       delay: 250,
       cache: false,
       processResults: (data: any) => {
-        console.log('DATA_TYPES_RESULT', data);
         this.dataTypes = data.results;
         return {
           results: $.map(data.results, (obj, idx) => {

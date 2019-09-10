@@ -112,7 +112,7 @@ export class DimensionOptionsComponent implements OnInit {
       this.displayAxisLabelsAs.removeAt(0);
     }
     labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
-    console.log('DISPLAY AXIS LABELS AS', this.displayAxisLabelsAs);
+    console.log(this.displayAxisLabelsAs);
   }
 
 }
