@@ -409,9 +409,42 @@ def generix_brick_metadata(brick_id):
     br = bp.load(brick_id)
     
     return br.to_json(exclude_data_values=True, typed_values_property_name=False)
-    # return json.dumps( {
-    #     'res': br.to_dict(exclude_data_values=True, typed_values_property_name=False)
-    # } )
+
+
+@app.route('/generix/plot_data_test', methods=['POST'])
+def generix_plot_data_test():
+    query = request.json
+    bp = dp._get_type_provider('Brick')
+    # brick_id = query['objectId']
+    # br = bp.load(brick_id)  
+    br = bp.load('Brick0000003')  
+    # br = bp.load('Brick0000023')  
+    br.mean(br.dims[2])     
+
+    res = {}
+    # axes = list(query['data'].keys())
+    # for axis in axes:
+    #     dimIndex = query['data'][axis]
+    #     if type(dimIndex) is int:
+
+    x = br.dims[0].vars[0].values.tolist()
+    y = br.data_vars[0].values.tolist()
+    z = []  
+    for i in range(br.dims[1].size):
+        label = ''
+        for dvar in br.dims[1].vars:
+            label = label + str(dvar.values[i]) + '; ' 
+        z.append(
+            label
+        )
+
+    res = {
+        'x' : x,
+        'y': y,
+        'z' : z
+    }
+    return  json.dumps({'results': res})
+
 
 def _extract_criterion_props(criterion):
     prop_name = criterion['attribute']
