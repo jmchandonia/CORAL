@@ -382,7 +382,7 @@ def generix_data_types():
         })
 
     res.sort(key=lambda x: x['dataType']) 
-    return  json.dumps({'results': res})
+    return  json.dumps({'res': res})
 
 @app.route("/generix/data_models", methods=['GET'])
 def generix_data_models():
@@ -401,7 +401,164 @@ def generix_data_models():
             'properties': pdefs
         }
 
-    return  json.dumps({'results': res})
+    return  json.dumps({'res': res})
+
+@app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
+def generix_brick_metadata(brick_id):
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    
+    return br.to_json(exclude_data_values=True, typed_values_property_name=False)
+    # return json.dumps( {
+    #     'res': br.to_dict(exclude_data_values=True, typed_values_property_name=False)
+    # } )
+
+def _extract_criterion_props(criterion):
+    prop_name = criterion['attribute']
+    prop_value = criterion['keyword']
+    scalar_type = criterion['scalarType']
+    operation = criterion['matchType']
+
+    # update value
+    if scalar_type == 'int':
+        prop_value = int(prop_value)
+    elif scalar_type == 'float':
+        prop_value = float(prop_value)   
+    return (prop_name, prop_value, operation)           
+
+
+@app.route('/generix/search', methods=['GET','POST'])
+def generix_search():
+    # {
+    # "processesUp": [
+    #     {
+    #     "attribute": "qui est esse",
+    #     "scalarType": "text",
+    #     "matchType": "Contains",
+    #     "keyword": "qui est esse"
+    #     },
+    #     {
+    #     "attribute": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
+    #     "scalarType": "text",
+    #     "matchType": "Match",
+    #     "keyword": "eum et est occaecati"
+    #     }
+    # ],
+    # "processesDown": [
+    #     {
+    #     "attribute": "eveniet quod temporibus",
+    #     "scalarType": "text",
+    #     "matchType": "Contains",
+    #     "keyword": "qui est esse"
+    #     }
+    # ],
+    # "queryMatch": {
+    #     "dataType": "core",
+    #     "dataModel": "Graph",
+    #     "params": [
+    #     {
+    #         "attribute": "eum et est occaecati",
+    #         "scalarType": "int",
+    #         "matchType": "Contains",
+    #         "keyword": "qui est esse"
+    #     },
+    #     {
+    #         "attribute": "nesciunt quas odio",
+    #         "scalarType": "text",
+    #         "matchType": "Match",
+    #         "keyword": "nesciunt quas odio"
+    #     }
+    #     ]
+    # },
+    # "connectsUpTo": {
+    #     "dataType": "core",
+    #     "dataModel": "Graph",
+    #     "params": [
+    #     {
+    #         "attribute": "qui est esse",
+    #         "scalarType": "text",
+    #         "matchType": "Match",
+    #         "keyword": "qui est esse"
+    #     },
+    #     {
+    #         "attribute": "qui est esse",
+    #         "scalarType": "text",
+    #         "matchType": "Contains",
+    #         "keyword": "ea molestias quasi exercitationem repellat qui ipsa sit aut"
+    #     }
+    #     ]
+    # },
+    # "connectsDownto": {
+    #     "dataType": "core",
+    #     "dataModel": "Graph",
+    #     "params": [
+    #     {
+    #         "attribute": "qui est esse",
+    #         "scalarType": "text",
+    #         "matchType": "Contains",
+    #         "keyword": "qui est esse"
+    #     },
+    #     {
+    #         "attribute": "magnam facilis autem",
+    #         "scalarType": "text",
+    #         "matchType": "Match",
+    #         "keyword": "magnam facilis autem"
+    #     }
+    #     ]
+    # }
+    # }
+
+    search_data = request.json
+
+    # Do qqueryMatch
+    query_match = search_data['queryMatch']
+    provider = dp._get_type_provider(query_match['dataModel'])
+    q = provider.query()
+
+    if query_match['dataModel'] == 'Brick':
+        q.has({'data_type': {'=': query_match['dataType']}})
+
+    for criterion in query_match['params']:
+        (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+        q.has({prop_name: {operation: prop_value}})
+
+    # Do processesUp
+    if 'processesUp' in search_data:
+        for criterion in search_data['processesUp']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_output_of_process({prop_name: {operation: prop_value}})
+
+    # Do processesDown
+    if 'processesDown' in search_data:
+        for criterion in search_data['processesDown']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_input_of_process({prop_name: {operation: prop_value}})
+
+    # Do connectsUpTo
+    if 'connectsUpTo' in search_data:
+        connects_up_to = search_data['connectsUpTo']
+        params = {}
+        for criterion in connects_up_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params['prop_name'] = {operation: prop_value}
+
+        q.linked_up_to(connects_up_to['dataModel'],  params )
+
+    # Do connectsDownTo
+    if 'connectsDownTo' in search_data:
+        connects_down_to = search_data['connectsDownTo']
+        params = {}
+        for criterion in connects_down_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params['prop_name'] = {operation: prop_value}
+
+        q.linked_down_to(connects_down_to['dataModel'],  params )
+
+    res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
+    # return  json.dumps( {'res': res} )
+    return res
+
+
 
 
 @app.route("/generix/search_operations", methods=['GET'])
@@ -423,7 +580,9 @@ def generix_search_operations():
     # 'in': FILTER_IN    
 
     res = ['=','>','<','>=','<=','like']
-    return  json.dumps({'results': res})
+    return  json.dumps({'res': res})
+
+
 
 
 
