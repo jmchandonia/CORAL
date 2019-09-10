@@ -12,11 +12,12 @@
   <div class="option-container">
     <div class="row">
         <div class="col-4">
-            <label for="graphType">Graph Type</label>
+            <label for="plotType">Plot Type</label>
             <select2
+            id="plotType"
             [cssImport]="true"
-            [options]="{width: '100%'}"
-            [data]="plotTypeOptions"
+            [options]="plotTypeOptions"
+            [data]="plotTypeData"
             ngDefaultControl
             (valueChanged)="updatePlotType($event)"
             formControlName="plotType"
@@ -30,13 +31,14 @@
     </div>
   </div>
   <app-dimension-options
-    *ngFor="let _ of plotObject.dimensions; let i = index;"
+    *ngFor="let form of formDimensions?.controls; let i = index;"
     [dimensions]="plotObject.dimensions"
     [dimensionLabel]="dimensions[i]"
     [index]="i"
-    [form]="plotForm"
+    [form]="form"
     ></app-dimension-options>
   <div class="row bottom-button-row">
-    <button (click)="submit()" [routerLink]="['../../result']" class="btn btn-primary offset-10">Plot Graph</button>
+    <button (click)="submit()" class="btn btn-primary offset-10">Plot Graph</button>
+    <!--[routerLink]="['../../result']"-->
   </div>
 </form>

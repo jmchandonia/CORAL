@@ -41,6 +41,8 @@ export class AxisLabelerComponent implements OnInit {
   }
 
   updateFormat() {
+
+    // get key value format to send to server, eg {0: 'value=#V1'}
     const newFormat = this.format.split(',').map(item => {
       const index = parseInt(item.replace(/^\D+/g, ''), 10) - 1;
       return { [index]: item };
@@ -48,7 +50,7 @@ export class AxisLabelerComponent implements OnInit {
     if (NaN in newFormat[newFormat.length - 1]) {
       newFormat.pop();
     }
-
+    // get value labels to display in UI
     const newValueLabels = this.format.split(',').map(item => {
       return item.replace(/#V[0-9]/gi, '');
     });
