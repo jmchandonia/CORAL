@@ -19,8 +19,8 @@ def init_system(argv=None):
     print('Uploading new data')
     upload_ontologies()
     upload_core()
-    upload_processes()
     upload_bricks()
+    upload_processes()
 
 def init_system_collections(argv=None):
     services._init_db_connection()    
@@ -102,7 +102,9 @@ def upload_core(argv=None):
     doc = _get_upload_config_doc()
 
     for file_def in doc['entities']:
-        if 'ignore' in file_def: continue
+        if 'ignore' in file_def:
+            print('Skipping %s due to ignore directive' % file_def['file'])
+            continue
         try:
             file_name = os.path.join(services._IMPORT_DIR_ENTITY, file_def['file'])
             type_name = file_def['dtype']
@@ -123,9 +125,9 @@ def upload_core(argv=None):
 
                     data = row.to_dict()
                     data_holder = EntityDataHolder(type_name, data)
-                    ws.save_data(data_holder)
+                    ws.save_data_if_not_exists(data_holder)
                 except Exception as e:
-                    print('Error:', e)
+                    print('Error in loading:', data, e)
         except Exception as e:
             print('Error:', e)
 
@@ -142,7 +144,9 @@ def upload_processes(argv=None):
     doc = _get_upload_config_doc()
 
     for file_def in doc['processes']:
-        if 'ignore' in file_def: continue
+        if 'ignore' in file_def:
+            print('Skipping %s due to ignore directive' % file_def['file'])
+            continue
         try:
             process_type = file_def['ptype']
             file_name = os.path.join(services._IMPORT_DIR_PROCESS, file_def['file'])

@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import dumper
 from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM
 
@@ -158,12 +159,33 @@ class Workspace:
         self._store_process(data_holder)
         self._index_process(data_holder)
 
+    def save_data_if_not_exists(self, data_holder):
+        upk_prop_name = data_holder.type_def.upk_property_def.name
+        upk_id = data_holder.data[upk_prop_name]
+        try:
+            current_pk_id = self._get_pk_id(data_holder.type_name, upk_id)
+        except:
+            current_pk_id = None
+        if current_pk_id is None:
+            self.save_data(data_holder)
+        else:
+            print('skipping %s due to older object' % upk_id)
+            # check for consistency
+            # for now throw an error, although we may want to upsert instead
+            # data_holder_2 = EntityDataHolder(data_holder.type_name,
+            # data_holder.data)
+            # data_holder_2.set_id(current_pk_id)
+            # self._load_object(data_holder_2)
+            # print("new data")
+            # dumper.dump(data_holder)
+            # print("old data")
+            # dumper.dump(data_holder_2)
+
     def save_data(self, data_holder):
         self._generate_id(data_holder)
         self._validate_object(data_holder)
         self._store_object(data_holder)
         self._index_object(data_holder)
-
 
     def _generate_id(self, data_holder):
         id = self.next_id(data_holder.type_name)
@@ -182,7 +204,6 @@ class Workspace:
         for key, value in data_holder.data.items():
             if value != value:
                 data_holder.data[key] = None
-
 
     def _store_object(self, data_holder):
         type_name = data_holder.type_name
@@ -206,6 +227,27 @@ class Workspace:
                 json.dump(data, outfile)
 
         self._store_object_type_ids(type_name, pk_id, upk_id)
+
+    def _load_object(self, data_holder):
+        pk_id = data_holder.id
+        print('trying to load %s' % pk_id)
+        aql = 'RETURN DOCUMENT(@@collection/@pk_id)'
+        aql_bind = {
+            '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_OBJECT_TYPE_ID,
+            'pk_id': pk_id
+        }
+        res = self.__arango_service.find(aql,aql_bind)
+        type2objects = {}
+        for row in res:
+            _id = row['_id']
+            type_name = _id.split('/')[0][4:]
+        
+            objs = type2objects.get(type_name)
+            if objs is None:
+                objs = []
+                type2objects[type_name] = objs
+            objs.append(row)
+        dumper.dump(type2objects)
 
     def _get_pk_id(self, type_name, upk_id):
 
@@ -270,7 +312,7 @@ class Workspace:
                 }, 'ProcessInput', TYPE_CATEGORY_SYSTEM
             )      
 
-        # Do ouput objects
+        # Do output objects
         for output_object in process['output_objects']:
             type_name, obj_id = output_object.split(':')
             type_def = services.indexdef.get_type_def(type_name)
