@@ -5,10 +5,16 @@
   >{{value}}<span class="badge badge-pill badge-primary">V{{i+1}}</span>, 
   </span>
   <span 
-    *ngIf="valueLabels.length" 
+    *ngIf="valueLabels.length && !displayOptions" 
     class="edit-button"
     (click)="toggleDisplayOptions()"
     >Edit</span>
+  <span
+    class="update-cancel-buttons"
+    *ngIf="displayOptions">
+    <span (click)="toggleDisplayOptions()">Cancel |</span>
+    <span (click)="onSave()"> Update</span>
+  </span>
   <hr *ngIf=displayOptions />
   <div class="display-options" *ngIf="displayOptions">
     <label for="edit-text-format">Format: </label>

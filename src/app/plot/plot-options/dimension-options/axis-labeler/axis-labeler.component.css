@@ -30,9 +30,19 @@ input {
     margin-left: 15px;
 }
 
+.update-cancel-buttons {
+    margin-left: 320px;
+    font-size: 0.8rem;
+    color: blue;
+}
+
 .edit-button {
     position: relative;
     left: 400px;
     font-size: 0.8rem;
     color: blue;
+}
+
+.edit-text-format {
+    margin-bottom: 10px;
 }

@@ -25,6 +25,11 @@ h5 {
     display: inline-block;
 }
 
+.var-unchecked {
+    background-color: rgb(189, 189, 189)!important;
+    color: black!important;
+}
+
 .form-check-label {
     padding-left: 0px!important;
 }
