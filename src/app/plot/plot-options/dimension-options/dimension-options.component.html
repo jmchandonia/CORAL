@@ -35,8 +35,8 @@
         <label class="form-check-label" [for]="v">{{selectedValue.dim_vars[i]}}</label>
         <span
           class="badge badge-pill badge-primary ml-1"
-          *ngIf="isChecked(i)"
-        >V{{ findVariableNumber(selectedValue.dim_vars[i]) }}</span>
+          [ngClass]="isChecked(i) ? '' : 'var-unchecked'"
+        >V{{ i + 1 }}</span>
       </div>
     </div>
   </div>

@@ -31,21 +31,33 @@ export class AxisLabelerComponent implements OnInit {
         this.format += `${v}#V${i + 1}, `;
       });
     }
+  }
 
+  onSave() {
+    this.toggleDisplayOptions();
     if (!this.displayOptions && this.format) {
       this.updateFormat();
     }
   }
 
   updateFormat() {
-    const newFormat = this.format.split(',');
-    if (newFormat.length === this.valueLabels.length) {
-      this.invalid = false;
-      this.valueLabels = [...newFormat.map(item => item.replace(/#V[0-9]/gi, ''))];
-      this.labelsChanged.emit(this.valueLabels);
-    } else {
-      this.invalid = true;
+    const newFormat = this.format.split(',').map(item => {
+      const index = parseInt(item.replace(/^\D+/g, ''), 10) - 1;
+      return { [index]: item };
+    });
+    if (NaN in newFormat[newFormat.length - 1]) {
+      newFormat.pop();
     }
+
+    const newValueLabels = this.format.split(',').map(item => {
+      return item.replace(/#V[0-9]/gi, '');
+    });
+
+    if (!newValueLabels[newValueLabels.length - 1].match(/#V[0-9]/gi)) {
+      newValueLabels.pop();
+    }
+    this.valueLabels = newValueLabels;
+    this.labelsChanged.emit(newFormat);
   }
 
 }
