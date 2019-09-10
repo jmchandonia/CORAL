@@ -7,8 +7,9 @@ import { Select2Module } from 'ng2-select2';
 import { DimensionOptionsComponent } from './plot-options/dimension-options/dimension-options.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AxisLabelerComponent } from './plot-options/dimension-options/axis-labeler/axis-labeler.component';
+import { PlotResultComponent } from './plot-result/plot-result.component';
 @NgModule({
-  declarations: [PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent],
+  declarations: [PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,
