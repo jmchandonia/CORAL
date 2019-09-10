@@ -382,7 +382,7 @@ def generix_data_types():
         })
 
     res.sort(key=lambda x: x['dataType']) 
-    return  json.dumps({'res': res})
+    return  json.dumps({'results': res})
 
 @app.route("/generix/data_models", methods=['GET'])
 def generix_data_models():
@@ -401,7 +401,7 @@ def generix_data_models():
             'properties': pdefs
         }
 
-    return  json.dumps({'res': res})
+    return  json.dumps({'results': res})
 
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
 def generix_brick_metadata(brick_id):
@@ -510,7 +510,7 @@ def generix_search():
 
     search_data = request.json
 
-    # Do qqueryMatch
+    # Do queryMatch
     query_match = search_data['queryMatch']
     provider = dp._get_type_provider(query_match['dataModel'])
     q = provider.query()
@@ -580,7 +580,7 @@ def generix_search_operations():
     # 'in': FILTER_IN    
 
     res = ['=','>','<','>=','<=','like']
-    return  json.dumps({'res': res})
+    return  json.dumps({'results': res})
 
 
 
