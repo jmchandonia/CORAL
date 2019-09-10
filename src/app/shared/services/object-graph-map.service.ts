@@ -46,13 +46,13 @@ selectedObject = new ObjectMetadata({
 
   // private selectedObject: ObjectMetadata = new ObjectMetadata(object1);
 
-  private graphOptions2d = [
-    'scatter',
-    'bar'
-  ];
-
-  private graphOptions3d = [
-    'heatmap'
+  private graphOptions = [
+    {type: 'Scatter Plot', dimensions: 3, plot: 'scatter', mode: 'markers'},
+    {type: 'Horizontal Barchart', dimensions: 2, plot: 'bar'},
+    {type: 'Vertical Barchart', dimensions: 2, plot: 'bar'},
+    {type: 'Stacked Barchart', dimensions: 3, plot: 'bar'},
+    {type: 'Line Plot', dimensions: 2, plot: 'scatter', mode: 'lines+markers'},
+    {type: 'Heat Map', dimensions: 3, plot: 'heatmap'}
   ];
 
   private dataQuery = new DataQuery();
@@ -71,12 +71,13 @@ selectedObject = new ObjectMetadata({
   // set selected object
 
   listPlotTypes() {
-    if (this.selectedObject.shape.length > 2) {
-      return null;
-    } else {
-      return this.selectedObject.shape.length === 1 ?
-        this.graphOptions2d : this.graphOptions3d;
-    }
+    // if (this.selectedObject.shape.length > 2) {
+    //   return null;
+    // } else {
+    //   return this.selectedObject.shape.length === 1 ?
+    //     this.graphOptions2d : this.graphOptions3d;
+    // }
+    return this.graphOptions;
   }
 
   setDimension(axis, dimension) {
