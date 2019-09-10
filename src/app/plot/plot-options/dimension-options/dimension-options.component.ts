@@ -21,15 +21,12 @@ export class DimensionOptionsComponent implements OnInit {
     });
   }
   @Input() index: number;
-  @Input() set form(f: FormGroup) {
-    // tslint:disable-next-line:no-string-literal
-    this.dimensionForm = f.controls.dimensions['controls'][this.index];
-  }
+  @Input() form: FormGroup;
   @Input() dimensionLabel = '';
   selectedValue: Dimension;
   allDimensions: Dimension[];
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
-  dimensionForm: FormGroup;
+  // dimensionForm: FormGroup;
   displayValuesFrom: FormArray;
   displayAxisLabelsAs: FormArray;
   isLabelChecked = [];
@@ -39,18 +36,18 @@ export class DimensionOptionsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisValuesAs') as FormArray;
+    this.displayAxisLabelsAs = this.form.get('displayAxisValuesAs') as FormArray;
    }
 
   setSelectedDimension(event) {
     this.selectedValue = this.allDimensions[event.value];
-    this.dimensionForm.controls.fromDimension.setValue(event.data[0].text);
+    this.form.controls.fromDimension.setValue(event.data[0].text);
     this.addDimensionVariables();
   }
 
   addDimensionVariables()  {
-    this.displayValuesFrom = this.dimensionForm.get('displayValuesFrom') as FormArray;
-    this.displayAxisLabelsAs = this.dimensionForm.get('displayAxisLabelsAs') as FormArray;
+    this.displayValuesFrom = this.form.get('displayValuesFrom') as FormArray;
+    this.displayAxisLabelsAs = this.form.get('displayAxisLabelsAs') as FormArray;
 
     // clear form value on select
     while (this.displayValuesFrom.length) {
@@ -100,11 +97,11 @@ export class DimensionOptionsComponent implements OnInit {
   }
 
   get isDisplayAxisChecked() {
-    return this.dimensionForm.get('displayAxisLabels').value;
+    return this.form.get('displayAxisLabels').value;
   }
 
   get isDisplayHoverChecked() {
-    return this.dimensionForm.get('displayHoverLabels').value;
+    return this.form.get('displayHoverLabels').value;
   }
 
   setNewLabels(labels) {
