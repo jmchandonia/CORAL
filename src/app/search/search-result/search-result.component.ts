@@ -13,11 +13,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SearchResultComponent implements OnInit {
 
-  private results = [];
-  private resultFields = [];
-  private dataTable: any;
-  private searchQuery: QueryBuilder;
-  private showQuery = false;
+  results = [];
+  resultFields = [];
+  dataTable: any;
+  searchQuery: QueryBuilder;
+  showQuery = false;
 
   constructor(
     private queryBuilder: QueryBuilderService,

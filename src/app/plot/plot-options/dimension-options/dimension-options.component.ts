@@ -32,7 +32,7 @@ export class DimensionOptionsComponent implements OnInit {
   isLabelChecked = [];
 
   constructor(
-    private objectGraphMap: ObjectGraphMapService
+    objectGraphMap: ObjectGraphMapService
   ) { }
 
   ngOnInit() {

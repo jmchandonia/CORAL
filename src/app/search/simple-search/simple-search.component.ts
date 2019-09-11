@@ -10,7 +10,7 @@ import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryB
 })
 export class SimpleSearchComponent implements OnInit {
 
-  private dataModelList: Array<Select2OptionData> = [
+  dataModelList: Array<Select2OptionData> = [
     {
       id: '0',
       text: 'N-dimensional array'
@@ -23,9 +23,9 @@ export class SimpleSearchComponent implements OnInit {
       id: '2',
       text: 'Cluster'
     }
-  ]
+  ];
 
-  private keywordList: Array<Select2OptionData> = [
+  keywordList: Array<Select2OptionData> = [
     {
       id: '0',
       text: 'Microbial'
@@ -42,15 +42,15 @@ export class SimpleSearchComponent implements OnInit {
       id: '3',
       text: 'Genomics'
     }
-  ]
+  ];
 
-  private select2Options = {
+  select2Options = {
     width: '100%',
-  }
+  };
 
-  private queryMatch: QueryMatch = new QueryMatch();
+  queryMatch: QueryMatch = new QueryMatch();
 
-  private queryBuilderObject: QueryBuilder;
+  queryBuilderObject: QueryBuilder;
 
   constructor(
     private queryBuilder: QueryBuilderService

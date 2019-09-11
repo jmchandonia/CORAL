@@ -46,7 +46,7 @@ selectedObject = new ObjectMetadata({
 
   // private selectedObject: ObjectMetadata = new ObjectMetadata(object1);
 
-  private graphOptions = [
+  graphOptions = [
     {type: 'Scatter Plot', dimensions: 3, plot: 'scatter', mode: 'markers'},
     {type: 'Horizontal Barchart', dimensions: 2, plot: 'bar'},
     {type: 'Vertical Barchart', dimensions: 2, plot: 'bar'},
@@ -55,7 +55,7 @@ selectedObject = new ObjectMetadata({
     {type: 'Heat Map', dimensions: 3, plot: 'heatmap'}
   ];
 
-  private dataQuery = new DataQuery();
+  dataQuery = new DataQuery();
 
   constructor(
     private network: NetworkService,
