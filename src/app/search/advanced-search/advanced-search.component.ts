@@ -20,7 +20,7 @@ export class AdvancedSearchComponent implements OnInit {
   operators;
 
   constructor(
-    queryBuilder: QueryBuilderService,
+    private queryBuilder: QueryBuilderService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient
