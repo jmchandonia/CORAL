@@ -1,0 +1,41 @@
+.data-information-header {
+    width: 800px;
+    margin: 0px auto;
+    margin-top: 20px;
+}
+
+.display-values-container {
+    background-color: rgb(130, 130, 130);
+    border-radius:10px;
+    width: 100%;
+    margin-right: 10px;
+    margin-left: 15px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    color: white;
+}
+
+.label-display-options {
+    margin-top: 20px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+h5 {
+    display: inline-block;
+}
+
+.var-unchecked {
+    background-color: rgb(189, 189, 189)!important;
+    color: black!important;
+}
+
+.form-check-label {
+    padding-left: 0px!important;
+}
+
+.header {
+    margin-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

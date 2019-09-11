@@ -2,7 +2,7 @@
     <h5 style="display: inline-block">Data Information</h5>
 </div>
 <app-query-builder
-    [connection]="'queryMatch'"></app-query-builder>
+    [connection]="'queryMatch'" [operators]="operators"></app-query-builder>
  <div class="data-information-header" (click)="showConnectionsUp = !showConnectionsUp">
     <i class="material-icons" *ngIf="!showConnectionsUp" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showConnectionsUp" style="font-size: 1.25rem;">arrow_drop_down</i>
@@ -10,7 +10,7 @@
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsUp" />
 <app-query-builder
-    [connection]="'connectsUpTo'" [hidden]="!showConnectionsUp"
+    [connection]="'connectsUpTo'" [operators]="operators" [hidden]="!showConnectionsUp"
     ></app-query-builder>
 <div class="data-information-header" (click)="showConnectionsDown = !showConnectionsDown">
     <i class="material-icons" *ngIf="!showConnectionsDown" style="font-size: 1.25rem;">arrow_right</i>
@@ -19,7 +19,7 @@
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsDown" />
 <app-query-builder 
-    [connection]="'connectsDownto'" [hidden]="!showConnectionsDown"
+    [connection]="'connectsDownto'" [operators]="operators" [hidden]="!showConnectionsDown"
     ></app-query-builder>
 <div class="data-information-header" (click)="showProcessesUp = !showProcessesUp">
     <i class="material-icons" *ngIf="!showProcessesUp" style="font-size: 1.25rem;">arrow_right</i>
@@ -64,3 +64,5 @@
         </div>
     </div>
 </div>
+
+<button (click)="testQuery()">Test Query</button>

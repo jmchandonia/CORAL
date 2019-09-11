@@ -14,6 +14,20 @@ export class PropertyParamsComponent implements OnInit {
   @Output() added: EventEmitter<QueryParam> = new EventEmitter();
   @Output() updated: EventEmitter<any> = new EventEmitter();
   @Input() isEmpty: boolean;
+  @Input() set attributes(a: Array<any>) {
+    if (a) {
+          this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
+      return { id: item.name, text: item.name };
+    })];
+    }
+  }
+  @Input() set operators(o: Array<string>) {
+    if (o) {
+      this.matchTypes = [this.matchTypes[0], ...o.map(item => {
+        return { id: item, text: item };
+      })];
+    }
+  }
   @Input() connection = '';
   @ViewChild(Select2Component) attribute: ElementRef;
 
@@ -27,22 +41,14 @@ export class PropertyParamsComponent implements OnInit {
       id: '',
       text: ''
     },
-  ]
+  ];
 
   private matchTypes: Array<Select2OptionData> = [
     {
       id: '',
       text: ''
     },
-    {
-      id: '0',
-      text: 'Match'
-    },
-    {
-      id: '1',
-      text: 'Contains'
-    }
-  ]
+  ];
 
   @Input() set data(param) {
     this.matchTypeBuilder = param.matchType;
@@ -56,26 +62,26 @@ export class PropertyParamsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (!this.isEmpty) {
-      let newData = this.network.getPropertyValuesDirect(this.connection);
-      newData = newData.map(item => {
-        return { id: item.id.toString(), text: item.title };
-      });
-      this.propertyTypes = [this.propertyTypes[0], ...newData];
-    } else {
-      this.network.getPropertyValues()
-      .subscribe(data => {
-        if (
-            data.connection === this.connection 
-            || (!this.connection && data.connection === 'queryMatch')
-          ) {
-         const newData = data.results.map(item => {
-           return { id: item.id.toString(), text: item.title }
-         });
-         this.propertyTypes = [this.propertyTypes[0], ...newData];
-        }
-      });
-    }
+    // if (!this.isEmpty) {
+    //   let newData = this.network.getPropertyValuesDirect(this.connection);
+    //   newData = newData.map(item => {
+    //     return { id: item.id.toString(), text: item.title };
+    //   });
+    //   this.propertyTypes = [this.propertyTypes[0], ...newData];
+    // } else {
+    //   this.network.getPropertyValues()
+    //   .subscribe(data => {
+    //     if (
+    //         data.connection === this.connection 
+    //         || (!this.connection && data.connection === 'queryMatch')
+    //       ) {
+    //      const newData = data.results.map(item => {
+    //        return { id: item.id.toString(), text: item.title }
+    //      });
+    //      this.propertyTypes = [this.propertyTypes[0], ...newData];
+    //     }
+    //   });
+    // }
   }
 
   addParam() {
@@ -90,7 +96,7 @@ export class PropertyParamsComponent implements OnInit {
   }
 
   findDropdownValue(builder, dropDownType) {
-    return this.propertyTypes.length > 1 ? 
+    return this.propertyTypes.length > 1 ?
     this[dropDownType].find(item => item.text === builder).id
     : '';
   }

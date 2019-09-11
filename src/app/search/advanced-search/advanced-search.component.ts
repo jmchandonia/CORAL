@@ -3,6 +3,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-advanced-search',
@@ -16,10 +17,12 @@ export class AdvancedSearchComponent implements OnInit {
   private showConnectionsDown = false;
   private showProcessesUp = false;
   private showProcessesDown = false;
+  private operators;
 
   constructor(
     private queryBuilder: QueryBuilderService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) { }
 
   ngOnInit() {
@@ -29,6 +32,11 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilder.getUpdatedObject().subscribe(object => {
       Object.assign(this.queryBuilderObject, object);
     });
+
+    this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations')
+      .subscribe((data: any) => {
+        this.operators = data.results;
+      });
   }
 
   addProcess(process, queryParam) {
@@ -41,6 +49,10 @@ export class AdvancedSearchComponent implements OnInit {
 
   removeProcess(process, queryParam) {
     this.queryBuilder.removeProcessParam(process, queryParam);
+  }
+
+  testQuery() {
+    console.log('CURRENT QUERY', this.queryBuilderObject);
   }
 
 }
