@@ -84,6 +84,10 @@ selectedObject = new ObjectMetadata({
     this.dataQuery[axis] = parseInt(dimension, 10);
   }
 
+  getMeasurements() {
+    return this.measurements;
+  }
+
   submitNewPlot(plot: FormGroup) {
     const dims = plot.get('dimensions') as FormArray;
     const obj = this.selectedObject;

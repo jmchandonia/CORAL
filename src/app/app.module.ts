@@ -10,7 +10,7 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 
 
-// PlotlyModule.plotlyjs = PlotlyJS;
+PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
   declarations: [
     AppComponent
@@ -22,7 +22,7 @@ import { PlotlyModule } from 'angular-plotly.js';
     HttpClientModule,
     Select2Module,
     PlotModule,
-    // PlotlyModule
+    PlotlyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

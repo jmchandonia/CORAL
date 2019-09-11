@@ -9,6 +9,7 @@ import { QueryBuilderComponent } from './advanced-search/query-builder/query-bui
 import { PropertyParamsComponent } from './advanced-search/query-builder/property-params/property-params.component';
 import { FormsModule } from '@angular/forms';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { SearchResultComponent } from './search-result/search-result.component';
     CommonModule,
     SearchRoutingModule,
     Select2Module,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ]
 })
 export class SearchModule { }

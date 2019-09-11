@@ -16,7 +16,8 @@ export class PropertyParamsComponent implements OnInit {
   @Input() isEmpty: boolean;
   @Input() set attributes(a: Array<any>) {
     if (a) {
-          this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
+      this.propertyTypesMetadata = a;
+      this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
       return { id: item.name, text: item.name };
     })];
     }
@@ -35,20 +36,14 @@ export class PropertyParamsComponent implements OnInit {
   private matchTypeBuilder = '';
   private attributeBuilder = '';
   private keywordBuilder = '';
+  private propertyTypesMetadata: any[];
+  private propertyTypes: Array<Select2OptionData> = this.select2Init();
+  private matchTypes: Array<Select2OptionData> = this.select2Init();
 
-  private propertyTypes: Array<Select2OptionData> = [
-    {
-      id: '',
-      text: ''
-    },
-  ];
-
-  private matchTypes: Array<Select2OptionData> = [
-    {
-      id: '',
-      text: ''
-    },
-  ];
+  select2Init() {
+    // required to have placeholder be displayed
+    return [{id: '', text: ''}];
+  }
 
   @Input() set data(param) {
     this.matchTypeBuilder = param.matchType;
@@ -85,10 +80,16 @@ export class PropertyParamsComponent implements OnInit {
   }
 
   addParam() {
+
+    const scalar = this.propertyTypesMetadata.find(item => {
+      return item.name === this.attributeBuilder;
+    }).scalar_type;
+
     this.added.emit(new QueryParam(
       this.attributeBuilder,
       this.matchTypeBuilder,
-      this.keywordBuilder
+      this.keywordBuilder,
+      scalar
     ));
     this.attributeBuilder = '';
     this.matchTypeBuilder = '';

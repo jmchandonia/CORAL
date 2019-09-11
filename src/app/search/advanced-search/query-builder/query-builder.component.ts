@@ -29,7 +29,9 @@ export class QueryBuilderComponent implements OnInit {
     width: '100%',
     placeholder: 'Select A DataType',
     templateResult: state => {
-      return `<span><img class="icon" src="./assets/${state.text.includes('u') ? 'Brick' : 'Sample'}.png" />${state.text}</span>`;
+      if (!state.id) { return state; }
+      const obj = this.dataTypes[parseInt(state.id, 10)];
+      return `<span><img class="icon" src="./assets/${obj.category === 'DDT_' ? 'Brick' : 'Sample'}.png" />${state.text}</span>`;
     },
     escapeMarkup: m => m
   };
@@ -56,12 +58,6 @@ export class QueryBuilderComponent implements OnInit {
     private chRef: ChangeDetectorRef
   ) { }
 
-  public formatState(state) {
-    const $state = 
-      `<span><img class="icon" src="./assets/${state.text.includes('u') ? 'Brick' : 'Sample'}.png />${state.text}</span>`;
-    return $state;
-  }
-
   ngOnInit() {
     this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
       .subscribe((data: any) => {
@@ -77,9 +73,11 @@ export class QueryBuilderComponent implements OnInit {
         this.dataTypes = data.results;
         return {
           results: $.map(data.results, (obj, idx) => {
+            console.log('RESULTS', obj.dataType, obj.dataModel, obj.category);
             return {id: idx.toString(), text: obj.dataType};
           }),
         };
+        //${obj.dataType}:${obj.dataModel}:${obj.category}
     },
   };
 

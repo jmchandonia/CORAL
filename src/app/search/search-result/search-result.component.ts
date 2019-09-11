@@ -24,12 +24,7 @@ export class SearchResultComponent implements OnInit {
 
   ngOnInit() {
     this.queryBuilder.submitQuery()
-      .subscribe((data: any[]) => {
-        this.results = data;
-        this.chRef.detectChanges();
-        const table: any = $('table');
-        this.dataTable = table.DataTable();
-      });
+      .subscribe(res => console.log('RES', res));
 
     this.searchQuery = this.queryBuilder.getCurrentObject();
   }

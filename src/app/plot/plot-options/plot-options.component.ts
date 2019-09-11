@@ -48,6 +48,7 @@ export class PlotOptionsComponent implements OnInit {
     private route: ActivatedRoute,
     private objectGraphMap: ObjectGraphMapService,
     private fb: FormBuilder,
+    private router: Router,
     ) { }
   private objectId: string;
 
@@ -75,7 +76,6 @@ export class PlotOptionsComponent implements OnInit {
     for (let i = 0; i < selected.dimensions; i++) {
       this.formDimensions.push(this.createDimensionItem());
     }
-    console.log('UGH', this.formDimensions);
   }
 
   createDimensionItem() {
