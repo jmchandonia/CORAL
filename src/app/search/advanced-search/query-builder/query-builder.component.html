@@ -1,9 +1,8 @@
 <div class="query-container">
   <label for="data-type">Data Type</label>
   <select2
-    [options]="{ width: '100%', placeholder: 'Select a data type stored in our system' }"
     [cssImport]="true"
-    [data]="dataModelList"
+    [options]="options"
     name="data-type"
     (valueChanged)="updateObjectDataModel($event)"
   >
@@ -12,6 +11,8 @@
   <app-property-params 
     *ngFor="let param of queryMatch?.params; let idx = index;" 
     [data]="param"
+    [attributes]="selectedAttributes"
+    [operators]="operators"
     [isEmpty]="false"
     [connection]="connection"
     (removed)="removePropertyParam(param)"
@@ -20,6 +21,8 @@
   </app-property-params>
   <app-property-params
     [isEmpty]="true" 
+    [attributes]="selectedAttributes"
+    [operators]="operators"
     [connection]="connection" 
     (added)="addPropertyParam($event)" 
     style="color: orange!important"
