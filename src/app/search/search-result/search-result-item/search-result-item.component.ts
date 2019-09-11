@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SearchResultItemComponent implements OnInit {
 
-  private searchResult: any;
+  public searchResult: any;
 
   constructor(
     private qb: QueryBuilderService,

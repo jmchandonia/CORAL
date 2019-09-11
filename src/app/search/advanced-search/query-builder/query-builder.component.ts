@@ -14,14 +14,14 @@ import { Observable } from 'rxjs';
 })
 export class QueryBuilderComponent implements OnInit {
 
-  private queryMatch: QueryMatch = new QueryMatch(); // need to program in dataType
+  public queryMatch: QueryMatch = new QueryMatch(); // need to program in dataType
   // make queryMatch input a set function that assigns data value to this.queryMatch
   // @Input() set data(qMatch: QueryMatch) { this.queryMatch = qMatch }
   @Input() connection: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
   @Input() operators = [];
   private ajaxOptions: Select2AjaxOptions;
-  private selectedAttributes: any;
+  public selectedAttributes: any;
   private dataModels: any;
   private dataTypes: any;
 

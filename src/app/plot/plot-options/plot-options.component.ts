@@ -14,12 +14,12 @@ import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 export class PlotOptionsComponent implements OnInit {
 
   private dimensions = ['x', 'y', 'z'];
-  private plotObject: any;
-  private plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
-  private formDimensions: FormArray;
+  public plotObject: any;
+  public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
+  public formDimensions: FormArray;
   private testForm: any;
   private listPlotTypes: any;
-  private plotForm = this.fb.group({
+  public plotForm = this.fb.group({
     plotType: '',
     graphTitle: [''],
     dimensions: this.fb.array([])
@@ -34,7 +34,7 @@ export class PlotOptionsComponent implements OnInit {
     'Scatter Plot': '<i class="material-icons dropdown-icon">scatter_plot</i>'
   };
 
-  private plotTypeOptions: Select2Options = {
+  public plotTypeOptions: Select2Options = {
     width: '100%',
     templateResult: state => {
       if (!state.id) {
