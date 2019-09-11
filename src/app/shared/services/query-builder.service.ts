@@ -9,9 +9,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class QueryBuilderService {
 
-  private queryBuilderObject: QueryBuilder;
+  public queryBuilderObject: QueryBuilder;
   public queryBuilderSub = new Subject<QueryBuilder>();
-  private resultSub = new Subject();
+  resultSub = new Subject();
   public resultStore: any;
 
   constructor(private http: HttpClient) { }

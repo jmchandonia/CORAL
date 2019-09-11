@@ -12,15 +12,15 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AdvancedSearchComponent implements OnInit {
 
-  private queryBuilderObject: QueryBuilder;
-  private showConnectionsUp = false;
-  private showConnectionsDown = false;
-  private showProcessesUp = false;
-  private showProcessesDown = false;
-  private operators;
+  queryBuilderObject: QueryBuilder;
+  showConnectionsUp = false;
+  showConnectionsDown = false;
+  showProcessesUp = false;
+  showProcessesDown = false;
+  operators;
 
   constructor(
-    private queryBuilder: QueryBuilderService,
+    queryBuilder: QueryBuilderService,
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient

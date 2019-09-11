@@ -14,10 +14,10 @@ export class AxisLabelerComponent implements OnInit {
       value += '=';
     });
   }
-  private displayOptions = false;
-  private format = '';
-  private invalid = false;
-  private valueLabels = [];
+  displayOptions = false;
+  format = '';
+  invalid = false;
+  valueLabels = [];
   @Output() labelsChanged: EventEmitter<any> = new EventEmitter();
 
   constructor() { }

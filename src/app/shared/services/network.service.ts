@@ -9,7 +9,7 @@ export class NetworkService {
 
   private networkSub: Subject<any> = new Subject();
 
-  private dataModelStore = {
+  dataModelStore = {
     queryMatch: [],
     connectsUpTo: [],
     connectsDownTo: [],

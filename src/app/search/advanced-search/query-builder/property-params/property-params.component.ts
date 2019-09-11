@@ -32,13 +32,13 @@ export class PropertyParamsComponent implements OnInit {
   @Input() connection = '';
   @ViewChild(Select2Component) attribute: ElementRef;
 
-  private queryParam: QueryParam;
-  private matchTypeBuilder = '';
-  private attributeBuilder = '';
-  private keywordBuilder = '';
-  private propertyTypesMetadata: any[];
-  private propertyTypes: Array<Select2OptionData> = this.select2Init();
-  private matchTypes: Array<Select2OptionData> = this.select2Init();
+  queryParam: QueryParam;
+  matchTypeBuilder = '';
+  attributeBuilder = '';
+  keywordBuilder = '';
+  propertyTypesMetadata: any[];
+  propertyTypes: Array<Select2OptionData> = this.select2Init();
+  matchTypes: Array<Select2OptionData> = this.select2Init();
 
   select2Init() {
     // required to have placeholder be displayed
