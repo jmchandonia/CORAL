@@ -3,6 +3,7 @@ from flask import Response
 from flask import request
 from flask_cors import CORS
 import pandas as pd
+import re
 
 # from . import services
 # from .brick import Brick
@@ -409,6 +410,83 @@ def generix_brick_metadata(brick_id):
     br = bp.load(brick_id)
     
     return br.to_json(exclude_data_values=True, typed_values_property_name=False)
+
+
+@app.route('/generix/plot_data', methods=['POST'])
+def generix_plot_data():
+    ''' We will currently support 1D and 2D and only the first data variable '''
+
+    query = request.json
+    bp = dp._get_type_provider('Brick')
+    brick_id = query['objectId']
+    try:
+        br = bp.load(brick_id)  
+    except:
+        return json.dumps({
+            'results': '', 
+            'status': 'ERR', 
+            'error': 'Can not load brick: %s' % brick_id})
+
+    # support mean
+    if 'constraints' in query:
+        for dimIndex, cst in query['constraints'].items():
+            dimIndex = int(dimIndex)
+            if cst == 'mean':
+                br = br.mean(br.dims[dimIndex])
+
+    if br.dim_count > 2:
+        return json.dumps({
+            'results': '', 
+            'status': 'ERR', 
+            'error': 'The current version can support only 1D and 2D objects'})
+
+    # Get all axes
+    axes = list(query['data'].keys())
+    if len(axes) != br.dim_count + 1:
+        return json.dumps({
+            'results': '', 
+            'status': 'ERR', 
+            'error': '#axes should equal to #dimensions -1'})
+
+    # Dimension indeces to axes
+    dim_index2axis = {}
+    for axis in axes:
+        dim_index = query['data'][axis]
+        dim_index2axis[dim_index] = axis
+
+    res = {}
+
+    for axis in axes:
+        dim_index = query['data'][axis]
+        if type(dim_index) is int:
+            label_pattern = query['labels'][axis]
+            res[axis] = _build_dim_labels(br.dims[dim_index],label_pattern)
+        else:
+            if br.dim_count == 1:
+                res[axis] = br.data_vars[0].values.tolist()
+            elif br.dim_count == 2:
+                if dim_index2axis[dim_index] == 'x':
+                    res[axis] = br.data_vars[0].values.tolist()
+                else:
+                    res[axis] = br.data_vars[0].values.T.tolist()
+
+    return  json.dumps({
+                'results': res,     
+                'status': 'OK', 
+                'error': ''
+            })    
+
+
+def _build_dim_labels(dim, pattern):
+    labels = []
+    for i in range(dim.size):
+        label = pattern
+        for vi, dvar in enumerate(dim.vars):
+            vi += 1
+            label = re.sub(r'#V%s'%vi, str(dvar.values[i]), label )
+        labels.append(label)
+    return labels
+
 
 
 @app.route('/generix/plot_data_test', methods=['POST'])
