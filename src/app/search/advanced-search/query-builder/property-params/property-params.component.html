@@ -32,7 +32,7 @@
       [value]="findDropdownValue(keywordBuilder, 'propertyTypes')"
       (valueChanged)="updateParam('keyword', $event)"
     ></select2> -->
-    <input class="form-control" [(ngModel)]="keywordBuilder" />
+    <input class="form-control" [(ngModel)]="queryParam.keyword" />
   </div>
   <div class="col-1">
     <i 

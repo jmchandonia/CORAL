@@ -1,0 +1,17 @@
+.search-result-row {
+    background-color: rgb(180,180,180);
+}
+
+.back {
+    margin-left: 30px!important;
+}
+
+h6 {
+    display: block!important;
+    margin-left: 30px!important;
+    margin-top: 10px;
+}
+
+.search-result-row h4 {
+    margin-left: 30px;
+}

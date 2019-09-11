@@ -6,6 +6,14 @@
     border: 1px solid #00365C!important;
 }
 
+.btn-secondary {
+    background-color: rgb(255, 98, 0)!important;
+}
+
+.btn-secondary:hover {
+    background-color: rgb(247, 115, 33)!important;
+}
+
 .btn-primary:hover {
     background-color:rgb(0, 91, 155)!important;
 }

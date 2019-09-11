@@ -21,23 +21,20 @@
 </div>
 <hr />
 <div class="row justify-content-center">
-  <div class="table-container col-10">
+  <div class="table-container col-11">
     <table class="table table-hover" cellspacing="1">
       <thead>
         <tr>
-          <th>a</th>
-          <th>b</th>
-          <th>c</th>
+          <th *ngFor="let field of resultFields">{{field.name}}</th>
           <th>options</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let result of results">
-          <td>{{result.title}}</td>
-          <td>{{result.body}}</td>
-          <td>{{result.userId}}</td>
+          <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
           <td>
-            <button class="btn btn-primary">View Data</button>
+            <button (click)="viewData(result.brick_id)" class="btn btn-sm btn-primary view-data data-button">View Data</button>
+            <button (click)="useData(result.brick_id)" class="btn btn-sm btn-secondary data-button">Use Data</button>
           </td>
         </tr>
       </tbody>

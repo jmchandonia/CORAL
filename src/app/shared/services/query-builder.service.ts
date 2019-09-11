@@ -9,19 +9,27 @@ import { HttpClient } from '@angular/common/http';
 })
 export class QueryBuilderService {
 
-  private queryBuilderObject: QueryBuilder = new QueryBuilder();
+  private queryBuilderObject: QueryBuilder;
   public queryBuilderSub = new Subject<QueryBuilder>();
   private resultSub = new Subject();
+  public resultStore: any;
 
   constructor(private http: HttpClient) { }
 
   getCurrentObject() {
     if (!this.queryBuilderObject) {
-      this.queryBuilderObject = new QueryBuilder();
+      const savedObject = this.getSavedObject();
+      this.queryBuilderObject = savedObject
+        ? savedObject
+        : new QueryBuilder();
       return this.queryBuilderObject;
     } else {
       return this.queryBuilderObject;
     }
+  }
+
+  getSavedObject() {
+    return JSON.parse(localStorage.getItem('queryBuilderObject'));
   }
 
   resetObject() {
@@ -54,16 +62,24 @@ export class QueryBuilderService {
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
+  // getSearchResults() {
+  //   return this.resultSub.asObservable();
+  // }
+
+  submitSearchResults() {
+    localStorage.setItem('queryBuilderObject', JSON.stringify(this.queryBuilderObject));
+  }
+
+  // setSearchResults(result) {
+  //   this.resultSub.next(result);
+  // }
+
   getSearchResults() {
-    return this.resultSub.asObservable();
-  }
-
-  setSearchResults(result) {
-    this.resultSub.next(result);
-  }
-
-  submitQuery() {
     return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
+  }
+
+  getObjectMetadata(id) {
+    return this.http.get(`https://psnov1.lbl.gov:8082/generix/brick_metadata/${id}`);
   }
 
 

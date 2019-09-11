@@ -1,0 +1,14 @@
+<div class="row">
+  <span class="ml-2 back" [routerLink]="['../']">Back To Search</span>
+  <hr style="width: 100%" />
+</div>
+<div class="row search-result-row">
+  <h4>Properties</h4>
+</div>
+<div class="row">
+  <h6>Id: {{searchResult.id}}</h6>
+  <h6>Type: {{searchResult.typed_values[0].value_type.oterm_name}}</h6>
+  <h6>Units: {{searchResult.typed_values[0].value_units.oterm_name}}</h6>
+</div>
+<div class="row search-result-row"><h4>Data</h4></div>
+  <h6></h6>
