@@ -51,6 +51,15 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilder.removeProcessParam(process, queryParam);
   }
 
+  onSubmit() {
+    // this.queryBuilder.submitQuery()
+    //   .subscribe((res) => {
+    //     this.queryBuilder.setSearchResults(res);
+    //     this.router.navigateByUrl('../result');
+    //   });
+    // this.router.navigate(['../result']);
+  }
+
   testQuery() {
     console.log('CURRENT QUERY', this.queryBuilderObject);
   }

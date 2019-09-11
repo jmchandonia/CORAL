@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
 import { NetworkService } from './network.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,9 @@ export class QueryBuilderService {
 
   private queryBuilderObject: QueryBuilder = new QueryBuilder();
   public queryBuilderSub = new Subject<QueryBuilder>();
+  private resultSub = new Subject();
 
-  constructor(private network: NetworkService) { }
+  constructor(private http: HttpClient) { }
 
   getCurrentObject() {
     if (!this.queryBuilderObject) {
@@ -38,7 +40,7 @@ export class QueryBuilderService {
 
   addProcessParam(process, queryParam) {
     this.queryBuilderObject[process].push(queryParam);
-    this.queryBuilderSub.next(this.queryBuilderObject); 
+    this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
   updateProcessParam(process, index, queryParam) {
@@ -52,8 +54,16 @@ export class QueryBuilderService {
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
+  getSearchResults() {
+    return this.resultSub.asObservable();
+  }
+
+  setSearchResults(result) {
+    this.resultSub.next(result);
+  }
+
   submitQuery() {
-    return this.network.submitQuery()
+    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
   }
 
 

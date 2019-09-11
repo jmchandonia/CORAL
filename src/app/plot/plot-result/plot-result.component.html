@@ -1,3 +1,7 @@
+<div class="row">
+  <span class="col-2 offset-1 mt-2" [routerLink]="['../options/123']">Go back</span>
+  <hr style="width: 100%" />
+</div>
 <div class="plot-container">
-  <!-- <plotly-plot [data]="data" [layout]="layout"></plotly-plot> -->
+  <plotly-plot [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
 </div>

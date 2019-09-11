@@ -1,0 +1,8 @@
+.plot-container {
+    padding: 20px;
+    background-color: rgb(180,180,180);
+    margin: 0px auto;
+    width: 850px;
+    border-radius: 20px;
+    margin-top: 20px;
+}

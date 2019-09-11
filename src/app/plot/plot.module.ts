@@ -8,6 +8,10 @@ import { DimensionOptionsComponent } from './plot-options/dimension-options/dime
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AxisLabelerComponent } from './plot-options/dimension-options/axis-labeler/axis-labeler.component';
 import { PlotResultComponent } from './plot-result/plot-result.component';
+import { PlotlyModule } from 'angular-plotly.js';
+import * as PlotlyJS from 'plotly.js/dist/plotly.js';
+
+PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
   declarations: [PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
   imports: [
@@ -15,7 +19,8 @@ import { PlotResultComponent } from './plot-result/plot-result.component';
     PlotRoutingModule,
     Select2Module,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    PlotlyModule
   ]
 })
 export class PlotModule { }
