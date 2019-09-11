@@ -23,7 +23,7 @@
     ></select2>
   </div>
   <div class="col-5">
-    <select2
+    <!-- <select2
       ngDefaultControl
       name="keywords"
       [cssImport]="true"
@@ -31,7 +31,8 @@
       [data]="propertyTypes"
       [value]="findDropdownValue(keywordBuilder, 'propertyTypes')"
       (valueChanged)="updateParam('keyword', $event)"
-    ></select2>
+    ></select2> -->
+    <input class="form-control" [(ngModel)]="keywordBuilder" />
   </div>
   <div class="col-1">
     <i 
@@ -72,7 +73,7 @@
     ></select2>
   </div>
   <div class="col-5">
-    <select2
+    <!-- <select2
       ngDefaultControl
       name="keywords"
       [cssImport]="true"
@@ -80,7 +81,8 @@
       [data]="propertyTypes"
       [(ngModel)]="keywordBuilder"
       (valueChanged)="keywordBuilder = $event.data[0].text"
-    ></select2>
+    ></select2> -->
+    <input class="form-control" placeholder="Keyword(s)" [(ngModel)]="keywordBuilder">
   </div>
   <div class="col-1">
     <i 

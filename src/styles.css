@@ -9,3 +9,32 @@
 .btn-primary:hover {
     background-color:rgb(0, 91, 155)!important;
 }
+
+.icon {
+    height: 24px;
+    width: 24px;
+    margin-right: 15px;
+}
+
+.dropdown-icon {
+    height: 20px;
+    width:  20px;
+    margin-right: 15px;
+    color: #00365C;
+    position: relative;
+    top: 5px;
+}
+
+.dropdown-item {
+    margin-bottom: 5px;
+}
+
+.rotated {
+    transform: rotate(90deg);
+    margin-left: 5px;
+}
+
+.form-control {
+    height: 28px!important;
+    border: 1px solid #aaa!important;
+}

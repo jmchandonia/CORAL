@@ -18,6 +18,7 @@ export class QueryMatch {
     }
     public dataModel: string;
     public dataType: string;
+    public category: string;
     public params: QueryParam[];
 }
 
