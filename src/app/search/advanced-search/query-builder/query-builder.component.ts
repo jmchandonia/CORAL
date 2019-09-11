@@ -73,7 +73,6 @@ export class QueryBuilderComponent implements OnInit {
         this.dataTypes = data.results;
         return {
           results: $.map(data.results, (obj, idx) => {
-            console.log('RESULTS', obj.dataType, obj.dataModel, obj.category);
             return {id: idx.toString(), text: obj.dataType};
           }),
         };

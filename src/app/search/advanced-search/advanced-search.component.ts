@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -22,6 +22,7 @@ export class AdvancedSearchComponent implements OnInit {
   constructor(
     private queryBuilder: QueryBuilderService,
     private router: Router,
+    private route: ActivatedRoute,
     private http: HttpClient
   ) { }
 
@@ -52,12 +53,8 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.queryBuilder.submitQuery()
-    //   .subscribe((res) => {
-    //     this.queryBuilder.setSearchResults(res);
-    //     this.router.navigateByUrl('../result');
-    //   });
-    // this.router.navigate(['../result']);
+    this.queryBuilder.submitSearchResults();
+    this.router.navigate(['../result'], {relativeTo: this.route});
   }
 
   testQuery() {

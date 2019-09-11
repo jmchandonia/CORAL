@@ -30,7 +30,6 @@ export class PlotResultComponent implements OnInit {
     this.plotData = this.objectGraphMap.getMeasurements();
     this.data[0].x = this.plotData.x;
     this.data[0].y = this.plotData.y;
-    console.log('DAATA', this.data);
     this.chRef.detectChanges();
   }
 

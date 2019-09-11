@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ObjectGraphMapService } from '../../shared/services/object-graph-map.service';
 import { ObjectMetadata } from '../../shared/models/object-metadata';
+import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { Select2OptionData } from 'ng2-select2';
 import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 
@@ -13,7 +14,7 @@ import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 export class PlotOptionsComponent implements OnInit {
 
   private dimensions = ['x', 'y', 'z'];
-  private plotObject: ObjectMetadata;
+  private plotObject: any;
   private plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   private formDimensions: FormArray;
   private testForm: any;
@@ -47,6 +48,7 @@ export class PlotOptionsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private objectGraphMap: ObjectGraphMapService,
+    private queryBuilder: QueryBuilderService,
     private fb: FormBuilder,
     private router: Router,
     ) { }
@@ -55,8 +57,18 @@ export class PlotOptionsComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.objectId = params.id;
+      this.queryBuilder.getObjectMetadata(this.objectId)
+        .subscribe((result: any) => {
+          this.plotObject = {dimensions: []};
+          result.dim_context.forEach(dim => {
+            this.plotObject.dimensions.push({
+              type: dim.data_type.oterm_name,
+              dim_vars: [...dim.typed_values.map(o => o.value_type.oterm_name)]
+            });
+          });
+        });
     });
-    this.plotObject = this.objectGraphMap.getSelectedObject();
+    // this.plotObject = this.objectGraphMap.getSelectedObject();
     this.listPlotTypes = this.objectGraphMap.listPlotTypes();
     const plotTypes = this.listPlotTypes.map(item => item.type);
     plotTypes.forEach((val, idx) => {
@@ -98,7 +110,6 @@ export class PlotOptionsComponent implements OnInit {
 
   submit() {
     // this.objectGraphMap.submitNewPlot(this.plotForm);
-    console.log('plot form', this.plotForm);
   }
 
 }

@@ -49,6 +49,7 @@ export class PropertyParamsComponent implements OnInit {
     this.matchTypeBuilder = param.matchType;
     this.attributeBuilder = param.attribute;
     this.keywordBuilder = param.keyword;
+    this.queryParam = param;
     // TODO: figure out a way to bind builder values with select2 dropdown items
   }
 

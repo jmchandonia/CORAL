@@ -9,3 +9,11 @@
     color: #00365C;
     padding: 20px;
 }
+
+.data-button {
+    width: 100px!important;
+}
+
+.view-data {
+    margin-bottom: 5px!important;
+}

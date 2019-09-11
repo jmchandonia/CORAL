@@ -10,14 +10,18 @@ import { PropertyParamsComponent } from './advanced-search/query-builder/propert
 import { FormsModule } from '@angular/forms';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SearchResultItemComponent } from './search-result/search-result-item/search-result-item.component';
 
 
 @NgModule({
   declarations: [
-    SearchComponent, 
-    SimpleSearchComponent, 
-    AdvancedSearchComponent, 
-    QueryBuilderComponent, PropertyParamsComponent, SearchResultComponent
+    SearchComponent,
+    SimpleSearchComponent,
+    AdvancedSearchComponent,
+    QueryBuilderComponent,
+    PropertyParamsComponent,
+    SearchResultComponent,
+    SearchResultItemComponent
   ],
   imports: [
     CommonModule,
