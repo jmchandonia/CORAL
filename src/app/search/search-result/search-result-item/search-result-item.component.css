@@ -1,5 +1,41 @@
 .search-result-row {
-    background-color: rgb(180,180,180);
+    background-color: rgb(201, 201, 201);
+    padding-top: 12px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.data-container {
+    border: 1px solid rgb(201,201,201);
+    box-shadow: 1px 1px 5px rgb(130,130,130);
+}
+
+.top-title {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.bottom-title {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-align: right;
+    width: 100%;
+    padding: 10px;
+}
+
+p {
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.dimensions-container {
+    margin-left: 20px;
+}
+
+.back-icon {
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
 }
 
 .back {
@@ -14,4 +50,9 @@ h6 {
 
 .search-result-row h4 {
     margin-left: 30px;
+}
+
+.menu-option {
+    color: #00365C;
+    cursor: pointer;
 }
