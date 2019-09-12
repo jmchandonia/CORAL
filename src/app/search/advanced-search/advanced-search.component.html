@@ -31,11 +31,15 @@
     <app-property-params
         *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
         [data]="queryMatch"
+        [operators]="operators"
+        [attributes]="processes"
         (updated)="updateProcess('processesUp', idx, $event)"
         (removed)="removeProcess('processesUp', $event)"
         ></app-property-params>
     <app-property-params
         [isEmpty]="true"
+        [attributes]="processes"
+        [operators]="operators"
         (added)="addProcess('processesUp', $event)"
         ></app-property-params>
 </div>
@@ -49,11 +53,15 @@
     <app-property-params
         *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
         [data]="queryMatch"
+        [attributes]="processes"
+        [operators]="operators"
         (updated)="updateProcess('processesDown', idx, $event)"
         (removed)="removeProcess('processesDown', $event)"
         ></app-property-params>
     <app-property-params
         [isEmpty]="true"
+        [attributes]="processes"
+        [operators]="operators"
         (added)="addProcess('processesDown', $event)"
         ></app-property-params>
 </div>
