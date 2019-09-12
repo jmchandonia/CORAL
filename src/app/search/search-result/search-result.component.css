@@ -3,6 +3,12 @@
     cursor: pointer;
 }
 
+.back-icon {
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
+}
+
 .query-container {
     border-radius: 20px;
     background-color: rgb(211, 209, 208);

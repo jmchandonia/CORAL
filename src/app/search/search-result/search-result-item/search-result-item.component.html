@@ -1,14 +1,48 @@
-<div class="row">
-  <span class="ml-2 back" [routerLink]="['../']">Back To Search</span>
-  <hr style="width: 100%" />
+<div class="container">
+  <div class="row mb-3 mt-3">
+    <div class="offset-1" [routerLink]="['../']">
+      <i class="material-icons back-icon">keyboard_arrow_left</i>
+      <span class="menu-option">Back To Search Results</span>
+    </div>
+    <hr class="col-12" />
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="search-result-row top-title">
+        <h4>Properties</h4>
+      </div>
+      <div class="row d-block">
+        <p><strong>Id:</strong> {{searchResult?.id}}</p>
+        <p><strong>Type:</strong> {{searchResult?.typed_values[0].value_type.oterm_name}}</p>
+        <p><strong>Units:</strong> {{searchResult?.typed_values[0].value_units.oterm_name}}</p>
+        <p><strong>Name:</strong> {{searchResult?.name}}</p>
+      </div>
+      <div class="search-result-row">
+        <h4>Data</h4>
+      </div>
+      <div class="row d-block">
+        <p><strong>Data Type:</strong> {{searchResult?.data_type.oterm_name}}</p>
+        <p><strong>Description:</strong> {{searchResult?.description}}</p>
+      </div>
+      <div class="search-result-row">
+        <h4>Dimensions ({{searchResult?.dim_context.length}})</h4>
+      </div>
+      <div class="row d-block">
+        <div class="dimensions-container" *ngFor="let dim of searchResult?.dim_context; let i = index">
+          <strong>{{dim.data_type.oterm_name}}, size={{dim.size}}</strong><br />
+          <strong>Variables: </strong>
+          <p *ngFor="let dim_var of dim.typed_values">{{dim_var.value_type.oterm_name}}</p>
+        </div>
+      </div>
+      <div class="search-result-row bottom-title">
+        <!-- <h4>Attributes</h4>
+      </div>
+      <div class="row d-block">
+
+      </div> -->
+      <!-- <div class="row"> -->
+        <button class="btn btn-secondary" (click)="useForPlot()">Use Data</button>
+      <!-- </div> -->
+    </div>
+  </div>
 </div>
-<div class="row search-result-row">
-  <h4>Properties</h4>
-</div>
-<div class="row">
-  <h6>Id: {{searchResult.id}}</h6>
-  <h6>Type: {{searchResult.typed_values[0].value_type.oterm_name}}</h6>
-  <h6>Units: {{searchResult.typed_values[0].value_units.oterm_name}}</h6>
-</div>
-<div class="row search-result-row"><h4>Data</h4></div>
-  <h6></h6>

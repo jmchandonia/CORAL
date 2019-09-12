@@ -4,7 +4,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  ChangeDetectionStrategy,
   ViewChild,
   ElementRef
  } from '@angular/core';
@@ -16,7 +15,6 @@ import { NetworkService } from '../../../../shared/services/network.service';
   selector: 'app-property-params',
   templateUrl: './property-params.component.html',
   styleUrls: ['./property-params.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyParamsComponent implements OnInit {
 
