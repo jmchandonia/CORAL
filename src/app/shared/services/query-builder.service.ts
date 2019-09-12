@@ -75,6 +75,14 @@ export class QueryBuilderService {
     return this.http.get(`https://psnov1.lbl.gov:8082/generix/brick_metadata/${id}`);
   }
 
+  getDataTypes() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_types');
+  }
+
+  getDataModels() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+  }
+
   getSearchType() {
     return this.searchType;
   }

@@ -76,7 +76,6 @@ export class QueryBuilderComponent implements OnInit {
             return {id: idx.toString(), text: obj.dataType};
           }),
         };
-        //${obj.dataType}:${obj.dataModel}:${obj.category}
     },
   };
 
