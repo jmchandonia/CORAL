@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef
+ } from '@angular/core';
 import { Select2OptionData, Select2Component } from 'ng2-select2';
 import { QueryParam } from '../../../../shared/models/QueryBuilder';
 import { NetworkService } from '../../../../shared/services/network.service';
@@ -6,7 +15,8 @@ import { NetworkService } from '../../../../shared/services/network.service';
 @Component({
   selector: 'app-property-params',
   templateUrl: './property-params.component.html',
-  styleUrls: ['./property-params.component.css']
+  styleUrls: ['./property-params.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PropertyParamsComponent implements OnInit {
 
@@ -18,8 +28,8 @@ export class PropertyParamsComponent implements OnInit {
     if (a) {
       this.propertyTypesMetadata = a;
       this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
-      return { id: item.name, text: item.name };
-    })];
+        return { id: item.name, text: item.name };
+      })];
     }
   }
   @Input() set operators(o: Array<string>) {
@@ -57,28 +67,7 @@ export class PropertyParamsComponent implements OnInit {
     private network: NetworkService,
   ) { }
 
-  ngOnInit() {
-    // if (!this.isEmpty) {
-    //   let newData = this.network.getPropertyValuesDirect(this.connection);
-    //   newData = newData.map(item => {
-    //     return { id: item.id.toString(), text: item.title };
-    //   });
-    //   this.propertyTypes = [this.propertyTypes[0], ...newData];
-    // } else {
-    //   this.network.getPropertyValues()
-    //   .subscribe(data => {
-    //     if (
-    //         data.connection === this.connection 
-    //         || (!this.connection && data.connection === 'queryMatch')
-    //       ) {
-    //      const newData = data.results.map(item => {
-    //        return { id: item.id.toString(), text: item.title }
-    //      });
-    //      this.propertyTypes = [this.propertyTypes[0], ...newData];
-    //     }
-    //   });
-    // }
-  }
+  ngOnInit() { }
 
   addParam() {
 

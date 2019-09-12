@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-advanced-search',
   templateUrl: './advanced-search.component.html',
-  styleUrls: ['./advanced-search.component.css']
+  styleUrls: ['./advanced-search.component.css'],
 })
 export class AdvancedSearchComponent implements OnInit {
 
@@ -18,12 +18,14 @@ export class AdvancedSearchComponent implements OnInit {
   showProcessesUp = false;
   showProcessesDown = false;
   operators;
+  processes = [];
 
   constructor(
     private queryBuilder: QueryBuilderService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,12 @@ export class AdvancedSearchComponent implements OnInit {
     this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations')
       .subscribe((data: any) => {
         this.operators = data.results;
+      });
+
+    this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
+      .subscribe((data: any) => {
+        const process = data.results.Process;
+        this.processes = process.properties;
       });
   }
 
