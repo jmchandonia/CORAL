@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryBuilder';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-simple-search',
@@ -53,7 +54,8 @@ export class SimpleSearchComponent implements OnInit {
   queryBuilderObject: QueryBuilder;
 
   constructor(
-    private queryBuilder: QueryBuilderService
+    private queryBuilder: QueryBuilderService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -68,8 +70,10 @@ export class SimpleSearchComponent implements OnInit {
     this.queryMatch.params = [new QueryParam(null, null, event.data[0].text)];
   }
 
-  submitSearch() {
-    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch))
+  onSubmit() {
+    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch));
+    this.router.navigate(['/search/result']);
+    this.queryBuilder.setSearchType('simple');
   }
 
 }

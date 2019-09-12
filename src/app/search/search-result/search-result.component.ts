@@ -18,6 +18,7 @@ export class SearchResultComponent implements OnInit {
   dataTable: any;
   searchQuery: QueryBuilder;
   showQuery = false;
+  searchType: string;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -27,7 +28,10 @@ export class SearchResultComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.searchType = this.queryBuilder.getSearchType();
     this.searchQuery = this.queryBuilder.getCurrentObject();
+
     this.queryBuilder.getSearchResults()
       .subscribe((res: any) => {
         this.results = res.data;
@@ -38,7 +42,6 @@ export class SearchResultComponent implements OnInit {
         this.dataTable = table.DataTable();
       });
 
-    // this.searchQuery = this.queryBuilder.getCurrentObject();
   }
 
   viewData(id) {

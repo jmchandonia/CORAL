@@ -13,6 +13,7 @@ export class QueryBuilderService {
   public queryBuilderSub = new Subject<QueryBuilder>();
   resultSub = new Subject();
   public resultStore: any;
+  searchType: string;
 
   constructor(private http: HttpClient) { }
 
@@ -72,6 +73,14 @@ export class QueryBuilderService {
 
   getObjectMetadata(id) {
     return this.http.get(`https://psnov1.lbl.gov:8082/generix/brick_metadata/${id}`);
+  }
+
+  getSearchType() {
+    return this.searchType;
+  }
+
+  setSearchType(searchType: string) {
+    this.searchType = searchType;
   }
 
 

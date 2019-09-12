@@ -63,6 +63,7 @@ export class AdvancedSearchComponent implements OnInit {
   onSubmit() {
     this.queryBuilder.submitSearchResults();
     this.router.navigate(['../result'], {relativeTo: this.route});
+    this.queryBuilder.setSearchType('advanced');
   }
 
   testQuery() {
