@@ -5,7 +5,7 @@
     [options]="select2Options" 
     [data]="dataTypeList" 
     [cssImport]="true"
-    [value]="'Select Data Type'"
+    [value]="selectedDataType ? '0' : ''"
     (valueChanged)="updateDataModel($event)"
     name="data-type-selector"></select2>
   <label for="keyword-selector" style="margin-top: 10px;">Keywords</label>

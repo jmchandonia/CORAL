@@ -30,7 +30,9 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit() {
 
-    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    // this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    const getQuery = this.queryBuilder.getCurrentObject();
+    this.queryBuilderObject = getQuery.qb;
 
     this.queryBuilder.getUpdatedObject().subscribe(object => {
       Object.assign(this.queryBuilderObject, object);

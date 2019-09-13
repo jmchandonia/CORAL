@@ -13,6 +13,7 @@ export class SimpleSearchComponent implements OnInit {
 
   dataTypeList: Array<Select2OptionData> = [{id: '', text: ''}];
   dataTypes: any[];
+  selectedDataType: string;
   keywords = '';
   select2Options: Select2Options = {
     width: '100%',
@@ -28,7 +29,13 @@ export class SimpleSearchComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    const getQuery = this.queryBuilder.getCurrentObject();
+    this.queryBuilderObject = getQuery.qb;
+    if (!getQuery.empty && getQuery.qb.queryMatch) {
+      this.keywords = this.queryBuilderObject.queryMatch.params[0].keyword;
+      this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
+      this.dataTypeList.push({id: '0', text: this.selectedDataType});
+    }
     this.ajaxOptions = {
       url: 'https://psnov1.lbl.gov:8082/generix/data_types',
       dataType: 'json',
@@ -55,8 +62,9 @@ export class SimpleSearchComponent implements OnInit {
   }
 
   onSubmit() {
-    this.queryMatch.params.push(new QueryParam(null, null, this.keywords));
-    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch));
+    this.queryMatch.params.push(new QueryParam(null, null, this.keywords, 'string'));
+    this.queryBuilderObject.queryMatch = this.queryMatch;
+    this.queryBuilder.submitSearchResults();
     this.router.navigate(['/search/result']);
     this.queryBuilder.setSearchType('simple');
   }
