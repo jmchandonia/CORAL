@@ -20,12 +20,15 @@ export class QueryBuilderService {
   getCurrentObject() {
     if (!this.queryBuilderObject) {
       const savedObject = this.getSavedObject();
-      this.queryBuilderObject = savedObject
-        ? savedObject
-        : new QueryBuilder();
-      return this.queryBuilderObject;
+      if (savedObject) {
+        this.queryBuilderObject = savedObject;
+        return {qb: this.queryBuilderObject, empty: false};
+      } else {
+        this.queryBuilderObject = new QueryBuilder();
+        return {qb: this.queryBuilderObject, empty: true};
+      }
     } else {
-      return this.queryBuilderObject;
+      return {qb: this.queryBuilderObject, empty: false};
     }
   }
 
@@ -34,8 +37,9 @@ export class QueryBuilderService {
   }
 
   resetObject() {
-    delete this.queryBuilderObject;
+    localStorage.removeItem('queryBuilderObject');
     this.queryBuilderObject = new QueryBuilder();
+    console.log('qbo after reset ->', this.queryBuilderObject);
   }
 
   getUpdatedObject() {
@@ -64,6 +68,7 @@ export class QueryBuilderService {
   }
 
   submitSearchResults() {
+    console.log('QBO IN SUBMIT', this.queryBuilderObject);
     localStorage.setItem('queryBuilderObject', JSON.stringify(this.queryBuilderObject));
   }
 
