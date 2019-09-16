@@ -45,7 +45,7 @@ export class QueryBuilderComponent implements OnInit {
     escapeMarkup: m => m
   };
 
-  private dataTypeList: Array<Select2OptionData> = [
+  dataTypeList: Array<Select2OptionData> = [
     {
       id: '',
       text: ''
