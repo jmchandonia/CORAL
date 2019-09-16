@@ -32,7 +32,10 @@ export class SimpleSearchComponent implements OnInit {
     const getQuery = this.queryBuilder.getCurrentObject();
     this.queryBuilderObject = getQuery.qb;
     if (!getQuery.empty && getQuery.qb.queryMatch) {
-      this.keywords = this.queryBuilderObject.queryMatch.params[0].keyword;
+      const p = this.queryBuilderObject.queryMatch.params;
+      if (p && p.length) {
+        this.keywords = p[0].keyword;
+      }
       this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
       this.dataTypeList.push({id: '0', text: this.selectedDataType});
     }

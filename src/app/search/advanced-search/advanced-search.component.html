@@ -2,7 +2,7 @@
     <h5 style="display: inline-block">Data Information</h5>
 </div>
 <app-query-builder
-    [connection]="'queryMatch'" [operators]="operators"></app-query-builder>
+    [connection]="'queryMatch'" [queryMatch]="queryBuilderObject.queryMatch" [operators]="operators"></app-query-builder>
  <div class="data-information-header" (click)="showConnectionsUp = !showConnectionsUp">
     <i class="material-icons" *ngIf="!showConnectionsUp" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showConnectionsUp" style="font-size: 1.25rem;">arrow_drop_down</i>
@@ -10,7 +10,7 @@
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsUp" />
 <app-query-builder
-    [connection]="'connectsUpTo'" [operators]="operators" [hidden]="!showConnectionsUp"
+    [connection]="'connectsUpTo'" [queryMatch]="queryBuilderObject.connectsUpTo" [operators]="operators" [hidden]="!showConnectionsUp"
     ></app-query-builder>
 <div class="data-information-header" (click)="showConnectionsDown = !showConnectionsDown">
     <i class="material-icons" *ngIf="!showConnectionsDown" style="font-size: 1.25rem;">arrow_right</i>
@@ -19,7 +19,7 @@
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsDown" />
 <app-query-builder 
-    [connection]="'connectsDownto'" [operators]="operators" [hidden]="!showConnectionsDown"
+    [connection]="'connectsDownto'" [queryMatch]="queryBuilderObject.connectsDownTo" [operators]="operators" [hidden]="!showConnectionsDown"
     ></app-query-builder>
 <div class="data-information-header" (click)="showProcessesUp = !showProcessesUp">
     <i class="material-icons" *ngIf="!showProcessesUp" style="font-size: 1.25rem;">arrow_right</i>
@@ -69,7 +69,6 @@
     <div class="row">
         <div class="col-2 offset-10">
             <button class="btn btn-primary" (click)="onSubmit()">Search</button>
-            <!-- [routerLink]="['../result'" -->
         </div>
     </div>
 </div>
