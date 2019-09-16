@@ -39,7 +39,6 @@ export class QueryBuilderService {
   resetObject() {
     localStorage.removeItem('queryBuilderObject');
     this.queryBuilderObject = new QueryBuilder();
-    console.log('qbo after reset ->', this.queryBuilderObject);
   }
 
   getUpdatedObject() {
@@ -56,8 +55,8 @@ export class QueryBuilderService {
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
-  updateProcessParam(process, index, queryParam) {
-    this.queryBuilderObject[process][index] = queryParam;
+  updateProcessParam(process, index, event) {
+    this.queryBuilderObject[process][index][event.key] = event.value.value;
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
@@ -86,6 +85,10 @@ export class QueryBuilderService {
 
   getDataModels() {
     return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+  }
+
+  getOperators() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations');
   }
 
   getSearchType() {

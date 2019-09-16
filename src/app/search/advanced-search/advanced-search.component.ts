@@ -30,7 +30,6 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.queryBuilderObject = this.queryBuilder.getCurrentObject();
     const getQuery = this.queryBuilder.getCurrentObject();
     this.queryBuilderObject = getQuery.qb;
 
@@ -38,12 +37,12 @@ export class AdvancedSearchComponent implements OnInit {
       Object.assign(this.queryBuilderObject, object);
     });
 
-    this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations')
+    this.queryBuilder.getOperators()
       .subscribe((data: any) => {
         this.operators = data.results;
       });
 
-    this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
+    this.queryBuilder.getDataModels()
       .subscribe((data: any) => {
         const process = data.results.Process;
         this.processes = process.properties;

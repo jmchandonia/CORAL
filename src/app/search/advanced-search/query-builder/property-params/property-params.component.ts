@@ -39,6 +39,7 @@ export class PropertyParamsComponent implements OnInit {
   }
   @Input() connection = '';
   @ViewChild(Select2Component) attribute: ElementRef;
+  // @ViewChild(Select2Component) matchType: ElementRef;
 
   queryParam: QueryParam;
   matchTypeBuilder = '';
@@ -47,6 +48,8 @@ export class PropertyParamsComponent implements OnInit {
   propertyTypesMetadata: any[];
   propertyTypes: Array<Select2OptionData> = this.select2Init();
   matchTypes: Array<Select2OptionData> = this.select2Init();
+  selectedMatchType: string;
+  selectedAttribute: string;
 
   select2Init() {
     // required to have placeholder be displayed
@@ -54,11 +57,18 @@ export class PropertyParamsComponent implements OnInit {
   }
 
   @Input() set data(param) {
-    this.matchTypeBuilder = param.matchType;
-    this.attributeBuilder = param.attribute;
+    if (param.matchType) {
+      this.selectedMatchType = param.matchType;
+      this.matchTypes.push({id: '0', text: param.matchType});
+      this.matchTypeBuilder = param.matchType;
+    }
+    if (param.attribute) {
+      this.selectedAttribute = param.attribute;
+      this.propertyTypes.push({id: '0', text: param.attribute});
+      this.attributeBuilder = param.attribute;
+    }
     this.keywordBuilder = param.keyword;
     this.queryParam = param;
-    // TODO: figure out a way to bind builder values with select2 dropdown items
   }
 
   constructor(
