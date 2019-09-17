@@ -457,7 +457,7 @@ def _get_plot_data(query):
     for axis in axes:
         dim_index = query['data'][axis]
         if type(dim_index) is int:
-            label_pattern = query['labels'][axis]
+            label_pattern = query['config'][axis]['label_pattern']
             res[axis] = _build_dim_labels(br.dims[dim_index],label_pattern)
         else:
             if br.dim_count == 1:
@@ -483,39 +483,53 @@ def generix_plotly_data():
 
     rs = d['results']
 
-    title = ''
-    xTitle = ''
-    yTitle = ''
-
+    # Build layout
     layout = {
         'width': 800,
         'height': 600,
-        'title': title,
-        'xaxis': {
-            'title': xTitle,
-        },
-        'yaxis': {
-            title: yTitle
-        }
+        'title': query['config']['title'],
+        **query['plotly_layout']
     }
-
-    data = []
-    if 'z' in d['results']:
-        for zindex, zval in enumerate(rs['z']):
-            trace = {
-                'x': rs['x'][zindex] if query['data']['x'] == 'D' else rs['x'],
-                'y': rs['y'][zindex] if query['data']['y'] == 'D' else rs['y'],
-                'name': zval,
-                'type': 'bar'                
+    if 'x' in query['config']:
+        if query['config']['x']['show_title']:
+            layout['xaxis'] = {
+              'title': query['config']['x']['title']  
             }
-            data.append(trace)
-    else:
+
+    if 'y' in query['config']:
+        if query['config']['y']['show_title']:
+            layout['yaxis'] = {
+              'title': query['config']['y']['title']  
+            }
+
+    # Build layout
+    data = []
+    plot_type = query['plotly_trace'].get('type')
+    if plot_type == 'heatmap':
         trace = {
             'x': rs['x'],
             'y': rs['y'],
-            'type': 'bar'                
+            'z': rs['z'],
+            **query['plotly_trace']             
         }        
-        data.append(trace)
+        data.append(trace)        
+    else:
+        if 'z' in d['results']:
+            for zindex, zval in enumerate(rs['z']):
+                trace = {
+                    'x': rs['x'][zindex] if query['data']['x'] == 'D' else rs['x'],
+                    'y': rs['y'][zindex] if query['data']['y'] == 'D' else rs['y'],
+                    'name': zval,
+                    **query['plotly_trace']            
+                }
+                data.append(trace)
+        else:
+            trace = {
+                'x': rs['x'],
+                'y': rs['y'],
+                **query['plotly_trace']             
+            }        
+            data.append(trace)
 
     return json.dumps({
         'results': {
