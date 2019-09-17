@@ -749,8 +749,21 @@ def generix_search_operations():
     res = ['=','>','<','>=','<=','like']
     return  json.dumps({'results': res})
 
-
-
+@app.route("/generix/plot_types", methods=['GET'])
+def generix_plot_types():
+    fname = cns['_PLOT_TYPES_FILE']
+    try:
+        plot_types = json.loads(open(fname).read())['plot_types']
+    except Exception as e:
+        return json.dumps({
+            'results': '', 
+            'status': 'ERR', 
+            'error': str(e)})
+        
+    return json.dumps({
+        'results': plot_types, 
+        'status': 'OK', 
+        'error': ''})
 
 
 if __name__ == "__main__":
