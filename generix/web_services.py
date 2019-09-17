@@ -412,20 +412,18 @@ def generix_brick_metadata(brick_id):
     return br.to_json(exclude_data_values=True, typed_values_property_name=False)
 
 
-@app.route('/generix/plot_data', methods=['POST'])
-def generix_plot_data():
+def _get_plot_data(query):
     ''' We will currently support 1D and 2D and only the first data variable '''
 
-    query = request.json
     bp = dp._get_type_provider('Brick')
     brick_id = query['objectId']
     try:
         br = bp.load(brick_id)  
     except:
-        return json.dumps({
+        return {
             'results': '', 
             'status': 'ERR', 
-            'error': 'Can not load brick: %s' % brick_id})
+            'error': 'Can not load brick: %s' % brick_id}
 
     # support mean
     if 'constraints' in query:
@@ -435,18 +433,18 @@ def generix_plot_data():
                 br = br.mean(br.dims[dimIndex])
 
     if br.dim_count > 2:
-        return json.dumps({
+        return {
             'results': '', 
             'status': 'ERR', 
-            'error': 'The current version can support only 1D and 2D objects'})
+            'error': 'The current version can support only 1D and 2D objects'}
 
     # Get all axes
     axes = list(query['data'].keys())
     if len(axes) != br.dim_count + 1:
-        return json.dumps({
+        return {
             'results': '', 
             'status': 'ERR', 
-            'error': '#axes should equal to #dimensions -1'})
+            'error': '#axes should equal to #dimensions -1'}
 
     # Dimension indeces to axes
     dim_index2axis = {}
@@ -470,12 +468,70 @@ def generix_plot_data():
                 else:
                     res[axis] = br.data_vars[0].values.T.tolist()
 
-    return  json.dumps({
+    return  {
                 'results': res,     
                 'status': 'OK', 
                 'error': ''
-            })    
+            }
 
+@app.route('/generix/plotly_data', methods=['POST'])
+def generix_plotly_data():
+    query = request.json
+    d = _get_plot_data(query)
+    if d['status'] != 'OK':
+        return json.dumps(d)
+
+    rs = d['results']
+
+    title = ''
+    xTitle = ''
+    yTitle = ''
+
+    layout = {
+        'width': 800,
+        'height': 600,
+        'title': title,
+        'xaxis': {
+            'title': xTitle,
+        },
+        'yaxis': {
+            title: yTitle
+        }
+    }
+
+    data = []
+    if 'z' in d['results']:
+        for zindex, zval in enumerate(rs['z']):
+            trace = {
+                'x': rs['x'][zindex] if query['data']['x'] == 'D' else rs['x'],
+                'y': rs['y'][zindex] if query['data']['y'] == 'D' else rs['y'],
+                'name': zval,
+                'type': 'bar'                
+            }
+            data.append(trace)
+    else:
+        trace = {
+            'x': rs['x'],
+            'y': rs['y'],
+            'type': 'bar'                
+        }        
+        data.append(trace)
+
+    return json.dumps({
+        'results': {
+            'layout': layout,
+            'data': data
+        },     
+        'status': 'OK', 
+        'error': ''
+    })
+
+
+
+@app.route('/generix/plot_data', methods=['POST'])
+def generix_plot_data():
+    d = _get_plot_data(request.json)
+    return json.dumps(d)
 
 def _build_dim_labels(dim, pattern):
     labels = []
