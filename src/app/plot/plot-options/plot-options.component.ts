@@ -20,6 +20,7 @@ export class PlotOptionsComponent implements OnInit {
   private testForm: any;
   private listPlotTypes: any;
   public selectedPlotType: any;
+  public objectId: string;
   public plotForm = this.fb.group({
     plotType: '',
     graphTitle: [''],
@@ -46,7 +47,6 @@ export class PlotOptionsComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     ) { }
-  private objectId: string;
 
   ngOnInit() {
 
