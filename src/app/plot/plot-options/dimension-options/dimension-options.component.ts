@@ -15,19 +15,23 @@ import { FormGroup, FormControl, FormArray } from '@angular/forms';
 export class DimensionOptionsComponent implements OnInit {
 
   @Input() set dimensions(d: Dimension[]) {
-    this.allDimensions = d;
+    this._dimensions = d;
     d.forEach((val, idx) => {
       this.fromDimensionDropdown.push({id: idx.toString(), text: val.type});
     });
   }
+
+  get dimensions() {
+    return this._dimensions;
+  }
+
   @Input() index: number;
   @Input() form: FormGroup;
   @Input() dimensionLabel = '';
   @Input() metadata: any;
   selectedValue: Dimension;
-  allDimensions: Dimension[];
+  _dimensions: Dimension[];
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
-  // dimensionForm: FormGroup;
   displayValuesFrom: FormArray;
   displayAxisLabelsAs: FormArray;
   isLabelChecked = [];
@@ -42,21 +46,26 @@ export class DimensionOptionsComponent implements OnInit {
    }
 
   setSelectedDimension(event) {
-    this.selectedValue = this.allDimensions[event.value];
+    this.selectedValue = this.dimensions[event.value];
     this.form.controls.fromDimension.setValue(event.data[0].text);
+
+    // if selected value is data measurements (at the end of the dropdown)
     if (parseInt(event.value, 10) === this.fromDimensionDropdown.length - 2) {
       this.axisTitle = `${this.metadata.typed_values[0].value_type.oterm_name}`;
+
+      // add units if there are any
       if (this.metadata.typed_values[0].value_units) {
         this.axisTitle += ` (${this.metadata.typed_values[0].value_units.oterm_name})`;
       }
     } else {
+      // if selected value is from a dimension in the brick
       const idx = parseInt(event.value, 10);
       this.axisTitle = `${this.metadata.dim_context[idx].data_type.oterm_name}`;
     }
-    this.addDimensionVariables();
+    this.addDimensionVariables(event.data[0].text);
   }
 
-  addDimensionVariables()  {
+  addDimensionVariables(label)  {
     this.displayValuesFrom = this.form.get('displayValuesFrom') as FormArray;
     this.displayAxisLabelsAs = this.form.get('displayAxisLabelsAs') as FormArray;
 
@@ -71,7 +80,10 @@ export class DimensionOptionsComponent implements OnInit {
         this.displayValuesFrom.push(new FormControl(false));
       });
     } else {
-      this.displayValuesFrom.push(new FormControl(true));
+      // prepopulate axis labeler if there's only one dimension variable
+      this.displayValuesFrom.push(new FormControl({value: true, disabled: true}));
+      this.setNewLabels(`${label}=#V1`);
+      this.isLabelChecked = [`${label}=`];
     }
   }
 
@@ -119,7 +131,6 @@ export class DimensionOptionsComponent implements OnInit {
     while (this.displayAxisLabelsAs.length) {
       this.displayAxisLabelsAs.removeAt(0);
     }
-    // labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
     this.displayAxisLabelsAs.push(new FormControl(labels));
   }
 
