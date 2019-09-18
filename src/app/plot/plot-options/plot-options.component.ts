@@ -56,7 +56,9 @@ export class PlotOptionsComponent implements OnInit {
       this.queryBuilder.getObjectMetadata(this.objectId)
         .subscribe((result: any) => {
           this.plotMetadata = result;
+          console.log('Meta Data', this.plotMetadata);
           this.plotObject = {dimensions: []};
+          this.plotForm.get('graphTitle').setValue(result.data_type.oterm_name);
 
           // add plot object dimensions to form
           result.dim_context.forEach(dim => {
@@ -116,11 +118,11 @@ export class PlotOptionsComponent implements OnInit {
     return this.fb.group({
       fromDimension: '',
       displayValuesFrom: this.fb.array([]),
-      displayAxisLabels: false,
+      displayAxisLabels: true,
       displayAxisLabelsAs: this.fb.array([]),
-      displayHoverLabels: false,
+      displayHoverLabels: true,
       displayHoverLabelsAs: '',
-      displayAxisTitle: false,
+      displayAxisTitle: true,
       axisTitle: ''
     });
   }
