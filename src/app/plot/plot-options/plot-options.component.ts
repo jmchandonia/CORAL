@@ -53,10 +53,11 @@ export class PlotOptionsComponent implements OnInit {
     // get object id
     this.route.params.subscribe(params => {
       this.objectId = params.id;
+
+      // get metadata
       this.queryBuilder.getObjectMetadata(this.objectId)
         .subscribe((result: any) => {
           this.plotMetadata = result;
-          console.log('Meta Data', this.plotMetadata);
           this.plotObject = {dimensions: []};
           this.plotForm.get('graphTitle').setValue(result.data_type.oterm_name);
 

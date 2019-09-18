@@ -69,7 +69,6 @@ export class ObjectGraphMapService {
       }
     });
 
-    console.log('BODY ->', body);
     this.plotRequestBody = body;
   }
 
