@@ -30,9 +30,9 @@ export class QueryBuilderComponent implements OnInit {
   }
   private ajaxOptions: Select2AjaxOptions;
   public selectedAttributes: any;
-  private dataModels: any;
-  private dataTypes: any;
-  private selectedDataType: string;
+  dataModels: any;
+  dataTypes: any;
+  selectedDataType: string;
 
   options: Select2Options = {
     width: '100%',

@@ -59,7 +59,7 @@ export class AxisLabelerComponent implements OnInit {
       newValueLabels.pop();
     }
     this.valueLabels = newValueLabels;
-    this.labelsChanged.emit(newFormat);
+    this.labelsChanged.emit(this.format);
   }
 
 }
