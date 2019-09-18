@@ -3,104 +3,79 @@ import { NetworkService } from './network.service';
 import { ObjectMetadata, ObjectDataInfo, Dimension } from '../models/object-metadata';
 import { DataQuery } from '../models/data-query';
 import { FormGroup, FormArray } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ObjectGraphMapService {
 
-objectdata1 = new ObjectDataInfo({
-    type: 'Microbial Growth',
-    units: '',
-    scalar_type: 'Number'
-});
-
-dimension1 = new Dimension({
-    type: 'conditions',
-    dim_vars: ['media addition', 'concentration of metal mix', 'temperature']
-});
-
-dimension2 = new Dimension({
-    type: 'time since inoculation',
-    dim_vars: ['hours']
-});
-
-selectedObject = new ObjectMetadata({
-    id: 'brick000000123',
-    type: 'brick',
-    shape: [1, 2],
-    name: 'microbial growth',
-    data: this.objectdata1,
-    dimensions: [this.dimension1]
-});
-
-  measurements = {
-    // tslint:disable-next-line:whitespace
-    x: [1,2,3,4,5,6,7,8,9,10],
-    // tslint:disable-next-line:whitespace
-    y: [12,13,56,7,34,25,18,4],
-    // tslint: disable-next-line:whitespace
-    z: [1, 4, 5, 6, 8, 12, 13, 3, 14]
-  };
-
-
-  // private selectedObject: ObjectMetadata = new ObjectMetadata(object1);
-
-  graphOptions = [
-    {type: 'Scatter Plot', dimensions: 3, plot: 'scatter', mode: 'markers'},
-    {type: 'Horizontal Barchart', dimensions: 2, plot: 'bar'},
-    {type: 'Vertical Barchart', dimensions: 2, plot: 'bar'},
-    {type: 'Stacked Barchart', dimensions: 3, plot: 'bar'},
-    {type: 'Line Plot', dimensions: 2, plot: 'scatter', mode: 'lines+markers'},
-    {type: 'Heat Map', dimensions: 3, plot: 'heatmap'}
-  ];
-
   dataQuery = new DataQuery();
+  plotData: any[];
+  plotDataSub = new Subject();
+  plotRequestBody: any;
 
   constructor(
     private network: NetworkService,
-    // private dataQuery: DataQuery
+    private http: HttpClient
     ) { }
-
-  // get selected object
-
-  getSelectedObject() {
-    return this.selectedObject;
-  }
-
-  // set selected object
-
-  listPlotTypes() {
-    // if (this.selectedObject.shape.length > 2) {
-    //   return null;
-    // } else {
-    //   return this.selectedObject.shape.length === 1 ?
-    //     this.graphOptions2d : this.graphOptions3d;
-    // }
-    return this.graphOptions;
-  }
 
   setDimension(axis, dimension) {
     this.dataQuery[axis] = parseInt(dimension, 10);
   }
 
-  getMeasurements() {
-    return this.measurements;
+  getPlotData() {
+    return this.plotData;
   }
 
-  submitNewPlot(plot: FormGroup) {
-    const dims = plot.get('dimensions') as FormArray;
-    const obj = this.selectedObject;
-    const body: any = {
-      id: this.selectedObject.id,
-      x_dimension: {
-        dimension: obj.dimensions.indexOf(dims[0].get('fromDimension')),
-        dim_vars: this.selectedObject.dimensions.filter(d => dims[0].get('displayValuesFrom'))
-      }
+  getPlotDataSub() {
+    return this.plotDataSub.asObservable();
+  }
+
+  getPlotTypes() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/plot_types');
+  }
+
+  submitNewPlot(formGroup: FormGroup, metadata: any, plotTypeData: any) {
+
+    const form = formGroup.value;
+    const xyzLabels = ['x', 'y', 'z'];
+
+    const body = {
+      objectId: metadata.id,
+      data: {},
+      config: {
+        title: form.graphTitle,
+      },
+      plotly_trace: plotTypeData.plotly_trace,
+      plotly_layout: plotTypeData.plotly_layout,
     };
-    if (dims[2]) {
-      body.z_direction = this.selectedObject.dimensions.indexOf(dims[2]);
-    }
+
+    form.dimensions.forEach((dim, idx) => {
+      const xyz = xyzLabels[idx];
+      if (dim.fromDimension === metadata.typed_values[0].value_type.oterm_name) {
+        body.data[xyz] = 'D';
+      } else {
+        const matchDim = metadata.dim_context.find(item => item.data_type.oterm_name === dim.fromDimension);
+        const dimIdx = metadata.dim_context.indexOf(matchDim);
+        body.data[xyz] = dimIdx;
+        body.config[xyz] = {
+          title: dim.axisTitle,
+          label_pattern: dim.displayAxisLabelsAs[0],
+          show_title: dim.displayAxisLabels,
+          show_labels: dim.displayHoverLabels
+        };
+      }
+    });
+
+    console.log('BODY ->', body);
+    this.plotRequestBody = body;
+  }
+
+  getPlotlyData() {
+    console.log('plotly request body', this.plotRequestBody);
+    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/plotly_data', this.plotRequestBody);
   }
 
 }

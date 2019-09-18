@@ -5,4 +5,17 @@
     width: 850px;
     border-radius: 20px;
     margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.loading {
+    height: 600px;
+    width: 800px;
+    background-color: rgb(250,250,250);
+    color: rgb(180,180,180);
+}
+
+.loading h1 {
+    margin: 0px auto;
+    vertical-align: middle;
 }

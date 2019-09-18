@@ -23,6 +23,7 @@ export class DimensionOptionsComponent implements OnInit {
   @Input() index: number;
   @Input() form: FormGroup;
   @Input() dimensionLabel = '';
+  @Input() metadata: any;
   selectedValue: Dimension;
   allDimensions: Dimension[];
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
@@ -30,6 +31,7 @@ export class DimensionOptionsComponent implements OnInit {
   displayValuesFrom: FormArray;
   displayAxisLabelsAs: FormArray;
   isLabelChecked = [];
+  axisTitle: string;
 
   constructor(
     objectGraphMap: ObjectGraphMapService
@@ -42,6 +44,15 @@ export class DimensionOptionsComponent implements OnInit {
   setSelectedDimension(event) {
     this.selectedValue = this.allDimensions[event.value];
     this.form.controls.fromDimension.setValue(event.data[0].text);
+    if (parseInt(event.value, 10) === this.fromDimensionDropdown.length - 2) {
+      this.axisTitle = `${this.metadata.typed_values[0].value_type.oterm_name}`;
+      if (this.metadata.typed_values[0].value_units) {
+        this.axisTitle += ` (${this.metadata.typed_values[0].value_units.oterm_name})`;
+      }
+    } else {
+      const idx = parseInt(event.value, 10);
+      this.axisTitle = `${this.metadata.dim_context[idx].data_type.oterm_name}`;
+    }
     this.addDimensionVariables();
   }
 
@@ -108,7 +119,8 @@ export class DimensionOptionsComponent implements OnInit {
     while (this.displayAxisLabelsAs.length) {
       this.displayAxisLabelsAs.removeAt(0);
     }
-    labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
+    // labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
+    this.displayAxisLabelsAs.push(new FormControl(labels));
   }
 
 }

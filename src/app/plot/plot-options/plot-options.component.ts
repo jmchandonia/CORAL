@@ -13,26 +13,20 @@ import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 })
 export class PlotOptionsComponent implements OnInit {
 
-  private dimensions = ['x', 'y', 'z'];
   public plotObject: any;
+  public plotMetadata: any;
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public formDimensions: FormArray;
   private testForm: any;
   private listPlotTypes: any;
+  public selectedPlotType: any;
   public plotForm = this.fb.group({
     plotType: '',
     graphTitle: [''],
     dimensions: this.fb.array([])
   });
 
-  public plotIcons = {
-    'Heat Map': '<i class="material-icons dropdown-icon">gradient</i>',
-    'Horizontal Barchart': '<i class="material-icons dropdown-icon rotated">insert_chart</i>',
-    'Vertical Barchart': '<i class="material-icons dropdown-icon">insert_chart</i>',
-    'Stacked Barchart': '<i class="material-icons dropdown-icon">clear_all</i>',
-    'Line Plot': '<i class="material-icons dropdown-icon">timeline</i>',
-    'Scatter Plot': '<i class="material-icons dropdown-icon">scatter_plot</i>'
-  };
+  public plotIcons = {};
 
   public plotTypeOptions: Select2Options = {
     width: '100%',
@@ -55,38 +49,66 @@ export class PlotOptionsComponent implements OnInit {
   private objectId: string;
 
   ngOnInit() {
+
+    // get object id
     this.route.params.subscribe(params => {
       this.objectId = params.id;
       this.queryBuilder.getObjectMetadata(this.objectId)
         .subscribe((result: any) => {
+          this.plotMetadata = result;
           this.plotObject = {dimensions: []};
+
+          // add plot object dimensions to form
           result.dim_context.forEach(dim => {
             this.plotObject.dimensions.push({
               type: dim.data_type.oterm_name,
               dim_vars: [...dim.typed_values.map(o => o.value_type.oterm_name)]
             });
           });
+
+          // add object dimension values to each dimension category
+          const measurements = result.typed_values[0];
+          this.plotObject.dimensions.push({
+            type: measurements.value_type.oterm_name,
+            dim_vars: [measurements.value_type.oterm_name]
+          });
+
+          // get plot types from server
+          this.objectGraphMap.getPlotTypes()
+            .subscribe((data: any) => {
+
+              // filter plot types by n_dimension
+              this.listPlotTypes = data.results.filter((val, idx) => {
+                return val.n_dimensions === this.plotMetadata.dim_context.length;
+              });
+
+              // add plot type values to select2
+              this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
+                return { id: idx.toString(), text: val.name }; }
+              )];
+
+              // add icons for each plot type
+              this.listPlotTypes.forEach(plotType => {
+                this.plotIcons[plotType.name] = plotType.image_tag;
+              });
+          });
         });
-    });
-    // this.plotObject = this.objectGraphMap.getSelectedObject();
-    this.listPlotTypes = this.objectGraphMap.listPlotTypes();
-    const plotTypes = this.listPlotTypes.map(item => item.type);
-    plotTypes.forEach((val, idx) => {
-      this.plotTypeData.push({ id: idx.toString(), text: val });
     });
   }
 
   addDimensions(index) {
-    this.formDimensions = this.plotForm.get('dimensions') as FormArray;
+    if (index) {
+      this.formDimensions = this.plotForm.get('dimensions') as FormArray;
 
-    // clear old values from previous plot types
-    while (this.formDimensions.value.length) {
-      this.formDimensions.removeAt(0);
-    }
-    // add N new dimensions from selected plot type
-    const selected = this.listPlotTypes[index];
-    for (let i = 0; i < selected.dimensions; i++) {
-      this.formDimensions.push(this.createDimensionItem());
+      // clear old values from previous plot types
+      while (this.formDimensions.value.length) {
+        this.formDimensions.removeAt(0);
+      }
+      // add N new dimensions from selected plot type
+      this.selectedPlotType = this.listPlotTypes[index];
+      for (const _ of this.selectedPlotType.axis_blocks) {
+        this.formDimensions.push(this.createDimensionItem());
+      }
     }
   }
 
@@ -109,7 +131,8 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submit() {
-    // this.objectGraphMap.submitNewPlot(this.plotForm);
+    console.log('PLOT FORM -> ', this.plotForm);
+    this.objectGraphMap.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
   }
 
 }
