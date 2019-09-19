@@ -10,6 +10,7 @@
         [cssImport]="true"
         [options]="{width: '100%'}"
         [data]="fromDimensionDropdown"
+        [value]="fromDimensionDropdownId || ''"
         (valueChanged)="setSelectedDimension($event)"
       ></select2>
     </div>

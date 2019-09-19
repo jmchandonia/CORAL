@@ -20,6 +20,7 @@ export class PlotOptionsComponent implements OnInit {
   private testForm: any;
   private listPlotTypes: any;
   public selectedPlotType: any;
+  public selectedPlotTypeId: string; // for select2
   public objectId: string;
   public plotForm = this.fb.group({
     plotType: '',
@@ -94,9 +95,21 @@ export class PlotOptionsComponent implements OnInit {
               this.listPlotTypes.forEach(plotType => {
                 this.plotIcons[plotType.name] = plotType.image_tag;
               });
+
+              if (this.objectGraphMap.plotForm && this.objectGraphMap.plotType) {
+                this.populatePlotForm();
+              }
           });
         });
     });
+  }
+
+  populatePlotForm() {
+    this.plotForm = this.objectGraphMap.plotForm;
+    this.selectedPlotType = this.objectGraphMap.plotType;
+    this.selectedPlotTypeId = this.plotTypeData.find(item => {
+      return item.text === this.selectedPlotType.name;
+    }).id;
   }
 
   addDimensions(index) {
@@ -104,18 +117,26 @@ export class PlotOptionsComponent implements OnInit {
       this.formDimensions = this.plotForm.get('dimensions') as FormArray;
 
       // clear old values from previous plot types
-      while (this.formDimensions.value.length) {
-        this.formDimensions.removeAt(0);
+      if (!this.objectGraphMap.plotForm) {
+        while (this.formDimensions.value.length) {
+          this.formDimensions.removeAt(0);
+        }
       }
       // add N new dimensions from selected plot type
       this.selectedPlotType = this.listPlotTypes[index];
-      for (const _ of this.selectedPlotType.axis_blocks) {
-        this.formDimensions.push(this.createDimensionItem());
-      }
+      // for (const _ of this.selectedPlotType.axis_blocks) {
+      //   this.formDimensions.push(this.createDimensionItem());
+      // }
+
+      this.selectedPlotType.axis_blocks.forEach((v, i) => {
+        if (!this.objectGraphMap.plotForm || v.hasOwnProperty('displayValuesFrom')) {
+          this.formDimensions.push(this.createDimensionItem(this.plotForm.value.dimensions[i])) ;
+        }
+      });
     }
   }
 
-  createDimensionItem() {
+  createDimensionItem(dim) {
     return this.fb.group({
       fromDimension: '',
       displayValuesFrom: this.fb.array([]),
@@ -129,12 +150,13 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   updatePlotType(event) {
-    this.plotForm.controls.plotType.setValue(event.data[0].text);
-    this.addDimensions(event.value);
+    if (event.value !== '-1') {
+      this.plotForm.controls.plotType.setValue(event.data[0].text);
+      this.addDimensions(event.value);
+    }
   }
 
   submit() {
-    console.log('PLOT FORM -> ', this.plotForm);
     this.objectGraphMap.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
   }
 

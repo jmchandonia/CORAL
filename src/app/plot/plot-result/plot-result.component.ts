@@ -31,6 +31,7 @@ export class PlotResultComponent implements OnInit {
       this.objectId = params.id;
     });
 
+
     this.objectGraphMap.getPlotlyData()
       .subscribe((data: any) => {
         const result = data.results;

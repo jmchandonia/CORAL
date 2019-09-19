@@ -19,6 +19,7 @@
             [options]="plotTypeOptions"
             [data]="plotTypeData"
             ngDefaultControl
+            [value]="selectedPlotTypeId || ''"
             (valueChanged)="updatePlotType($event)"
             formControlName="plotType"
             >
