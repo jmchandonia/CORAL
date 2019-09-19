@@ -15,6 +15,9 @@ export class ObjectGraphMapService {
   plotData: any[];
   plotDataSub = new Subject();
   plotRequestBody: any;
+  public plotType: any;
+  public plotForm: FormGroup;
+  public plotFormDimensions: FormArray;
 
   constructor(
     private network: NetworkService,
@@ -38,7 +41,6 @@ export class ObjectGraphMapService {
   }
 
   submitNewPlot(formGroup: FormGroup, metadata: any, plotTypeData: any) {
-
     const form = formGroup.value;
     const xyzLabels = ['x', 'y', 'z'];
 
@@ -70,10 +72,16 @@ export class ObjectGraphMapService {
     });
 
     this.plotRequestBody = body;
+    this.plotForm = formGroup;
+    this.plotFormDimensions = formGroup.controls.dimensions as FormArray;
+    this.plotType = plotTypeData;
+  }
+
+  getPlotType() {
+    return this.plotForm;
   }
 
   getPlotlyData() {
-    console.log('plotly request body', this.plotRequestBody);
     return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/plotly_data', this.plotRequestBody);
   }
 

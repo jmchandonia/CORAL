@@ -32,17 +32,42 @@ export class DimensionOptionsComponent implements OnInit {
   selectedValue: Dimension;
   _dimensions: Dimension[];
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
+  fromDimensionDropdownId: string;
   displayValuesFrom: FormArray;
   displayAxisLabelsAs: FormArray;
   isLabelChecked = [];
   axisTitle: string;
 
   constructor(
-    objectGraphMap: ObjectGraphMapService
+    private objectGraphMap: ObjectGraphMapService
   ) { }
 
   ngOnInit() {
     this.displayAxisLabelsAs = this.form.get('displayAxisValuesAs') as FormArray;
+    if (this.objectGraphMap.plotForm) {
+      const f = this.objectGraphMap.plotForm.value.dimensions[this.index];
+      this.fromDimensionDropdownId = this.fromDimensionDropdown.find(item => item.text === f.fromDimension).id;
+      this.form.patchValue({
+        fromDimension: f.fromDimension,
+        displayAxisLabels: f.displayAxisLabels,
+        displayAxisLabelsAs: f.displayAxisLabelsAs,
+        displayHoverLabels: f.displayHoverLabels,
+        displayHoverLabelsAs: f.displayHoverLabelsAs,
+        displayAxisTitle: f.displayAxisTitle,
+        axisTitle: f.axisTitle
+      });
+      this.selectedValue = this.dimensions[this.fromDimensionDropdownId];
+      if (parseInt(this.fromDimensionDropdownId, 10) === this.fromDimensionDropdown.length - 2) {
+        this.axisTitle = this.metadata.typed_values[0].value_type.oterm_name;
+        if (this.metadata.typed_values[0].value_units) {
+          this.axisTitle += `(${this.metadata.typed_values[0].value_units.oterm_name})`;
+        }
+      } else {
+        const idx = parseInt(this.fromDimensionDropdownId, 10);
+        this.axisTitle = this.metadata.dim_context[idx].data_type.oterm_name;
+      }
+      this.addDimensionVariables(f.fromDimension);
+    }
    }
 
   setSelectedDimension(event) {
@@ -81,9 +106,9 @@ export class DimensionOptionsComponent implements OnInit {
       });
     } else {
       // prepopulate axis labeler if there's only one dimension variable
+      this.isLabelChecked = [`${label}=`];
       this.displayValuesFrom.push(new FormControl({value: true, disabled: true}));
       this.setNewLabels(`${label}=#V1`);
-      this.isLabelChecked = [`${label}=`];
     }
   }
 
