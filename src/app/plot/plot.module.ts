@@ -11,7 +11,7 @@ import { PlotResultComponent } from './plot-result/plot-result.component';
 import { PlotlyModule } from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 
-import { ObjectGraphMapService } from '../shared/services/object-graph-map.service';
+import { PlotService } from '../shared/services/plot.service';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -24,6 +24,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FormsModule,
     PlotlyModule
   ],
-  providers: [ObjectGraphMapService]
+  providers: [PlotService]
 })
 export class PlotModule { }
