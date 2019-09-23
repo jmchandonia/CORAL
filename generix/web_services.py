@@ -623,7 +623,7 @@ def generix_search():
     provider = dp._get_type_provider(query_match['dataModel'])
     q = provider.query()
 
-    if query_match['dataModel'] == 'Brick':
+    if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
         q.has({'data_type': {'=': query_match['dataType']}})
 
     for criterion in query_match['params']:
