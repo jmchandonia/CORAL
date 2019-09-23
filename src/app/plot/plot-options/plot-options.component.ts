@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ObjectGraphMapService } from '../../shared/services/object-graph-map.service';
+import { PlotService } from '../../shared/services/plot.service';
 import { ObjectMetadata } from '../../shared/models/object-metadata';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { Select2OptionData } from 'ng2-select2';
 import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
+import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 
 @Component({
   selector: 'app-plot-options',
@@ -22,7 +23,8 @@ export class PlotOptionsComponent implements OnInit {
   public selectedPlotType: any;
   public selectedPlotTypeId: string; // for select2
   public objectId: string;
-  public plotForm = this.fb.group({
+  public plotBuilder: PlotBuilder;
+  public plotForm = this.fb.group({ // delete
     plotType: '',
     graphTitle: [''],
     dimensions: this.fb.array([])
@@ -43,13 +45,15 @@ export class PlotOptionsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private objectGraphMap: ObjectGraphMapService,
+    private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
     private fb: FormBuilder,
     private router: Router,
     ) { }
 
   ngOnInit() {
+
+    this.plotBuilder = this.plotService.plotBuilder;
 
     // get object id
     this.route.params.subscribe(params => {
@@ -61,6 +65,7 @@ export class PlotOptionsComponent implements OnInit {
           this.plotMetadata = result;
           this.plotObject = {dimensions: []};
           this.plotForm.get('graphTitle').setValue(result.data_type.oterm_name);
+          this.plotBuilder.title = result.data_type.oterm_name;
 
           // add plot object dimensions to form
           result.dim_context.forEach(dim => {
@@ -78,7 +83,7 @@ export class PlotOptionsComponent implements OnInit {
           });
 
           // get plot types from server
-          this.objectGraphMap.getPlotTypes()
+          this.plotService.getPlotTypes()
             .subscribe((data: any) => {
 
               // filter plot types by n_dimension
@@ -96,7 +101,7 @@ export class PlotOptionsComponent implements OnInit {
                 this.plotIcons[plotType.name] = plotType.image_tag;
               });
 
-              if (this.objectGraphMap.plotForm && this.objectGraphMap.plotType) {
+              if (this.plotService.plotForm && this.plotService.plotType) {
                 this.populatePlotForm();
               }
           });
@@ -105,8 +110,8 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   populatePlotForm() {
-    this.plotForm = this.objectGraphMap.plotForm;
-    this.selectedPlotType = this.objectGraphMap.plotType;
+    this.plotForm = this.plotService.plotForm;
+    this.selectedPlotType = this.plotService.plotType;
     this.selectedPlotTypeId = this.plotTypeData.find(item => {
       return item.text === this.selectedPlotType.name;
     }).id;
@@ -117,7 +122,7 @@ export class PlotOptionsComponent implements OnInit {
       this.formDimensions = this.plotForm.get('dimensions') as FormArray;
 
       // clear old values from previous plot types
-      if (!this.objectGraphMap.plotForm) {
+      if (!this.plotService.plotForm) {
         while (this.formDimensions.value.length) {
           this.formDimensions.removeAt(0);
         }
@@ -129,7 +134,7 @@ export class PlotOptionsComponent implements OnInit {
       // }
 
       this.selectedPlotType.axis_blocks.forEach((v, i) => {
-        if (!this.objectGraphMap.plotForm || v.hasOwnProperty('displayValuesFrom')) {
+        if (!this.plotService.plotForm || v.hasOwnProperty('displayValuesFrom')) {
           this.formDimensions.push(this.createDimensionItem(this.plotForm.value.dimensions[i])) ;
         }
       });
@@ -157,7 +162,7 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submit() {
-    this.objectGraphMap.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
+    this.plotService.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
   }
 
 }

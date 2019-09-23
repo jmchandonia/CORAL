@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Dimension } from '../../../shared/models/object-metadata';
 import { Select2OptionData } from 'ng2-select2';
-import { ObjectGraphMapService } from '../../../shared/services/object-graph-map.service';
+import { PlotService } from '../../../shared/services/plot.service';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 @Component({
@@ -39,13 +39,13 @@ export class DimensionOptionsComponent implements OnInit {
   axisTitle: string;
 
   constructor(
-    private objectGraphMap: ObjectGraphMapService
+    private plotService: PlotService
   ) { }
 
   ngOnInit() {
     this.displayAxisLabelsAs = this.form.get('displayAxisValuesAs') as FormArray;
-    if (this.objectGraphMap.plotForm) {
-      const f = this.objectGraphMap.plotForm.value.dimensions[this.index];
+    if (this.plotService.plotForm) {
+      const f = this.plotService.plotForm.value.dimensions[this.index];
       this.fromDimensionDropdownId = this.fromDimensionDropdown.find(item => item.text === f.fromDimension).id;
       this.form.patchValue({
         fromDimension: f.fromDimension,

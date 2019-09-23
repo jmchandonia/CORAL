@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NetworkService } from './network.service';
-import { ObjectMetadata, ObjectDataInfo, Dimension } from '../models/object-metadata';
+// import { ObjectMetadata, ObjectDataInfo } from '../models/object-metadata';
+import { PlotBuilder, Dimension } from '../models/plot-builder';
 import { DataQuery } from '../models/data-query';
 import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +10,7 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ObjectGraphMapService {
+export class PlotService {
 
   dataQuery = new DataQuery();
   plotData: any[];
@@ -18,6 +19,8 @@ export class ObjectGraphMapService {
   public plotType: any;
   public plotForm: FormGroup;
   public plotFormDimensions: FormArray;
+
+  public plotBuilder: PlotBuilder = new PlotBuilder();
 
   constructor(
     private network: NetworkService,

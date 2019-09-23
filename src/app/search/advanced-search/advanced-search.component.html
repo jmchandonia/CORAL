@@ -6,7 +6,7 @@
  <div class="data-information-header" (click)="showConnectionsUp = !showConnectionsUp">
     <i class="material-icons" *ngIf="!showConnectionsUp" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showConnectionsUp" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Parent Connections</h5>
+    <h5 style="display: inline-block">Filter by Parents</h5>
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsUp" />
 <app-query-builder
@@ -15,7 +15,7 @@
 <div class="data-information-header" (click)="showConnectionsDown = !showConnectionsDown">
     <i class="material-icons" *ngIf="!showConnectionsDown" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showConnectionsDown" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Child Connections</h5>
+    <h5 style="display: inline-block">Filter by Children</h5>
 </div>
 <hr class="data-divider" *ngIf="!showConnectionsDown" />
 <app-query-builder 
@@ -24,7 +24,7 @@
 <div class="data-information-header" (click)="showProcessesUp = !showProcessesUp">
     <i class="material-icons" *ngIf="!showProcessesUp" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showProcessesUp" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Parent Processes</h5>
+    <h5 style="display: inline-block">Process that Generated the Data</h5>
 </div>
 <hr class="data-divider" *ngIf="!showProcessesUp" />
 <div class="advanced-search-container" [hidden]="!showProcessesUp">
@@ -46,7 +46,7 @@
 <div class="data-information-header" (click)="showProcessesDown = !showProcessesDown">
         <i class="material-icons" *ngIf="!showProcessesDown" style="font-size: 1.25rem;">arrow_right</i>
         <i class="material-icons" *ngIf="showProcessesDown" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Child Processes</h5>
+    <h5 style="display: inline-block">Process that Use the Data</h5>
 </div>
 <hr class="data-divider" *ngIf="!showProcessesDown" />
 <div class="advanced-search-container" [hidden]="!showProcessesDown">

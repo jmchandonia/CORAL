@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ObjectGraphMapService } from 'src/app/shared/services/object-graph-map.service';
+import { PlotService } from 'src/app/shared/services/plot.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class PlotResultComponent implements OnInit {
 
   constructor(
-    private objectGraphMap: ObjectGraphMapService,
+    private plotService: PlotService,
     private router: Router,
     private route: ActivatedRoute,
     private chRef: ChangeDetectorRef
@@ -32,7 +32,7 @@ export class PlotResultComponent implements OnInit {
     });
 
 
-    this.objectGraphMap.getPlotlyData()
+    this.plotService.getPlotlyData()
       .subscribe((data: any) => {
         const result = data.results;
         this.data = result.data;
