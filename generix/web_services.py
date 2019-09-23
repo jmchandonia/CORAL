@@ -382,6 +382,12 @@ def generix_data_types():
             'category': TYPE_CATEGORY_DYNAMIC
         })
 
+    # Add NDArray as a dataype
+    res.append({
+        'dataType': 'NDArray', 
+        'dataModel': 'Brick',
+        'category': TYPE_CATEGORY_DYNAMIC
+    })
     res.sort(key=lambda x: x['dataType']) 
     return  json.dumps({'results': res})
 
