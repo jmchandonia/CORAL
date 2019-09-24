@@ -706,6 +706,56 @@ def generix_plot_types():
         'status': 'OK', 
         'error': ''})
 
+@app.route("/generix/reports", methods=['GET'])
+def generix_reports():
+
+    reports = [
+        {
+            'name': 'Data Brick: #data sets',
+            'id': 'brick_types'
+        },
+        {
+            'name': 'Data Brick: dimensions',
+            'id': 'brick_dim_types'
+        },
+        {
+            'name': 'Data Brick: dimension variable',
+            'id': 'brick_data_var_types'
+        },
+        {
+            'name': 'Processes',
+            'id': 'process_types'
+        },
+        {
+            'name': 'ENIGMA personnel',
+            'id': 'process_persons'
+        },
+        {
+            'name': 'ENIGMA compaigns',
+            'id': 'process_campaigns'
+        }
+    ]        
+    return json.dumps({
+        'results': reports, 
+        'status': 'OK', 
+        'error': ''})
+
+@app.route("/generix/reports/<id>", methods=['GET'])
+def generix_report(id):
+    try:
+        report = getattr(svs['reports'], id)
+        res = report.to_df().head(n=1000).to_json(orient="table", index=False)
+    except Exception as e:
+        return json.dumps({
+            'results': '', 
+            'status': 'ERR', 
+            'error': str(e)})
+
+    return  json.dumps( {
+        'results': res, 
+        'status': 'OK', 
+        'error': ''
+    } )
 
 if __name__ == "__main__":
     port = cns['_WEB_SERVICE']['port']
