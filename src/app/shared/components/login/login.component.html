@@ -1,0 +1,61 @@
+<div class="login-container">
+  <div class="clearinghouse-header">
+    <h5>Data ClearingHouse</h5>
+  </div>
+  <div class="row justify-content-center mt-3">
+    <!-- <div class="btn-group" role="group" aria-label="Switch to signup">
+      <button type="button" class="btn btn-secondary" (click)="displayLogin = true">Login</button>
+      <button type="button" class="btn btn-secondary" (click)="displayLogin = false">Sign Up</button>
+    </div> -->
+  <div class="col-10">
+      <ul class="nav nav-tabs nav-fill">
+          <li class="nav-item">
+            <a 
+              [ngClass]="displayLogin ? 'active' : ''"
+              class="nav-link"
+              href="JavaScript:void(0)"
+              (click)="displayLogin = true;"
+            >Login</a>
+          </li>
+          <li class="nav-item">
+            <a
+              [ngClass]="!displayLogin ? 'active' : ''"
+              class="nav-link"
+              href="JavaScript:void(0)"  
+              (click)="displayLogin = false;"
+            >Sign Up</a>
+          </li>
+        </ul>
+  </div>
+  </div>
+  <div class="pl-4 pr-4" *ngIf="displayLogin">
+    <form class="form-group">
+      <label for="email">Email Address:</label>
+      <input type="text" id="email" class="form-control" />
+      <label for="password">Password:</label>
+      <input type="password" id="password" class="form-control" />
+      <div class="row">
+        <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="pl-4 pr-4" *ngIf="!displayLogin">
+    <form class="form-group">
+      <label for="first-name">First Name:</label>
+      <input type="text" id="first-name" class="form-control" />
+      <label for="last-name">Last Name:</label>
+      <input type="text" id="last-name" class="form-control" />
+      <label for="signup-email">Email:</label>
+      <input type="text" id="signup-email" class="form-control" />
+      <label for="signup-password">Password:</label>
+      <input type="password" id="signup-password" class="form-control" />
+      <div class="row">
+        <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
+          Sign Up
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
