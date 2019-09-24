@@ -4,6 +4,7 @@ from flask import request
 from flask_cors import CORS
 import pandas as pd
 import re
+import random 
 
 # from . import services
 # from .brick import Brick
@@ -797,11 +798,10 @@ def _get_category_items(process_stat_df, attr):
 
 
 
-
+# Test version
 @app.route('/generix/types_stat', methods=['POST'])
 def generix_type_stat():
     query = request.json
-
     # request = [
     #     {
     #         'attribute': '',
@@ -810,30 +810,61 @@ def generix_type_stat():
     #         'scalarType': ''
     #     },
     # ]
-
-    # response = [
-    #     'core_types':{
-    #         'items': [
-    #             {
-    #                 'name': 'Commnuity',
-    #                 'count': 25,
-    #                 'queryMatch': {
-    #                     'dataType': '',
-    #                     'dataModel': '',
-    #                     'params': [],
-    #                     'category': ''
-    #                 }
-    #             }
-    #         ]
-    #     },
-    #     'dynamic_types':{
-    #         'items': [
-
-    #         ]
-    #     }
     
-    # ]
+    # Core types
+    stat_type_items = []
+    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+    for td in type_defs:
+        if td.name == 'ENIGMA':
+            continue
+        stat_type_items.append(
+            {
+                'name': td.name,
+                'count': random.randint(0,1000),
+                'queryMatch': {
+                    'dataType': td.name,
+                    'dataModel': td.name,
+                    'params': [],
+                    'category': TYPE_CATEGORY_STATIC
+                }
+            }            
+        )
+    stat_type_items.sort(key=lambda x: x['name'])        
 
+    # Dynamic types
+    dyn_type_items = []
+    bp = dp._get_type_provider('Brick')
+    for dt_name in bp.type_names():
+
+        dyn_type_items.append(
+            {
+                'name': dt_name,
+                'count': random.randint(0,1000),
+                'queryMatch': {
+                    'dataType': dt_name,
+                    'dataModel': 'Brick',
+                    'params': [],
+                    'category': TYPE_CATEGORY_DYNAMIC
+                }
+            }            
+        )      
+    dyn_type_items.sort(key=lambda x: x['name'])        
+
+
+    res = {
+        'core_types' : {
+            'items': stat_type_items
+        },
+        'dynamic_types': {
+            'items': dyn_type_items
+        }
+    }
+
+    return  json.dumps( {
+        'results': res, 
+        'status': 'OK', 
+        'error': ''
+    } )  
 
 
 
