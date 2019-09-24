@@ -8,12 +8,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { PlotModule } from './plot/plot.module';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
+import { LoginComponent } from './shared/components/login/login.component';
+import { HomeComponent } from './shared/components/home/home.component';
+import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { UploadComponent } from './shared/components/upload/upload.component';
 
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent,
+    HomeComponent,
+    DashboardComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,

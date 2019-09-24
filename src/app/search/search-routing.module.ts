@@ -9,7 +9,7 @@ import { SearchResultItemComponent } from './search-result/search-result-item/se
 const routes: Routes = [
   {
     path: 'search', component: SearchComponent, children: [
-      {path: '', redirectTo: 'simple', pathMatch: 'full'},
+      {path: '', redirectTo: 'advanced', pathMatch: 'full'},
       {path: 'simple', component: SimpleSearchComponent},
       {path: 'advanced', component: AdvancedSearchComponent},
       {path: 'result', component: SearchResultComponent},
