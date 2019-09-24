@@ -757,6 +757,86 @@ def generix_report(id):
         'error': ''
     } )
 
+@app.route("/generix/filters", methods=['GET'])
+def generix_filters():
+    reports = svs['reports']
+
+    df_campaign = reports.process_campaigns.to_df()
+    df_persons = reports.process_campaigns.to_df()
+    res = [
+        {
+            'categoryName': 'ENIGMA Campaigns',
+            'items': _get_category_items(df_campaign, 'campaign' )
+        },
+        {
+            'categoryName': 'ENIGMA Personnel',
+            'items': _get_category_items(df_persons, 'person')
+        },
+    ]
+    return  json.dumps( {
+        'results': res, 
+        'status': 'OK', 
+        'error': ''
+    } )    
+
+def _get_category_items(process_stat_df, attr):
+    res = []
+    for _, row in process_stat_df.sort_values('Term Name').iterrows():
+        res.append(
+            {
+                'name': row['Term Name'],
+                'queryParam': {
+                    'attribute': attr,
+                    'matchType':  '=' ,
+                    'keyword': row['Term Name'],
+                    'scalarType': 'term'
+                }
+            }
+        )
+    return res
+
+
+
+
+@app.route('/generix/types_stat', methods=['POST'])
+def generix_type_stat():
+    query = request.json
+
+    # request = [
+    #     {
+    #         'attribute': '',
+    #         'matchType' '',
+    #         'keyword': '',
+    #         'scalarType': ''
+    #     },
+    # ]
+
+    # response = [
+    #     'core_types':{
+    #         'items': [
+    #             {
+    #                 'name': 'Commnuity',
+    #                 'count': 25,
+    #                 'queryMatch': {
+    #                     'dataType': '',
+    #                     'dataModel': '',
+    #                     'params': [],
+    #                     'category': ''
+    #                 }
+    #             }
+    #         ]
+    #     },
+    #     'dynamic_types':{
+    #         'items': [
+
+    #         ]
+    #     }
+    
+    # ]
+
+
+
+
 if __name__ == "__main__":
     port = cns['_WEB_SERVICE']['port']
     if cns['_WEB_SERVICE']['https']:
