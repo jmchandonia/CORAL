@@ -10,7 +10,7 @@ export class AxisLabelerComponent implements OnInit {
   @Input() set values(v) {
     this.valueLabels = v;
     this.valueLabels.forEach((value, idx)  => {
-      this.format += `${value}=#V${idx},`;
+      this.format += `${value}#V${idx + 1},`;
       value += '=';
     });
   }
@@ -35,8 +35,13 @@ export class AxisLabelerComponent implements OnInit {
 
   onSave() {
     this.toggleDisplayOptions();
-    if (!this.displayOptions && this.format) {
+    if (!this.displayOptions && this.format && this.format.match(/#V[0-9]/gi)) {
       this.updateFormat();
+    } else {
+      this.format = '';
+      this.valueLabels.forEach((value, idx) => {
+        this.format += `${value}#V${idx + 1},`;
+      });
     }
   }
 
