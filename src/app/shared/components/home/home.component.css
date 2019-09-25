@@ -1,7 +1,7 @@
-
+/* 
 .filter-box {
-    margin-left: 30px;
-}
+    margin-left: 20px;
+} */
 
 .options-container {
     background-color: rgb(210,210,210);
@@ -9,8 +9,8 @@
     border-radius: 10px;
 }
 
-h4 {
-    margin-left: 30px;
+h5 { 
+    padding-bottom: 5px;
 }
 
 img { 
@@ -20,4 +20,9 @@ img {
 label {
     margin-left: 5px;
     color: rgb(100,100,100);
+}
+
+.category-li {
+    border-top: 1px solid #e3e3e3;
+    border-bottom: 1px solid #e3e3e3;
 }

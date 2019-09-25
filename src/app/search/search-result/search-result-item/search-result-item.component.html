@@ -8,9 +8,9 @@
   <div class="row justify-content-center">
     <div class="col-10">
       <div class="search-result-row top-title">
-        <h4>Properties</h4>
+        <h5>Properties</h5>
       </div>
-      <div class="row d-block">
+      <!-- <div class="row d-block">
         <p><strong>Id:</strong> {{searchResult?.id}}</p>
         <p><strong>Type:</strong> {{searchResult?.data_type.oterm_name}}</p>
         <p>
@@ -20,9 +20,43 @@
           </span>
         </p>
         <p><strong>Name:</strong> {{searchResult?.name}}</p>
-      </div>
+      </div> -->
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Id:</strong>
+            </td>
+            <td>{{searchResult?.id}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Type:</strong>
+            </td>
+            <td>{{searchResult?.data_type.oterm_name}}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Shape:</strong>
+            </td>
+            <td>
+              <span *ngFor="let dim of searchResult?.dim_context; let last = last">
+                {{dim.size}}<span *ngIf="!last">, </span>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Name:</strong>
+            </td>
+            <td>
+              {{searchResult?.name}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div class="search-result-row">
-        <h4>Data</h4>
+        <h5>Data</h5>
       </div>
       <div class="row d-block">
         <p>
@@ -34,7 +68,7 @@
         <p><strong>Description:</strong> {{searchResult?.description}}</p>
       </div>
       <div class="search-result-row">
-        <h4>Dimensions ({{searchResult?.dim_context.length}})</h4>
+        <h5>Dimensions ({{searchResult?.dim_context.length}})</h5>
       </div>
       <div class="row d-block">
         <p *ngFor="let dim of searchResult?.dim_context; let i = index">
@@ -44,7 +78,7 @@
         </p>
       </div>
       <div class="search-result-row" *ngIf="searchResult?.array_context && searchResult?.array_context.length">
-        <h4>Attributes</h4>
+        <h5>Attributes</h5>
       </div>
       <div class="row d-block">
         <p *ngFor="let item of searchResult?.array_context">

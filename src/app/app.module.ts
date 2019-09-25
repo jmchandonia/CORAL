@@ -10,8 +10,9 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 import { LoginComponent } from './shared/components/login/login.component';
 import { HomeComponent } from './shared/components/home/home.component';
-import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { ReportsComponent } from './shared/components/reports/reports.component';
 import { UploadComponent } from './shared/components/upload/upload.component';
+import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 
 
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -20,8 +21,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AppComponent,
     LoginComponent,
     HomeComponent,
-    DashboardComponent,
+    ReportsComponent,
     UploadComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
