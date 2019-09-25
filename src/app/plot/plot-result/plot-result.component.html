@@ -3,6 +3,17 @@
   <hr style="width: 100%" />
 </div>
 <div class="plot-container">
+  <div class="card">
+    <p class="card-text">
+        TYour plot is displayed below.  You can hover over the plot to see more
+        information, or download the plot to use in a presentation or paper.
+        Use the buttons below to download the original data, print the plot,
+        or show the code you can use to re-create this plot in a Data
+        Clearinghouse Jupyter notebook.
+    </p>
+  </div>
+</div>
+<div class="plot-container">
   <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
   <div *ngIf="loading" class="loading"><h1>Loading....</h1></div>
 </div>
