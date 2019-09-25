@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SearchResultItemComponent } from './search-result/search-result-item/search-result-item.component';
-
+import { QueryBuilderService } from '../shared/services/query-builder.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +29,7 @@ import { SearchResultItemComponent } from './search-result/search-result-item/se
     Select2Module,
     FormsModule,
     HttpClientModule
-  ]
+  ],
+  providers: [QueryBuilderService]
 })
 export class SearchModule { }
