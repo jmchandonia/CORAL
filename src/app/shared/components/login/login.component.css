@@ -12,6 +12,11 @@
     font-weight: bold;
 }
 
+.login-options {
+    color: #00365C;
+    cursor: pointer;
+}
+
 .clearinghouse-header{
     background-image: url('../../../../assets/temporary_login_cover.jpg');
     background-size: cover;
