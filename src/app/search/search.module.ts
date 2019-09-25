@@ -9,20 +9,26 @@ import { QueryBuilderComponent } from './advanced-search/query-builder/query-bui
 import { PropertyParamsComponent } from './advanced-search/query-builder/property-params/property-params.component';
 import { FormsModule } from '@angular/forms';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { HttpClientModule } from '@angular/common/http';
+import { SearchResultItemComponent } from './search-result/search-result-item/search-result-item.component';
 
 
 @NgModule({
   declarations: [
-    SearchComponent, 
-    SimpleSearchComponent, 
-    AdvancedSearchComponent, 
-    QueryBuilderComponent, PropertyParamsComponent, SearchResultComponent
+    SearchComponent,
+    SimpleSearchComponent,
+    AdvancedSearchComponent,
+    QueryBuilderComponent,
+    PropertyParamsComponent,
+    SearchResultComponent,
+    SearchResultItemComponent
   ],
   imports: [
     CommonModule,
     SearchRoutingModule,
     Select2Module,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ]
 })
 export class SearchModule { }

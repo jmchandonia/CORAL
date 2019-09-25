@@ -3,6 +3,8 @@
   <select2
     [cssImport]="true"
     [options]="options"
+    [data]="dataTypeList"
+    [value]="selectedDataType ? '0' : ''"
     name="data-type"
     (valueChanged)="updateObjectDataModel($event)"
   >

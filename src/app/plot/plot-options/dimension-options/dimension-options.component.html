@@ -1,5 +1,5 @@
 <div class="data-information-header">
-  <h5>{{dimensionLabel.toUpperCase()}} dimension</h5>
+  <h5>{{dimensionLabel}}</h5>
 </div>
 <div class="option-container" [formGroup]="form">
   <div class="row">
@@ -10,6 +10,7 @@
         [cssImport]="true"
         [options]="{width: '100%'}"
         [data]="fromDimensionDropdown"
+        [value]="fromDimensionDropdownId || ''"
         (valueChanged)="setSelectedDimension($event)"
       ></select2>
     </div>
@@ -18,7 +19,7 @@
         <input class="form-check-input" formControlName="displayAxisTitle" type="checkbox" value="" id="axisTitle" />
         <label class="form-check-label" for="axisTitle">Axis Title</label>
       </div>
-      <input formControlName="axisTitle" class="form-control">
+      <input formControlName="axisTitle" [(ngModel)]="axisTitle" class="form-control">
     </div>
   </div>
   <div class="row" *ngIf="selectedValue">

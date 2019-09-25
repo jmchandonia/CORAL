@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryBuilder';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-simple-search',
@@ -10,66 +11,65 @@ import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryB
 })
 export class SimpleSearchComponent implements OnInit {
 
-  private dataModelList: Array<Select2OptionData> = [
-    {
-      id: '0',
-      text: 'N-dimensional array'
-    },
-    {
-      id: '1',
-      text: 'Graph'
-    },
-    {
-      id: '2',
-      text: 'Cluster'
-    }
-  ]
-
-  private keywordList: Array<Select2OptionData> = [
-    {
-      id: '0',
-      text: 'Microbial'
-    },
-    {
-      id: '1',
-      text: 'Biology'
-    },
-    {
-      id: '2',
-      text: 'Density'
-    },
-    {
-      id: '3',
-      text: 'Genomics'
-    }
-  ]
-
-  private select2Options = {
+  dataTypeList: Array<Select2OptionData> = [{id: '', text: ''}];
+  dataTypes: any[];
+  selectedDataType: string;
+  keywords = '';
+  select2Options: Select2Options = {
     width: '100%',
-  }
-
-  private queryMatch: QueryMatch = new QueryMatch();
-
-  private queryBuilderObject: QueryBuilder;
+    placeholder: 'Select a Data Type from our system'
+  };
+  ajaxOptions: Select2AjaxOptions;
+  queryMatch: QueryMatch = new QueryMatch();
+  queryBuilderObject: QueryBuilder;
 
   constructor(
-    private queryBuilder: QueryBuilderService
+    private queryBuilder: QueryBuilderService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    const getQuery = this.queryBuilder.getCurrentObject();
+    this.queryBuilderObject = getQuery.qb;
+    if (!getQuery.empty && getQuery.qb.queryMatch) {
+      const p = this.queryBuilderObject.queryMatch.params;
+      if (p && p.length) {
+        this.keywords = p[0].keyword;
+      }
+      this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
+      this.dataTypeList.push({id: '0', text: this.selectedDataType});
+    }
+    this.ajaxOptions = {
+      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      dataType: 'json',
+      delay: 250,
+      cache: false,
+      processResults: (data: any) => {
+        this.dataTypes = data.results;
+        return {
+          results: $.map(data.results, (obj, idx) => {
+            return {id: idx.toString(), text: obj.dataType};
+          }),
+        };
+      },
+    };
+    this.select2Options.ajax = this.ajaxOptions;
   }
 
   updateDataModel(event) {
-    this.queryMatch.dataModel = event.data[0].text;
+    const d = this.dataTypes[parseInt(event.value, 10)];
+    const { dataModel, dataType, category } = d;
+    this.queryMatch.dataModel = dataModel;
+    this.queryMatch.dataType = dataType;
+    this.queryMatch.category = category;
   }
 
-  updateKeywords(event) {
-    this.queryMatch.params = [new QueryParam(null, null, event.data[0].text)];
-  }
-
-  submitSearch() {
-    console.log('SIMPLE  QBO -> ', JSON.stringify(this.queryMatch))
+  onSubmit() {
+    this.queryMatch.params.push(new QueryParam(null, null, this.keywords, 'string'));
+    this.queryBuilderObject.queryMatch = this.queryMatch;
+    this.queryBuilder.submitSearchResults();
+    this.router.navigate(['/search/result']);
+    this.queryBuilder.setSearchType('simple');
   }
 
 }

@@ -1,0 +1,12 @@
+.option-container {
+    background-color: rgb(210,210,210);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 0px auto;
+    width: 800px;
+}
+
+.table-background {
+    background-color: white;
+    padding: 10px;
+}

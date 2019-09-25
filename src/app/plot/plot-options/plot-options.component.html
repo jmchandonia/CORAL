@@ -1,8 +1,8 @@
 <form [formGroup]="plotForm">
   <div class="row mb-3 mt-3">
-    <div class="offset-1" [routerLink]="['../../../search/result']">
+    <div class="offset-1" [routerLink]="['../../../search/result/' + objectId]">
       <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
-      <span class="menu-option">Back to Results</span>
+      <span class="menu-option">Back to Result</span>
     </div>
   </div>
   <hr />
@@ -19,6 +19,7 @@
             [options]="plotTypeOptions"
             [data]="plotTypeData"
             ngDefaultControl
+            [value]="selectedPlotTypeId || ''"
             (valueChanged)="updatePlotType($event)"
             formControlName="plotType"
             >
@@ -33,12 +34,13 @@
   <app-dimension-options
     *ngFor="let form of formDimensions?.controls; let i = index;"
     [dimensions]="plotObject.dimensions"
-    [dimensionLabel]="dimensions[i]"
+    [metadata]="plotMetadata"
+    [dimensionLabel]="selectedPlotType.axis_blocks[i].title"
     [index]="i"
     [form]="form"
     ></app-dimension-options>
   <div class="row bottom-button-row">
-    <button (click)="submit()" class="btn btn-primary offset-10">Plot Graph</button>
-    <!--[routerLink]="['../../result']"-->
+    <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
+    <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
 </form>

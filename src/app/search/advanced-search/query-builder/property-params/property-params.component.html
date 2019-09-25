@@ -1,38 +1,26 @@
 <div class="row mt-1" *ngIf="!isEmpty">
   <div class="col-3">
     <select2
-      ngDefaultControl
       name="attributes"
-      #attribute
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Attributes' }"
       [data]="propertyTypes"
-      [value]="findDropdownValue(attributeBuilder, 'propertyTypes')"
+      [value]="selectedAttribute ? '0' : ''"
       (valueChanged)="updateParam('attribute', $event)"
     ></select2>
   </div>
   <div class="col-3">
     <select2
-      ngDefaultControl
       name="matchType"
       [cssImport]="true"
       [options]="{ width: '100%', placeholder: 'Match Type' }"
       [data]="matchTypes"
-      [value]="findDropdownValue(matchTypeBuilder, 'matchTypes')"
+      [value]="selectedMatchType ? '0' : ''"
       (valueChanged)="updateParam('matchType', $event)"
     ></select2>
   </div>
   <div class="col-5">
-    <!-- <select2
-      ngDefaultControl
-      name="keywords"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Keyword(s)'}"
-      [data]="propertyTypes"
-      [value]="findDropdownValue(keywordBuilder, 'propertyTypes')"
-      (valueChanged)="updateParam('keyword', $event)"
-    ></select2> -->
-    <input class="form-control" [(ngModel)]="keywordBuilder" />
+    <input class="form-control" [(ngModel)]="queryParam.keyword" />
   </div>
   <div class="col-1">
     <i 
@@ -73,15 +61,6 @@
     ></select2>
   </div>
   <div class="col-5">
-    <!-- <select2
-      ngDefaultControl
-      name="keywords"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Keyword(s)'}"
-      [data]="propertyTypes"
-      [(ngModel)]="keywordBuilder"
-      (valueChanged)="keywordBuilder = $event.data[0].text"
-    ></select2> -->
     <input class="form-control" placeholder="Keyword(s)" [(ngModel)]="keywordBuilder">
   </div>
   <div class="col-1">

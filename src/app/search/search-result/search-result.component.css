@@ -3,9 +3,23 @@
     cursor: pointer;
 }
 
+.back-icon {
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
+}
+
 .query-container {
     border-radius: 20px;
     background-color: rgb(211, 209, 208);
     color: #00365C;
     padding: 20px;
+}
+
+.data-button {
+    width: 100px!important;
+}
+
+.view-data {
+    margin-bottom: 5px!important;
 }
