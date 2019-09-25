@@ -5,6 +5,10 @@
     margin-bottom: 10px;
 }
 
+strong {
+    font-weight: bold;
+}
+
 .data-container {
     border: 1px solid rgb(201,201,201);
     box-shadow: 1px 1px 5px rgb(130,130,130);
@@ -48,7 +52,7 @@ h6 {
     margin-top: 10px;
 }
 
-.search-result-row h4 {
+.search-result-row h5 {
     margin-left: 30px;
 }
 

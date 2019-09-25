@@ -1,21 +1,24 @@
-<div class="form-container">
-  <select2 [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
-  </select2>
-</div>
-
-<div class="form-container mt-3" *ngIf="selectedValue">
-  <div class="table-background">
-      <table class="table table-hover" cellspacing="1">
-          <thead>
-            <tr>
-              <th *ngFor="let field of selectedValue?.schema.fields">{{field.name}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of selectedValue?.data">
-              <td *ngFor="let field of selectedValue?.schema.fields">{{item[field.name]}}</td>
-            </tr>
-          </tbody>
-        </table>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <div class="card p-3">
+          <h5 class="card-title">Plot Description title</h5>
+          <p class="card-text">Apparently we had reached a great height in the atmosphere, for the sky was a dead black, and the stars had ceased to twinkle. By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out, and the car seemed to float in the middle of an immense dark sphere, whose upper half was strewn with silver. Looking down into the dark gulf below, I could see a ruddy light streaming through a rift in the clouds.
+      
+            </p>
+        </div>
+      </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+        <div style="height: 300px; border: 1px solid #aaa; text-align: center;">
+          <h5 style="display: inline-block; margin-top: 100px;">Plot</h5>
+        </div>
+      </div>
+    <div class="col-6">
+        <div style="height: 300px; border: 1px solid #aaa; text-align: center;">
+          <h5 style="display: inline-block; margin-top: 100px;">Plot</h5>
+        </div>
+      </div>
   </div>
 </div>

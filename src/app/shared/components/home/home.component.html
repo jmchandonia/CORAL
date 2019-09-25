@@ -1,48 +1,63 @@
-<div class="row">
-  <div class="col-4">
-    <h4>Filter By:</h4>
-    <div class="form-container-column filter-box">
-        <ul class="nav flex-column">
-            <li class="nav-item" *ngFor="let category of filterCategories; let i = index;">
-              <strong>{{category.categoryName}}</strong>
-              <div *ngFor="let item of category.items; let j = index;">
-                <input [id]="i + ' ' + j" type="checkbox" (change)="onValueChecked($event)" />
-                <label [for]="i + ' ' + j">{{item.name}}</label>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+          <div class="form-container-column filter-box">
+              <h5>Narrow Results</h5>
+              <ul class="nav flex-column">
+                  <li class="nav-item" class="category-li" *ngFor="let category of filterCategories; let i = index;">
+                    <span class="category-label">{{category.categoryName}}</span>
+                    <div style="margin-bottom: -8px;" *ngFor="let item of category.items; let j = index;">
+                      <input [id]="i + ' ' + j" type="checkbox" (change)="onValueChecked($event)" />
+                      <label style="font-size: 0.7em;" [for]="i + ' ' + j">{{item.name}}</label>
+                    </div>
+                  </li>
+                </ul>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Title should be here</h5>
+                <p class="card-text">This typeface family was designed for the output of inkjet printers. It was inspired by the concept of saving space in publishing texts without loss of height. This means it is a very condensed type.</p>
               </div>
-            </li>
-          </ul>
-    </div>
-  </div>
-  <div class="col-4" *ngIf="coreTypes && coreTypes.items?.length">
-    <h4>Core Types</h4>
-    <div class="form-container-column">
-      <ul class="list-group">
-        <li
-          *ngFor="let c of coreTypes.items"
-          class="list-group-item d-flex justify-content-between align-items-center"
-          (click)="navigateToSearch(c.queryMatch)" 
-        >
-        {{c.name}}
-        <span
-          class="badge badge-primary badge-pill">{{c.count}}</span>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="col-4" *ngIf="dynamicTypes && dynamicTypes.items?.length">
-    <h4>Dynamic Types</h4>
-    <div class="form-container-column">
-        <ul class="list-group">
-            <li
-              *ngFor="let d of dynamicTypes.items"
-              class="list-group-item d-flex justify-content-between align-items-center"
-              (click)="navigateToSearch(d.queryMatch)" 
-            >
-            {{d.name}}
-            <span
-              class="badge badge-primary badge-pill">{{d.count}}</span>
-            </li>
-          </ul>
-    </div>
-  </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-6 pl-0 pr-1">
+              <div class="card" *ngIf="coreTypes && coreTypes.items?.length">
+                <div class="card-header" style="background-color: #00489B; color: white;">
+                  Core Types
+                </div>
+                <ul class="list-group">
+                  <li 
+                    *ngFor="let c of coreTypes.items"
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                    (click)="navigateToSearch(c.queryMatch)"
+                  >
+                  {{c.name}}
+                    <span class="badge badge-primary badge-pill">{{c.count}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-6 pl-1 pr-0">
+                <div class="card" *ngIf="dynamicTypes && dynamicTypes.items?.length">
+                  <div class="card-header" style="background-color: #00489B; color: white;">
+                    Dynamic Types
+                  </div>
+                  <ul class="list-group">
+                    <li 
+                      *ngFor="let d of dynamicTypes.items"
+                      class="list-group-item d-flex justify-content-between align-items-center"
+                      (click)="navigateToSearch(c.queryMatch)"
+                    >
+                    {{d.name}}
+                      <span class="badge badge-primary badge-pill">{{d.count}}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+          </div>
+      </div>
 </div>

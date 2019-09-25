@@ -47,10 +47,10 @@ body {
     margin-left: 5px;
 }
 
-.form-control {
+/* .form-control {
     height: 28px!important;
     border: 1px solid #aaa!important;
-}
+} */
 
 .form-container {
     background-color: rgb(210,210,210);
@@ -63,7 +63,7 @@ body {
 
 .form-container-column {
     border-radius: 10px;
-    background-color: rgb(210,210,210);
+    background-color: #ECECEC;
     padding: 10px;
 }
 
@@ -75,4 +75,6 @@ body {
     margin: 0px auto;
     width: 800px;
 }
+
+
 
