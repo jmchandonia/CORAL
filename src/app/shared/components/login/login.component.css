@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Economica&display=swap');
+
 .login-container{
     margin: 0px auto;
     background-color: rgb(210,210,210);
@@ -5,13 +7,18 @@
     width: 600px;
 }
 
+.login-title {
+    font-family: 'Economica', sans-serif;
+    font-weight: bold;
+}
+
 .clearinghouse-header{
     background-image: url('../../../../assets/temporary_login_cover.jpg');
     background-size: cover;
     text-align: center;
     height: 300px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .clearinghouse-header h5{ 

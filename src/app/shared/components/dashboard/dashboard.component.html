@@ -1,9 +1,9 @@
-<div class="option-container">
+<div class="form-container">
   <select2 [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
   </select2>
 </div>
 
-<div class="option-container mt-3" *ngIf="selectedValue">
+<div class="form-container mt-3" *ngIf="selectedValue">
   <div class="table-background">
       <table class="table table-hover" cellspacing="1">
           <thead>
@@ -18,5 +18,4 @@
           </tbody>
         </table>
   </div>
-  <!-- <h4 *ngIf="selectedValue"></h4> -->
 </div>
