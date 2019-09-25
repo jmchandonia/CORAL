@@ -712,27 +712,27 @@ def generix_reports():
 
     reports = [
         {
-            'name': 'Data Brick: #data sets',
+            'name': 'Data Uploaded by Category',
             'id': 'brick_types'
         },
         {
-            'name': 'Data Brick: dimensions',
+            'name': 'Data Sorted by Dimensionality',
             'id': 'brick_dim_types'
         },
         {
-            'name': 'Data Brick: dimension variable',
+            'name': 'Data Sorted by Dimension Type',
             'id': 'brick_data_var_types'
         },
         {
-            'name': 'Processes',
+            'name': 'Data Sorted by Process used to Generate Data',
             'id': 'process_types'
         },
         {
-            'name': 'ENIGMA personnel',
+            'name': 'Data Uploaded by Lab & Person',
             'id': 'process_persons'
         },
         {
-            'name': 'ENIGMA compaigns',
+            'name': 'Data Uploaded by Campaign',
             'id': 'process_campaigns'
         }
     ]        
@@ -763,7 +763,7 @@ def generix_filters():
     reports = svs['reports']
 
     df_campaign = reports.process_campaigns.to_df()
-    df_persons = reports.process_campaigns.to_df()
+    df_persons = reports.process_persons.to_df()
     res = [
         {
             'categoryName': 'ENIGMA Campaigns',
