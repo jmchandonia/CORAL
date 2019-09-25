@@ -1,0 +1,23 @@
+
+.filter-box {
+    margin-left: 30px;
+}
+
+.options-container {
+    background-color: rgb(210,210,210);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+h4 {
+    margin-left: 30px;
+}
+
+img { 
+    margin-left: 150px;
+}
+
+label {
+    margin-left: 5px;
+    color: rgb(100,100,100);
+}

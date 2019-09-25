@@ -21,7 +21,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LoginComponent,
     HomeComponent,
     DashboardComponent,
-    UploadComponent
+    UploadComponent,
   ],
   imports: [
     BrowserModule,

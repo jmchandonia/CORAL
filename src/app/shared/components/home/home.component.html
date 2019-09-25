@@ -1,3 +1,48 @@
-<p>
-  home works!
-</p>
+<div class="row">
+  <div class="col-4">
+    <h4>Filter By:</h4>
+    <div class="options-container filter-box">
+        <ul class="nav flex-column">
+            <li class="nav-item" *ngFor="let category of filterCategories; let i = index;">
+              <strong>{{category.categoryName}}</strong>
+              <div *ngFor="let item of category.items; let j = index;">
+                <input [id]="i + ' ' + j" type="checkbox" (change)="onValueChecked($event)" />
+                <label [for]="i + ' ' + j">{{item.name}}</label>
+              </div>
+            </li>
+          </ul>
+    </div>
+  </div>
+  <div class="col-4" *ngIf="coreTypes.items?.length">
+    <h4>Core Types</h4>
+    <div class="options-container">
+      <ul class="list-group">
+        <li
+          *ngFor="let c of coreTypes.items"
+          class="list-group-item d-flex justify-content-between align-items-center"
+          (click)="navigateToSearch(c.queryMatch)" 
+        >
+        {{c.name}}
+        <span
+          class="badge badge-primary badge-pill">{{c.count}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-4" *ngIf="dynamicTypes.items?.length">
+    <h4>Dynamic Types</h4>
+    <div class="options-container">
+        <ul class="list-group">
+            <li
+              *ngFor="let d of dynamicTypes.items"
+              class="list-group-item d-flex justify-content-between align-items-center"
+              (click)="navigateToSearch(d.queryMatch)" 
+            >
+            {{d.name}}
+            <span
+              class="badge badge-primary badge-pill">{{d.count}}</span>
+            </li>
+          </ul>
+    </div>
+  </div>
+</div>
