@@ -9,7 +9,7 @@ const routes: Routes = [
     path: 'plot', component: PlotComponent, children: [
       { path: '', redirectTo: 'options/:id', pathMatch: 'full' },
       { path: 'options/:id', component: PlotOptionsComponent },
-      { path: 'result', component: PlotResultComponent },
+      { path: 'result/:id', component: PlotResultComponent },
     ]
   }
 ];

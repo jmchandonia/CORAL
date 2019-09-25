@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { Dimension } from '../../../shared/models/object-metadata';
 import { Select2OptionData } from 'ng2-select2';
-import { ObjectGraphMapService } from '../../../shared/services/object-graph-map.service';
+import { PlotService } from '../../../shared/services/plot.service';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 @Component({
@@ -15,37 +15,82 @@ import { FormGroup, FormControl, FormArray } from '@angular/forms';
 export class DimensionOptionsComponent implements OnInit {
 
   @Input() set dimensions(d: Dimension[]) {
-    this.allDimensions = d;
+    this._dimensions = d;
     d.forEach((val, idx) => {
       this.fromDimensionDropdown.push({id: idx.toString(), text: val.type});
     });
   }
+
+  get dimensions() {
+    return this._dimensions;
+  }
+
   @Input() index: number;
   @Input() form: FormGroup;
   @Input() dimensionLabel = '';
+  @Input() metadata: any;
   selectedValue: Dimension;
-  allDimensions: Dimension[];
+  _dimensions: Dimension[];
   fromDimensionDropdown: Array<Select2OptionData> = [{id: '', text: ''}];
-  // dimensionForm: FormGroup;
+  fromDimensionDropdownId: string;
   displayValuesFrom: FormArray;
   displayAxisLabelsAs: FormArray;
   isLabelChecked = [];
+  axisTitle: string;
 
   constructor(
-    private objectGraphMap: ObjectGraphMapService
+    private plotService: PlotService
   ) { }
 
   ngOnInit() {
     this.displayAxisLabelsAs = this.form.get('displayAxisValuesAs') as FormArray;
+    if (this.plotService.plotForm) {
+      const f = this.plotService.plotForm.value.dimensions[this.index];
+      this.fromDimensionDropdownId = this.fromDimensionDropdown.find(item => item.text === f.fromDimension).id;
+      this.form.patchValue({
+        fromDimension: f.fromDimension,
+        displayAxisLabels: f.displayAxisLabels,
+        displayAxisLabelsAs: f.displayAxisLabelsAs,
+        displayHoverLabels: f.displayHoverLabels,
+        displayHoverLabelsAs: f.displayHoverLabelsAs,
+        displayAxisTitle: f.displayAxisTitle,
+        axisTitle: f.axisTitle
+      });
+      this.selectedValue = this.dimensions[this.fromDimensionDropdownId];
+      if (parseInt(this.fromDimensionDropdownId, 10) === this.fromDimensionDropdown.length - 2) {
+        this.axisTitle = this.metadata.typed_values[0].value_type.oterm_name;
+        if (this.metadata.typed_values[0].value_units) {
+          this.axisTitle += `(${this.metadata.typed_values[0].value_units.oterm_name})`;
+        }
+      } else {
+        const idx = parseInt(this.fromDimensionDropdownId, 10);
+        this.axisTitle = this.metadata.dim_context[idx].data_type.oterm_name;
+      }
+      this.addDimensionVariables(f.fromDimension);
+    }
    }
 
   setSelectedDimension(event) {
-    this.selectedValue = this.allDimensions[event.value];
+    this.selectedValue = this.dimensions[event.value];
     this.form.controls.fromDimension.setValue(event.data[0].text);
-    this.addDimensionVariables();
+
+    // if selected value is data measurements (at the end of the dropdown)
+    if (parseInt(event.value, 10) === this.fromDimensionDropdown.length - 2) {
+      this.axisTitle = `${this.metadata.typed_values[0].value_type.oterm_name}`;
+
+      // add units if there are any
+      if (this.metadata.typed_values[0].value_units) {
+        this.axisTitle += ` (${this.metadata.typed_values[0].value_units.oterm_name})`;
+      }
+    } else {
+      // if selected value is from a dimension in the brick
+      const idx = parseInt(event.value, 10);
+      this.axisTitle = `${this.metadata.dim_context[idx].data_type.oterm_name}`;
+    }
+    this.addDimensionVariables(event.data[0].text);
   }
 
-  addDimensionVariables()  {
+  addDimensionVariables(label)  {
     this.displayValuesFrom = this.form.get('displayValuesFrom') as FormArray;
     this.displayAxisLabelsAs = this.form.get('displayAxisLabelsAs') as FormArray;
 
@@ -60,7 +105,10 @@ export class DimensionOptionsComponent implements OnInit {
         this.displayValuesFrom.push(new FormControl(false));
       });
     } else {
-      this.displayValuesFrom.push(new FormControl(true));
+      // prepopulate axis labeler if there's only one dimension variable
+      this.isLabelChecked = [`${label}=`];
+      this.displayValuesFrom.push(new FormControl({value: true, disabled: true}));
+      this.setNewLabels(`${label}=#V1`);
     }
   }
 
@@ -108,8 +156,7 @@ export class DimensionOptionsComponent implements OnInit {
     while (this.displayAxisLabelsAs.length) {
       this.displayAxisLabelsAs.removeAt(0);
     }
-    labels.forEach(label => this.displayAxisLabelsAs.push(new FormControl(label)));
-    console.log(this.displayAxisLabelsAs);
+    this.displayAxisLabelsAs.push(new FormControl(labels));
   }
 
 }

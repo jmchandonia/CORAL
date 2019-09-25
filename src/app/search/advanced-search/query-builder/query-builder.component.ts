@@ -14,39 +14,42 @@ import { Observable } from 'rxjs';
 })
 export class QueryBuilderComponent implements OnInit {
 
-  private queryMatch: QueryMatch = new QueryMatch(); // need to program in dataType
-  // make queryMatch input a set function that assigns data value to this.queryMatch
-  // @Input() set data(qMatch: QueryMatch) { this.queryMatch = qMatch }
+  public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
   @Input() operators = [];
+  @Input() set queryMatch(value: QueryMatch) {
+    this._queryMatch = value;
+    if (value && value.dataType) {
+      this.selectedDataType = value.dataType;
+      this.dataTypeList.push({id : '0', text: value.dataType});
+    }
+  }
+  get queryMatch() {
+    return this._queryMatch;
+  }
   private ajaxOptions: Select2AjaxOptions;
-  private selectedAttributes: any;
-  private dataModels: any;
-  private dataTypes: any;
+  public selectedAttributes: any;
+  dataModels: any;
+  dataTypes: any;
+  selectedDataType: string;
 
   options: Select2Options = {
     width: '100%',
-    placeholder: 'Select A DataType',
+    placeholder: 'Select A Data Type',
     templateResult: state => {
-      return `<span><img class="icon" src="./assets/${state.text.includes('u') ? 'Brick' : 'Sample'}.png" />${state.text}</span>`;
+      if (!state.id) { return state; }
+      const obj = this.dataTypes[parseInt(state.id, 10)];
+      return `<span><img class="icon" src="./assets/${obj.category === 'DDT_' ? 'Brick' : 'Sample'}.png" />${state.text}</span>`;
     },
     escapeMarkup: m => m
   };
 
-  private dataModelList: Array<Select2OptionData> = [
+  dataTypeList: Array<Select2OptionData> = [
     {
       id: '',
       text: ''
     },
-  ];
-
-  private propertyParams = [
-    {
-      type: '',
-      match: 'contains',
-      keyword: ''
-    }
   ];
 
   constructor(
@@ -56,13 +59,12 @@ export class QueryBuilderComponent implements OnInit {
     private chRef: ChangeDetectorRef
   ) { }
 
-  public formatState(state) {
-    const $state = 
-      `<span><img class="icon" src="./assets/${state.text.includes('u') ? 'Brick' : 'Sample'}.png />${state.text}</span>`;
-    return $state;
-  }
-
   ngOnInit() {
+
+    if (!this.queryMatch) {
+      this.queryMatch = new QueryMatch();
+    }
+
     this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
       .subscribe((data: any) => {
         this.dataModels = data.results;
@@ -80,26 +82,19 @@ export class QueryBuilderComponent implements OnInit {
             return {id: idx.toString(), text: obj.dataType};
           }),
         };
-    },
-  };
-
+      },
+    };
     this.options.ajax = this.ajaxOptions;
 }
-
-  /// ADD SCALAR TYPE IN PARAMETERS WITH ATTRIBUTES
-  // https://psnov1.lbl.gov:8082/generix/search_operations
-  /// ADD ICONS FOR SEARCH PARAMS
 
   updateObjectDataModel(event) {
     const selected = this.dataTypes[parseInt(event.value, 10)];
     const selectedModel = this.dataModels[selected.dataModel];
-    this.queryMatch.dataModel = selectedModel.dataModel;
-    this.queryMatch.dataType = event.data[0].text;
-    this.queryMatch.category = selectedModel.category;
     this.selectedAttributes = selectedModel.properties;
+    Object.keys(selected).forEach(key => {
+      this.queryMatch[key] = selected[key];
+    });
     this.queryMatch.params = [];
-    // make dropdown for propertyparams disabled until this is selected
-    // remove old propertyparam references is a new type is selected
     this.updateQueryMatch();
   }
 

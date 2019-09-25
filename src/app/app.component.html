@@ -1,5 +1,60 @@
 <div class="top-nav">
-
+    <div class="row pr-4 pl-4">
+        <img id="logo-image" src="../assets/lbnl-logo.png">
+        <div class="nav-container">
+            <ul class="nav nav-tabs offset-4">
+                <li class="nav-item">
+                    <a
+                      class="nav-link" 
+                      href="Javascript:void:(0)"
+                      [routerLink]="['home']"
+                      [ngClass]="currentUrl?.includes('home') ? 'active' : ''"
+                    >
+                      Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      href="JavaScript:void(0)"
+                      [routerLink]="['login']"
+                    >
+                        Sign Out
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                      class="nav-link"
+                      href="JavaScript:void(0)"
+                      [routerLink]="['search']"
+                      [ngClass]="currentUrl?.includes('search') ? 'active' : ''"
+                    >
+                        Search
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      href="JavaScript:void(0)"
+                      [routerLink]="['upload']"
+                      [ngClass]="currentUrl?.includes('upload') ? 'active' : ''"
+                    >
+                        Upload
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      href="Javascript:void(0)"
+                      [routerLink]="['dashboard']"
+                      [ngClass]="currentUrl?.includes('dashboard') ? 'active' : ''"
+                    >
+                        Dashboard
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <router-outlet></router-outlet>

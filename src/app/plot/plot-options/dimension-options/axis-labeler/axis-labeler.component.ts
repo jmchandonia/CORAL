@@ -10,14 +10,14 @@ export class AxisLabelerComponent implements OnInit {
   @Input() set values(v) {
     this.valueLabels = v;
     this.valueLabels.forEach((value, idx)  => {
-      this.format += `${value}=#V${idx},`;
+      this.format += `${value}#V${idx + 1},`;
       value += '=';
     });
   }
-  private displayOptions = false;
-  private format = '';
-  private invalid = false;
-  private valueLabels = [];
+  displayOptions = false;
+  format = '';
+  invalid = false;
+  valueLabels = [];
   @Output() labelsChanged: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
@@ -35,8 +35,13 @@ export class AxisLabelerComponent implements OnInit {
 
   onSave() {
     this.toggleDisplayOptions();
-    if (!this.displayOptions && this.format) {
+    if (!this.displayOptions && this.format && this.format.match(/#V[0-9]/gi)) {
       this.updateFormat();
+    } else {
+      this.format = '';
+      this.valueLabels.forEach((value, idx) => {
+        this.format += `${value}#V${idx + 1},`;
+      });
     }
   }
 
@@ -59,7 +64,7 @@ export class AxisLabelerComponent implements OnInit {
       newValueLabels.pop();
     }
     this.valueLabels = newValueLabels;
-    this.labelsChanged.emit(newFormat);
+    this.labelsChanged.emit(this.format);
   }
 
 }
