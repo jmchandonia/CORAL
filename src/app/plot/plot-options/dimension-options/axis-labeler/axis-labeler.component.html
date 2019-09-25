@@ -1,8 +1,8 @@
 <div class="container col-12">
   <span
     class="label-item"
-    *ngFor="let value of valueLabels; let i = index;"
-  >{{value}}<span class="badge badge-pill badge-primary">V{{i+1}}</span>, 
+    *ngFor="let value of valueLabels; let i = index; let last = last"
+  >{{value}}<span class="badge badge-pill badge-primary">V{{i+1}}</span><span *ngIf="!last">,</span> 
   </span>
   <span 
     *ngIf="valueLabels.length && !displayOptions" 

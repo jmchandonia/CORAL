@@ -1,11 +1,15 @@
 <div class="row">
-  <span class="col-2 offset-1 mt-2" (click)="onGoBack()">Go back</span>
+  <span class="col-2 offset-1 mt-2" (click)="onGoBack()">
+      <i class="material-icons back-icon">keyboard_arrow_left</i>
+    Go back
+  </span>
   <hr style="width: 100%" />
 </div>
-<div class="plot-container">
-  <div class="card">
+<div class="form-container" style="padding: 0px;">
+  <div class="card mb-5" style="border: 0px;">
+    <h3 class="card-title">Your plot is displayed below</h3>
     <p class="card-text">
-        TYour plot is displayed below.  You can hover over the plot to see more
+        You can hover over the plot to see more
         information, or download the plot to use in a presentation or paper.
         Use the buttons below to download the original data, print the plot,
         or show the code you can use to re-create this plot in a Data
@@ -13,7 +17,7 @@
     </p>
   </div>
 </div>
-<div class="plot-container">
+<div class="form-container" style="padding: 0px; border: 1px solid #ccc;">
   <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
-  <div *ngIf="loading" class="loading"><h1>Loading....</h1></div>
+  <div *ngIf="loading" class="loading"><h3>Loading....</h3></div>
 </div>

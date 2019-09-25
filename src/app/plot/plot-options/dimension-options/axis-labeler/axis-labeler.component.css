@@ -31,16 +31,16 @@ input {
 }
 
 .update-cancel-buttons {
-    margin-left: 320px;
+    margin-left: 300px;
     font-size: 0.8rem;
-    color: blue;
+    color: #00489b;
 }
 
 .edit-button {
     position: relative;
-    left: 400px;
+    left: 350px;
     font-size: 0.8rem;
-    color: blue;
+    color: #00489b;
 }
 
 .edit-text-format {

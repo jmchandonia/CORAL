@@ -53,8 +53,6 @@ body {
 } */
 
 .form-container {
-    background-color: rgb(210,210,210);
-    border-radius: 10px;
     margin: 0px auto;
     width: 800px;
     margin-bottom: 20px;
@@ -74,6 +72,10 @@ body {
 .data-information-header {
     margin: 0px auto;
     width: 800px;
+}
+
+.select2-container{
+    height: 30px!important;
 }
 
 

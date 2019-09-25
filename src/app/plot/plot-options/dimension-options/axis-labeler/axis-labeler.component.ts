@@ -9,10 +9,15 @@ export class AxisLabelerComponent implements OnInit {
 
   @Input() set values(v) {
     this.valueLabels = v;
-    this.valueLabels.forEach((value, idx)  => {
-      this.format += `${value}#V${idx + 1},`;
-      value += '=';
-    });
+    if (this.valueLabels.length === 1) {
+      this.valueLabels[0] = '';
+      this.labelsChanged.emit('#V1');
+    } else {
+      this.valueLabels.forEach((value, idx)  => {
+        this.format += `${value}#V${idx + 1},`;
+        value += '=';
+      });
+    }
   }
   displayOptions = false;
   format = '';
@@ -46,7 +51,6 @@ export class AxisLabelerComponent implements OnInit {
   }
 
   updateFormat() {
-
     // get key value format to send to server, eg {0: 'value=#V1'}
     const newFormat = this.format.split(',').map(item => {
       const index = parseInt(item.replace(/^\D+/g, ''), 10) - 1;

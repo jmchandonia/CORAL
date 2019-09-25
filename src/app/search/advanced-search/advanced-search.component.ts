@@ -13,10 +13,7 @@ import { HttpClient } from '@angular/common/http';
 export class AdvancedSearchComponent implements OnInit {
 
   queryBuilderObject: QueryBuilder;
-  showConnectionsUp = false;
-  showConnectionsDown = false;
-  showProcessesUp = false;
-  showProcessesDown = false;
+  showAdvancedFilters = false;
   operators;
   processes = [];
 
