@@ -19,8 +19,8 @@ export class HomeComponent implements OnInit {
   checkBoxArray: string[] = [];
   public filterCategories: any[] = [];
   public filterQueryBuilder: QueryParam[] = [];
-  public coreTypes: any[] = [];
-  public dynamicTypes: any[] = [];
+  public coreTypes: any;
+  public dynamicTypes: any;
 
   constructor(
     private homeService: HomeService,

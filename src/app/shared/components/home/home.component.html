@@ -13,7 +13,7 @@
           </ul>
     </div>
   </div>
-  <div class="col-4" *ngIf="coreTypes.items?.length">
+  <div class="col-4" *ngIf="coreTypes && coreTypes.items?.length">
     <h4>Core Types</h4>
     <div class="options-container">
       <ul class="list-group">
@@ -29,7 +29,7 @@
       </ul>
     </div>
   </div>
-  <div class="col-4" *ngIf="dynamicTypes.items?.length">
+  <div class="col-4" *ngIf="dynamicTypes && dynamicTypes.items?.length">
     <h4>Dynamic Types</h4>
     <div class="options-container">
         <ul class="list-group">
