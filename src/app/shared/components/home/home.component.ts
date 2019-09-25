@@ -16,11 +16,11 @@ export class HomeComponent implements OnInit {
     width: '100%'
   };
 
-  private checkBoxArray: string[] = [];
+  checkBoxArray: string[] = [];
   public filterCategories: any[] = [];
-  private filterQueryBuilder: QueryParam[] = [];
-  private coreTypes: any[] = [];
-  private dynamicTypes: any[] = [];
+  public filterQueryBuilder: QueryParam[] = [];
+  public coreTypes: any[] = [];
+  public dynamicTypes: any[] = [];
 
   constructor(
     private homeService: HomeService,
@@ -33,7 +33,6 @@ export class HomeComponent implements OnInit {
 
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
-        console.log('RES', res);
         this.filterCategories = res.results;
       });
   }
@@ -41,7 +40,6 @@ export class HomeComponent implements OnInit {
   getUpdatedValues() {
     this.homeService.getUpdatedValues(this.filterQueryBuilder)
     .subscribe((res: any) => {
-      console.log('RES', res);
       if (res.status === 'OK') {
         this.coreTypes = res.results.core_types;
         this.dynamicTypes = res.results.dynamic_types;
