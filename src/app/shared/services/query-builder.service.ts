@@ -2,28 +2,42 @@ import { Injectable } from '@angular/core';
 import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
 import { NetworkService } from './network.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QueryBuilderService {
 
-  private queryBuilderObject: QueryBuilder = new QueryBuilder();
+  public queryBuilderObject: QueryBuilder;
   public queryBuilderSub = new Subject<QueryBuilder>();
+  resultSub = new Subject();
+  public resultStore: any;
+  searchType: string;
 
-  constructor(private network: NetworkService) { }
+  constructor(private http: HttpClient) { }
 
   getCurrentObject() {
     if (!this.queryBuilderObject) {
-      this.queryBuilderObject = new QueryBuilder();
-      return this.queryBuilderObject;
+      const savedObject = this.getSavedObject();
+      if (savedObject) {
+        this.queryBuilderObject = savedObject;
+        return {qb: this.queryBuilderObject, empty: false};
+      } else {
+        this.queryBuilderObject = new QueryBuilder();
+        return {qb: this.queryBuilderObject, empty: true};
+      }
     } else {
-      return this.queryBuilderObject;
+      return {qb: this.queryBuilderObject, empty: false};
     }
   }
 
+  getSavedObject() {
+    return JSON.parse(localStorage.getItem('queryBuilderObject'));
+  }
+
   resetObject() {
-    delete this.queryBuilderObject;
+    localStorage.removeItem('queryBuilderObject');
     this.queryBuilderObject = new QueryBuilder();
   }
 
@@ -38,11 +52,11 @@ export class QueryBuilderService {
 
   addProcessParam(process, queryParam) {
     this.queryBuilderObject[process].push(queryParam);
-    this.queryBuilderSub.next(this.queryBuilderObject); 
+    this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
-  updateProcessParam(process, index, queryParam) {
-    this.queryBuilderObject[process][index] = queryParam;
+  updateProcessParam(process, index, event) {
+    this.queryBuilderObject[process][index][event.key] = event.value.value;
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
@@ -52,8 +66,42 @@ export class QueryBuilderService {
     this.queryBuilderSub.next(this.queryBuilderObject);
   }
 
-  submitQuery() {
-    return this.network.submitQuery()
+  submitSearchResults() {
+    console.log('QBO IN SUBMIT', this.queryBuilderObject);
+    localStorage.setItem('queryBuilderObject', JSON.stringify(this.queryBuilderObject));
+  }
+
+  submitSearchResultsFromHome(queryMatch: QueryMatch) {
+    this.queryBuilderObject = new QueryBuilder();
+    this.queryBuilderObject.queryMatch = queryMatch;
+  }
+
+  getSearchResults() {
+    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
+  }
+
+  getObjectMetadata(id) {
+    return this.http.get(`https://psnov1.lbl.gov:8082/generix/brick_metadata/${id}`);
+  }
+
+  getDataTypes() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_types');
+  }
+
+  getDataModels() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+  }
+
+  getOperators() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations');
+  }
+
+  getSearchType() {
+    return this.searchType;
+  }
+
+  setSearchType(searchType: string) {
+    this.searchType = searchType;
   }
 
 

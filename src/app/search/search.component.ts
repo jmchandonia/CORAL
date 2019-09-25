@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { QueryBuilderService } from '../shared/services/query-builder.service';
 
 @Component({
   selector: 'app-search',
@@ -10,15 +11,23 @@ export class SearchComponent implements OnInit {
 
   currentUrl = '';
 
-  constructor(private _router: Router) { }
+  constructor(
+    private router: Router,
+    private queryBuilder: QueryBuilderService
+    ) { }
 
   ngOnInit() {
-    this.currentUrl = this._router.url;
-    this._router.events.subscribe(event => {
+    this.currentUrl = this.router.url;
+    this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
       }
-    })
+    });
+  }
+
+  redirectTo(url) {
+    this.queryBuilder.resetObject();
+    this.router.navigate([`/search/${url}`]);
   }
 
 }

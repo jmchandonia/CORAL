@@ -1,41 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-advanced-search',
   templateUrl: './advanced-search.component.html',
-  styleUrls: ['./advanced-search.component.css']
+  styleUrls: ['./advanced-search.component.css'],
 })
 export class AdvancedSearchComponent implements OnInit {
 
-  private queryBuilderObject: QueryBuilder;
-  private showConnectionsUp = false;
-  private showConnectionsDown = false;
-  private showProcessesUp = false;
-  private showProcessesDown = false;
-  private operators;
+  queryBuilderObject: QueryBuilder;
+  showConnectionsUp = false;
+  showConnectionsDown = false;
+  showProcessesUp = false;
+  showProcessesDown = false;
+  operators;
+  processes = [];
 
   constructor(
     private queryBuilder: QueryBuilderService,
     private router: Router,
-    private http: HttpClient
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
 
-    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    const getQuery = this.queryBuilder.getCurrentObject();
+    this.queryBuilderObject = getQuery.qb;
 
     this.queryBuilder.getUpdatedObject().subscribe(object => {
       Object.assign(this.queryBuilderObject, object);
     });
 
-    this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations')
+    this.queryBuilder.getOperators()
       .subscribe((data: any) => {
         this.operators = data.results;
+      });
+
+    this.queryBuilder.getDataModels()
+      .subscribe((data: any) => {
+        const process = data.results.Process;
+        this.processes = process.properties;
       });
   }
 
@@ -49,6 +59,12 @@ export class AdvancedSearchComponent implements OnInit {
 
   removeProcess(process, queryParam) {
     this.queryBuilder.removeProcessParam(process, queryParam);
+  }
+
+  onSubmit() {
+    this.queryBuilder.submitSearchResults();
+    this.router.navigate(['../result'], {relativeTo: this.route});
+    this.queryBuilder.setSearchType('advanced');
   }
 
   testQuery() {

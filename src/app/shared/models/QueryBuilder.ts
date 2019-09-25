@@ -9,9 +9,9 @@ export class QueryBuilder {
 
 export class QueryMatch {
     constructor(
-        dType?: string, 
+        dType?: string,
         dModel?: string
-    ) { 
+    ) {
         this.dataType = dType;
         this.dataModel = dModel;
         this.params = [];
@@ -26,13 +26,17 @@ export class QueryParam {
     constructor(
         attr?: string,
         match?: string,
-        key?: string
-    ) { 
+        key?: string,
+        scalar?: string
+    ) {
         this.attribute = attr;
         this.matchType = match;
         this.keyword = key;
+        this.scalarType = scalar;
     }
-    public attribute: string = '';
-    public matchType: string = '';
-    public keyword: string = '';
+    public attribute: string;
+    public matchType: string;
+    public scalarType: string;
+    public keyword: string;
 }
+

@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef
+ } from '@angular/core';
 import { Select2OptionData, Select2Component } from 'ng2-select2';
 import { QueryParam } from '../../../../shared/models/QueryBuilder';
 import { NetworkService } from '../../../../shared/services/network.service';
@@ -6,7 +14,7 @@ import { NetworkService } from '../../../../shared/services/network.service';
 @Component({
   selector: 'app-property-params',
   templateUrl: './property-params.component.html',
-  styleUrls: ['./property-params.component.css']
+  styleUrls: ['./property-params.component.css'],
 })
 export class PropertyParamsComponent implements OnInit {
 
@@ -16,9 +24,10 @@ export class PropertyParamsComponent implements OnInit {
   @Input() isEmpty: boolean;
   @Input() set attributes(a: Array<any>) {
     if (a) {
-          this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
-      return { id: item.name, text: item.name };
-    })];
+      this.propertyTypesMetadata = a;
+      this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
+        return { id: item.name, text: item.name };
+      })];
     }
   }
   @Input() set operators(o: Array<string>) {
@@ -30,65 +39,55 @@ export class PropertyParamsComponent implements OnInit {
   }
   @Input() connection = '';
   @ViewChild(Select2Component) attribute: ElementRef;
+  // @ViewChild(Select2Component) matchType: ElementRef;
 
-  private queryParam: QueryParam;
-  private matchTypeBuilder = '';
-  private attributeBuilder = '';
-  private keywordBuilder = '';
+  queryParam: QueryParam;
+  matchTypeBuilder = '';
+  attributeBuilder = '';
+  keywordBuilder = '';
+  propertyTypesMetadata: any[];
+  propertyTypes: Array<Select2OptionData> = this.select2Init();
+  matchTypes: Array<Select2OptionData> = this.select2Init();
+  selectedMatchType: string;
+  selectedAttribute: string;
 
-  private propertyTypes: Array<Select2OptionData> = [
-    {
-      id: '',
-      text: ''
-    },
-  ];
-
-  private matchTypes: Array<Select2OptionData> = [
-    {
-      id: '',
-      text: ''
-    },
-  ];
+  select2Init() {
+    // required to have placeholder be displayed
+    return [{id: '', text: ''}];
+  }
 
   @Input() set data(param) {
-    this.matchTypeBuilder = param.matchType;
-    this.attributeBuilder = param.attribute;
+    if (param.matchType) {
+      this.selectedMatchType = param.matchType;
+      this.matchTypes.push({id: '0', text: param.matchType});
+      this.matchTypeBuilder = param.matchType;
+    }
+    if (param.attribute) {
+      this.selectedAttribute = param.attribute;
+      this.propertyTypes.push({id: '0', text: param.attribute});
+      this.attributeBuilder = param.attribute;
+    }
     this.keywordBuilder = param.keyword;
-    // TODO: figure out a way to bind builder values with select2 dropdown items
+    this.queryParam = param;
   }
 
   constructor(
     private network: NetworkService,
   ) { }
 
-  ngOnInit() {
-    // if (!this.isEmpty) {
-    //   let newData = this.network.getPropertyValuesDirect(this.connection);
-    //   newData = newData.map(item => {
-    //     return { id: item.id.toString(), text: item.title };
-    //   });
-    //   this.propertyTypes = [this.propertyTypes[0], ...newData];
-    // } else {
-    //   this.network.getPropertyValues()
-    //   .subscribe(data => {
-    //     if (
-    //         data.connection === this.connection 
-    //         || (!this.connection && data.connection === 'queryMatch')
-    //       ) {
-    //      const newData = data.results.map(item => {
-    //        return { id: item.id.toString(), text: item.title }
-    //      });
-    //      this.propertyTypes = [this.propertyTypes[0], ...newData];
-    //     }
-    //   });
-    // }
-  }
+  ngOnInit() { }
 
   addParam() {
+
+    const scalar = this.propertyTypesMetadata.find(item => {
+      return item.name === this.attributeBuilder;
+    }).scalar_type;
+
     this.added.emit(new QueryParam(
       this.attributeBuilder,
       this.matchTypeBuilder,
-      this.keywordBuilder
+      this.keywordBuilder,
+      scalar
     ));
     this.attributeBuilder = '';
     this.matchTypeBuilder = '';

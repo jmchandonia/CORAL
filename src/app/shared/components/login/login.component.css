@@ -1,0 +1,29 @@
+.login-container{
+    margin: 0px auto;
+    background-color: rgb(210,210,210);
+    border-radius: 20px;
+    width: 600px;
+}
+
+.clearinghouse-header{
+    background-image: url('../../../../assets/temporary_login_cover.jpg');
+    background-size: cover;
+    text-align: center;
+    height: 300px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.clearinghouse-header h5{ 
+    color: white;
+    font-size: 3rem;
+    margin-top: 10px;
+}
+
+.login-container {
+    margin-top: 10px;
+}
+
+label {
+    margin-top: 10px;
+}
