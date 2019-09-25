@@ -71,6 +71,11 @@ export class QueryBuilderService {
     localStorage.setItem('queryBuilderObject', JSON.stringify(this.queryBuilderObject));
   }
 
+  submitSearchResultsFromHome(queryMatch: QueryMatch) {
+    this.queryBuilderObject = new QueryBuilder();
+    this.queryBuilderObject.queryMatch = queryMatch;
+  }
+
   getSearchResults() {
     return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
   }
