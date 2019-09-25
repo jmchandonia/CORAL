@@ -43,6 +43,11 @@ export class PlotService {
     return this.http.get('https://psnov1.lbl.gov:8082/generix/plot_types');
   }
 
+  resetValues() {
+    this.plotForm = undefined;
+    this.plotType = undefined;
+  }
+
   submitNewPlot(formGroup: FormGroup, metadata: any, plotTypeData: any) {
     const form = formGroup.value;
     const xyzLabels = ['x', 'y', 'z'];

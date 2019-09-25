@@ -165,4 +165,9 @@ export class PlotOptionsComponent implements OnInit {
     this.plotService.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
   }
 
+  onGoBack(id) {
+    this.plotService.resetValues();
+    this.router.navigate([`search/result/${id}`]);
+  }
+
 }
