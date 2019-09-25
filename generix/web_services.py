@@ -745,7 +745,9 @@ def generix_reports():
 def generix_report(id):
     try:
         report = getattr(svs['reports'], id)
-        res = report.to_df().head(n=1000).to_json(orient="table", index=False)
+        df = report.to_df()
+        df.columns = ['Category', 'Term ID', 'Count']
+        res = df.head(n=1000).to_json(orient="table", index=False)
     except Exception as e:
         return json.dumps({
             'results': '', 
