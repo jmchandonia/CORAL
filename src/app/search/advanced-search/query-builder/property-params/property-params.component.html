@@ -1,23 +1,27 @@
 <div class="row mt-1" *ngIf="!isEmpty">
   <div class="col-3">
-    <select2
-      name="attributes"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Attributes' }"
-      [data]="propertyTypes"
-      [value]="selectedAttribute ? '0' : ''"
-      (valueChanged)="updateParam('attribute', $event)"
-    ></select2>
+    <div class="form-control">
+        <select2
+        name="attributes"
+        [cssImport]="true"
+        [options]="{ width: '100%', placeholder: 'Attributes' }"
+        [data]="propertyTypes"
+        [value]="selectedAttribute ? '0' : ''"
+        (valueChanged)="updateParam('attribute', $event)"
+      ></select2>
+    </div>
   </div>
   <div class="col-3">
-    <select2
-      name="matchType"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Match Type' }"
-      [data]="matchTypes"
-      [value]="selectedMatchType ? '0' : ''"
-      (valueChanged)="updateParam('matchType', $event)"
-    ></select2>
+    <div class="form-control">
+        <select2
+        name="matchType"
+        [cssImport]="true"
+        [options]="{ width: '100%', placeholder: 'Match Type' }"
+        [data]="matchTypes"
+        [value]="selectedMatchType ? '0' : ''"
+        (valueChanged)="updateParam('matchType', $event)"
+      ></select2>
+    </div>
   </div>
   <div class="col-5">
     <input class="form-control" [(ngModel)]="queryParam.keyword" />
@@ -39,26 +43,30 @@
 
 <div class="row mt-1" *ngIf="isEmpty">
   <div class="col-3">
-    <select2
-      ngDefaultControl
-      name="attributes"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Attributes' }"
-      [data]="propertyTypes"
-      [(ngModel)]="attributeBuilder"
-      (valueChanged)="attributeBuilder = $event.data[0].text"
-    ></select2>
+    <div class="form-control">
+        <select2
+        ngDefaultControl
+        name="attributes"
+        [cssImport]="true"
+        [options]="{ width: '100%', placeholder: 'Attributes' }"
+        [data]="propertyTypes"
+        [(ngModel)]="attributeBuilder"
+        (valueChanged)="attributeBuilder = $event.data[0].text"
+      ></select2>
+    </div>
   </div>
   <div class="col-3">
-    <select2
-      ngDefaultControl
-      name="matchType"
-      [cssImport]="true"
-      [options]="{ width: '100%', placeholder: 'Match Type' }"
-      [data]="matchTypes"
-      [(ngModel)]="matchTypeBuilder"
-      (valueChanged)="matchTypeBuilder = $event.data[0].text"
-    ></select2>
+    <div class="form-control">
+        <select2
+        ngDefaultControl
+        name="matchType"
+        [cssImport]="true"
+        [options]="{ width: '100%', placeholder: 'Match Type' }"
+        [data]="matchTypes"
+        [(ngModel)]="matchTypeBuilder"
+        (valueChanged)="matchTypeBuilder = $event.data[0].text"
+      ></select2>
+    </div>
   </div>
   <div class="col-5">
     <input class="form-control" placeholder="Keyword(s)" [(ngModel)]="keywordBuilder">

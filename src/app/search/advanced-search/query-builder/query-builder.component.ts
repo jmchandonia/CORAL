@@ -16,6 +16,7 @@ export class QueryBuilderComponent implements OnInit {
 
   public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
+  @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
   @Input() operators = [];
   @Input() set queryMatch(value: QueryMatch) {

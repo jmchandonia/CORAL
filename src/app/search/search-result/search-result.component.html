@@ -33,8 +33,8 @@
         <tr *ngFor="let result of results">
           <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
           <td style="width: 150px;">
-            <i class="material-icons options-icon" (click)="viewData()">description</i>
-            <i class="material-icons options-icon" (click)="useData()">bar_chart</i>
+            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="viewData(result.brick_id)">description</i>
+            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="useData(result.brick_id)">bar_chart</i>
             <i class="material-icons options-icon">cloud_download</i>
           </td>
         </tr>

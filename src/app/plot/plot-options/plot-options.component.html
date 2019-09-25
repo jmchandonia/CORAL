@@ -1,4 +1,3 @@
-<form [formGroup]="plotForm">
   <div class="row mb-3 mt-3">
     <div class="offset-1" [routerLink]="['../../../search/result/' + objectId]">
       <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
@@ -6,29 +5,37 @@
     </div>
   </div>
   <hr />
-  <div class="data-information-header">
-    <h5>Data Plotting Options</h5>
-  </div>
   <div class="form-container">
-    <div class="row">
-        <div class="col-4">
-            <label for="plotType">Plot Type</label>
-            <select2
-            id="plotType"
-            [cssImport]="true"
-            [options]="plotTypeOptions"
-            [data]="plotTypeData"
-            ngDefaultControl
-            [value]="selectedPlotTypeId || ''"
-            (valueChanged)="updatePlotType($event)"
-            formControlName="plotType"
-            >
-            </select2>
-          </div>
-          <div class="col-8">
-            <label for="graphTitle">Graph Title</label>
-            <input class="form-control" type="text" formControlName="graphTitle" />
-          </div>
+    <div class="card">
+      <div class="card-header" style="background-color: #eeeeff;">
+        Data Plotting Options
+      </div>
+      <form [formGroup]="plotForm">
+        <div class="form-group p-3">
+            <!-- <div class="form-container"> -->
+                <div class="row">
+                    <div class="col-4">
+                        <label for="plotType">Plot Type</label>
+                        <select2
+                        id="plotType"
+                        [cssImport]="true"
+                        [options]="plotTypeOptions"
+                        [data]="plotTypeData"
+                        ngDefaultControl
+                        [value]="selectedPlotTypeId || ''"
+                        (valueChanged)="updatePlotType($event)"
+                        formControlName="plotType"
+                        >
+                        </select2>
+                      </div>
+                      <div class="col-8">
+                        <label for="graphTitle">Graph Title</label>
+                        <input class="form-control" type="text" formControlName="graphTitle" />
+                      </div>
+                </div>
+              <!-- </div> -->
+        </div>
+      </form>
     </div>
   </div>
   <app-dimension-options
@@ -43,4 +50,3 @@
     <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
-</form>
