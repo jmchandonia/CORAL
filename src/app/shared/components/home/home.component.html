@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-4">
     <h4>Filter By:</h4>
-    <div class="options-container filter-box">
+    <div class="form-container-column filter-box">
         <ul class="nav flex-column">
             <li class="nav-item" *ngFor="let category of filterCategories; let i = index;">
               <strong>{{category.categoryName}}</strong>
@@ -15,7 +15,7 @@
   </div>
   <div class="col-4" *ngIf="coreTypes && coreTypes.items?.length">
     <h4>Core Types</h4>
-    <div class="options-container">
+    <div class="form-container-column">
       <ul class="list-group">
         <li
           *ngFor="let c of coreTypes.items"
@@ -31,7 +31,7 @@
   </div>
   <div class="col-4" *ngIf="dynamicTypes && dynamicTypes.items?.length">
     <h4>Dynamic Types</h4>
-    <div class="options-container">
+    <div class="form-container-column">
         <ul class="list-group">
             <li
               *ngFor="let d of dynamicTypes.items"

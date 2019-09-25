@@ -1,32 +1,28 @@
-<div class="login-container">
+<div class="form-container form-container-sm" style="padding: 0px;">
   <div class="clearinghouse-header">
-    <h5>Data ClearingHouse</h5>
+    <h5 class="login-title">GENERIX CLEARINGHOUSE</h5>
   </div>
   <div class="row justify-content-center mt-3">
-    <!-- <div class="btn-group" role="group" aria-label="Switch to signup">
-      <button type="button" class="btn btn-secondary" (click)="displayLogin = true">Login</button>
-      <button type="button" class="btn btn-secondary" (click)="displayLogin = false">Sign Up</button>
-    </div> -->
-  <div class="col-10">
-      <ul class="nav nav-tabs nav-fill">
-          <li class="nav-item">
-            <a 
-              [ngClass]="displayLogin ? 'active' : ''"
-              class="nav-link"
-              href="JavaScript:void(0)"
-              (click)="displayLogin = true;"
-            >Login</a>
-          </li>
-          <li class="nav-item">
-            <a
-              [ngClass]="!displayLogin ? 'active' : ''"
-              class="nav-link"
-              href="JavaScript:void(0)"  
-              (click)="displayLogin = false;"
-            >Sign Up</a>
-          </li>
-        </ul>
-  </div>
+    <div class="col-10">
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+              <a 
+                [ngClass]="displayLogin ? 'active' : ''"
+                class="nav-link"
+                href="JavaScript:void(0)"
+                (click)="displayLogin = true;"
+              >Login</a>
+            </li>
+            <li class="nav-item">
+              <a
+                [ngClass]="!displayLogin ? 'active' : ''"
+                class="nav-link"
+                href="JavaScript:void(0)"  
+                (click)="displayLogin = false;"
+              >Sign Up</a>
+            </li>
+          </ul>
+    </div>
   </div>
   <div class="pl-4 pr-4" *ngIf="displayLogin">
     <form class="form-group">

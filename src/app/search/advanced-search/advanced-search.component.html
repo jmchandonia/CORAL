@@ -24,7 +24,7 @@
     <h5 style="display: inline-block">Process that Generated the Data</h5>
 </div>
 <hr class="data-divider" *ngIf="!showProcessesUp" />
-<div class="advanced-search-container" [hidden]="!showProcessesUp">
+<div class="theme form-container" [hidden]="!showProcessesUp">
     <app-property-params
         *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
         [data]="queryMatch"
@@ -46,7 +46,7 @@
     <h5 style="display: inline-block">Process that Use the Data</h5>
 </div>
 <hr class="data-divider" *ngIf="!showProcessesDown" />
-<div class="advanced-search-container" [hidden]="!showProcessesDown">
+<div class="theme form-container" [hidden]="!showProcessesDown">
     <app-property-params
         *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
         [data]="queryMatch"
