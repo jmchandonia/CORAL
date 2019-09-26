@@ -39,9 +39,8 @@
     </div>
   </div>
   <app-dimension-options
-    *ngFor="let form of formDimensions?.controls; let i = index;"
-    [dimensions]="plotObject.dimensions"
-    [metadata]="plotMetadata"
+    *ngFor="let dimension of plotBuilder.dimensions; let i = index;"
+    [metadata]="plotMetadata" 
     [dimensionLabel]="selectedPlotType.axis_blocks[i].title"
     [index]="i"
     [form]="form"
@@ -50,3 +49,4 @@
     <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
+  <!-- *ngFor="let form of formDimensions?.controls; let i = index;" -->

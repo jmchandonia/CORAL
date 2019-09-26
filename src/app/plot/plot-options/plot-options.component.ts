@@ -14,8 +14,8 @@ import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 })
 export class PlotOptionsComponent implements OnInit {
 
-  public plotObject: any;
-  public plotMetadata: any;
+  // public plotObject: any;
+  public plotMetadata: ObjectMetadata;
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public formDimensions: FormArray;
   private testForm: any;
@@ -24,11 +24,6 @@ export class PlotOptionsComponent implements OnInit {
   public selectedPlotTypeId: string; // for select2
   public objectId: string;
   public plotBuilder: PlotBuilder;
-  public plotForm = this.fb.group({ // delete
-    plotType: '',
-    graphTitle: [''],
-    dimensions: this.fb.array([])
-  });
 
   public plotIcons = {};
 
@@ -47,12 +42,12 @@ export class PlotOptionsComponent implements OnInit {
     private route: ActivatedRoute,
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
-    private fb: FormBuilder,
     private router: Router,
     ) { }
 
   ngOnInit() {
 
+    // set up plot builder value from service
     this.plotBuilder = this.plotService.plotBuilder;
 
     // get object id
@@ -63,24 +58,22 @@ export class PlotOptionsComponent implements OnInit {
       this.queryBuilder.getObjectMetadata(this.objectId)
         .subscribe((result: any) => {
           this.plotMetadata = result;
-          this.plotObject = {dimensions: []};
-          this.plotForm.get('graphTitle').setValue(result.data_type.oterm_name);
+          console.log('PLOT METADATA', this.plotMetadata);
           this.plotBuilder.title = result.data_type.oterm_name;
 
           // add plot object dimensions to form
           result.dim_context.forEach(dim => {
-            this.plotObject.dimensions.push({
-              type: dim.data_type.oterm_name,
-              dim_vars: [...dim.typed_values.map(o => o.value_type.oterm_name)]
-            });
+            this.plotBuilder.dimensions.push(new Dimension());
           });
+
+          console.log('PLOT BUILDER', this.plotBuilder);
 
           // add object dimension values to each dimension category
           const measurements = result.typed_values[0];
-          this.plotObject.dimensions.push({
-            type: measurements.value_type.oterm_name,
-            dim_vars: [measurements.value_type.oterm_name]
-          });
+          // this.plotObject.dimensions.push({
+          //   type: measurements.value_type.oterm_name,
+          //   dim_vars: [measurements.value_type.oterm_name]
+          // });
 
           // get plot types from server
           this.plotService.getPlotTypes()
@@ -101,68 +94,68 @@ export class PlotOptionsComponent implements OnInit {
                 this.plotIcons[plotType.name] = plotType.image_tag;
               });
 
-              if (this.plotService.plotForm && this.plotService.plotType) {
-                this.populatePlotForm();
-              }
+              // if (this.plotService.plotForm && this.plotService.plotType) {
+              //   this.populatePlotForm();
+              // }
           });
         });
     });
   }
 
-  populatePlotForm() {
-    this.plotForm = this.plotService.plotForm;
-    this.selectedPlotType = this.plotService.plotType;
-    this.selectedPlotTypeId = this.plotTypeData.find(item => {
-      return item.text === this.selectedPlotType.name;
-    }).id;
-  }
+  // populatePlotForm() {
+  //   this.plotForm = this.plotService.plotForm;
+  //   this.selectedPlotType = this.plotService.plotType;
+  //   this.selectedPlotTypeId = this.plotTypeData.find(item => {
+  //     return item.text === this.selectedPlotType.name;
+  //   }).id;
+  // }
 
-  addDimensions(index) {
-    if (index) {
-      this.formDimensions = this.plotForm.get('dimensions') as FormArray;
+  // addDimensions(index) {
+  //   if (index) {
+  //     this.formDimensions = this.plotForm.get('dimensions') as FormArray;
 
-      // clear old values from previous plot types
-      if (!this.plotService.plotForm) {
-        while (this.formDimensions.value.length) {
-          this.formDimensions.removeAt(0);
-        }
-      }
-      // add N new dimensions from selected plot type
-      this.selectedPlotType = this.listPlotTypes[index];
-      // for (const _ of this.selectedPlotType.axis_blocks) {
-      //   this.formDimensions.push(this.createDimensionItem());
-      // }
+  //     // clear old values from previous plot types
+  //     if (!this.plotService.plotForm) {
+  //       while (this.formDimensions.value.length) {
+  //         this.formDimensions.removeAt(0);
+  //       }
+  //     }
+  //     // add N new dimensions from selected plot type
+  //     this.selectedPlotType = this.listPlotTypes[index];
+  //     // for (const _ of this.selectedPlotType.axis_blocks) {
+  //     //   this.formDimensions.push(this.createDimensionItem());
+  //     // }
 
-      this.selectedPlotType.axis_blocks.forEach((v, i) => {
-        if (!this.plotService.plotForm || v.hasOwnProperty('displayValuesFrom')) {
-          this.formDimensions.push(this.createDimensionItem(this.plotForm.value.dimensions[i])) ;
-        }
-      });
-    }
-  }
+  //     this.selectedPlotType.axis_blocks.forEach((v, i) => {
+  //       if (!this.plotService.plotForm || v.hasOwnProperty('displayValuesFrom')) {
+  //         this.formDimensions.push(this.createDimensionItem(this.plotForm.value.dimensions[i])) ;
+  //       }
+  //     });
+  //   }
+  // }
 
-  createDimensionItem(dim) {
-    return this.fb.group({
-      fromDimension: '',
-      displayValuesFrom: this.fb.array([]),
-      displayAxisLabels: true,
-      displayAxisLabelsAs: this.fb.array([]),
-      displayHoverLabels: true,
-      displayHoverLabelsAs: '',
-      displayAxisTitle: true,
-      axisTitle: ''
-    });
-  }
+  // createDimensionItem(dim) {
+  //   return this.fb.group({
+  //     fromDimension: '',
+  //     displayValuesFrom: this.fb.array([]),
+  //     displayAxisLabels: true,
+  //     displayAxisLabelsAs: this.fb.array([]),
+  //     displayHoverLabels: true,
+  //     displayHoverLabelsAs: '',
+  //     displayAxisTitle: true,
+  //     axisTitle: ''
+  //   });
+  // }
 
-  updatePlotType(event) {
-    if (event.value !== '-1') {
-      this.plotForm.controls.plotType.setValue(event.data[0].text);
-      this.addDimensions(event.value);
-    }
-  }
+  // updatePlotType(event) {
+  //   if (event.value !== '-1') {
+  //     this.plotForm.controls.plotType.setValue(event.data[0].text);
+  //     this.addDimensions(event.value);
+  //   }
+  // }
 
   submit() {
-    this.plotService.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
+    // this.plotService.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
   }
 
   onGoBack(id) {
