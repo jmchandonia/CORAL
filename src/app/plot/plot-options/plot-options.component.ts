@@ -66,6 +66,9 @@ export class PlotOptionsComponent implements OnInit {
             this.plotBuilder.dimensions.push(new Dimension());
           });
 
+          // add one more dimension for data values
+          this.plotBuilder.dimensions.push(new Dimension());
+
           console.log('PLOT BUILDER', this.plotBuilder);
 
           // add object dimension values to each dimension category
@@ -76,30 +79,33 @@ export class PlotOptionsComponent implements OnInit {
           // });
 
           // get plot types from server
-          this.plotService.getPlotTypes()
-            .subscribe((data: any) => {
-
-              // filter plot types by n_dimension
-              this.listPlotTypes = data.results.filter((val, idx) => {
-                return val.n_dimensions === this.plotMetadata.dim_context.length;
-              });
-
-              // add plot type values to select2
-              this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
-                return { id: idx.toString(), text: val.name }; }
-              )];
-
-              // add icons for each plot type
-              this.listPlotTypes.forEach(plotType => {
-                this.plotIcons[plotType.name] = plotType.image_tag;
-              });
-
+          this.getPlotTypes();
               // if (this.plotService.plotForm && this.plotService.plotType) {
               //   this.populatePlotForm();
               // }
           });
         });
-    });
+    }
+
+
+  getPlotTypes() {
+    this.plotService.getPlotTypes()
+      .subscribe((data: any) => {
+        // filter plot types by n_dimension
+        this.listPlotTypes = data.results.filter((val, idx) => {
+          return val.n_dimensions === this.plotMetadata.dim_context.length;
+        });
+
+        // add plot type values to select2
+        this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
+          return { id: idx.toString(), text: val.name }; }
+        )];
+
+        // add icons for each plot type
+        this.listPlotTypes.forEach(plotType => {
+          this.plotIcons[plotType.name] = plotType.image_tag;
+        });
+      });
   }
 
   // populatePlotForm() {

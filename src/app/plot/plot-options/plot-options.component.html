@@ -40,10 +40,10 @@
   </div>
   <app-dimension-options
     *ngFor="let dimension of plotBuilder.dimensions; let i = index;"
-    [metadata]="plotMetadata" 
+    [dimension]="dimension"
+    [dropdownValues]="plotMetadata.dim_context[i]"
     [dimensionLabel]="selectedPlotType.axis_blocks[i].title"
     [index]="i"
-    [form]="form"
     ></app-dimension-options>
   <div class="row bottom-button-row">
     <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
