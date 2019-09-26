@@ -13,7 +13,7 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { UploadComponent } from './shared/components/upload/upload.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -32,6 +32,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HttpClientModule,
     Select2Module,
     PlotModule,
+    NgxSpinnerModule,
     PlotlyModule
   ],
   providers: [],
