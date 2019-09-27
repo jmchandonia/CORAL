@@ -6,6 +6,7 @@ import { QueryBuilderService } from '../../shared/services/query-builder.service
 import { Select2OptionData } from 'ng2-select2';
 import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-plot-options',
@@ -15,16 +16,17 @@ import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 export class PlotOptionsComponent implements OnInit {
 
   // public plotObject: any;
-  public plotMetadata: ObjectMetadata;
+  public metadata: ObjectMetadata;
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
-  public formDimensions: FormArray;
-  private testForm: any;
+  // public formDimensions: FormArray;
+  public dimensionData: Array<Select2OptionData> = [];
   private listPlotTypes: any;
   public selectedPlotType: any;
+  public axisBlocks: any[];
   public selectedPlotTypeId: string; // for select2
   public objectId: string;
   public plotBuilder: PlotBuilder;
-
+  public dimensions: Dimension[];
   public plotIcons = {};
 
   public plotTypeOptions: Select2Options = {
@@ -46,60 +48,70 @@ export class PlotOptionsComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-
-    // set up plot builder value from service
-    this.plotBuilder = this.plotService.plotBuilder;
+    // set up plot builder value from service;
+    this.plotBuilder = this.plotService.getPlotBuilder();
 
     // get object id
     this.route.params.subscribe(params => {
       this.objectId = params.id;
+      this.plotBuilder.objectId = params.id;
+    });
 
-      // get metadata
-      this.queryBuilder.getObjectMetadata(this.objectId)
-        .subscribe((result: any) => {
-          this.plotMetadata = result;
-          console.log('PLOT METADATA', this.plotMetadata);
-          this.plotBuilder.title = result.data_type.oterm_name;
+    // get metadata
+    this.queryBuilder.getObjectMetadata(this.objectId)
+      .subscribe((result: any) => {
+        this.metadata = result;
+        console.log('PLOT METADATA', this.metadata);
 
-          // add plot object dimensions to form
-          result.dim_context.forEach(dim => {
-            this.plotBuilder.dimensions.push(new Dimension());
-          });
+        // get list of plot types from server
+        this.getPlotTypes();
 
-          // add one more dimension for data values
-          this.plotBuilder.dimensions.push(new Dimension());
+        // set title and dimensions
+        this.plotService.setConfig(
+          result.data_type.oterm_name,
+          result.dim_context.length,
+          (dims: Dimension[]) => {
+            this.dimensions = dims;
+          }
+        );
 
-          console.log('PLOT BUILDER', this.plotBuilder);
-
-          // add object dimension values to each dimension category
-          const measurements = result.typed_values[0];
-          // this.plotObject.dimensions.push({
-          //   type: measurements.value_type.oterm_name,
-          //   dim_vars: [measurements.value_type.oterm_name]
-          // });
-
-          // get plot types from server
-          this.getPlotTypes();
-              // if (this.plotService.plotForm && this.plotService.plotType) {
-              //   this.populatePlotForm();
-              // }
+        // get dropdown values for dimensions
+        result.dim_context.forEach(dim => {
+          this.dimensionData.push({
+            id: this.dimensionData.length.toString(),
+            text: dim.data_type.oterm_name
           });
         });
+
+        // add dropdown value for data measurements
+        this.dimensionData.push({
+          id: this.dimensionData.length.toString(),
+          text: result.typed_values[0].value_type.oterm_name
+        });
+      });
+  }
+
+    test() {
+      console.log('COMPONENT', this.plotBuilder, this.metadata);
+      console.log('SERVICE', this.plotService.plotBuilder);
+      console.assert(_.isEqual(this.plotBuilder, this.plotService.plotBuilder));
     }
 
-
-  getPlotTypes() {
+    getPlotTypes() {
     this.plotService.getPlotTypes()
       .subscribe((data: any) => {
         // filter plot types by n_dimension
+        console.log('DATA', data);
         this.listPlotTypes = data.results.filter((val, idx) => {
-          return val.n_dimensions === this.plotMetadata.dim_context.length;
+          return val.n_dimensions === this.metadata.dim_context.length;
         });
+        console.log('LIST PLOT TYPES');
 
         // add plot type values to select2
         this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
           return { id: idx.toString(), text: val.name }; }
         )];
+        console.log('PLOT TYPE DATA');
 
         // add icons for each plot type
         this.listPlotTypes.forEach(plotType => {
@@ -107,6 +119,109 @@ export class PlotOptionsComponent implements OnInit {
         });
       });
   }
+
+  updatePlotType(event) {
+    if (event.value.length) {
+      const n = parseInt(event.value, 10);
+      console.log('LIST PLOT TYPES', this.listPlotTypes, this.listPlotTypes[n], n, event.value);
+      const { plotly_trace, plotly_layout, axis_blocks } = this.listPlotTypes[n];
+      this.plotBuilder.plotly_trace = plotly_trace;
+      this.plotBuilder.plotly_layout = plotly_layout;
+      this.axisBlocks = axis_blocks;
+      this.selectedPlotType = this.listPlotTypes[n];
+      console.log('AXIS BLOCKS', this.axisBlocks);
+    }
+  }
+
+  onGoBack(id) {
+    // this.plotService.resetValues();
+    this.router.navigate([`/search/result/${id}`]);
+  }
+
+  // ngOnInit() {
+
+  //   // set up plot builder value from service
+  //   this.plotBuilder = this.plotService.getPlotBuilder();
+
+  //   // get object id
+  //   this.route.params.subscribe(params => {
+  //     this.objectId = params.id;
+
+  //     // get metadata
+  //     this.queryBuilder.getObjectMetadata(this.objectId)
+  //       .subscribe((result: any) => {
+  //         this.metadata = result;
+  //         console.log('PLOT METADATA', this.metadata);
+  //         // this.plotBuilder.title = result.data_type.oterm_name;
+  //         // this.plotService.setDimensions(result.dim_context.length);
+  //         this.plotBuilder.setConfig(
+  //           result.data_type.oterm_name,
+  //           result.dim_context.length
+  //           );
+
+  //         // add plot object dimensions to form
+  //         result.dim_context.forEach(dim => {
+  //           this.plotBuilder.dimensions.push(new Dimension());
+  //           console.log('DIM', dim);
+  //           this.dimensionData.push({
+  //             id: this.dimensionData.length.toString(),
+  //             text: dim.data_type.oterm_name
+  //           });
+  //         });
+
+  //         // add one more dimension for data values
+  //         this.plotBuilder.dimensions.push(new Dimension());
+  //         this.dimensionData.push({
+  //           id: this.dimensionData.length.toString(),
+  //           text: result.typed_values[0].value_type.oterm_name
+  //         });
+
+  //         console.log('PLOT BUILDER', this.plotBuilder);
+
+  //         // add object dimension values to each dimension category
+  //         const measurements = result.typed_values[0];
+  //         // this.plotObject.dimensions.push({
+  //         //   type: measurements.value_type.oterm_name,
+  //         //   dim_vars: [measurements.value_type.oterm_name]
+  //         // });
+
+  //         // get plot types from server
+  //         this.getPlotTypes();
+  //             // if (this.plotService.plotForm && this.plotService.plotType) {
+  //             //   this.populatePlotForm();
+  //             // }
+  //         });
+  //       });
+  //   }
+
+  //   test() {
+  //     console.log(this.plotBuilder, this.metadata);
+  //   }
+
+  // getPlotTypes() {
+  //   this.plotService.getPlotTypes()
+  //     .subscribe((data: any) => {
+  //       // filter plot types by n_dimension
+  //       this.listPlotTypes = data.results.filter((val, idx) => {
+  //         return val.n_dimensions === this.metadata.dim_context.length;
+  //       });
+
+  //       // add plot type values to select2
+  //       this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
+  //         return { id: idx.toString(), text: val.name }; }
+  //       )];
+
+  //       // add icons for each plot type
+  //       this.listPlotTypes.forEach(plotType => {
+  //         this.plotIcons[plotType.name] = plotType.image_tag;
+  //       });
+  //     });
+  // }
+
+  // updatePlotType(event) {
+  //   const n = parseInt(event.value, 10);
+  //   this.selectedPlotType = this.listPlotTypes[n];
+  // }
 
   // populatePlotForm() {
   //   this.plotForm = this.plotService.plotForm;
@@ -153,20 +268,14 @@ export class PlotOptionsComponent implements OnInit {
   //   });
   // }
 
-  // updatePlotType(event) {
-  //   if (event.value !== '-1') {
-  //     this.plotForm.controls.plotType.setValue(event.data[0].text);
-  //     this.addDimensions(event.value);
-  //   }
+  // submit() {
+  //   // this.plotService.submitNewPlot(this.plotForm, this.metadata, this.selectedPlotType);
   // }
 
-  submit() {
-    // this.plotService.submitNewPlot(this.plotForm, this.plotMetadata, this.selectedPlotType);
-  }
+  // onGoBack(id) {
+  //   this.plotService.resetValues();
+  //   this.router.navigate([`search/result/${id}`]);
+  // }
 
-  onGoBack(id) {
-    this.plotService.resetValues();
-    this.router.navigate([`search/result/${id}`]);
-  }
 
 }

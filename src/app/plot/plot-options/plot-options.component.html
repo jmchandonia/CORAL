@@ -10,42 +10,47 @@
       <div class="card-header" style="background-color: #eeeeff;">
         Data Plotting Options
       </div>
-      <form [formGroup]="plotForm">
+      <form>
         <div class="form-group p-3">
-            <!-- <div class="form-container"> -->
                 <div class="row">
                     <div class="col-4">
                         <label for="plotType">Plot Type</label>
                         <select2
-                        id="plotType"
-                        [cssImport]="true"
-                        [options]="plotTypeOptions"
-                        [data]="plotTypeData"
-                        ngDefaultControl
-                        [value]="selectedPlotTypeId || ''"
-                        (valueChanged)="updatePlotType($event)"
-                        formControlName="plotType"
+                          id="plotType"
+                          [cssImport]="true"
+                          [options]="plotTypeOptions"
+                          [data]="plotTypeData"
+                          ngDefaultControl
+                          [value]="selectedPlotTypeId || ''"
+                          (valueChanged)="updatePlotType($event)"
                         >
                         </select2>
                       </div>
                       <div class="col-8">
                         <label for="graphTitle">Graph Title</label>
-                        <input class="form-control" type="text" formControlName="graphTitle" />
+                        <input class="form-control"
+                          type="text"
+                          [(ngModel)]="plotBuilder.title"
+                          [ngModelOptions]="{standalone: true}"
+                        />
                       </div>
                 </div>
-              <!-- </div> -->
         </div>
       </form>
     </div>
   </div>
-  <app-dimension-options
-    *ngFor="let dimension of plotBuilder.dimensions; let i = index;"
-    [dimension]="dimension"
-    [dropdownValues]="plotMetadata.dim_context[i]"
-    [dimensionLabel]="selectedPlotType.axis_blocks[i].title"
-    [index]="i"
+  <div class="dimension-options-container" *ngIf="selectedPlotType">
+    <app-dimension-options
+      *ngFor="let dimension of dimensions; let i = index;"
+      [dimension]="dimension"
+      [metadata]="metadata"
+      [dropdownValues]="dimensionData"
+      [dimensionLabel]="axisBlocks[i].title"
+      [index]="i"
     ></app-dimension-options>
+  </div>
   <div class="row bottom-button-row">
+    <button (click)="test()">TEST</button>
     <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
