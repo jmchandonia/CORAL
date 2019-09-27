@@ -29,7 +29,7 @@
 //     public scalar_type: string;
 // }
 
-export class Dimension {
+export class DimensionValue {
 
     constructor(args) {
         Object.assign(this, args);

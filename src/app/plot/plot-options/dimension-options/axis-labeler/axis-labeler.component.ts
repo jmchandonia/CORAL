@@ -7,23 +7,27 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 })
 export class AxisLabelerComponent implements OnInit {
 
+  @Input() label: string;
+  @Output() labelChanged: EventEmitter<string> = new EventEmitter();
+
   @Input() set values(v) {
     this.valueLabels = v;
+    console.log('CHANGING LABEL VALUES', this.valueLabels);
     if (this.valueLabels.length === 1) {
       this.valueLabels[0] = '';
-      this.labelsChanged.emit('#V1');
+      this.format = '#V1';
     } else {
-      this.valueLabels.forEach((value, idx)  => {
-        this.format += `${value}#V${idx + 1},`;
-        value += '=';
+      this.valueLabels.forEach((label, idx) => {
+        this.format += `${label.value}#V${idx + 1},`;
+        // label.value += '=';
       });
     }
+    this.labelChanged.emit(this.format);
   }
   displayOptions = false;
   format = '';
   invalid = false;
   valueLabels = [];
-  @Output() labelsChanged: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -68,7 +72,7 @@ export class AxisLabelerComponent implements OnInit {
       newValueLabels.pop();
     }
     this.valueLabels = newValueLabels;
-    this.labelsChanged.emit(this.format);
+    this.labelChanged.emit(this.format);
   }
 
 }

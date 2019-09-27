@@ -4,7 +4,7 @@
     <div class="card-header" style="background-color: #eeeeff;">
       {{dimensionLabel}}
     </div>
-    <form [formGroup]="form">
+    <form>
       <div class="form-group p-3">
           <div class="row">
               <div class="col-6">
@@ -13,62 +13,64 @@
                   name="fromDimension"
                   [cssImport]="true"
                   [options]="{width: '100%'}"
-                  [data]="fromDimensionDropdown"
+                  [data]="dropdownValues"
                   [value]="fromDimensionDropdownId || ''"
                   (valueChanged)="setSelectedDimension($event)"
                 ></select2>
               </div>
               <div class="col-6">
                 <div class="form-check offset-1">
-                  <input class="form-check-input" formControlName="displayAxisTitle" type="checkbox" value="" id="axisTitle" />
+                  <input class="form-check-input" type="checkbox" value="" id="axisTitle" />
                   <label class="form-check-label" for="axisTitle">Axis Title</label>
                 </div>
-                <input formControlName="axisTitle" [(ngModel)]="axisTitle" class="form-control">
+                <input name="axisTitle" [(ngModel)]="dimension.title" class="form-control">
               </div>
             </div>
-            <div class="row" *ngIf="selectedValue">
+            <div class="row" *ngIf="selectedDimension">
               <p class="header">Display Values From:</p>
               <div class="display-values-container">
-                <div class="form-check ml-5" formArrayName="displayValuesFrom" *ngFor="let d of displayValues.controls; let i = index;">
+                <div class="form-check ml-5" *ngFor="let d of selectedDimension?.dimVars; let i = index;">
                   <input 
                     class="form-check-input" 
-                    type="checkbox" 
-                    [checked]="selectedValue.dim_vars.length === 1 ? 'checked' : ''"
-                    [formControlName]="i"
-                    (change)="editAxisLabels(i)"
+                    type="checkbox"
+                    [(ngModel)]="d.selected"
+                    [ngModelOptions]="{standalone: true}"
                      />
-                  <label class="form-check-label" [for]="v">{{selectedValue.dim_vars[i]}}</label>
+                  <label class="form-check-label">{{d.value}}</label>
                   <span
                     class="badge badge-pill badge-primary ml-1"
-                    [ngClass]="isChecked(i) ? '' : 'var-unchecked'"
+                    [ngClass]="d.selected ? '' : 'var-unchecked'"
                   >V{{ i + 1 }}</span>
                 </div>
               </div>
             </div>
-            <div class="row label-display-options">
+            <div class="row label-display-options" *ngIf="selectedDimension">
               <div class="col-4">
                 <div class="form-check">
-                  <input class="form-check-input" formControlName="displayAxisLabels" type="checkbox" value="" id="axisLabels" />
+                  <input class="form-check-input" type="checkbox" value="" id="axisLabels" />
                   <label class="form-check-label" for="axisLabels">Display axis labels as</label>
                 </div>
               </div>
               <div class="col-8">
-                <!-- <input formControlName="displayAxisLabelsAs" class="form-control" /> -->
-                <app-axis-labeler [values]="isLabelChecked" (labelsChanged)="setNewLabels($event)"></app-axis-labeler>
+                <app-axis-labeler
+                  [values]="selectedDimension?.selectedDimVars"
+                  (labelChanged)="updateLabelPattern($event)"
+                ></app-axis-labeler>
               </div>
             </div>
-            <div class="row label-display-options">
+            <!-- <div class="row label-display-options">
               <div class="col-4">
                 <div class="form-check">
-                  <input class="form-check-input" formControlName="displayHoverLabels" type="checkbox" value="" id="hoverLabels" />
+                  <input class="form-check-input" type="checkbox" value="" id="hoverLabels" />
                   <label class="form-check-label" for="hoverLabels">Display hover Labels: </label> 
                 </div>
               </div>
               <div class="col-8">
-                <input formControlName="displayHoverLabelsAs" class="form-control" />
+                <input class="form-control" />
               </div>
-            </div>
+            </div> -->
         </div>
     </form>
   </div>
+  <button (click)="d()">tt</button>
 </div>
