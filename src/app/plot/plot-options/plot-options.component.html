@@ -27,10 +27,10 @@
                         </select2>
                       </div>
                       <div class="col-8">
-                        <label for="graphTitle">Graph Title</label>
+                        <label for="graphTitle">Plot Title</label>
                         <input class="form-control"
                           type="text"
-                          [(ngModel)]="plotBuilder.title"
+                          [(ngModel)]="plotBuilder.config.title"
                           [ngModelOptions]="{standalone: true}"
                         />
                       </div>
@@ -51,7 +51,7 @@
   </div>
   <div class="row bottom-button-row">
     <button (click)="test()">TEST</button>
-    <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
+    <button class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
   <!-- *ngFor="let form of formDimensions?.controls; let i = index;" -->

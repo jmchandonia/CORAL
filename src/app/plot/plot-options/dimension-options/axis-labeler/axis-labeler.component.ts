@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { DimensionRef } from 'src/app/shared/models/plot-builder';
 
 @Component({
   selector: 'app-axis-labeler',
@@ -10,23 +11,37 @@ export class AxisLabelerComponent implements OnInit {
   @Input() label: string;
   @Output() labelChanged: EventEmitter<string> = new EventEmitter();
 
-  @Input() set values(v) {
-    this.valueLabels = v.dimVars;
-    if (this.valueLabels.length === 1) {
-      this.valueLabels[0] = '';
+  @Input() set values(v: DimensionRef) {
+    this.valueLabels = [];
+    this.format = '';
+    this._values = v;
+    if (this.values.dimVars.length === 1) {
+      this.valueLabels.push('');
       this.format = '#V1';
     } else {
-      this.valueLabels.forEach((label, idx) => {
-        this.format += `${label.value}#V${idx + 1},`;
-        // label.value += '=';
+      const dv = this.values.dimVars;
+      dv.forEach((label, idx) => {
+        this.format += `${label.value}=#V${idx + 1}`;
+        if (idx !== dv.length - 1) {
+          this.format += ', ';
+        }
+      });
+      this.valueLabels = this.format.split(',').map(item => {
+        return item.replace(/#V[0-9]/gi, '');
       });
     }
     this.labelChanged.emit(this.format);
   }
+
+  get values() {
+    return this._values;
+  }
+
   displayOptions = false;
   format = '';
   invalid = false;
   valueLabels = [];
+  _values: DimensionRef;
 
   constructor() { }
 
@@ -34,11 +49,6 @@ export class AxisLabelerComponent implements OnInit {
 
   toggleDisplayOptions() {
     this.displayOptions = !this.displayOptions;
-    if (this.displayOptions && !this.format) {
-      this.valueLabels.forEach((v, i) => {
-        this.format += `${v}#V${i + 1}, `;
-      });
-    }
   }
 
   onSave() {
@@ -46,6 +56,7 @@ export class AxisLabelerComponent implements OnInit {
     if (!this.displayOptions && this.format && this.format.match(/#V[0-9]/gi)) {
       this.updateFormat();
     } else {
+      // if format doesn't have #V(N),  reset value labels to original state
       this.format = '';
       this.valueLabels.forEach((value, idx) => {
         this.format += `${value}#V${idx + 1},`;
@@ -54,23 +65,10 @@ export class AxisLabelerComponent implements OnInit {
   }
 
   updateFormat() {
-    // get key value format to send to server, eg {0: 'value=#V1'}
-    const newFormat = this.format.split(',').map(item => {
-      const index = parseInt(item.replace(/^\D+/g, ''), 10) - 1;
-      return { [index]: item };
-    });
-    if (NaN in newFormat[newFormat.length - 1]) {
-      newFormat.pop();
-    }
     // get value labels to display in UI
-    const newValueLabels = this.format.split(',').map(item => {
+    this.valueLabels = this.format.split(',').map(item => {
       return item.replace(/#V[0-9]/gi, '');
     });
-
-    if (!newValueLabels[newValueLabels.length - 1].match(/#V[0-9]/gi)) {
-      newValueLabels.pop();
-    }
-    this.valueLabels = newValueLabels;
     this.labelChanged.emit(this.format);
   }
 
