@@ -5,14 +5,38 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { UploadComponent } from './shared/components/upload/upload.component'; // will be a module in the future
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { AuthGuardService as AuthGuard } from './shared/services/auth-guard.service';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'login', pathMatch: 'full'},
-  {path: 'login', component: LoginComponent},
-  {path: 'home', component: HomeComponent},
-  {path: 'reports', component: ReportsComponent},
-  {path: 'upload', component: UploadComponent},
-  {path: 'dashboard', component: DashboardComponent}
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'reports',
+    component: ReportsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'upload',
+    component: UploadComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({
