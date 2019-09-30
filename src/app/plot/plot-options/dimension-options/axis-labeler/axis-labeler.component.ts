@@ -11,8 +11,7 @@ export class AxisLabelerComponent implements OnInit {
   @Output() labelChanged: EventEmitter<string> = new EventEmitter();
 
   @Input() set values(v) {
-    this.valueLabels = v;
-    console.log('CHANGING LABEL VALUES', this.valueLabels);
+    this.valueLabels = v.dimVars;
     if (this.valueLabels.length === 1) {
       this.valueLabels[0] = '';
       this.format = '#V1';

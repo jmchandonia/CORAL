@@ -50,6 +50,7 @@ export class DimensionRef {
     constructor(type, dimVars) {
         this.type = type;
         this.dimVars = dimVars;
+        console.log('CONTRUCTED ITEM', this);
     }
 
     type: string;
