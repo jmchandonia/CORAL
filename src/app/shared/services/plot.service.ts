@@ -100,7 +100,11 @@ export class PlotService {
 
   plotBuilderTest() { console.log(this.plotBuilder); }
 
-  setConfig(title: string, length: number, callback: (dims: Dimension[]) => void) {
+  setConfig(
+    title: string,
+    length: number,
+    callback: (dims: Dimension[]) => void
+    ) {
     const { config } = this.plotBuilder;
     config.title = title;
     config.x = new Dimension();
@@ -112,7 +116,6 @@ export class PlotService {
     } else {
       callback([config.x, config.y]); // add 2 dimensions to form
     }
-    console.log('PLOT BUILDER', this.plotBuilder);
   }
 
   setPlotlyDataAxis(key: string, value: string) {

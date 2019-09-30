@@ -61,7 +61,6 @@ export class PlotOptionsComponent implements OnInit {
     this.queryBuilder.getObjectMetadata(this.objectId)
       .subscribe((result: any) => {
         this.metadata = result;
-        console.log('PLOT METADATA', this.metadata);
 
         // get list of plot types from server
         this.getPlotTypes();
@@ -101,17 +100,14 @@ export class PlotOptionsComponent implements OnInit {
     this.plotService.getPlotTypes()
       .subscribe((data: any) => {
         // filter plot types by n_dimension
-        console.log('DATA', data);
         this.listPlotTypes = data.results.filter((val, idx) => {
           return val.n_dimensions === this.metadata.dim_context.length;
         });
-        console.log('LIST PLOT TYPES');
 
         // add plot type values to select2
         this.plotTypeData = [{id: '', text: ''}, ...this.listPlotTypes.map((val, idx) => {
           return { id: idx.toString(), text: val.name }; }
         )];
-        console.log('PLOT TYPE DATA');
 
         // add icons for each plot type
         this.listPlotTypes.forEach(plotType => {
@@ -123,13 +119,11 @@ export class PlotOptionsComponent implements OnInit {
   updatePlotType(event) {
     if (event.value.length) {
       const n = parseInt(event.value, 10);
-      console.log('LIST PLOT TYPES', this.listPlotTypes, this.listPlotTypes[n], n, event.value);
       const { plotly_trace, plotly_layout, axis_blocks } = this.listPlotTypes[n];
       this.plotBuilder.plotly_trace = plotly_trace;
       this.plotBuilder.plotly_layout = plotly_layout;
       this.axisBlocks = axis_blocks;
       this.selectedPlotType = this.listPlotTypes[n];
-      console.log('AXIS BLOCKS', this.axisBlocks);
     }
   }
 

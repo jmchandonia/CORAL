@@ -16,6 +16,7 @@
                   [data]="dropdownValues"
                   [value]="fromDimensionDropdownId || ''"
                   (valueChanged)="setSelectedDimension($event)"
+                  (click)="chRef.detectChanges()"
                 ></select2>
               </div>
               <div class="col-6">
@@ -53,7 +54,7 @@
               </div>
               <div class="col-8">
                 <app-axis-labeler
-                  [values]="selectedDimension?.selectedDimVars"
+                  [values]="selectedDimension"
                   (labelChanged)="updateLabelPattern($event)"
                 ></app-axis-labeler>
               </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Dimension, DimensionRef } from '../../../shared/models/plot-builder';
 import { Select2OptionData } from 'ng2-select2';
 import { PlotService } from '../../../shared/services/plot.service';
@@ -14,7 +14,6 @@ import { PlotService } from '../../../shared/services/plot.service';
 })
 export class DimensionOptionsComponent implements OnInit {
 
-
   @Input() dimension: Dimension; // reference to dimension in plot service
   @Input() dimensionLabel: string; // label for form UI e.g. 'X axis'
   @Input() dropdownValues: Array<Select2OptionData> = [{id: '', text: ''}];
@@ -24,12 +23,12 @@ export class DimensionOptionsComponent implements OnInit {
       this.dimensionData.push(
         new DimensionRef(
           dim.data_type.oterm_name,
-          [...dim.typed_values.map(type => ({ value: type.oterm_name, selected: true }))]
+          [...dim.typed_values.map(t => ({ value: t.value_type.oterm_name, selected: true }))]
         )
       );
     });
     // add measurement value
-    const measurementVal = data.typed_values[0].value_type.oterm_name;
+    const measurementVal = data.data_type.oterm_name;
     this.dimensionData.push(
       new DimensionRef(
         measurementVal, [{value: measurementVal, selected: true}]
@@ -41,18 +40,15 @@ export class DimensionOptionsComponent implements OnInit {
     // map index order to key value pairs for server
     const xyz = ['x', 'y', 'z'];
     this.plotlyDataRef = xyz[i];
-    console.log('PLOTLY DATA REF', this.plotlyDataRef);
   }
 
   plotlyDataRef: string; // reference to plotly data axis in plotbuilder
   dimensionData: DimensionRef[] = []; // used to display dimension variable value and title
   selectedDimension: DimensionRef;
 
-  constructor(private plotService: PlotService) { }
+  constructor(private plotService: PlotService, private chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    console.log('DIMENSION', this.dimension);
-    console.log('DIMENSION LABEL', this.dimensionLabel);
   }
 
   setSelectedDimension(event) {
@@ -66,6 +62,7 @@ export class DimensionOptionsComponent implements OnInit {
       this.plotService.setPlotlyDataAxis(this.plotlyDataRef, event.value);
     }
     this.selectedDimension = this.dimensionData[idx];
+    this.chRef.detectChanges();
   }
 
   updateLabelPattern(value) {
