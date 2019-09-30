@@ -5,10 +5,11 @@ import { SimpleSearchComponent } from './simple-search/simple-search.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { SearchResultItemComponent } from './search-result/search-result-item/search-result-item.component';
+import { AuthGuardService as AuthGuard } from '../shared/services/auth-guard.service';
 
 const routes: Routes = [
   {
-    path: 'search', component: SearchComponent, children: [
+    path: 'search', component: SearchComponent, canActivate: [AuthGuard], children: [
       {path: '', redirectTo: 'advanced', pathMatch: 'full'},
       {path: 'simple', component: SimpleSearchComponent},
       {path: 'advanced', component: AdvancedSearchComponent},
