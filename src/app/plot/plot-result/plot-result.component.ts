@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-plot-result',
@@ -14,9 +13,7 @@ export class PlotResultComponent implements OnInit {
     private plotService: PlotService,
     private router: Router,
     private route: ActivatedRoute,
-    private chRef: ChangeDetectorRef
     ) { }
-  private plotSub: Subscription;
   plotData: any;
   objectId: string;
   loading = true;

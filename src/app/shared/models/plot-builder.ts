@@ -39,7 +39,7 @@ export class PlotBuilder {
 }
 
 export class Dimension {
-    title: string;
+    title = '';
     label_pattern: string;
     show_title = true;
     show_labels = true;
@@ -50,7 +50,6 @@ export class DimensionRef {
     constructor(type, dimVars) {
         this.type = type;
         this.dimVars = dimVars;
-        console.log('CONTRUCTED ITEM', this);
     }
 
     type: string;
