@@ -1,23 +1,5 @@
-// export class PlotBuilder {
-//     public plotType = '';
-//     public title = '';
-//     public titleChecked: boolean;
-//     public dimensions: Dimension[] = [];
-// }
-
-// export class Dimension {
-//     public fromDimension = '';
-//     public axisTitle = '';
-//     public labelPattern = '';
-//     public displayAxisTitle = true;
-//     public displayHoverLabels = true;
-//     public displayHoverLabelsAs = '';
-//     public displayAxisLabels = true;
-//     public displayAxisLabelsAs: string[] = [];
-// }
 
 // tslint:disable:variable-name
-
 
 export class Config {
     title: string;
