@@ -39,6 +39,7 @@ export class PlotResultComponent implements OnInit {
   }
 
   onGoBack() {
+    this.plotService.markPlotStatus();
     this.router.navigate([`plot/options/${this.objectId}`]);
   }
 

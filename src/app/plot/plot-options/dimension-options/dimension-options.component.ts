@@ -44,22 +44,22 @@ export class DimensionOptionsComponent implements OnInit {
   plotlyDataRef: string; // reference to plotly data axis in plotbuilder
   dimensionData: DimensionRef[] = []; // used to display dimension variable value and title
   selectedDimension: DimensionRef;
+  selectedDropdownValue: string
 
   constructor(private plotService: PlotService, private chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.plotlyDataRef);
   }
 
   setSelectedDimension(event) {
     const idx = parseInt(event.value, 10);
-    if (idx === this.dimensionData.length - 1) {
-      // measurement option is seleceted, set value in service to 'D'
-      this.plotService.setPlotlyDataAxis(this.plotlyDataRef, 'D');
+    this.plotService.setPlotlyDataAxis(this.plotlyDataRef, event.value);
+    if (event.value === 'D') {
+      this.selectedDimension = this.dimensionData[this.dimensionData.length - 1];
     } else {
-      // otherwise set plotly ref as index value
-      this.plotService.setPlotlyDataAxis(this.plotlyDataRef, event.value);
+      this.selectedDimension = this.dimensionData[idx];
     }
-    this.selectedDimension = this.dimensionData[idx];
     this.dimension.title = this.selectedDimension.type;
     this.chRef.detectChanges();
   }

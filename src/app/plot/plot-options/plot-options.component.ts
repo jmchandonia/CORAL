@@ -17,11 +17,11 @@ export class PlotOptionsComponent implements OnInit {
 
   public metadata: ObjectMetadata;
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
+  public plotTypeDataValue: string; // for select2
   public dimensionData: Array<Select2OptionData> = [];
   private listPlotTypes: any;
   public selectedPlotType: any;
   public axisBlocks: any[];
-  public selectedPlotTypeId: string; // for select2
   public objectId: string;
   public plotBuilder: PlotBuilder;
   public dimensions: Dimension[];
@@ -65,13 +65,21 @@ export class PlotOptionsComponent implements OnInit {
         this.getPlotTypes();
 
         // set title and dimensions
-        this.plotService.setConfig(
-          result.data_type.oterm_name,
-          result.dim_context.length,
-          (dims: Dimension[]) => {
-            this.dimensions = dims;
-          }
-        );
+        const plotType = this.plotService.getPlotType();
+        if (!plotType) {
+          // create new plot config
+          this.plotService.setConfig(
+            result.data_type.oterm_name,
+            result.dim_context.length,
+            (dims: Dimension[]) => {
+              this.dimensions = dims;
+            }
+          );
+        } else {
+          // use old plot config (coming back from /result)
+          this.plotTypeDataValue = plotType;
+          this.dimensions = this.plotService.getConfiguredDimensions();
+        }
 
         // get dropdown values for dimensions
         result.dim_context.forEach(dim => {
@@ -83,7 +91,8 @@ export class PlotOptionsComponent implements OnInit {
 
         // add dropdown value for data measurements
         this.dimensionData.push({
-          id: this.dimensionData.length.toString(),
+          // id: this.dimensionData.length.toString(),
+          id: 'D',
           text: result.typed_values[0].value_type.oterm_name
         });
       });
@@ -123,6 +132,7 @@ export class PlotOptionsComponent implements OnInit {
       this.plotBuilder.plotly_layout = plotly_layout;
       this.axisBlocks = axis_blocks;
       this.selectedPlotType = this.listPlotTypes[n];
+      this.plotService.setPlotType(event.value);
     }
   }
 

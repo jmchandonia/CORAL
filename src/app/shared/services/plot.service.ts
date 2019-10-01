@@ -12,11 +12,30 @@ import { Subject } from 'rxjs';
 export class PlotService {
 
   public plotBuilder: PlotBuilder = new PlotBuilder();
+  public plotType: string;
 
   constructor(private http: HttpClient) { }
 
   getPlotBuilder() {
     return this.plotBuilder;
+  }
+
+  getPlotType() {
+    return this.plotType;
+  }
+
+  setPlotType(value) {
+    this.plotType = value;
+  }
+
+  getConfiguredDimensions() {
+    const keys = Object.keys(this.plotBuilder.config);
+    // return all refenences to dimensions without adding config.title
+    return keys.map(v => this.plotBuilder.config[v]).filter(t => typeof t !== 'string');
+  }
+
+  getDimDropdownValue(axis) {
+    return this.plotBuilder.data[axis];
   }
 
   setConfig(
@@ -35,6 +54,10 @@ export class PlotService {
     } else {
       callback([config.x, config.y]); // add 2 dimensions to form
     }
+  }
+
+  markPlotStatus() {
+    // this.reusePlot = true;
   }
 
   clearPlotBuilder() {
