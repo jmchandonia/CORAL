@@ -15,6 +15,7 @@ import { UploadComponent } from './shared/components/upload/upload.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -37,7 +38,13 @@ PlotlyModule.plotlyjs = PlotlyJS;
     PlotlyModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: JWT_OPTIONS,
+      useValue: JWT_OPTIONS
+    },
+    JwtHelperService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
