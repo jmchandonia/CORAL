@@ -24,9 +24,4 @@ export class AppComponent implements OnInit {
     });
    }
 
-   testLogin() {
-     console.log('TESTING LOGIN');
-     this.auth.changeTest();
-   }
-
 }

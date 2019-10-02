@@ -31,9 +31,9 @@
       <div class="col-9">
           <form class="form-group">
               <label for="email">Username:</label>
-              <input type="text" id="email" class="form-control" />
+              <input type="text" [(ngModel)]="username" name="username" id="email" class="form-control" />
               <label for="password">Password:</label>
-              <input type="password" id="password" class="form-control" />
+              <input type="password" [(ngModel)]="password" name="password" id="password" class="form-control" />
               <div class="row">
                 <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
                   Login

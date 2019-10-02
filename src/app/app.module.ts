@@ -14,6 +14,7 @@ import { ReportsComponent } from './shared/components/reports/reports.component'
 import { UploadComponent } from './shared/components/upload/upload.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FormsModule } from '@angular/forms';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -33,7 +34,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     Select2Module,
     PlotModule,
     NgxSpinnerModule,
-    PlotlyModule
+    PlotlyModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
