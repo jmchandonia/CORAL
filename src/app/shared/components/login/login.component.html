@@ -28,12 +28,38 @@
   </div>
   <div class="pl-4 pr-4" *ngIf="displayLogin">
     <div class="row justify-content-center">
-      <div class="col-9">
+      <div class="col-9 loading-container" *ngIf="loading">
+        <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+      <div class="col-9" *ngIf="!loading">
+          <div class="alert alert-danger mt-2" *ngIf="errorMessage.length">
+            Error: {{errorMessage}}
+          </div>
           <form class="form-group">
               <label for="email">Username:</label>
-              <input type="text" [(ngModel)]="username" name="username" id="email" class="form-control" />
+              <input
+                type="text"
+                [(ngModel)]="username"
+                name="username"
+                id="username"
+                class="form-control"
+                [ngClass]="error ? 'form-control-error' : ''"
+              />
               <label for="password">Password:</label>
-              <input type="password" [(ngModel)]="password" name="password" id="password" class="form-control" />
+              <input
+                type="password"
+                [(ngModel)]="password"
+                name="password"
+                id="password"
+                class="form-control"
+                [ngClass]="error ? 'form-control-error' : ''"  
+              />
               <div class="row">
                 <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
                   Login

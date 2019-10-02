@@ -7,6 +7,14 @@
     width: 600px;
 }
 
+.form-control-error { 
+    border: 1px solid red;
+}
+
+.loading-container {
+    height: 300px;
+}
+
 .login-title {
     font-family: 'Economica', sans-serif;
     font-weight: bold;
