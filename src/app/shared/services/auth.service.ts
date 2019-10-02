@@ -17,7 +17,13 @@ export class AuthService {
   }
 
   changeTest() {
-    this.test = !this.test;
+  }
+
+  submitLogin(username, password) {
+    this.http.post<any>('https://psnov1.lbl.gov:8082/generix/user_login', {username, password})
+      .subscribe(res => {
+        console.log('RES', res);
+      });
   }
 
 }
