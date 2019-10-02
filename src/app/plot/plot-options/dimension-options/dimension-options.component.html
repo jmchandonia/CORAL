@@ -14,7 +14,6 @@
                   [cssImport]="true"
                   [options]="{width: '100%'}"
                   [data]="dropdownValues"
-                  [value]="fromDimensionDropdownId || ''"
                   (valueChanged)="setSelectedDimension($event)"
                   (click)="chRef.detectChanges()"
                 ></select2>

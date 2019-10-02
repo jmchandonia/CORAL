@@ -45,7 +45,7 @@ export class DimensionOptionsComponent implements OnInit {
   dimensionData: DimensionRef[] = []; // used to display dimension variable value and title
   selectedDimension: DimensionRef;
 
-  constructor(private plotService: PlotService, private chRef: ChangeDetectorRef) { }
+  constructor(private plotService: PlotService, chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
