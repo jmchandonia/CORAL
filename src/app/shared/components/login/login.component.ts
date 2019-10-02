@@ -14,6 +14,8 @@ export class LoginComponent implements OnInit {
     private auth: AuthService
   ) { }
   public displayLogin = true;
+  public error = false;
+  public errorMessage = '';
   username = '';
   password = '';
 
@@ -21,7 +23,15 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.auth.submitLogin(this.username, this.password);
+    this.auth.submitLogin(this.username, this.password)
+      .subscribe(res => {
+        if (res.success) {
+          this.router.navigate(['home']);
+        } else {
+          this.error = true;
+          this.errorMessage = res.message;
+        }
+      });
   }
 
 }
