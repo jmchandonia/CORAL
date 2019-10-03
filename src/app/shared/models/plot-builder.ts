@@ -32,10 +32,30 @@ export class DimensionRef {
     constructor(type, dimVars) {
         this.type = type;
         this.dimVars = dimVars;
+        this.resetLabels();
     }
 
     type: string;
     dimVars: any[];
+    _labels: string[];
+
+    resetLabels() {
+        if (this.dimVars.length === 1) {
+            this.labels = ['#V1'];
+        } else {
+            this.labels = this.dimVars.map((d, i) => {
+                return d.selected ? `${d.value}=#V${i + 1}` : '';
+            });
+        }
+    }
+
+    set labels(l: string[]) {
+        this._labels = l;
+    }
+
+    get labels() {
+        return this._labels.filter(label => label.length);
+    }
 
     get selectedDimVars() {
         return [...this.dimVars.filter(d => d.selected)];
