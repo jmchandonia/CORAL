@@ -11,9 +11,9 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { LoginComponent } from './shared/components/login/login.component';
 import { HomeComponent } from './shared/components/home/home.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
-import { UploadComponent } from './shared/components/upload/upload.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { UploadModule } from './upload/upload.module';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -22,7 +22,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LoginComponent,
     HomeComponent,
     ReportsComponent,
-    UploadComponent,
     DashboardComponent,
   ],
   imports: [
@@ -33,7 +32,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     Select2Module,
     PlotModule,
     NgxSpinnerModule,
-    PlotlyModule
+    PlotlyModule,
+    UploadModule
   ],
   providers: [],
   bootstrap: [AppComponent]
