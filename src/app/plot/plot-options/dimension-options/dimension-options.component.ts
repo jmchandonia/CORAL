@@ -38,28 +38,30 @@ export class DimensionOptionsComponent implements OnInit {
   @Input() set index(i: number) {
     // map index order to key value pairs for server
     const xyz = ['x', 'y', 'z'];
-    this.plotlyDataRef = xyz[i];
+    this.axis = xyz[i];
   }
 
-  plotlyDataRef: string; // reference to plotly data axis in plotbuilder
+  axis: string; // reference to plotly data axis in plotbuilder
   dimensionData: DimensionRef[] = []; // used to display dimension variable value and title
   selectedDimension: DimensionRef;
-  selectedDropdownValue: string
+  selectedDropdownValue: string;
 
   constructor(private plotService: PlotService, private chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.plotlyDataRef);
+    this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.axis);
+    this.selectedDimension = this.plotService.getLabelBuilder(this.axis);
   }
 
   setSelectedDimension(event) {
     const idx = parseInt(event.value, 10);
-    this.plotService.setPlotlyDataAxis(this.plotlyDataRef, event.value);
+    this.plotService.setPlotlyDataAxis(this.axis, event.value);
     if (event.value === 'D') {
       this.selectedDimension = this.dimensionData[this.dimensionData.length - 1];
     } else {
       this.selectedDimension = this.dimensionData[idx];
     }
+    this.plotService.setLabelBuilder(this.selectedDimension, this.axis);
     this.dimension.title = this.selectedDimension.type;
     this.chRef.detectChanges();
   }

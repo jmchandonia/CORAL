@@ -5,6 +5,7 @@ import { DataQuery } from '../models/data-query';
 import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { DimensionRef } from 'src/app/shared/models/plot-builder';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class PlotService {
 
   public plotBuilder: PlotBuilder = new PlotBuilder();
   public plotType: string;
+  public axisLabelBuilders: any = {};
+  private axisLabelSub = new Subject();
 
   constructor(private http: HttpClient) { }
 
@@ -56,11 +59,31 @@ export class PlotService {
     }
   }
 
-  markPlotStatus() {
-    // this.reusePlot = true;
+  /// axis label methods ///
+
+  setLabelBuilder(labelBuilder: DimensionRef, axis: string) {
+    this.axisLabelBuilders[axis] = labelBuilder;
+    this.axisLabelSub.next({axis, labelBuilder: this.axisLabelBuilders[axis]});
+  }
+
+  getLabelBuilder(axis) {
+    return this.axisLabelBuilders[axis];
+  }
+
+  getUpdatedLabelBuilder() {
+    return this.axisLabelSub.asObservable();
+  }
+
+  updateFormatString(format: string, axis: string) {
+    this.plotBuilder.config[axis].label_pattern = format;
+  }
+
+  testLabelBuilders() {
+    console.log(this.axisLabelBuilders);
   }
 
   clearPlotBuilder() {
+    this.axisLabelBuilders = {};
     this.plotBuilder = new PlotBuilder();
   }
 
