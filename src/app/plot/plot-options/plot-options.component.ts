@@ -102,7 +102,6 @@ export class PlotOptionsComponent implements OnInit {
       console.log('COMPONENT', this.plotBuilder, this.metadata);
       console.log('SERVICE', this.plotService.plotBuilder);
       console.assert(_.isEqual(this.plotBuilder, this.plotService.plotBuilder));
-      this.plotService.testLabelBuilders();
     }
 
     getPlotTypes() {

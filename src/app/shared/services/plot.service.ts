@@ -78,11 +78,8 @@ export class PlotService {
     this.plotBuilder.config[axis].label_pattern = format;
   }
 
-  testLabelBuilders() {
-    console.log(this.axisLabelBuilders);
-  }
-
   clearPlotBuilder() {
+    delete this.plotType;
     this.axisLabelBuilders = {};
     this.plotBuilder = new PlotBuilder();
   }
