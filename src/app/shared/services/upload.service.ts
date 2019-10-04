@@ -29,4 +29,8 @@ export class UploadService {
   getDataTypes() {
     return this.http.get('https://psnov1.lbl.gov:8082/generix/data_types');
   }
+
+  getDataModels() {
+    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+  }
 }
