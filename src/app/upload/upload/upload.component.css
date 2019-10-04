@@ -10,3 +10,11 @@ button {
 .next-button {
     margin-left: 1px;
 }
+
+.complete a{
+    color: #00489B!important;
+}
+
+.incomplete a {
+    color: #aaa!important;
+}

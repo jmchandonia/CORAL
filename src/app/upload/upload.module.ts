@@ -5,9 +5,10 @@ import { UploadComponent } from './upload/upload.component';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { TypeSelectorComponent } from './upload/type-selector/type-selector.component';
 import { Select2Module } from 'ng2-select2';
+import { PropertyBuilderComponent } from './upload/property-builder/property-builder.component';
 
 @NgModule({
-  declarations: [UploadComponent, TypeSelectorComponent],
+  declarations: [UploadComponent, TypeSelectorComponent, PropertyBuilderComponent],
   imports: [
     CommonModule,
     UploadRoutingModule,

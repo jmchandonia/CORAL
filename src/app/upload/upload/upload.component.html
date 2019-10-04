@@ -1,19 +1,18 @@
 <div class="container">
   <nav>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item active">
-        <a
+      <li
+        *ngFor="let step of uploadSteps; let i = index;"
+        class="breadcrumb-item"
+        [ngClass]="getProgressStatus(i)"
+      >
+        <a 
           href="JavaScript:void(0)"
-          [routerLink]="['/type']">
-          Type
+          [routerLink]="[step]"
+          >
+          {{capitalize(step)}}
         </a>
       </li>
-      <li class="breadcrumb-item">Properties</li>
-      <li class="breadcrumb-item">Dimensions</li>
-      <li class="breadcrumb-item">Load</li>
-      <li class="breadcrumb-item">Validate</li>
-      <li class="breadcrumb-item">Map</li>
-      <li class="breadcrumb-item">Create</li>
     </ol>
   </nav>
 </div>
@@ -21,7 +20,11 @@
 <div class="container">
   <div class="row mt-4">
     <div class="col-1 offset-1">
-      <button class="btn btn-light">
+      <button
+        class="btn btn-light"
+        *ngIf="progressIndex > 0"
+        (click)="previousStep()"
+      >
         <i class="material-icons arrow-icon">
           keyboard_arrow_left
         </i>
@@ -29,12 +32,21 @@
       </button>
     </div>
     <div class="col-1 offset-7">
-      <button class="btn btn-light">
+      <button
+        class="btn btn-light"
+        *ngIf="progressIndex < 6"
+        (click)="nextStep()"
+      >
         Next  
           <i class="material-icons arrow-icon">
             keyboard_arrow_right
           </i>
       </button>
+      <button
+        *ngIf="progressIndex === 6"
+        (click)="submit()"
+        class="btn btn-primary"
+      >Submit</button>
     </div>
   </div>
 </div>
