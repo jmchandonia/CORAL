@@ -39,9 +39,12 @@ export class DimensionVariable {
 }
 
 export class TypedProperty {
+    // TODO: Discuss how to handle ontological terms
     parentCollection: TypedProperty[];
     index: number;
-    type: Term = new Term();
+    // type: Term = new Term();
+    type: string;
     value: string;
-    units: Term = new Term();
+    // units: Term = new Term();
+    units: string;
 }
