@@ -4,7 +4,12 @@
       <div class="card">
         <h5 class="card-header">Select a brick type to upload</h5>
         <div class="card-body">
-          <select2 [cssImport]="true" [options]="{width: '100%'}"></select2>
+          <select2
+            [cssImport]="true"
+            [data]="select2Data"
+            [options]="select2Options"
+            (valueChanged)="setBrickType($event)"
+          ></select2>
         </div>
       </div>
     </div>
