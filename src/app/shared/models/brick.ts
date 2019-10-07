@@ -17,16 +17,25 @@ export class Term {
 }
 
 export class BrickDimension {
+    constructor(
+        brick: Brick,
+        index: number
+    ) {
+        this.brick = brick;
+        this.index = index;
+    }
     brick: Brick;
     index: number;
-    type: Term = new Term();
+    // type: Term = new Term();
+    type: string;
     variables: DimensionVariable[] = [];
 }
 
 export class DimensionVariable {
     dimension: BrickDimension;
     index: number;
-    type: Term = new Term();
+    // type: Term = new Term();
+    type: string;
     scalarType: string;
     values: any[] = [];
     valuesSameple: string; //

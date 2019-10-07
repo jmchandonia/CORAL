@@ -8,9 +8,12 @@ import { Select2Module } from 'ng2-select2';
 import { PropertyBuilderComponent } from './upload/property-builder/property-builder.component';
 import { FormsModule } from '@angular/forms';
 import { PropertyFormComponent } from './upload/property-builder/property-form/property-form.component';
+import { DimensionBuilderComponent } from './upload/dimension-builder/dimension-builder.component';
+import { DimensionFormComponent } from './upload/dimension-builder/dimension-form/dimension-form.component';
+import { DimensionVariableFormComponent } from './upload/dimension-builder/dimension-form/dimension-variable-form/dimension-variable-form.component';
 
 @NgModule({
-  declarations: [UploadComponent, TypeSelectorComponent, PropertyBuilderComponent, PropertyFormComponent],
+  declarations: [UploadComponent, TypeSelectorComponent, PropertyBuilderComponent, PropertyFormComponent, DimensionBuilderComponent, DimensionFormComponent, DimensionVariableFormComponent],
   imports: [
     CommonModule,
     UploadRoutingModule,
