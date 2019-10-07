@@ -9,6 +9,12 @@ export class Brick {
     dimensions: BrickDimension[] = [];
     properties: TypedProperty[] = [];
     data_file_name: string;
+
+    resetDimensionIndices() {
+        this.dimensions.forEach((dimension, index) => {
+            dimension.index = index;
+        });
+    }
 }
 
 export class Term {
@@ -29,9 +35,19 @@ export class BrickDimension {
     // type: Term = new Term();
     type: string;
     variables: DimensionVariable[] = [];
+
+    resetDimVarIndices() {
+        this.variables.forEach((variable, idx) => {
+            variable.index = idx;
+        });
+    }
 }
 
 export class DimensionVariable {
+    constructor(dimension, index) {
+        this.dimension = dimension;
+        this.index = index;
+    }
     dimension: BrickDimension;
     index: number;
     // type: Term = new Term();
