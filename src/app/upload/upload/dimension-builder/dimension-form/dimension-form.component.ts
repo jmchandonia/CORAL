@@ -15,6 +15,17 @@ export class DimensionFormComponent implements OnInit {
   ngOnInit() {
   }
 
+  addDimensionVariable() {
+    this.dimension.variables.push(
+      new DimensionVariable(this.dimension, this.dimension.variables.length)
+      );
+  }
+
+  removeDimensionVariable(dimVar) {
+    this.dimension.variables = this.dimension.variables.filter(item => item !== dimVar);
+    this.dimension.resetDimVarIndices();
+  }
+
   delete() {
     this.deleted.emit(this.dimension);
   }

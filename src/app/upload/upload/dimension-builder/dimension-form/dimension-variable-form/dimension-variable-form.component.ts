@@ -15,4 +15,8 @@ export class DimensionVariableFormComponent implements OnInit {
   ngOnInit() {
   }
 
+  delete() {
+    this.deleted.emit(this.dimVar);
+  }
+
 }

@@ -25,6 +25,7 @@ export class DimensionBuilderComponent implements OnInit {
 
   removeDimension(dimension) {
     this.brick.dimensions = this.brick.dimensions.filter(dim => dim !== dimension);
+    this.brick.resetDimensionIndices();
   }
 
 }
