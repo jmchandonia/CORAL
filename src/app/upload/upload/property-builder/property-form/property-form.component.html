@@ -16,12 +16,15 @@
       [ngModelOptions]="{standalone: true}"
     />
   </div>
-  <div class="col-3">
+  <div class="col-2">
     <input
       class="form-control"
       type="text"
       [(ngModel)]="property.units"
       [ngModelOptions]="{standalone: true}"
     />
+  </div>
+  <div class="col-1">
+    <button class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
   </div>
 </div>
