@@ -49,4 +49,8 @@ export class PropertyFormComponent implements OnInit {
     this.property.units = this.propertyList[idx].scalar_type;
   }
 
+  onDelete() {
+    this.deleted.emit(this.property);
+  }
+
 }

@@ -25,13 +25,17 @@ export class PropertyBuilderComponent implements OnInit {
       .subscribe((data: any) => {
         // starting out upload wizard with just brick types
         this.propertyList = data.results.Brick.properties;
-        console.log('PROPERTYLIST', this.propertyList, typeof this.propertyList);
       });
   }
 
   addProperty() {
     this.properties.push(new TypedProperty());
     this.uploadService.testBrickBuilder();
+  }
+
+  deleteProperty(property) {
+    this.brick.properties = this.brick.properties.filter(item => item !== property);
+    this.properties = this.brick.properties;
   }
 
 }
