@@ -7,8 +7,8 @@ body {
 }
 
 .btn-primary {
-    background-color:#00365C!important; 
-    border: 1px solid #00365C!important;
+    background-color:#00489B!important; 
+    border: 1px solid #00489B!important;
 }
 
 .btn-secondary {
@@ -20,7 +20,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color:rgb(0, 91, 155)!important;
+    background-color: rgb(24, 96, 179)!important;
 }
 
 .icon {

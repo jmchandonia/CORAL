@@ -21,7 +21,7 @@
                           [options]="plotTypeOptions"
                           [data]="plotTypeData"
                           ngDefaultControl
-                          [value]="selectedPlotTypeId || ''"
+                          [value]="listPlotTypes && plotTypeDataValue ? plotTypeDataValue : ''"
                           (valueChanged)="updatePlotType($event)"
                         >
                         </select2>

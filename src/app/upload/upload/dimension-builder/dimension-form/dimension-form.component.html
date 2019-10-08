@@ -1,0 +1,25 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <h6 class="col-10">Dimension {{dimension.index + 1}}</h6>
+      <button class="btn btn-link" (click)="detete()">Remove</button>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <label>Dimension Type:</label>
+        <select2 [cssImport]="true" [options]="{width: '100%'}"></select2>
+      </div>
+    </div>
+    <div class="row mt-3 p-1 dimension-variables-label">
+      <h6 class="col-10 mt-1">Dimension Variables ({{dimension.variables.length}})</h6>
+      <button (click)="addDimensionVariable()" class="btn btn-sm btn-link pb-2">Add</button>
+    </div>
+      <app-dimension-variable-form
+        (deleted)="removeDimensionVariable($event)"
+        *ngFor="let dimVar of dimension.variables"
+        [dimVar]="dimVar"
+      ></app-dimension-variable-form>
+  </div>
+</div>
