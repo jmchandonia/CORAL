@@ -26,49 +26,11 @@
                 <input name="axisTitle" [(ngModel)]="dimension.title" class="form-control">
               </div>
             </div>
-            <div class="row" *ngIf="selectedDimension">
-              <p class="header">Display Values From:</p>
-              <div class="display-values-container">
-                <div class="form-check ml-5" *ngFor="let d of selectedDimension?.dimVars; let i = index;">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox"
-                    [(ngModel)]="d.selected"
-                    [ngModelOptions]="{standalone: true}"
-                     />
-                  <label class="form-check-label">{{d.value}}</label>
-                  <span
-                    class="badge badge-pill badge-primary ml-1"
-                    [ngClass]="d.selected ? '' : 'var-unchecked'"
-                  >V{{ i + 1 }}</span>
+              <div class="row">
+                <div class="col-12" *ngIf="selectedDimension">
+                  <app-axis-labeler [axis]="axis"></app-axis-labeler>
                 </div>
               </div>
-            </div>
-            <div class="row label-display-options" *ngIf="selectedDimension">
-              <div class="col-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="axisLabels" />
-                  <label class="form-check-label" for="axisLabels">Display axis labels as</label>
-                </div>
-              </div>
-              <div class="col-8">
-                <app-axis-labeler
-                  [values]="selectedDimension"
-                  (labelChanged)="updateLabelPattern($event)"
-                ></app-axis-labeler>
-              </div>
-            </div>
-            <!-- <div class="row label-display-options">
-              <div class="col-4">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="hoverLabels" />
-                  <label class="form-check-label" for="hoverLabels">Display hover Labels: </label> 
-                </div>
-              </div>
-              <div class="col-8">
-                <input class="form-control" />
-              </div>
-            </div> -->
         </div>
     </form>
   </div>
