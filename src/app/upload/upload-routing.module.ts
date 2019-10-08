@@ -4,9 +4,10 @@ import { NgModule } from '@angular/core';
 import { TypeSelectorComponent } from './upload/type-selector/type-selector.component';
 import { PropertyBuilderComponent } from './upload/property-builder/property-builder.component';
 import { DimensionBuilderComponent } from './upload/dimension-builder/dimension-builder.component';
+import { AuthGuardService } from 'src/app/shared/services/auth-guard.service';
 
 const routes: Routes = [
-    {path: 'upload', component: UploadComponent, children: [
+    {path: 'upload', component: UploadComponent, canActivate: [AuthGuardService], children: [
         {path: '', redirectTo: 'type', pathMatch: 'full'},
         {path: 'type', component: TypeSelectorComponent},
         {path: 'properties', component: PropertyBuilderComponent},
