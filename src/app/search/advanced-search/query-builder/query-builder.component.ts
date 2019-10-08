@@ -18,7 +18,11 @@ export class QueryBuilderComponent implements OnInit {
   @Input() connection: string;
   @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
-  @Input() operators = [];
+  @Input() set dataProps(data: any) {
+    this.dataModels = data.dataModels;
+    this.dataTypes = data.dataTypes;
+    this.operators = data.operators;
+  }
   @Input() set queryMatch(value: QueryMatch) {
     this._queryMatch = value;
     if (value && value.dataType) {
@@ -33,6 +37,7 @@ export class QueryBuilderComponent implements OnInit {
   public selectedAttributes: any;
   dataModels: any;
   dataTypes: any;
+  operators: string[] = [];
   selectedDataType: string;
 
   options: Select2Options = {
@@ -65,11 +70,6 @@ export class QueryBuilderComponent implements OnInit {
     if (!this.queryMatch) {
       this.queryMatch = new QueryMatch();
     }
-
-    this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
-      .subscribe((data: any) => {
-        this.dataModels = data.results;
-      });
 
     this.ajaxOptions = {
       url: 'https://psnov1.lbl.gov:8082/generix/data_types',
@@ -115,7 +115,7 @@ export class QueryBuilderComponent implements OnInit {
   }
 
   updateQueryMatch() {
-    this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
+    // this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
   }
 
 }

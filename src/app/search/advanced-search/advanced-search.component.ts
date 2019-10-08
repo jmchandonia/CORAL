@@ -16,6 +16,8 @@ export class AdvancedSearchComponent implements OnInit {
   showAdvancedFilters = false;
   operators;
   processes = [];
+  public dataTypes;
+  public dataModels;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -27,39 +29,56 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit() {
 
-    const getQuery = this.queryBuilder.getCurrentObject();
-    this.queryBuilderObject = getQuery.qb;
+    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
 
-    this.queryBuilder.getUpdatedObject().subscribe(object => {
-      Object.assign(this.queryBuilderObject, object);
-    });
+    this.getOperators();
+    this.getDataModels();
+    this.getDataTypes();
 
+  }
+
+  getOperators() {
     this.queryBuilder.getOperators()
       .subscribe((data: any) => {
         this.operators = data.results;
       });
+  }
 
+  getDataModels() {
     this.queryBuilder.getDataModels()
       .subscribe((data: any) => {
-        const process = data.results.Process;
-        this.processes = process.properties;
+        this.dataModels = data.results;
+        this.processes = this.dataModels.Process.properties;
       });
   }
 
+  getDataTypes() {
+    this.queryBuilder.getDataTypes()
+      .subscribe((data: any) => {
+        this.dataTypes = data.results;
+      });
+  }
+
+  get dataProps() {
+    const { operators, dataTypes, dataModels } = this;
+    return { operators, dataTypes, dataModels };
+  }
+
   addProcess(process, queryParam) {
-    this.queryBuilder.addProcessParam(process, queryParam);
+    // this.queryBuilder.addProcessParam(process, queryParam);
+    // this.queryBuilderObject.push()
   }
 
   updateProcess(process, index, queryParam) {
-    this.queryBuilder.updateProcessParam(process, index, queryParam);
+    // this.queryBuilder.updateProcessParam(process, index, queryParam);
   }
 
   removeProcess(process, queryParam) {
-    this.queryBuilder.removeProcessParam(process, queryParam);
+    // this.queryBuilder.removeProcessParam(process, queryParam);
   }
 
   onSubmit() {
-    this.queryBuilder.submitSearchResults();
+    // this.queryBuilder.submitSearchResults();
     this.router.navigate(['../result'], {relativeTo: this.route});
     this.queryBuilder.setSearchType('advanced');
   }
