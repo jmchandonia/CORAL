@@ -3,7 +3,7 @@
     <h5>Upstream Process</h5>
   </div>
   <div class="card-body">
-    <table class="table table-bordered process-table">
+    <table class="table table-bordered" [ngClass]="processesUp.inputs > 10 ? 'data-table' : ''">
       <thead>
         <tr>
           <th>Data Type</th>
@@ -38,15 +38,10 @@
           <div class="col-6">
             <h5>{{process.name}}</h5>
           </div>
-          <!-- <div class="col-6">
-            <button class="btn btn-light">
-              View Outputs
-            </button>
-          </div> -->
         </div>
         <div class="row">
           <div class="col-12">
-            <table class="table table-bordered process-table">
+            <table class="table table-bordered" [ngClass]="process.outputs.length > 2 ? 'data-table' : ''">
               <thead>
                 <tr>
                   <th>Data Type</th>
