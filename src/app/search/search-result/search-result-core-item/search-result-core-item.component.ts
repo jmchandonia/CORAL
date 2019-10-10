@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 
 @Component({
   selector: 'app-search-result-core-item',
@@ -7,9 +9,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchResultCoreItemComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private queryBuilder: QueryBuilderService
+  ) { }
+
+  objectId: string;
+  data: any = [
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+    ['key', 'value'],
+  ];
 
   ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.objectId = params.id;
+      this.queryBuilder.getCoreTypeMetadata(this.objectId)
+        .subscribe(result => {
+          this.data = result;
+        });
+    });
   }
 
 }

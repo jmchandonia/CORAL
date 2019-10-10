@@ -1,3 +1,27 @@
-<p>
-  search-result-core-item works!
-</p>
+<div class="row mb-3 mt-3">
+  <div class="offset-1" [routerLink]="['../']">
+    <i class="material-icons back-icon">keyboard_arrow_left</i>
+    <span class="menu-option">Back To Search Results</span>
+  </div>
+</div>
+<hr />
+<div class="row justify-content-center">
+  <div class="col-10">
+    <div class="card">
+      <div class="card-header">
+        Core Type Data
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr *ngFor="let item of data;">
+              <td>{{item[0]}}</td>
+              <td>{{item[1]}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <app-process-data></app-process-data>
+  </div>
+</div>

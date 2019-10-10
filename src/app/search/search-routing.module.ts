@@ -6,6 +6,7 @@ import { AdvancedSearchComponent } from './advanced-search/advanced-search.compo
 import { SearchResultComponent } from './search-result/search-result.component';
 import { SearchResultItemComponent } from './search-result/search-result-item/search-result-item.component';
 import { AuthGuardService as AuthGuard } from '../shared/services/auth-guard.service';
+import { SearchResultCoreItemComponent } from './search-result/search-result-core-item/search-result-core-item.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
       {path: 'simple', component: SimpleSearchComponent},
       {path: 'advanced', component: AdvancedSearchComponent},
       {path: 'result', component: SearchResultComponent},
-      {path: 'result/:id', component: SearchResultItemComponent}
+      {path: 'result/:id', component: SearchResultItemComponent},
+      {path: 'result/core/:id', component: SearchResultCoreItemComponent}
     ]
  }
 ];
