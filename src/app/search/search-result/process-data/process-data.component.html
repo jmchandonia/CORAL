@@ -1,0 +1,76 @@
+<div class="card mt-3">
+  <div class="card-header">
+    <h5>Upstream Process</h5>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered process-table">
+      <thead>
+        <tr>
+          <th>Data Type</th>
+          <th>Name</th>
+          <th>ID</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Microbial Growth</td>
+          <td>microbial_growth.ndarray</td>
+          <td>brick0000003</td>
+          <td>
+            <button class="btn btn-link">
+              View
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card mt-3">
+  <div class="card-header">
+    <h5>Downstream Processes</h5>
+  </div>
+  <div class="card-body">
+    <div class="row" *ngFor="let process of processesDown">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6">
+            <h5>{{process.name}}</h5>
+          </div>
+          <!-- <div class="col-6">
+            <button class="btn btn-light">
+              View Outputs
+            </button>
+          </div> -->
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered process-table">
+              <thead>
+                <tr>
+                  <th>Data Type</th>
+                  <th>Name</th>
+                  <th>ID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let output of process.outputs">
+                  <td>{{output.dataType}}</td>
+                  <td>{{output.name}}</td>
+                  <td>{{output.id}}</td>
+                  <td>
+                    <button class="btn btn-link" (click)="navigate(output)">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
