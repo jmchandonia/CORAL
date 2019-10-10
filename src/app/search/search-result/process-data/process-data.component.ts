@@ -73,7 +73,6 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const tables: any = $('.process-table');
-    console.log('TABLES', tables);
     this.dataTables = tables.DataTable({
       ordering: false,
       info: false
