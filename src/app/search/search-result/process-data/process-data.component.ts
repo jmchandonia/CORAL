@@ -65,6 +65,8 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
     }
   ];
 
+  processesUp = {inputs: []};
+
   dataTables: any;
 
   constructor(private router: Router, private chRef: ChangeDetectorRef) { }
@@ -72,7 +74,7 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   @Input() id: string;
 
   ngAfterViewInit() {
-    const tables: any = $('.process-table');
+    const tables: any = $('.data-table');
     this.dataTables = tables.DataTable({
       ordering: false,
       info: false
