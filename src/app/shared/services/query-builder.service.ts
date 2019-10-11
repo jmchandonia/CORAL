@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
-import { NetworkService } from './network.service';
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -77,27 +76,27 @@ export class QueryBuilderService {
   }
 
   getSearchResults() {
-    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
+    return this.http.post<any>(`${environment.baseURL}/search`, this.queryBuilderObject);
   }
 
   getObjectMetadata(id) {
-    return this.http.get(`https://psnov1.lbl.gov:8082/generix/brick_metadata/${id}`);
+    return this.http.get(`${environment.baseURL}/brick_metadata/${id}`);
   }
 
   getCoreTypeMetadata(id) {
-    return this.http.get(`https://psnov1.lbl.gov:8082/generix/core_type_metadata/${id}`);
+    return this.http.get(`${environment.baseURL}/core_type_metadata/${id}`);
   }
 
   getDataTypes() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_types');
+    return this.http.get(`${environment.baseURL}/data_types`);
   }
 
   getDataModels() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+    return this.http.get(`${environment.baseURL}/data_models`);
   }
 
   getOperators() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/search_operations');
+    return this.http.get(`${environment.baseURL}/search_operations`);
   }
 
   getSearchType() {

@@ -6,6 +6,7 @@ import { QueryBuilderService } from '../../../shared/services/query-builder.serv
 import { HttpClient } from '@angular/common/http';
 import * as $ from 'jquery';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-query-builder',
@@ -66,13 +67,13 @@ export class QueryBuilderComponent implements OnInit {
       this.queryMatch = new QueryMatch();
     }
 
-    this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
+    this.http.get(`${environment.baseURL}/data_models`)
       .subscribe((data: any) => {
         this.dataModels = data.results;
       });
 
     this.ajaxOptions = {
-      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      url: `${environment.baseURL}/data_types`,
       dataType: 'json',
       delay: 250,
       cache: false,

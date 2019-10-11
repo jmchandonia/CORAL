@@ -7,6 +7,7 @@ import {
   Term,
   DimensionVariable
  } from 'src/app/shared/models/brick';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,10 +28,10 @@ export class UploadService {
   ) { }
 
   getDataTypes() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_types');
+    return this.http.get(`${environment.baseURL}/data_types`);
   }
 
   getDataModels() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/data_models');
+    return this.http.get(`${environment.baseURL}/data_models`);
   }
 }
