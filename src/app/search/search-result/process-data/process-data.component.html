@@ -19,7 +19,7 @@
                   <td>Outputs: </td>
                   <td>
                     <button class="btn btn-link" (click)="hideProcessInputs = !hideProcessInputs">
-                      View
+                      {{hideProcessInputs ? 'View' : 'Hide'}}
                     </button>
                   </td>
                 </tr>
@@ -81,7 +81,7 @@
                       <td>Outputs: </td>
                       <td>
                         <button class="btn btn-link" (click)="toggleProcessOutputs(i)">
-                          View
+                          {{hideProcessOutputs[i] ? 'View' : 'Hide'}}
                         </button>
                       </td>
                     </tr>
