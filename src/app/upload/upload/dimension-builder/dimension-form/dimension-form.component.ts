@@ -8,6 +8,10 @@ import { BrickDimension, DimensionVariable } from 'src/app/shared/models/brick';
 })
 export class DimensionFormComponent implements OnInit {
 
+  select2Options: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container'
+  }
   @Input() dimension: BrickDimension;
   @Output() deleted = new EventEmitter();
   constructor() { }

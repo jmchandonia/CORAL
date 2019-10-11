@@ -74,9 +74,26 @@ body {
     width: 800px;
 }
 
-.select2-container{
-    height: 30px!important;
+.select2-custom-container {
+    height: 45px!important;
+    border: 1px solid #ced4da!important;
 }
+
+.select2-custom-container .select2-selection__rendered {
+    margin-top: 10px;
+}
+
+.select2-custom-container .select2-selection__arrow {
+    background-color: #eeeeff;
+    top: 0px!important;
+    width: 45px!important;
+    height: 45px!important;
+    border: 1px solid #ced4da!important;
+    border-top-right-radius: 4px!important;
+    border-bottom-right-radius: 4px!important;
+}
+
+
 
 
 
