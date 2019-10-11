@@ -21,7 +21,8 @@ export class ReportsComponent implements OnInit {
   public ajax: Select2AjaxOptions;
   options: Select2Options = {
     width: '100%',
-    placeholder: 'Browse By Type'
+    placeholder: 'Browse By Type',
+    containerCssClass: 'select2-custom-container'
   };
   browseItems: any[];
   dataTable: any;

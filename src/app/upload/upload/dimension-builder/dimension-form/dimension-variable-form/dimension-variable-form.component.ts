@@ -10,6 +10,10 @@ export class DimensionVariableFormComponent implements OnInit {
 
   @Input() dimVar: DimensionVariable;
   @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
+  options: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container'
+  }
   constructor() { }
 
   ngOnInit() {

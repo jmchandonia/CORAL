@@ -12,7 +12,7 @@
             <label for="reports-select">
               Display Summary of Uploaded Datasets, sorted by:
             </label>
-            <select2 class="form-control" id="reports-select" [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
+            <select2 id="reports-select" [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
               </select2>
           </div>
         </form>
