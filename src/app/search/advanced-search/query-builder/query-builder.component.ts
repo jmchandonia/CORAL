@@ -60,7 +60,6 @@ export class QueryBuilderComponent implements OnInit {
 
   constructor(
     private queryBuilder: QueryBuilderService,
-    private network: NetworkService,
     private http: HttpClient,
     private chRef: ChangeDetectorRef
   ) { }
@@ -95,23 +94,18 @@ export class QueryBuilderComponent implements OnInit {
     Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
     });
-    this.queryMatch.params = [];
-    this.updateQueryMatch();
   }
 
   updatePropertyParam(index, event) {
     this.queryMatch.params[index][event.key] = event.value.data[0].text;
-    this.updateQueryMatch();
   }
 
   removePropertyParam(param) {
     this.queryMatch.params = this.queryMatch.params.filter(p => p !== param);
-    this.updateQueryMatch();
   }
 
-  addPropertyParam(param) {
-    this.queryMatch.params.push(param);
-    this.updateQueryMatch();
+  addPropertyParam() {
+    this.queryMatch.params.push(new QueryParam());
   }
 
   updateQueryMatch() {
