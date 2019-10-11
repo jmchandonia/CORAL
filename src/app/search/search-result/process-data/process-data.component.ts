@@ -65,9 +65,15 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
     }
   ];
 
-  processesUp = {inputs: []};
+  processesUp = {name: 'processUp', inputs: [{
+    dataType: 'Microbial Growth',
+    categorty: '_DDT',
+    name: 'microbial_growth.ndArray',
+    id: 'brick000008'
+  }]};
   hideProcessUp = false;
   hideProcessDown = false;
+  hideProcessInputs = true;
   hideProcessOutputs: boolean[] = [];
   dataTables: any;
 
@@ -85,7 +91,9 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.hideProcessOutputs = Array(this.processesDown.length).map(() => false);
+    this.processesDown.forEach(() => {
+      this.hideProcessOutputs.push(true);
+    });
   }
 
   toggleProcessOutputs(index) {
