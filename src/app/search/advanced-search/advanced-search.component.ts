@@ -73,8 +73,9 @@ export class AdvancedSearchComponent implements OnInit {
     // this.queryBuilder.updateProcessParam(process, index, queryParam);
   }
 
-  removeProcess(process, queryParam) {
-    // this.queryBuilder.removeProcessParam(process, queryParam);
+  removeProcessUp(index) {
+    let { processesUp } = this.queryBuilderObject;
+    processesUp = processesUp.filter((_, i) => i !== index);
   }
 
   onSubmit() {
@@ -83,8 +84,12 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilder.setSearchType('advanced');
   }
 
+  addProcessUp() {
+    this.queryBuilderObject.processesUp.push(new QueryParam());s
+  }
+
   testQuery() {
-    console.log('CURRENT QUERY', this.queryBuilderObject);
+    this.queryBuilder.testQueryBuilder();
   }
 
 }

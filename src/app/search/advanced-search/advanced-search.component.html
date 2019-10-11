@@ -28,19 +28,20 @@
         </div>
         <div class="form-group p-3">
             <app-property-params
-            *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
-            [data]="queryMatch"
+            *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
             [operators]="operators"
             [attributes]="processes"
-            (updated)="updateProcess('processesUp', idx, $event)"
-            (removed)="removeProcess('processesUp', $event)"
+            (removed)="removeProcessUp(idx)"
+            [queryParam]="queryParam"
             ></app-property-params>
-            <app-property-params
-            [isEmpty]="true"
-            [attributes]="processes"
-            [operators]="operators"
-            (added)="addProcess('processesUp', $event)"
-            ></app-property-params>
+        </div>
+        <hr >
+        <div class="row">
+            <div class="col-2 offset-10">
+                <button class="btn btn-link" (click)="addProcessUp()">
+                    Add
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -68,4 +69,4 @@
     </div>
 </div>
 
-<!-- <button (click)="testQuery()">Test Query</button> -->
+<button (click)="testQuery()">Test Query</button>

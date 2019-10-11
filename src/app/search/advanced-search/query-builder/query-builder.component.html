@@ -5,38 +5,36 @@
     </div>
     <form>
       <div class="form-group p-3">
-          <label for="data-type">Data Type</label>
-            <select2
-              class="form-control"
-              [cssImport]="true"
-              [options]="options"
-              [data]="dataTypeList"
-              [value]="selectedDataType ? '0' : ''"
-              name="data-type"
-              (valueChanged)="updateObjectDataModel($event)"
-            >
-          </select2>
-            <label class="mt-2">Property Parameters</label>
-            <app-property-params 
-              *ngFor="let param of queryMatch?.params; let idx = index;" 
-              [data]="param"
-              [attributes]="selectedAttributes"
-              [operators]="operators"
-              [isEmpty]="false"
-              [connection]="connection"
-              (removed)="removePropertyParam(param)"
-              (updated)="updatePropertyParam(idx, $event)"
-            >
-            </app-property-params>
-            <app-property-params
-              [isEmpty]="true" 
-              [attributes]="selectedAttributes"
-              [operators]="operators"
-              [connection]="connection" 
-              (added)="addPropertyParam($event)" 
-              style="color: orange!important"
-            >
-            </app-property-params>
+        <label for="data-type">Data Type</label>
+        <select2
+          class="form-control"
+          [cssImport]="true"
+          [options]="options"
+           [data]="dataTypeList"
+          [value]="selectedDataType ? '0' : ''"
+          name="data-type"
+          (valueChanged)="updateObjectDataModel($event)"
+        >
+        </select2>
+        <label class="mt-2">Property Parameters</label>
+        <app-property-params 
+          *ngFor="let param of queryMatch?.params; let idx = index;" 
+          [attributes]="selectedAttributes"
+          [operators]="operators"
+          [connection]="connection"
+          [queryParam]="param"
+          (removed)="removePropertyParam(param)"
+          (updated)="updatePropertyParam(idx, $event)"
+        >
+        </app-property-params>
+        <hr />
+        <div class="row">
+          <div class="col-2 offset-10">
+            <button class="btn btn-link" (click)="addPropertyParam()">
+              Add
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   </div>

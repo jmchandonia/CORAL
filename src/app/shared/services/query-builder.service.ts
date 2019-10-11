@@ -85,10 +85,14 @@ export class QueryBuilderService {
   //   localStorage.setItem('queryBuilderObject', JSON.stringify(this.queryBuilderObject));
   // }
 
-  // submitSearchResultsFromHome(queryMatch: QueryMatch) {
-  //   this.queryBuilderObject = new QueryBuilder();
-  //   this.queryBuilderObject.queryMatch = queryMatch;
-  // }
+  submitSearchResultsFromHome(queryMatch: QueryMatch) {
+    this.queryBuilderObject = new QueryBuilder();
+    this.queryBuilderObject.queryMatch = queryMatch;
+  }
+
+  testQueryBuilder() {
+    console.log('TESTING SERVICE', this.queryBuilderObject);
+  }
 
   getSearchResults() {
     return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/search', this.queryBuilderObject);
