@@ -3,6 +3,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryBuilder';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-simple-search',
@@ -40,7 +41,7 @@ export class SimpleSearchComponent implements OnInit {
       this.dataTypeList.push({id: '0', text: this.selectedDataType});
     }
     this.ajaxOptions = {
-      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      url: `${environment.baseURL}/data_types`,
       dataType: 'json',
       delay: 250,
       cache: false,

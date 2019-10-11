@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Select2OptionData } from 'ng2-select2';
 import { Brick } from 'src/app/shared/models/brick';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-type-selector',
   templateUrl: './type-selector.component.html',
@@ -30,7 +30,7 @@ export class TypeSelectorComponent implements OnInit {
     this.brick = this.uploadService.getBrickBuilder();
 
     this.ajaxOptions = {
-      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      url: `${environment.baseURL}/data_types`,
       dataType: 'json',
       processResults: (data: any) => {
         this.dataTypes = data.results.filter(item => item.dataModel === 'Brick');

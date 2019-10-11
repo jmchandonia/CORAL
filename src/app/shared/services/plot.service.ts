@@ -6,7 +6,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { DimensionRef } from 'src/app/shared/models/plot-builder';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -89,11 +89,11 @@ export class PlotService {
   }
 
   getPlotlyData() {
-    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/plotly_data', this.plotBuilder);
+    return this.http.post<any>(`${environment.baseURL}/plotly_data`, this.plotBuilder);
   }
 
   getPlotTypes() {
-    return this.http.get('https://psnov1.lbl.gov:8082/generix/plot_types');
+    return this.http.get(`${environment.baseURL}/plot_types`);
   }
 
 

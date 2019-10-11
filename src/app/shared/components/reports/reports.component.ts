@@ -3,6 +3,7 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import * as $ from 'jquery';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-reports',
@@ -28,7 +29,7 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit() {
     this.ajax = {
-      url: 'https://psnov1.lbl.gov:8082/generix/reports',
+      url: `${environment.baseURL}/reports`,
       dataType: 'json',
       delay: 250,
       cache: false,
@@ -47,7 +48,7 @@ export class ReportsComponent implements OnInit {
     }
 
     updateTable(event) {
-      this.http.get(`https://psnov1.lbl.gov:8082/generix/reports/${event.value}`)
+      this.http.get(`${environment.baseURL}/reports/${event.value}`)
       .subscribe((res: any) => {
         if (res.status === 'OK') {
           this.selectedValue = JSON.parse(res.results);

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class AuthService {
   }
 
   submitLogin(username, password) {
-    return this.http.post<any>('https://psnov1.lbl.gov:8082/generix/user_login', {username, password})
+    return this.http.post<any>(`${environment.baseURL}/user_login`, {username, password})
       .pipe(map(res => {
         const success = res.success;
         if (success) {
