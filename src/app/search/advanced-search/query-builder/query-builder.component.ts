@@ -38,6 +38,7 @@ export class QueryBuilderComponent implements OnInit {
 
   options: Select2Options = {
     width: '100%',
+    containerCssClass: 'select2-custom-container',
     placeholder: 'Select A Data Type',
     templateResult: state => {
       if (!state.id) { return state; }

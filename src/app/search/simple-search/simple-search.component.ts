@@ -18,7 +18,8 @@ export class SimpleSearchComponent implements OnInit {
   keywords = '';
   select2Options: Select2Options = {
     width: '100%',
-    placeholder: 'Select a Data Type from our system'
+    placeholder: 'Select a Data Type from our system',
+    containerCssClass: 'select2-custom-container'
   };
   ajaxOptions: Select2AjaxOptions;
   queryMatch: QueryMatch = new QueryMatch();
