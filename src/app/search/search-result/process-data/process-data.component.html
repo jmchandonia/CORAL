@@ -3,28 +3,56 @@
     <h5>Upstream Process</h5>
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
-    <table class="table table-bordered" [ngClass]="processesUp.inputs > 10 ? 'data-table' : ''">
-      <thead>
-        <tr>
-          <th>Data Type</th>
-          <th>Name</th>
-          <th>ID</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Microbial Growth</td>
-          <td>microbial_growth.ndarray</td>
-          <td>brick0000003</td>
-          <td>
-            <button class="btn btn-link">
-              View
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row">
+      <div class="col-12">
+          <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td>Enigma Personnel: </td>
+                  <td>Trenholm Lab</td>
+                </tr>
+                <tr>
+                  <td>ENIGMA Campaign: </td>
+                  <td>ENIGMA trenholm </td>
+                </tr>
+                <tr>
+                  <td>Outputs: </td>
+                  <td>
+                    <button class="btn btn-link" (click)="hideProcessInputs = !hideProcessInputs">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12" [hidden]="hideProcessInputs">
+          <table class="table table-bordered" [ngClass]="processesUp.inputs > 10 ? 'data-table' : ''">
+              <thead>
+                <tr>
+                  <th>Data Type</th>
+                  <th>Name</th>
+                  <th>ID</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{processesUp.inputs[0].dataType}}</td>
+                  <td>{{processesUp.inputs[0].name}}</td>
+                  <td>{{processesUp.inputs[0].id}}</td>
+                  <td>
+                    <button class="btn btn-link">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+    </div>
   </div>
 </div>
 <div class="card mt-3">
@@ -35,12 +63,36 @@
     <div class="row" *ngFor="let process of processesDown; let i = index">
       <div class="col-12">
         <div class="row">
-          <div class="col-6">
+          <div class="col-12">
             <h5>{{process.name}}</h5>
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-bordered">
+                  <tbody>
+                    <tr>
+                      <td>Enigma Personnel: </td>
+                      <td>Trenholm Lab</td>
+                    </tr>
+                    <tr>
+                      <td>ENIGMA Campaign: </td>
+                      <td>ENIGMA trenholm </td>
+                    </tr>
+                    <tr>
+                      <td>Outputs: </td>
+                      <td>
+                        <button class="btn btn-link" (click)="toggleProcessOutputs(i)">
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
+          <div class="col-12"[hidden]="hideProcessOutputs[i]">
             <table class="table table-bordered" [ngClass]="process.outputs.length > 2 ? 'data-table' : ''">
               <thead>
                 <tr>
