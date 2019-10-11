@@ -16,7 +16,8 @@ export class TypeSelectorComponent implements OnInit {
 
   select2Options: Select2Options = {
     width: '100%',
-    placeholder: 'Select a Data Type'
+    placeholder: 'Select a Data Type',
+    containerCssClass: 'select2-custom-container'
   };
 
   select2Data: Array<Select2OptionData>;

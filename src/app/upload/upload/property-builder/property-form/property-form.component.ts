@@ -26,7 +26,10 @@ export class PropertyFormComponent implements OnInit {
 
   private _propertyList: any[];
   select2Data: Array<Select2OptionData> = [];
-  select2Options: Select2Options = { width: '100%' };
+  select2Options: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container'
+   };
 
   constructor() { }
 
