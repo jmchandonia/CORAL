@@ -14,14 +14,14 @@ export class AppComponent implements OnInit {
     private router: Router,
     private auth: AuthService
   ) {
-   }
-
-   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
       }
     });
+   }
+
+   ngOnInit() {
    }
 
    logout() {
