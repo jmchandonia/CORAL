@@ -85,7 +85,7 @@ export class QueryBuilderService {
   }
 
   getCoreTypeMetadata(id) {
-    return this.http.get(`https://psnov1.lbl.gov:8082/generix/core_type_metadata`);
+    return this.http.get(`https://psnov1.lbl.gov:8082/generix/core_type_metadata/${id}`);
   }
 
   getDataTypes() {

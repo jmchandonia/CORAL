@@ -66,7 +66,9 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   ];
 
   processesUp = {inputs: []};
-
+  hideProcessUp = false;
+  hideProcessDown = false;
+  hideProcessOutputs: boolean[] = [];
   dataTables: any;
 
   constructor(private router: Router, private chRef: ChangeDetectorRef) { }
@@ -82,13 +84,19 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
     this.chRef.detectChanges();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.hideProcessOutputs = Array(this.processesDown.length).map(() => false);
+  }
+
+  toggleProcessOutputs(index) {
+    this.hideProcessOutputs[index] = !this.hideProcessOutputs[index];
+  }
 
   navigate(output) {
     this.router.navigate(
       output.category === '_DDT'
         ? [`search/result/${output.id}`]
-        : [`search/result/core-type/${output.id}`]
+        : [`search/result/core/${output.id}`]
     );
   }
 
