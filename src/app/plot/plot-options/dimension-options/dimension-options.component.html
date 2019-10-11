@@ -12,7 +12,7 @@
                 <select2
                   name="fromDimension"
                   [cssImport]="true"
-                  [options]="{width: '100%'}"
+                  [options]="select2Options"
                   [data]="dropdownValues"
                   (valueChanged)="setSelectedDimension($event)"
                   (click)="chRef.detectChanges()"
