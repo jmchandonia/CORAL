@@ -29,6 +29,7 @@ export class PlotOptionsComponent implements OnInit {
 
   public plotTypeOptions: Select2Options = {
     width: '100%',
+    containerCssClass: 'select2-custom-container',
     templateResult: state => {
       if (!state.id) {
         return state;

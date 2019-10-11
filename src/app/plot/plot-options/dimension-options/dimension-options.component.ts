@@ -35,6 +35,11 @@ export class DimensionOptionsComponent implements OnInit {
     );
   }
 
+  select2Options: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container'
+  };
+
   @Input() set index(i: number) {
     // map index order to key value pairs for server
     const xyz = ['x', 'y', 'z'];
