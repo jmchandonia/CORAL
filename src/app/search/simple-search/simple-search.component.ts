@@ -31,16 +31,16 @@ export class SimpleSearchComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const getQuery = this.queryBuilder.getCurrentObject();
-    this.queryBuilderObject = getQuery.qb;
-    if (!getQuery.empty && getQuery.qb.queryMatch) {
-      const p = this.queryBuilderObject.queryMatch.params;
-      if (p && p.length) {
-        this.keywords = p[0].keyword;
-      }
-      this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
-      this.dataTypeList.push({id: '0', text: this.selectedDataType});
-    }
+    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    // this.queryBuilderObject = getQuery.qb;
+    // if (!getQuery.empty && getQuery.qb.queryMatch) {
+    //   const p = this.queryBuilderObject.queryMatch.params;
+    //   if (p && p.length) {
+    //     this.keywords = p[0].keyword;
+    //   }
+    //   this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
+    //   this.dataTypeList.push({id: '0', text: this.selectedDataType});
+    // }
     this.ajaxOptions = {
       url: `${environment.baseURL}/data_types`,
       dataType: 'json',
@@ -69,7 +69,7 @@ export class SimpleSearchComponent implements OnInit {
   onSubmit() {
     this.queryMatch.params.push(new QueryParam(null, null, this.keywords, 'string'));
     this.queryBuilderObject.queryMatch = this.queryMatch;
-    this.queryBuilder.submitSearchResults();
+    // this.queryBuilder.submitSearchResults();
     this.router.navigate(['/search/result']);
     this.queryBuilder.setSearchType('simple');
   }

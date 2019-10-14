@@ -26,8 +26,8 @@ export class PropertyParamsComponent implements OnInit {
   @Input() set attributes(a: Array<any>) {
     if (a) {
       this.propertyTypesMetadata = a;
-      this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
-        return { id: item.name, text: item.name };
+      this.propertyTypes = [this.propertyTypes[0], ...a.map((item, idx) => {
+        return { id: idx.toString(), text: item.name };
       })];
     }
   }
@@ -103,6 +103,11 @@ export class PropertyParamsComponent implements OnInit {
 
   setAttribute(event) {
     this.queryParam.attribute = event.data[0].text;
+    this.setScalarType(parseInt(event.value, 10));
+  }
+
+  setScalarType(index) {
+    this.queryParam.scalarType = this.propertyTypesMetadata[index].scalar_type;
   }
 
   setMatchType(event) {
