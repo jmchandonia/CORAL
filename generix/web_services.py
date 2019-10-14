@@ -5,6 +5,9 @@ from flask_cors import CORS
 import pandas as pd
 import re
 import random 
+from simplepam import authenticate
+import jwt
+import datetime
 
 # from . import services
 # from .brick import Brick
@@ -357,9 +360,33 @@ def _search_oterms(ontology, value):
         'results': res
     })
 
-######## 
+########################################################################################
 ## NEW VERSION
-########
+##########################################################################################
+
+
+@app.route("/generix/user_login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return json.dumps({ 'message': 'testing login route handler' })
+    
+    login = request.json
+    auth = authenticate(login['username'], login['password'])
+    if not auth:
+        return json.dumps({'success': False, 'message': 'Incorrect username/password'})
+    else:
+        try:
+            payload = {
+		        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=10),
+		        'iat': datetime.datetime.utcnow(),
+		        'sub': login['username']
+	        }
+            new_jwt = jwt.encode(payload, 'test', algorithm='HS256')
+            return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
+        except Exception as e:
+            print(e)
+            return json.dumps({'success': False, 'message': 'Something went wrong'})  
+
 
 @app.route("/generix/data_types", methods=['GET'])
 def generix_data_types():
