@@ -89,6 +89,18 @@ class ArangoService:
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
 
+    def get_up_process_docs(self, index_type_def, obj_id, size = 100):
+        aql = '''
+            for spo in SYS_ProcessOutput filter spo._to == @id
+            for pr in SYS_Process filter pr._id == spo._from
+            for pi in SYS_ProcessInput filter pi._to == pr._id
+            collect process = pr into docs =  document(pi._from)
+            return { "process" : process,  "docs" :  docs}
+        '''
+        aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+
+
     def get_dn_process_docs(self, index_type_def, obj_id, size = 100):
         aql = '''
             for pi in SYS_ProcessInput filter pi._from == @id
