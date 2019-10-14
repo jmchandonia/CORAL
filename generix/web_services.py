@@ -947,6 +947,57 @@ def generix_dn_process_docs(obj_id):
         })   
 
 
+@app.route('/generix/up_process_docs/<obj_id>', methods=['GET'])
+def generix_up_process_docs(obj_id):
+    arango_service = svs['arango_service']
+    indexdef = svs['indexdef']
+
+    obj_type = ''
+    res = re.search(r'([a-zA-Z_]*)(\d*)',obj_id)    
+    if res:
+        obj_type = res.group(1)
+    else:
+        return  json.dumps( {
+            'results': '', 
+            'status': 'ERR', 
+            'error': 'Wrong object ID format'
+        })
+
+    itdef = indexdef.get_type_def(obj_type)
+    rows = arango_service.get_up_process_docs(itdef, obj_id)
+
+    process_docs = []
+    for row in rows:
+        process = row['process']
+
+        # build docs
+        docs = []
+        for doc in row['docs']:
+            hdoc = {}
+            for key in doc:
+                if not key.startswith('_'):
+                    hdoc[key] = doc[key]
+            docs.append(hdoc)
+
+        process_docs.append({
+            'process': {
+                'id':process['id'], 
+                'process': process['process_term_name'], 
+                'person': process['person_term_name'], 
+                'campaign': process['campaign_term_name'], 
+                'date_start' : process['date_start'], 
+                'date_end': process['date_end']
+            },
+            'docs' : docs
+        })
+
+    return  json.dumps( {
+            'results': process_docs, 
+            'status': 'OK', 
+            'error': ''
+        })   
+
+
 if __name__ == "__main__":
     port = cns['_WEB_SERVICE']['port']
     if cns['_WEB_SERVICE']['https']:
