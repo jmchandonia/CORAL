@@ -914,31 +914,7 @@ def generix_dn_process_docs(obj_id):
 
     itdef = indexdef.get_type_def(obj_type)
     rows = arango_service.get_dn_process_docs(itdef, obj_id)
-
-    process_docs = []
-    for row in rows:
-        process = row['process']
-
-        # build docs
-        docs = []
-        for doc in row['docs']:
-            hdoc = {}
-            for key in doc:
-                if not key.startswith('_'):
-                    hdoc[key] = doc[key]
-            docs.append(hdoc)
-
-        process_docs.append({
-            'process': {
-                'id':process['id'], 
-                'process': process['process_term_name'], 
-                'person': process['person_term_name'], 
-                'campaign': process['campaign_term_name'], 
-                'date_start' : process['date_start'], 
-                'date_end': process['date_end']
-            },
-            'docs' : docs
-        })
+    process_docs = _to_process_docs(rows)
 
     return  json.dumps( {
             'results': process_docs, 
@@ -965,7 +941,18 @@ def generix_up_process_docs(obj_id):
 
     itdef = indexdef.get_type_def(obj_type)
     rows = arango_service.get_up_process_docs(itdef, obj_id)
+    process_docs = _to_process_docs(rows)
 
+
+    return  json.dumps( {
+            'results': process_docs, 
+            'status': 'OK', 
+            'error': ''
+        })   
+
+
+def _to_process_docs(rows):
+    indexdef = svs['indexdef']
     process_docs = []
     for row in rows:
         process = row['process']
@@ -973,11 +960,16 @@ def generix_up_process_docs(obj_id):
         # build docs
         docs = []
         for doc in row['docs']:
-            hdoc = {}
-            for key in doc:
-                if not key.startswith('_'):
-                    hdoc[key] = doc[key]
-            docs.append(hdoc)
+
+            res = re.search(r'([a-zA-Z_]*)(\d*)', doc['_key'])  
+            obj_type = res.group(1)
+            itdef = indexdef.get_type_def(obj_type)
+            docs.append({
+                'id': doc['_key'],
+                'type': obj_type,
+                'category': itdef.category,
+                'description': '' 
+            })
 
         process_docs.append({
             'process': {
@@ -990,12 +982,7 @@ def generix_up_process_docs(obj_id):
             },
             'docs' : docs
         })
-
-    return  json.dumps( {
-            'results': process_docs, 
-            'status': 'OK', 
-            'error': ''
-        })   
+    return process_docs
 
 
 if __name__ == "__main__":
