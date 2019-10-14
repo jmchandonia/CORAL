@@ -1,8 +1,9 @@
+// tslint:disable:no-use-before-declare
 export class QueryBuilder {
     constructor() { }
-    public queryMatch: QueryMatch;
-    public connectsUpTo: QueryMatch;
-    public connectsDownTo: QueryMatch;
+    public queryMatch: QueryMatch = new QueryMatch();
+    public connectsUpTo: QueryMatch = new QueryMatch();
+    public connectsDownTo: QueryMatch = new QueryMatch();
     public processesUp: QueryParam[] = [];
     public processesDown: QueryParam[] = [];
 }
@@ -19,7 +20,7 @@ export class QueryMatch {
     public dataModel: string;
     public dataType: string;
     public category: string;
-    public params: QueryParam[];
+    public params: QueryParam[] = [];
 }
 
 export class QueryParam {
@@ -37,6 +38,6 @@ export class QueryParam {
     public attribute: string;
     public matchType: string;
     public scalarType: string;
-    public keyword: string;
+    public keyword = '';
 }
 

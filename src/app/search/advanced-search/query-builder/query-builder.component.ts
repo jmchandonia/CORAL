@@ -19,7 +19,11 @@ export class QueryBuilderComponent implements OnInit {
   @Input() connection: string;
   @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
-  @Input() operators = [];
+  @Input() set dataProps(data: any) {
+    this.dataModels = data.dataModels;
+    this.dataTypes = data.dataTypes;
+    this.operators = data.operators;
+  }
   @Input() set queryMatch(value: QueryMatch) {
     this._queryMatch = value;
     if (value && value.dataType) {
@@ -34,6 +38,7 @@ export class QueryBuilderComponent implements OnInit {
   public selectedAttributes: any;
   dataModels: any;
   dataTypes: any;
+  operators: string[] = [];
   selectedDataType: string;
 
   options: Select2Options = {
@@ -57,7 +62,6 @@ export class QueryBuilderComponent implements OnInit {
 
   constructor(
     private queryBuilder: QueryBuilderService,
-    private network: NetworkService,
     private http: HttpClient,
     private chRef: ChangeDetectorRef
   ) { }
@@ -67,11 +71,6 @@ export class QueryBuilderComponent implements OnInit {
     if (!this.queryMatch) {
       this.queryMatch = new QueryMatch();
     }
-
-    this.http.get(`${environment.baseURL}/data_models`)
-      .subscribe((data: any) => {
-        this.dataModels = data.results;
-      });
 
     this.ajaxOptions = {
       url: `${environment.baseURL}/data_types`,
@@ -97,27 +96,22 @@ export class QueryBuilderComponent implements OnInit {
     Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
     });
-    this.queryMatch.params = [];
-    this.updateQueryMatch();
   }
 
   updatePropertyParam(index, event) {
     this.queryMatch.params[index][event.key] = event.value.data[0].text;
-    this.updateQueryMatch();
   }
 
   removePropertyParam(param) {
     this.queryMatch.params = this.queryMatch.params.filter(p => p !== param);
-    this.updateQueryMatch();
   }
 
-  addPropertyParam(param) {
-    this.queryMatch.params.push(param);
-    this.updateQueryMatch();
+  addPropertyParam() {
+    this.queryMatch.params.push(new QueryParam());
   }
 
   updateQueryMatch() {
-    this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
+    // this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
   }
 
 }
