@@ -7,6 +7,14 @@ def to_var_name(prefix, name):
 def to_es_type_name(type_name):
     return type_name
 
+def to_object_type(object_id):
+    res = re.search(r'([a-zA-Z_]*)(\d*)',object_id)    
+    if res:
+        return res.group(1)
+
+    raise ValueError('Wrong object ID format %s' % object_id)
+
+
 
 # def to_es_type_name(type_name):
 #     chars = list(type_name)
