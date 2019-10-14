@@ -14,6 +14,7 @@ import datetime
 
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
+from .utils import to_object_type
 
 app = Flask(__name__)
 CORS(app)
@@ -902,10 +903,9 @@ def generix_dn_process_docs(obj_id):
     indexdef = svs['indexdef']
 
     obj_type = ''
-    res = re.search(r'([a-zA-Z_]*)(\d*)',obj_id)    
-    if res:
-        obj_type = res.group(1)
-    else:
+    try:
+        obj_type = to_object_type(obj_id)
+    except:
         return  json.dumps( {
             'results': '', 
             'status': 'ERR', 
@@ -929,10 +929,9 @@ def generix_up_process_docs(obj_id):
     indexdef = svs['indexdef']
 
     obj_type = ''
-    res = re.search(r'([a-zA-Z_]*)(\d*)',obj_id)    
-    if res:
-        obj_type = res.group(1)
-    else:
+    try:
+        obj_type = to_object_type(obj_id)
+    except:
         return  json.dumps( {
             'results': '', 
             'status': 'ERR', 
@@ -960,9 +959,7 @@ def _to_process_docs(rows):
         # build docs
         docs = []
         for doc in row['docs']:
-
-            res = re.search(r'([a-zA-Z_]*)(\d*)', doc['_key'])  
-            obj_type = res.group(1)
+            obj_type = to_object_type(doc['_key'])
             itdef = indexdef.get_type_def(obj_type)
             docs.append({
                 'id': doc['_key'],
@@ -983,6 +980,37 @@ def _to_process_docs(rows):
             'docs' : docs
         })
     return process_docs
+
+
+@app.route('/generix/core_type_metadata/<obj_id>', methods=['GET'])
+def generix_core_type_metadata(obj_id):
+    obj_type = ''
+    try:
+        obj_type = to_object_type(obj_id)
+        doc = dp.core_types[obj_type].find_one({'id':obj_id})
+        res = []
+        for prop in doc.properties:
+            if prop.startswith('_'): continue
+            res.append(
+                {
+                    'property': prop,
+                    'value': doc[prop]
+                }
+            )
+        return  json.dumps( {
+            'results': res, 
+            'status': 'OK', 
+            'error': ''
+        })          
+    except:
+        return  json.dumps( {
+            'results': '', 
+            'status': 'ERR', 
+            'error': 'Wrong object ID format'
+        })
+
+    
+
 
 
 if __name__ == "__main__":
