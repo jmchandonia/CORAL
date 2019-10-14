@@ -1,4 +1,4 @@
-<div class="row mt-1" *ngIf="!isEmpty">
+<div class="row mt-1">
   <div class="col-3">
     <div class="form-control">
         <select2
@@ -6,8 +6,7 @@
         [cssImport]="true"
         [options]="{ width: '100%', placeholder: 'Attributes' }"
         [data]="propertyTypes"
-        [value]="selectedAttribute ? '0' : ''"
-        (valueChanged)="updateParam('attribute', $event)"
+        (valueChanged)="setAttribute($event)"
       ></select2>
     </div>
   </div>
@@ -18,70 +17,15 @@
         [cssImport]="true"
         [options]="{ width: '100%', placeholder: 'Match Type' }"
         [data]="matchTypes"
-        [value]="selectedMatchType ? '0' : ''"
-        (valueChanged)="updateParam('matchType', $event)"
+        (valueChanged)="setMatchType($event)"
       ></select2>
     </div>
   </div>
-  <div class="col-5">
+  <div class="col-4">
     <input class="form-control" [(ngModel)]="queryParam.keyword" />
   </div>
-  <div class="col-1">
-    <i 
-      class="material-icons add-remove" 
-      (click)="removeParam()"
-      *ngIf="!isEmpty"
-      >remove_circle_outline</i>
-    <i
-      class="material-icons add-remove"
-      (click)="addParam()"
-      *ngIf="isEmpty"
-    >add_circle_outline</i>
+  <div class="col-2">
+    <button class="btn btn-link" (click)="removeParam()">Delete</button>
   </div>
   <hr style="margin-bottom: 10px; width: 95%">
-</div>
-
-<div class="row mt-1" *ngIf="isEmpty">
-  <div class="col-3">
-    <div class="form-control">
-        <select2
-        ngDefaultControl
-        name="attributes"
-        [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Attributes' }"
-        [data]="propertyTypes"
-        [(ngModel)]="attributeBuilder"
-        (valueChanged)="attributeBuilder = $event.data[0].text"
-      ></select2>
-    </div>
-  </div>
-  <div class="col-3">
-    <div class="form-control">
-        <select2
-        ngDefaultControl
-        name="matchType"
-        [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Match Type' }"
-        [data]="matchTypes"
-        [(ngModel)]="matchTypeBuilder"
-        (valueChanged)="matchTypeBuilder = $event.data[0].text"
-      ></select2>
-    </div>
-  </div>
-  <div class="col-5">
-    <input class="form-control" placeholder="Keyword(s)" [(ngModel)]="keywordBuilder">
-  </div>
-  <div class="col-1">
-    <i 
-      class="material-icons add-remove" 
-      (click)="removeParam()"
-      *ngIf="!isEmpty"
-      >remove_circle_outline</i>
-    <i
-      class="material-icons add-remove"
-      (click)="addParam()"
-      *ngIf="isEmpty"
-    >add_circle_outline</i>
-  </div>
-  <hr style="color: green; margin-bottom: 10px; width: 95%">
 </div>

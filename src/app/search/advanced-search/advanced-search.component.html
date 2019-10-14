@@ -1,7 +1,6 @@
 <app-query-builder
-    [connection]="'queryMatch'"
     [queryMatch]="queryBuilderObject.queryMatch"
-    [operators]="operators"
+    [dataProps]="dataProps"
     [title]="'Search Options'"
     ></app-query-builder>
  <div class="data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
@@ -11,16 +10,14 @@
 </div>
 <hr class="data-divider" *ngIf="!showAdvancedFilters" />
 <app-query-builder
-    [connection]="'connectsUpTo'"
     [queryMatch]="queryBuilderObject.connectsUpTo"
-    [operators]="operators"
+    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Parent'"
     ></app-query-builder>
 <app-query-builder 
-    [connection]="'connectsDownto'"
     [queryMatch]="queryBuilderObject.connectsDownTo"
-    [operators]="operators"
+    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Children'"
     ></app-query-builder>
@@ -31,19 +28,20 @@
         </div>
         <div class="form-group p-3">
             <app-property-params
-            *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
-            [data]="queryMatch"
+            *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
             [operators]="operators"
             [attributes]="processes"
-            (updated)="updateProcess('processesUp', idx, $event)"
-            (removed)="removeProcess('processesUp', $event)"
+            (removed)="removeProcessUp(idx)"
+            [queryParam]="queryParam"
             ></app-property-params>
-            <app-property-params
-            [isEmpty]="true"
-            [attributes]="processes"
-            [operators]="operators"
-            (added)="addProcess('processesUp', $event)"
-            ></app-property-params>
+        </div>
+        <hr >
+        <div class="row">
+            <div class="col-2 offset-10">
+                <button class="btn btn-link" (click)="addProcessUp()">
+                    Add
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -71,4 +69,4 @@
     </div>
 </div>
 
-<!-- <button (click)="testQuery()">Test Query</button> -->
+<button (click)="testQuery()">Test Query</button>
