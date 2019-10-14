@@ -383,8 +383,8 @@ class Query:
             )
 
         
-        # print('aql = ', aql)
-        # print('aql_bind = ', aql_bind)
+        print('aql = ', aql)
+        print('aql_bind = ', aql_bind)
 
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind, size)
