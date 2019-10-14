@@ -60,6 +60,9 @@ class EntitiesProvider:
     def __init__(self):
         self.__load_entity_providers()
 
+    def __getitem__(self, core_type):
+        return self.__dict__[core_type]
+
     def __load_entity_providers(self):
         index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
         for index_type_def in index_type_defs:
