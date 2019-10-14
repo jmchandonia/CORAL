@@ -74,8 +74,9 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   removeProcessUp(index) {
-    let { processesUp } = this.queryBuilderObject;
-    processesUp = processesUp.filter((_, i) => i !== index);
+    console.log('REMOVING PROCESSES UP');
+    const { processesUp } = this.queryBuilderObject;
+    this.queryBuilderObject.processesUp = processesUp.filter((_, i) => i !== index);
   }
 
   onSubmit() {

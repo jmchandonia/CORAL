@@ -1,21 +1,21 @@
 <div class="row mt-1">
   <div class="col-3">
-    <div class="form-control">
+    <div>
         <select2
         name="attributes"
         [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Attributes' }"
+        [options]="{ width: '100%', placeholder: 'Attributes', containerCssClass: 'select2-custom-container' }"
         [data]="propertyTypes"
         (valueChanged)="setAttribute($event)"
       ></select2>
     </div>
   </div>
   <div class="col-3">
-    <div class="form-control">
+    <div>
         <select2
         name="matchType"
         [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Match Type' }"
+        [options]="{ width: '100%', placeholder: 'Match Type', containerCssClass: 'select2-custom-container' }"
         [data]="matchTypes"
         (valueChanged)="setMatchType($event)"
       ></select2>
