@@ -49,7 +49,6 @@ def _init_db_connection():
     arango_service = ArangoService(__arango_conn, __arango_config['db'])
 
 
-
 ontology = None
 typedef = None
 indexdef = None
