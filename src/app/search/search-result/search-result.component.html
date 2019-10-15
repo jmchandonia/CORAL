@@ -34,6 +34,7 @@
           <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
           <td style="width: 150px;">
             <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="viewData(result.brick_id)">description</i>
+            <i *ngIf="result.id" class="material-icons options-icon" (click)="viewCoreData(result.id)">description</i>
             <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="useData(result.brick_id)">bar_chart</i>
             <i class="material-icons options-icon">cloud_download</i>
           </td>

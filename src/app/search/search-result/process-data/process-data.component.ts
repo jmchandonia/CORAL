@@ -58,7 +58,7 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
 
   navigate(output) {
     const route = output.category === 'DDT_'
-      ? `/search/result/${output.id}`
+      ? `/search/result/brick/${output.id}`
       : `/search/result/core/${output.id}`;
     this.router.navigate([route]);
   }
