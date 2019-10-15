@@ -9,6 +9,12 @@
     top: 2px;
 }
 
+.options-icon {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
 .query-container {
     border-radius: 20px;
     background-color: rgb(211, 209, 208);
@@ -22,4 +28,9 @@
 
 .view-data {
     margin-bottom: 5px!important;
+}
+
+.table-header {
+    background-color: #00489B;
+    color: white;
 }

@@ -6,6 +6,7 @@ import { QueryBuilderService } from '../../../shared/services/query-builder.serv
 import { HttpClient } from '@angular/common/http';
 import * as $ from 'jquery';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-query-builder',
@@ -16,8 +17,13 @@ export class QueryBuilderComponent implements OnInit {
 
   public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
+  @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
-  @Input() operators = [];
+  @Input() set dataProps(data: any) {
+    this.dataModels = data.dataModels;
+    this.dataTypes = data.dataTypes;
+    this.operators = data.operators;
+  }
   @Input() set queryMatch(value: QueryMatch) {
     this._queryMatch = value;
     if (value && value.dataType) {
@@ -32,10 +38,12 @@ export class QueryBuilderComponent implements OnInit {
   public selectedAttributes: any;
   dataModels: any;
   dataTypes: any;
+  operators: string[] = [];
   selectedDataType: string;
 
   options: Select2Options = {
     width: '100%',
+    containerCssClass: 'select2-custom-container',
     placeholder: 'Select A Data Type',
     templateResult: state => {
       if (!state.id) { return state; }
@@ -54,7 +62,6 @@ export class QueryBuilderComponent implements OnInit {
 
   constructor(
     private queryBuilder: QueryBuilderService,
-    private network: NetworkService,
     private http: HttpClient,
     private chRef: ChangeDetectorRef
   ) { }
@@ -65,13 +72,8 @@ export class QueryBuilderComponent implements OnInit {
       this.queryMatch = new QueryMatch();
     }
 
-    this.http.get('https://psnov1.lbl.gov:8082/generix/data_models')
-      .subscribe((data: any) => {
-        this.dataModels = data.results;
-      });
-
     this.ajaxOptions = {
-      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      url: `${environment.baseURL}/data_types`,
       dataType: 'json',
       delay: 250,
       cache: false,
@@ -94,27 +96,22 @@ export class QueryBuilderComponent implements OnInit {
     Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
     });
-    this.queryMatch.params = [];
-    this.updateQueryMatch();
   }
 
   updatePropertyParam(index, event) {
     this.queryMatch.params[index][event.key] = event.value.data[0].text;
-    this.updateQueryMatch();
   }
 
   removePropertyParam(param) {
     this.queryMatch.params = this.queryMatch.params.filter(p => p !== param);
-    this.updateQueryMatch();
   }
 
-  addPropertyParam(param) {
-    this.queryMatch.params.push(param);
-    this.updateQueryMatch();
+  addPropertyParam() {
+    this.queryMatch.params.push(new QueryParam());
   }
 
   updateQueryMatch() {
-    this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
+    // this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
   }
 
 }

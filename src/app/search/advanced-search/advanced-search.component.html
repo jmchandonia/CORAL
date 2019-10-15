@@ -1,52 +1,51 @@
 <app-query-builder
-    [connection]="'queryMatch'" [queryMatch]="queryBuilderObject.queryMatch" [operators]="operators"></app-query-builder>
- <div class="data-information-header" (click)="showConnectionsUp = !showConnectionsUp">
-    <i class="material-icons" *ngIf="!showConnectionsUp" style="font-size: 1.25rem;">arrow_right</i>
-    <i class="material-icons" *ngIf="showConnectionsUp" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Filter by Parents</h5>
+    [queryMatch]="queryBuilderObject.queryMatch"
+    [dataProps]="dataProps"
+    [title]="'Search Options'"
+    ></app-query-builder>
+ <div class="data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
+    <i class="material-icons" *ngIf="!showAdvancedFilters" style="font-size: 1.25rem;">arrow_right</i>
+    <i class="material-icons" *ngIf="showAdvancedFilters" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Advanced Filters</h5>
 </div>
-<hr class="data-divider" *ngIf="!showConnectionsUp" />
+<hr class="data-divider" *ngIf="!showAdvancedFilters" />
 <app-query-builder
-    [connection]="'connectsUpTo'" [queryMatch]="queryBuilderObject.connectsUpTo" [operators]="operators" [hidden]="!showConnectionsUp"
+    [queryMatch]="queryBuilderObject.connectsUpTo"
+    [dataProps]="dataProps"
+    [hidden]="!showAdvancedFilters"
+    [title]="'Filter By Parent'"
     ></app-query-builder>
-<div class="data-information-header" (click)="showConnectionsDown = !showConnectionsDown">
-    <i class="material-icons" *ngIf="!showConnectionsDown" style="font-size: 1.25rem;">arrow_right</i>
-    <i class="material-icons" *ngIf="showConnectionsDown" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Filter by Children</h5>
-</div>
-<hr class="data-divider" *ngIf="!showConnectionsDown" />
 <app-query-builder 
-    [connection]="'connectsDownto'" [queryMatch]="queryBuilderObject.connectsDownTo" [operators]="operators" [hidden]="!showConnectionsDown"
+    [queryMatch]="queryBuilderObject.connectsDownTo"
+    [dataProps]="dataProps"
+    [hidden]="!showAdvancedFilters"
+    [title]="'Filter By Children'"
     ></app-query-builder>
-<div class="data-information-header" (click)="showProcessesUp = !showProcessesUp">
-    <i class="material-icons" *ngIf="!showProcessesUp" style="font-size: 1.25rem;">arrow_right</i>
-    <i class="material-icons" *ngIf="showProcessesUp" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Process that Generated the Data</h5>
+<div class="form-container" style="padding: 0px;" [hidden]="!showAdvancedFilters">
+    <div class="card">
+        <div class="card-header" style="background-color: #eeeeff;">
+            Processes That Generated the Data
+        </div>
+        <div class="form-group p-3">
+            <app-property-params
+            *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
+            [operators]="operators"
+            [attributes]="processes"
+            (removed)="removeProcessUp(idx)"
+            [queryParam]="queryParam"
+            ></app-property-params>
+        </div>
+        <hr >
+        <div class="row">
+            <div class="col-2 offset-10">
+                <button class="btn btn-link" (click)="addProcessUp()">
+                    Add
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<hr class="data-divider" *ngIf="!showProcessesUp" />
-<div class="advanced-search-container" [hidden]="!showProcessesUp">
-    <app-property-params
-        *ngFor="let queryMatch of queryBuilderObject.processesUp; let idx = index;"
-        [data]="queryMatch"
-        [operators]="operators"
-        [attributes]="processes"
-        (updated)="updateProcess('processesUp', idx, $event)"
-        (removed)="removeProcess('processesUp', $event)"
-        ></app-property-params>
-    <app-property-params
-        [isEmpty]="true"
-        [attributes]="processes"
-        [operators]="operators"
-        (added)="addProcess('processesUp', $event)"
-        ></app-property-params>
-</div>
-<div class="data-information-header" (click)="showProcessesDown = !showProcessesDown">
-        <i class="material-icons" *ngIf="!showProcessesDown" style="font-size: 1.25rem;">arrow_right</i>
-        <i class="material-icons" *ngIf="showProcessesDown" style="font-size: 1.25rem;">arrow_drop_down</i>
-    <h5 style="display: inline-block">Process that Use the Data</h5>
-</div>
-<hr class="data-divider" *ngIf="!showProcessesDown" />
-<div class="advanced-search-container" [hidden]="!showProcessesDown">
+<!-- <div class="form-container" [hidden]="!showAdvancedFilters">
     <app-property-params
         *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
         [data]="queryMatch"
@@ -61,7 +60,7 @@
         [operators]="operators"
         (added)="addProcess('processesDown', $event)"
         ></app-property-params>
-</div>
+</div> -->
 <div class="search-button-footer">
     <div class="row">
         <div class="col-2 offset-10">
@@ -70,4 +69,5 @@
     </div>
 </div>
 
-<!-- <button (click)="testQuery()">Test Query</button> -->
+<button (click)="testQuery()">Test Query</button>
+<button (click)="clear()">Clear Query</button>
