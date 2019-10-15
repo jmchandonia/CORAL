@@ -2,8 +2,8 @@
 export class QueryBuilder {
     constructor() { }
     public queryMatch: QueryMatch = new QueryMatch();
-    public connectsUpTo: QueryMatch = new QueryMatch();
-    public connectsDownTo: QueryMatch = new QueryMatch();
+    public connectsUpTo: QueryMatch;
+    public connectsDownTo: QueryMatch;
     public processesUp: QueryParam[] = [];
     public processesDown: QueryParam[] = [];
 }
