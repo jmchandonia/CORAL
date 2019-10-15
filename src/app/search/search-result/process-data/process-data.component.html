@@ -4,50 +4,47 @@
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
     <div class="row">
-      <div class="col-12" *ngIf="processesUp?.length < 100">
-          <table class="table table-bordered">
-              <tbody>
-                <tr *ngFor="let key of objectKeys(processesUp[0].process)">
-                  <td>{{key}}</td>
-                  <td>{{processesUp[0].process[key]}}</td>
-                </tr>
-                <tr>
-                  <td>Inputs</td>
-                  <td>
-                    <button class="btn btn-link" (click)="hideProcessInputs = !hideProcessInputs">
-                      {{hideProcessInputs ? 'View' : 'Hide'}}
+        <div class="col-12">
+          <div class="jumbotron">
+            <h3 class="display-6">
+              {{processesUp[0].process.process}}
+            </h3>
+            <hr class="my-6" />
+            <div class="row">
+              <div class="col-6">
+                <span class="d-block">
+                  <span class="bold">Person: </span>
+                  <span>{{processesUp[0].process.person}}</span>
+                </span>
+                <span class="d-block">
+                  <strong class="bold">Campaign: </strong>
+                  <span>{{processesUp[0].process.campaign}}</span>
+                </span>
+              </div>
+              <div class="col-6">
+                <span class="d-block" *ngIf="processesUp[0].process.date_start">
+                  <strong class="bold">Start Date: </strong>
+                  <span>{{processesUp[0].process.date_start}}</span> 
+                </span>
+                <span class="d-block" *ngIf="processesUp[0].process.date_end">
+                  <strong class="bold">End Date: </strong>
+                  <span>{{processesUp[0].process.date_end}}</span> 
+                </span>
+              </div>
+            </div>
+            <hr class="my-6" />
+            <div class="row">
+              <div class="col-12">
+                  <button class="btn btn-primary" (click)="hideProcessInputs = !hideProcessInputs">
+                      {{hideProcessInputs ? 'View Inputs' : 'Hide Inputs'}}
                     </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-      </div>
-      <div class="col-12" *ngIf="processesUp?.length > 100">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Process</th>
-              <th>ID</th>
-              <th>Campaign</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Person</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of processesUp">
-              <td>{{p.process.process}}</td>
-              <td>{{p.process.id}}</td>
-              <td>{{p.process.campaign}}</td>
-              <td>{{p.process.date_start}}</td>
-              <td>{{p.process.date_end}}</td>
-              <td>{{p.process.person}}</td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row ml-2 mr-2">
       <div class="col-12" [hidden]="hideProcessInputs">
           <table class="table table-bordered" [ngClass]="processesUp && processesUp[0].docs.length > 10 ? 'data-table' : ''">
               <thead>
@@ -74,7 +71,6 @@
       </div>
     </div>
   </div>
-</div>
 <div class="card mt-3" *ngIf="processesDown && processesDown?.length">
   <div class="card-header">
     <h5>Downstream Processes</h5>
@@ -82,28 +78,42 @@
   <div class="card-body" [hidden]="hideProcessDown">
     <div class="row" *ngFor="let p of processesDown; let i = index">
       <div class="col-12">
-            <div class="row">
-              <div class="col-12">
-                <table
-                  class="table table-bordered"
-                  >
-                <tbody>
-                  <tr *ngFor="let key of objectKeys(p.process)">
-                    <td>{{key}}</td>
-                    <td>{{p.process[key]}}</td>
-                  </tr>
-                  <tr>
-                    <td>Outputs</td>
-                    <td>
-                      <button class="btn btn-link" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
-                        {{hideProcessOutputs[i] ? 'View' : 'Hide'}}
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-                </table>
+          <div class="jumbotron">
+              <h3 class="display-6">
+                {{p.process.process}}
+              </h3>
+              <hr class="my-6" />
+              <div class="row">
+                <div class="col-6">
+                  <span class="d-block">
+                    <span class="bold">Person: </span>
+                    <span>{{p.process.person}}</span>
+                  </span>
+                  <span class="d-block">
+                    <strong class="bold">Campaign: </strong>
+                    <span>{{p.process.campaign}}</span>
+                  </span>
+                </div>
+                <div class="col-6">
+                  <span class="d-block" *ngIf="p.process.date_start">
+                    <strong class="bold">Start Date: </strong>
+                    <span>{{p.process.date_start}}</span> 
+                  </span>
+                  <span class="d-block" *ngIf="p.process.date_end">
+                    <strong class="bold">End Date: </strong>
+                    <span>{{p.process.date_end}}</span> 
+                  </span>
+                </div>
               </div>
-        </div>
+              <hr class="my-6" />
+              <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
+                        {{hideProcessInputs ? 'View Inputs' : 'Hide Inputs'}}
+                      </button>
+                </div>
+              </div>
+            </div>
         <div class="row">
           <div class="col-12"[hidden]="hideProcessOutputs[i]">
             <table class="table table-bordered" [ngClass]="p.docs.length > 2 ? 'data-table' : ''">
