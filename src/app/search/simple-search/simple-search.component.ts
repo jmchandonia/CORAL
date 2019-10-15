@@ -3,6 +3,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryMatch, QueryParam } from '../../shared/models/QueryBuilder';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-simple-search',
@@ -17,7 +18,8 @@ export class SimpleSearchComponent implements OnInit {
   keywords = '';
   select2Options: Select2Options = {
     width: '100%',
-    placeholder: 'Select a Data Type from our system'
+    placeholder: 'Select a Data Type from our system',
+    containerCssClass: 'select2-custom-container'
   };
   ajaxOptions: Select2AjaxOptions;
   queryMatch: QueryMatch = new QueryMatch();
@@ -29,18 +31,18 @@ export class SimpleSearchComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const getQuery = this.queryBuilder.getCurrentObject();
-    this.queryBuilderObject = getQuery.qb;
-    if (!getQuery.empty && getQuery.qb.queryMatch) {
-      const p = this.queryBuilderObject.queryMatch.params;
-      if (p && p.length) {
-        this.keywords = p[0].keyword;
-      }
-      this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
-      this.dataTypeList.push({id: '0', text: this.selectedDataType});
-    }
+    this.queryBuilderObject = this.queryBuilder.getCurrentObject();
+    // this.queryBuilderObject = getQuery.qb;
+    // if (!getQuery.empty && getQuery.qb.queryMatch) {
+    //   const p = this.queryBuilderObject.queryMatch.params;
+    //   if (p && p.length) {
+    //     this.keywords = p[0].keyword;
+    //   }
+    //   this.selectedDataType = this.queryBuilderObject.queryMatch.dataType;
+    //   this.dataTypeList.push({id: '0', text: this.selectedDataType});
+    // }
     this.ajaxOptions = {
-      url: 'https://psnov1.lbl.gov:8082/generix/data_types',
+      url: `${environment.baseURL}/data_types`,
       dataType: 'json',
       delay: 250,
       cache: false,
@@ -67,7 +69,7 @@ export class SimpleSearchComponent implements OnInit {
   onSubmit() {
     this.queryMatch.params.push(new QueryParam(null, null, this.keywords, 'string'));
     this.queryBuilderObject.queryMatch = this.queryMatch;
-    this.queryBuilder.submitSearchResults();
+    // this.queryBuilder.submitSearchResults();
     this.router.navigate(['/search/result']);
     this.queryBuilder.setSearchType('simple');
   }

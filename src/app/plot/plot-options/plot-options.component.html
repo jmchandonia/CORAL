@@ -1,46 +1,57 @@
-<form [formGroup]="plotForm">
   <div class="row mb-3 mt-3">
-    <div class="offset-1" [routerLink]="['../../../search/result/' + objectId]">
+    <div class="offset-1" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem;">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
     </div>
   </div>
   <hr />
-  <div class="data-information-header">
-    <h5>Data Plotting Options</h5>
-  </div>
-  <div class="option-container">
-    <div class="row">
-        <div class="col-4">
-            <label for="plotType">Plot Type</label>
-            <select2
-            id="plotType"
-            [cssImport]="true"
-            [options]="plotTypeOptions"
-            [data]="plotTypeData"
-            ngDefaultControl
-            [value]="selectedPlotTypeId || ''"
-            (valueChanged)="updatePlotType($event)"
-            formControlName="plotType"
-            >
-            </select2>
-          </div>
-          <div class="col-8">
-            <label for="graphTitle">Graph Title</label>
-            <input class="form-control" type="text" formControlName="graphTitle" />
-          </div>
+  <div class="form-container">
+    <div class="card">
+      <div class="card-header" style="background-color: #eeeeff;">
+        Data Plotting Options
+      </div>
+      <form>
+        <div class="form-group p-3">
+                <div class="row">
+                    <div class="col-4">
+                        <label for="plotType">Plot Type</label>
+                        <select2
+                          id="plotType"
+                          [cssImport]="true"
+                          [options]="plotTypeOptions"
+                          [data]="plotTypeData"
+                          ngDefaultControl
+                          [value]="listPlotTypes && plotTypeDataValue ? plotTypeDataValue : ''"
+                          (valueChanged)="updatePlotType($event)"
+                        >
+                        </select2>
+                      </div>
+                      <div class="col-8">
+                        <label for="graphTitle">Plot Title</label>
+                        <input class="form-control"
+                          type="text"
+                          [(ngModel)]="plotBuilder.config.title"
+                          [ngModelOptions]="{standalone: true}"
+                        />
+                      </div>
+                </div>
+        </div>
+      </form>
     </div>
   </div>
-  <app-dimension-options
-    *ngFor="let form of formDimensions?.controls; let i = index;"
-    [dimensions]="plotObject.dimensions"
-    [metadata]="plotMetadata"
-    [dimensionLabel]="selectedPlotType.axis_blocks[i].title"
-    [index]="i"
-    [form]="form"
+  <div class="dimension-options-container" *ngIf="selectedPlotType">
+    <app-dimension-options
+      *ngFor="let dimension of dimensions; let i = index;"
+      [dimension]="dimension"
+      [metadata]="metadata"
+      [dropdownValues]="dimensionData"
+      [dimensionLabel]="axisBlocks[i].title"
+      [index]="i"
     ></app-dimension-options>
+  </div>
   <div class="row bottom-button-row">
-    <button (click)="submit()" class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
+    <button (click)="test()">TEST</button>
+    <button class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
-</form>
+  <!-- *ngFor="let form of formDimensions?.controls; let i = index;" -->

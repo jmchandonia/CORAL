@@ -1,60 +1,107 @@
-<div class="container">
   <div class="row mb-3 mt-3">
     <div class="offset-1" [routerLink]="['../']">
       <i class="material-icons back-icon">keyboard_arrow_left</i>
       <span class="menu-option">Back To Search Results</span>
     </div>
-    <hr class="col-12" />
   </div>
+  <hr />
   <div class="row justify-content-center">
     <div class="col-10">
-      <div class="search-result-row top-title">
-        <h4>Properties</h4>
+      <div class="card">
+        <div class="card-header">
+          <h5>Properties</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Id: </strong></td>
+                  <td>{{searchResult?.id}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Type: </strong></td>
+                  <td>{{searchResult?.data_type.oterm_name}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Shape: </strong></td>
+                  <td>
+                    <span *ngFor="let dim of searchResult?.dim_context; let last = last">
+                      {{dim.size}}<span *ngIf="!last">, </span>
+                    </span>
+                  </td> 
+                </tr>
+              </tbody>
+            </table>
+          </div>
       </div>
-      <div class="row d-block">
-        <p><strong>Id:</strong> {{searchResult?.id}}</p>
-        <p><strong>Type:</strong> {{searchResult?.data_type.oterm_name}}</p>
-        <p>
-          <strong>Shape: </strong>
-          <span *ngFor="let dim of searchResult?.dim_context; let last = last">
-            {{dim.size}}<span *ngIf="!last">, </span>
-          </span>
-        </p>
-        <p><strong>Name:</strong> {{searchResult?.name}}</p>
+      <div class="card mt-3">
+        <div class="card-header">
+          <h5>Data</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td>Data Type: </td>
+                <td>
+                  <span>{{searchResult?.typed_values[0].value_type.oterm_name}}</span>
+                  <span *ngIf="searchResult?.typed_values[0].value_units">
+                    ({{searchResult?.typed_values[0].value_units.oterm_name}})
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>Description: </td>
+                <td>{{searchResult?.description}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <h6>Dimensions ({{searchResult?.dim_context.length}})</h6>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Data Type</th>
+                <th>Size</th>
+                <th>Variables</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dim of searchResult?.dim_context; let i = index">
+                <td>{{dim.data_type.oterm_name}}</td>
+                <td>{{dim.size}}</td>
+                <td>
+                  <span *ngFor="let v of dim.typed_values; let last = last">
+                    {{v.value_type.oterm_name}}
+                    <span *ngIf="!last">, </span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="search-result-row">
-        <h4>Data</h4>
+      <div class="card mt-3">
+        <div class="card-header">
+          <h5>Attributes</h5>
+        </div>
+        <div class="card-body" *ngIf="searchResult?.array_context && searchResult?.array_context.length">
+          <table class="table table-bordered">
+            <tbody>
+              <tr *ngFor ="let item of searchResult?.array_context">
+                <td>{{item.value_type.oterm_name}}</td>
+                <td>{{item.value.value}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="row d-block">
-        <p>
-          <strong>Data Type:</strong> 
-          <span> {{searchResult?.typed_values[0].value_type.oterm_name}}</span>
-          <span *ngIf="searchResult?.typed_values[0].value_units"> ({{searchResult?.typed_values[0].value_units.oterm_name}})</span>
-        
-        </p>
-        <p><strong>Description:</strong> {{searchResult?.description}}</p>
+      <app-process-data [id]="objectId"></app-process-data>
+      <div class="row mt-3 mb-3">
+        <div class="col-2 offset-10">
+          <button class="btn btn-block btn-secondary" (click)="useForPlot()">
+            Plot
+          </button>
+        </div>
       </div>
-      <div class="search-result-row">
-        <h4>Dimensions ({{searchResult?.dim_context.length}})</h4>
-      </div>
-      <div class="row d-block">
-        <p *ngFor="let dim of searchResult?.dim_context; let i = index">
-          <strong>{{dim.data_type.oterm_name}}, size={{dim.size}}</strong><br />
-          <span>Variables: </span>
-          <span *ngFor="let dim_var of dim.typed_values">{{dim_var.value_type.oterm_name}}</span>
-        </p>
-      </div>
-      <div class="search-result-row" *ngIf="searchResult?.array_context && searchResult?.array_context.length">
-        <h4>Attributes</h4>
-      </div>
-      <div class="row d-block">
-        <p *ngFor="let item of searchResult?.array_context">
-          <strong>{{item.value_type.oterm_name}}: </strong>
-          <span>{{item.value.value}}</span>
-        </p>
-      </div>
-      <div class="search-result-row bottom-title">
-        <button class="btn btn-secondary" (click)="useForPlot()">Plot</button>
     </div>
   </div>
-</div>

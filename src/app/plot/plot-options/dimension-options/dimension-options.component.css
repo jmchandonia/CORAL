@@ -1,18 +1,12 @@
-.data-information-header {
-    width: 800px;
-    margin: 0px auto;
-    margin-top: 20px;
-}
-
 .display-values-container {
-    background-color: rgb(130, 130, 130);
-    border-radius:10px;
+    background-color: #eeeeee;
+    border: 1px solid #aaa;
+    border-radius:5px;
     width: 100%;
     margin-right: 10px;
     margin-left: 15px;
     padding-top: 15px;
     padding-bottom: 5px;
-    color: white;
 }
 
 .label-display-options {

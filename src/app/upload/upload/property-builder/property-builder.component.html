@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <h5 class="card-header">
+          Add properties to your brick
+        </h5>
+        <div class="card-body">
+          <div class="row">
+            <h6 class="col-6">
+              Property Type
+            </h6>
+            <h6 class="col-3">
+              Value
+            </h6>
+            <h6 class="col-2">
+              Units
+            </h6>
+          </div>
+          <app-property-form
+            *ngFor="let property of properties" 
+            [property]="property"
+            [propertyList]="propertyList"
+            (deleted)="deleteProperty(property)"
+          ></app-property-form>
+        </div>
+        <div class="card-footer">
+          <button (click)="addProperty()" class="btn btn-sm btn-link">+ Add a property</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
