@@ -1,11 +1,11 @@
 <div class="card mt-3" *ngIf="processesUp && processesUp.length">
-  <div class="card-header">
+  <div class="card-header light-blue">
     <h5>Upstream Process</h5>
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
     <div class="row">
         <div class="col-12">
-          <div class="jumbotron">
+          <div class="jumbotron pt-4 pb-4">
             <h3 class="display-6">
               {{processesUp[0].process.process}}
             </h3>
@@ -20,6 +20,14 @@
                   <strong class="bold">Campaign: </strong>
                   <span>{{processesUp[0].process.campaign}}</span>
                 </span>
+                <span class="d-block" *ngIf="processesUp[0].docs.length && processesUp[0].docs.length < 2">
+                  <strong class="bold">Input Object: </strong>
+                  <button
+                    class="btn btn-sm btn-link p-0"
+                    (click)="navigate(processesUp[0].docs[0])"
+                    style="font-size: 16px;"
+                    >{{processesUp[0].docs[0].id}} - {{processesUp[0].docs[0].description}}</button>
+                </span>
               </div>
               <div class="col-6">
                 <span class="d-block" *ngIf="processesUp[0].process.date_start">
@@ -33,10 +41,14 @@
               </div>
             </div>
             <hr class="my-6" />
-            <div class="row">
+            <div class="row" *ngIf="processesUp[0].docs[0].length && processesUp[0].docs[0].length > 1">
               <div class="col-12">
                   <button class="btn btn-primary" (click)="hideProcessInputs = !hideProcessInputs">
-                      {{hideProcessInputs ? 'View Inputs' : 'Hide Inputs'}}
+                      {{
+                        hideProcessInputs 
+                          ? 'View Input Objects (' + processesUp[0].docs[0].length + ')' 
+                          : 'Hide Input Objects'
+                        }}
                     </button>
               </div>
             </div>
@@ -47,24 +59,22 @@
     <div class="row ml-2 mr-2">
       <div class="col-12" [hidden]="hideProcessInputs">
           <table class="table table-bordered" [ngClass]="processesUp && processesUp[0].docs.length > 10 ? 'data-table' : ''">
-              <thead>
+              <thead class="table-header">
                 <tr>
-                  <th>Data Type</th>
                   <th>ID</th>
+                  <th>Data Type</th>
                   <th>Description</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let input of processesUp[0].docs">
-                  <td>{{input.type}}</td>
-                  <td>{{input.id}}</td>
-                  <td>{{input.description}}</td>
                   <td>
-                    <button class="btn btn-link" (click)="navigate(input)">
-                      View
+                    <button class="btn btn-link p-0" (click)="navigate(input)">
+                      {{input.id}}
                     </button>
                   </td>
+                  <td>{{input.type}}</td>
+                  <td>{{input.description}}</td>
                 </tr>
               </tbody>
             </table>
@@ -72,13 +82,13 @@
     </div>
   </div>
 <div class="card mt-3" *ngIf="processesDown && processesDown?.length">
-  <div class="card-header">
+  <div class="card-header light-blue">
     <h5>Downstream Processes</h5>
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
     <div class="row" *ngFor="let p of processesDown; let i = index">
       <div class="col-12">
-          <div class="jumbotron">
+          <div class="jumbotron pt-4 pb-4">
               <h3 class="display-6">
                 {{p.process.process}}
               </h3>
@@ -93,6 +103,21 @@
                     <strong class="bold">Campaign: </strong>
                     <span>{{p.process.campaign}}</span>
                   </span>
+                  <span
+                    class="d-block"
+                    *ngIf="p.docs.length && p.docs.length < 2"
+                  >
+                    <strong class="bold">
+                      Output Object:
+                    </strong>
+                    <button
+                      class="btn btn-sm btn-link p-0"
+                      style="font-size: 16px;"
+                      (click)="navigate(p.docs[0])"
+                    >
+                    {{p.docs[0].id}} - {{p.docs[0].description}}
+                    </button>
+                  </span>
                 </div>
                 <div class="col-6">
                   <span class="d-block" *ngIf="p.process.date_start">
@@ -106,10 +131,10 @@
                 </div>
               </div>
               <hr class="my-6" />
-              <div class="row">
+              <div class="row" *ngIf="p.docs.length && p.docs.length > 1">
                 <div class="col-12">
                     <button class="btn btn-primary" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
-                        {{hideProcessOutputs[i] ? 'View Outputs' : 'Hide Outputs'}}
+                        {{hideProcessOutputs[i] ? 'View Output Objects (' + p.docs.length + ')' : 'Hide Output Objects'}}
                       </button>
                 </div>
               </div>
@@ -117,24 +142,22 @@
         <div class="row">
           <div class="col-12"[hidden]="hideProcessOutputs[i]">
             <table class="table table-bordered" [ngClass]="p.docs.length > 2 ? 'data-table' : ''">
-              <thead>
+              <thead class="table-header">
                 <tr>
-                  <th>Data Type</th>
                   <th>ID</th>
+                  <th>Data Type</th>
                   <th>Description</th>
-                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let doc of p.docs">
-                  <td>{{doc.type}}</td>
-                  <td>{{doc.id}}</td>
-                  <td>{{doc.description}}</td>
                   <td>
-                    <button class="btn btn-link" (click)="navigate(doc)">
-                      View
+                    <button class="btn btn-link p-0" (click)="navigate(doc)">
+                      {{doc.id}}
                     </button>
                   </td>
+                  <td>{{doc.type}}</td>
+                  <td>{{doc.description}}</td>
                 </tr>
               </tbody>
             </table>
