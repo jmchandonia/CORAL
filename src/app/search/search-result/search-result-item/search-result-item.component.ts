@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -11,11 +12,13 @@ export class SearchResultItemComponent implements OnInit {
 
   public searchResult: any;
   private objectId: string;
+  modalRef: BsModalRef;
 
   constructor(
     private qb: QueryBuilderService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: BsModalService
     ) { }
 
   ngOnInit() {
@@ -28,6 +31,10 @@ export class SearchResultItemComponent implements OnInit {
           });
       }
     });
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
   }
 
   useForPlot() {
