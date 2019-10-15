@@ -1,22 +1,18 @@
-<div class="card mt-3">
+<div class="card mt-3" *ngIf="processesUp && processesUp.length">
   <div class="card-header">
     <h5>Upstream Process</h5>
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
     <div class="row">
-      <div class="col-12">
+      <div class="col-12" *ngIf="processesUp?.length < 100">
           <table class="table table-bordered">
               <tbody>
-                <tr>
-                  <td>Enigma Personnel: </td>
-                  <td>Trenholm Lab</td>
+                <tr *ngFor="let key of objectKeys(processesUp[0].process)">
+                  <td>{{key}}</td>
+                  <td>{{processesUp[0].process[key]}}</td>
                 </tr>
                 <tr>
-                  <td>ENIGMA Campaign: </td>
-                  <td>ENIGMA trenholm </td>
-                </tr>
-                <tr>
-                  <td>Outputs: </td>
+                  <td>Inputs</td>
                   <td>
                     <button class="btn btn-link" (click)="hideProcessInputs = !hideProcessInputs">
                       {{hideProcessInputs ? 'View' : 'Hide'}}
@@ -26,25 +22,49 @@
               </tbody>
             </table>
       </div>
+      <div class="col-12" *ngIf="processesUp?.length > 100">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Process</th>
+              <th>ID</th>
+              <th>Campaign</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Person</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of processesUp">
+              <td>{{p.process.process}}</td>
+              <td>{{p.process.id}}</td>
+              <td>{{p.process.campaign}}</td>
+              <td>{{p.process.date_start}}</td>
+              <td>{{p.process.date_end}}</td>
+              <td>{{p.process.person}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="row">
       <div class="col-12" [hidden]="hideProcessInputs">
-          <table class="table table-bordered" [ngClass]="processesUp.inputs > 10 ? 'data-table' : ''">
+          <table class="table table-bordered" [ngClass]="processesUp && processesUp[0].docs.length > 10 ? 'data-table' : ''">
               <thead>
                 <tr>
                   <th>Data Type</th>
-                  <th>Name</th>
                   <th>ID</th>
+                  <th>Description</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>{{processesUp.inputs[0].dataType}}</td>
-                  <td>{{processesUp.inputs[0].name}}</td>
-                  <td>{{processesUp.inputs[0].id}}</td>
+                <tr *ngFor="let input of processesUp[0].docs">
+                  <td>{{input.type}}</td>
+                  <td>{{input.id}}</td>
+                  <td>{{input.description}}</td>
                   <td>
-                    <button class="btn btn-link">
+                    <button class="btn btn-link" (click)="navigate(input)">
                       View
                     </button>
                   </td>
@@ -55,60 +75,53 @@
     </div>
   </div>
 </div>
-<div class="card mt-3">
+<div class="card mt-3" *ngIf="processesDown && processesDown?.length">
   <div class="card-header">
     <h5>Downstream Processes</h5>
   </div>
   <div class="card-body" [hidden]="hideProcessDown">
-    <div class="row" *ngFor="let process of processesDown; let i = index">
+    <div class="row" *ngFor="let p of processesDown; let i = index">
       <div class="col-12">
-        <div class="row">
-          <div class="col-12">
-            <h5>{{process.name}}</h5>
             <div class="row">
               <div class="col-12">
-                <table class="table table-bordered">
-                  <tbody>
-                    <tr>
-                      <td>Enigma Personnel: </td>
-                      <td>Trenholm Lab</td>
-                    </tr>
-                    <tr>
-                      <td>ENIGMA Campaign: </td>
-                      <td>ENIGMA trenholm </td>
-                    </tr>
-                    <tr>
-                      <td>Outputs: </td>
-                      <td>
-                        <button class="btn btn-link" (click)="toggleProcessOutputs(i)">
-                          {{hideProcessOutputs[i] ? 'View' : 'Hide'}}
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
+                <table
+                  class="table table-bordered"
+                  >
+                <tbody>
+                  <tr *ngFor="let key of objectKeys(p.process)">
+                    <td>{{key}}</td>
+                    <td>{{p.process[key]}}</td>
+                  </tr>
+                  <tr>
+                    <td>Outputs</td>
+                    <td>
+                      <button class="btn btn-link" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
+                        {{hideProcessOutputs[i] ? 'View' : 'Hide'}}
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
                 </table>
               </div>
-            </div>
-          </div>
         </div>
         <div class="row">
           <div class="col-12"[hidden]="hideProcessOutputs[i]">
-            <table class="table table-bordered" [ngClass]="process.outputs.length > 2 ? 'data-table' : ''">
+            <table class="table table-bordered" [ngClass]="p.docs.length > 2 ? 'data-table' : ''">
               <thead>
                 <tr>
                   <th>Data Type</th>
-                  <th>Name</th>
                   <th>ID</th>
+                  <th>Description</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let output of process.outputs">
-                  <td>{{output.dataType}}</td>
-                  <td>{{output.name}}</td>
-                  <td>{{output.id}}</td>
+                <tr *ngFor="let doc of p.docs">
+                  <td>{{doc.type}}</td>
+                  <td>{{doc.id}}</td>
+                  <td>{{doc.description}}</td>
                   <td>
-                    <button class="btn btn-link" (click)="navigate(output)">
+                    <button class="btn btn-link" (click)="navigate(doc)">
                       View
                     </button>
                   </td>

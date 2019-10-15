@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import * as $ from 'jquery';
 import 'datatables.net';
 import 'datatables.net-bs4';
@@ -11,75 +12,22 @@ import 'datatables.net-bs4';
 })
 export class ProcessDataComponent implements OnInit, AfterViewInit {
 
-  processesDown = [
-    {
-      name: 'process1',
-      outputs: [
-        {
-          dataType: 'Gene Knockout Fitness',
-          category: '_DDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        },
-        {
-          dataType: 'TnSeqLibrary',
-          category: '_SDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        },
-        {
-          dataType: 'Physical Measurement',
-          category: '_DDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        }
-      ]
-    },
-    {
-      name: 'process2',
-      outputs: [
-        {
-          dataType: 'Read',
-          category: '_SDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        },
-        {
-          dataType: 'Chemical Measurement',
-          category: '_DDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        }
-      ]
-    },
-    {
-      name: 'process3',
-      outputs: [
-        {
-          dataType: 'TnSeqLibrary',
-          category: '_DDT',
-          name: 'TnSeq1',
-          id: 'tnseq0000003'
-        }
-      ]
-    }
-  ];
-
-  processesUp = {name: 'processUp', inputs: [{
-    dataType: 'Microbial Growth',
-    categorty: '_DDT',
-    name: 'microbial_growth.ndArray',
-    id: 'brick000008'
-  }]};
+  processesDown: any[];
+  processesUp: any[];
   hideProcessUp = false;
   hideProcessDown = false;
   hideProcessInputs = true;
   hideProcessOutputs: boolean[] = [];
   dataTables: any;
 
-  constructor(private router: Router, private chRef: ChangeDetectorRef) { }
+  constructor(
+    private router: Router,
+    private chRef: ChangeDetectorRef,
+    private queryBuilder: QueryBuilderService
+    ) { }
 
   @Input() id: string;
+  @Input() item: any;
 
   ngAfterViewInit() {
     const tables: any = $('.data-table');
@@ -91,9 +39,17 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.processesDown.forEach(() => {
-      this.hideProcessOutputs.push(true);
-    });
+    this.queryBuilder.getProcessesUp(this.id)
+      .subscribe((data: any) => {
+        this.processesUp = data.results;
+      });
+    this.queryBuilder.getProcessesDown(this.id)
+      .subscribe((data: any) => {
+        this.processesDown = data.results;
+        this.processesDown.forEach(() => {
+          this.hideProcessOutputs.push(true);
+        });
+      });
   }
 
   toggleProcessOutputs(index) {
@@ -101,11 +57,14 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   }
 
   navigate(output) {
-    this.router.navigate(
-      output.category === '_DDT'
-        ? [`search/result/${output.id}`]
-        : [`search/result/core/${output.id}`]
-    );
+    const route = output.category === 'DDT_'
+      ? `/search/result/${output.id}`
+      : `/search/result/core/${output.id}`;
+    this.router.navigate([route]);
+  }
+
+  objectKeys(n) {
+    return Object.keys(n).filter(o => n[o] !== null);
   }
 
 }

@@ -16,23 +16,15 @@ export class SearchResultCoreItemComponent implements OnInit {
   ) { }
 
   objectId: string;
-  data: any = [
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-    ['key', 'value'],
-  ];
+  data: any[];
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       this.objectId = params.id;
       this.queryBuilder.getCoreTypeMetadata(this.objectId)
-        .subscribe(result => {
-          this.data = result;
+        .subscribe((data: any) => {
+          // this.data = result;
+          this.data = data.results;
         });
     });
   }

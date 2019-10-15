@@ -74,7 +74,6 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   removeProcessUp(index) {
-    console.log('REMOVING PROCESSES UP');
     const { processesUp } = this.queryBuilderObject;
     this.queryBuilderObject.processesUp = processesUp.filter((_, i) => i !== index);
   }
@@ -91,6 +90,10 @@ export class AdvancedSearchComponent implements OnInit {
 
   testQuery() {
     this.queryBuilder.testQueryBuilder();
+  }
+
+  clear() {
+    this.queryBuilder.resetObject();
   }
 
 }

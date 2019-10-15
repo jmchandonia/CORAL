@@ -60,6 +60,14 @@ export class QueryBuilderService {
     return this.searchType;
   }
 
+  getProcessesUp(id) {
+    return this.http.get(`${environment.baseURL}/up_process_docs/${id}`);
+  }
+
+  getProcessesDown(id) {
+    return this.http.get(`${environment.baseURL}/dn_process_docs/${id}`);
+  }
+
   setSearchType(searchType: string) {
     this.searchType = searchType;
   }
