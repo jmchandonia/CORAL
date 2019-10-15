@@ -45,7 +45,11 @@ export class SearchResultComponent implements OnInit {
   }
 
   viewData(id) {
-    this.router.navigate([`search/result/${id}`]);
+    this.router.navigate([`search/result/brick/${id}`]);
+  }
+
+  viewCoreData(id) {
+    this.router.navigate([`search/result/core/${id}`]);
   }
 
   useData(id) {
