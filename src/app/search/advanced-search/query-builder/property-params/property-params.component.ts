@@ -19,14 +19,15 @@ import { NetworkService } from '../../../../shared/services/network.service';
 export class PropertyParamsComponent implements OnInit {
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
-  @Output() added: EventEmitter<QueryParam> = new EventEmitter();
+  // @Output() added: EventEmitter<QueryParam> = new EventEmitter();
+  @Input() queryParam: QueryParam;
   @Output() updated: EventEmitter<any> = new EventEmitter();
   @Input() isEmpty: boolean;
   @Input() set attributes(a: Array<any>) {
     if (a) {
       this.propertyTypesMetadata = a;
-      this.propertyTypes = [this.propertyTypes[0], ...a.map(item => {
-        return { id: item.name, text: item.name };
+      this.propertyTypes = [this.propertyTypes[0], ...a.map((item, idx) => {
+        return { id: idx.toString(), text: item.name };
       })];
     }
   }
@@ -41,7 +42,7 @@ export class PropertyParamsComponent implements OnInit {
   @ViewChild(Select2Component) attribute: ElementRef;
   // @ViewChild(Select2Component) matchType: ElementRef;
 
-  queryParam: QueryParam;
+  // queryParam: QueryParam;
   matchTypeBuilder = '';
   attributeBuilder = '';
   keywordBuilder = '';
@@ -56,43 +57,35 @@ export class PropertyParamsComponent implements OnInit {
     return [{id: '', text: ''}];
   }
 
-  @Input() set data(param) {
-    if (param.matchType) {
-      this.selectedMatchType = param.matchType;
-      this.matchTypes.push({id: '0', text: param.matchType});
-      this.matchTypeBuilder = param.matchType;
-    }
-    if (param.attribute) {
-      this.selectedAttribute = param.attribute;
-      this.propertyTypes.push({id: '0', text: param.attribute});
-      this.attributeBuilder = param.attribute;
-    }
-    this.keywordBuilder = param.keyword;
-    this.queryParam = param;
-  }
+  // @Input() set data(param) {
+  //   if (param.matchType) {
+  //     this.selectedMatchType = param.matchType;
+  //     this.matchTypes.push({id: '0', text: param.matchType});
+  //     this.matchTypeBuilder = param.matchType;
+  //   }
+  //   if (param.attribute) {
+  //     this.selectedAttribute = param.attribute;
+  //     this.propertyTypes.push({id: '0', text: param.attribute});
+  //     this.attributeBuilder = param.attribute;
+  //   }
+  //   this.keywordBuilder = param.keyword;
+  //   this.queryParam = param;
+  // }
 
   constructor(
     private network: NetworkService,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+   }
 
-  addParam() {
+  // addParam() {
+  //   const scalar = this.propertyTypesMetadata.find(item => {
+  //     return item.name === this.attributeBuilder;
+  //   }).scalar_type;
+  // }
 
-    const scalar = this.propertyTypesMetadata.find(item => {
-      return item.name === this.attributeBuilder;
-    }).scalar_type;
-
-    this.added.emit(new QueryParam(
-      this.attributeBuilder,
-      this.matchTypeBuilder,
-      this.keywordBuilder,
-      scalar
-    ));
-    this.attributeBuilder = '';
-    this.matchTypeBuilder = '';
-    this.keywordBuilder = '';
-  }
+  // TODO: add scalar type
 
   findDropdownValue(builder, dropDownType) {
     return this.propertyTypes.length > 1 ?
@@ -106,7 +99,19 @@ export class PropertyParamsComponent implements OnInit {
 
   removeParam() {
     this.removed.emit();
-    // you need to clear the builders here
+  }
+
+  setAttribute(event) {
+    this.queryParam.attribute = event.data[0].text;
+    this.setScalarType(parseInt(event.value, 10));
+  }
+
+  setScalarType(index) {
+    this.queryParam.scalarType = this.propertyTypesMetadata[index].scalar_type;
+  }
+
+  setMatchType(event) {
+    this.queryParam.matchType = event.data[0].text;
   }
 
 }

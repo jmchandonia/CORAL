@@ -1,8 +1,8 @@
 <div class="top-nav">
     <div class="row pr-4 pl-4">
-        <img id="logo-image" src="../assets/lbnl-logo.png">
-        <div class="nav-container">
-            <ul class="nav nav-tabs offset-4">
+        <img id="logo-image" src="assets/enigma-logo.png">
+        <div class="nav-container" *ngIf="!currentUrl?.includes('login')">
+            <ul class="nav nav-tabs offset-3 white">
                 <li class="nav-item">
                     <a
                       class="nav-link" 
@@ -15,11 +15,12 @@
                 </li>
                 <li class="nav-item">
                     <a
-                      class="nav-link"
-                      href="JavaScript:void(0)"
-                      [routerLink]="['login']"
+                    class="nav-link"
+                    href="JavaScript:void(0)"
+                    [routerLink]="['upload']"
+                    [ngClass]="currentUrl?.includes('upload') ? 'active' : ''"
                     >
-                        Sign Out
+                        Upload
                     </a>
                 </li>
                 <li class="nav-item">
@@ -33,23 +34,31 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          href="Javascript:void(0)"
+                          [routerLink]="['reports']"
+                          [ngClass]="currentUrl?.includes('reports') ? 'active' : ''"
+                        >
+                            Reports
+                        </a>
+                    </li>
+                <li class="nav-item">
                     <a
-                      class="nav-link"
-                      href="JavaScript:void(0)"
-                      [routerLink]="['upload']"
-                      [ngClass]="currentUrl?.includes('upload') ? 'active' : ''"
-                    >
-                        Upload
+                        class="nav-link"
+                        href="JavaScript:void(0)"
+                        [routerLink]="['dashboard']"
+                        [ngClass]="currentUrl?.includes('dashboard') ? 'active' : ''"
+                    > Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a
                       class="nav-link"
-                      href="Javascript:void(0)"
-                      [routerLink]="['dashboard']"
-                      [ngClass]="currentUrl?.includes('dashboard') ? 'active' : ''"
+                      href="JavaScript:void(0)"
+                      (click)="logout()"
                     >
-                        Dashboard
+                        Sign Out
                     </a>
                 </li>
             </ul>

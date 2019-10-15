@@ -1,11 +1,11 @@
 <div class="row mb-3 mt-3">
-  <div class="offset-1" [routerLink]="searchType === 'advanced' ? ['../advanced'] : ['../simple']">
+  <div class="offset-1" [routerLink]="['../advanced']">
     <i class="material-icons back-icon">keyboard_arrow_left</i>
     <span class="menu-option">Go Back</span>
   </div>
   <span 
     class="menu-option col-2" 
-    (click)="showQuery = true"
+  (click)="showQuery = true"
     *ngIf="!showQuery"
     >| &nbsp;&nbsp;Show Query</span>
   <span
@@ -22,8 +22,8 @@
 <hr />
 <div class="row justify-content-center">
   <div class="table-container col-11">
-    <table class="table table-hover" cellspacing="1">
-      <thead>
+    <table style="font-size: 0.8em;" class="table table-hover" cellspacing="1">
+      <thead class="table-header">
         <tr>
           <th *ngFor="let field of resultFields">{{field.name}}</th>
           <th></th>
@@ -32,9 +32,10 @@
       <tbody>
         <tr *ngFor="let result of results">
           <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
-          <td>
-            <button (click)="viewData(result.brick_id)" class="btn btn-sm btn-primary view-data data-button">View Data</button>
-            <button (click)="useData(result.brick_id)" class="btn btn-sm btn-secondary data-button">Use Data</button>
+          <td style="width: 150px;">
+            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="viewData(result.brick_id)">description</i>
+            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="useData(result.brick_id)">bar_chart</i>
+            <i class="material-icons options-icon">cloud_download</i>
           </td>
         </tr>
       </tbody>

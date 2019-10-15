@@ -1,22 +1,24 @@
-<div class="option-container">
-  <select2 [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
-  </select2>
-</div>
-
-<div class="option-container mt-3" *ngIf="selectedValue">
-  <div class="table-background">
-      <table class="table table-hover" cellspacing="1">
-          <thead>
-            <tr>
-              <th *ngFor="let field of selectedValue?.schema.fields">{{field.name}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of selectedValue?.data">
-              <td *ngFor="let field of selectedValue?.schema.fields">{{item[field.name]}}</td>
-            </tr>
-          </tbody>
-        </table>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <div class="card p-3">
+          <h5 class="card-title">Dashboard</h5>
+          <p class="card-text">This page shows graphs indicating the current state of the system.
+              It can be customized by each user, according to what graphs are most
+              relevant to their work.</p>
+        </div>
+      </div>
   </div>
-  <!-- <h4 *ngIf="selectedValue"></h4> -->
+  <div class="row mt-3">
+    <div class="col-6">
+        <div style="height: 300px; border: 1px solid #aaa; text-align: center;">
+          <h3 style="color: #2969a5; display: inline-block; margin-top: 130px;">Plot</h3>
+        </div>
+      </div>
+    <div class="col-6">
+        <div style="height: 300px; border: 1px solid #aaa; text-align: center;">
+          <h3 style="color: #2969a5; display: inline-block; margin-top: 130px;">Plot</h3>
+        </div>
+      </div>
+  </div>
 </div>

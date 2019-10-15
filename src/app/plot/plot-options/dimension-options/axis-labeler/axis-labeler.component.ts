@@ -1,70 +1,87 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import { DimensionRef } from 'src/app/shared/models/plot-builder';
+import { Subscription } from 'rxjs';
+import { PlotService } from 'src/app/shared/services/plot.service';
 
 @Component({
   selector: 'app-axis-labeler',
   templateUrl: './axis-labeler.component.html',
   styleUrls: ['./axis-labeler.component.css']
 })
-export class AxisLabelerComponent implements OnInit {
+export class AxisLabelerComponent implements OnInit, OnDestroy {
 
-  @Input() set values(v) {
-    this.valueLabels = v;
-    this.valueLabels.forEach((value, idx)  => {
-      this.format += `${value}#V${idx + 1},`;
-      value += '=';
-    });
-  }
+  @Input() axis: string;
+  labelBuilderSub = new Subscription();
+  labelBuilder: DimensionRef;
+  labelArray: string[] = [];
+  plotlyFormatString: string;
   displayOptions = false;
-  format = '';
-  invalid = false;
-  valueLabels = [];
-  @Output() labelsChanged: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor(private plotService: PlotService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.labelBuilder = this.plotService.getLabelBuilder(this.axis);
+    if (this.labelBuilder) {
+      this.updateLabelArray(true);
+    }
+    this.labelBuilderSub = this.plotService.getUpdatedLabelBuilder()
+      .subscribe(({axis, labelBuilder}) => {
+        if (axis === this.axis) {
+          this.labelBuilder = labelBuilder;
+          this.updateLabelArray(true);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.labelBuilderSub) {
+      this.labelBuilderSub.unsubscribe();
+    }
+  }
+
+  updateLabelArray(fromService: boolean) { // (change)="updateLabelArray(false) in html"
+    if (!fromService) {
+      this.labelBuilder.resetLabels();
+      this.plotService.setLabelBuilder(this.labelBuilder, this.axis);
+    }
+    this.updatePlotlyFormatString();
+  }
+
+  updatePlotlyFormatString() {
+      this.plotlyFormatString = this.labelBuilder.labels.join();
+      this.submitFormatString();
+  }
+
+  submitFormatString() {
+    // TODO: add format validation
+    const split = this.plotlyFormatString.split(',');
+    let idx = 0;
+    this.labelBuilder.labels = [
+      ...this.labelBuilder.dimVars.map((dimVar) => {
+        if (dimVar.selected) {
+          return split[idx++];
+        } else {
+          return '';
+        }
+      })
+    ];
+    this.plotService.updateFormatString(this.plotlyFormatString, this.axis);
+  }
+
+  get labelDisplay() {
+    return this.labelBuilder.labels
+      .map((label, idx) => {
+        return label.replace(
+          /#V[0-9]/gi,
+          // TODO: escape markup so #V(n) badge can show up before or after user input
+          // `<span class="badge badge-pill badge-primary">V${idx + 1}</span>`
+          ''
+          );
+      });
+  }
 
   toggleDisplayOptions() {
     this.displayOptions = !this.displayOptions;
-    if (this.displayOptions && !this.format) {
-      this.valueLabels.forEach((v, i) => {
-        this.format += `${v}#V${i + 1}, `;
-      });
-    }
-  }
-
-  onSave() {
-    this.toggleDisplayOptions();
-    if (!this.displayOptions && this.format && this.format.match(/#V[0-9]/gi)) {
-      this.updateFormat();
-    } else {
-      this.format = '';
-      this.valueLabels.forEach((value, idx) => {
-        this.format += `${value}#V${idx + 1},`;
-      });
-    }
-  }
-
-  updateFormat() {
-
-    // get key value format to send to server, eg {0: 'value=#V1'}
-    const newFormat = this.format.split(',').map(item => {
-      const index = parseInt(item.replace(/^\D+/g, ''), 10) - 1;
-      return { [index]: item };
-    });
-    if (NaN in newFormat[newFormat.length - 1]) {
-      newFormat.pop();
-    }
-    // get value labels to display in UI
-    const newValueLabels = this.format.split(',').map(item => {
-      return item.replace(/#V[0-9]/gi, '');
-    });
-
-    if (!newValueLabels[newValueLabels.length - 1].match(/#V[0-9]/gi)) {
-      newValueLabels.pop();
-    }
-    this.valueLabels = newValueLabels;
-    this.labelsChanged.emit(this.format);
   }
 
 }
