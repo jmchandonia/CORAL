@@ -16,6 +16,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { UploadModule } from './upload/upload.module';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -36,7 +37,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     NgxSpinnerModule,
     PlotlyModule,
     FormsModule,
-    UploadModule
+    UploadModule,
+    ModalModule.forRoot()
   ],
   providers: [
     {
