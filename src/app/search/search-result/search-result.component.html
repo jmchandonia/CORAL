@@ -21,7 +21,16 @@
 </div>
 <hr />
 <div class="row justify-content-center">
-  <div class="table-container col-11">
+  <div class="loading-container" *ngIf="!results.length">
+      <ngx-spinner
+      bdColor="rgba(0,0,0,0)"
+      color="#aaa"
+      size="medium"
+      type="ball-spin-fade-rotating"
+      [fullScreen]="false"
+    ></ngx-spinner>
+  </div>
+  <div class="table-container col-11" *ngIf="results.length">
     <table style="font-size: 0.8em;" class="table table-hover" cellspacing="1">
       <thead class="table-header">
         <tr>
