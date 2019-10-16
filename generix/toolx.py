@@ -94,6 +94,7 @@ def upload_bricks(argv=None):
             ws.save_data(data_holder)
         except Exception as e:
             print('Error: ', e)
+            traceback.print_exc()
 
 
 def upload_core(argv=None):
