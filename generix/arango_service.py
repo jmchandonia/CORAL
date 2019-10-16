@@ -135,6 +135,27 @@ class ArangoService:
         rs = self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
         return self.__to_type2objects(rs)
 
+
+    def get_brick_type_counts(self, person_term_ids, campaign_term_ids, size = 1000):
+        # TODO
+        # for pr in SYS_Process filter 1==1 and pr.person_term_id in ['ENIGMA:0000032'] and pr.campaign_term_id in ["ENIGMA:0000013"]
+        # for po in SYS_ProcessOutput filter po._from == pr._id
+        # for b in  DDT_Brick filter po._to == b._id
+        aql = '''
+            for b in  DDT_Brick
+            collect b_type = b.data_type_term_name with count into b_count
+            return {b_type, b_count}
+        '''
+        aql_bind = {}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+
+    def get_core_type_count(self, core_type,  size = 1000):
+        aql = '''
+            return length(%s)
+        ''' % core_type
+        aql_bind = {}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]    
+
     
     def __to_type2objects(self, aql_rs):
         type2objects = {}
