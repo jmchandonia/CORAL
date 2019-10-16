@@ -829,9 +829,11 @@ def _get_category_items(process_stat_df, attr):
 
 
 # Test version
-@app.route('/generix/types_stat', methods=['POST'])
+@app.route('/generix/types_stat', methods=['GET','POST'])
 def generix_type_stat():
-    query = request.json
+    arango_service = svs['arango_service']
+
+    # query = request.json
     # request = [
     #     {
     #         'attribute': '',
@@ -850,7 +852,7 @@ def generix_type_stat():
         stat_type_items.append(
             {
                 'name': td.name,
-                'count': random.randint(0,1000),
+                'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name)),
                 'queryMatch': {
                     'dataType': td.name,
                     'dataModel': td.name,
@@ -863,21 +865,40 @@ def generix_type_stat():
 
     # Dynamic types
     dyn_type_items = []
-    bp = dp._get_type_provider('Brick')
-    for dt_name in bp.type_names():
-
+    rows = arango_service.get_brick_type_counts([],[])
+    for row in rows:
         dyn_type_items.append(
             {
-                'name': dt_name,
-                'count': random.randint(0,1000),
+                'name': row['b_type'],
+                'count': row['b_count'],
                 'queryMatch': {
-                    'dataType': dt_name,
+                    'dataType': row['b_type'],
                     'dataModel': 'Brick',
                     'params': [],
                     'category': TYPE_CATEGORY_DYNAMIC
                 }
             }            
-        )      
+        )
+
+# 111
+
+    # bp = dp._get_type_provider('Brick')
+    # for dt_name in bp.type_names():
+
+    #     dyn_type_items.append(
+    #         {
+    #             'name': dt_name,
+    #             'count': random.randint(0,1000),
+    #             'queryMatch': {
+    #                 'dataType': dt_name,
+    #                 'dataModel': 'Brick',
+    #                 'params': [],
+    #                 'category': TYPE_CATEGORY_DYNAMIC
+    #             }
+    #         }            
+    #     )
+
+
     dyn_type_items.sort(key=lambda x: x['name'])        
 
 
