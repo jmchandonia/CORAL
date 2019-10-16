@@ -15,7 +15,7 @@
           (valueChanged)="updateObjectDataModel($event)"
         >
         </select2>
-        <label class="mt-2">Property Parameters</label>
+        <label class="mt-4">Property Parameters</label>
         <app-property-params 
           *ngFor="let param of queryMatch?.params; let idx = index;" 
           [attributes]="selectedAttributes"

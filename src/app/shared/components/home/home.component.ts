@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -21,11 +22,13 @@ export class HomeComponent implements OnInit {
   public filterQueryBuilder: QueryParam[] = [];
   public coreTypes: any;
   public dynamicTypes: any;
+  public loading = false;
 
   constructor(
     private homeService: HomeService,
     private searchService: QueryBuilderService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
     ) { }
 
   ngOnInit() {
@@ -38,8 +41,12 @@ export class HomeComponent implements OnInit {
   }
 
   getUpdatedValues() {
+    this.loading = true;
+    this.spinner.show();
     this.homeService.getUpdatedValues(this.filterQueryBuilder)
     .subscribe((res: any) => {
+      this.loading = false;
+      this.spinner.hide();
       if (res.status === 'OK') {
         this.coreTypes = res.results.core_types;
         this.dynamicTypes = res.results.dynamic_types;
@@ -61,7 +68,7 @@ export class HomeComponent implements OnInit {
       this.checkBoxArray.push(event.target.id);
       this.filterQueryBuilder.push(selected);
     }
-    this.getUpdatedValues();
+    // this.getUpdatedValues();
   }
 
   navigateToSearch(queryMatch: QueryMatch) {
