@@ -187,6 +187,8 @@ class Brick:
                     for term_id in var_json['values']['oterm_refs']:
                         # var_values.append(Term(term_id))
                         var_values.append(services.term_provider.get_term(term_id))                        
+                elif var_scalar_type == 'object_ref':
+                    var_values = var_json['values']['object_refs']
                 else:
                     var_values = var_json['values'][var_scalar_type + '_values']
 
@@ -246,6 +248,8 @@ class Brick:
             value_scalar_type = values_json['values']['scalar_type']
             if value_scalar_type == 'oterm_ref':
                 value_scalar_type = 'oterm_refs'
+            elif value_scalar_type == 'object_ref':
+                value_scalar_type = 'object_refs'
             else:
                 value_scalar_type += '_values'
             data = np.array(values_json['values'][value_scalar_type])
@@ -1321,7 +1325,7 @@ class BrickVariable:
                 val  = attr.value
                 if type(val) is Term:
                     val = val.term_name
-                items.append(val)
+                items.append(str(val))
 
         return to_var_name('',' '.join(items))
 
