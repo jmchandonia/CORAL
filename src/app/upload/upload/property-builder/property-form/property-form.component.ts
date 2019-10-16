@@ -9,7 +9,7 @@ import { Select2OptionData } from 'ng2-select2';
   styleUrls: ['./property-form.component.css']
 })
 export class PropertyFormComponent implements OnInit {
-
+  selectedValue: any;
   @Output() deleted = new EventEmitter();
   @Input() property: TypedProperty;
   @Input() set propertyList(props: any[]) {

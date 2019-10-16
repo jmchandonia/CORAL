@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class SearchResultItemComponent implements OnInit {
 
   public searchResult: any;
-  private objectId: string;
+  public objectId: string;
   modalRef: BsModalRef;
 
   constructor(

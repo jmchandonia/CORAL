@@ -19,7 +19,7 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public plotTypeDataValue: string; // for select2
   public dimensionData: Array<Select2OptionData> = [];
-  private listPlotTypes: any;
+  public listPlotTypes: any;
   public selectedPlotType: any;
   public axisBlocks: any[];
   public objectId: string;
