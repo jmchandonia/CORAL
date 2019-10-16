@@ -4,12 +4,12 @@
         <div class="card-header light-blue">
           <h5>
             {{searchResult?.data_type.oterm_name}}
-            <span>(</span>
+            <span>&lt;</span>
             <span *ngFor="let dim of searchResult?.dim_context; let last = last;">
             {{dim.data_type.oterm_name}}
               <span *ngIf="!last">, </span>
             </span>
-            <span>)</span>
+            <span>&gt;</span>
           </h5>
         </div>
         <div class="card-body">
@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <strong>Data Type: </strong>
+                    <strong>Value Type: </strong>
                   </td>
                   <td>
                     <span>{{searchResult?.typed_values[0].value_type.oterm_name}}</span>
@@ -37,20 +37,20 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    <strong>Description: </strong>
-                  </td>
-                  <td>
-                    {{searchResult?.description}}
-                  </td>
-                </tr>
-                <tr>
                   <td><strong>Shape: </strong></td>
                   <td>
                     <span *ngFor="let dim of searchResult?.dim_context; let last = last">
                       {{dim.size}}<span *ngIf="!last">, </span>
                     </span>
                   </td> 
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Description: </strong>
+                  </td>
+                  <td>
+                    {{searchResult?.description}}
+                  </td>
                 </tr>
               </tbody>
             </table>
