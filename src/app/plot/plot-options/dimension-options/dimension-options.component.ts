@@ -37,7 +37,8 @@ export class DimensionOptionsComponent implements OnInit {
 
   select2Options: Select2Options = {
     width: '100%',
-    containerCssClass: 'select2-custom-container'
+    containerCssClass: 'select2-custom-container',
+    placeholder: 'Select Dimension'
   };
 
   @Input() set index(i: number) {

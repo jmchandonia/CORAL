@@ -3,13 +3,13 @@
       <div class="card">
         <div class="card-header light-blue">
           <h5>
-            {{searchResult?.data_type.oterm_name}}
-            <span>&lt;</span>
-            <span *ngFor="let dim of searchResult?.dim_context; let last = last;">
+            <span style="font-weight: bold">{{searchResult?.data_type.oterm_name}}&nbsp;</span>
+            <span style="font-size: 18px;">&lt;</span>
+            <span style="font-size: 18px;" *ngFor="let dim of searchResult?.dim_context; let last = last;">
             {{dim.data_type.oterm_name}}
-              <span *ngIf="!last">, </span>
+              <span style="font-size: 18px;" *ngIf="!last">, </span>
             </span>
-            <span>&gt;</span>
+            <span style="font-size: 18px;">&gt;</span>
           </h5>
         </div>
         <div class="card-body">
