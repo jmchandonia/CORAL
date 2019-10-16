@@ -998,7 +998,7 @@ def generix_core_type_metadata(obj_id):
                 }
             )
         return  json.dumps( {
-            'results': res, 
+            'results': { "items": res, "type": obj_type  }, 
             'status': 'OK', 
             'error': ''
         })          
