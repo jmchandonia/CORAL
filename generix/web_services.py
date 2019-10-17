@@ -341,17 +341,14 @@ def _create_brick(brick_data):
 
     return br
 
-
-
 def _get_term(term_data):
     return svs['ontology'].all.find_id( term_data['id'] ) if term_data['id'] != '' else None
-
 
 def _search_oterms(ontology, value):
     if value is None:
         value = '*'
     res = []
-    term_collection = ontology.find_name_pattern(value)
+    term_collection = ontology.find_name_prefix(value)
     for term in term_collection.terms:
         res.append({
             'id' : term.term_id,
