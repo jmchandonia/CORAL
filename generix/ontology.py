@@ -258,6 +258,9 @@ class Ontology:
         aql_filter = 'x.term_name == @term_name'
         return self.__find_term(aql_filter, aql_bind)
 
+    def find_name_prefix(self, value, size=100):
+        return self.find_name_pattern("prefix:" + value, size)
+
     def find_name_pattern(self, value, size=100):
         aql_bind = {'@collection': 'OTerm', 'property_name': 'term_name', 'property_value': value}
         aql_filter = ''
