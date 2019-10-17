@@ -26,22 +26,22 @@ cns = dp._get_constants()
 def hello():
     return "Welcome!"
 
-@app.route("/search_ont_dtypes/<value>", methods=['GET'])
+@app.route("/generix/search_ont_dtypes/<value>", methods=['GET'])
 def search_ont_dtypes(value):
     # value = request.args.get('term')
     return _search_oterms(svs['ontology'].data_types, value)
 
-@app.route("/search_ont_all/<value>", methods=['GET'])
+@app.route("/generix/search_ont_all/<value>", methods=['GET'])
 def search_ont_all(value):
     # value = request.args.get('term')
     return _search_oterms(svs['ontology'].all, value)
 
-@app.route("/search_ont_units/<value>", methods=['GET'])
+@app.route("/generix/search_ont_units/<value>", methods=['GET'])
 def search_ont_units(value):
     # value = request.args.get('term')
     return _search_oterms(svs['ontology'].units, value)
 
-@app.route("/brick_type_templates", methods=['GET'])
+@app.route("/generix/brick_type_templates", methods=['GET'])
 def brick_type_templates():
     file_contxt = open(cns['_BRICK_TYPE_TEMPLATES_FILE']).read()
     res = json.loads( file_contxt )
@@ -49,7 +49,7 @@ def brick_type_templates():
         'results': res['types']
     }  )
 
-@app.route("/core_types", methods=['GET'])
+@app.route("/generix/core_types", methods=['GET'])
 def core_types():
     res = []
     
@@ -88,7 +88,7 @@ def core_types():
     })
 
 
-@app.route('/map_dim_variable', methods=['GET', 'POST'])
+@app.route('/generix/map_dim_variable', methods=['GET', 'POST'])
 def map_dim_variable():
     if request.method == 'POST':
         brick_data = json.loads(request.form['brick'])
@@ -125,7 +125,7 @@ def map_dim_variable():
     })
 
 
-@app.route('/do_search', methods=['GET', 'POST'])
+@app.route('/generix/do_search', methods=['GET', 'POST'])
 def do_search():
     if request.method == 'POST':
         search_data = json.loads(request.form['searchBuilder'])
@@ -182,7 +182,7 @@ def do_search():
             'res': res
     } )
 
-@app.route("/brick/<brick_id>", methods=['GET'])
+@app.route("/generix/brick/<brick_id>", methods=['GET'])
 def get_brick(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
@@ -195,7 +195,7 @@ def get_brick(brick_id):
 
 
 
-@app.route("/do_report/<value>", methods=['GET'])
+@app.route("/generix/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
     # res = df.head(n=100).to_json(orient="table", index=False)
@@ -208,7 +208,7 @@ def do_report(value):
     } )
 
 
-@app.route('/create_brick', methods=['GET', 'POST'])
+@app.route('/generix/create_brick', methods=['GET', 'POST'])
 def create_brick():
     if request.method == 'POST':
         brick_data = json.loads(request.form['brick'])
@@ -238,7 +238,7 @@ def create_brick():
 
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/generix/upload', methods=['GET', 'POST'])
 def upload_file():
     print("From uploader", request.method)
     if request.method == 'POST':
