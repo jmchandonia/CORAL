@@ -14,12 +14,11 @@ export class PropertyFormComponent implements OnInit {
   @Output() deleted = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
 
-    if (!prop.editable) {
-      this.typesSelect2 = [prop.type];
-      this.unitsSelect2 = [prop.units];
-    }
+    this.typesSelect2 = prop.type ? [prop.type] : [];
+    this.unitsSelect2 = prop.units ? [prop.units] : [];
 
     this._property = prop;
+
     if (prop.type) {
       this.propTypeItem = prop.type.id;
     }
@@ -33,6 +32,11 @@ export class PropertyFormComponent implements OnInit {
 
   get property() {
     return  this._property;
+  }
+
+  get valueItem() {
+    return this.property.value ?
+      this.property.value.text : '';
   }
 
   private _property: TypedProperty;
@@ -91,11 +95,13 @@ export class PropertyFormComponent implements OnInit {
   }
 
   setPropertyType(event) {
-    this.property.type = new Term(event.data.id, event.data.text);
+    const item = event.data[0];
+    this.property.type = new Term(item.id, item.text);
   }
 
   setUnits(event) {
-    this.property.units = new Term(event.data.id, event.data.text);
+    const item = event.data[0];
+    this.property.units = new Term(item.id, item.text);
   }
 
   onDelete() {
