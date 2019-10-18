@@ -39,7 +39,7 @@ export class BrickDimension {
     brick: Brick;
     index: number;
     type: Term;
-    editable = true;
+    editable: boolean;
     // type: string;
     variables: DimensionVariable[] = [];
 
@@ -58,8 +58,6 @@ export class DimensionVariable {
     dimension: BrickDimension;
     index: number;
     type: Term;
-    // type: string;
-    // scalarType: string;
     scalarType: Term;
     units: Term;
     values: any[] = [];
@@ -82,8 +80,6 @@ export class TypedProperty {
     parentCollection: TypedProperty[];
     index: number;
     type: Term;
-    // type: string;
-    value: Term;
+    value: Term = new Term();
     units: Term;
-    // units: string;
 }

@@ -20,7 +20,7 @@ export class DimensionBuilderComponent implements OnInit {
   }
 
   addDimension() {
-    this.brick.dimensions.push(new BrickDimension(this.brick, this.brick.dimensions.length));
+    this.brick.dimensions.push(new BrickDimension(this.brick, this.brick.dimensions.length, true));
   }
 
   removeDimension(dimension) {
