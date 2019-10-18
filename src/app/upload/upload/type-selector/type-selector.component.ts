@@ -23,7 +23,7 @@ export class TypeSelectorComponent implements OnInit {
   select2Data: Array<Select2OptionData>;
 
   ajaxOptions: Select2AjaxOptions;
-  private brick: Brick;
+  brick: Brick;
   dataTypes: any;
   selectedTemplate: string;
 

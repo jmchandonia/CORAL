@@ -23,7 +23,7 @@ export class Term {
         this.text = text;
     }
     id: string;
-    name: string;
+    text: string;
 }
 
 export class BrickDimension {

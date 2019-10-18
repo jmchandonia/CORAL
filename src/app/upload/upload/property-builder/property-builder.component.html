@@ -20,7 +20,6 @@
           <app-property-form
             *ngFor="let property of properties" 
             [property]="property"
-            [propertyList]="propertyList"
             (deleted)="deleteProperty(property)"
           ></app-property-form>
         </div>

@@ -11,25 +11,54 @@ import { Select2OptionData } from 'ng2-select2';
 export class PropertyFormComponent implements OnInit {
   selectedValue: any;
   @Output() deleted = new EventEmitter();
-  @Input() property: TypedProperty;
-  @Input() set propertyList(props: any[]) {
-    this._propertyList = props;
-    this.select2Data = props.map((prop, idx) => ({
-      id: idx.toString(),
-      text: this.format(prop.name)
-    }));
+  @Input() set property(prop: TypedProperty) {
+
+    if (!prop.editable) {
+      this.typesSelect2 = [prop.type];
+      this.unitsSelect2 = [prop.units];
+    }
+
+    this._property = prop;
+    if (prop.type) {
+      this.propTypeItem = prop.type.id;
+    }
+    if (prop.units) {
+      this.unitsItem = prop.units.id;
+    }
+    if (prop.value) {
+      this.propValueItem = prop.value.text;
+    }
   }
 
-  get propertyList() {
-    return this._propertyList;
+  get property() {
+    return  this._property;
   }
+  // @Input() set propertyList(props: any[]) {
+  //   this._propertyList = props;
+  //   this.select2Data = props.map((prop, idx) => ({
+  //     id: idx.toString(),
+  //     text: this.format(prop.name)
+  //   }));
+  // }
 
-  private _propertyList: any[];
-  select2Data: Array<Select2OptionData> = [];
+  // get propertyList() {
+  //   return this._propertyList;
+  // }
+
+  // private _propertyList: any[];
+  private _property: TypedProperty;
+  unitsSelect2: Array<Select2OptionData> = [];
   select2Options: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container'
    };
+
+   typesSelect2: Array<Select2OptionData> = [];
+
+   propTypeItem: string;
+   propValueItem: string;
+   unitsItem: string;
+   editable = true;
 
   constructor() { }
 
