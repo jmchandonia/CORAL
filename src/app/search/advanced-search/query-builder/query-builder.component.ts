@@ -5,7 +5,7 @@ import { NetworkService } from '../../../shared/services/network.service';
 import { QueryBuilderService } from '../../../shared/services/query-builder.service';
 import { HttpClient } from '@angular/common/http';
 import * as $ from 'jquery';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -21,7 +21,7 @@ export class QueryBuilderComponent implements OnInit {
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
   @Input() set dataProps(data: any) {
     this.dataModels = data.dataModels;
-    this.dataTypes = data.dataTypes;
+    // this.dataTypes = data.dataTypes;
     this.operators = data.operators;
   }
   @Input() set queryMatch(value: QueryMatch) {
@@ -40,6 +40,7 @@ export class QueryBuilderComponent implements OnInit {
   dataTypes: any;
   operators: string[] = [];
   selectedDataType: string;
+  dataTypeSub = new Subscription();
 
   options: Select2Options = {
     width: '100%',
@@ -67,35 +68,55 @@ export class QueryBuilderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    // TODO: make all querymatches initialize right away
+    // TODO: add direct method to get data types in addition to subscription
+    // TODO: add ngOnDestroy and unsubscribe to subscriptions
     if (!this.queryMatch) {
       this.queryMatch = new QueryMatch();
     }
 
-    this.ajaxOptions = {
-      url: `${environment.baseURL}/data_types`,
-      dataType: 'json',
-      delay: 250,
-      cache: false,
-      processResults: (data: any) => {
-        this.dataTypes = data.results;
-        return {
-          results: $.map(data.results, (obj, idx) => {
-            return {id: idx.toString(), text: obj.dataType};
-          }),
-        };
-      },
-    };
-    this.options.ajax = this.ajaxOptions;
+    this.dataTypeSub = this.queryBuilder.getDataTypes()
+      .subscribe(dataTypes => {
+        this.dataTypes = dataTypes;
+        this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
+          return {id: idx.toString(), text: type.dataType};
+        })];
+      });
+    // this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
+    //   return {id: idx.toString(), text: type.name};
+    // })];
+
+    // this.ajaxOptions = {
+    //   url: `${environment.baseURL}/data_types`,
+    //   dataType: 'json',
+    //   delay: 250,
+    //   cache: false,
+    //   processResults: (data: any) => {
+    //     this.dataTypes = data.results;
+    //     return {
+    //       results: $.map(data.results, (obj, idx) => {
+    //         return {id: idx.toString(), text: obj.dataType};
+    //       }),
+    //     };
+    //   },
+    // };
+    // this.options.ajax = this.ajaxOptions;
 }
 
   updateObjectDataModel(event) {
-    const selected = this.dataTypes[parseInt(event.value, 10)];
-    const selectedModel = this.dataModels[selected.dataModel];
-    this.selectedAttributes = selectedModel.properties;
-    Object.keys(selected).forEach(key => {
+    // const selected = this.dataTypes[parseInt(event.value, 10)];
+    // const selectedModel = this.dataModels[selected.dataModel];
+    // this.selectedAttributes = selectedModel.properties;
+    // Object.keys(selected).forEach(key => {
+    //   this.queryMatch[key] = selected[key];
+    // });
+    if (this.dataTypes && event.value.length) {
+      const selected = this.dataTypes[parseInt(event.value, 10)];
+      Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
-    });
+      });
+      this.selectedDataType = event.data[0].text;
+    }
   }
 
   updatePropertyParam(index, event) {

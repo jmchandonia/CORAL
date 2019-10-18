@@ -31,6 +31,10 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/data_types`);
   }
 
+  getBrickTypeTemplates() {
+    return this.http.get(`${environment.baseURL}/brick_type_templates`);
+  }
+
   getDataModels() {
     return this.http.get(`${environment.baseURL}/data_models`);
   }

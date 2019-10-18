@@ -18,10 +18,8 @@
         <label class="mt-4">Property Parameters</label>
         <app-property-params 
           *ngFor="let param of queryMatch?.params; let idx = index;" 
-          [attributes]="selectedAttributes"
-          [operators]="operators"
-          [connection]="connection"
           [queryParam]="param"
+          [dataType]="selectedDataType"
           (removed)="removePropertyParam(param)"
           (updated)="updatePropertyParam(idx, $event)"
         >

@@ -30,19 +30,23 @@ export class TypeSelectorComponent implements OnInit {
 
     this.brick = this.uploadService.getBrickBuilder();
 
-    this.ajaxOptions = {
-      url: `${environment.baseURL}/data_types`,
-      dataType: 'json',
-      processResults: (data: any) => {
-        this.dataTypes = data.results.filter(item => item.dataModel === 'Brick');
-        return {
-          results: $.map(this.dataTypes, (obj, idx) => {
-          return {id: idx.toString(), text: obj.dataType};
-        })
-      };
-      }
-    };
-    this.select2Options.ajax = this.ajaxOptions;
+    // this.ajaxOptions = {
+    //   url: `${environment.baseURL}/data_types`,
+    //   dataType: 'json',
+    //   processResults: (data: any) => {
+    //     this.dataTypes = data.results.filter(item => item.dataModel === 'Brick');
+    //     return {
+    //       results: $.map(this.dataTypes, (obj, idx) => {
+    //       return {id: idx.toString(), text: obj.dataType};
+    //     })
+    //   };
+    //   }
+    // };
+    // this.select2Options.ajax = this.ajaxOptions;
+    this.uploadService.getBrickTypeTemplates()
+      .subscribe((data: any) => {
+        this.select2Data = data.results;
+      });
   }
 
   setBrickType(event) {
