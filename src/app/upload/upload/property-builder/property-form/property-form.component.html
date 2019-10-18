@@ -2,9 +2,10 @@
   <div class="col-6">
     <select2
       [cssImport]="true"
-      [data]="select2Data"
+      [data]="typesSelect2"
       [options]="select2Options"
-      [value]="selectedValue || ''"
+      [value]="propTypeItem ? propTypeItem : ''"
+      [disabled]="!property.editable"
       (valueChanged)="setPropertyType($event)"  
     ></select2>
   </div>
@@ -12,17 +13,25 @@
     <input
       class="form-control"
       type="text"
-      [(ngModel)]="property.value"
+      [(ngModel)]="propValueItem"
+      [disabled]="!property.editable"
       [ngModelOptions]="{standalone: true}"
     />
   </div>
   <div class="col-2">
-    <input
+    <!-- <input
       class="form-control"
       type="text"
       [(ngModel)]="property.units"
-      [ngModelOptions]="{standalone: true}"
-    />
+      [ngModelOptions]="{standalone: true}" -->
+      <select2
+        [cssImport]="true"
+        [data]="unitsSelect2"
+        [options]="select2Options"
+        [value]="unitsItem ? unitsItem : ''"
+        [disabled]="!property.editable"
+        (valueChanged)="setPropertyType($event)"
+    ></select2>
   </div>
   <div class="col-1">
     <button class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
