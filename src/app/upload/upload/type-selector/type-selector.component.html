@@ -8,6 +8,7 @@
             [cssImport]="true"
             [data]="select2Data"
             [options]="select2Options"
+            [value]="selectedTemplate ? selectedTemplate : ''"
             (valueChanged)="setBrickType($event)"
           ></select2>
         </div>
