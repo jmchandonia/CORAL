@@ -18,6 +18,10 @@ export class Brick {
 }
 
 export class Term {
+    constructor(id?, text?) {
+        this.id = id;
+        this.text = text;
+    }
     id: string;
     name: string;
 }
@@ -25,15 +29,18 @@ export class Term {
 export class BrickDimension {
     constructor(
         brick: Brick,
-        index: number
+        index: number,
+        editable?: boolean
     ) {
         this.brick = brick;
         this.index = index;
+        this.editable = editable;
     }
     brick: Brick;
     index: number;
-    // type: Term = new Term();
-    type: string;
+    type: Term;
+    editable = true;
+    // type: string;
     variables: DimensionVariable[] = [];
 
     resetDimVarIndices() {
@@ -50,9 +57,11 @@ export class DimensionVariable {
     }
     dimension: BrickDimension;
     index: number;
-    // type: Term = new Term();
-    type: string;
-    scalarType: string;
+    type: Term;
+    // type: string;
+    // scalarType: string;
+    scalarType: Term;
+    units: Term;
     values: any[] = [];
     valuesSameple: string; //
     mapCoreType: string; //
@@ -65,11 +74,16 @@ export class DimensionVariable {
 
 export class TypedProperty {
     // TODO: Discuss how to handle ontological terms
+    constructor(index: number, editable?: boolean) {
+        this.index = index;
+        this.editable = editable;
+    }
+    editable = true;
     parentCollection: TypedProperty[];
     index: number;
-    // type: Term = new Term();
-    type: string;
-    value: string;
-    // units: Term = new Term();
-    units: string;
+    type: Term;
+    // type: string;
+    value: Term;
+    units: Term;
+    // units: string;
 }

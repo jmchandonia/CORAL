@@ -90,7 +90,6 @@ export class QueryBuilderService {
     // return [{id: '', text: ''}, ...this.dataTypeHash[dataType].map((att, idx) => {
     //   return {id: idx.toString(), text: att.name}
     // })]
-    console.log(dataType);
     return this.dataTypeHash[dataType];
   }
 

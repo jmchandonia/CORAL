@@ -25,32 +25,25 @@ export class TypeSelectorComponent implements OnInit {
   ajaxOptions: Select2AjaxOptions;
   private brick: Brick;
   dataTypes: any;
+  selectedTemplate: string;
 
   ngOnInit() {
-
+    this.selectedTemplate = this.uploadService.selectedTemplate;
     this.brick = this.uploadService.getBrickBuilder();
-
-    // this.ajaxOptions = {
-    //   url: `${environment.baseURL}/data_types`,
-    //   dataType: 'json',
-    //   processResults: (data: any) => {
-    //     this.dataTypes = data.results.filter(item => item.dataModel === 'Brick');
-    //     return {
-    //       results: $.map(this.dataTypes, (obj, idx) => {
-    //       return {id: idx.toString(), text: obj.dataType};
-    //     })
-    //   };
-    //   }
-    // };
-    // this.select2Options.ajax = this.ajaxOptions;
-    this.uploadService.getBrickTypeTemplates()
+    const templates = this.uploadService.brickTypeTemplates;
+    if (templates) {
+      this.select2Data = templates;
+    } else {
+      this.uploadService.getTemplateSub()
       .subscribe((data: any) => {
-        this.select2Data = data.results;
+        this.select2Data = data;
       });
+    }
   }
 
   setBrickType(event) {
-    this.brick.type = event.data[0].text;
+    const template = event.data[0];
+    this.uploadService.setSelectedTemplate(template);
     this.uploadService.testBrickBuilder();
   }
 
