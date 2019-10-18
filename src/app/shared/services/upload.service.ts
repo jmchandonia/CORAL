@@ -89,4 +89,12 @@ export class UploadService {
   getDataModels() {
     return this.http.get(`${environment.baseURL}/data_models`);
   }
+
+  searchOntTerms(term) {
+    return this.http.get(`${environment.baseURL}/search_ont_all/${term}`);
+  }
+
+  searchOntUnits(term) {
+    return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
+  }
 }

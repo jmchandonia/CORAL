@@ -3,10 +3,9 @@
     <select2
       [cssImport]="true"
       [data]="typesSelect2"
-      [options]="select2Options"
-      [value]="propTypeItem ? propTypeItem : ''"
+      [options]="propertiesOptions"
       [disabled]="!property.editable"
-      (valueChanged)="setPropertyType($event)"  
+      (valueChanged)="setPropertyType($event)"
     ></select2>
   </div>
   <div class="col-3">
@@ -27,10 +26,10 @@
       <select2
         [cssImport]="true"
         [data]="unitsSelect2"
-        [options]="select2Options"
+        [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
         [disabled]="!property.editable"
-        (valueChanged)="setPropertyType($event)"
+        (valueChanged)="setUnits($event)"
     ></select2>
   </div>
   <div class="col-1">
