@@ -1,0 +1,44 @@
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Select2OptionData } from 'ng2-select2';
+import { Term } from 'src/app/shared/models/brick';
+import { UploadService } from 'src/app/shared/services/upload.service';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-async-dropdown',
+  templateUrl: './async-dropdown.component.html',
+  styleUrls: ['./async-dropdown.component.css']
+})
+export class AsyncDropdownComponent implements OnInit {
+
+  @Input() disabled: boolean;
+  @Input() term: Term;
+  @Input() callSearchMethod: (term: string) => Observable<any>;
+  @Output() searchTermChanged: EventEmitter<string> = new EventEmitter();
+
+  data: Array<Select2OptionData> = [];
+
+  options: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container',
+    query: (options: Select2QueryOptions) => {
+      const searchTerm = options.term;
+      if (searchTerm.length > 3) {
+        options.callback({results: []});
+      } else {
+        this.callSearchMethod(searchTerm)
+          .subscribe((data: any) => {
+            options.callback({results: data.results as Select2OptionData});
+          });
+      }
+    }
+  };
+
+  constructor(private uploadService: UploadService) {
+  }
+
+  ngOnInit() {
+  }
+
+
+}
