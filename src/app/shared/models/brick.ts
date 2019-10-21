@@ -30,16 +30,16 @@ export class BrickDimension {
     constructor(
         brick: Brick,
         index: number,
-        editable?: boolean
+        required?: boolean
     ) {
         this.brick = brick;
         this.index = index;
-        this.editable = editable;
+        this.required = required;
     }
     brick: Brick;
     index: number;
     type: Term;
-    editable: boolean;
+    required: boolean;
     // type: string;
     variables: DimensionVariable[] = [];
 
@@ -74,11 +74,11 @@ export class DimensionVariable {
 
 export class TypedProperty {
     // TODO: Discuss how to handle ontological terms
-    constructor(index: number, editable?: boolean) {
+    constructor(index: number, required?: boolean) {
         this.index = index;
-        this.editable = editable;
+        this.required = required;
     }
-    editable = true;
+    required = true;
     parentCollection: TypedProperty[];
     index: number;
     type: Term;

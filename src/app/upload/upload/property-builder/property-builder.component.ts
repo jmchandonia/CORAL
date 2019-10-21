@@ -29,7 +29,7 @@ export class PropertyBuilderComponent implements OnInit {
   }
 
   addProperty() {
-    this.properties.push(new TypedProperty(this.properties.length, true));
+    this.properties.push(new TypedProperty(this.properties.length, false));
     this.uploadService.testBrickBuilder();
   }
 

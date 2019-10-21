@@ -77,7 +77,7 @@ export class PropertyFormComponent implements OnInit {
    propTypeItem: string;
    propValueItem: string;
    unitsItem: string;
-   editable = true;
+   required = true;
 
   constructor(private uploadService: UploadService) { }
 

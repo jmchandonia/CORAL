@@ -19,7 +19,7 @@ export class AsyncDropdownComponent implements OnInit {
       this.selectedId = selectedValue.id;
     }
   }
-  @Input() editable: boolean;
+  @Input() required: boolean;
   // @Input() value: string;
   // @Input() callSearchMethod: (term: string) => Observable<any>;
   @Input() method: string;

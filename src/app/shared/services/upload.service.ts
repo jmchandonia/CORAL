@@ -62,7 +62,7 @@ export class UploadService {
   setTemplateDimensions(dims) {
     this.brickBuilder.dimensions = [];
     dims.forEach((item, idx) => {
-      const dim = new BrickDimension(this.brickBuilder, idx, false);
+      const dim = new BrickDimension(this.brickBuilder, idx, true);
       dim.type = new Term(item.type.id, item.type.text);
       item.dim_vars.forEach((dvItem, dvIdx) => {
         const dimVar = new DimensionVariable(this.brickBuilder, dvIdx, true);
@@ -78,7 +78,7 @@ export class UploadService {
   setTemplateProperties(props) {
     this.brickBuilder.properties = [];
     props.forEach((item, idx) => {
-      const prop = new TypedProperty(idx, false);
+      const prop = new TypedProperty(idx, true);
       prop.type = item.property as Term;
       prop.units = item.units as Term;
       prop.value = item.value as Term;
