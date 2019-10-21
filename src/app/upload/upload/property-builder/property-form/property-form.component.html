@@ -8,6 +8,13 @@
       [value]="propTypeItem ? propTypeItem : ''"
       (valueChanged)="setPropertyType($event)"
     ></select2>
+    <!-- <app-async-dropdown
+      [value]="propTypeItem"
+      [editable]="property.editable"
+      [term]="propTypeItem"
+      [callSearchMethod]="getOntTerms"
+      (valueChanged)="setPropertyType($event)"
+    ></app-async-dropdown> -->
   </div>
   <div class="col-3">
     <input

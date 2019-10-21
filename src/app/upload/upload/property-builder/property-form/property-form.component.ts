@@ -82,6 +82,8 @@ export class PropertyFormComponent implements OnInit {
   constructor(private uploadService: UploadService) { }
 
   ngOnInit() {
+    this.getOntUnits = this.getOntUnits.bind(this);
+    this.getOntTerms = this.getOntTerms.bind(this);
   }
 
   delete() {
@@ -95,6 +97,7 @@ export class PropertyFormComponent implements OnInit {
   }
 
   setPropertyType(event) {
+    console.log('EVENT', event);
     const item = event.data[0];
     this.property.type = new Term(item.id, item.text);
   }
@@ -106,6 +109,14 @@ export class PropertyFormComponent implements OnInit {
 
   onDelete() {
     this.deleted.emit(this.property);
+  }
+
+  public getOntUnits(x) {
+    return this.uploadService.searchOntUnits(x);
+  }
+
+  public getOntTerms(x) {
+    return this.uploadService.searchOntTerms(x);
   }
 
 }
