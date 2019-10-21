@@ -11,10 +11,12 @@ import { Observable } from 'rxjs';
 })
 export class AsyncDropdownComponent implements OnInit {
 
-  @Input() disabled: boolean;
+  // @Input() disabled: boolean;
   @Input() term: Term;
+  @Input() editable: boolean;
+  @Input() value: string;
   @Input() callSearchMethod: (term: string) => Observable<any>;
-  @Output() searchTermChanged: EventEmitter<string> = new EventEmitter();
+  @Output() valueChanged: EventEmitter<string> = new EventEmitter();
 
   data: Array<Select2OptionData> = [];
 
@@ -23,11 +25,12 @@ export class AsyncDropdownComponent implements OnInit {
     containerCssClass: 'select2-custom-container',
     query: (options: Select2QueryOptions) => {
       const searchTerm = options.term;
-      if (searchTerm.length > 3) {
+      if (searchTerm && searchTerm.length > 3) {
         options.callback({results: []});
       } else {
         this.callSearchMethod(searchTerm)
           .subscribe((data: any) => {
+            this.data = data.results;
             options.callback({results: data.results as Select2OptionData});
           });
       }
@@ -38,6 +41,10 @@ export class AsyncDropdownComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  handleValueChange(event) {
+    this.valueChanged.emit(event);
   }
 
 

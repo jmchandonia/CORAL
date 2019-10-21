@@ -1,3 +1,7 @@
-<p>
-  async-dropdown works!
-</p>
+<select2
+  [options]="options"
+  [cssImport]="true"
+  [data]="data"
+  [disabled]="!editable"
+  [value]="term ? term.id : ''"
+  (valueChanged)="handleValueChange($event)"></select2>

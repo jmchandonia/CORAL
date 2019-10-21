@@ -90,11 +90,11 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/data_models`);
   }
 
-  searchOntTerms(term) {
+  public searchOntTerms(term) {
     return this.http.get(`${environment.baseURL}/search_ont_all/${term}`);
   }
 
-  searchOntUnits(term) {
+  public searchOntUnits(term) {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
 }
