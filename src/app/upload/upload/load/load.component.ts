@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 
 @Component({
   selector: 'app-load',
   templateUrl: './load.component.html',
-  styleUrls: ['./load.component.css']
+  styleUrls: ['./load.component.css'],
+  viewProviders: [UploadDragDropDirective]
 })
 export class LoadComponent implements OnInit {
 
@@ -22,6 +24,10 @@ export class LoadComponent implements OnInit {
     } else {
       this.fileSize = `${this.file.size / 1000} KB`;
     }
+   }
+
+   removeFile() {
+     this.file = null;
    }
 
 }

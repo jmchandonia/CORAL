@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="drop-zone p-4">
+      <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
         <div class="row justify-content-center">
           <div class="col-10 d-block">
             <h2>Drag and drop your files here</h2>
@@ -18,7 +18,8 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header light-blue">
-          <h5>File Information</h5>
+          <h5 style="float: left" class=" mt-1 mb-0">File Information</h5>
+          <button (click)="removeFile()" style="float: right" class="btn btn-link">Remove</button>
         </div>
         <div class="card-body">
           <strong style="float: left">{{file?.name}}</strong>
