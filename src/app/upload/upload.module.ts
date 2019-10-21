@@ -13,6 +13,7 @@ import { DimensionFormComponent } from './upload/dimension-builder/dimension-for
 // tslint:disable-next-line:max-line-length
 import { DimensionVariableFormComponent } from './upload/dimension-builder/dimension-form/dimension-variable-form/dimension-variable-form.component';
 import { AsyncDropdownComponent } from './upload/async-dropdown/async-dropdown.component';
+import { LoadComponent } from './upload/load/load.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { AsyncDropdownComponent } from './upload/async-dropdown/async-dropdown.c
     DimensionBuilderComponent,
     DimensionFormComponent,
     DimensionVariableFormComponent,
-    AsyncDropdownComponent
+    AsyncDropdownComponent,
+    LoadComponent
   ],
   imports: [
     CommonModule,
