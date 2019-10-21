@@ -9,10 +9,9 @@
       (valueChanged)="setPropertyType($event)"
     ></select2>
     <!-- <app-async-dropdown
-      [value]="propTypeItem"
+      [term]="property.type"
       [editable]="property.editable"
-      [term]="propTypeItem"
-      [callSearchMethod]="getOntTerms"
+      [method]="'searchOntTerms'"
       (valueChanged)="setPropertyType($event)"
     ></app-async-dropdown> -->
   </div>
@@ -34,6 +33,11 @@
         [disabled]="!property.editable"
         (valueChanged)="setUnits($event)"
     ></select2>
+    <!-- <app-async-dropdown
+        [value]="unitsItem"
+        [method]="'searchOntUnits'"
+        [editable]="property.editable"
+        (valueChanged)="setUnits($event)"></app-async-dropdown> -->
   </div>
   <div class="col-1">
     <button *ngIf="property.editable" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
