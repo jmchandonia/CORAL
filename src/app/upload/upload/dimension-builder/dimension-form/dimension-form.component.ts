@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BrickDimension, DimensionVariable } from 'src/app/shared/models/brick';
+import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 @Component({
@@ -50,9 +50,14 @@ export class DimensionFormComponent implements OnInit {
   ngOnInit() {
   }
 
+  setDimensionType(event) {
+    const term = event.data[0];
+    this.dimension.type = new Term(term.id, term.text);
+  }
+
   addDimensionVariable() {
     this.dimension.variables.push(
-      new DimensionVariable(this.dimension, this.dimension.variables.length)
+      new DimensionVariable(this.dimension, this.dimension.variables.length, false)
       );
   }
 
