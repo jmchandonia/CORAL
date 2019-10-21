@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="drop-zone p-4">
+        <div class="row justify-content-center">
+          <div class="col-10 d-block">
+            <h2>Drag and drop your files here</h2>
+          </div>
+          <div class="col-10 d-block">
+            <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
+            <input hidden type="file" id="file" (change)="handleFileInput($event.target.files)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="file" class="row mt-4 justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5>File Information</h5>
+        </div>
+        <div class="card-body">
+          <strong style="float: left">{{file?.name}}</strong>
+          <span style="float: right">{{fileSize}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+.drop-zone {
+    border-radius: 5px;
+    background-color: #eeeeff;
+    border: 1px solid #aaa;
+}
+
+.click-to-browse {
+    color: #2969a5;
+    cursor: pointer;
+}

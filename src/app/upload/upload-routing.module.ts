@@ -5,13 +5,15 @@ import { TypeSelectorComponent } from './upload/type-selector/type-selector.comp
 import { PropertyBuilderComponent } from './upload/property-builder/property-builder.component';
 import { DimensionBuilderComponent } from './upload/dimension-builder/dimension-builder.component';
 import { AuthGuardService } from 'src/app/shared/services/auth-guard.service';
+import { LoadComponent } from './upload/load/load.component';
 
 const routes: Routes = [
     {path: 'upload', component: UploadComponent, canActivate: [AuthGuardService], children: [
         {path: '', redirectTo: 'type', pathMatch: 'full'},
         {path: 'type', component: TypeSelectorComponent},
         {path: 'properties', component: PropertyBuilderComponent},
-        {path: 'dimensions', component: DimensionBuilderComponent}
+        {path: 'dimensions', component: DimensionBuilderComponent},
+        {path: 'load', component: LoadComponent}
     ]}
 ];
 
