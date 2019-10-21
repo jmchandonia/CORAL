@@ -4,13 +4,13 @@
       [cssImport]="true"
       [data]="typesSelect2"
       [options]="propertiesOptions"
-      [disabled]="!property.editable"
+      [disabled]="property.required"
       [value]="propTypeItem ? propTypeItem : ''"
       (valueChanged)="setPropertyType($event)"
     ></select2>
     <!-- <app-async-dropdown
       [term]="property.type"
-      [editable]="property.editable"
+      [required]="property.required"
       [method]="'searchOntTerms'"
       (valueChanged)="setPropertyType($event)"
     ></app-async-dropdown> -->
@@ -20,7 +20,7 @@
       class="form-control"
       type="text"
       [(ngModel)]="property.value.text"
-      [disabled]="!property.editable"
+      [disabled]="property.required"
       [ngModelOptions]="{standalone: true}"
     />
   </div>
@@ -30,16 +30,16 @@
         [data]="unitsSelect2"
         [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
-        [disabled]="!property.editable"
+        [disabled]="property.required"
         (valueChanged)="setUnits($event)"
     ></select2>
     <!-- <app-async-dropdown
         [value]="unitsItem"
         [method]="'searchOntUnits'"
-        [editable]="property.editable"
+        [required]="property.required"
         (valueChanged)="setUnits($event)"></app-async-dropdown> -->
   </div>
   <div class="col-1">
-    <button *ngIf="property.editable" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
+    <button *ngIf="!property.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
   </div>
 </div>
