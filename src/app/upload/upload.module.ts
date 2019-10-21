@@ -14,6 +14,7 @@ import { DimensionFormComponent } from './upload/dimension-builder/dimension-for
 import { DimensionVariableFormComponent } from './upload/dimension-builder/dimension-form/dimension-variable-form/dimension-variable-form.component';
 import { AsyncDropdownComponent } from './upload/async-dropdown/async-dropdown.component';
 import { LoadComponent } from './upload/load/load.component';
+import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 
 @NgModule({
   declarations: [
@@ -25,13 +26,14 @@ import { LoadComponent } from './upload/load/load.component';
     DimensionFormComponent,
     DimensionVariableFormComponent,
     AsyncDropdownComponent,
-    LoadComponent
+    LoadComponent,
+    UploadDragDropDirective
   ],
   imports: [
     CommonModule,
     UploadRoutingModule,
     Select2Module,
-    FormsModule
+    FormsModule,
   ],
   providers: [UploadService]
 })
