@@ -51,14 +51,16 @@ export class BrickDimension {
 }
 
 export class DimensionVariable {
-    constructor(dimension, index) {
+    constructor(dimension, index, required?) {
         this.dimension = dimension;
         this.index = index;
+        this.required = required;
     }
+    required = true;
     dimension: BrickDimension;
     index: number;
     type: Term;
-    scalarType: Term;
+    scalarType: Term = new Term();
     units: Term;
     values: any[] = [];
     valuesSameple: string; //
