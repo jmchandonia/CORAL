@@ -12,13 +12,22 @@ import { Observable } from 'rxjs';
 export class AsyncDropdownComponent implements OnInit {
 
   // @Input() disabled: boolean;
-  @Input() term: Term;
+  // @Input() term: Term;
+  @Input() set term(selectedValue: Term) {
+    if (selectedValue) {
+      this.data = [selectedValue];
+      this.selectedId = selectedValue.id;
+    }
+  }
   @Input() editable: boolean;
-  @Input() value: string;
-  @Input() callSearchMethod: (term: string) => Observable<any>;
+  // @Input() value: string;
+  // @Input() callSearchMethod: (term: string) => Observable<any>;
+  @Input() method: string;
+
   @Output() valueChanged: EventEmitter<string> = new EventEmitter();
 
   data: Array<Select2OptionData> = [];
+  selectedId: string;
 
   options: Select2Options = {
     width: '100%',
@@ -28,9 +37,10 @@ export class AsyncDropdownComponent implements OnInit {
       if (searchTerm && searchTerm.length > 3) {
         options.callback({results: []});
       } else {
-        this.callSearchMethod(searchTerm)
+        // this.callSearchMethod(searchTerm)
+        this.uploadService[this.method](searchTerm)
           .subscribe((data: any) => {
-            this.data = data.results;
+            // this.data = data.results;
             options.callback({results: data.results as Select2OptionData});
           });
       }

@@ -27,8 +27,17 @@ export class DimensionFormComponent implements OnInit {
     }
   };
 
+  selectedType: string;
+
+  data: Array<Select2OptionData> = [];
+
   @Input() set dimension(d: BrickDimension) {
     this._dimension = d;
+
+    if (d.type) {
+      this.data = [d.type];
+      this.selectedType = d.type.id;
+    }
   }
 
   get dimension() {
