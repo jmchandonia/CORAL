@@ -8,6 +8,7 @@ export class Brick {
     template_id: string;
     dimensions: BrickDimension[] = [];
     properties: TypedProperty[] = [];
+    dataValues: DataValues;
     data_file_name: string;
 
     resetDimensionIndices() {
@@ -15,6 +16,34 @@ export class Brick {
             dimension.index = index;
         });
     }
+
+    toJson() {
+        const cache = [];
+        const res = JSON.stringify(this, (key, value) => {
+            if (typeof value === 'object' && value !== null) {
+                if (cache.indexOf(value) !== -1) {
+                    // Duplicate reference found
+                    try {
+                        // If this value does not reference a parent it can be deduped
+                        return JSON.parse(JSON.stringify(value));
+                    } catch (error) {
+                        // discard key if value cannot be deduped
+                        return;
+                    }
+                }
+                // Store value in our collection
+                cache.push(value);
+            }
+            return value;
+        });
+        return res;
+      }
+}
+
+export class DataValues {
+    type: Term;
+    scalarType: Term;
+    units: Term;
 }
 
 export class Term {

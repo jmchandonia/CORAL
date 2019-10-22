@@ -22,8 +22,13 @@
           <button (click)="removeFile()" style="float: right" class="btn btn-link">Remove</button>
         </div>
         <div class="card-body">
-          <strong style="float: left">{{file?.name}}</strong>
-          <span style="float: right">{{fileSize}}</span>
+          <!-- <strong style="float: left">{{file?.name}}</strong>
+          <span style="float: right">{{fileSize}}</span> -->
+          <span style="float: left">
+            <strong>{{file?.name}}</strong>
+            <span> ({{fileSize}})</span>
+          </span>
+          <button style="float: right" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
         </div>
       </div>
     </div>

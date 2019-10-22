@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
+import { UploadService } from 'src/app/shared/services/upload.service';
+import { Brick, BrickDimension, TypedProperty, Term } from 'src/app/shared/models/brick';
+
 
 @Component({
   selector: 'app-load',
@@ -9,12 +12,14 @@ import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-d
 })
 export class LoadComponent implements OnInit {
 
-  constructor() { }
+  constructor(private uploadService: UploadService) { }
 
   file: File = null;
   fileSize: string;
+  brick: Brick;
 
   ngOnInit() {
+    this.brick = this.uploadService.getBrickBuilder();
   }
 
   handleFileInput(files: FileList) {
@@ -24,6 +29,10 @@ export class LoadComponent implements OnInit {
     } else {
       this.fileSize = `${this.file.size / 1000} KB`;
     }
+   }
+
+   upload() {
+    this.uploadService.uploadBrick(this.file);
    }
 
    removeFile() {

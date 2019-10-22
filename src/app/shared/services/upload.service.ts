@@ -97,4 +97,12 @@ export class UploadService {
   public searchOntUnits(term) {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
+
+  uploadBrick(file: File) {
+    const formData: FormData = new FormData();
+    formData.append('files', file, file.name);
+    formData.append('brick', this.brickBuilder.toJson());
+    this.http.post(`${environment.baseURL}/upload`, formData)
+      .subscribe(res => console.log('RESPONSE FROM SERVER', res));
+  }
 }
