@@ -5,7 +5,8 @@ import {
   BrickDimension,
   TypedProperty,
   Term,
-  DimensionVariable
+  DimensionVariable,
+  DataValue
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
@@ -55,6 +56,7 @@ export class UploadService {
     this.brickBuilder.type = template.text;
     this.brickBuilder.template_id = template.id;
     this.brickBuilder.name = template.text;
+    this.brickBuilder.dataValues = template.data_vars;
     this.setTemplateDimensions(template.dims);
     this.setTemplateProperties(template.properties);
   }
