@@ -8,6 +8,8 @@ import random
 from simplepam import authenticate
 import jwt
 import datetime
+import uuid 
+import os
 
 # from . import services
 # from .brick import Brick
@@ -21,6 +23,8 @@ CORS(app)
 dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
+
+TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')  
 
 @app.route("/")
 def hello():
@@ -238,19 +242,20 @@ def create_brick():
 
 
 
-@app.route('/generix/upload', methods=['GET', 'POST'])
+@app.route('/generix/upload', methods=['POST'])
 def upload_file():
     print("From uploader", request.method)
     if request.method == 'POST':
         brick = json.loads(request.form['brick'])
 
-        print( json.dumps(brick, sort_keys=True, 
-        indent=4, separators=(',', ': ') ) )
+        # print( json.dumps(brick, sort_keys=True, 
+        # indent=4, separators=(',', ': ') ) )
         
         # Save file
         f = request.files['files']
-        file_name = './data/' + f.filename
-        f.save(file_name)
+        data_id = uuid.uuid4().hex
+        file_name = os.path.join(TMP_DIR,data_id)
+        f.save( file_name )
 
         # Read df
         df = pd.read_csv(file_name, sep='\t') 
@@ -262,35 +267,57 @@ def upload_file():
         brick_dims = brick['dimensions'] 
         if len(brick_dims) > 0:
             dim = {
-                'dim_index': 0,
-                'vars': []
+                'size':  0,
+                'dim_vars': []
             }
             dims.append(dim)
             for i,v in enumerate(brick_dims[0]['variables']):
                 vals = list(df[df.columns[i]].values)
-                dim['vars'].append(vals)
+                dim['size'] = len(vals)
+                dim['dim_vars'].append({
+                    'value_example': _dim_var_example(vals)
+                })
 
         # Second dim
         if len(brick_dims) > 1:
             dim = {
-                'dim_index': 1,
-                'vars': []
+                'size':  0,
+                'dim_vars': []
             }
             dims.append(dim)
             offset = len(brick_dims[0]['variables'])
-            dim['vars'].append( list(df.columns[offset:].values) )
+            vals = list(df.columns[offset:].values)
+            dim['size'] = len(vals)
+            dim['dim_vars'].append({
+                'value_example': _dim_var_example(vals)
+            })
 
-        with open(file_name, 'r') as f:
-            file_data = ' '.join( f.readlines() )
+        data_vars = []
+        data_vars.append({
+            'value_example': _data_var_example(file_name, dims)
+        })
 
     return  json.dumps( {
-            'status': 'success',
-            'data': {
+            'status': 'OK',
+            'results': {
                 'dims': dims,
-                'file_name': file_name,
-                'file_data': file_data
-            }
+                'data_vars': data_vars,
+                'data_id': data_id
+            },
+            'error': ''
     } )
+
+def _data_var_example(filename, dims, max_items=5):
+    df = pd.read_csv(filename, sep='\t') 
+    offset = len(dims[0]['dim_vars'])
+    df = df[df.columns[offset:].values].head(max_items)
+    return df.to_html()
+
+def _dim_var_example(vals, max_items=5):
+    return '%s%s' % ( 
+        ','.join(str(val) for val in vals[0:max_items]), 
+        '...' if len(vals) > max_items else '' ) 
+
 
 def _create_brick(brick_data):
     dims_data = brick_data['dimensions']
