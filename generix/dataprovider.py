@@ -42,7 +42,8 @@ class DataProvider:
         return {
             '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE,
             '_WEB_SERVICE': services._WEB_SERVICE,
-            '_PLOT_TYPES_FILE': services._PLOT_TYPES_FILE
+            '_PLOT_TYPES_FILE': services._PLOT_TYPES_FILE,
+            '_DATA_DIR': services._DATA_DIR
         }
 
 class GenericsProvider:
