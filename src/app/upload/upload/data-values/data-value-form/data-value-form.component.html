@@ -1,0 +1,38 @@
+<div class="row mt-4">
+  <div class="col-4">
+    <select2
+      [cssImport]="true"
+      [value]="typeValuesItem ? typeValuesItem : ''"
+      [options]="typesOptions"
+      [data]="typeValues"
+      (valueChanged)="updateType($event)"
+      [disabled]="dataValue.required"
+    ></select2>
+  </div>
+  <div class="col-3">
+    <select2
+      [cssImport]="true"
+      [value]="scalarValuesItem ? scalarValuesItem : ''"
+      [options]="scalarOptions"
+      [data]="scalarValues"
+      (valueChanged)="updateScalarType($event)"
+      [disabled]="dataValue.required"
+    ></select2>
+  </div>
+  <div class="col-3">
+    <select2
+      [cssImport]="true"
+      [value]="unitsItem ? unitsItem : ''"
+      [options]="unitsOptions"
+      [data]="unitsValues"
+      (valueChanged)="updateUnits($event)"
+      [disabled]="dataValue.required"
+    ></select2>
+  </div>
+  <div class="col-2" *ngIf="!dataValue.required">
+    <button
+      class="btn btn-sm btn-link"
+      (click)="onDelete()"  
+    >Delete</button>
+  </div>
+</div>
