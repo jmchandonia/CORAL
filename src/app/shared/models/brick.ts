@@ -106,7 +106,7 @@ export class DimensionVariable {
     scalarType: Term = new Term();
     units: Term;
     values: any[] = [];
-    valuesSameple: string; //
+    valuesSample: string; //
     mapCoreType: string; //
     mapCoreProp: string; //
     mappedCount: number; //

@@ -104,7 +104,29 @@ export class UploadService {
     const formData: FormData = new FormData();
     formData.append('files', file, file.name);
     formData.append('brick', this.brickBuilder.toJson());
-    this.http.post(`${environment.baseURL}/upload`, formData)
-      .subscribe(res => console.log('RESPONSE FROM SERVER', res));
+    const returnResponse = new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/upload`, formData)
+        .subscribe((res: any) => {
+          this.mapBrickData(res);
+          resolve(res);
+        },
+          err => {
+            reject(err);
+          }
+        );
+    });
+    return returnResponse;
+  }
+
+  mapBrickData(res: any) {
+    this.brickBuilder.dimensions.forEach((dim, idx) => {
+      const dimData = res.data.dims[idx];
+
+      dim.variables.map((dimVar, dvIdx) => {
+        dimVar.values = dimData.vars[dvIdx];
+        dimVar.valuesSample = dimVar.values.slice(0,10).join(', ') + '...';
+      });
+    });
+    this.brickBuilder.data_file_name = res.data.file_name;
   }
 }
