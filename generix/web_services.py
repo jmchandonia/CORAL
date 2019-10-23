@@ -214,31 +214,37 @@ def do_report(value):
     } )
 
 
-@app.route('/generix/create_brick', methods=['GET', 'POST'])
+@app.route('/generix/create_brick', methods=['POST'])
 def create_brick():
-    if request.method == 'POST':
-        brick_data = json.loads(request.form['brick'])
-        br = _create_brick(brick_data)
+    brick_data = json.loads(request.form['brick'])
+    print(json.dumps(brick_data, 
+        sort_keys=True, 
+        indent=4, separators=(',', ': ') ) )
+        
+    brick_id = svs['workspace'].next_id('Brick')
 
-        print('Brick created')
-        print(br.data_vars[0].values)
-        print(br._repr_html_())
+    # br = _create_brick(brick_data)
 
-        process_term = _get_term({'id':'PROCESS:0000031'})
-        person_term = _get_term({'id':'ENIGMA:0000090'})
-        campaign_term = _get_term({'id':'ENIGMA:0000021'})
-        input_obj_ids = 'Well:Well0000000'
+    # print('Brick created')
+    # print(br.data_vars[0].values)
+    # print(br._repr_html_())
+
+    # process_term = _get_term({'id':'PROCESS:0000031'})
+    # person_term = _get_term({'id':'ENIGMA:0000090'})
+    # campaign_term = _get_term({'id':'ENIGMA:0000021'})
+    # input_obj_ids = 'Well:Well0000000'
 
 
-        br.save(process_term=process_term, 
-            person_term=person_term, 
-            campaign_term=campaign_term,
-            input_obj_ids=input_obj_ids)
+    # br.save(process_term=process_term, 
+    #     person_term=person_term, 
+    #     campaign_term=campaign_term,
+    #     input_obj_ids=input_obj_ids)
 
 
     return  json.dumps( {
-            'status': 'success',
-            'brick_id': br.id
+            'status': 'OK',
+            'results': brick_id,
+            'error': ''
     } )
 
 
@@ -903,9 +909,7 @@ def generix_type_stat():
                     'category': TYPE_CATEGORY_DYNAMIC
                 }
             }            
-        )
-
-# 111
+        )    
 
     # bp = dp._get_type_provider('Brick')
     # for dt_name in bp.type_names():
