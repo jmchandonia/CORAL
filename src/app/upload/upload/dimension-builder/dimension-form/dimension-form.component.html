@@ -38,10 +38,12 @@
         <strong>Units</strong>
       </div>
     </div>
-      <app-dimension-variable-form
-        (deleted)="removeDimensionVariable($event)"
-        *ngFor="let dimVar of dimension.variables"
-        [dimVar]="dimVar"
-      ></app-dimension-variable-form>
+      <ng-container *ngFor="let dimVar of dimension.variables">
+          <app-dimension-variable-form
+           (deleted)="removeDimensionVariable($event)"
+           *ngIf="!dimVar.hidden"
+           [dimVar]="dimVar"
+        ></app-dimension-variable-form>
+      </ng-container>
   </div>
 </div>

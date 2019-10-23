@@ -22,14 +22,13 @@
     <div class="col-3">
       <input class="form-control" [disabled]="dimVar.required" [(ngModel)]="dimVar.scalarType.text" [ngModelOptions]="{standalone: true}" />
     </div>
-    <div class="col-3">
+    <div class="col-3" *ngIf="dimVar.units !== null">
       <select2
         [cssImport]="true"
         [options]="unitsOptions"
         [data]="unitsData"
         [value]="selectedUnits ? selectedUnits : ''"
         (valueChanged)="setDimVarUnits($event)"
-        [disabled]="dimVar.required"
       ></select2>
     </div>
     <div class="col-2">

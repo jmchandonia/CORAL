@@ -16,17 +16,15 @@
       [options]="scalarOptions"
       [data]="scalarValues"
       (valueChanged)="updateScalarType($event)"
-      [disabled]="dataValue.required"
     ></select2>
   </div>
-  <div class="col-3">
+  <div class="col-3" *ngIf="dataValue.units !== null">
     <select2
       [cssImport]="true"
       [value]="unitsItem ? unitsItem : ''"
       [options]="unitsOptions"
       [data]="unitsValues"
       (valueChanged)="updateUnits($event)"
-      [disabled]="dataValue.required"
     ></select2>
   </div>
   <div class="col-2" *ngIf="!dataValue.required">
