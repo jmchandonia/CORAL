@@ -49,6 +49,10 @@ export class QueryBuilderService {
       });
   }
 
+  getLoadedDataTypes() {
+    return this.dataTypes;
+  }
+
   getCurrentObject() {
     return this.queryBuilderObject;
   }
