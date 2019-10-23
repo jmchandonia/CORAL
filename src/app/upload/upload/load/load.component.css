@@ -8,3 +8,13 @@
     color: #2969a5;
     cursor: pointer;
 }
+
+.process-container {
+    /* height: 200px; */
+    border: 1px solid #cedfda;
+    border-radius: 5px;
+}
+
+.loading-container { 
+    height: 200px;
+}

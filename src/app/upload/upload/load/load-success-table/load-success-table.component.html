@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mt-2 mb-2">
+        <div class="card-header light-blue">
+          <h5>Upload Successful</h5>
+        </div>
+        <div class="card-body">
+          <div class="card mt-2">
+            <div class="card-header light-blue">
+              <h6>Dimension Metadata</h6>
+            </div>
+            <div class="card-body">
+              <div class="row" *ngFor="let dim of brick.dimensions">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <h5>Dimension {{dim.index + 1}} ({{dim.type.text}}, size = {{dim.size}})</h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <table class="table table-bordered">
+                        <thead class="table-header">
+                          <tr>
+                            <td><strong>#</strong></td>
+                            <td><strong>Data Type</strong></td>
+                            <td><strong>Units</strong></td>
+                            <td><strong>Value Sample</strong></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let dimVar of dim.variables">
+                            <td>{{dimVar.index + 1}}</td>
+                            <td>{{dimVar.type.text}}</td>
+                            <td>{{dimVar.units.text}}</td>
+                            <td>{{dimVar.valuesSample}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-2 mb-2">
+            <div class="card-header light-blue">
+              <h6>Data Values</h6>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead class="table-header">
+                  <tr>
+                    <td><strong>#</strong></td>
+                    <td><strong>Data Type</strong></td>
+                    <td><strong>Units</strong></td>
+                    <td><strong>Value Sample</strong></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dataValue of brick.dataValues">
+                    <td>{{dataValue.index + 1}}</td>
+                    <td>{{dataValue.type.text}}</td>
+                    <td>{{dataValue.units.text}}</td>
+                    <td>{{dataValue.valuesSample}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

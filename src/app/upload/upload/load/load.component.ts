@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, BrickDimension, TypedProperty, Term } from 'src/app/shared/models/brick';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -12,11 +13,17 @@ import { Brick, BrickDimension, TypedProperty, Term } from 'src/app/shared/model
 })
 export class LoadComponent implements OnInit {
 
-  constructor(private uploadService: UploadService) { }
+  constructor(
+    private uploadService: UploadService,
+    private spinner: NgxSpinnerService
+  ) { }
 
   file: File = null;
   fileSize: string;
   brick: Brick;
+  successData: any;
+  error = false;
+  loading = false;
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
@@ -32,7 +39,19 @@ export class LoadComponent implements OnInit {
    }
 
    upload() {
-    this.uploadService.uploadBrick(this.file);
+    this.loading = true;
+    this.spinner.show();
+    this.uploadService.uploadBrick(this.file).then((res: any) => {
+      this.loading = false;
+      this.spinner.hide();
+      this.successData = res.results;
+    },
+    err => {
+      this.spinner.hide();
+      console.log('ERROR', err);
+      this.error = true;
+    }
+    );
    }
 
    removeFile() {
