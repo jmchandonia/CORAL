@@ -1,4 +1,4 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, send_file
 from flask import Response
 from flask import request
 from flask_cors import CORS
@@ -11,12 +11,14 @@ import datetime
 import uuid 
 import os
 
+
 # from . import services
 # from .brick import Brick
 
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
+from .template import generate_brick_2d_template
 
 app = Flask(__name__)
 CORS(app)
@@ -253,7 +255,7 @@ def upload_file():
         
         # Save file
         f = request.files['files']
-        data_id = uuid.uuid4().hex
+        data_id = 'brick_' + uuid.uuid4().hex
         file_name = os.path.join(TMP_DIR,data_id)
         f.save( file_name )
 
@@ -388,7 +390,6 @@ def _search_oterms(ontology, value):
 ########################################################################################
 ## NEW VERSION
 ##########################################################################################
-
 
 @app.route("/generix/user_login", methods=['GET', 'POST'])
 def login():
@@ -1055,6 +1056,16 @@ def generix_core_type_metadata(obj_id):
         })
 
     
+@app.route('/generix/generate_brick_template', methods=['POST'])
+def generate_brick_template():
+    brick = json.loads(request.form['brick'])
+    data_id = 'template_' + uuid.uuid4().hex
+    file_name = os.path.join(TMP_DIR,data_id)
+    generate_brick_2d_template(brick, file_name)
+    return send_file(file_name, 
+        as_attachment=True,
+        attachment_filename='data_template.xlsx',
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
 
 
