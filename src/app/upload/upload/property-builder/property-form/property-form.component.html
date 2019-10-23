@@ -20,17 +20,16 @@
       class="form-control"
       type="text"
       [(ngModel)]="property.value.text"
-      [disabled]="property.required"
       [ngModelOptions]="{standalone: true}"
     />
   </div>
   <div class="col-2">
       <select2
+        *ngIf="property.units !== null"
         [cssImport]="true"
         [data]="unitsSelect2"
         [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
-        [disabled]="property.required"
         (valueChanged)="setUnits($event)"
     ></select2>
     <!-- <app-async-dropdown

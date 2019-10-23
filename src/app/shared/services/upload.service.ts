@@ -10,6 +10,7 @@ import {
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
+import * as _ from 'lodash';
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +67,7 @@ export class UploadService {
     dataVars.forEach((dataVar, idx) => {
       const dataValue = new DataValue(idx, true);
       dataValue.type = dataVar.type as Term;
-      dataValue.units = dataVar.units as Term;
+      dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
       dataValue.scalarType = dataVar.scalar_type as Term;
       this.brickBuilder.dataValues.push(dataValue);
     });
@@ -81,7 +82,7 @@ export class UploadService {
         const dimVar = new DimensionVariable(this.brickBuilder, dvIdx, true);
         dimVar.type = dvItem.type as Term;
         dimVar.scalarType = dvItem.scalar_type as Term;
-        dimVar.units = dvItem.units as Term;
+        dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
         dim.variables.push(dimVar);
       });
       this.brickBuilder.dimensions.push(dim);
@@ -93,10 +94,14 @@ export class UploadService {
     props.forEach((item, idx) => {
       const prop = new TypedProperty(idx, true);
       prop.type = item.property as Term;
-      prop.units = item.units as Term;
+      prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
       prop.value = item.value as Term;
       this.brickBuilder.properties.push(prop);
     });
+  }
+
+  valuelessUnits(units) {
+    return _.isEqual(units, {id: '', text: ''});
   }
 
   getDataModels() {

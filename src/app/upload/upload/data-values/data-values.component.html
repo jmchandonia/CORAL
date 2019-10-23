@@ -18,11 +18,13 @@
             </div>
           </div>
           <ng-container *ngIf="dataValues">
-            <app-data-value-form
-              *ngFor="let dataValue of dataValues"
-              (removed)="removeDataValue(dataValue.index)"
-              [dataValue]="dataValue"
-              ></app-data-value-form>
+            <ng-container *ngFor="let dataValue of dataValues">              
+              <app-data-value-form
+                *ngIf="!dataValue.hidden"
+                (removed)="removeDataValue(dataValue.index)"
+                [dataValue]="dataValue"
+                ></app-data-value-form>
+            </ng-container>
           </ng-container>
         </div>
         <div class="card-footer light-blue">
