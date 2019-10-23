@@ -7,6 +7,7 @@ import { DimensionBuilderComponent } from './upload/dimension-builder/dimension-
 import { AuthGuardService } from 'src/app/shared/services/auth-guard.service';
 import { LoadComponent } from './upload/load/load.component';
 import { DataValuesComponent } from './upload/data-values/data-values.component';
+import { PreviewComponent } from './upload/preview/preview.component';
 
 const routes: Routes = [
     {path: 'upload', component: UploadComponent, canActivate: [AuthGuardService], children: [
@@ -15,7 +16,8 @@ const routes: Routes = [
         {path: 'properties', component: PropertyBuilderComponent},
         {path: 'dimensions', component: DimensionBuilderComponent},
         {path: 'load', component: LoadComponent},
-        {path: 'data-values', component: DataValuesComponent}
+        {path: 'data-values', component: DataValuesComponent},
+        {path: 'preview', component: PreviewComponent}
     ]}
 ];
 

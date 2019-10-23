@@ -17,6 +17,7 @@ export class UploadComponent implements OnInit {
     'load',
     'validate',
     'map',
+    'preview',
     'create'
   ];
 
