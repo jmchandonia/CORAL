@@ -11,6 +11,7 @@ export class Brick {
     properties: TypedProperty[] = [];
     dataValues: DataValue[] = [];
     dataFileName: string;
+    description: string;
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
