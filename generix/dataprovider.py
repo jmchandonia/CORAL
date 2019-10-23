@@ -36,7 +36,8 @@ class DataProvider:
             'ontology': services.ontology,
             'reports' : services.reports,
             'indexdef': services.indexdef,
-            'arango_service': services.arango_service
+            'arango_service': services.arango_service,
+            'workspace': services.workspace
         }
     def _get_constants(self):
         return {
