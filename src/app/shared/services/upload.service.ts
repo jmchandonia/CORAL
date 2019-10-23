@@ -62,6 +62,7 @@ export class UploadService {
   }
 
   setTemplateDataValues(dataVars) {
+    this.brickBuilder.dataValues = [];
     dataVars.forEach((dataVar, idx) => {
       const dataValue = new DataValue(idx, true);
       dataValue.type = dataVar.type as Term;
