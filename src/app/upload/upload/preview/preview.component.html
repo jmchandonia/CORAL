@@ -21,10 +21,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <!-- <tr>
                   <td><strong>Id: </strong></td>
                   <td>{{brick?.id}}</td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>
                     <strong>Value Type: </strong>
@@ -81,7 +81,9 @@
                   </span>
                 </td>
                 <td>
-                  <button class="btn btn-link" (click)="openModal(template)">View Dimension Variables</button>
+                  <span *ngFor="let v of dim.variables;">
+                    {{v.valuesSample}}
+                  </span>
                 </td>
               </tr>
             </tbody>

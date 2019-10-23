@@ -12,6 +12,8 @@ export class Brick {
     dataValues: DataValue[] = [];
     dataFileName: string;
     description: string;
+    process: Term;
+    campaign: Term;
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
