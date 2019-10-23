@@ -14,6 +14,20 @@
       </div>
     </div>
   </div>
+  <div class="row mt-4" *ngIf="loading || successData || error">
+    <div class="col-12 process-container">
+      <div class="loading-container" *ngIf="loading">
+        <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+      <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+    </div>
+  </div>
   <div *ngIf="file" class="row mt-4 justify-content-center">
     <div class="col-12">
       <div class="card">
@@ -22,8 +36,6 @@
           <button (click)="removeFile()" style="float: right" class="btn btn-link">Remove</button>
         </div>
         <div class="card-body">
-          <!-- <strong style="float: left">{{file?.name}}</strong>
-          <span style="float: right">{{fileSize}}</span> -->
           <span style="float: left">
             <strong>{{file?.name}}</strong>
             <span> ({{fileSize}})</span>

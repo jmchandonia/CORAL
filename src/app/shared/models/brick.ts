@@ -2,6 +2,7 @@
 
 export class Brick {
     id: string;
+    data_id: string;
     createStatus: string; //
     name: string;
     type: string;
@@ -9,7 +10,7 @@ export class Brick {
     dimensions: BrickDimension[] = [];
     properties: TypedProperty[] = [];
     dataValues: DataValue[] = [];
-    data_file_name: string;
+    dataFileName: string;
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
@@ -58,6 +59,7 @@ export class DataValue {
     type: Term;
     scalarType: Term;
     units: Term;
+    valuesSample: string;
 }
 
 export class Term {
@@ -83,6 +85,7 @@ export class BrickDimension {
     index: number;
     type: Term;
     required: boolean;
+    size: number;
     // type: string;
     variables: DimensionVariable[] = [];
 

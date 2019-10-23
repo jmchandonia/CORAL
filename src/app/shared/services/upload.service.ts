@@ -56,9 +56,19 @@ export class UploadService {
     this.brickBuilder.type = template.text;
     this.brickBuilder.template_id = template.id;
     this.brickBuilder.name = template.text;
-    this.brickBuilder.dataValues = template.data_vars;
+    this.setTemplateDataValues(template.data_vars);
     this.setTemplateDimensions(template.dims);
     this.setTemplateProperties(template.properties);
+  }
+
+  setTemplateDataValues(dataVars) {
+    dataVars.forEach((dataVar, idx) => {
+      const dataValue = new DataValue(idx, true);
+      dataValue.type = dataVar.type as Term;
+      dataValue.units = dataVar.units as Term;
+      dataValue.scalarType = dataVar.scalar_type as Term;
+      this.brickBuilder.dataValues.push(dataValue);
+    });
   }
 
   setTemplateDimensions(dims) {
@@ -119,14 +129,18 @@ export class UploadService {
   }
 
   mapBrickData(res: any) {
+    this.brickBuilder.data_id = res.results.data_id;
     this.brickBuilder.dimensions.forEach((dim, idx) => {
-      const dimData = res.data.dims[idx];
-
+      const dimData = res.results.dims[idx];
+      dim.size = dimData.size;
       dim.variables.map((dimVar, dvIdx) => {
-        dimVar.values = dimData.vars[dvIdx];
-        dimVar.valuesSample = dimVar.values.slice(0,10).join(', ') + '...';
+        dimVar.valuesSample = dimData.dim_vars[dvIdx].value_example;
       });
     });
-    this.brickBuilder.data_file_name = res.data.file_name;
+    this.brickBuilder.dataValues.forEach((val, idx) => {
+      const valueData = res.results.data_vars[idx];
+      val.valuesSample = valueData.value_example;
+    });
   }
+
 }

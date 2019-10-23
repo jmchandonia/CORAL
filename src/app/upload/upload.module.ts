@@ -17,6 +17,8 @@ import { LoadComponent } from './upload/load/load.component';
 import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 import { DataValuesComponent } from './upload/data-values/data-values.component';
 import { DataValueFormComponent } from './upload/data-values/data-value-form/data-value-form.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadSuccessTableComponent } from './upload/load/load-success-table/load-success-table.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,12 @@ import { DataValueFormComponent } from './upload/data-values/data-value-form/dat
     LoadComponent,
     UploadDragDropDirective,
     DataValuesComponent,
-    DataValueFormComponent
+    DataValueFormComponent,
+    LoadSuccessTableComponent
   ],
   imports: [
     CommonModule,
+    NgxSpinnerModule,
     UploadRoutingModule,
     Select2Module,
     FormsModule,
