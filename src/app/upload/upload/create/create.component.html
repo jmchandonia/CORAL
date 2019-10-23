@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <label for="brick-name">Brick Name:</label>
+              <input type="text" [(ngModel)]="brick.name" [ngModelOptions]="{standalone: true}" class="form-control" id="brick-name" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label for="brick-process">Process:</label>
+              <select2
+                id="brick-process"
+                [cssImport]="true"
+                [options]="options"
+                [data]="processData"
+                (valueChanged)="setBrickProcess($event)"
+                ></select2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label for="brick-campaign">Campaign: </label>
+              <select2
+                id="brick-campaign"
+                [cssImport]="true"
+                [options]="options"
+                [data]="campaignData"
+                (valueChanged)="setBrickCampaign($event)"
+                ></select2>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-2">
+            <button class="btn btn-primary" [disabled]="successId" (click)="submitBrick()">
+              Create
+            </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="loading">
+          <div class="col-12 loading-container">
+              <ngx-spinner
+              bdColor="rgba(0,0,0,0)"
+              color="#aaa"
+              size="medium"
+              type="ball-spin-fade-rotating"
+              [fullScreen]="false"
+            ></ngx-spinner>
+          </div>
+        </div>
+        <div class="row" *ngIf="successId">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header light-blue">
+                <h5>Create Success</h5>
+              </div>
+              <div class="card-body">
+                <p>Your Brick has been created successfully with brick ID {{successId}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

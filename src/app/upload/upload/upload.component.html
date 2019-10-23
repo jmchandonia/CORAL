@@ -22,7 +22,7 @@
     <div class="col-1 offset-1">
       <button
         class="btn btn-light"
-        *ngIf="progressIndex > 0"
+        *ngIf="progressIndex > 0 && !currentUrl.includes('create')"
         (click)="previousStep()"
       >
         <i class="material-icons arrow-icon">

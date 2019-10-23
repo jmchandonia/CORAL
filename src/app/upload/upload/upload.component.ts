@@ -48,7 +48,11 @@ export class UploadComponent implements OnInit {
   }
 
   nextStep() {
-    this.progressIndex++;
+    if(this.progressIndex == 4) {
+      this.progressIndex = 7;
+    } else {
+      this.progressIndex++;
+    }
     this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
   }
 

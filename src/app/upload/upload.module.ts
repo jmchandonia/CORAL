@@ -20,6 +20,7 @@ import { DataValueFormComponent } from './upload/data-values/data-value-form/dat
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoadSuccessTableComponent } from './upload/load/load-success-table/load-success-table.component';
 import { PreviewComponent } from './upload/preview/preview.component';
+import { CreateComponent } from './upload/create/create.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PreviewComponent } from './upload/preview/preview.component';
     DataValuesComponent,
     DataValueFormComponent,
     LoadSuccessTableComponent,
-    PreviewComponent
+    PreviewComponent,
+    CreateComponent
   ],
   imports: [
     CommonModule,

@@ -156,4 +156,10 @@ export class UploadService {
     });
   }
 
+  submitBrick() {
+    const formData: FormData = new FormData();
+    formData.append('brick', this.brickBuilder.toJson());
+    return this.http.post<any>(`${environment.baseURL}/create_brick`, formData);
+  }
+
 }
