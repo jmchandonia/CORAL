@@ -34,7 +34,7 @@
     <div class="col-1 offset-7">
       <button
         class="btn btn-light"
-        *ngIf="progressIndex < 6"
+        *ngIf="progressIndex < uploadSteps.length - 1"
         (click)="nextStep()"
       >
         Next  
