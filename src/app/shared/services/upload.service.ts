@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Brick,
   BrickDimension,
@@ -126,6 +126,18 @@ export class UploadService {
         );
     });
     return returnResponse;
+  }
+
+  downloadBrickTemplate() {
+    const formData: FormData = new FormData();
+    formData.append('brick', this.brickBuilder.toJson());
+    const config = {
+      headers: new HttpHeaders({
+        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      }),
+      responseType: 'blob' as 'json'
+    };
+    return this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config);
   }
 
   mapBrickData(res: any) {

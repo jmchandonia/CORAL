@@ -15,7 +15,7 @@ export class LoadComponent implements OnInit {
 
   constructor(
     private uploadService: UploadService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
   ) { }
 
   file: File = null;
@@ -36,6 +36,20 @@ export class LoadComponent implements OnInit {
     } else {
       this.fileSize = `${this.file.size / 1000} KB`;
     }
+   }
+
+   downloadTemplate() {
+     this.uploadService.downloadBrickTemplate()
+      .subscribe((data: Blob) => {
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.setAttribute('style', 'display: none');
+        a.href = url;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      });
    }
 
    upload() {
