@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { Select2OptionData, } from 'ng2-select2';
 import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
 import { NetworkService } from '../../../shared/services/network.service';
@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './query-builder.component.html',
   styleUrls: ['./query-builder.component.css']
 })
-export class QueryBuilderComponent implements OnInit {
+export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
@@ -69,39 +69,33 @@ export class QueryBuilderComponent implements OnInit {
 
   ngOnInit() {
     // TODO: make all querymatches initialize right away
-    // TODO: add direct method to get data types in addition to subscription
-    // TODO: add ngOnDestroy and unsubscribe to subscriptions
     if (!this.queryMatch) {
       this.queryMatch = new QueryMatch();
     }
 
-    this.dataTypeSub = this.queryBuilder.getDataTypes()
+    const loadedDataTypes = this.queryBuilder.getLoadedDataTypes();
+    if (loadedDataTypes) {
+      this.populateDataTypes(loadedDataTypes);
+    } else {
+      this.dataTypeSub = this.queryBuilder.getDataTypes()
       .subscribe(dataTypes => {
-        this.dataTypes = dataTypes;
-        this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
-          return {id: idx.toString(), text: type.dataType};
-        })];
+        this.populateDataTypes(dataTypes);
       });
-    // this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
-    //   return {id: idx.toString(), text: type.name};
-    // })];
-
-    // this.ajaxOptions = {
-    //   url: `${environment.baseURL}/data_types`,
-    //   dataType: 'json',
-    //   delay: 250,
-    //   cache: false,
-    //   processResults: (data: any) => {
-    //     this.dataTypes = data.results;
-    //     return {
-    //       results: $.map(data.results, (obj, idx) => {
-    //         return {id: idx.toString(), text: obj.dataType};
-    //       }),
-    //     };
-    //   },
-    // };
-    // this.options.ajax = this.ajaxOptions;
+    }
 }
+
+  populateDataTypes(dataTypes) {
+    this.dataTypes = dataTypes;
+    this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
+      return {id: idx.toString(), text: type.dataType};
+    })];
+  }
+
+  ngOnDestroy() {
+    if (this.dataTypeSub) {
+      this.dataTypeSub.unsubscribe();
+    }
+  }
 
   updateObjectDataModel(event) {
     // const selected = this.dataTypes[parseInt(event.value, 10)];
