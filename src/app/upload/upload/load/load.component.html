@@ -1,8 +1,16 @@
 <div class="container">
+  <div class="row mb-2">
+    <div class="col-12">
+      <button class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
+        <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
+        Download Template
+      </button>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="margin-top: 80px;">
           <div class="col-10 d-block">
             <h2>Drag and drop your files here</h2>
           </div>
