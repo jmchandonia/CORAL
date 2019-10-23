@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationStart } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-upload',
@@ -27,9 +27,13 @@ export class UploadComponent implements OnInit {
     private router: Router
   ) {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
+      if (event instanceof NavigationEnd) {
         this.currentUrl = event.url.split('/').pop();
         this.progressIndex = this.uploadSteps.indexOf(this.currentUrl);
+        if (this.progressIndex < 0) {
+          this.progressIndex = 0;
+          this.currentUrl = 'type';
+        }
       }
     });
   }
