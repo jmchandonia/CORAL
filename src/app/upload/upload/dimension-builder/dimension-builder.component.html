@@ -1,17 +1,18 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="card">
-        <h5 class="card-header">
-          Add Dimensions to your Brick
-        </h5>
-        <div class="card-body">
-          <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
+        <div class="row">
+          <div class="col-12">
+            <h5 class="mb-0" style="float: left">
+                Add Dimensions to your Brick
+            </h5>
+            <button class="btn btn-sm btn-link" style="float: right" (click)="addDimension()">
+              + Add a Dimension
+            </button>
+          </div>
         </div>
-        <div class="card-footer">
-          <button class="btn btn-sm btn-link" (click)="addDimension()">+ Add a Dimension</button>
-        </div>
-      </div>
+        <hr />
+        <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
     </div>
   </div>
 </div>
