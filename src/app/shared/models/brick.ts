@@ -63,6 +63,25 @@ export class DataValue {
     scalarType: Term;
     units: Term;
     valuesSample: string;
+    context: Context[] = [];
+}
+
+export class Context {
+    constructor(
+        required?: boolean,
+        property?: Term,
+        value?: Term,
+        units?: Term
+    ) {
+        this.required = required;
+        this.property = property;
+        this.value = value;
+        this.units = units;
+    }
+    required: boolean;
+    property: Term;
+    value: Term;
+    units: Term;
 }
 
 export class Term {
@@ -112,6 +131,7 @@ export class DimensionVariable {
     scalarType: Term = new Term();
     units: Term;
     values: any[] = [];
+    context: Context[] = [];
     valuesSample: string; //
     mapCoreType: string; //
     mapCoreProp: string; //
@@ -133,4 +153,5 @@ export class TypedProperty {
     type: Term;
     value: Term = new Term();
     units: Term;
+    context: Context[] = [];
 }
