@@ -12,6 +12,7 @@ export class DataValueFormComponent implements OnInit {
 
   @Input() set dataValue(d: DataValue) {
     this._dataValue = d;
+    console.log('DATA VALUE', this.dataValue);
 
     if (d.scalarType) {
       this.scalarValues = [d.scalarType];

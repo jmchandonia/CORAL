@@ -18,6 +18,7 @@ export class PropertyFormComponent implements OnInit {
     this.unitsSelect2 = prop.units ? [prop.units] : [];
 
     this._property = prop;
+    console.log('THIS DOT PROPERTY', this.property);
 
     if (prop.type) {
       this.propTypeItem = prop.type.id;

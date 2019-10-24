@@ -6,7 +6,8 @@ import {
   TypedProperty,
   Term,
   DimensionVariable,
-  DataValue
+  DataValue,
+  Context
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
@@ -52,6 +53,17 @@ export class UploadService {
     return this.templateSub.asObservable();
   }
 
+  setContext(ctx): Context {
+    const context = new Context();
+    context.required = ctx.required;
+    context.property = new Term(ctx.property.id, ctx.property.text);
+    context.value = new Term(ctx.value.id, ctx.value.text);
+    if (!this.valuelessUnits(ctx.units)) {
+      context.units = new Term(ctx.units.id, ctx.units.text);
+    }
+    return context;
+  }
+
   setSelectedTemplate(template) {
     this.selectedTemplate = template.id;
     this.brickBuilder.type = template.text;
@@ -69,6 +81,11 @@ export class UploadService {
       dataValue.type = dataVar.type as Term;
       dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
       dataValue.scalarType = dataVar.scalar_type as Term;
+      if (dataVar.context && dataVar.context.length) {
+        dataVar.context.forEach(ctx => {
+          dataValue.context.push(this.setContext(ctx));
+        });
+      }
       this.brickBuilder.dataValues.push(dataValue);
     });
   }
@@ -83,6 +100,11 @@ export class UploadService {
         dimVar.type = dvItem.type as Term;
         dimVar.scalarType = dvItem.scalar_type as Term;
         dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
+        if (dvItem.context && dvItem.context.length) {
+          dvItem.context.forEach(ctx => {
+            dimVar.context.push(this.setContext(ctx));
+          });
+        }
         dim.variables.push(dimVar);
       });
       this.brickBuilder.dimensions.push(dim);
@@ -96,6 +118,11 @@ export class UploadService {
       prop.type = item.property as Term;
       prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
       prop.value = item.value as Term;
+      if (item.context && item.context.length) {
+        item.context.forEach(ctx => {
+          prop.context.push(this.setContext(ctx));
+         });
+      }
       this.brickBuilder.properties.push(prop);
     });
   }
