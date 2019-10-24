@@ -27,7 +27,7 @@
         <hr />
         <div class="row">
           <div class="col-2 offset-10">
-            <button class="btn btn-link" (click)="addPropertyParam()">
+            <button class="btn btn-link" [disabled]="!selectedDataType" (click)="addPropertyParam()">
               Add
             </button>
           </div>
