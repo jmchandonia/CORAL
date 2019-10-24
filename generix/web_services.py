@@ -198,9 +198,6 @@ def get_brick(brick_id):
             'res': br.to_dict()
     } )
 
-
-
-
 @app.route("/generix/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
