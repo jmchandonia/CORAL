@@ -88,9 +88,6 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilderObject.processesUp.push(new QueryParam());
   }
 
-  testQuery() {
-    this.queryBuilder.testQueryBuilder();
-  }
 
   clear() {
     this.queryBuilder.resetObject();

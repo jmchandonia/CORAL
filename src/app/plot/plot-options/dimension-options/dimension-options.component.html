@@ -21,7 +21,7 @@
               </div>
               <div class="col-6">
                 <div class="form-check offset-1">
-                  <input class="form-check-input" type="checkbox" value="" id="axisTitle" />
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="dimension.show_title" [ngModelOptions]="{standalone: true}" id="axisTitle" />
                   <label class="form-check-label" for="axisTitle">Axis Title</label>
                 </div>
                 <input name="axisTitle" [(ngModel)]="dimension.title" class="form-control">
@@ -29,7 +29,7 @@
             </div>
               <div class="row">
                 <div class="col-12" *ngIf="selectedDimension">
-                  <app-axis-labeler [axis]="axis"></app-axis-labeler>
+                  <app-axis-labeler [dimension]="dimension" [axis]="axis"></app-axis-labeler>
                 </div>
               </div>
         </div>

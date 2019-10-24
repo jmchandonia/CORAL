@@ -40,22 +40,6 @@
         </div>
     </div>
 </div>
-<!-- <div class="form-container" [hidden]="!showAdvancedFilters">
-    <app-property-params
-        *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
-        [data]="queryMatch"
-        [attributes]="processes"
-        [operators]="operators"
-        (updated)="updateProcess('processesDown', idx, $event)"
-        (removed)="removeProcess('processesDown', $event)"
-        ></app-property-params>
-    <app-property-params
-        [isEmpty]="true"
-        [attributes]="processes"
-        [operators]="operators"
-        (added)="addProcess('processesDown', $event)"
-        ></app-property-params>
-</div> -->
 <div class="search-button-footer">
     <div class="row">
         <div class="col-2 offset-10">
@@ -63,6 +47,3 @@
         </div>
     </div>
 </div>
-
-<!-- <button (click)="testQuery()">Test Query</button> -->
-<!-- <button (click)="clear()">Clear Query</button> -->
