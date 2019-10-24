@@ -3,6 +3,7 @@ import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Router, NavigationEnd } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +17,8 @@ export class QueryBuilderService {
   dataModels: any[];
   operators: any[];
   dataTypeHash: any = {};
+  previousUrl: string;
+  currentUrl: string;
 
   getMetaData() {
 
@@ -29,7 +32,10 @@ export class QueryBuilderService {
 
   }
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     http.get(`${environment.baseURL}/data_models`)
       .subscribe((models: any) => {
         this.dataModels = models.results;
@@ -47,6 +53,17 @@ export class QueryBuilderService {
       .subscribe((operations: any) => {
         this.operators = operations.results;
       });
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.previousUrl = this.currentUrl;
+        this.currentUrl = event.url;
+      }
+    });
+  }
+
+  getPreviousUrl() {
+    return this.previousUrl;
   }
 
   getLoadedDataTypes() {

@@ -26,6 +26,7 @@ export class PlotOptionsComponent implements OnInit {
   public plotBuilder: PlotBuilder;
   public dimensions: Dimension[];
   public plotIcons = {};
+  public previousUrl: string;
 
   public plotTypeOptions: Select2Options = {
     width: '100%',
@@ -47,6 +48,9 @@ export class PlotOptionsComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+
+    this.previousUrl = this.queryBuilder.getPreviousUrl();
+
     // set up plot builder value from service;
     this.plotBuilder = this.plotService.getPlotBuilder();
 
@@ -136,9 +140,9 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   onGoBack(id) {
-    // this.plotService.resetValues();
     this.plotService.clearPlotBuilder();
-    this.router.navigate([`/search/result/brick/${id}`]);
+    const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
+    this.router.navigate([url]);
   }
 
 }
