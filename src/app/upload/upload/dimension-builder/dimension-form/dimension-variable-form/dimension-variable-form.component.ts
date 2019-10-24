@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
+import { BrickDimension, DimensionVariable, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 
@@ -14,7 +14,12 @@ export class DimensionVariableFormComponent implements OnInit {
   @Input() set dimVar(d: DimensionVariable) {
     this._dimVar = d;
     if (d.type) {
-      this.typeData = [d.type];
+      // this.typeData = [d.type];
+      if (d.context.length) {
+        this.typeData = [this.setContextLabel(d.type, d.context[0])];
+      } else {
+        this.typeData = [d.type];
+      }
       this.selectedType = d.type.id;
     }
 
@@ -74,6 +79,16 @@ export class DimensionVariableFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  setContextLabel(type: Term, context: Context) {
+    const label = type;
+    const { property, value, units } = context;
+    label.text += `, ${property.text}=${value.text}`;
+    if (units) {
+      label.text += ` (${units.text})`;
+    }
+    return label;
   }
 
   delete() {
