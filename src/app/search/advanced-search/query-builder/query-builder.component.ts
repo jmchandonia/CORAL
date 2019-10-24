@@ -26,10 +26,6 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   }
   @Input() set queryMatch(value: QueryMatch) {
     this._queryMatch = value;
-    if (value && value.dataType) {
-      this.selectedDataType = value.dataType;
-      this.dataTypeList.push({id : '0', text: value.dataType});
-    }
   }
   get queryMatch() {
     return this._queryMatch;
@@ -69,18 +65,22 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // TODO: make all querymatches initialize right away
-    if (!this.queryMatch) {
-      this.queryMatch = new QueryMatch();
-    }
 
     const loadedDataTypes = this.queryBuilder.getLoadedDataTypes();
     if (loadedDataTypes) {
       this.populateDataTypes(loadedDataTypes);
+      if (this.queryMatch && this.queryMatch.dataType) {
+        this.selectedDataType = this.dataTypeList.find(item => item.text === this.queryMatch.dataType).id;
+      }
     } else {
       this.dataTypeSub = this.queryBuilder.getDataTypes()
       .subscribe(dataTypes => {
         this.populateDataTypes(dataTypes);
       });
+    }
+
+    if (!this.queryMatch) {
+      this.queryMatch = new QueryMatch();
     }
 }
 
@@ -109,7 +109,7 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
       Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
       });
-      this.selectedDataType = event.data[0].text;
+      // this.selectedDataType = event.data[0].text;
     }
   }
 
@@ -123,10 +123,6 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   addPropertyParam() {
     this.queryMatch.params.push(new QueryParam());
-  }
-
-  updateQueryMatch() {
-    // this.queryBuilder.updateQueryMatch(this.connection, this.queryMatch);
   }
 
 }
