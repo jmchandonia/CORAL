@@ -26,10 +26,6 @@ export class UploadService {
     return this.brickBuilder;
   }
 
-  testBrickBuilder() {
-    console.log('CURRENT BRICK OBJECT', this.brickBuilder);
-  }
-
   constructor(
     private http: HttpClient
   ) {
