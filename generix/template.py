@@ -173,3 +173,85 @@ def generate_brick_2d_template(brick_skeleton,file_name):
         sheet.column_dimensions[c].width = COLUMN_WIDTH   
 
     book.save(file_name)    
+
+def generate_brick_1dm_template(brick_skeleton,file_name):
+
+    TITLE_FONT = Font(name='Calibri', size=14) 
+    INSTRUCTIONS_FONT = Font(name='Calibri', size=10, bold=True, italic=True)
+    DIM1_FILL = PatternFill('solid', fgColor="FFFFDD")  
+    DATA_FILL = PatternFill('solid', fgColor="FFDDDD") 
+    COLUMN_WIDTH = 18
+    dim1_row_counts = 10
+
+
+
+    book = Workbook()
+    sheet = book.active
+
+    format_name = 'F1DM'
+
+    data_vars = brick_skeleton['dataValues']
+    brick_dims = brick_skeleton['dimensions']
+
+
+    data_type = brick_skeleton['type']
+    data_vars = [ dvar['type']['text'] for dvar in data_vars ] 
+
+    dims = [brick_dims[0]['type']['text']]
+    dim1_vars = []
+    for dim_var in brick_dims[0]['variables']:
+        dim1_vars.append( '%s:%s' % (dims[0], dim_var['type']['text'])  )
+
+    rows = [
+        ['Automatically generated template '],
+        ['Type', data_type],    
+        ['Dimension 1', dims[0]],
+        ['Data values', ', '.join(data_vars)],
+        [],
+        ['Instructions: fill in all colored parts of the spreadheet bellow with your data and metadata'],
+        ['@Format:%s' % format_name]
+    ]
+        
+    row = []
+    for dim1_var in dim1_vars:
+        row.append(dim1_var)
+    for data_var in data_vars:
+        row.append(data_var)
+    rows.append(row)
+        
+
+    for row in rows:
+        sheet.append(row)
+        
+    sheet['A1'].font = TITLE_FONT
+
+    sheet['A3'].fill = DIM1_FILL
+    sheet['B3'].fill = DIM1_FILL
+
+    sheet['A4'].fill = DATA_FILL
+    sheet['B4'].fill = DATA_FILL
+
+    sheet['A6'].font = INSTRUCTIONS_FONT
+    sheet['A7'].font = INSTRUCTIONS_FONT
+
+    # Color Dim 1
+    start_row = len(rows) + 1        
+    start_column = 1
+    for ri in range(start_row,start_row + dim1_row_counts):
+        for ci,_ in enumerate(dim1_vars):
+            sheet.cell(row=ri, column=ci+start_column).fill = DIM1_FILL 
+
+        
+    # Color Data    
+    start_row = len(rows) + 1       
+    start_column = len(dim1_vars) + 1    
+    for ri in range(start_row,start_row + dim1_row_counts):
+        for ci in range(start_column,start_column + len(data_vars)):
+            sheet.cell(row=ri, column=ci ).fill = DATA_FILL 
+        
+        
+    for i in range(1, len(dim1_vars) + len(data_vars) + 1 ):
+        c = get_column_letter(i)
+        sheet.column_dimensions[c].width = COLUMN_WIDTH   
+
+    book.save(file_name)    
