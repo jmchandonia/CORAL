@@ -2,29 +2,43 @@
   <div class="col-6">
     <select2
       [cssImport]="true"
-      [data]="select2Data"
-      [options]="select2Options"
-      [value]="selectedValue || ''"
-      (valueChanged)="setPropertyType($event)"  
+      [data]="typesSelect2"
+      [options]="propertiesOptions"
+      [disabled]="property.required"
+      [value]="propTypeItem ? propTypeItem : ''"
+      (valueChanged)="setPropertyType($event)"
     ></select2>
+    <!-- <app-async-dropdown
+      [term]="property.type"
+      [required]="property.required"
+      [method]="'searchOntTerms'"
+      (valueChanged)="setPropertyType($event)"
+    ></app-async-dropdown> -->
   </div>
   <div class="col-3">
     <input
       class="form-control"
       type="text"
-      [(ngModel)]="property.value"
+      [(ngModel)]="property.value.text"
       [ngModelOptions]="{standalone: true}"
     />
   </div>
   <div class="col-2">
-    <input
-      class="form-control"
-      type="text"
-      [(ngModel)]="property.units"
-      [ngModelOptions]="{standalone: true}"
-    />
+      <select2
+        *ngIf="property.units !== null"
+        [cssImport]="true"
+        [data]="unitsSelect2"
+        [options]="unitsOptions"
+        [value]="unitsItem ? unitsItem : ''"
+        (valueChanged)="setUnits($event)"
+    ></select2>
+    <!-- <app-async-dropdown
+        [value]="unitsItem"
+        [method]="'searchOntUnits'"
+        [required]="property.required"
+        (valueChanged)="setUnits($event)"></app-async-dropdown> -->
   </div>
   <div class="col-1">
-    <button class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
+    <button *ngIf="!property.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
   </div>
 </div>

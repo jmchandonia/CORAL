@@ -11,8 +11,8 @@ export class Config {
 export class PlotBuilder {
     public objectId: string;
     public data: any = {
-        x: '',
-        y: '',
+        x: '' as any,
+        y: '' as any,
     };
     public config: Config = new Config();
     public plotly_trace: any;

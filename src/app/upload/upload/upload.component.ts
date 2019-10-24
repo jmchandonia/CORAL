@@ -12,10 +12,12 @@ export class UploadComponent implements OnInit {
   public uploadSteps = [
     'type',
     'properties',
+    'data-values',
     'dimensions',
     'load',
     'validate',
     'map',
+    'preview',
     'create'
   ];
 
@@ -28,6 +30,10 @@ export class UploadComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url.split('/').pop();
         this.progressIndex = this.uploadSteps.indexOf(this.currentUrl);
+        if (this.progressIndex < 0) {
+          this.progressIndex = 0;
+          this.currentUrl = 'type';
+        }
       }
     });
   }
@@ -41,12 +47,16 @@ export class UploadComponent implements OnInit {
     return index > this.progressIndex ? 'incomplete' : 'complete';
   }
 
-  capitalize(step) {
-    return step.charAt(0).toUpperCase() + step.slice(1);
+  format(step) {
+    return (step.charAt(0).toUpperCase() + step.slice(1)).replace('-', ' ');
   }
 
   nextStep() {
-    this.progressIndex++;
+    if (this.progressIndex === 4) {
+      this.progressIndex = 7;
+    } else {
+      this.progressIndex++;
+    }
     this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
   }
 

@@ -5,6 +5,7 @@ import * as $ from 'jquery';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import { Router, ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-search-result',
@@ -19,33 +20,44 @@ export class SearchResultComponent implements OnInit {
   searchQuery: QueryBuilder;
   showQuery = false;
   searchType: string;
+  error: any;
 
   constructor(
     private queryBuilder: QueryBuilderService,
     private chRef: ChangeDetectorRef,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
 
     this.searchType = this.queryBuilder.getSearchType();
     this.searchQuery = this.queryBuilder.getCurrentObject();
-
+    this.spinner.show();
     this.queryBuilder.getSearchResults()
       .subscribe((res: any) => {
         this.results = res.data;
-        // this.queryBuilder.resultStore = res.data;
         this.resultFields = res.schema.fields;
         this.chRef.detectChanges();
         const table: any = $('table');
         this.dataTable = table.DataTable();
-      });
+        this.spinner.hide();
+      },
+      err => {
+        this.spinner.hide();
+        this.error = err;
+      }
+      );
 
   }
 
   viewData(id) {
-    this.router.navigate([`search/result/${id}`]);
+    this.router.navigate([`search/result/brick/${id}`]);
+  }
+
+  viewCoreData(id) {
+    this.router.navigate([`search/result/core/${id}`]);
   }
 
   useData(id) {

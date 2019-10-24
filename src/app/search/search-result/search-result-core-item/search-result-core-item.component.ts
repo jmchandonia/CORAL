@@ -17,6 +17,7 @@ export class SearchResultCoreItemComponent implements OnInit {
 
   objectId: string;
   data: any[];
+  type = '';
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
@@ -24,7 +25,9 @@ export class SearchResultCoreItemComponent implements OnInit {
       this.queryBuilder.getCoreTypeMetadata(this.objectId)
         .subscribe((data: any) => {
           // this.data = result;
-          this.data = data.results;
+          // this.data = data.results;
+          this.data = data.results.items;
+          this.type = data.results.type;
         });
     });
   }

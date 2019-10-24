@@ -19,7 +19,7 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public plotTypeDataValue: string; // for select2
   public dimensionData: Array<Select2OptionData> = [];
-  private listPlotTypes: any;
+  public listPlotTypes: any;
   public selectedPlotType: any;
   public axisBlocks: any[];
   public objectId: string;
@@ -100,8 +100,6 @@ export class PlotOptionsComponent implements OnInit {
   }
 
     test() {
-      console.log('COMPONENT', this.plotBuilder, this.metadata);
-      console.log('SERVICE', this.plotService.plotBuilder);
       console.assert(_.isEqual(this.plotBuilder, this.plotService.plotBuilder));
     }
 
@@ -140,7 +138,7 @@ export class PlotOptionsComponent implements OnInit {
   onGoBack(id) {
     // this.plotService.resetValues();
     this.plotService.clearPlotBuilder();
-    this.router.navigate([`/search/result/${id}`]);
+    this.router.navigate([`/search/result/brick/${id}`]);
   }
 
 }

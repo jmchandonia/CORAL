@@ -14,6 +14,7 @@ import { SearchResultItemComponent } from './search-result/search-result-item/se
 import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { SearchResultCoreItemComponent } from './search-result/search-result-core-item/search-result-core-item.component';
 import { ProcessDataComponent } from './search-result/process-data/process-data.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ProcessDataComponent } from './search-result/process-data/process-data.
     SearchRoutingModule,
     Select2Module,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ],
   providers: [QueryBuilderService]
 })

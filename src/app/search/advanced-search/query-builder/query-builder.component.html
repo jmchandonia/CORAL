@@ -9,19 +9,17 @@
         <select2
           [cssImport]="true"
           [options]="options"
-           [data]="dataTypeList"
-          [value]="selectedDataType ? '0' : ''"
+          [data]="dataTypeList"
+          [value]="selectedDataType || ''"
           name="data-type"
           (valueChanged)="updateObjectDataModel($event)"
         >
         </select2>
-        <label class="mt-2">Property Parameters</label>
+        <label class="mt-4">Property Parameters</label>
         <app-property-params 
           *ngFor="let param of queryMatch?.params; let idx = index;" 
-          [attributes]="selectedAttributes"
-          [operators]="operators"
-          [connection]="connection"
           [queryParam]="param"
+          [dataType]="selectedDataType"
           (removed)="removePropertyParam(param)"
           (updated)="updatePropertyParam(idx, $event)"
         >

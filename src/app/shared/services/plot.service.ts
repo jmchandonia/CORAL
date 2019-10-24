@@ -38,7 +38,7 @@ export class PlotService {
   }
 
   getDimDropdownValue(axis) {
-    return this.plotBuilder.data[axis];
+    return this.plotBuilder.data[axis].toString();
   }
 
   setConfig(
@@ -52,7 +52,7 @@ export class PlotService {
     config.y = new Dimension();
     if (length > 1) {
       config.z = new Dimension();
-      this.plotBuilder.data.z = '';
+      this.plotBuilder.data.z = '' as any;
       callback([config.x, config.y, config.z]); // add 3 dimensions to form
     } else {
       callback([config.x, config.y]); // add 2 dimensions to form
@@ -89,7 +89,16 @@ export class PlotService {
   }
 
   getPlotlyData() {
+    this.parseIntDataAxes();
     return this.http.post<any>(`${environment.baseURL}/plotly_data`, this.plotBuilder);
+  }
+
+  parseIntDataAxes() {
+    Object.keys(this.plotBuilder.data).forEach(key => {
+      if (this.plotBuilder.data[key] !== 'D') {
+        this.plotBuilder.data[key] = parseInt(this.plotBuilder.data[key], 10);
+      }
+    });
   }
 
   getPlotTypes() {

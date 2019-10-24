@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="row mb-2">
+    <div class="col-12">
+      <button class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
+        <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
+        Download Template
+      </button>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
+        <div class="row justify-content-center" style="margin-top: 80px;">
+          <div class="col-10 d-block">
+            <h2>Drag and drop your files here</h2>
+          </div>
+          <div class="col-10 d-block">
+            <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
+            <input hidden type="file" id="file" (change)="handleFileInput($event.target.files)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4" *ngIf="loading || successData || error">
+    <div class="col-12 process-container">
+      <div class="loading-container" *ngIf="loading">
+        <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+      <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+    </div>
+  </div>
+  <div *ngIf="file" class="row mt-4 justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5 style="float: left" class=" mt-1 mb-0">File Information</h5>
+          <button (click)="removeFile()" style="float: right" class="btn btn-link">Remove</button>
+        </div>
+        <div class="card-body">
+          <span style="float: left">
+            <strong>{{file?.name}}</strong>
+            <span> ({{fileSize}})</span>
+          </span>
+          <button style="float: right" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
