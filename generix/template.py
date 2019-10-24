@@ -97,11 +97,11 @@ def generate_brick_2d_template(brick_skeleton,file_name):
     dims = [brick_dims[0]['type']['text'], brick_dims[1]['type']['text']]
     dim1_vars = []
     for dim_var in brick_dims[0]['variables']:
-        dim1_vars.append(dim_var['type']['text'])
+        dim1_vars.append( '%s:%s' % (dims[0], dim_var['type']['text'])  )
 
     dim2_vars = []
     for dim_var in brick_dims[1]['variables']:
-        dim2_vars.append(dim_var['type']['text'])
+        dim2_vars.append('%s:%s' % (dims[1], dim_var['type']['text']) )
 
     rows = [
         ['Automatically generated template '],
