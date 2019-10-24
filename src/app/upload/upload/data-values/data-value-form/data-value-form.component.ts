@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { DataValue, Term } from 'src/app/shared/models/brick';
+import { DataValue, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 
@@ -12,7 +12,6 @@ export class DataValueFormComponent implements OnInit {
 
   @Input() set dataValue(d: DataValue) {
     this._dataValue = d;
-    console.log('DATA VALUE', this.dataValue);
 
     if (d.scalarType) {
       this.scalarValues = [d.scalarType];
@@ -20,7 +19,11 @@ export class DataValueFormComponent implements OnInit {
     }
 
     if (d.type) {
-      this.typeValues = [d.type];
+      if (d.context && d.context.length) {
+        this.typeValues = [this.setContextLabel(d.type, d.context[0])];
+      } else {
+        this.typeValues = [d.type];
+      }
       this.typeValuesItem = d.type.id;
     }
 
@@ -95,6 +98,16 @@ export class DataValueFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  setContextLabel(type: Term, context: Context) {
+    const label = type;
+    const { property, value, units } = context;
+    label.text += `, ${property.text}=${value.text}`;
+    if (units) {
+      label.text += ` (${units.text})`;
+    }
+    return label;
   }
 
   onDelete() {
