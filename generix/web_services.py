@@ -18,7 +18,7 @@ import os
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
-from .template import generate_brick_2d_template
+from .template import generate_brick_2d_template, generate_brick_1dm_template
 
 app = Flask(__name__)
 CORS(app)
@@ -1062,7 +1062,16 @@ def generate_brick_template():
     brick = json.loads(request.form['brick'])
     data_id = 'template_' + uuid.uuid4().hex
     file_name = os.path.join(TMP_DIR,data_id)
-    generate_brick_2d_template(brick, file_name)
+
+    dim_count = len(brick['dimensions'])
+    data_var_count = len(brick['dataValues'])
+
+    if dim_count == 1:
+        generate_brick_1dm_template(brick, file_name)
+    elif dim_count == 2:
+        if data_var_count == 1:
+            generate_brick_2d_template(brick, file_name)
+
     return send_file(file_name, 
         as_attachment=True,
         attachment_filename='data_template.xlsx',
