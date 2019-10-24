@@ -1,5 +1,5 @@
 <div class="row mt-4">
-  <div class="col-4">
+  <div class="col-5">
     <select2
       [cssImport]="true"
       [value]="typeValuesItem ? typeValuesItem : ''"
@@ -9,16 +9,7 @@
       [disabled]="dataValue.required"
     ></select2>
   </div>
-  <div class="col-3">
-    <select2
-      [cssImport]="true"
-      [value]="scalarValuesItem ? scalarValuesItem : ''"
-      [options]="scalarOptions"
-      [data]="scalarValues"
-      (valueChanged)="updateScalarType($event)"
-    ></select2>
-  </div>
-  <div class="col-3" *ngIf="dataValue.units !== null">
+  <div class="col-5" *ngIf="dataValue.units !== null">
     <select2
       [cssImport]="true"
       [value]="unitsItem ? unitsItem : ''"

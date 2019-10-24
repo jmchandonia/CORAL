@@ -9,7 +9,7 @@
     <div class="col-1">
       <span class="badge badge-pill badge-primary">{{dimVar.index + 1}}</span>
     </div>
-    <div class="col-3">
+    <div class="col-5">
       <select2
         [cssImport]="true"
         [options]="typeOptions"
@@ -19,10 +19,7 @@
         [disabled]="dimVar.required"
         ></select2>
     </div>
-    <div class="col-3">
-      <input class="form-control" [disabled]="dimVar.required" [(ngModel)]="dimVar.scalarType.text" [ngModelOptions]="{standalone: true}" />
-    </div>
-    <div class="col-3" *ngIf="dimVar.units !== null">
+    <div class="col-5" *ngIf="dimVar.units !== null">
       <select2
         [cssImport]="true"
         [options]="unitsOptions"

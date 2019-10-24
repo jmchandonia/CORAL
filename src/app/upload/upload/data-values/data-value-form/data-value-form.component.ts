@@ -119,11 +119,6 @@ export class DataValueFormComponent implements OnInit {
     this.dataValue.type = new Term(type.id, type.text);
   }
 
-  updateScalarType(event) {
-    const scalarType = event.data[0];
-    this.dataValue.scalarType = new Term(scalarType.id, scalarType.text);
-  }
-
   updateUnits(event) {
     const units = event.data[0];
     this.dataValue.units = new Term(units.id, units.text);
