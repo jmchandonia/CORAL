@@ -83,10 +83,6 @@ export class QueryBuilderService {
     this.queryBuilderObject.queryMatch = queryMatch;
   }
 
-  testQueryBuilder() {
-    console.log('TESTING SERVICE', this.queryBuilderObject);
-  }
-
   getSearchResults() {
     return this.http.post<any>(`${environment.baseURL}/search`, this.queryBuilderObject);
   }

@@ -30,7 +30,6 @@ export class PropertyBuilderComponent implements OnInit {
 
   addProperty() {
     this.properties.push(new TypedProperty(this.properties.length, false));
-    this.uploadService.testBrickBuilder();
   }
 
   deleteProperty(property) {

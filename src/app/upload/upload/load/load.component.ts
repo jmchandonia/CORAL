@@ -62,7 +62,6 @@ export class LoadComponent implements OnInit {
     },
     err => {
       this.spinner.hide();
-      console.log('ERROR', err);
       this.error = true;
     }
     );

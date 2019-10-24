@@ -44,7 +44,6 @@ export class TypeSelectorComponent implements OnInit {
   setBrickType(event) {
     const template = event.data[0];
     this.uploadService.setSelectedTemplate(template);
-    this.uploadService.testBrickBuilder();
   }
 
 }
