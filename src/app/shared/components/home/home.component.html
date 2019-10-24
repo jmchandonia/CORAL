@@ -3,6 +3,7 @@
         <div class="col-3">
           <div class="form-container-column filter-box">
               <h5>Narrow Results</h5>
+              <!-- <button class="btn btn-sm btn-block mt-2 mb-2 btn-primary" (click)="getUpdatedValues()">Update Filter</button> -->
               <ul class="nav flex-column">
                   <li class="nav-item" class="category-li" *ngFor="let category of filterCategories; let i = index;">
                     <span class="category-label">{{category.categoryName}}</span>
@@ -12,6 +13,7 @@
                     </div>
                   </li>
                 </ul>
+              <button class="btn btn-sm btn-block mt-2 btn-primary" (click)="getUpdatedValues()">Update Filter</button>
           </div>
         </div>
         <div class="col-9">
@@ -27,7 +29,18 @@
               </div>
             </div>
           </div>
-          <div class="row mt-2">
+          <div class="row mt-2" *ngIf="loading">
+            <div class="col-12" style="height: 500px;">
+              <ngx-spinner
+              bdColor="rgba(0,0,0,0)"
+              color="#aaa"
+              size="medium"
+              type="ball-spin-fade-rotating"
+              [fullScreen]="false"
+            ></ngx-spinner>
+            </div>
+          </div>
+          <div class="row mt-2" *ngIf="!loading">
             <div class="col-6 pl-0 pr-1">
               <div class="card" *ngIf="coreTypes && coreTypes.items?.length">
                 <div class="card-header" style="background-color: #00489B; color: white;">
@@ -54,7 +67,7 @@
                     <li 
                       *ngFor="let d of dynamicTypes.items"
                       class="list-group-item d-flex justify-content-between align-items-center"
-                      (click)="navigateToSearch(c.queryMatch)"
+                      (click)="navigateToSearch(d.queryMatch)"
                     >
                     <span style="cursor: pointer;">{{d.name}}</span>
                       <span style="cursor: pointer;"  class="badge badge-primary badge-pill">{{d.count}}</span>

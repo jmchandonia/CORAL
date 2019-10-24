@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5 class="mb-0" style="float:left">Define the Data Values of your brick</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <strong>Type</strong>
+            </div>
+            <div class="col-3">
+              <strong>Scalar Type</strong> 
+            </div>
+            <div class="col-3">
+              <strong>Units</strong>
+            </div>
+          </div>
+          <ng-container *ngIf="dataValues">
+            <ng-container *ngFor="let dataValue of dataValues">              
+              <app-data-value-form
+                *ngIf="!dataValue.hidden"
+                (removed)="removeDataValue(dataValue.index)"
+                [dataValue]="dataValue"
+                ></app-data-value-form>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="card-footer light-blue">
+          <button class="btn btn-sm btn-link" (click)="addDataValue()">
+            + Add Data Value
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

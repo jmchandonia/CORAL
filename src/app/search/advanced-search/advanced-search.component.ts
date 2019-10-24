@@ -31,33 +31,33 @@ export class AdvancedSearchComponent implements OnInit {
 
     this.queryBuilderObject = this.queryBuilder.getCurrentObject();
 
-    this.getOperators();
-    this.getDataModels();
-    this.getDataTypes();
+    // this.getOperators();
+    // this.getDataModels();
+    // this.getDataTypes();
 
   }
 
-  getOperators() {
-    this.queryBuilder.getOperators()
-      .subscribe((data: any) => {
-        this.operators = data.results;
-      });
-  }
+  // getOperators() {
+  //   this.queryBuilder.getOperators()
+  //     .subscribe((data: any) => {
+  //       this.operators = data.results;
+  //     });
+  // }
 
-  getDataModels() {
-    this.queryBuilder.getDataModels()
-      .subscribe((data: any) => {
-        this.dataModels = data.results;
-        this.processes = this.dataModels.Process.properties;
-      });
-  }
+  // getDataModels() {
+  //   this.queryBuilder.getDataModels()
+  //     .subscribe((data: any) => {
+  //       this.dataModels = data.results;
+  //       this.processes = this.dataModels.Process.properties;
+  //     });
+  // }
 
-  getDataTypes() {
-    this.queryBuilder.getDataTypes()
-      .subscribe((data: any) => {
-        this.dataTypes = data.results;
-      });
-  }
+  // getDataTypes() {
+  //   this.queryBuilder.getDataTypes()
+  //     .subscribe((data: any) => {
+  //       this.dataTypes = data.results;
+  //     });
+  // }
 
   get dataProps() {
     const { operators, dataTypes, dataModels } = this;

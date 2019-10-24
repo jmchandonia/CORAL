@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import * as $ from 'jquery';
 import 'datatables.net';
@@ -22,6 +22,7 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private chRef: ChangeDetectorRef,
     private queryBuilder: QueryBuilderService
     ) { }
@@ -39,17 +40,24 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params.id) {
+        this.id = params.id;
+        this.getProcesses();
+      }
+    });
+  }
+
+  getProcesses() {
     this.queryBuilder.getProcessesUp(this.id)
-      .subscribe((data: any) => {
-        this.processesUp = data.results;
-      });
+    .subscribe((data: any) => {
+      this.processesUp = data.results;
+    });
     this.queryBuilder.getProcessesDown(this.id)
-      .subscribe((data: any) => {
-        this.processesDown = data.results;
-        this.processesDown.forEach(() => {
-          this.hideProcessOutputs.push(true);
-        });
-      });
+    .subscribe((data: any) => {
+      this.processesDown = data.results;
+      this.hideProcessOutputs = [...this.processesDown.map(() => true)];
+    });
   }
 
   toggleProcessOutputs(index) {
@@ -58,7 +66,7 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
 
   navigate(output) {
     const route = output.category === 'DDT_'
-      ? `/search/result/${output.id}`
+      ? `/search/result/brick/${output.id}`
       : `/search/result/core/${output.id}`;
     this.router.navigate([route]);
   }

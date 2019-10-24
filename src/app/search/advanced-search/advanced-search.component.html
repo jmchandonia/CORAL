@@ -29,8 +29,6 @@
         <div class="form-group p-3">
             <app-property-params
             *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
-            [operators]="operators"
-            [attributes]="processes"
             (removed)="removeProcessUp(idx)"
             [queryParam]="queryParam"
             ></app-property-params>
@@ -69,5 +67,5 @@
     </div>
 </div>
 
-<button (click)="testQuery()">Test Query</button>
-<button (click)="clear()">Clear Query</button>
+<!-- <button (click)="testQuery()">Test Query</button> -->
+<!-- <button (click)="clear()">Clear Query</button> -->
