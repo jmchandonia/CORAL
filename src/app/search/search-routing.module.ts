@@ -15,7 +15,7 @@ const routes: Routes = [
       {path: 'simple', component: SimpleSearchComponent},
       {path: 'advanced', component: AdvancedSearchComponent},
       {path: 'result', component: SearchResultComponent},
-      {path: 'result/:id', component: SearchResultItemComponent},
+      {path: 'result/brick/:id', component: SearchResultItemComponent},
       {path: 'result/core/:id', component: SearchResultCoreItemComponent}
     ]
  }

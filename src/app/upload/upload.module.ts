@@ -12,6 +12,15 @@ import { DimensionBuilderComponent } from './upload/dimension-builder/dimension-
 import { DimensionFormComponent } from './upload/dimension-builder/dimension-form/dimension-form.component';
 // tslint:disable-next-line:max-line-length
 import { DimensionVariableFormComponent } from './upload/dimension-builder/dimension-form/dimension-variable-form/dimension-variable-form.component';
+import { AsyncDropdownComponent } from './upload/async-dropdown/async-dropdown.component';
+import { LoadComponent } from './upload/load/load.component';
+import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
+import { DataValuesComponent } from './upload/data-values/data-values.component';
+import { DataValueFormComponent } from './upload/data-values/data-value-form/data-value-form.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadSuccessTableComponent } from './upload/load/load-success-table/load-success-table.component';
+import { PreviewComponent } from './upload/preview/preview.component';
+import { CreateComponent } from './upload/create/create.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +30,22 @@ import { DimensionVariableFormComponent } from './upload/dimension-builder/dimen
     PropertyFormComponent,
     DimensionBuilderComponent,
     DimensionFormComponent,
-    DimensionVariableFormComponent
+    DimensionVariableFormComponent,
+    AsyncDropdownComponent,
+    LoadComponent,
+    UploadDragDropDirective,
+    DataValuesComponent,
+    DataValueFormComponent,
+    LoadSuccessTableComponent,
+    PreviewComponent,
+    CreateComponent
   ],
   imports: [
     CommonModule,
+    NgxSpinnerModule,
     UploadRoutingModule,
     Select2Module,
-    FormsModule
+    FormsModule,
   ],
   providers: [UploadService]
 })

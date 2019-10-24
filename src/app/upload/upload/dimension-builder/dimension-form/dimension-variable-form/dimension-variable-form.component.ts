@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BrickDimension, DimensionVariable } from 'src/app/shared/models/brick';
+import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
+import { Select2OptionData } from 'ng2-select2';
+import { UploadService } from 'src/app/shared/services/upload.service';
 
 @Component({
   selector: 'app-dimension-variable-form',
@@ -8,19 +10,84 @@ import { BrickDimension, DimensionVariable } from 'src/app/shared/models/brick';
 })
 export class DimensionVariableFormComponent implements OnInit {
 
-  @Input() dimVar: DimensionVariable;
-  @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
-  options: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container'
+  // @Input() dimVar: DimensionVariable;
+  @Input() set dimVar(d: DimensionVariable) {
+    this._dimVar = d;
+    if (d.type) {
+      this.typeData = [d.type];
+      this.selectedType = d.type.id;
+    }
+
+    if (d.units) {
+      this.unitsData = [d.units];
+      this.selectedUnits = d.units.id;
+    }
   }
-  constructor() { }
+
+  get dimVar() {
+    return this._dimVar;
+  }
+
+  typeData: Array<Select2OptionData> = [];
+  unitsData: Array<Select2OptionData> = [];
+  selectedType: string;
+  selectedUnits: string;
+
+  private _dimVar: DimensionVariable;
+
+  @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
+
+  typeOptions: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container',
+    query: (options: Select2QueryOptions) => {
+      const term = options.term;
+      if (!term || term.length < 3) {
+        options.callback({results: []});
+      } else {
+        this.uploadService.searchOntTerms(term)
+          .subscribe((data: any) => {
+            options.callback({results: data.results as Select2OptionData});
+          });
+      }
+    }
+  };
+
+  unitsOptions: Select2Options = {
+    width: '100%',
+    containerCssClass: 'select2-custom-container',
+    query: (options: Select2QueryOptions) => {
+      const term = options.term;
+      if (!term || term.length < 3) {
+        options.callback({results: []});
+      } else {
+        this.uploadService.searchOntUnits(term)
+          .subscribe((data: any) => {
+            options.callback({results: data.results as Select2OptionData});
+          });
+      }
+    }
+  };
+
+  constructor(
+    private uploadService: UploadService
+  ) { }
 
   ngOnInit() {
   }
 
   delete() {
     this.deleted.emit(this.dimVar);
+  }
+
+  setDimVarType(event) {
+    const term = event.data[0];
+    this.dimVar.type = new Term(term.id, term.text);
+  }
+
+  setDimVarUnits(event) {
+    const term = event.data[0];
+    this.dimVar.units = new Term(term.id, term.text);
   }
 
 }

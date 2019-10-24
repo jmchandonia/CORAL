@@ -17,12 +17,18 @@
               Units
             </h6>
           </div>
-          <app-property-form
+          <!-- <app-property-form
             *ngFor="let property of properties" 
             [property]="property"
-            [propertyList]="propertyList"
             (deleted)="deleteProperty(property)"
-          ></app-property-form>
+          ></app-property-form> -->
+          <ng-container *ngFor="let property of properties">
+            <app-property-form
+              *ngIf="!property.hidden"
+              [property]="property"
+              (deleted)="deleteProperty(property)"
+            ></app-property-form>
+          </ng-container>
         </div>
         <div class="card-footer">
           <button (click)="addProperty()" class="btn btn-sm btn-link">+ Add a property</button>

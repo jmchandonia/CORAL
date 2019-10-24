@@ -30,6 +30,10 @@
     margin-bottom: 5px!important;
 }
 
+.loading-container {
+    height: 500px;
+}
+
 .table-header {
     background-color: #00489B;
     color: white;
