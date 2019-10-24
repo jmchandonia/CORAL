@@ -1,6 +1,5 @@
 <app-query-builder
     [queryMatch]="queryBuilderObject.queryMatch"
-    [dataProps]="dataProps"
     [title]="'Search Options'"
     ></app-query-builder>
  <div class="data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
@@ -11,13 +10,11 @@
 <hr class="data-divider" *ngIf="!showAdvancedFilters" />
 <app-query-builder
     [queryMatch]="queryBuilderObject.connectsUpTo"
-    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Parent'"
     ></app-query-builder>
 <app-query-builder 
     [queryMatch]="queryBuilderObject.connectsDownTo"
-    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Children'"
     ></app-query-builder>
