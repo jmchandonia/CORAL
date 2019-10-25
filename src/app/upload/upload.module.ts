@@ -21,6 +21,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { LoadSuccessTableComponent } from './upload/load/load-success-table/load-success-table.component';
 import { PreviewComponent } from './upload/preview/preview.component';
 import { CreateComponent } from './upload/create/create.component';
+import { MapComponent } from './upload/map/map.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CreateComponent } from './upload/create/create.component';
     DataValueFormComponent,
     LoadSuccessTableComponent,
     PreviewComponent,
-    CreateComponent
+    CreateComponent,
+    MapComponent
   ],
   imports: [
     CommonModule,

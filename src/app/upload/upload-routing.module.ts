@@ -9,6 +9,7 @@ import { LoadComponent } from './upload/load/load.component';
 import { DataValuesComponent } from './upload/data-values/data-values.component';
 import { PreviewComponent } from './upload/preview/preview.component';
 import { CreateComponent } from './upload/create/create.component';
+import { MapComponent } from './upload/map/map.component';
 
 const routes: Routes = [
     {path: 'upload', component: UploadComponent, canActivate: [AuthGuardService], children: [
@@ -19,7 +20,8 @@ const routes: Routes = [
         {path: 'load', component: LoadComponent},
         {path: 'data-values', component: DataValuesComponent},
         {path: 'preview', component: PreviewComponent},
-        {path: 'create', component: CreateComponent}
+        {path: 'create', component: CreateComponent},
+        {path: 'map', component: MapComponent}
     ]}
 ];
 
