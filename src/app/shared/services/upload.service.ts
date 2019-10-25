@@ -92,7 +92,7 @@ export class UploadService {
       const dim = new BrickDimension(this.brickBuilder, idx, true);
       dim.type = new Term(item.type.id, item.type.text);
       item.dim_vars.forEach((dvItem, dvIdx) => {
-        const dimVar = new DimensionVariable(this.brickBuilder, dvIdx, true);
+        const dimVar = new DimensionVariable(dim, dvIdx, true);
         dimVar.type = dvItem.type as Term;
         dimVar.scalarType = dvItem.scalar_type as Term;
         dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;

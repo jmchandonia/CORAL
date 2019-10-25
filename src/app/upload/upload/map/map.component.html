@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5>Map Properties and Dimension Variables</h5>
+        </div>
+        <div class="card body p-2">
+          <h5>Dimension Variables</h5>
+          <div class="row" *ngFor="let dimVar of dimVars">
+            <div class="col-6">
+              <strong>
+                {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
+              </strong>
+            </div>
+            <hr style="width: 100%" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
