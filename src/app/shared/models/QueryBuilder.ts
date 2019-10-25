@@ -17,7 +17,7 @@ export class QueryMatch {
         this.dataModel = dModel;
         this.params = [];
     }
-    public dataModel: string;
+    public dataModel = '';
     public dataType: string;
     public category: string;
     public params: QueryParam[] = [];

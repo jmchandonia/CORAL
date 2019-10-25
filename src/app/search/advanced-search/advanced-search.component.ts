@@ -31,46 +31,18 @@ export class AdvancedSearchComponent implements OnInit {
 
     this.queryBuilderObject = this.queryBuilder.getCurrentObject();
 
-    // this.getOperators();
-    // this.getDataModels();
-    // this.getDataTypes();
+    if (this.advancedFiltersSelected()) {
+      this.showAdvancedFilters = true;
+    }
 
   }
 
-  // getOperators() {
-  //   this.queryBuilder.getOperators()
-  //     .subscribe((data: any) => {
-  //       this.operators = data.results;
-  //     });
-  // }
-
-  // getDataModels() {
-  //   this.queryBuilder.getDataModels()
-  //     .subscribe((data: any) => {
-  //       this.dataModels = data.results;
-  //       this.processes = this.dataModels.Process.properties;
-  //     });
-  // }
-
-  // getDataTypes() {
-  //   this.queryBuilder.getDataTypes()
-  //     .subscribe((data: any) => {
-  //       this.dataTypes = data.results;
-  //     });
-  // }
-
-  get dataProps() {
-    const { operators, dataTypes, dataModels } = this;
-    return { operators, dataTypes, dataModels };
-  }
-
-  addProcess(process, queryParam) {
-    // this.queryBuilder.addProcessParam(process, queryParam);
-    // this.queryBuilderObject.push()
-  }
-
-  updateProcess(process, index, queryParam) {
-    // this.queryBuilder.updateProcessParam(process, index, queryParam);
+  advancedFiltersSelected() {
+    const { processesUp, connectsUpTo, connectsDownTo } = this.queryBuilderObject;
+    if (processesUp.length) {
+      return true;
+    }
+    return (connectsUpTo || connectsDownTo);
   }
 
   removeProcessUp(index) {
@@ -78,16 +50,22 @@ export class AdvancedSearchComponent implements OnInit {
     this.queryBuilderObject.processesUp = processesUp.filter((_, i) => i !== index);
   }
 
-  onSubmit() {
-    // this.queryBuilder.submitSearchResults();
-    this.router.navigate(['../result'], {relativeTo: this.route});
-    this.queryBuilder.setSearchType('advanced');
-  }
-
   addProcessUp() {
     this.queryBuilderObject.processesUp.push(new QueryParam());
   }
 
+  setConnectsUpTo(event) {
+    this.queryBuilderObject.connectsUpTo = event;
+  }
+
+  setConnectsDownTo(event) {
+    this.queryBuilderObject.connectsDownTo = event;
+  }
+
+  onSubmit() {
+    this.router.navigate(['../result'], {relativeTo: this.route});
+    this.queryBuilder.setSearchType('advanced');
+  }
 
   clear() {
     this.queryBuilder.resetObject();

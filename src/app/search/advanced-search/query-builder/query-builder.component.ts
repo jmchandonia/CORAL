@@ -11,16 +11,10 @@ import { Subscription } from 'rxjs';
 })
 export class QueryBuilderComponent implements OnInit, OnDestroy {
 
-  public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
   @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
-  @Input() set queryMatch(value: QueryMatch) {
-    this._queryMatch = value;
-  }
-  get queryMatch() {
-    return this._queryMatch;
-  }
+  @Input() queryMatch: QueryMatch;
   public selectedAttributes: any;
   dataModels: any;
   dataTypes: any;
@@ -53,8 +47,6 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // TODO: make all querymatches initialize right away
-
     const loadedDataTypes = this.queryBuilder.getLoadedDataTypes();
     if (loadedDataTypes) {
       this.populateDataTypes(loadedDataTypes);
@@ -68,10 +60,6 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
       .subscribe(dataTypes => {
         this.populateDataTypes(dataTypes);
       });
-    }
-
-    if (!this.queryMatch) {
-      this.queryMatch = new QueryMatch();
     }
 }
 
@@ -90,6 +78,10 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   updateObjectDataModel(event) {
     if (this.dataTypes && event.value.length) {
+      if (!this.queryMatch) {
+        this.queryMatch = new QueryMatch();
+        this.create.emit(this.queryMatch);
+      }
       const selected = this.dataTypes[parseInt(event.value, 10)];
       Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];

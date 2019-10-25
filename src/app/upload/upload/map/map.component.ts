@@ -19,7 +19,6 @@ export class MapComponent implements OnInit {
     this.brick.dimensions.forEach(dim => {
       this.dimVars = [...this.dimVars, ...dim.variables];
     });
-    console.log('DIM VARS', this.dimVars);
   }
 
 }
