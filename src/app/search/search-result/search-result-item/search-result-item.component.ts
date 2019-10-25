@@ -38,6 +38,7 @@ export class SearchResultItemComponent implements OnInit {
   }
 
   useForPlot() {
+    this.qb.setPreviousUrl(`/search/result/brick/${this.objectId}`);
     this.router.navigate([`/plot/options/${this.objectId}`]);
   }
 
