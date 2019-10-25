@@ -139,6 +139,15 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
 
+  mapDimVarToCoreTypes(dimVar) {
+    const formData: FormData = new FormData();
+    console.log('INDEXES', dimVar.index, dimVar.dimension.index, dimVar);
+    formData.append('brick', this.brickBuilder.toJson());
+    formData.append('dimIndex', dimVar.dimension.index);
+    formData.append('dimVarIndex', dimVar.index);
+    return this.http.post<any>(`${environment.baseURL}/map_dim_variable`, formData);
+  }
+
   uploadBrick(file: File) {
     const formData: FormData = new FormData();
     formData.append('files', file, file.name);
