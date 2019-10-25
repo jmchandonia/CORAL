@@ -18,16 +18,11 @@ export class QueryBuilderService {
   operators: any[];
   dataTypeHash: any = {};
   previousUrl: string;
-  currentUrl: string;
+  // currentUrl: string;
 
   getMetaData() {
 
   }
-
-  // getOperators() {
-
-  // }
-
   getPropertiesFromMetaData() {
 
   }
@@ -53,13 +48,10 @@ export class QueryBuilderService {
       .subscribe((operations: any) => {
         this.operators = operations.results;
       });
+  }
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.previousUrl = this.currentUrl;
-        this.currentUrl = event.url;
-      }
-    });
+  setPreviousUrl(url) {
+    this.previousUrl = url;
   }
 
   getPreviousUrl() {
