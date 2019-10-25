@@ -11,6 +11,7 @@ export class MapComponent implements OnInit {
 
   brick: Brick;
   dimVars: DimensionVariable[] = [];
+  testArray = [];
 
   constructor(private uploadService: UploadService) { }
 
@@ -19,6 +20,15 @@ export class MapComponent implements OnInit {
     this.brick.dimensions.forEach(dim => {
       this.dimVars = [...this.dimVars, ...dim.variables];
     });
+    this.testArray = [...Array(this.dimVars.length)].map(() => { return Math.floor(Math.random() * 10) % 2 === 0});
+    console.log('STUPID BOOLEAN ARRAY', this.testArray);
+  }
+
+  testMap() {
+    this.uploadService.mapDimVarToCoreTypes(this.dimVars[0])
+      .subscribe((result: any) => {
+        console.log('RESULT', result);
+      });
   }
 
 }

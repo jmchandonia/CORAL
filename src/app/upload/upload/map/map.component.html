@@ -1,19 +1,85 @@
-<div class="container">
+<!-- <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="card">
         <div class="card-header light-blue">
-          <h5>Map Properties and Dimension Variables</h5>
+          <h5 style="float: left;">Map Properties and Dimension Variables</h5>
+          <button class="btn btn-link" style="float: right;" (click)="testMap()">Map</button>
         </div>
         <div class="card body p-2">
           <h5>Dimension Variables</h5>
-          <div class="row" *ngFor="let dimVar of dimVars">
-            <div class="col-6">
-              <strong>
-                {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
-              </strong>
+          <table class="table table-bordered">
+            <thead class="dark-blue">
+              <tr>
+                <th>Variable</th>
+                <th>Total</th>
+                <th>Mapped</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dimVar of dimVars">
+                <td>
+                  {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
+                </td>
+                <td>
+                  {{dimVar.totalCount}}
+                </td>
+                <td>
+                  {{dimVar.mapCount}}
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mb-0" style="float: left">Map Properties and Dimension Variables</h5>
+          <button class="btn btn-link" style="float: right" (click)="testMap()">Map</button>
+        </div>
+      </div>
+      <hr />
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header light-blue">
+              <h5>Dimension Variables</h5>
             </div>
-            <hr style="width: 100%" />
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead class="table-header">
+                  <tr>
+                    <th>Variable</th>
+                    <th>Total</th>
+                    <th>Mapped</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dimVar of dimVars">
+                    <td>
+                      {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
+                    </td>
+                    <td>
+                      {{dimVar.totalCount}}
+                    </td>
+                    <td>
+                      {{dimVar.mapCount}}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
