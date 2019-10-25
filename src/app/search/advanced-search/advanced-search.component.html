@@ -12,11 +12,13 @@
     [queryMatch]="queryBuilderObject.connectsUpTo"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Parent'"
+    (create)="setConnectsUpTo($event)"
     ></app-query-builder>
 <app-query-builder 
     [queryMatch]="queryBuilderObject.connectsDownTo"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Children'"
+    (create)="setConnectsDownTo($event)"
     ></app-query-builder>
 <div class="form-container" style="padding: 0px;" [hidden]="!showAdvancedFilters">
     <div class="card">
