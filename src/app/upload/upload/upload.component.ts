@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
 @Component({
   selector: 'app-upload',
@@ -24,7 +25,8 @@ export class UploadComponent implements OnInit {
   progressIndex = 0;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private validator: UploadValidationService
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -52,12 +54,14 @@ export class UploadComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.progressIndex === 4) {
-      this.progressIndex = 7;
-    } else {
-      this.progressIndex++;
+    if (!this.validator.validationErrors(this.currentUrl)) {
+      if (this.progressIndex === 4) {
+        this.progressIndex = 7;
+      } else {
+        this.progressIndex++;
+      }
+      this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
     }
-    this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
   }
 
   previousStep() {
