@@ -141,7 +141,6 @@ export class UploadService {
 
   mapDimVarToCoreTypes(dimVar) {
     const formData: FormData = new FormData();
-    console.log('INDEXES', dimVar.index, dimVar.dimension.index, dimVar);
     formData.append('brick', this.brickBuilder.toJson());
     formData.append('dimIndex', dimVar.dimension.index);
     formData.append('dimVarIndex', dimVar.index);

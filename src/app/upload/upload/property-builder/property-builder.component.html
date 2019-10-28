@@ -1,10 +1,26 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mb-0 mt-2" style="float: left">
+            Add Properties To Your Brick
+          </h5>
+          <button class="btn btn-link" (click)="addProperty()" style="float: right">
+            + Add Property
+          </button> 
+        </div>
+      </div>
+      <hr />
+    </div>
+    <div class="col-12">
       <div class="card">
-        <h5 class="card-header">
+        <!-- <h5 class="card-header light-blue">
           Add properties to your brick
-        </h5>
+        </h5> -->
+        <div class="card-header light-blue">
+          <h5>Brick Properties</h5>
+        </div>
         <div class="card-body">
           <div class="row">
             <h6 class="col-6">
@@ -17,11 +33,6 @@
               Units
             </h6>
           </div>
-          <!-- <app-property-form
-            *ngFor="let property of properties" 
-            [property]="property"
-            (deleted)="deleteProperty(property)"
-          ></app-property-form> -->
           <ng-container *ngFor="let property of properties">
             <app-property-form
               *ngIf="!property.hidden"
@@ -30,9 +41,9 @@
             ></app-property-form>
           </ng-container>
         </div>
-        <div class="card-footer">
+        <!-- <div class="card-footer">
           <button (click)="addProperty()" class="btn btn-sm btn-link">+ Add a property</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
