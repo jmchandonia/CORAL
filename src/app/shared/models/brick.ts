@@ -14,6 +14,9 @@ export class Brick {
     description: string;
     process: Term;
     campaign: Term;
+    personnel: Term;
+    start_date: Date;
+    end_date: Date;
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
