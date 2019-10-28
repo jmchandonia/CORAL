@@ -7,12 +7,15 @@
 
 #logo-image {
     height: 90px;
+    margin-right: calc(100% - 900px);
 }
 
 .nav-container {
-    width: 800px;
     margin-top: 45px;
-    margin-left: 30%;
+    width: 800px;
+    height: 42px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .page-link {
