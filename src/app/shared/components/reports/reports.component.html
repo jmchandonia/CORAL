@@ -7,7 +7,7 @@
             Data Clearinghouse.
         </p>
       </div>
-        <form>
+        <!-- <form>
           <div class="form-group">
             <label for="reports-select">
               Display Summary of Uploaded Datasets, sorted by:
@@ -15,7 +15,15 @@
             <select2 id="reports-select" [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)">
               </select2>
           </div>
-        </form>
+        </form> -->
+        <div class="card">
+          <h5 class="card-header light-blue">
+            Display Summary of Uploaded Datasets, sorted by:
+          </h5>
+          <div class="card-body">
+            <select2 [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)"></select2>
+          </div>
+        </div>
       </div>
       <div class="option-container mt-3" *ngIf="selectedValue">
         <div class="table-background">
