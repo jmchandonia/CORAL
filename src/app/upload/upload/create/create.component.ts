@@ -24,6 +24,7 @@ export class CreateComponent implements OnInit {
 
   processData: Array<Select2OptionData> = [{id: '', text: ''}];
   campaignData: Array<Select2OptionData> = [{id: '', text: ''}];
+  personnelData: Array<Select2OptionData> = [{id: '', text: ''}];
 
   options: Select2Options = {
     width: '100%',
@@ -55,6 +56,11 @@ export class CreateComponent implements OnInit {
   setBrickCampaign(event) {
     const campaign = event.data[0];
     this.brick.campaign = new Term(campaign.id, campaign.text);
+  }
+
+  setBrickPersonnel(event) {
+    const person = event.data[0];
+    this.brick.personnel = new Term(person.id, person.text);
   }
 
   submitBrick() {
