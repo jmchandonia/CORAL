@@ -15,9 +15,6 @@
     </div>
     <div class="col-12">
       <div class="card">
-        <!-- <h5 class="card-header light-blue">
-          Add properties to your brick
-        </h5> -->
         <div class="card-header light-blue">
           <h5>Brick Properties</h5>
         </div>
@@ -41,9 +38,11 @@
             ></app-property-form>
           </ng-container>
         </div>
-        <!-- <div class="card-footer">
-          <button (click)="addProperty()" class="btn btn-sm btn-link">+ Add a property</button>
-        </div> -->
+      </div>
+    </div>
+    <div class="col-12 mt-2" *ngIf="errors">
+      <div class="alert alert-danger" role="alert">
+        Error: Please fill out all fields for brick properties
       </div>
     </div>
   </div>
