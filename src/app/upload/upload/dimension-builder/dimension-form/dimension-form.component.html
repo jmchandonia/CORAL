@@ -1,9 +1,18 @@
 <div class="card mt-4">
-  <div class="card-header">
-    <div class="row">
+  <div class="card-header light-blue">
+    <!-- <div class="row">
       <h6 class="col-10">Dimension {{dimension.index + 1}}</h6>
       <button class="btn btn-link" *ngIf="!dimension.required" (click)="delete()">Remove</button>
-    </div>
+    </div> -->
+    <h5 class="mt-2 mb-0" style="float: left">
+      Dimension {{dimension.index + 1}}
+    </h5>
+    <button
+      class="btn btn-link"
+      *ngIf="!dimension.required"
+      (click)="delete()"
+      style="float: right"
+      >Remove</button>
   </div>
   <div class="card-body">
     <div class="row">

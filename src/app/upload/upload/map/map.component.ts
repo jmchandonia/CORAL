@@ -21,7 +21,6 @@ export class MapComponent implements OnInit {
       this.dimVars = [...this.dimVars, ...dim.variables];
     });
     this.testArray = [...Array(this.dimVars.length)].map(() => { return Math.floor(Math.random() * 10) % 2 === 0});
-    console.log('STUPID BOOLEAN ARRAY', this.testArray);
   }
 
   testMap() {

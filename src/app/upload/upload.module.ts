@@ -22,6 +22,8 @@ import { LoadSuccessTableComponent } from './upload/load/load-success-table/load
 import { PreviewComponent } from './upload/preview/preview.component';
 import { CreateComponent } from './upload/create/create.component';
 import { MapComponent } from './upload/map/map.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -44,10 +46,12 @@ import { MapComponent } from './upload/map/map.component';
   ],
   imports: [
     CommonModule,
+    BsDatepickerModule.forRoot(),
     NgxSpinnerModule,
     UploadRoutingModule,
     Select2Module,
     FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [UploadService]
 })

@@ -1,5 +1,11 @@
 <div class="container">
   <div class="row justify-content-center">
+    <div class="col-12">
+      <h5 class="mb-0 mt-2">Final Information Needed</h5>
+    </div>
+  </div>
+  <hr />
+  <div class="row justify-content-center">
     <div class="col-10">
       <div class="card">
         <div class="card-body">
@@ -31,6 +37,28 @@
                 [data]="campaignData"
                 (valueChanged)="setBrickCampaign($event)"
                 ></select2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <label for="brick-personnel">Personnel: </label>
+              <select2
+                id="brick-personnel"
+                [cssImport]="true"
+                [options]="options"
+                [data]="campaignData"
+                (valueChanged)="setBrickCampaign($event)"
+                ></select2>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label for="start-date">Start Date: </label>
+              <input class="form-control" id="start-date" type="text" placeholder="mm/dd/yyyy" bsDatepicker>
+            </div>
+            <div class="col-6">
+              <label for="end-date">End Date: </label>
+              <input class="form-control" id="start-date" type="text" placeholder="mm/dd/yyyy" bsDatepicker>
             </div>
           </div>
         </div>
