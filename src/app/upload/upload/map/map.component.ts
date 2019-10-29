@@ -46,4 +46,11 @@ export class MapComponent implements OnInit {
       });
   }
 
+  getMappedStatus(mapped, total) {
+    if (mapped === total) {
+      return 'status-column-success';
+    }
+    return mapped === 0 ? 'status-column-fail' : 'status-column-warn'
+  }
+
 }
