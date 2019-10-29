@@ -17,10 +17,16 @@ export class UploadValidationService {
 
    validationErrors(step: string) {
      switch(step) {
-       case 'properties':
-         return this.validateProperties();
-        case 'dimensions': 
-          return this.validateDimensions();
+      case 'properties':
+        return this.validateProperties();
+      case 'dimensions': 
+        return this.validateDimensions();
+      case 'data-values':
+        return this.validateDataValues();
+      case 'load':
+        return this.validateUploadedData();
+      default:
+        return false;  
      }
    } 
 
@@ -29,18 +35,47 @@ export class UploadValidationService {
    }
 
    validateProperties() {
-    let errors = false;
     for (const property of this.brick.properties) {
       if (!property.type || !property.value.text || !property.units) {
-        errors = true;
+        this.errorSub.next(true);
+        return true;
       }
-      this.errorSub.next(errors);
-      return errors;
     }
+    return false;
    }
 
    validateDimensions() {
+    this.brick.dimensions.forEach(dimension => {
+      dimension.variables.forEach(variable => {
+        if (!variable.type || !variable.units) {
+          this.errorSub.next(true);
+          return true;
+        }
+      });
+    });
+    return false; 
+   }
 
+   validateDataValues() {
+     this.brick.dataValues.forEach(dataValue => {
+       if (!dataValue.type || !dataValue.units) {
+         this.errorSub.next(true);
+         return true;
+       }
+     });
+     return false;
+   }
+
+   validateUploadedData() {
+     this.brick.dimensions.forEach(dimension => {
+       dimension.variables.forEach(variable => {
+        if (!variable.valuesSample) {
+          this.errorSub.next(true);
+          return true;
+        }
+       });
+     });
+     return false;
    }
 
 

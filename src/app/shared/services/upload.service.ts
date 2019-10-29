@@ -182,7 +182,7 @@ export class UploadService {
     this.brickBuilder.dimensions.forEach((dim, idx) => {
       const dimData = res.results.dims[idx];
       dim.size = dimData.size;
-      dim.variables.map((dimVar, dvIdx) => {
+      dim.variables.forEach((dimVar, dvIdx) => {
         dimVar.valuesSample = dimData.dim_vars[dvIdx].value_example;
       });
     });
