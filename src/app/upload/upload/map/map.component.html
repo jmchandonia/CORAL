@@ -10,7 +10,25 @@
       <hr />
       <div class="row mt-2">
         <div class="col-12">
-          <div class="card">
+          <div class="card" *ngIf="!mapped && !loading">
+            <div class="card-header light-blue">
+              <h5 class="mb-0">Map Brick Data</h5>
+            </div>
+            <div class="card-body">
+              <p>Before uploading your brick, please check the validity of your values by mapping them to core types in our system.</p>
+              <button class="btn btn-primary" (click)="testMap()">Map Your Brick</button>
+            </div>
+          </div>
+          <div class="loading-container" *ngIf="loading">
+              <ngx-spinner
+              bdColor="rgba(0,0,0,0)"
+              color="#aaa"
+              size="medium"
+              type="ball-spin-fade-rotating"
+              [fullScreen]="false"
+            ></ngx-spinner>
+          </div>
+          <div class="card" *ngIf="mapped">
             <div class="card-header light-blue">
               <h5>Dimension Variables</h5>
             </div>
@@ -34,9 +52,6 @@
                       {{dimVar.totalCount}}
                     </td>
                     <td class="stats-column" [ngClass]="getMappedStatus(dimVar.mappedCount, dimVar.totalCount)">
-                      <!-- <span *ngIf="dimVar.mappedCount !== dimVar.totalCount && dimVar.mappedCount > 0" class="badge badge-pill badge-warning">{{dimVar.mappedCount}}</span> -->
-                      <!-- <span *ngIf="dimVar.mappedCount === 0" class="badge badge-pill badge-danger">{{dimVar.mappedCount}}</span> -->
-                      <!-- <span *ngIf="dimVar.mappedCount === dimVar.totalCount" class="badge badge-pill badge-success">{{dimVar.mappedCount}}</span> -->
                       {{dimVar.mappedCount}}
                     </td>
                     <td class="stats-column">
@@ -52,7 +67,7 @@
               </table>
             </div>
           </div>
-          <div class="card mt-2">
+          <div class="card mt-2" *ngIf="mapped">
             <div class="card-header light-blue">
               <h5>Property Values</h5>
             </div>
