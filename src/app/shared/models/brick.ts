@@ -139,7 +139,7 @@ export class DimensionVariable {
     mapCoreType: string; //
     mapCoreProp: string; //
     mappedCount: number; //
-    totalcount: number; //
+    totalCount: number; //
     mapped = false; //
     mapPk = false; //
 }
