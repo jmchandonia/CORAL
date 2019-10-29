@@ -20,7 +20,23 @@ export class MapComponent implements OnInit {
     this.brick.dimensions.forEach(dim => {
       this.dimVars = [...this.dimVars, ...dim.variables];
     });
-    this.testArray = [...Array(this.dimVars.length)].map(() => { return Math.floor(Math.random() * 10) % 2 === 0});
+    this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
+    this.dimVars.forEach((dimVar, idx) => {
+      dimVar.totalCount = 100;
+      switch(this.testArray[idx]) {
+        case 1:
+          dimVar.mappedCount = 100;
+          break;
+        case 2:
+          dimVar.mappedCount = 95;
+          break;
+        case 3:
+          dimVar.mappedCount = 0;
+          break;
+        default:
+          dimVar.mappedCount = 0;
+      }
+    });
   }
 
   testMap() {
