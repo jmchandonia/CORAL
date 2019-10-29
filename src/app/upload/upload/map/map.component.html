@@ -19,9 +19,9 @@
                 <thead class="table-header">
                   <tr>
                     <th>Variable</th>
-                    <th>Total</th>
-                    <th>Mapped</th>
-                    <th></th>
+                    <th class="stats-column">Total</th>
+                    <th class="stats-column">Mapped</th>
+                    <th class="stats-column"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -30,17 +30,18 @@
                       <!-- {{dimVar.dimension.type.text}}: {{dimVar.type.text}} -->
                       Dimension: Dimension Type
                     </td>
-                    <td>
+                    <td class="stats-column">
                       {{dimVar.totalCount}}
                     </td>
-                    <td>
-                      <span *ngIf="dimVar.mappedCount !== dimVar.totalCount && dimVar.mappedCount > 0" class="badge badge-pill badge-warning">{{dimVar.mappedCount}}</span>
-                      <span *ngIf="dimVar.mappedCount === 0" class="badge badge-pill badge-danger">{{dimVar.mappedCount}}</span>
-                      <span *ngIf="dimVar.mappedCount === dimVar.totalCount" class="badge badge-pill badge-success">{{dimVar.mappedCount}}</span>
+                    <td class="stats-column" [ngClass]="getMappedStatus(dimVar.mappedCount, dimVar.totalCount)">
+                      <!-- <span *ngIf="dimVar.mappedCount !== dimVar.totalCount && dimVar.mappedCount > 0" class="badge badge-pill badge-warning">{{dimVar.mappedCount}}</span> -->
+                      <!-- <span *ngIf="dimVar.mappedCount === 0" class="badge badge-pill badge-danger">{{dimVar.mappedCount}}</span> -->
+                      <!-- <span *ngIf="dimVar.mappedCount === dimVar.totalCount" class="badge badge-pill badge-success">{{dimVar.mappedCount}}</span> -->
+                      {{dimVar.mappedCount}}
                     </td>
-                    <td>
+                    <td class="stats-column">
                       <i *ngIf="dimVar.mappedCount === dimVar.totalCount" class="material-icons success">
-                        cloud_done
+                        check_circle
                       </i>
                       <i *ngIf="dimVar.mappedCount !== dimVar.totalCount" class="material-icons fail">
                         cancel
@@ -56,7 +57,13 @@
               <h5>Property Values</h5>
             </div>
             <div class="card-body">
-              <table class="table table-bordered"></table>
+              <table class="table table-bordered">
+                <thead class="table-header">
+                  <tr>
+
+                  </tr>
+                </thead>
+              </table>
             </div>
           </div>
         </div>
