@@ -52,11 +52,15 @@ export class MapComponent implements OnInit {
           default:
             dimVar.mappedCount = 0;
         }
-        this.loading = false;
-        this.spinner.hide();
-        this.mapped = true;
       });
-    }, 1000)
+      this.brick.dataValues.forEach(dataValue => {
+        dataValue.totalCount = 100;
+        dataValue.mappedCount = Math.floor(Math.random() * 2) === 0 ? 100 : 0;
+      });
+      this.loading = false;
+      this.spinner.hide();
+      this.mapped = true;      
+    }, 1000);
   }
 
   getMappedStatus(mapped, total) {

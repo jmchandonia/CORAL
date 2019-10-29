@@ -67,6 +67,8 @@ export class DataValue {
     units: Term;
     valuesSample: string;
     context: Context[] = [];
+    totalCount: number;
+    mappedCount: number;
 }
 
 export class Context {
