@@ -31,3 +31,7 @@ td {
     background-color: rgb(255, 226, 145);
     color: rgb(139, 105, 9);
 }
+
+.loading-container {
+    height: 300px;
+}
