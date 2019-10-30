@@ -89,7 +89,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.errorSub = this.validator.getValidationErrors()
-      .subscribe(errors => this.errors = errors);
+      .subscribe(errors => {
+        if (!this.property.required) {
+          this.errors = errors;
+        }
+      });
   }
 
   ngOnDestroy() {
