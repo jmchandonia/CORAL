@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { TypedProperty, Term } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-property-form',
   templateUrl: './property-form.component.html',
-  styleUrls: ['./property-form.component.css']
+  styleUrls: ['./property-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PropertyFormComponent implements OnInit, OnDestroy {
   selectedValue: any;
