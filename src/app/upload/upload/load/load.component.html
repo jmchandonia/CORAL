@@ -55,4 +55,11 @@
       </div>
     </div>
   </div>
+  <div *ngIf="validationError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: You must upload a file before continuing to the next steps.
+      </div>
+    </div>
+  </div>
 </div>

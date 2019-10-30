@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, BrickDimension, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
 
 @Component({
@@ -11,11 +13,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./load.component.css'],
   viewProviders: [UploadDragDropDirective]
 })
-export class LoadComponent implements OnInit {
+export class LoadComponent implements OnInit, OnDestroy {
 
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
+    private validator: UploadValidationService
   ) { }
 
   file: File = null;
@@ -24,9 +27,19 @@ export class LoadComponent implements OnInit {
   successData: any;
   error = false;
   loading = false;
+  validationError = false;
+  validationErrorSub: Subscription
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
+    this.validationErrorSub = this.validator.getValidationErrors()
+     .subscribe(error => this.validationError = error);
+  }
+
+  ngOnDestroy() {
+    if (this.validationErrorSub) {
+      this.validationErrorSub.unsubscribe();
+    }
   }
 
   handleFileInput(files: FileList) {
