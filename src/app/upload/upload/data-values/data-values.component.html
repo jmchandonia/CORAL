@@ -31,11 +31,13 @@
             </ng-container>
           </ng-container>
         </div>
-        <!-- <div class="card-footer light-blue">
-          <button class="btn btn-sm btn-link" (click)="addDataValue()">
-            + Add Data Value
-          </button>
-        </div> -->
+      </div>
+      <div class="row mt-2" *ngIf="error">
+        <div class="col-12">
+          <div class="alert alert-danger">
+            Error: Please fill out all fields for brick data values
+          </div>
+        </div>
       </div>
     </div>
   </div>

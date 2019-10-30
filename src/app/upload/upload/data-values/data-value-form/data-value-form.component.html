@@ -7,6 +7,7 @@
       [data]="typeValues"
       (valueChanged)="updateType($event)"
       [disabled]="dataValue.required"
+      [ngClass]="error && !dataValue.type ? 'select2-error' : ''"
     ></select2>
   </div>
   <div class="col-5" *ngIf="dataValue.units !== null">
@@ -16,6 +17,7 @@
       [options]="unitsOptions"
       [data]="unitsValues"
       (valueChanged)="updateUnits($event)"
+      [ngClass]="error && !dataValue.units ? 'select2-error' : ''"
     ></select2>
   </div>
   <div class="col-2" *ngIf="!dataValue.required">

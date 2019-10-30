@@ -1,14 +1,17 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewEncapsulation,EventEmitter, Output } from '@angular/core';
 import { DataValue, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Subscription } from 'rxjs'; 
 
 @Component({
   selector: 'app-data-value-form',
   templateUrl: './data-value-form.component.html',
-  styleUrls: ['./data-value-form.component.css']
+  styleUrls: ['./data-value-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class DataValueFormComponent implements OnInit {
+export class DataValueFormComponent implements OnInit, OnDestroy {
 
   @Input() set dataValue(d: DataValue) {
     this._dataValue = d;
@@ -47,6 +50,8 @@ export class DataValueFormComponent implements OnInit {
   scalarValuesItem: string;
   typeValuesItem: string;
   unitsItem: string;
+  error = false;
+  errorSub: Subscription;
 
   scalarOptions: Select2Options = {
     width: '100%',
@@ -94,10 +99,23 @@ export class DataValueFormComponent implements OnInit {
    };
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private validator: UploadValidationService
   ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(error => {
+        if (!this.dataValue.required) {
+          this.error = error;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   setContextLabel(type: Term, context: Context) {
