@@ -17,6 +17,8 @@ export class UploadValidationService {
 
    validationErrors(step: string) {
      switch(step) {
+      case 'type':
+        return this.validateDataType()
       case 'properties':
         return this.validateProperties();
       case 'dimensions': 
@@ -32,6 +34,10 @@ export class UploadValidationService {
 
    getValidationErrors() {
      return this.errorSub.asObservable();
+   }
+
+   validateDataType() {
+     return !this.brick.type;
    }
 
    validateProperties() {
