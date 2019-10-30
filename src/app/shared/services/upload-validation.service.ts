@@ -55,15 +55,19 @@ export class UploadValidationService {
    }
 
    validateDimensions() {
-    this.nonRequiredDimensions.forEach(dimension => {
-      dimension.variables.forEach(variable => {
+    for (const dimension of this.nonRequiredDimensions) {
+      for (const variable of dimension.variables) {
         if ((!variable.type || !variable.units) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
-      });
-    });
-    return false; 
+      }
+      if (!dimension.type) {
+        this.errorSub.next(true);
+        return true;
+      }
+    }
+    return false;
    }
 
    validateDataValues() {
@@ -77,15 +81,15 @@ export class UploadValidationService {
    }
 
    validateUploadedData() {
-     this.brick.dimensions.forEach(dimension => {
-       dimension.variables.forEach(variable => {
-        if (!variable.valuesSample) {
+    for (const dimension of this.brick.dimensions) {
+      for (const variable of dimension.variables) {
+        if(!variable.valuesSample) {
           this.errorSub.next(true);
           return true;
         }
-       });
-     });
-     return false;
+      }
+    }
+    return false;
    }
 
    get nonRequiredProperties() {
