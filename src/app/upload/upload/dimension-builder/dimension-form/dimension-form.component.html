@@ -25,6 +25,7 @@
         [data]="data"
         [disabled]="dimension.required"
         (valueChanged)="setDimensionType($event)"
+        [ngClass]="error && !dimension.type ? 'select2-error' : ''"
         ></select2>
       </div>
     </div>

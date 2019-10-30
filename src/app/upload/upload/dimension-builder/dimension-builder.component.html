@@ -15,4 +15,11 @@
         <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
     </div>
   </div>
+  <div class="row mt-2" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: Please make sure all your brick's dimensions and dimension variables fields are filled out.
+      </div>
+    </div>
+  </div>
 </div>

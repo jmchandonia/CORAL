@@ -17,6 +17,7 @@
         [value]="selectedType ? selectedType : ''"
         (valueChanged)="setDimVarType($event)"
         [disabled]="dimVar.required"
+        [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
         ></select2>
     </div>
     <div class="col-5" *ngIf="dimVar.units !== null">
@@ -26,6 +27,7 @@
         [data]="unitsData"
         [value]="selectedUnits ? selectedUnits : ''"
         (valueChanged)="setDimVarUnits($event)"
+        [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
       ></select2>
     </div>
     <div class="col-1">
