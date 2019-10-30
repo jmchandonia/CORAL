@@ -37,7 +37,11 @@ export class UploadValidationService {
    }
 
    validateDataType() {
-     return !this.brick.type;
+     if (!this.brick.type) {
+       this.errorSub.next(true);
+       return true;
+     }
+     return false;
    }
 
    validateProperties() {
@@ -63,12 +67,12 @@ export class UploadValidationService {
    }
 
    validateDataValues() {
-     this.nonRequiredDataValues.forEach(dataValue => {
-       if (!dataValue.type || !dataValue.units) {
-         this.errorSub.next(true);
-         return true;
-       }
-     });
+      for (const dataValue of this.nonRequiredDataValues) {
+        if (!dataValue.type || !dataValue.units) {
+          this.errorSub.next(true);
+          return true;
+        }
+      }
      return false;
    }
 

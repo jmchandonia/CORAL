@@ -16,7 +16,15 @@
             [options]="select2Options"
             [value]="selectedTemplate ? selectedTemplate : ''"
             (valueChanged)="setBrickType($event)"
+            [ngClass]="error ? 'select2-error' : ''" 
           ></select2>
+        </div>
+      </div>
+      <div class="row mt-2" *ngIf="error">
+        <div class="col-12">
+          <div class="alert alert-danger">
+            Error: Please select a template to model your brick
+          </div>
         </div>
       </div>
     </div>
