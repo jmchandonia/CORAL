@@ -13,7 +13,6 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   public properties: TypedProperty[];
   brick: Brick;
-  propertyList: any[];
   errors = false;
   errorSub = new Subscription();
 
@@ -21,16 +20,11 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
     private uploadService: UploadService,
     private validator: UploadValidationService,
   ) {
-    this.brick = uploadService.getBrickBuilder();
+    this.brick = this.uploadService.getBrickBuilder();
     this.properties = this.brick.properties;
    }
 
   ngOnInit() {
-    this.uploadService.getDataModels()
-      .subscribe((data: any) => {
-        // starting out upload wizard with just brick types
-        this.propertyList = data.results.Brick.properties;
-      });
     this.errorSub = this.validator.getValidationErrors()
       .subscribe(errors => this.errors = errors);
   }

@@ -1,6 +1,7 @@
 // tslint:disable:variable-name
 
 export class Brick {
+
     id: string;
     data_id: string;
     createStatus: string; //
