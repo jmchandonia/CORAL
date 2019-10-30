@@ -35,7 +35,7 @@ export class UploadValidationService {
    }
 
    validateProperties() {
-    for (const property of this.brick.properties) {
+    for (const property of this.nonRequiredProperties) {
       if (!property.type || !property.value.text || !property.units) {
         this.errorSub.next(true);
         return true;
@@ -45,9 +45,9 @@ export class UploadValidationService {
    }
 
    validateDimensions() {
-    this.brick.dimensions.forEach(dimension => {
+    this.nonRequiredDimensions.forEach(dimension => {
       dimension.variables.forEach(variable => {
-        if (!variable.type || !variable.units) {
+        if ((!variable.type || !variable.units) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
@@ -57,7 +57,7 @@ export class UploadValidationService {
    }
 
    validateDataValues() {
-     this.brick.dataValues.forEach(dataValue => {
+     this.nonRequiredDataValues.forEach(dataValue => {
        if (!dataValue.type || !dataValue.units) {
          this.errorSub.next(true);
          return true;
@@ -76,6 +76,18 @@ export class UploadValidationService {
        });
      });
      return false;
+   }
+
+   get nonRequiredProperties() {
+     return this.brick.properties.filter(property => !property.required);
+   }
+
+   get nonRequiredDimensions() {
+     return this.brick.dimensions.filter(dimension => !dimension.required);
+   }
+
+   get nonRequiredDataValues() {
+     return this.brick.dataValues.filter(dataValue => !dataValue.required);
    }
 
 
