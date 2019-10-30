@@ -89,6 +89,12 @@ export class UploadValidationService {
         }
       }
     }
+    for (const value of this.brick.dataValues) {
+      if (!value.valuesSample) {
+        this.errorSub.next(true);
+        return true;
+      }
+    }
     return false;
    }
 

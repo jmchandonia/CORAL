@@ -24,6 +24,7 @@ import { CreateComponent } from './upload/create/create.component';
 import { MapComponent } from './upload/map/map.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LoadSuccessTableComponent,
     PreviewComponent,
     CreateComponent,
-    MapComponent
+    MapComponent,
+    SafeHtmlPipe
   ],
   imports: [
     CommonModule,
