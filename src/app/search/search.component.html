@@ -19,5 +19,5 @@
     <span class="search-option" *ngIf="previousUrl.length" (click)="navigateToPreviousItem()">| &nbsp;&nbsp; Previous Item</span>
   </div>
 </div>
-<hr />
+<hr *ngIf="currentUrl.includes('core') || currentUrl.includes('brick')" />
 <router-outlet></router-outlet>
