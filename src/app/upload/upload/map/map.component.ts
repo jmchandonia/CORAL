@@ -1,24 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, BrickDimension, DimensionVariable, TypedProperty } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
 
   brick: Brick;
   dimVars: DimensionVariable[] = [];
   testArray = [];
   mapped = false;
   loading = false;
+  error = false;
+  errorSub: Subscription;
 
   constructor(
     private uploadService: UploadService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private validator: UploadValidationService
     ) { }
 
   ngOnInit() {
@@ -26,6 +31,15 @@ export class MapComponent implements OnInit {
     this.brick.dimensions.forEach(dim => {
       this.dimVars = [...this.dimVars, ...dim.variables];
     });
+
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(error => this.error = error);
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   testMap() {
