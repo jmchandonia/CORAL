@@ -39,7 +39,7 @@ export class DataValuesComponent implements OnInit, OnDestroy {
   }
 
   removeDataValue(index) {
-    this.brick.dataValues = this.brick.dataValues.splice(index, 1);
+    this.dataValues.splice(index, 1);
     this.brick.resetDataValueIndices();
   }
 
