@@ -26,7 +26,7 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
     containerCssClass: 'select2-custom-container'
   };
 
-  select2Data: Array<Select2OptionData>;
+  select2Data: Array<Select2OptionData> = [{id: '', text: ''}];
   errorSub: Subscription;
   ajaxOptions: Select2AjaxOptions;
   brick: Brick;
@@ -44,11 +44,11 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
     this.brick = this.uploadService.getBrickBuilder();
     const templates = this.uploadService.brickTypeTemplates;
     if (templates) {
-      this.select2Data = templates;
+      this.select2Data = [...this.select2Data, ...templates];
     } else {
       this.uploadService.getTemplateSub()
       .subscribe((data: any) => {
-        this.select2Data = data;
+        this.select2Data = [...this.select2Data, ...data];
       });
     }
   }
@@ -60,8 +60,10 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
   }
 
   setBrickType(event) {
-    const template = event.data[0];
-    this.uploadService.setSelectedTemplate(template);
+    if (event.value.length) {
+      const template = event.data[0];
+      this.uploadService.setSelectedTemplate(template);
+    }
   }
 
 }

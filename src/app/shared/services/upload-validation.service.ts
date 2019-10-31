@@ -83,7 +83,7 @@ export class UploadValidationService {
    validateUploadedData() {
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
-        if(!variable.valuesSample) {
+        if (!variable.valuesSample) {
           this.errorSub.next(true);
           return true;
         }
