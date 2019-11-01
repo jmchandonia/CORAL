@@ -10,7 +10,15 @@
 
         [ngModelOptions]="{standalone: true}"
       />
-      <label class="form-check-label">{{d.value}}</label>
+      <label class="form-check-label">{{d.value}}
+        <ng-container *ngIf="d.context.length">
+          <span *ngFor="let ctx of d.context; let last = last">
+            <span *ngIf="!last">,&nbsp;</span>
+            <span>{{ctx.value_type.oterm_name}}={{ctx.value.oterm_name}}</span>
+            <span *ngIf="ctx.units">&nbsp;({{ctx.units.oterm_name}})</span>
+          </span>
+        </ng-container>
+      </label>
       <span
         class="badge badge-pill badge-primary ml-1"
         [ngClass]="d.selected ? '' : 'var-unchecked'" 

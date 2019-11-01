@@ -36,7 +36,7 @@
                 >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button>
               </div>
             </div>
-              <div class="row" *ngIf="showDisplayValues">
+              <div class="row" [hidden]="!showDisplayValues">
                 <div class="col-12" *ngIf="selectedDimension">
                   <app-axis-labeler [dimension]="dimension" [axis]="axis"></app-axis-labeler>
                 </div>
