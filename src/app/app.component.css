@@ -1,14 +1,16 @@
 .top-nav {
-    height: 100px;
-    /* width: 100%; */
-    background-color: #00489B; 
+    padding-top: 15px;
+    background: linear-gradient(to right, #00365C, #00489B);
     margin-bottom: 20px;
     overflow-x: hidden;
 }
 
 #logo-image {
-    height: 90px;
-    margin-right: calc(100% - 900px);
+    height: 100px;
+    width: 100px;
+    margin-bottom: 15px;
+    margin-right: calc(100% - 1000px);
+    padding: 10px;
 }
 
 .nav-container {
@@ -41,10 +43,4 @@
 
 .page-link:hover{
     color: white;
-}
-
-@media only screen and (max-width: 1200px) {
-    .nav-container {
-        margin-left: 0px;
-    }
 }
