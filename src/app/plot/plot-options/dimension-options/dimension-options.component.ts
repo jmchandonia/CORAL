@@ -22,15 +22,15 @@ export class DimensionOptionsComponent implements OnInit {
       this.dimensionData.push(
         new DimensionRef(
           dim.data_type.oterm_name,
-          [...dim.typed_values.map(t => ({ value: t.value_type.oterm_name, selected: true }))]
+          [...dim.typed_values.map(t => ({ value: t.value_type.oterm_name, selected: true, context: t.value_context }))]
         )
       );
     });
-    // add measurement value
-    const measurementVal = data.data_type.oterm_name;
+    // add measurement value, for now we are only working with one data value
+    const measurementVal = data.typed_values[0];
     this.dimensionData.push(
       new DimensionRef(
-        measurementVal, [{value: measurementVal, selected: true}]
+        measurementVal, [{value: measurementVal.value_type.oterm_name, selected: true, context: measurementVal.value_context }]
       )
     );
   }
@@ -70,7 +70,20 @@ export class DimensionOptionsComponent implements OnInit {
       this.selectedDimension = this.dimensionData[idx];
     }
     this.plotService.setLabelBuilder(this.selectedDimension, this.axis);
-    this.dimension.title = this.selectedDimension.type;
+    // this.dimension.title = this.selectedDimension.type;
+
+    if (this.selectedDimension.dimVars.length > 1) {
+      this.dimension.title = this.selectedDimension.type;
+    } else {
+      const { dimVars } = this.selectedDimension;
+      this.dimension.title = dimVars[0].value;
+      dimVars[0].context.forEach(ctx => {
+        this.dimension.title += `, ${ctx.value_type.oterm_name}=${ctx.value.value}`;
+        if (ctx.units) {
+          this.dimension.title += `(${ctx.units.oterm_name})`;
+        }
+      });
+    }
 
     // hide dimension variable options if theres only one variable;
     this.showDisplayValues = this.selectedDimension.dimVars.length > 1;
