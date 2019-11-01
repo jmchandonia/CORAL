@@ -10,7 +10,7 @@ import { AxisLabelerComponent } from './plot-options/dimension-options/axis-labe
 import { PlotResultComponent } from './plot-result/plot-result.component';
 import { PlotlyModule } from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-
+import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { PlotService } from '../shared/services/plot.service';
 
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -24,6 +24,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FormsModule,
     PlotlyModule
   ],
-  providers: [PlotService]
+  providers: [PlotService, QueryBuilderService]
 })
 export class PlotModule { }
