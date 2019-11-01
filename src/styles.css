@@ -1,14 +1,14 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
-
+@import url('https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500&display=swap');
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Red Hat Text', sans-serif;
 }
 
 .bold {
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
+    font-family: 'Red Hat Text', sans-serif;
+    font-weight: medium;
 }
 
 .btn-primary {
