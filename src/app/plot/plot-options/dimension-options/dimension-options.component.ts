@@ -35,6 +35,8 @@ export class DimensionOptionsComponent implements OnInit {
     );
   }
 
+  showDisplayValues = false;
+
   select2Options: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
@@ -69,6 +71,9 @@ export class DimensionOptionsComponent implements OnInit {
     }
     this.plotService.setLabelBuilder(this.selectedDimension, this.axis);
     this.dimension.title = this.selectedDimension.type;
+
+    // hide dimension variable options if theres only one variable;
+    this.showDisplayValues = this.selectedDimension.dimVars.length > 1;
     this.chRef.detectChanges();
   }
 
