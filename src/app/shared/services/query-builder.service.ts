@@ -20,13 +20,6 @@ export class QueryBuilderService {
   previousUrl: string;
   // currentUrl: string;
 
-  getMetaData() {
-
-  }
-  getPropertiesFromMetaData() {
-
-  }
-
   constructor(
     private http: HttpClient,
     private router: Router
@@ -48,6 +41,14 @@ export class QueryBuilderService {
       .subscribe((operations: any) => {
         this.operators = operations.results;
       });
+  }
+
+  getQueryBuilderCache() {
+    return JSON.parse(localStorage.getItem('queryBuilder'));
+  }
+
+  setQueryBuilderCache() {
+    localStorage.setItem('queryBuilder', JSON.stringify(this.queryBuilderObject));
   }
 
   setPreviousUrl(url) {
@@ -76,6 +77,9 @@ export class QueryBuilderService {
   }
 
   getSearchResults() {
+    if (this.queryBuilderObject.isEmpty) {
+      this.queryBuilderObject = this.getQueryBuilderCache();
+    }
     return this.http.post<any>(`${environment.baseURL}/search`, this.queryBuilderObject);
   }
 
