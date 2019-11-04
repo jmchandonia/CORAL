@@ -1,10 +1,10 @@
-  <div class="row mb-3 mt-3">
+  <div *ngIf="!isEditor" class="row mb-3 mt-3">
     <div class="offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem; position:relative; top: 3px">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
     </div>
   </div>
-  <hr />
+  <hr *ngIf="!isEditor" />
   <div class="form-container">
     <div class="card">
       <div class="card-header" style="background-color: #eeeeff;">
@@ -50,8 +50,10 @@
     ></app-dimension-options>
   </div>
   <div class="row bottom-button-row">
-    <!-- <button (click)="test()">TEST</button> -->
-    <button class="btn btn-primary offset-10" [routerLink]="['../../result/' + objectId]">Plot Graph</button>
+    <!-- <button (click)="test()">TEST</button> --> 
+    <button class="btn btn-primary offset-10" (click)="emitUpdate()" [routerLink]="['../../result/' + objectId]">
+      {{isEditor ? 'Update Plot' : 'Plot Data'}}
+    </button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
   <!-- *ngFor="let form of formDimensions?.controls; let i = index;" -->

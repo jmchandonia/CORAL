@@ -16,7 +16,7 @@ export class PlotResultComponent implements OnInit {
     ) { }
   plotData: any;
   objectId: string;
-  loading = true;
+  loading = false;
   data: any;
   layout = {
     width: 800,
@@ -27,13 +27,17 @@ export class PlotResultComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.objectId = params.id;
     });
+    this.getPlotData();
+  }
 
-
+  getPlotData() {
+    window.scroll(0, 0);
+    this.loading = true;
     this.plotService.getPlotlyData()
-      .subscribe((data: any) => {
-        const result = data.results;
-        this.data = result.data;
-        this.layout = result.layout;
+      .subscribe((res: any) => {
+        const { data, layout } = res.results;
+        this.data = data;
+        this.layout = layout;
         this.loading = false;
       });
   }
