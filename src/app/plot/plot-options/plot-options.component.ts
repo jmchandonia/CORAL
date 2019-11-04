@@ -148,9 +148,12 @@ export class PlotOptionsComponent implements OnInit {
     }
   }
 
-  emitUpdate() {
+  submitPlot() {
+    this.plotService.setPlotCache();
     if (this.isEditor) {
       this.updated.emit();
+    } else {
+      this.router.navigate([`plot/result/${this.objectId}`]);
     }
   }
 
