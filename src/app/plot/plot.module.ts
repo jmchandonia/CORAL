@@ -12,6 +12,7 @@ import { PlotlyModule } from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { PlotService } from '../shared/services/plot.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -22,7 +23,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     Select2Module,
     ReactiveFormsModule,
     FormsModule,
-    PlotlyModule
+    PlotlyModule,
+    NgxSpinnerModule
   ],
   providers: [PlotService, QueryBuilderService]
 })
