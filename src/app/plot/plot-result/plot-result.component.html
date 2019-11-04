@@ -20,7 +20,15 @@
   </div>
   <div class="form-container" style="padding: 0px; border: 1px solid #ccc;">
     <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
-    <div *ngIf="loading" class="loading"><h3>Loading....</h3></div>
+    <div *ngIf="loading" class="loading">
+      <ngx-spinner
+      bdColor="rgba(0,0,0,0)"
+      color="#aaa"
+      size="medium"
+      style="position: relative; top: 250px"
+      type="ball-spin-fade-rotating"
+      [fullScreen]="false"></ngx-spinner>
+    </div>
   </div>
   <div class="form-container" style="margin-bottom: 0px; padding-bottom: 0px">
     <h5>Edit Plot</h5>
