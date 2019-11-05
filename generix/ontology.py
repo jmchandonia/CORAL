@@ -12,6 +12,24 @@ OTERM_COLLECTION_NAME = TYPE_CATEGORY_ONTOLOGY + OTERM_TYPE
 
 ONTOLOGY_COLLECTION_NAME_PREFIX = 'generix-ont-'
 
+_TERM_PATTERN = re.compile(r'(.+)<(\w+:\d+)>')
+_TERM_ID_PATTERN = re.compile(r'\w+:\d+')
+
+_TERM_ID = re.compile(r'id:\s+(\w+:\d+)')
+_TERM_NAME = re.compile(r'name:\s+(.+)')
+_TERM_IS_A = re.compile(r'is_a:\s+(\w+:\d+)')
+_TERM_SYNONYM = re.compile(r'synonym:\s+"(.+)"')
+_TERM_IS_MICROTYPE = re.compile(r'is_microtype\s+"true"')
+_TERM_IS_DIMENSION = re.compile(r'is_valid_dimension\s+"true"')
+_TERM_IS_DIMENSION_VARIABLE = re.compile(r'is_valid_dimension_variable\s+"true"')
+_TERM_IS_PROPERTY = re.compile(r'is_valid_property\s+"true"')
+_TERM_VALID_UNITES = re.compile(r'valid_units\s+"([\w+:\d+\s*]+)"')
+_TERM_VALID_UNITES_PARENT = re.compile(r'valid_units_parent\s+"([\w+:\d+\s*]+)"')
+_TERM_OREF = re.compile(r'ORef:\s+(\w+:\d+)')
+_TERM_REF = re.compile(r'Ref:\s+(\w+:\d+\.\w+\.\w+)')
+_MICROTYPE_FK_PATTERN = re.compile(r'(\w+:\d+)\.(\w+)\.(\w+)')
+
+
 class OntologyService:
     def __init__(self, arango_service):
         self.__arango_service = arango_service
@@ -49,18 +67,31 @@ class OntologyService:
     def _index_terms(self, ont_id, terms):
         for _, term in terms.items():
             all_parent_ids = {}
-            self._collect_all_parent_ids(term, all_parent_ids)
+            self._collect_all_parent_ids(term, all_parent_ids)             
             doc = {
                 'ontology_id': ont_id,
                 'term_id': term.term_id,
                 'term_name': term.term_name,
+                'term_names': [term.term_name] + term.synonyms,
                 'parent_term_ids': term.parent_ids,
+                
+                'synonyms':term.synonyms,
+                'is_microtype':term.is_microtype,
+                'is_dimension':term.is_dimension,
+                'is_dimension_variable':term.is_dimension_variable,
+                'is_property':term.is_property,
+
+                'microtype_fk':term.microtype_fk,
+                'microtype_valid_values_parent':term.microtype_valid_values_parent,
+                'microtype_valid_units':term.microtype_valid_units,
+                'microtype_valid_units_parent':term.microtype_valid_units_parent,
+
                 'parent_path_term_ids': list(all_parent_ids.keys())
             }
             try:
                 self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
-            except:
-                print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']) )
+            except Exception as e:
+                print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']), e )
 
 
     def _collect_all_parent_ids(self, term, all_parent_ids):
@@ -79,37 +110,95 @@ class OntologyService:
         terms = {}
 
         term_id = None
-        term_name = None
-
-        # TODO: index term_aliases as well
-        term_aliases = []
-        term_parent_ids = []
-
         root_term = None
+
         with open( os.path.join(dir_name, file_name) , 'r') as f:
             for line in f:
                 line = line.strip()
                 if state == STATE_NONE:
                     if line.startswith('[Term]'):
+
+                        # init term properties
                         term_id = None
-                        term_name = None
-                        term_aliases = []
-                        term_parent_ids = []
+                        term_name = ''
+                        term_synonyms = []
+
+                        term_is_microtype = False
+                        term_is_dimension = False
+                        term_is_dimension_variable = False
+                        term_is_property = False
+                        term_ref = ''
+                        term_oref = ''
+                        term_valid_units = []
+                        term_valid_units_parent = []
+                        term_parent_ids = []                        
+
                         state = STATE_TERM_FOUND
 
                 elif state == STATE_TERM_FOUND:
-                    if line.startswith('id:'):
-                        term_id = line[len('id:'):].strip()
+                    if line.startswith('id:'):    
+                        m = _TERM_ID.match(line)
+                        if m is not None:                    
+                            term_id = m.groups()[0]
                     elif line.startswith('name:'):
-                        term_name = line[len('name:'):].strip()
+                        m = _TERM_NAME.match(line)
+                        if m is not None:
+                            term_name = m.groups()[0]
                     elif line.startswith('is_a:'):
-                        parent_id = line[len('is_a:'):].strip().split(' ')[
-                            0].strip()
-                        term_parent_ids.append(parent_id)
+                        m = _TERM_IS_A.match(line)
+                        if m is not None:
+                            parent_id = m.groups()[0]                        
+                            term_parent_ids.append(parent_id)
+                    elif line.startswith('synonym:'):
+                        m = _TERM_SYNONYM.match(line)
+                        if m is not None:
+                            syn = m.groups()[0]                        
+                            term_synonyms.append(syn)
+                    elif line.startswith('xref:'):
+                        xr = line[len('xref:'):].strip()
+
+                        m = _TERM_REF.match(xr)
+                        if m is not None:
+                            term_ref = m.groups()[0]
+
+                        m = _TERM_OREF.match(xr)
+                        if m is not None:
+                            term_oref = m.groups()[0]
+
+                    elif line.startswith('property_value:'):
+                        pv = line[len('property_value:'):].strip()
+                        if not term_is_microtype and _TERM_IS_MICROTYPE.match(pv):
+                            term_is_microtype = True
+                        elif not term_is_dimension and _TERM_IS_DIMENSION.match(pv):
+                            term_is_dimension = True
+                        elif not term_is_dimension_variable and _TERM_IS_DIMENSION_VARIABLE.match(pv):
+                            term_is_dimension_variable = True
+                        elif not term_is_property and _TERM_IS_PROPERTY.match(pv):
+                            term_is_property = True
+                        else:
+                            m = _TERM_VALID_UNITES.match(pv)
+                            if m is not None:
+                                term_valid_units = m.groups()[0].split()
+                            
+                            m = _TERM_VALID_UNITES_PARENT.match(pv)
+                            if m is not None:
+                                term_valid_units_parent = m.groups()[0].split()
+
                     elif line == '':
                         term = Term(term_id, term_name=term_name,
                                     ontology_id=ont_id,
-                                    parent_ids=term_parent_ids)
+                                    parent_ids=term_parent_ids,
+                                    
+                                    synonyms=term_synonyms,
+                                    is_microtype=term_is_microtype,
+                                    is_dimension=term_is_dimension,
+                                    is_dimension_variable=term_is_dimension_variable,
+                                    is_property=term_is_property,
+                                    microtype_fk=term_ref,
+                                    microtype_valid_values_parent=term_oref,
+                                    microtype_valid_units=term_valid_units,
+                                    microtype_valid_units_parent=term_valid_units_parent                        
+                                    )
                         terms[term.term_id] = term
                         if root_term is None:
                             root_term = term
@@ -119,7 +208,18 @@ class OntologyService:
         if term_id is not None:
             term = Term(term_id, term_name=term_name,
                         ontology_id=ont_id,
-                        parent_ids=term_parent_ids)
+                        parent_ids=term_parent_ids,
+                        synonyms=term_synonyms,
+                        is_microtype=term_is_microtype,
+                        is_dimension=term_is_dimension,
+                        is_dimension_variable=term_is_dimension_variable,
+                        is_property=term_is_property,
+                        microtype_fk=term_ref,
+                        microtype_valid_values_parent=term_oref,
+                        microtype_valid_units=term_valid_units,
+                        microtype_valid_units_parent=term_valid_units_parent                        
+                        )
+
             terms[term.term_id] = term
             if root_term is None:
                 root_term = term
@@ -147,6 +247,21 @@ class OntologyService:
     @property
     def all(self):
         return Ontology(self.__arango_service, 'all', ontologies_all=True)
+
+    @property
+    def dimension_microtypes(self):
+        return Ontology(self.__arango_service, 'all', ontologies_all=True, 
+            base_aql_filter='x.is_microtype==True and x.is_dimension==True')
+
+    @property
+    def dimension_variable_microtypes(self):
+        return Ontology(self.__arango_service, 'all', ontologies_all=True, 
+            base_aql_filter='x.is_microtype==True and x.is_dimension_variable==True')
+
+    @property
+    def property_microtypes(self):
+        return Ontology(self.__arango_service, 'all', ontologies_all=True, 
+            base_aql_filter='x.is_microtype==True and x.is_property==True')
 
     def term_stat(self, index_type_def, term_prop_name):
         index_prop_def = index_type_def.get_property_def(term_prop_name)
@@ -177,9 +292,11 @@ class OntologyService:
             for row in rs  ]    
 
 class Ontology:
-    def __init__(self, arango_service, ontology_id, ontologies_all=False):        
+    def __init__(self, arango_service, ontology_id, base_aql_filter=None, base_aql_bind=None, ontologies_all=False):        
         self.__arango_service = arango_service
         self.__ontology_id = ontology_id
+        self.__base_aql_filter = base_aql_filter
+        self.__base_aql_bind = base_aql_bind
 
         self.__index_name = ONTOLOGY_COLLECTION_NAME_PREFIX
         if ontologies_all:
@@ -197,13 +314,18 @@ class Ontology:
         #     self.__dict__[name] = term
 
     def __find_terms(self, aql_filter, aql_bind, aql_fulltext=None, size=100):
-        
+        111
         if aql_filter is None or len(aql_filter) == 0:
             aql_filter = '1==1'
 
         if not self.__index_name.endswith('*'):
             aql_filter += ' and x.ontology_id == @ontology_id'
             aql_bind['ontology_id'] = self.__ontology_id
+        
+        if self.__base_aql_filter is not None:
+            aql_filter += ' and ' + self.__base_aql_filter
+        if self.__base_aql_bind is not None:
+            aql_bind.update(self.__base_aql_bind)
 
         if aql_fulltext is None:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (OTERM_COLLECTION_NAME, aql_filter )
@@ -221,6 +343,18 @@ class Ontology:
                         ontology_id=row['ontology_id'],
                         parent_ids=row['parent_term_ids'],
                         parent_path_ids=row['parent_path_term_ids'],
+                        
+                        synonyms = row['synonyms'],
+                        is_microtype = row['is_microtype'],
+                        is_dimension = row['is_dimension'],
+                        is_dimension_variable = row['is_dimension_variable'],
+                        is_property = row['is_property'],
+
+                        microtype_fk = row['microtype_fk'],
+                        microtype_valid_values_parent = row['microtype_valid_values_parent'],
+                        microtype_valid_units = row['microtype_valid_units'],
+                        microtype_valid_units_parent = row['microtype_valid_units_parent'],
+
                         persisted=True)     
             terms.append(term)       
         return terms
@@ -258,13 +392,21 @@ class Ontology:
         aql_filter = 'x.term_name == @term_name'
         return self.__find_term(aql_filter, aql_bind)
 
-    def find_name_prefix(self, value, size=100):
-        return self.find_name_pattern("prefix:" + value, size)
+    def find_name_prefix(self, value, parent_term_id=None, size=100):
+        return self.find_name_pattern("prefix:" + value, parent_term_id=parent_term_id, size=size)
 
-    def find_name_pattern(self, value, size=100):
-        aql_bind = {'@collection': 'OTerm', 'property_name': 'term_name', 'property_value': value}
+    def find_name_pattern(self, value, parent_term_id=None, size=100):
+        aql_bind = {
+            '@collection': 'OTerm', 
+            'property_name': 'term_name', 
+            'property_value': value}
         aql_filter = ''
         aql_fulltext = 'FULLTEXT(@@collection, @property_name, @property_value)'
+
+        if parent_term_id is not None and parent_term_id != '':
+            aql_bind['parent_term_id'] = parent_term_id
+            aql_filter = '@parent_term_id in x.parent_term_ids'
+
         return TermCollection(self.__find_terms(aql_filter, aql_bind, 
             aql_fulltext=aql_fulltext, size=size))
 
@@ -350,24 +492,64 @@ class TermCollection:
         table = '<table>%s%s</table>' % (header, ''.join(rows))
         return '%s <br> %s terms' % (table, len(self.terms))
 
-
-_TERM_PATTERN = re.compile('(.+)<(\w+:\d+)>')
-_TERM_ID_PATTERN = re.compile('\w+:\d+')
-
-
 class Term:
     '''
         Supports lazzy loading
     '''
 
-    def __init__(self, term_id, term_name=None, ontology_id=None,
-                 parent_ids=None, parent_path_ids=None, validator_name=None, persisted=False, refresh=False):
+    def __init__(self, term_id, 
+                term_name=None, 
+                ontology_id=None,
+                parent_ids=None, 
+                parent_path_ids=None, 
+                synonyms=None,
+                is_microtype=None,
+                is_dimension=None,
+                is_dimension_variable=None,
+                is_property=None,
+
+                microtype_fk=None,
+                microtype_valid_values_parent=None,
+                microtype_valid_units=None,
+                microtype_valid_units_parent=None,              
+                validator_name=None, 
+                persisted=False, 
+                refresh=False):
+
         self.__persisted = persisted
         self.__term_id = term_id
         self.__term_name = term_name
         self.__ontology_id = ontology_id
         self.__parent_ids = parent_ids
         self.__parent_path_ids = parent_path_ids
+
+        self.__synonyms = synonyms
+        self.__is_microtype = is_microtype
+        self.__is_dimension = is_dimension
+        self.__is_dimension_variable = is_dimension_variable
+        self.__is_property = is_property
+        self.__microtype_fk = microtype_fk
+
+        self.__microtype_fk_term_id = None
+        self.__microtype_fk_core_type = None
+        self.__microtype_fk_core_prop_name = None
+
+        if microtype_fk is not None:
+            self.__microtype_fk_term_id = ''
+            self.__microtype_fk_core_type = ''
+            self.__microtype_fk_core_prop_name = ''
+            if microtype_fk != '':
+                m = _MICROTYPE_FK_PATTERN.match(microtype_fk)
+                if m is not None:
+                    vals = m.groups()
+                    self.__microtype_fk_term_id = vals[0]
+                    self.__microtype_fk_core_type = vals[1]
+                    self.__microtype_fk_core_prop_name = vals[2]
+
+        self.__microtype_valid_values_parent = microtype_valid_values_parent
+        self.__microtype_valid_units = microtype_valid_units
+        self.__microtype_valid_units_parent = microtype_valid_units_parent 
+
         self.__validator_name = validator_name
         self.__parent_terms = []
         if refresh:
@@ -434,7 +616,7 @@ class Term:
         return '%s [%s] <pre>Ontology: %s</pre><pre>Parents: %s</pre>' \
             % (self.term_name, self.term_id, self.ontology_id, self.parent_ids)
 
-    def __safe_proeprty(self, prop_name):
+    def __safe_property(self, prop_name):
         if self.__dict__[prop_name] is None and not self.__persisted:
             self.__lazzy_load()
         return self.__getattribute__(prop_name)
@@ -469,11 +651,11 @@ class Term:
 
     @property
     def ontology_id(self):
-        return self.__safe_proeprty('_Term__ontology_id')
+        return self.__safe_property('_Term__ontology_id')
 
     @property
     def term_name(self):
-        return self.__safe_proeprty('_Term__term_name')
+        return self.__safe_property('_Term__term_name')
 
     # @property
     # def property_name(self):
@@ -481,15 +663,63 @@ class Term:
 
     @property
     def parent_ids(self):
-        return self.__safe_proeprty('_Term__parent_ids')
+        return self.__safe_property('_Term__parent_ids')
 
     @property
     def parent_path_ids(self):
-        return self.__safe_proeprty('_Term__parent_path_ids')
+        return self.__safe_property('_Term__parent_path_ids')
+
+    @property
+    def synonyms(self):
+        return self.__safe_property('_Term__synonyms')
+
+    @property
+    def is_microtype(self):
+        return self.__safe_property('_Term__is_microtype')
+
+    @property
+    def is_dimension(self):
+        return self.__safe_property('_Term__is_dimension')
+
+    @property
+    def is_dimension_variable(self):
+        return self.__safe_property('_Term__is_dimension_variable')
+
+    @property
+    def is_property(self):
+        return self.__safe_property('_Term__is_property')
+
+    @property
+    def microtype_fk(self):
+        return self.__safe_property('_Term__microtype_fk')
+
+    @property
+    def microtype_fk_term_id(self):
+        return self.__safe_property('_Term__microtype_fk_term_id')
+
+    @property
+    def microtype_fk_core_type(self):
+        return self.__safe_property('_Term__microtype_fk_core_type')
+
+    @property
+    def microtype_fk_core_prop_name(self):
+        return self.__safe_property('_Term__microtype_fk_core_prop_name')
+
+    @property
+    def microtype_valid_values_parent(self):
+        return self.__safe_property('_Term__microtype_valid_values_parent')
+
+    @property
+    def microtype_valid_units(self):
+        return self.__safe_property('_Term__microtype_valid_units')
+
+    @property
+    def microtype_valid_units_parent(self):
+        return self.__safe_property('_Term__microtype_valid_units_parent')
 
     @property
     def validator_name(self):
-        return self.__safe_proeprty('_Term__validator_name')
+        return self.__safe_property('_Term__validator_name')
 
     @property
     def property_name(self):
@@ -531,8 +761,11 @@ class Term:
     def _update_parents(self, terms):
         self.__parent_terms = []
         for pid in self.__parent_ids:
-            term = terms[pid]
-            self.__parent_terms.append(term)
+            if pid in terms:
+                self.__parent_terms.append(terms[pid])
+            else:
+                # TODO we should check database here
+                pass
 
 
 class CashedTermProvider:
