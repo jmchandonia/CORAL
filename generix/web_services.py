@@ -384,7 +384,13 @@ def _search_oterms(ontology, value):
     for term in term_collection.terms:
         res.append({
             'id' : term.term_id,
-            'text': term.term_name
+            'text': term.term_name,
+            'microtype':{
+                'fk': term.microtype_fk,
+                'valid_values_parent': term.microtype_valid_values_parent,
+                'valid_units': term.microtype_valid_units,
+                'valid_units_parent': term.microtype_valid_units_parent
+            }
         })
     return  json.dumps({
         'results': res
