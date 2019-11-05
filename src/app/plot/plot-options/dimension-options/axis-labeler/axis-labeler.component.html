@@ -10,7 +10,15 @@
 
         [ngModelOptions]="{standalone: true}"
       />
-      <label class="form-check-label">{{d.value}}</label>
+      <label class="form-check-label">{{d.value}}
+        <ng-container *ngIf="d.context.length">
+          <span *ngFor="let ctx of d.context; let last = last">
+            <span *ngIf="!last">,&nbsp;</span>
+            <span>{{ctx.value_type.oterm_name}}={{ctx.value.oterm_name}}</span>
+            <span *ngIf="ctx.units">&nbsp;({{ctx.units.oterm_name}})</span>
+          </span>
+        </ng-container>
+      </label>
       <span
         class="badge badge-pill badge-primary ml-1"
         [ngClass]="d.selected ? '' : 'var-unchecked'" 
@@ -21,7 +29,7 @@
 <div class="row label-display-options">
   <div class="col-4">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="axisLabels" />
+      <input class="form-check-input" [(ngModel)]="dimension.show_labels" [ngModelOptions]="{standalone: true}" type="checkbox" id="axisLabels" />
       <label class="form-check-label" for="axisLabels">Display Axis Labels As</label>
     </div>
   </div>

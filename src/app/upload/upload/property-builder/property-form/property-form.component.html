@@ -7,6 +7,7 @@
       [disabled]="property.required"
       [value]="propTypeItem ? propTypeItem : ''"
       (valueChanged)="setPropertyType($event)"
+      [ngClass]="errors && !property.type ? 'select2-error' : ''"
     ></select2>
     <!-- <app-async-dropdown
       [term]="property.type"
@@ -21,6 +22,7 @@
       type="text"
       [(ngModel)]="property.value.text"
       [ngModelOptions]="{standalone: true}"
+      [ngClass]="errors && !property.value.text ? 'error' : ''"
     />
   </div>
   <div class="col-2">
@@ -31,6 +33,7 @@
         [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
         (valueChanged)="setUnits($event)"
+        [ngClass]="errors && !property.units ? 'select2-error' : ''" 
     ></select2>
     <!-- <app-async-dropdown
         [value]="unitsItem"

@@ -1,5 +1,5 @@
-<div class="top-nav">
-    <div class="row pr-4 pl-4">
+<!-- <div class="top-nav"> -->
+    <div class="row top-nav pl-4">
         <img id="logo-image" src="assets/enigma-logo.png">
         <div class="nav-container" *ngIf="!currentUrl?.includes('login')">
             <ul class="nav nav-tabs offset-3 white">
@@ -29,6 +29,7 @@
                       href="JavaScript:void(0)"
                       [routerLink]="['search']"
                       [ngClass]="currentUrl?.includes('search') ? 'active' : ''"
+                      (click)="clearPlotBuilder()"
                     >
                         Search
                     </a>
@@ -64,6 +65,6 @@
             </ul>
         </div>
     </div>
-</div>
+<!-- </div> -->
 
 <router-outlet></router-outlet>

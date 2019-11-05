@@ -3,6 +3,7 @@ import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Router, NavigationEnd } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,20 +17,13 @@ export class QueryBuilderService {
   dataModels: any[];
   operators: any[];
   dataTypeHash: any = {};
+  previousUrl: string;
+  // currentUrl: string;
 
-  getMetaData() {
-
-  }
-
-  // getOperators() {
-
-  // }
-
-  getPropertiesFromMetaData() {
-
-  }
-
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     http.get(`${environment.baseURL}/data_models`)
       .subscribe((models: any) => {
         this.dataModels = models.results;
@@ -49,6 +43,22 @@ export class QueryBuilderService {
       });
   }
 
+  getQueryBuilderCache() {
+    return JSON.parse(localStorage.getItem('queryBuilder'));
+  }
+
+  setQueryBuilderCache() {
+    localStorage.setItem('queryBuilder', JSON.stringify(this.queryBuilderObject));
+  }
+
+  setPreviousUrl(url) {
+    this.previousUrl = url;
+  }
+
+  getPreviousUrl() {
+    return this.previousUrl;
+  }
+
   getLoadedDataTypes() {
     return this.dataTypes;
   }
@@ -66,11 +76,10 @@ export class QueryBuilderService {
     this.queryBuilderObject.queryMatch = queryMatch;
   }
 
-  testQueryBuilder() {
-    console.log('TESTING SERVICE', this.queryBuilderObject);
-  }
-
   getSearchResults() {
+    if (this.queryBuilderObject.isEmpty) {
+      this.queryBuilderObject = this.getQueryBuilderCache();
+    }
     return this.http.post<any>(`${environment.baseURL}/search`, this.queryBuilderObject);
   }
 

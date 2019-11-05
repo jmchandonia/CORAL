@@ -1,39 +1,33 @@
 <div class="row mt-3">
   <div class="col-12">
-  <!-- <div class="row">
-    <div class="col-12">
-      <h6>Dimension Variable {{dimVar.index + 1}}</h6>
-    </div>
-  </div> -->
-  <div class="row">
-    <div class="col-1">
-      <span class="badge badge-pill badge-primary">{{dimVar.index + 1}}</span>
-    </div>
-    <div class="col-3">
-      <select2
-        [cssImport]="true"
-        [options]="typeOptions"
-        [data]="typeData"
-        [value]="selectedType ? selectedType : ''"
-        (valueChanged)="setDimVarType($event)"
-        [disabled]="dimVar.required"
+    <div class="row">
+      <div class="col-1">
+        <span class="badge badge-pill badge-primary mt-2">{{dimVar.index + 1}}</span>
+      </div>
+      <div class="col-5">
+        <select2
+          [cssImport]="true"
+          [options]="typeOptions"
+          [data]="typeData"
+          [value]="selectedType ? selectedType : ''"
+          (valueChanged)="setDimVarType($event)"
+          [disabled]="dimVar.required"
+          [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
+          ></select2>
+      </div>
+      <div class="col-5" *ngIf="dimVar.units !== null">
+        <select2
+          [cssImport]="true"
+          [options]="unitsOptions"
+          [data]="unitsData"
+          [value]="selectedUnits ? selectedUnits : ''"
+          (valueChanged)="setDimVarUnits($event)"
+          [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
         ></select2>
-    </div>
-    <div class="col-3">
-      <input class="form-control" [disabled]="dimVar.required" [(ngModel)]="dimVar.scalarType.text" [ngModelOptions]="{standalone: true}" />
-    </div>
-    <div class="col-3" *ngIf="dimVar.units !== null">
-      <select2
-        [cssImport]="true"
-        [options]="unitsOptions"
-        [data]="unitsData"
-        [value]="selectedUnits ? selectedUnits : ''"
-        (valueChanged)="setDimVarUnits($event)"
-      ></select2>
-    </div>
-    <div class="col-2">
-      <button class="btn btn-sm btn-link" *ngIf="!dimVar.required" (click)="delete()">Delete</button>
+      </div>
+      <div class="col-1">
+        <button class="btn btn-sm btn-link" *ngIf="!dimVar.required" (click)="delete()">Delete</button>
+      </div>
     </div>
   </div>
-</div>
 </div>

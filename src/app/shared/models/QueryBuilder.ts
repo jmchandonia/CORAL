@@ -1,3 +1,5 @@
+import { isEqual } from 'lodash';
+
 // tslint:disable:no-use-before-declare
 export class QueryBuilder {
     constructor() { }
@@ -6,6 +8,10 @@ export class QueryBuilder {
     public connectsDownTo: QueryMatch;
     public processesUp: QueryParam[] = [];
     public processesDown: QueryParam[] = [];
+
+    get isEmpty() {
+        return isEqual(this, new QueryBuilder());
+    }
 }
 
 export class QueryMatch {
@@ -17,7 +23,7 @@ export class QueryMatch {
         this.dataModel = dModel;
         this.params = [];
     }
-    public dataModel: string;
+    public dataModel = '';
     public dataType: string;
     public category: string;
     public params: QueryParam[] = [];

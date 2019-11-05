@@ -1,9 +1,8 @@
 <app-query-builder
     [queryMatch]="queryBuilderObject.queryMatch"
-    [dataProps]="dataProps"
     [title]="'Search Options'"
     ></app-query-builder>
- <div class="data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
+ <div class="mb-2 data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
     <i class="material-icons" *ngIf="!showAdvancedFilters" style="font-size: 1.25rem;">arrow_right</i>
     <i class="material-icons" *ngIf="showAdvancedFilters" style="font-size: 1.25rem;">arrow_drop_down</i>
     <h5 style="display: inline-block">Advanced Filters</h5>
@@ -11,15 +10,15 @@
 <hr class="data-divider" *ngIf="!showAdvancedFilters" />
 <app-query-builder
     [queryMatch]="queryBuilderObject.connectsUpTo"
-    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Parent'"
+    (create)="setConnectsUpTo($event)"
     ></app-query-builder>
 <app-query-builder 
     [queryMatch]="queryBuilderObject.connectsDownTo"
-    [dataProps]="dataProps"
     [hidden]="!showAdvancedFilters"
     [title]="'Filter By Children'"
+    (create)="setConnectsDownTo($event)"
     ></app-query-builder>
 <div class="form-container" style="padding: 0px;" [hidden]="!showAdvancedFilters">
     <div class="card">
@@ -36,36 +35,17 @@
         <hr >
         <div class="row">
             <div class="col-2 offset-10">
-                <button class="btn btn-link" (click)="addProcessUp()">
+                <button class="btn btn-link mb-2" [disabled]="!queryBuilderObject.queryMatch.dataType" (click)="addProcessUp()">
                     Add
                 </button>
             </div>
         </div>
     </div>
 </div>
-<!-- <div class="form-container" [hidden]="!showAdvancedFilters">
-    <app-property-params
-        *ngFor="let queryMatch of queryBuilderObject.processesDown; let idx = index;"
-        [data]="queryMatch"
-        [attributes]="processes"
-        [operators]="operators"
-        (updated)="updateProcess('processesDown', idx, $event)"
-        (removed)="removeProcess('processesDown', $event)"
-        ></app-property-params>
-    <app-property-params
-        [isEmpty]="true"
-        [attributes]="processes"
-        [operators]="operators"
-        (added)="addProcess('processesDown', $event)"
-        ></app-property-params>
-</div> -->
 <div class="search-button-footer">
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-2 offset-10">
             <button class="btn btn-primary" (click)="onSubmit()">Search</button>
         </div>
     </div>
 </div>
-
-<!-- <button (click)="testQuery()">Test Query</button> -->
-<!-- <button (click)="clear()">Clear Query</button> -->

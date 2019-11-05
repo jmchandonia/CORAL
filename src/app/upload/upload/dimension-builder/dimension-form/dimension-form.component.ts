@@ -1,13 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
+import { Subscription } from 'rxjs';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+
 @Component({
   selector: 'app-dimension-form',
   templateUrl: './dimension-form.component.html',
-  styleUrls: ['./dimension-form.component.css']
+  styleUrls: ['./dimension-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class DimensionFormComponent implements OnInit {
+export class DimensionFormComponent implements OnInit, OnDestroy {
 
   private _dimension: BrickDimension;
 
@@ -28,7 +32,8 @@ export class DimensionFormComponent implements OnInit {
   };
 
   selectedType: string;
-
+  error = false;
+  errorSub: Subscription;
   data: Array<Select2OptionData> = [];
 
   @Input() set dimension(d: BrickDimension) {
@@ -45,9 +50,20 @@ export class DimensionFormComponent implements OnInit {
   }
 
   @Output() deleted = new EventEmitter();
-  constructor(private uploadService: UploadService) { }
+  constructor(
+    private uploadService: UploadService,
+    private validator: UploadValidationService
+  ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(error => this.error = error);
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   setDimensionType(event) {

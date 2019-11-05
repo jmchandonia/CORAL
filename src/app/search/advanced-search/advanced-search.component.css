@@ -7,6 +7,10 @@
     margin-bottom: 20px;
 }
 
+.data-information-header {
+    cursor: pointer;
+}
+
 .data-information-header h5 {
     margin-left: 20px;
 }

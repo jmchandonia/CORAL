@@ -1,0 +1,37 @@
+.success {
+    color: green;
+    margin-top: 6px;
+}
+
+.fail {
+    color: red;
+    margin-top: 6px;
+}
+
+td {
+    vertical-align: middle;
+}
+
+.stats-column {
+    width: 8%;
+    text-align: center;
+}
+
+.status-column-success {
+    color: green;
+    background-color: rgb(192, 241, 192);
+}
+
+.status-column-fail {
+    color: rgb(160, 2, 2);
+    background-color: rgb(241, 145, 145);
+}
+
+.status-column-warn {
+    background-color: rgb(255, 226, 145);
+    color: rgb(139, 105, 9);
+}
+
+.loading-container {
+    height: 300px;
+}

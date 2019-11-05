@@ -1,0 +1,122 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mb-0 mt-2" style="float: left">Map Properties and Dimension Variables</h5>
+          <button class="btn btn-link" style="float: right" (click)="testMap()">Map</button>
+        </div>
+      </div>
+      <hr />
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="card" *ngIf="!mapped && !loading">
+            <div class="card-header light-blue">
+              <h5 class="mb-0">Map Brick Data</h5>
+            </div>
+            <div class="card-body">
+              <p>Before uploading your brick, please check the validity of your values by mapping them to core types in our system.</p>
+              <button class="btn btn-primary" (click)="testMap()">Map Your Brick</button>
+            </div>
+          </div>
+          <div class="loading-container" *ngIf="loading">
+              <ngx-spinner
+              bdColor="rgba(0,0,0,0)"
+              color="#aaa"
+              size="medium"
+              type="ball-spin-fade-rotating"
+              [fullScreen]="false"
+            ></ngx-spinner>
+          </div>
+          <div class="card" *ngIf="mapped">
+            <div class="card-header light-blue">
+              <h5>Dimension Variables</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead class="table-header">
+                  <tr>
+                    <th>Variable</th>
+                    <th class="stats-column">Total</th>
+                    <th class="stats-column">Mapped</th>
+                    <th class="stats-column"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dimVar of dimVars">
+                    <td>
+                      {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
+                    </td>
+                    <td class="stats-column">
+                      {{dimVar.totalCount}}
+                    </td>
+                    <td class="stats-column" [ngClass]="getMappedStatus(dimVar.mappedCount, dimVar.totalCount)">
+                      {{dimVar.mappedCount}}
+                    </td>
+                    <td class="stats-column">
+                      <i *ngIf="dimVar.mappedCount === dimVar.totalCount" class="material-icons success">
+                        check_circle
+                      </i>
+                      <i *ngIf="dimVar.mappedCount !== dimVar.totalCount" class="material-icons fail">
+                        cancel
+                      </i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card mt-2" *ngIf="mapped">
+            <div class="card-header light-blue">
+              <h5>Data Values</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead class="table-header">
+                  <tr>
+                    <th>Value</th>
+                    <th class="stats-column">Total</th>
+                    <th class="stats-column">Mapped</th>
+                    <th class="stats-column"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dataValue of brick.dataValues">
+                    <td>
+                      {{dataValue.type.text}}
+                      <span *ngIf="dataValue.context.length">
+                        , {{dataValue.context[0].property.text}}={{dataValue.context[0].value.text}}
+                        <span *ngIf="dataValue.context[0].units">
+                           ({{dataValue.context[0].units.text}})
+                        </span>
+                      </span>
+                    </td>
+                    <td class="stats-column">{{dataValue.totalCount}}</td>
+                    <td class="stats-column"[ngClass]="getMappedStatus(dataValue.mappedCount, dataValue.totalCount)">
+                      {{dataValue.mappedCount}}
+                    </td>
+                    <td class="stats-column">
+                      <i *ngIf="dataValue.mappedCount === dataValue.totalCount" class="material-icons success">
+                        check_circle
+                      </i>
+                      <i *ngIf="dataValue.mappedCount !== dataValue.totalCount" class="material-icons fail">
+                        cancel
+                      </i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: Please check your brick for inconsistent dimension variable and data values before submitting.
+      </div>
+    </div>
+  </div>
+</div>

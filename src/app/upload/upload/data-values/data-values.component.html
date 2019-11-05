@@ -1,19 +1,23 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mb-0 mt-2" style="float: left">Define your Brick's Data Values</h5>
+          <button class="btn btn-link" style="float: right" (click)="addDataValue()">+ Add Data Value</button>
+        </div>
+      </div>
+      <hr />
       <div class="card">
         <div class="card-header light-blue">
-          <h5 class="mb-0" style="float:left">Define the Data Values of your brick</h5>
+          <h5 class="mb-0" style="float:left">Data Values</h5>
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col-4">
+            <div class="col-5">
               <strong>Type</strong>
             </div>
-            <div class="col-3">
-              <strong>Scalar Type</strong> 
-            </div>
-            <div class="col-3">
+            <div class="col-5">
               <strong>Units</strong>
             </div>
           </div>
@@ -27,10 +31,12 @@
             </ng-container>
           </ng-container>
         </div>
-        <div class="card-footer light-blue">
-          <button class="btn btn-sm btn-link" (click)="addDataValue()">
-            + Add Data Value
-          </button>
+      </div>
+      <div class="row mt-3" *ngIf="error">
+        <div class="col-12">
+          <div class="alert alert-danger">
+            Error: Please fill out all fields for brick data values
+          </div>
         </div>
       </div>
     </div>

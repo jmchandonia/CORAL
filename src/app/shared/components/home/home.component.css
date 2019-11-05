@@ -26,3 +26,7 @@ label {
     border-top: 1px solid #e3e3e3;
     border-bottom: 1px solid #e3e3e3;
 }
+
+.category-label{
+    margin-top: 0.5rem;
+}

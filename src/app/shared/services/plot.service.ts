@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnChanges } from '@angular/core';
 import { NetworkService } from './network.service';
 import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
 import { DataQuery } from '../models/data-query';
@@ -17,18 +17,31 @@ export class PlotService {
   public axisLabelBuilders: any = {};
   private axisLabelSub = new Subject();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    const cachedPlotBuilder = this.getPlotCache();
+    this.plotBuilder = cachedPlotBuilder ? cachedPlotBuilder : new PlotBuilder();
+  }
 
   getPlotBuilder() {
     return this.plotBuilder;
   }
 
   getPlotType() {
-    return this.plotType;
+    // return this.plotType;
+    return localStorage.getItem('plotType');
   }
 
   setPlotType(value) {
-    this.plotType = value;
+    // this.plotType = value;
+    localStorage.setItem('plotType', value);
+  }
+
+  setPlotCache() {
+    localStorage.setItem('plotBuilder', JSON.stringify(this.plotBuilder));
+  }
+
+  getPlotCache() {
+    return JSON.parse(localStorage.getItem('plotBuilder'));
   }
 
   getConfiguredDimensions() {
@@ -57,6 +70,7 @@ export class PlotService {
     } else {
       callback([config.x, config.y]); // add 2 dimensions to form
     }
+    this.setPlotCache();
   }
 
   /// axis label methods ///
@@ -79,7 +93,9 @@ export class PlotService {
   }
 
   clearPlotBuilder() {
-    delete this.plotType;
+    // delete this.plotType;
+    localStorage.removeItem('plotType');
+    localStorage.removeItem('plotBuilder');
     this.axisLabelBuilders = {};
     this.plotBuilder = new PlotBuilder();
   }

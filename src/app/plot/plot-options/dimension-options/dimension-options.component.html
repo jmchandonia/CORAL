@@ -5,7 +5,7 @@
       {{dimensionLabel}}
     </div>
     <form>
-      <div class="form-group p-3">
+      <div class="form-group p-3 mb-0">
           <div class="row">
               <div class="col-6">
                 <label for="fromDimension">From Dimension</label>
@@ -21,15 +21,24 @@
               </div>
               <div class="col-6">
                 <div class="form-check offset-1">
-                  <input class="form-check-input" type="checkbox" value="" id="axisTitle" />
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="dimension.show_title" [ngModelOptions]="{standalone: true}" id="axisTitle" />
                   <label class="form-check-label" for="axisTitle">Axis Title</label>
                 </div>
                 <input name="axisTitle" [(ngModel)]="dimension.title" class="form-control">
               </div>
             </div>
-              <div class="row">
+            <div class="row mt-3">
+              <div class="col-12">
+                <button
+                  *ngIf="selectedDimension"
+                  class="btn btn-sm btn-link pl-0"
+                  (click)="showDisplayValues = !showDisplayValues"  
+                >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button>
+              </div>
+            </div>
+              <div class="row" [hidden]="!showDisplayValues">
                 <div class="col-12" *ngIf="selectedDimension">
-                  <app-axis-labeler [axis]="axis"></app-axis-labeler>
+                  <app-axis-labeler [dimension]="dimension" [axis]="axis"></app-axis-labeler>
                 </div>
               </div>
         </div>

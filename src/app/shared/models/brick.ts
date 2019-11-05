@@ -1,6 +1,7 @@
 // tslint:disable:variable-name
 
 export class Brick {
+
     id: string;
     data_id: string;
     createStatus: string; //
@@ -14,6 +15,9 @@ export class Brick {
     description: string;
     process: Term;
     campaign: Term;
+    personnel: Term;
+    start_date: Date;
+    end_date: Date;
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
@@ -64,6 +68,8 @@ export class DataValue {
     units: Term;
     valuesSample: string;
     context: Context[] = [];
+    totalCount: number;
+    mappedCount: number;
 }
 
 export class Context {
@@ -136,7 +142,7 @@ export class DimensionVariable {
     mapCoreType: string; //
     mapCoreProp: string; //
     mappedCount: number; //
-    totalcount: number; //
+    totalCount: number; //
     mapped = false; //
     mapPk = false; //
 }
