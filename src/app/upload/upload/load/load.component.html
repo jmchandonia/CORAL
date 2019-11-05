@@ -1,12 +1,14 @@
 <div class="container">
   <div class="row mb-2">
     <div class="col-12">
+      <h5 class="mb-0 mt-2" style="float: left">Upload Brick Data</h5>
       <button class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
         <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
         Download Template
       </button>
     </div>
   </div>
+  <hr />
   <div class="row justify-content-center">
     <div class="col-12">
       <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
@@ -50,6 +52,13 @@
           </span>
           <button style="float: right" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
         </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="validationError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: You must upload a file before continuing to the next steps.
       </div>
     </div>
   </div>

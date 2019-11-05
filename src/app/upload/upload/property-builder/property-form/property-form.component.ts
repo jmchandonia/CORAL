@@ -1,15 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { TypedProperty, Term } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Subscription } from 'rxjs';
 // tslint:disable:variable-name
 
 @Component({
   selector: 'app-property-form',
   templateUrl: './property-form.component.html',
-  styleUrls: ['./property-form.component.css']
+  styleUrls: ['./property-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class PropertyFormComponent implements OnInit {
+export class PropertyFormComponent implements OnInit, OnDestroy {
   selectedValue: any;
   @Output() deleted = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
@@ -18,7 +21,6 @@ export class PropertyFormComponent implements OnInit {
     this.unitsSelect2 = prop.units ? [prop.units] : [];
 
     this._property = prop;
-    console.log('THIS DOT PROPERTY', this.property);
 
     if (prop.type) {
       this.propTypeItem = prop.type.id;
@@ -74,15 +76,31 @@ export class PropertyFormComponent implements OnInit {
 
 
    typesSelect2: Array<Select2OptionData> = [];
-
+   errorSub = new Subscription();
    propTypeItem: string;
    propValueItem: string;
    unitsItem: string;
    required = true;
+   errors = false;
 
-  constructor(private uploadService: UploadService) { }
+  constructor(
+    private uploadService: UploadService,
+    private validator: UploadValidationService
+  ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(errors => {
+        if (!this.property.required) {
+          this.errors = errors;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   delete() {

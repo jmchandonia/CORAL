@@ -1,18 +1,24 @@
 .top-nav {
-    height: 100px;
-    width: 100%;
-    background-color: #00365C; 
+    padding-top: 15px;
+    background: linear-gradient(to right, #00365C, #00489B);
     margin-bottom: 20px;
+    overflow-x: hidden;
 }
 
 #logo-image {
-    height: 90px;
+    height: 100px;
+    width: 100px;
+    margin-bottom: 15px;
+    margin-right: calc(100% - 1000px);
+    padding: 10px;
 }
 
 .nav-container {
-    width: 800px;
     margin-top: 45px;
-    margin-left: 30%;
+    width: 800px;
+    height: 42px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .page-link {
@@ -24,6 +30,10 @@
 }
 
 .nav-link:active {
+    color: white!important;
+}
+
+.nav-link:focus {
     color: #00365C;
 }
 
@@ -33,10 +43,4 @@
 
 .page-link:hover{
     color: white;
-}
-
-@media only screen and (max-width: 1200px) {
-    .nav-container {
-        margin-left: 0px;
-    }
 }

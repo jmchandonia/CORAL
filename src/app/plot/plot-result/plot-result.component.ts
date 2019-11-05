@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-plot-result',
@@ -13,10 +14,11 @@ export class PlotResultComponent implements OnInit {
     private plotService: PlotService,
     private router: Router,
     private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
     ) { }
   plotData: any;
   objectId: string;
-  loading = true;
+  loading = false;
   data: any;
   layout = {
     width: 800,
@@ -27,14 +29,20 @@ export class PlotResultComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.objectId = params.id;
     });
+    this.getPlotData();
+  }
 
-
+  getPlotData() {
+    window.scroll(0, 0);
+    this.loading = true;
+    this.spinner.show();
     this.plotService.getPlotlyData()
-      .subscribe((data: any) => {
-        const result = data.results;
-        this.data = result.data;
-        this.layout = result.layout;
+      .subscribe((res: any) => {
+        const { data, layout } = res.results;
+        this.data = data;
+        this.layout = layout;
         this.loading = false;
+        this.spinner.hide();
       });
   }
 

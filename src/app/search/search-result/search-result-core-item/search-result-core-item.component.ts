@@ -26,7 +26,7 @@ export class SearchResultCoreItemComponent implements OnInit {
         .subscribe((data: any) => {
           // this.data = result;
           // this.data = data.results;
-          this.data = data.results.items;
+          this.data = data.results.items.filter(item => item.value);
           this.type = data.results.type;
         });
     });
