@@ -61,6 +61,7 @@ export class SearchResultComponent implements OnInit {
   }
 
   useData(id) {
+    this.queryBuilder.setPreviousUrl('/search/result');
     this.router.navigate([`../../plot/options/${id}`], {relativeTo: this.route});
   }
 

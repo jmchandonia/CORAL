@@ -1,36 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, TypedProperty } from 'src/app/shared/models/brick';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-property-builder',
   templateUrl: './property-builder.component.html',
   styleUrls: ['./property-builder.component.css']
 })
-export class PropertyBuilderComponent implements OnInit {
+export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   public properties: TypedProperty[];
   brick: Brick;
-  propertyList: any[];
+  errors = false;
+  errorSub = new Subscription();
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private validator: UploadValidationService,
   ) {
-    this.brick = uploadService.getBrickBuilder();
+    this.brick = this.uploadService.getBrickBuilder();
     this.properties = this.brick.properties;
    }
 
   ngOnInit() {
-    this.uploadService.getDataModels()
-      .subscribe((data: any) => {
-        // starting out upload wizard with just brick types
-        this.propertyList = data.results.Brick.properties;
-      });
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(errors => this.errors = errors);
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   addProperty() {
     this.properties.push(new TypedProperty(this.properties.length, false));
-    this.uploadService.testBrickBuilder();
   }
 
   deleteProperty(property) {

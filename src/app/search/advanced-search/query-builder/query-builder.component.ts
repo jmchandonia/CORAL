@@ -1,12 +1,8 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { Select2OptionData, } from 'ng2-select2';
 import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
-import { NetworkService } from '../../../shared/services/network.service';
 import { QueryBuilderService } from '../../../shared/services/query-builder.service';
-import { HttpClient } from '@angular/common/http';
-import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-query-builder',
@@ -15,27 +11,16 @@ import { environment } from 'src/environments/environment';
 })
 export class QueryBuilderComponent implements OnInit, OnDestroy {
 
-  public _queryMatch: QueryMatch = new QueryMatch();
   @Input() connection: string;
   @Input() title: string;
   @Output() create: EventEmitter<QueryMatch> = new EventEmitter();
-  @Input() set dataProps(data: any) {
-    this.dataModels = data.dataModels;
-    // this.dataTypes = data.dataTypes;
-    this.operators = data.operators;
-  }
-  @Input() set queryMatch(value: QueryMatch) {
-    this._queryMatch = value;
-  }
-  get queryMatch() {
-    return this._queryMatch;
-  }
-  private ajaxOptions: Select2AjaxOptions;
+  @Input() queryMatch: QueryMatch;
   public selectedAttributes: any;
   dataModels: any;
   dataTypes: any;
   operators: string[] = [];
   selectedDataType: string;
+  selectedDataTypeId: string;
   dataTypeSub = new Subscription();
 
   options: Select2Options = {
@@ -59,28 +44,22 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   constructor(
     private queryBuilder: QueryBuilderService,
-    private http: HttpClient,
-    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    // TODO: make all querymatches initialize right away
-
     const loadedDataTypes = this.queryBuilder.getLoadedDataTypes();
     if (loadedDataTypes) {
       this.populateDataTypes(loadedDataTypes);
       if (this.queryMatch && this.queryMatch.dataType) {
-        this.selectedDataType = this.dataTypeList.find(item => item.text === this.queryMatch.dataType).id;
+        const {id, text} = this.dataTypeList.find(item => item.text === this.queryMatch.dataType);
+        this.selectedDataTypeId = id;
+        this.selectedDataType = text;
       }
     } else {
       this.dataTypeSub = this.queryBuilder.getDataTypes()
       .subscribe(dataTypes => {
         this.populateDataTypes(dataTypes);
       });
-    }
-
-    if (!this.queryMatch) {
-      this.queryMatch = new QueryMatch();
     }
 }
 
@@ -98,18 +77,16 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   }
 
   updateObjectDataModel(event) {
-    // const selected = this.dataTypes[parseInt(event.value, 10)];
-    // const selectedModel = this.dataModels[selected.dataModel];
-    // this.selectedAttributes = selectedModel.properties;
-    // Object.keys(selected).forEach(key => {
-    //   this.queryMatch[key] = selected[key];
-    // });
     if (this.dataTypes && event.value.length) {
+      if (!this.queryMatch) {
+        this.queryMatch = new QueryMatch();
+        this.create.emit(this.queryMatch);
+      }
       const selected = this.dataTypes[parseInt(event.value, 10)];
       Object.keys(selected).forEach(key => {
       this.queryMatch[key] = selected[key];
       });
-      // this.selectedDataType = event.data[0].text;
+      this.selectedDataType = event.data[0].text;
     }
   }
 

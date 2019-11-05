@@ -1,23 +1,37 @@
 <div class="row">
-  <span class="col-2 offset-1 mt-2" (click)="onGoBack()">
+  <span class="col-2 offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack()">
       <i class="material-icons back-icon">keyboard_arrow_left</i>
     Go back
   </span>
   <hr style="width: 100%" />
 </div>
-<div class="form-container" style="padding: 0px;">
-  <div class="card mb-5" style="border: 0px;">
-    <h3 class="card-title">Your plot is displayed below</h3>
-    <p class="card-text">
-        You can hover over the plot to see more
-        information, or download the plot to use in a presentation or paper.
-        Use the buttons below to download the original data, print the plot,
-        or show the code you can use to re-create this plot in a Data
-        Clearinghouse Jupyter notebook.
-    </p>
+<div class="container">
+  <div class="form-container" style="padding: 0px;">
+    <div class="card mb-5" style="border: 0px;">
+      <h3 class="card-title">Your plot is displayed below</h3>
+      <p class="card-text">
+          You can hover over the plot to see more
+          information, or download the plot to use in a presentation or paper.
+          Use the buttons below to download the original data, print the plot,
+          or show the code you can use to re-create this plot in a Data
+          Clearinghouse Jupyter notebook.
+      </p>
+    </div>
   </div>
-</div>
-<div class="form-container" style="padding: 0px; border: 1px solid #ccc;">
-  <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
-  <div *ngIf="loading" class="loading"><h3>Loading....</h3></div>
+  <div class="form-container" style="padding: 0px; border: 1px solid #ccc;">
+    <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
+    <div *ngIf="loading" class="loading">
+      <ngx-spinner
+      bdColor="rgba(0,0,0,0)"
+      color="#aaa"
+      size="medium"
+      style="position: relative; top: 250px"
+      type="ball-spin-fade-rotating"
+      [fullScreen]="false"></ngx-spinner>
+    </div>
+  </div>
+  <div class="form-container" style="margin-bottom: 0px; padding-bottom: 0px">
+    <h5>Edit Plot</h5>
+  </div>
+  <app-plot-options (updated)="getPlotData()"></app-plot-options>
 </div>

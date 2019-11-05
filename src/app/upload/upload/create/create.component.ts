@@ -3,6 +3,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker'; 
 
 @Component({
   selector: 'app-create',
@@ -19,8 +20,11 @@ export class CreateComponent implements OnInit {
   loading = false;
   successId: string;
 
+  datepickerConfig: Partial<BsDatepickerConfig> = { containerClass: 'theme-dark-blue' };
+
   processData: Array<Select2OptionData> = [{id: '', text: ''}];
   campaignData: Array<Select2OptionData> = [{id: '', text: ''}];
+  personnelData: Array<Select2OptionData> = [{id: '', text: ''}];
 
   options: Select2Options = {
     width: '100%',
@@ -52,6 +56,11 @@ export class CreateComponent implements OnInit {
   setBrickCampaign(event) {
     const campaign = event.data[0];
     this.brick.campaign = new Term(campaign.id, campaign.text);
+  }
+
+  setBrickPersonnel(event) {
+    const person = event.data[0];
+    this.brick.personnel = new Term(person.id, person.text);
   }
 
   submitBrick() {

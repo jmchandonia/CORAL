@@ -3,16 +3,23 @@
     <div class="col-12">
         <div class="row">
           <div class="col-12">
-            <h5 class="mb-0" style="float: left">
+            <h5 class="mb-0 mt-2" style="float: left">
                 Add Dimensions to your Brick
             </h5>
-            <button class="btn btn-sm btn-link" style="float: right" (click)="addDimension()">
+            <button class="btn btn-link" style="float: right" (click)="addDimension()">
               + Add a Dimension
             </button>
           </div>
         </div>
         <hr />
         <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
+    </div>
+  </div>
+  <div class="row mt-2" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: Please make sure all your brick's dimensions and dimension variables fields are filled out.
+      </div>
     </div>
   </div>
 </div>

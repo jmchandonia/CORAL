@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { PlotService } from '../../shared/services/plot.service';
 import { ObjectMetadata } from '../../shared/models/object-metadata';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { Select2OptionData } from 'ng2-select2';
-import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 import * as _ from 'lodash';
 
@@ -26,6 +25,10 @@ export class PlotOptionsComponent implements OnInit {
   public plotBuilder: PlotBuilder;
   public dimensions: Dimension[];
   public plotIcons = {};
+  public previousUrl: string;
+  @Output() updated: EventEmitter<any> = new EventEmitter();
+  currentUrl: string;
+  isEditor = false; // determines whether component is in plot/options or plot/result
 
   public plotTypeOptions: Select2Options = {
     width: '100%',
@@ -44,9 +47,19 @@ export class PlotOptionsComponent implements OnInit {
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
     private router: Router,
-    ) { }
+    ) {
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.currentUrl = event.url;
+          this.isEditor = event.url.includes('result');
+        }
+      });
+    }
 
   ngOnInit() {
+
+    this.previousUrl = this.queryBuilder.getPreviousUrl();
+
     // set up plot builder value from service;
     this.plotBuilder = this.plotService.getPlotBuilder();
 
@@ -135,10 +148,20 @@ export class PlotOptionsComponent implements OnInit {
     }
   }
 
+  submitPlot() {
+    this.plotService.setPlotCache();
+    if (this.isEditor) {
+      this.updated.emit();
+    } else {
+      this.router.navigate([`plot/result/${this.objectId}`]);
+    }
+  }
+
   onGoBack(id) {
-    // this.plotService.resetValues();
+
     this.plotService.clearPlotBuilder();
-    this.router.navigate([`/search/result/brick/${id}`]);
+    const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
+    this.router.navigate([url]);
   }
 
 }

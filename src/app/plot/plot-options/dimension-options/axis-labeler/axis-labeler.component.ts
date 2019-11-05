@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { DimensionRef } from 'src/app/shared/models/plot-builder';
+import { DimensionRef, Dimension } from 'src/app/shared/models/plot-builder';
 import { Subscription } from 'rxjs';
 import { PlotService } from 'src/app/shared/services/plot.service';
 
@@ -11,6 +11,7 @@ import { PlotService } from 'src/app/shared/services/plot.service';
 export class AxisLabelerComponent implements OnInit, OnDestroy {
 
   @Input() axis: string;
+  @Input() dimension: Dimension;
   labelBuilderSub = new Subscription();
   labelBuilder: DimensionRef;
   labelArray: string[] = [];

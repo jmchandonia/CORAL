@@ -1,20 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { BrickDimension, DimensionVariable, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dimension-variable-form',
   templateUrl: './dimension-variable-form.component.html',
-  styleUrls: ['./dimension-variable-form.component.css']
+  styleUrls: ['./dimension-variable-form.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class DimensionVariableFormComponent implements OnInit {
+export class DimensionVariableFormComponent implements OnInit, OnDestroy {
 
-  // @Input() dimVar: DimensionVariable;
   @Input() set dimVar(d: DimensionVariable) {
     this._dimVar = d;
     if (d.type) {
-      this.typeData = [d.type];
+      if (d.context.length) {
+        this.typeData = [this.setContextLabel(d.type, d.context[0])];
+      } else {
+        this.typeData = [d.type];
+      }
       this.selectedType = d.type.id;
     }
 
@@ -32,6 +38,8 @@ export class DimensionVariableFormComponent implements OnInit {
   unitsData: Array<Select2OptionData> = [];
   selectedType: string;
   selectedUnits: string;
+  error = false;
+  errorSub: Subscription;
 
   private _dimVar: DimensionVariable;
 
@@ -70,10 +78,33 @@ export class DimensionVariableFormComponent implements OnInit {
   };
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private validator: UploadValidationService
   ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getValidationErrors()
+      .subscribe(error => {
+        if (!this.dimVar.required) {
+          this.error = error;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
+  }
+
+  setContextLabel(type: Term, context: Context) {
+    const label = type;
+    const { property, value, units } = context;
+    label.text += `, ${property.text}=${value.text}`;
+    if (units) {
+      label.text += ` (${units.text})`;
+    }
+    return label;
   }
 
   delete() {
