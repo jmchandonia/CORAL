@@ -32,20 +32,89 @@ TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')
 def hello():
     return "Welcome!"
 
-@app.route("/generix/search_ont_dtypes/<value>", methods=['GET'])
-def search_ont_dtypes(value):
-    # value = request.args.get('term')
-    return _search_oterms(svs['ontology'].data_types, value)
 
-@app.route("/generix/search_ont_all/<value>", methods=['GET'])
-def search_ont_all(value):
-    # value = request.args.get('term')
-    return _search_oterms(svs['ontology'].all, value)
+@app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
+def search_dimension_microtypes(value):
+    return _search_microtypes(svs['ontology'].dimension_microtypes, value)
 
-@app.route("/generix/search_ont_units/<value>", methods=['GET'])
-def search_ont_units(value):
-    # value = request.args.get('term')
-    return _search_oterms(svs['ontology'].units, value)
+@app.route("/generix/search_dimension_variable_microtypes/<value>", methods=['GET'])
+def search_dimension_variable_microtypes(value):
+    return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
+
+@app.route("/generix/search_property_microtypes/<value>", methods=['GET'])
+def search_property_microtypes(value):
+    return _search_microtypes(svs['ontology'].property_microtypes, value)
+
+
+def _search_microtypes(ontology, value):
+    if value is None:
+        value = '*'
+    res = []
+
+    term_collection = ontology.find_name_prefix(value)
+    for term in term_collection.terms:
+        res.append({
+            'id' : term.term_id,
+            'text': term.term_name,
+            'microtype':{
+                'fk': term.microtype_fk,
+                'valid_values_parent': term.microtype_valid_values_parent,
+                'valid_units': term.microtype_valid_units,
+                'valid_units_parent': term.microtype_valid_units_parent
+            }
+        })
+    return  json.dumps({
+        'results': res
+    })
+
+
+@app.route("/generix/search_property_value_oterms", methods=['POST'])
+def search_property_values():
+    query = request.json
+    value = query['value']
+    parent_term_id = query['microtype']['valid_values_parent']
+    return _search_oterms(svs['ontology'].all, value, parent_term_id=parent_term_id)
+
+@app.route("/generix/search_property_units_oterms", methods=['POST'])
+def search_property_units_oterms():
+    query = request.json
+    value = query['value']
+    parent_term_id = query['microtype']['valid_units_parent']
+    return _search_oterms(svs['ontology'].units, value, parent_term_id=parent_term_id)
+
+
+def _search_oterms(ontology, value, parent_term_id=None):
+    if value is None:
+        value = '*'
+    res = []
+
+    if parent_term_id == '':
+        parent_term_id = None
+    term_collection = ontology.find_name_prefix(value, parent_term_id=parent_term_id)
+    for term in term_collection.terms:
+        res.append({
+            'id' : term.term_id,
+            'text': term.term_name
+        })
+    return  json.dumps({
+        'results': res
+    })
+
+
+# @app.route("/generix/search_ont_dtypes/<value>", methods=['GET'])
+# def search_ont_dtypes(value):
+#     # value = request.args.get('term')
+#     return _search_oterms(svs['ontology'].data_types, value)
+
+# @app.route("/generix/search_ont_all/<value>", methods=['GET'])
+# def search_ont_all(value):
+#     # value = request.args.get('term')
+#     return _search_oterms(svs['ontology'].all, value)
+
+# @app.route("/generix/search_ont_units/<value>", methods=['GET'])
+# def search_ont_units(value):
+#     # value = request.args.get('term')
+#     return _search_oterms(svs['ontology'].units, value)
 
 @app.route("/generix/brick_type_templates", methods=['GET'])
 def brick_type_templates():
@@ -376,25 +445,6 @@ def _create_brick(brick_data):
 def _get_term(term_data):
     return svs['ontology'].all.find_id( term_data['id'] ) if term_data['id'] != '' else None
 
-def _search_oterms(ontology, value):
-    if value is None:
-        value = '*'
-    res = []
-    term_collection = ontology.find_name_prefix(value)
-    for term in term_collection.terms:
-        res.append({
-            'id' : term.term_id,
-            'text': term.term_name,
-            'microtype':{
-                'fk': term.microtype_fk,
-                'valid_values_parent': term.microtype_valid_values_parent,
-                'valid_units': term.microtype_valid_units,
-                'valid_units_parent': term.microtype_valid_units_parent
-            }
-        })
-    return  json.dumps({
-        'results': res
-    })
 
 ########################################################################################
 ## NEW VERSION
