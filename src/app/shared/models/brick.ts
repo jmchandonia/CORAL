@@ -150,9 +150,16 @@ export class DimensionVariable {
 
 export class TypedProperty {
     // TODO: Discuss how to handle ontological terms
-    constructor(index: number, required?: boolean) {
+    constructor(
+        index: number,
+        required?: boolean,
+        type?: Term,
+        microType?: any,
+        ) {
         this.index = index;
         this.required = required;
+        this.type = type;
+        this.microType = microType;
     }
     required = true;
     parentCollection: TypedProperty[];

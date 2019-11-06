@@ -44,4 +44,8 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
     this.properties = this.brick.properties;
   }
 
+  resetProperty(event: TypedProperty) {
+    this.brick.properties.splice(event.index, 1, event);
+  }
+
 }

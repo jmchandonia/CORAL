@@ -88,6 +88,8 @@ body {
     background-color: #e9ecef;
     border-radius: 3px;
     height: 38px;
+    margin-left: 0.1275rem;
+    margin-right: 0.1275rem;
 }
 
 .no-units > span {
