@@ -90,6 +90,10 @@ body {
     height: 38px;
 }
 
+.no-units > span {
+    margin-top: 8px;
+}
+
 .light-blue {
     background-color: #eeeeff;
 }
