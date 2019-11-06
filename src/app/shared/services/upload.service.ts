@@ -199,6 +199,18 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/search_property_microtypes/${term}`);
   }
 
+  public getProcessOterms() {
+    return this.http.get(`${environment.baseURL}/get_process_oterms`);
+  }
+
+  public getCampaignOterms() {
+    return this.http.get(`${environment.baseURL}/get_campaign_oterms`);
+  }
+
+  public getPersonnelOterms() {
+    return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
+  }
+
   mapDimVarToCoreTypes(dimVar) {
     // mapping dimension variable to core types, still prototyping
     const formData: FormData = new FormData();
