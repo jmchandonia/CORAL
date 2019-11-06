@@ -56,6 +56,7 @@ def _search_microtypes(ontology, value):
         res.append({
             'id' : term.term_id,
             'text': term.term_name,
+            'has_units': len(term.microtype_valid_units) > 0 or len(term.microtype_valid_units_parent) > 0,
             'microtype':{
                 'fk': term.microtype_fk,
                 'valid_values_parent': term.microtype_valid_values_parent,
@@ -75,14 +76,6 @@ def search_property_values():
     parent_term_id = query['microtype']['valid_values_parent']
     return _search_oterms(svs['ontology'].all, value, parent_term_id=parent_term_id)
 
-@app.route("/generix/search_property_units_oterms", methods=['POST'])
-def search_property_units_oterms():
-    query = request.json
-    value = query['value']
-    parent_term_id = query['microtype']['valid_units_parent']
-    return _search_oterms(svs['ontology'].units, value, parent_term_id=parent_term_id)
-
-
 def _search_oterms(ontology, value, parent_term_id=None):
     if value is None:
         value = '*'
@@ -99,6 +92,36 @@ def _search_oterms(ontology, value, parent_term_id=None):
     return  json.dumps({
         'results': res
     })
+
+@app.route("/generix/get_property_units_oterms", methods=['POST'])
+def get_property_units_oterms():
+    query = request.json
+    parent_term_ids = query['microtype']['valid_units_parent']
+    term_ids = query['microtype']['valid_units'] 
+    return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
+
+def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
+    res = {}
+
+    if term_ids is not None:
+        for term in ontology.find_ids(term_ids).terms:
+            res[term.term_id] = {
+                'id' : term.term_id,
+                'text': term.term_name
+            }
+
+    if parent_term_ids is not None:
+        for parent_term_id in parent_term_ids:
+            for term in ontology.find_parent_path_id(parent_term_id).terms:
+                res[term.term_id] = {
+                    'id' : term.term_id,
+                    'text': term.term_name
+                }
+    res = list(res.values())
+    res.sort(key=lambda x: x['text'])
+    return  json.dumps({
+        'results': res
+    })    
 
 
 # @app.route("/generix/search_ont_dtypes/<value>", methods=['GET'])
