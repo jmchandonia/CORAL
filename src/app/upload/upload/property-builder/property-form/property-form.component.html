@@ -41,6 +41,9 @@
         [method]="'searchOntUnits'"
         [required]="property.required"
         (valueChanged)="setUnits($event)"></app-async-dropdown> -->
+      <div class="row justify-content-center no-units" *ngIf="property.units === null">
+        <span>N/A</span>
+      </div>
   </div>
   <div class="col-1">
     <button *ngIf="!property.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
