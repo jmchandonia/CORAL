@@ -20,10 +20,10 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
     containerCssClass: 'select2-custom-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
-      if (!term || term.length < 3) {
+      if (!term || term.length < 1) {
         options.callback({results: []});
       } else {
-        this.uploadService.searchOntTerms(term)
+        this.uploadService.searchDimensionMicroTypes(term)
           .subscribe((data: any) => {
             options.callback({results: data.results as Select2OptionData});
           });
