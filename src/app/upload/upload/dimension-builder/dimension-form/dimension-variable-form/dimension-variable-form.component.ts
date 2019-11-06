@@ -50,7 +50,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     containerCssClass: 'select2-custom-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
-      if (!term || term.length < 1) {
+      if (!term || term.length < 3) {
         options.callback({results: []});
       } else {
         this.uploadService.searchDimensionVariableMicroTypes(term)
