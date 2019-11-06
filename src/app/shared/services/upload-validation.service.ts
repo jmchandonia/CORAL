@@ -20,9 +20,9 @@ export class UploadValidationService {
 
    validationErrors(step: string) {
      // handle different brick validations depending on what step the user is on
-     switch(step) {
+     switch (step) {
       case 'type':
-        return this.validateDataType()
+        return this.validateDataType();
       case 'properties':
         return this.validateProperties();
       case 'dimensions': 
@@ -34,7 +34,7 @@ export class UploadValidationService {
       case 'map':
         return this.validateMappedData();
       default:
-        return false;  
+        return false;
      }
    } 
 
@@ -56,7 +56,7 @@ export class UploadValidationService {
      // filter only user input properties
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.type || !property.value || !property.units) {
+      if (!property.type || !property.value || property.units === undefined) {
         this.errorSub.next(true);
         return true;
       }
