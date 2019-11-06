@@ -11,6 +11,7 @@ import {
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import * as _ from 'lodash';
 @Injectable({
   providedIn: 'root'
@@ -179,7 +180,7 @@ export class UploadService {
 
   public searchOntPropertyValues(value: string, microtype: any) {
     const body = { microtype, value };
-    return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body);
+    return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body).pipe(delay(500));
   }
 
   public searchOntPropertyUnits(microtype: any) {
@@ -188,15 +189,15 @@ export class UploadService {
   }
 
   public searchDimensionMicroTypes(term) {
-    return this.http.get(`${environment.baseURL}/search_dimension_microtypes/${term}`);
+    return this.http.get(`${environment.baseURL}/search_dimension_microtypes/${term}`).pipe(delay(500));
   }
 
   public searchDimensionVariableMicroTypes(term) {
-    return this.http.get(`${environment.baseURL}/search_dimension_variable_microtypes/${term}`);
+    return this.http.get(`${environment.baseURL}/search_dimension_variable_microtypes/${term}`).pipe(delay(500));
   }
 
   public searchPropertyMicroTypes(term) {
-    return this.http.get(`${environment.baseURL}/search_property_microtypes/${term}`);
+    return this.http.get(`${environment.baseURL}/search_property_microtypes/${term}`).pipe(delay(500));
   }
 
   public getProcessOterms() {
