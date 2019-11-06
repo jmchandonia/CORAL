@@ -15,11 +15,12 @@ import { Subscription } from 'rxjs';
 export class PropertyFormComponent implements OnInit, OnDestroy {
   selectedValue: any;
   @Output() deleted = new EventEmitter();
+  @Output() typeReselected: EventEmitter<TypedProperty> = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
 
     this.typesSelect2 = prop.type ? [prop.type] : [];
-    this.unitsSelect2 = prop.units ? [prop.units] : [];
-    this.valuesSelect2 = prop.value ? [prop.value] : [];
+    this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
+    this.valuesSelect2 = prop.value ? [prop.value] : [{id: '', text: ''}];
 
     this._property = prop;
 
@@ -31,6 +32,10 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     }
     if (prop.value) {
       this.propValueItem = prop.value.id;
+    }
+
+    if (this.property.microType) {
+      this.getPropertyUnits();
     }
   }
 
@@ -126,7 +131,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
           if (this.property.units === null) {
             this.property.units = undefined;
           }
-          this.unitsSelect2 = data.results;
+          this.unitsSelect2 = [...this.unitsSelect2, ...data.results];
         }
       });
   }
@@ -135,7 +140,20 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     const item = event.data[0];
     this.property.type = new Term(item.id, item.text);
     this.property.microType = item.microtype;
-    this.getPropertyUnits();
+
+    // clear reset entire property object to clear other select 2 dropdowns
+    if (this.property.value || this.property.units) {
+      const resetProperty = new TypedProperty(
+        this.property.index,
+        this.property.required,
+        this.property.type,
+        this.property.microType
+      );
+      // emit new typed property to replace old one in parent component array reference
+      this.typeReselected.emit(resetProperty);
+    } else {
+      this.getPropertyUnits();
+    }
   }
 
   setValue(event) {
