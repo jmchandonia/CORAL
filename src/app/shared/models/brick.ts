@@ -134,6 +134,7 @@ export class DimensionVariable {
     dimension: BrickDimension;
     index: number;
     type: Term;
+    microType: any;
     scalarType: Term = new Term();
     units: Term;
     values: any[] = [];
@@ -157,7 +158,27 @@ export class TypedProperty {
     parentCollection: TypedProperty[];
     index: number;
     type: Term;
+    microType: any;
     value: Term = new Term();
     units: Term;
     context: Context[] = [];
+}
+
+export class MicroType {
+    constructor(
+        fk?: string,
+        valid_units?: string[],
+        valid_units_parent?: string[],
+        valid_values_parent?: string
+    ) {
+        this.fk = fk;
+        this.valid_units = valid_units;
+        this.valid_units_parent = valid_units_parent;
+        this.valid_values_parent = valid_values_parent;
+    }
+
+    fk: string;
+    valid_units: string[];
+    valid_units_parent: string[];
+    valid_values_parent: string;
 }

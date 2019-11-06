@@ -177,6 +177,18 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
 
+  public searchDimensionMicroTypes(term) {
+    return this.http.get(`${environment.baseURL}/search_dimension_microtypes/${term}`);
+  }
+
+  public searchDimensionVariableMicroTypes(term) {
+    return this.http.get(`${environment.baseURL}/search_dimension_variable_microtypes/${term}`);
+  }
+
+  public searchPropertyMicroTypes(term) {
+    return this.http.get(`${environment.baseURL}/search_property_microtypes/${term}`);
+  }
+
   mapDimVarToCoreTypes(dimVar) {
     // mapping dimension variable to core types, still prototyping
     const formData: FormData = new FormData();
