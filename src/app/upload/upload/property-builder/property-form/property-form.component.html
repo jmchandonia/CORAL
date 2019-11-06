@@ -17,13 +17,14 @@
     ></app-async-dropdown> -->
   </div>
   <div class="col-3">
-    <input
-      class="form-control"
-      type="text"
-      [(ngModel)]="property.value.text"
-      [ngModelOptions]="{standalone: true}"
-      [ngClass]="errors && !property.value.text ? 'error' : ''"
-    />
+      <select2
+        [cssImport]="true"
+        [data]="valuesSelect2"
+        [options]="valuesOptions"
+        [value]="propValueItem ? propValueItem : ''"
+        [ngClass]="{'select2-error' : errors && !property.value}"
+        (valueChanged)="setValue($event)"
+      ></select2>
   </div>
   <div class="col-2">
       <select2

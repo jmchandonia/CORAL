@@ -177,6 +177,16 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
 
+  public searchOntPropertyValues(value: string, microtype: any) {
+    const body = { microtype, value };
+    return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body);
+  }
+
+  public searchOntPropertyUnits(microtype: any) {
+    const body = { microtype };
+    return this.http.post<any>(`${environment.baseURL}/get_property_units_oterms`, body);
+  }
+
   public searchDimensionMicroTypes(term) {
     return this.http.get(`${environment.baseURL}/search_dimension_microtypes/${term}`);
   }
