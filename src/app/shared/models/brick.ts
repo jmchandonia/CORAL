@@ -159,7 +159,7 @@ export class TypedProperty {
     index: number;
     type: Term;
     microType: any;
-    value: Term = new Term();
+    value: Term;
     units: Term;
     context: Context[] = [];
 }

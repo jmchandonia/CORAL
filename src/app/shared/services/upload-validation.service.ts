@@ -56,7 +56,7 @@ export class UploadValidationService {
      // filter only user input properties
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.type || !property.value.text || !property.units) {
+      if (!property.type || !property.value || !property.units) {
         this.errorSub.next(true);
         return true;
       }
