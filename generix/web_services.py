@@ -27,6 +27,10 @@ svs = dp._get_services()
 cns = dp._get_constants()
 
 TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')  
+_PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
+_CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
+_PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
+
 
 @app.route("/")
 def hello():
@@ -99,6 +103,18 @@ def get_property_units_oterms():
     parent_term_ids = query['microtype']['valid_units_parent']
     term_ids = query['microtype']['valid_units'] 
     return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
+
+@app.route("/generix/get_personnel_oterms", methods=['GET'])
+def get_personnel_oterms():
+    return _get_oterms(svs['ontology'].all,parent_term_ids=[_PERSONNEL_PARENT_TERM_ID])
+
+@app.route("/generix/get_campaign_oterms", methods=['GET'])
+def get_campaign_oterms():
+    return _get_oterms(svs['ontology'].all,parent_term_ids=[_CAMPAIGN_PARENT_TERM_ID])
+
+@app.route("/generix/get_process_oterms", methods=['GET'])
+def get_process_oterms():
+    return _get_oterms(svs['ontology'].all,parent_term_ids=[_PROCESS_PARENT_TERM_ID])
 
 def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
     res = {}
