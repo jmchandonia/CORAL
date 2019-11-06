@@ -68,7 +68,7 @@ export class UploadValidationService {
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
         // check if there is type and units for all user input dimension variables
-        if ((!variable.type || !variable.units) && !variable.required) {
+        if ((!variable.type || variable.units === undefined) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
@@ -91,7 +91,7 @@ export class UploadValidationService {
           return true;
         }
       }
-     return false;
+      return false;
    }
 
    validateUploadedData() {
