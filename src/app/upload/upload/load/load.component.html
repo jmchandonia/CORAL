@@ -24,18 +24,17 @@
       </div>
     </div>
   </div>
-  <div class="row mt-4" *ngIf="loading || successData || error">
-    <div class="col-12 process-container">
-      <div class="loading-container" *ngIf="loading">
+  <div class="row" *ngIf="loading">
+    <div class="col-12" style="height: 200px;">
+      <!-- <div class="loading-container" style="background-color:pink;"> -->
         <ngx-spinner
-          bdColor="rgba(0,0,0,0)"
-          color="#aaa"
-          size="medium"
-          type="ball-spin-fade-rotating"
-          [fullScreen]="false"
-        ></ngx-spinner>
-      </div>
-      <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false"
+      ></ngx-spinner>
+      <!-- </div> -->
     </div>
   </div>
   <div *ngIf="file" class="row mt-4 justify-content-center">
@@ -55,6 +54,32 @@
       </div>
     </div>
   </div>
+  <!-- <div class="row mt-4" *ngIf="loading || successData || error"> -->
+    <!-- <div class="col-12 process-container">
+      <div class="loading-container" *ngIf="loading">
+        <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+      <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+    </div> -->
+    <!-- <div class="row" *ngIf="loading">
+      <div class="col-12" style="height: 200px;">
+          <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+    </div> -->
+    <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+  <!-- </div> -->
   <div *ngIf="validationError" class="row mt-4">
     <div class="col-12">
       <div class="alert alert-danger">
