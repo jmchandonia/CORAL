@@ -302,7 +302,7 @@ def parse_brick_F1DM_data(brick_ui, file_name):
         if header != dim_var:
             raise ValueError('Wrong format: expected dimension variable %s; found %s' % (dim_var, header))
         vals = _get_1d_column_data(sheet, start_row + 1, ci)
-        dims[0].size = len(vals)
+        dims[0]['size'] = len(vals)
         dims[0]['dim_vars'].append({
             'values': vals            
         })
