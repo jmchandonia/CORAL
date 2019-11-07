@@ -18,7 +18,7 @@ import os
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
-from .template import generate_brick_2d_template, generate_brick_1dm_template
+from .template import generate_brick_2d_template, generate_brick_1dm_template, parse_brick_F2DT_data
 
 app = Flask(__name__)
 CORS(app)
@@ -30,6 +30,10 @@ TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')
 _PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
 _CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
 _PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
+
+_BRICK_DATA_FILE_PREFIX = 'brick_data_'
+_BRICK_FILE_PREFIX = 'brick_'
+_TEMPATE_FILE_PREFIX = 'template_'
 
 
 @app.route("/")
@@ -357,57 +361,41 @@ def create_brick():
 
 @app.route('/generix/upload', methods=['POST'])
 def upload_file():
-    print("From uploader", request.method)
-    if request.method == 'POST':
-        brick = json.loads(request.form['brick'])
+    brick_ui = json.loads(request.form['brick'])
+    
+    # Save file
+    f = request.files['files']
+    data_id = uuid.uuid4().hex
+    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX + data_id)
+    f.save( file_name )
 
-        # print( json.dumps(brick, sort_keys=True, 
-        # indent=4, separators=(',', ': ') ) )
-        
-        # Save file
-        f = request.files['files']
-        data_id = 'brick_' + uuid.uuid4().hex
-        file_name = os.path.join(TMP_DIR,data_id)
-        f.save( file_name )
+    # Parse brick data
+    brick_data = parse_brick_F2DT_data(brick_ui, file_name)
 
-        # Read df
-        df = pd.read_csv(file_name, sep='\t') 
+    # Build proto brick and save it in tmp file
+    brick_proto = _create_brick(brick_ui, brick_data)
+    file_name = os.path.join(TMP_DIR,_BRICK_FILE_PREFIX + data_id)
+    _save_brick_proto(brick_proto, file_name)
 
-        # Build vairable values for each dims
-        dims = []
+    # Build output (examples of values for dim vars and data vars)
+    dims = []
+    data_vars = []
 
-        # First dim
-        brick_dims = brick['dimensions'] 
-        if len(brick_dims) > 0:
-            dim = {
-                'size':  0,
-                'dim_vars': []
-            }
-            dims.append(dim)
-            for i,v in enumerate(brick_dims[0]['variables']):
-                vals = list(df[df.columns[i]].values)
-                dim['size'] = len(vals)
-                dim['dim_vars'].append({
-                    'value_example': _dim_var_example(vals)
-                })
+    for dim_proto in brick_proto['dims']:
+        dim = {
+            'size' : dim_proto['size'],
+            'dim_vars': []
+        }
+        dims.append(dim)
 
-        # Second dim
-        if len(brick_dims) > 1:
-            dim = {
-                'size':  0,
-                'dim_vars': []
-            }
-            dims.append(dim)
-            offset = len(brick_dims[0]['variables'])
-            vals = list(df.columns[offset:].values)
-            dim['size'] = len(vals)
+        for dim_var_proto in dim_proto['dim_vars']:
             dim['dim_vars'].append({
-                'value_example': _dim_var_example(vals)
+                'value_example': _dim_var_example(dim_var_proto['values'])
             })
 
-        data_vars = []
+    for data_var_proto in brick_proto['data_vars']:
         data_vars.append({
-            'value_example': _data_var_example(file_name, dims)
+            'value_example': _data_var_example(data_var_proto['values'])
         })
 
     return  json.dumps( {
@@ -420,20 +408,25 @@ def upload_file():
             'error': ''
     } )
 
-def _data_var_example(filename, dims, max_items=5):
-    df = pd.read_csv(filename, sep='\t') 
-    offset = len(dims[0]['dim_vars'])
-    df = df[df.columns[offset:].values].head(max_items)
-    return df.to_html()
+def _save_brick_proto(brick, file_name):
+    data_json = brick.to_json()
+    data = json.loads(data_json)
+    with open(file_name, 'w') as outfile:  
+        json.dump(data, outfile)    
+
+
+def _data_var_example(vals, max_items=5):
+    return '%s%s' % ( 
+        ','.join(str(val) for val in vals[0:max_items]), 
+        '...' if len(vals) > max_items else '' ) 
 
 def _dim_var_example(vals, max_items=5):
     return '%s%s' % ( 
         ','.join(str(val) for val in vals[0:max_items]), 
         '...' if len(vals) > max_items else '' ) 
 
-
-def _create_brick(brick_data):
-    dims_data = brick_data['dimensions']
+def _create_brick(brick_ui, brick_data):
+    dims_data = brick_ui['dimensions']
 
     dim_type_terms = []
     dim_shapes = []
@@ -1155,8 +1148,8 @@ def generix_core_type_metadata(obj_id):
 @app.route('/generix/generate_brick_template', methods=['POST'])
 def generate_brick_template():
     brick = json.loads(request.form['brick'])
-    data_id = 'template_' + uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR,data_id)
+    data_id = uuid.uuid4().hex
+    file_name = os.path.join(TMP_DIR,_TEMPATE_FILE_PREFIX + data_id)
 
     dim_count = len(brick['dimensions'])
     data_var_count = len(brick['dataValues'])
