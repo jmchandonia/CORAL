@@ -366,7 +366,8 @@ def upload_file():
     # Save file
     f = request.files['files']
     data_id = uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX + data_id)
+    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX 
+        + data_id + '_' + f.filename)
     f.save( file_name )
 
     # Parse brick data    
