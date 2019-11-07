@@ -259,7 +259,7 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
 def parse_brick_F1DM_data(brick_ui, file_name):
     SEARCH_FORMAT_MAX_ROW = 100
     TEMPLATE_FORMAT = 'F1DM'
-    book = load_workbook("sample.xlsx")
+    book = load_workbook(file_name)
     sheet = book.active
 
     dims_ui = brick_ui['dimensions']
