@@ -119,7 +119,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   setContextLabel(type: Term, context: Context) {
-    const label = type;
+    const label: Select2OptionData = Object.assign({}, type);
     const { property, value, units } = context;
     label.text += `, ${property.text}=${value.text}`;
     if (units) {
