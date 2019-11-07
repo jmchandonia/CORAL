@@ -1,5 +1,5 @@
 import pandas as pd
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
 
@@ -256,6 +256,75 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
     book.save(file_name)    
 
 
+def parse_brick_F1DM_data(brick_ui, file_name):
+    SEARCH_FORMAT_MAX_ROW = 100
+    TEMPLATE_FORMAT = 'F1DM'
+    book = load_workbook("sample.xlsx")
+    sheet = book.active
+
+    dims_ui = brick_ui['dimensions']
+
+    template_data_vars = [ dvar['type']['text'] for dvar in brick_ui['dataValues'] ] 
+    template_dim = dims_ui[0]['type']['text']
+    template_dim1_vars = []
+    for dim_var in dims_ui[0]['variables']:
+        template_dim1_vars.append( '%s:%s' % (template_dim, dim_var['type']['text'])  )
+
+    dims = [{
+        'size' : 0,
+        'dim_vars': []
+    }]
+    data_vars = []
+
+    template_format = None
+    start_row = -1
+    for ri in range(1,SEARCH_FORMAT_MAX_ROW):
+        value = sheet.cell(row=ri, column=1 ).value
+        if value is not None and value.startswith('@Format:'):
+            start_row = ri
+            template_format = value[len('@Format:'):]
+            break
+
+    if template_format is None:
+        raise ValueError('Can not identify the template format')
+    
+    if template_format != TEMPLATE_FORMAT:
+        raise ValueError('Wrong data format: the expected foramt is %s; found %s' % (
+            TEMPLATE_FORMAT, template_format))
+
+    start_row += 1
+    ci = 0
+
+    # Do dimension variables
+    for dim_var in template_dim1_vars:
+        ci += 1
+        header = sheet.cell(row=start_row, column=ci ).value
+        if header != dim_var:
+            raise ValueError('Wrong format: expected dimension variable %s; found %s' % (dim_var, header))
+        vals = _get_1d_column_data(sheet, start_row + 1, ci)
+        dims[0].size = len(vals)
+        dims[0]['dim_vars'].append({
+            'values': vals            
+        })
+
+    # Do data variables
+    for data_var in template_data_vars:
+        ci += 1
+        header = sheet.cell(row=start_row, column=ci ).value
+        if header != data_var:
+            raise ValueError('Wrong format: expected data variable %s; found %s' % (data_var, header))
+        vals = _get_1d_column_data(sheet, start_row + 1, ci)
+        data_vars.append({
+            'values': vals                   
+        })            
+
+    _validate(dims, data_vars)
+    return {
+        'dims': dims,
+        'data_vars': data_vars
+    }
+
+
 def parse_brick_F2DT_data(brick_ui, file_name):
     # Read df
     df = pd.read_csv(file_name, sep='\t') 
@@ -274,7 +343,9 @@ def parse_brick_F2DT_data(brick_ui, file_name):
         for i,v in enumerate(brick_dims[0]['variables']):
             vals = list(df[df.columns[i]].values)
             dim['size'] = len(vals)
-            dim['dim_vars'].append(vals)
+            dim['dim_vars'].append({
+                'values': vals
+            })
 
     # Second dim
     if len(brick_dims) > 1:
@@ -286,14 +357,34 @@ def parse_brick_F2DT_data(brick_ui, file_name):
         offset = len(brick_dims[0]['variables'])
         vals = list(df.columns[offset:].values)
         dim['size'] = len(vals)
-        dim['dim_vars'].append(vals)
+        dim['dim_vars'].append({
+                'values': vals
+            })
 
     data_vars = []
     offset = len(dims[0]['dim_vars'])
     vals = df[df.columns[offset:].values].values
-    data_vars.append(vals)
-    
+    data_vars.append({
+                'values': vals
+            })
+
+    _validate(dims, data_vars)    
     return {
         'dims': dims,
         'data_vars': data_vars
     }
+
+def _validate(dims, data_vars):    
+    # TODO
+    pass
+
+
+def _get_1d_column_data(sheet, ri, ci):
+    data = []
+    while True:
+        value = sheet.cell(row=ri, column=ci ).value
+        if value is None:
+            break
+        data.append(value)
+        ri += 1
+    return data
