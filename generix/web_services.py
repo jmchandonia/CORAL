@@ -18,7 +18,7 @@ import os
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
-from .template import generate_brick_2d_template, generate_brick_1dm_template, parse_brick_F2DT_data
+from . import template 
 
 app = Flask(__name__)
 CORS(app)
@@ -369,33 +369,43 @@ def upload_file():
     file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX + data_id)
     f.save( file_name )
 
-    # Parse brick data
-    brick_data = parse_brick_F2DT_data(brick_ui, file_name)
+    # Parse brick data    
+    brick_data = {}
+    try:
+        dim_count = len(brick_ui['dimensions'])
+        if dim_count == 1:
+            brick_data = template.parse_brick_F1DM_data(brick_ui, file_name)
+        elif dim_count == 2:
+            brick_data = template.parse_brick_F2DT_data(brick_ui, file_name)
+        else:
+            raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
+    except Exception as e:
+        return _err_response(e)
 
-    # Build proto brick and save it in tmp file
-    brick_proto = _create_brick(brick_ui, brick_data)
-    file_name = os.path.join(TMP_DIR,_BRICK_FILE_PREFIX + data_id)
-    _save_brick_proto(brick_proto, file_name)
+    # # Build proto brick and save it in tmp file
+    # brick_proto = _create_brick(brick_ui, brick_data)
+    # file_name = os.path.join(TMP_DIR,_BRICK_FILE_PREFIX + data_id)
+    # _save_brick_proto(brick_proto, file_name)
 
     # Build output (examples of values for dim vars and data vars)
     dims = []
     data_vars = []
 
-    for dim_proto in brick_proto['dims']:
+    for dim_data in brick_data['dims']:
         dim = {
-            'size' : dim_proto['size'],
+            'size' : dim_data['size'],
             'dim_vars': []
         }
         dims.append(dim)
 
-        for dim_var_proto in dim_proto['dim_vars']:
+        for dim_var_data in dim_data['dim_vars']:
             dim['dim_vars'].append({
-                'value_example': _dim_var_example(dim_var_proto['values'])
+                'value_example': _dim_var_example(dim_var_data['values'])
             })
 
-    for data_var_proto in brick_proto['data_vars']:
+    for data_var_data in brick_data['data_vars']:
         data_vars.append({
-            'value_example': _data_var_example(data_var_proto['values'])
+            'value_example': _data_var_example(data_var_data['values'])
         })
 
     return  json.dumps( {
@@ -1155,17 +1165,22 @@ def generate_brick_template():
     data_var_count = len(brick['dataValues'])
 
     if dim_count == 1:
-        generate_brick_1dm_template(brick, file_name)
+        template.generate_brick_1dm_template(brick, file_name)
     elif dim_count == 2:
         if data_var_count == 1:
-            generate_brick_2d_template(brick, file_name)
+            template.generate_brick_2d_template(brick, file_name)
 
     return send_file(file_name, 
         as_attachment=True,
         attachment_filename='data_template.xlsx',
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-
+def _err_response(e):
+    return  json.dumps( {
+            'results': '', 
+            'status': 'ERR', 
+            'error': str(e)
+        })
 
 if __name__ == "__main__":
     port = cns['_WEB_SERVICE']['port']
