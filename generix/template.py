@@ -1,3 +1,4 @@
+import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
@@ -183,8 +184,6 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
     COLUMN_WIDTH = 18
     dim1_row_counts = 10
 
-
-
     book = Workbook()
     sheet = book.active
 
@@ -255,3 +254,46 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
         sheet.column_dimensions[c].width = COLUMN_WIDTH   
 
     book.save(file_name)    
+
+
+def parse_brick_F2DT_data(brick_ui, file_name):
+    # Read df
+    df = pd.read_csv(file_name, sep='\t') 
+
+    # Build vairable values for each dims
+    dims = []
+
+    # First dim
+    brick_dims = brick_ui['dimensions'] 
+    if len(brick_dims) > 0:
+        dim = {
+            'size':  0,
+            'dim_vars': []
+        }
+        dims.append(dim)
+        for i,v in enumerate(brick_dims[0]['variables']):
+            vals = list(df[df.columns[i]].values)
+            dim['size'] = len(vals)
+            dim['dim_vars'].append(vals)
+
+    # Second dim
+    if len(brick_dims) > 1:
+        dim = {
+            'size':  0,
+            'dim_vars': []
+        }
+        dims.append(dim)
+        offset = len(brick_dims[0]['variables'])
+        vals = list(df.columns[offset:].values)
+        dim['size'] = len(vals)
+        dim['dim_vars'].append(vals)
+
+    data_vars = []
+    offset = len(dims[0]['dim_vars'])
+    vals = df[df.columns[offset:].values].values
+    data_vars.append(vals)
+    
+    return {
+        'dims': dims,
+        'data_vars': data_vars
+    }
