@@ -87,6 +87,7 @@ export class LoadComponent implements OnInit, OnDestroy {
      this.file = null;
      this.error = false;
      delete this.errorMessage;
+     delete this.successData;
    }
 
 }
