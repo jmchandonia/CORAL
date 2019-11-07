@@ -26,6 +26,7 @@ export class LoadComponent implements OnInit, OnDestroy {
   brick: Brick;
   successData: any;
   error = false;
+  errorMessage: string;
   loading = false;
   validationError = false;
   validationErrorSub: Subscription
@@ -76,6 +77,7 @@ export class LoadComponent implements OnInit, OnDestroy {
     err => {
       this.spinner.hide();
       this.error = true;
+      this.errorMessage = err.error;
       this.loading = false;
     }
     );
@@ -83,6 +85,8 @@ export class LoadComponent implements OnInit, OnDestroy {
 
    removeFile() {
      this.file = null;
+     this.error = false;
+     delete this.errorMessage;
    }
 
 }

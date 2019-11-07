@@ -69,7 +69,7 @@ export class UploadService {
 
     // clear brickbuilder datavalues if different template is selected
     this.brickBuilder.dataValues = [];
-    
+
     dataVars.forEach((dataVar, idx) => {
       // set required to true in constructor
       const dataValue = new DataValue(idx, true);
@@ -78,7 +78,7 @@ export class UploadService {
       dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
       dataValue.type = dataVar.type as Term;
       dataValue.scalarType = dataVar.scalar_type as Term;
-      
+
       // create array of context objects for every data value that has context-
       if (dataVar.context && dataVar.context.length) {
         dataVar.context.forEach(ctx => {
@@ -95,7 +95,7 @@ export class UploadService {
 
     // clear previous dimensions if new template is selected
     this.brickBuilder.dimensions = [];
-    
+
     dims.forEach((item, idx) => {
       // set required to true in constructor
       const dim = new BrickDimension(this.brickBuilder, idx, true);
@@ -233,9 +233,12 @@ export class UploadService {
     const returnResponse = new Promise((resolve, reject) => {
       this.http.post(`${environment.baseURL}/upload`, formData)
         .subscribe((res: any) => {
-          // helper method to handle mapping brick data results to client brick object
-          this.mapBrickData(res);
-          resolve(res);
+          if (res.error) {
+            reject(res);
+          } else {
+            this.mapBrickData(res);
+            resolve(res);
+          }
         },
           err => {
             reject(err);
