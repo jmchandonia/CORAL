@@ -35,7 +35,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   }
 
   typeData: Array<Select2OptionData> = [];
-  unitsData: Array<Select2OptionData> = [];
+  unitsData: Array<Select2OptionData> = [{id: '', text: ''}];
   selectedType: string;
   selectedUnits: string;
   error = false;
@@ -53,7 +53,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
       if (!term || term.length < 3) {
         options.callback({results: []});
       } else {
-        this.uploadService.searchOntTerms(term)
+        this.uploadService.searchDimensionVariableMicroTypes(term)
           .subscribe((data: any) => {
             options.callback({results: data.results as Select2OptionData});
           });
@@ -64,17 +64,6 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   unitsOptions: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term || term.length < 3) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchOntUnits(term)
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
-      }
-    }
   };
 
   constructor(
@@ -114,11 +103,29 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   setDimVarType(event) {
     const term = event.data[0];
     this.dimVar.type = new Term(term.id, term.text);
+    this.dimVar.microType = term.microtype;
+    if (!term.has_units) {
+      this.dimVar.units = null;
+    } else {
+      this.dimVar.units = undefined;
+      this.uploadService.searchOntPropertyUnits(this.dimVar.microType)
+        .subscribe(data => {
+          this.unitsData = data.results;
+        });
+    }
+    this.validate();
   }
 
   setDimVarUnits(event) {
     const term = event.data[0];
     this.dimVar.units = new Term(term.id, term.text);
+    this.validate();
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDimensions();
+    }
   }
 
 }

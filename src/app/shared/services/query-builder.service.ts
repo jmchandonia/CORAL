@@ -76,6 +76,10 @@ export class QueryBuilderService {
     this.queryBuilderObject.queryMatch = queryMatch;
   }
 
+  validSearchQuery() {
+    return this.queryBuilderObject.isValid;
+  }
+
   getSearchResults() {
     if (this.queryBuilderObject.isEmpty) {
       this.queryBuilderObject = this.getQueryBuilderCache();

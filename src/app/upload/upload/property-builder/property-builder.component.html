@@ -35,6 +35,7 @@
               *ngIf="!property.hidden"
               [property]="property"
               (deleted)="deleteProperty(property)"
+              (typeReselected)="resetProperty($event)"
             ></app-property-form>
           </ng-container>
         </div>

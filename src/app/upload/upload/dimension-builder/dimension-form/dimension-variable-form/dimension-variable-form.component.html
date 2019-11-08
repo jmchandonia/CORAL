@@ -15,7 +15,7 @@
           [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
           ></select2>
       </div>
-      <div class="col-5" *ngIf="dimVar.units !== null">
+      <div class="col-5" *ngIf="dimVar.units !== null && dimVar.type">
         <select2
           [cssImport]="true"
           [options]="unitsOptions"
@@ -24,6 +24,11 @@
           (valueChanged)="setDimVarUnits($event)"
           [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
         ></select2>
+      </div>
+      <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
+        <div class="row justify-content-center no-units">
+          <span>N/A</span>
+        </div>
       </div>
       <div class="col-1">
         <button class="btn btn-sm btn-link" *ngIf="!dimVar.required" (click)="delete()">Delete</button>

@@ -26,7 +26,9 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.errorSub = this.validator.getValidationErrors()
-      .subscribe(errors => this.errors = errors);
+      .subscribe(errors => {
+        this.errors = errors;
+      });
   }
 
   ngOnDestroy() {
@@ -42,6 +44,10 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
   deleteProperty(property) {
     this.brick.properties = this.brick.properties.filter(item => item !== property);
     this.properties = this.brick.properties;
+  }
+
+  resetProperty(event: TypedProperty) {
+    this.brick.properties.splice(event.index, 1, event);
   }
 
 }
