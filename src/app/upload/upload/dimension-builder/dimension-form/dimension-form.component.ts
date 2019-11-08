@@ -57,7 +57,9 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.errorSub = this.validator.getValidationErrors()
-      .subscribe(error => this.error = error);
+      .subscribe(error => {
+        this.error = error;
+      });
   }
 
   ngOnDestroy() {
@@ -69,6 +71,7 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
   setDimensionType(event) {
     const term = event.data[0];
     this.dimension.type = new Term(term.id, term.text);
+    this.validate();
   }
 
   addDimensionVariable() {
@@ -80,10 +83,17 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
   removeDimensionVariable(dimVar) {
     this.dimension.variables = this.dimension.variables.filter(item => item !== dimVar);
     this.dimension.resetDimVarIndices();
+    this.validate();
   }
 
   delete() {
     this.deleted.emit(this.dimension);
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDimensions();
+    }
   }
 
 }

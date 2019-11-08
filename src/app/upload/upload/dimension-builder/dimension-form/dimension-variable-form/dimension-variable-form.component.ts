@@ -113,11 +113,19 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
           this.unitsData = data.results;
         });
     }
+    this.validate();
   }
 
   setDimVarUnits(event) {
     const term = event.data[0];
     this.dimVar.units = new Term(term.id, term.text);
+    this.validate();
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDimensions();
+    }
   }
 
 }
