@@ -61,6 +61,7 @@ export class UploadValidationService {
         return true;
       }
     }
+    this.errorSub.next(false);
     return false;
    }
 
@@ -79,6 +80,7 @@ export class UploadValidationService {
         return true;
       }
     }
+    this.errorSub.next(false);
     return false;
    }
 

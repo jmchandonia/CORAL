@@ -38,7 +38,7 @@
         [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
         (valueChanged)="setUnits($event)"
-        [ngClass]="errors && !property.units ? 'select2-error' : ''" 
+        [ngClass]="errors && property.units === undefined ? 'select2-error' : ''" 
     ></select2>
     <!-- <app-async-dropdown
         [value]="unitsItem"
