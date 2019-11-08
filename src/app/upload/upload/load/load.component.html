@@ -18,7 +18,7 @@
           </div>
           <div class="col-10 d-block">
             <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
-            <input hidden type="file" id="file" (change)="handleFileInput($event.target.files)" />
+            <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
           </div>
         </div>
       </div>
