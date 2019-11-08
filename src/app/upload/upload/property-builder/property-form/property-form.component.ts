@@ -15,10 +15,12 @@ import { Subscription } from 'rxjs';
 export class PropertyFormComponent implements OnInit, OnDestroy {
   selectedValue: any;
   @Output() deleted = new EventEmitter();
+  @Output() typeReselected: EventEmitter<TypedProperty> = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
 
     this.typesSelect2 = prop.type ? [prop.type] : [];
-    this.unitsSelect2 = prop.units ? [prop.units] : [];
+    this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
+    this.valuesSelect2 = prop.value ? [prop.value] : [{id: '', text: ''}];
 
     this._property = prop;
 
@@ -29,7 +31,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       this.unitsItem = prop.units.id;
     }
     if (prop.value) {
-      this.propValueItem = prop.value.text;
+      this.propValueItem = prop.value.id;
+    }
+
+    if (this.property.microType) {
+      this.getPropertyUnits();
     }
   }
 
@@ -43,7 +49,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   }
 
   private _property: TypedProperty;
-  unitsSelect2: Array<Select2OptionData> = [];
+
   propertiesOptions: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
@@ -52,30 +58,39 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       if (!term || term.length < 3) {
         options.callback({results: []});
       } else {
-        this.uploadService.searchOntTerms(term).subscribe((data: any) => {
+        this.uploadService.searchPropertyMicroTypes(term).subscribe((data: any) => {
           options.callback({results: data.results as Select2OptionData});
         });
       }
     }
+   };
+
+   valuesOptions: Select2Options = {
+     width: '100%',
+     containerCssClass: 'select2-custom-container',
+     query: (options: Select2QueryOptions) => {
+       const term = options.term;
+       if (!term || term.length < 3) {
+         options.callback({results: []});
+       } else {
+         this.uploadService.searchOntPropertyValues(term, this.property.microType) // ADD POST DATA
+          .subscribe((data: any) => {
+            options.callback({results: data.results as Select2OptionData});
+          });
+       }
+     }
    };
 
   unitsOptions: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term || term.length < 3) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchOntUnits(term).subscribe((data: any) => {
-          options.callback({results: data.results as Select2OptionData});
-        });
-      }
-    }
    };
 
 
    typesSelect2: Array<Select2OptionData> = [];
+   unitsSelect2: Array<Select2OptionData> = [{ id: '', text: '' }];
+   valuesSelect2: Array<Select2OptionData> = [{ id: '', text: '' }];
+
    errorSub = new Subscription();
    propTypeItem: string;
    propValueItem: string;
@@ -85,7 +100,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private uploadService: UploadService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
   ) { }
 
   ngOnInit() {
@@ -107,24 +122,63 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     this.deleted.emit();
   }
 
-  format(propName) {
-    return propName
-      .replace('n_', 'number of ')
-      .replace(/_/gi, ' ');
+  getPropertyUnits() {
+    this.uploadService.searchOntPropertyUnits(this.property.microType)
+      .subscribe(data => {
+        if (!data.results.length) {
+          this.property.units = null as Term;
+        } else {
+          if (this.property.units === null) {
+            this.property.units = undefined;
+          }
+          this.unitsSelect2 = [...this.unitsSelect2, ...data.results];
+        }
+      });
   }
 
   setPropertyType(event) {
     const item = event.data[0];
     this.property.type = new Term(item.id, item.text);
+    this.property.microType = item.microtype;
+
+    // clear reset entire property object to clear other select 2 dropdowns
+    if (this.property.value || this.property.units) {
+      const resetProperty = new TypedProperty(
+        this.property.index,
+        this.property.required,
+        this.property.type,
+        this.property.microType
+      );
+      // emit new typed property to replace old one in parent component array reference
+      this.typeReselected.emit(resetProperty);
+    } else {
+      this.getPropertyUnits();
+      this.validate();
+    }
+  }
+
+  setValue(event) {
+    const item = event.data[0];
+    this.property.value = new Term(item.id, item.text);
+    this.validate();
   }
 
   setUnits(event) {
-    const item = event.data[0];
-    this.property.units = new Term(item.id, item.text);
+    if (event.value.length) {
+      const item = event.data[0];
+      this.property.units = new Term(item.id, item.text);
+      this.validate();
+    }
   }
 
   onDelete() {
     this.deleted.emit(this.property);
+  }
+
+  validate() {
+    if (this.errors) {
+      this.validator.validateProperties();
+    }
   }
 
 }

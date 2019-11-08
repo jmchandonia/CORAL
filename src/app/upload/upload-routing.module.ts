@@ -18,7 +18,7 @@ const routes: Routes = [
         {path: 'properties', component: PropertyBuilderComponent},
         {path: 'dimensions', component: DimensionBuilderComponent},
         {path: 'load', component: LoadComponent},
-        {path: 'data-values', component: DataValuesComponent},
+        {path: 'data-variables', component: DataValuesComponent},
         {path: 'preview', component: PreviewComponent},
         {path: 'create', component: CreateComponent},
         {path: 'map', component: MapComponent}

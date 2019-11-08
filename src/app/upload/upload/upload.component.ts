@@ -13,7 +13,7 @@ export class UploadComponent implements OnInit {
   public uploadSteps = [
     'type',
     'properties',
-    'data-values',
+    'data-variables',
     'dimensions',
     'load',
     'validate',

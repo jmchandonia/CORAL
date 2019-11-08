@@ -39,6 +39,13 @@ export class DimensionBuilderComponent implements OnInit, OnDestroy {
   removeDimension(dimension) {
     this.brick.dimensions = this.brick.dimensions.filter(dim => dim !== dimension);
     this.brick.resetDimensionIndices();
+    this.validate();
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDimensions();
+    }
   }
 
 }

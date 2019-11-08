@@ -20,23 +20,23 @@ export class UploadValidationService {
 
    validationErrors(step: string) {
      // handle different brick validations depending on what step the user is on
-     switch(step) {
+     switch (step) {
       case 'type':
-        return this.validateDataType()
+        return this.validateDataType();
       case 'properties':
         return this.validateProperties();
       case 'dimensions': 
         return this.validateDimensions();
-      case 'data-values':
-        return this.validateDataValues();
+      case 'data-variables':
+        return this.validateDataVariables();
       case 'load':
         return this.validateUploadedData();
       case 'map':
         return this.validateMappedData();
       default:
-        return false;  
+        return false;
      }
-   } 
+   }
 
    getValidationErrors() {
      // components subscribe to this method to display errors if there are any
@@ -49,6 +49,7 @@ export class UploadValidationService {
        this.errorSub.next(true);
        return true;
      }
+     this.errorSub.next(false);
      return false;
    }
 
@@ -56,11 +57,12 @@ export class UploadValidationService {
      // filter only user input properties
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.type || !property.value.text || !property.units) {
+      if (!property.type || !property.value || property.units === undefined) {
         this.errorSub.next(true);
         return true;
       }
     }
+    this.errorSub.next(false);
     return false;
    }
 
@@ -68,7 +70,7 @@ export class UploadValidationService {
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
         // check if there is type and units for all user input dimension variables
-        if ((!variable.type || !variable.units) && !variable.required) {
+        if ((!variable.type || variable.units === undefined) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
@@ -79,10 +81,11 @@ export class UploadValidationService {
         return true;
       }
     }
+    this.errorSub.next(false);
     return false;
    }
 
-   validateDataValues() {
+   validateDataVariables() {
       // filter only user input data values
       for (const dataValue of this.nonRequiredDataValues) {
         // check if data value has selected type and units
@@ -91,7 +94,8 @@ export class UploadValidationService {
           return true;
         }
       }
-     return false;
+      this.errorSub.next(false);
+      return false;
    }
 
    validateUploadedData() {

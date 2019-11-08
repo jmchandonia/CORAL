@@ -63,6 +63,13 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
     if (event.value.length) {
       const template = event.data[0];
       this.uploadService.setSelectedTemplate(template);
+      this.validate();
+    }
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDataType();
     }
   }
 
