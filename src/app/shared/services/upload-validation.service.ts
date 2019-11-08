@@ -27,8 +27,8 @@ export class UploadValidationService {
         return this.validateProperties();
       case 'dimensions': 
         return this.validateDimensions();
-      case 'data-values':
-        return this.validateDataValues();
+      case 'data-variables':
+        return this.validateDataVariables();
       case 'load':
         return this.validateUploadedData();
       case 'map':
@@ -82,7 +82,7 @@ export class UploadValidationService {
     return false;
    }
 
-   validateDataValues() {
+   validateDataVariables() {
       // filter only user input data values
       for (const dataValue of this.nonRequiredDataValues) {
         // check if data value has selected type and units
