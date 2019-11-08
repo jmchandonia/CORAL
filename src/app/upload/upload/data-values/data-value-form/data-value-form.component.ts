@@ -3,7 +3,7 @@ import { DataValue, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
-import { Subscription } from 'rxjs'; 
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-data-value-form',
@@ -15,11 +15,6 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   @Input() set dataValue(d: DataValue) {
     this._dataValue = d;
-
-    if (d.scalarType) {
-      this.scalarValues = [d.scalarType];
-      this.scalarValuesItem = d.scalarType.id;
-    }
 
     if (d.type) {
       if (d.context && d.context.length) {
@@ -43,44 +38,17 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:variable-name
   private _dataValue: DataValue;
 
-  scalarValues: Array<Select2OptionData> = [{id: '', text: ''}];
   typeValues: Array<Select2OptionData> = [{id: '', text: ''}];
   unitsValues: Array<Select2OptionData> = [{id: '', text: ''}];
 
-  scalarValuesItem: string;
   typeValuesItem: string;
   unitsItem: string;
   error = false;
   errorSub: Subscription;
 
-  scalarOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term || term.length < 3) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchOntTerms(term).subscribe((data: any) => {
-          options.callback({results: data.results as Select2OptionData});
-        });
-      }
-    }
-   };
-
    unitsOptions: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term || term.length < 3) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchOntUnits(term).subscribe((data: any) => {
-          options.callback({results: data.results as Select2OptionData});
-        });
-      }
-    }
    };
 
    typesOptions: Select2Options = {
@@ -91,7 +59,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
       if (!term || term.length < 3) {
         options.callback({results: []});
       } else {
-        this.uploadService.searchOntTerms(term).subscribe((data: any) => {
+        this.uploadService.searchDataVariableMicroTypes(term).subscribe((data: any) => {
           options.callback({results: data.results as Select2OptionData});
         });
       }
@@ -119,7 +87,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   setContextLabel(type: Term, context: Context) {
-    const label = type;
+    const label: Select2OptionData = Object.assign({}, type);
     const { property, value, units } = context;
     label.text += `, ${property.text}=${value.text}`;
     if (units) {
@@ -130,16 +98,41 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   onDelete() {
     this.removed.emit();
+    this.validate();
   }
 
   updateType(event) {
     const type = event.data[0];
     this.dataValue.type = new Term(type.id, type.text);
+    this.dataValue.microType = type.microtype;
+    if (!type.has_units) {
+      this.dataValue.units = null;
+    } else {
+      this.dataValue.units = undefined;
+      this.getUnits();
+    }
+    this.validate();
+  }
+
+  getUnits() {
+    this.uploadService.searchOntPropertyUnits(this.dataValue.microType)
+      .subscribe(data => {
+        this.unitsValues = [{id: '', text: ''}, ...data.results];
+      });
   }
 
   updateUnits(event) {
-    const units = event.data[0];
-    this.dataValue.units = new Term(units.id, units.text);
+    if (event.value.length) {
+      const units = event.data[0];
+      this.dataValue.units = new Term(units.id, units.text);
+      this.validate();
+    }
+  }
+
+  validate() {
+    if (this.error) {
+      this.validator.validateDataVariables();
+    }
   }
 
 }

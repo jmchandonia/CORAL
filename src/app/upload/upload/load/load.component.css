@@ -18,4 +18,11 @@
 
 .loading-container { 
     height: 200px;
+    width: 100%;
+    text-align: center;
+}
+
+.error-header {
+    background-color: #F8D7DA;
+    color: #721C24;
 }

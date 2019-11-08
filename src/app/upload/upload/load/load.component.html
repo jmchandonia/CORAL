@@ -18,24 +18,33 @@
           </div>
           <div class="col-10 d-block">
             <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
-            <input hidden type="file" id="file" (change)="handleFileInput($event.target.files)" />
+            <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row mt-4" *ngIf="loading || successData || error">
-    <div class="col-12 process-container">
-      <div class="loading-container" *ngIf="loading">
+  <div class="row" *ngIf="loading">
+    <div class="col-12" style="height: 200px;">
         <ngx-spinner
-          bdColor="rgba(0,0,0,0)"
-          color="#aaa"
-          size="medium"
-          type="ball-spin-fade-rotating"
-          [fullScreen]="false"
-        ></ngx-spinner>
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false"
+      ></ngx-spinner>
+    </div>
+  </div>
+  <div class="row mt-4" *ngIf="error">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header error-header">
+          Upload Error
+        </div>
+        <div class="card-body">
+          {{errorMessage}}
+        </div>
       </div>
-      <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
     </div>
   </div>
   <div *ngIf="file" class="row mt-4 justify-content-center">
@@ -55,6 +64,7 @@
       </div>
     </div>
   </div>
+  <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
   <div *ngIf="validationError" class="row mt-4">
     <div class="col-12">
       <div class="alert alert-danger">

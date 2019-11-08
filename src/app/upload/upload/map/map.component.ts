@@ -43,10 +43,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   testMap() {
-    // this.uploadService.mapDimVarToCoreTypes(this.dimVars[0])
-    //   .subscribe((result: any) => {
-    //     console.log('RESULT', result);
-    //   });
     this.loading = true;
     this.spinner.show();
     setTimeout(() => {

@@ -29,23 +29,33 @@ export class CreateComponent implements OnInit {
   options: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const searchTerm = options.term;
-      if (searchTerm && searchTerm.length > 3) {
-        options.callback({results: []});
-      } else {
-          this.uploadService.searchOntTerms(searchTerm)
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
-      }
-    }
   };
 
   brick: Brick;
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
+    this.getProcessOterms();
+    this.getCampaignOterms();
+    this.getPersonnelOterms();
+  }
+
+  getProcessOterms() {
+    this.uploadService.getProcessOterms().subscribe((data: any) => {
+      this.processData = [this.processData[0], ...data.results];
+    });
+  }
+
+  getCampaignOterms() {
+    this.uploadService.getCampaignOterms().subscribe((data: any) => {
+      this.campaignData = [this.campaignData[0], ...data.results];
+    });
+  }
+
+  getPersonnelOterms() {
+    this.uploadService.getPersonnelOterms().subscribe((data: any) => {
+      this.personnelData = [this.personnelData[0], ...data.results];
+    });
   }
 
   setBrickProcess(event) {

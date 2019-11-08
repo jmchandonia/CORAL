@@ -17,29 +17,37 @@
     ></app-async-dropdown> -->
   </div>
   <div class="col-3">
-    <input
-      class="form-control"
-      type="text"
-      [(ngModel)]="property.value.text"
-      [ngModelOptions]="{standalone: true}"
-      [ngClass]="errors && !property.value.text ? 'error' : ''"
-    />
+      <select2
+        *ngIf="property.type"
+        [cssImport]="true"
+        [data]="valuesSelect2"
+        [options]="valuesOptions"
+        [value]="propValueItem ? propValueItem : ''"
+        [ngClass]="{'select2-error' : errors && !property.value}"
+        (valueChanged)="setValue($event)"
+      ></select2>
+      <div class="row justify-content-center no-units" *ngIf="!property.type">
+        <span>N/A</span>
+      </div>
   </div>
   <div class="col-2">
       <select2
-        *ngIf="property.units !== null"
+        *ngIf="property.units !== null && property.type"
         [cssImport]="true"
         [data]="unitsSelect2"
         [options]="unitsOptions"
         [value]="unitsItem ? unitsItem : ''"
         (valueChanged)="setUnits($event)"
-        [ngClass]="errors && !property.units ? 'select2-error' : ''" 
+        [ngClass]="errors && property.units === undefined ? 'select2-error' : ''" 
     ></select2>
     <!-- <app-async-dropdown
         [value]="unitsItem"
         [method]="'searchOntUnits'"
         [required]="property.required"
         (valueChanged)="setUnits($event)"></app-async-dropdown> -->
+      <div class="row justify-content-center no-units" *ngIf="!property.type || property.units === null">
+        <span>N/A</span>
+      </div>
   </div>
   <div class="col-1">
     <button *ngIf="!property.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 

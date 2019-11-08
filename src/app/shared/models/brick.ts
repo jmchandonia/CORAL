@@ -64,6 +64,7 @@ export class DataValue {
     index: number;
     required = false;
     type: Term;
+    microType: any;
     scalarType: Term;
     units: Term;
     valuesSample: string;
@@ -134,6 +135,7 @@ export class DimensionVariable {
     dimension: BrickDimension;
     index: number;
     type: Term;
+    microType: any;
     scalarType: Term = new Term();
     units: Term;
     values: any[] = [];
@@ -149,15 +151,42 @@ export class DimensionVariable {
 
 export class TypedProperty {
     // TODO: Discuss how to handle ontological terms
-    constructor(index: number, required?: boolean) {
+    constructor(
+        index: number,
+        required?: boolean,
+        type?: Term,
+        microType?: any,
+        ) {
         this.index = index;
         this.required = required;
+        this.type = type;
+        this.microType = microType;
     }
     required = true;
     parentCollection: TypedProperty[];
     index: number;
     type: Term;
-    value: Term = new Term();
+    microType: any;
+    value: Term;
     units: Term;
     context: Context[] = [];
+}
+
+export class MicroType {
+    constructor(
+        fk?: string,
+        valid_units?: string[],
+        valid_units_parent?: string[],
+        valid_values_parent?: string
+    ) {
+        this.fk = fk;
+        this.valid_units = valid_units;
+        this.valid_units_parent = valid_units_parent;
+        this.valid_values_parent = valid_values_parent;
+    }
+
+    fk: string;
+    valid_units: string[];
+    valid_units_parent: string[];
+    valid_values_parent: string;
 }
