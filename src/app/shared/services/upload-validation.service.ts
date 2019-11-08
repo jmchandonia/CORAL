@@ -36,7 +36,7 @@ export class UploadValidationService {
       default:
         return false;
      }
-   } 
+   }
 
    getValidationErrors() {
      // components subscribe to this method to display errors if there are any
@@ -49,6 +49,7 @@ export class UploadValidationService {
        this.errorSub.next(true);
        return true;
      }
+     this.errorSub.next(false);
      return false;
    }
 
