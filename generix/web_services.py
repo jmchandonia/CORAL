@@ -49,6 +49,12 @@ def search_dimension_microtypes(value):
 def search_dimension_variable_microtypes(value):
     return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
 
+@app.route("/generix/search_data_variable_microtypes/<value>", methods=['GET'])
+def search_data_variable_microtypes(value):
+    # TODO: do we need a special OTerm porperty to select data variable - specific terms
+    return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
+
+
 @app.route("/generix/search_property_microtypes/<value>", methods=['GET'])
 def search_property_microtypes(value):
     return _search_microtypes(svs['ontology'].property_microtypes, value)
