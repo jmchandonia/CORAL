@@ -26,7 +26,9 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.errorSub = this.validator.getValidationErrors()
-      .subscribe(errors => this.errors = errors);
+      .subscribe(errors => {
+        this.errors = errors;
+      });
   }
 
   ngOnDestroy() {

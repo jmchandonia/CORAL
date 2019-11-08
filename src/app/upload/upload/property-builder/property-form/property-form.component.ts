@@ -100,7 +100,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private uploadService: UploadService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
   ) { }
 
   ngOnInit() {
@@ -153,21 +153,32 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       this.typeReselected.emit(resetProperty);
     } else {
       this.getPropertyUnits();
+      this.validate();
     }
   }
 
   setValue(event) {
     const item = event.data[0];
     this.property.value = new Term(item.id, item.text);
+    this.validate();
   }
 
   setUnits(event) {
-    const item = event.data[0];
-    this.property.units = new Term(item.id, item.text);
+    if (event.value.length) {
+      const item = event.data[0];
+      this.property.units = new Term(item.id, item.text);
+      this.validate();
+    }
   }
 
   onDelete() {
     this.deleted.emit(this.property);
+  }
+
+  validate() {
+    if (this.errors) {
+      this.validator.validateProperties();
+    }
   }
 
 }
