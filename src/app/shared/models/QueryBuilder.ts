@@ -12,6 +12,17 @@ export class QueryBuilder {
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
     }
+
+    get isValid() {
+        if (this.isEmpty) { return false; }
+        if (this.queryMatch.isValid) { return false; }
+        if (this.connectsUpTo && !this.connectsUpTo.isValid) { return false; }
+        if (this.connectsDownTo && !this.connectsDownTo.isValid) { return false; }
+        for (const processUp of this.processesUp) {
+            if (!processUp.isValid) { return false; }
+        }
+        return true;
+    }
 }
 
 export class QueryMatch {
@@ -27,6 +38,18 @@ export class QueryMatch {
     public dataType: string;
     public category: string;
     public params: QueryParam[] = [];
+
+    get isEmpty() {
+        return isEqual(this, new QueryMatch());
+    }
+
+    isValid() {
+        if (this.isEmpty) { return false; }
+        for (const param of this.params) {
+            if (!param.isValid) { return false; }
+        }
+        return true;
+    }
 }
 
 export class QueryParam {
@@ -45,5 +68,17 @@ export class QueryParam {
     public matchType: string;
     public scalarType: string;
     public keyword = '';
+
+    get isValid() {
+        if (
+            !this.attribute ||
+            !this.matchType ||
+            !this.scalarType ||
+            !this.keyword.length
+        ) {
+            return false;
+         }
+        return true;
+    }
 }
 
