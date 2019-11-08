@@ -24,6 +24,8 @@ export class UploadService {
   public brickTypeTemplates: any[];
   templateSub = new Subject();
   selectedTemplate: any;
+  uploadSuccessData: any = null;
+  uploadFile: File = null;
 
   constructor(
     private http: HttpClient
@@ -249,6 +251,14 @@ export class UploadService {
         );
     });
     return returnResponse;
+  }
+
+  setSuccessData(data: any) {
+    this.uploadSuccessData = data;
+  }
+
+  setFile(data: File) {
+    this.uploadFile = data;
   }
 
   downloadBrickTemplate() {

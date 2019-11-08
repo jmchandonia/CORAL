@@ -33,6 +33,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
+    this.getUploadData();
     this.validationErrorSub = this.validator.getValidationErrors()
      .subscribe(error => this.validationError = error);
   }
@@ -43,17 +44,31 @@ export class LoadComponent implements OnInit, OnDestroy {
     }
   }
 
+  getUploadData() {
+    const data = this.uploadService.uploadSuccessData;
+    if (data) { this.successData = data; }
+
+    const file: File = this.uploadService.uploadFile;
+    if (file) {
+      this.file = file;
+      this.calculateFileSize();
+    }
+  }
+
   handleFileInput(files: FileList) {
     this.file = files.item(0);
     this.calculateFileSize();
+    this.validationError = false;
    }
 
    handleFileInputFromBrowse(event) {
      if (event.target && event.target.files) {
        this.file = event.target.files.item(0);
+       this.uploadService.setFile(this.file);
        // reset target value so that even can be triggered again
        event.target.value = null;
        this.calculateFileSize();
+       this.validationError = false;
      }
    }
 
@@ -86,6 +101,7 @@ export class LoadComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.spinner.hide();
       this.successData = res.results;
+      this.uploadService.setSuccessData(res.results);
     },
     err => {
       this.spinner.hide();
@@ -94,6 +110,7 @@ export class LoadComponent implements OnInit, OnDestroy {
       this.loading = false;
     }
     );
+    this.validationError = false;
    }
 
    removeFile() {
@@ -101,6 +118,9 @@ export class LoadComponent implements OnInit, OnDestroy {
      this.error = false;
      delete this.errorMessage;
      delete this.successData;
+     this.uploadService.setSuccessData(null);
+     this.uploadService.setFile(null as File);
+     this.validationError = false;
    }
 
 }
