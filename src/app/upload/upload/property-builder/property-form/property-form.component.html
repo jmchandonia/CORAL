@@ -18,6 +18,7 @@
   </div>
   <div class="col-3">
       <select2
+        *ngIf="property.type"
         [cssImport]="true"
         [data]="valuesSelect2"
         [options]="valuesOptions"
@@ -25,10 +26,13 @@
         [ngClass]="{'select2-error' : errors && !property.value}"
         (valueChanged)="setValue($event)"
       ></select2>
+      <div class="row justify-content-center no-units" *ngIf="!property.type">
+        <span>N/A</span>
+      </div>
   </div>
   <div class="col-2">
       <select2
-        *ngIf="property.units !== null"
+        *ngIf="property.units !== null && property.type"
         [cssImport]="true"
         [data]="unitsSelect2"
         [options]="unitsOptions"
@@ -41,7 +45,7 @@
         [method]="'searchOntUnits'"
         [required]="property.required"
         (valueChanged)="setUnits($event)"></app-async-dropdown> -->
-      <div class="row justify-content-center no-units" *ngIf="property.units === null">
+      <div class="row justify-content-center no-units" *ngIf="!property.type || property.units === null">
         <span>N/A</span>
       </div>
   </div>

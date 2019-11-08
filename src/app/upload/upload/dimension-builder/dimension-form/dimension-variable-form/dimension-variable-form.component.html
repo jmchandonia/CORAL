@@ -15,7 +15,7 @@
           [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
           ></select2>
       </div>
-      <div class="col-5" *ngIf="dimVar.units !== null">
+      <div class="col-5" *ngIf="dimVar.units !== null && dimVar.type">
         <select2
           [cssImport]="true"
           [options]="unitsOptions"
@@ -25,7 +25,7 @@
           [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
         ></select2>
       </div>
-      <div class="col-5" *ngIf="dimVar.units === null">
+      <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
         <div class="row justify-content-center no-units">
           <span>N/A</span>
         </div>
