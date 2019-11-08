@@ -64,6 +64,7 @@ export class DataValue {
     index: number;
     required = false;
     type: Term;
+    microType: any;
     scalarType: Term;
     units: Term;
     valuesSample: string;
