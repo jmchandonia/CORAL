@@ -187,6 +187,10 @@ export class UploadService {
     return this.http.post<any>(`${environment.baseURL}/get_property_units_oterms`, body);
   }
 
+  public searchDataVariableMicroTypes(term) {
+    return this.http.get(`${environment.baseURL}/search_data_variable_microtypes/${term}`).pipe(delay(500));
+  }
+
   public searchDimensionMicroTypes(term) {
     return this.http.get(`${environment.baseURL}/search_dimension_microtypes/${term}`).pipe(delay(500));
   }
