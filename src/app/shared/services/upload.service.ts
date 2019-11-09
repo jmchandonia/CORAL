@@ -26,6 +26,7 @@ export class UploadService {
   selectedTemplate: any;
   uploadSuccessData: any = null;
   uploadFile: File = null;
+  requiredProcess = false;
 
   constructor(
     private http: HttpClient
@@ -43,6 +44,7 @@ export class UploadService {
       .subscribe((data: any) => {
         // store templates so they only need to be loaded once
         this.brickTypeTemplates = data.results;
+
         // emit results to types selector component
         this.templateSub.next(this.brickTypeTemplates);
       });
@@ -58,6 +60,10 @@ export class UploadService {
     this.selectedTemplate = template.id;
     this.brickBuilder.type = template.text;
     this.brickBuilder.template_id = template.id;
+    if (template.process) {
+      this.requiredProcess = true;
+      this.brickBuilder.process = template.process as Term;
+    }
 
     // map complex objects from template to brick builder
     this.setTemplateDataValues(template.data_vars);
