@@ -3,7 +3,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker'; 
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-create',
@@ -25,6 +25,8 @@ export class CreateComponent implements OnInit {
   processData: Array<Select2OptionData> = [{id: '', text: ''}];
   campaignData: Array<Select2OptionData> = [{id: '', text: ''}];
   personnelData: Array<Select2OptionData> = [{id: '', text: ''}];
+  processValue: string;
+  requiredProcess = false;
 
   options: Select2Options = {
     width: '100%',
@@ -35,7 +37,15 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
-    this.getProcessOterms();
+    this.requiredProcess = this.uploadService.requiredProcess;
+
+    if (this.requiredProcess) {
+      this.processData = [this.brick.process];
+      this.processValue = this.brick.process.id;
+    } else {
+      this.getProcessOterms();
+    }
+
     this.getCampaignOterms();
     this.getPersonnelOterms();
   }

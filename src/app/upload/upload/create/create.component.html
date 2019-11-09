@@ -23,6 +23,8 @@
                 [cssImport]="true"
                 [options]="options"
                 [data]="processData"
+                [value]="processValue ? processValue : ''"
+                [disabled]="requiredProcess"
                 (valueChanged)="setBrickProcess($event)"
                 ></select2>
             </div>
