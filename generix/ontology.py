@@ -19,6 +19,7 @@ _TERM_ID = re.compile(r'id:\s+(\w+:\d+)')
 _TERM_NAME = re.compile(r'name:\s+(.+)')
 _TERM_IS_A = re.compile(r'is_a:\s+(\w+:\d+)')
 _TERM_SYNONYM = re.compile(r'synonym:\s+"(.+)"')
+_TEMR_SCALAR_TYPE = re.compile(r'data_type\s+"(\w+)"')
 _TERM_IS_MICROTYPE = re.compile(r'is_microtype\s+"true"')
 _TERM_IS_DIMENSION = re.compile(r'is_valid_dimension\s+"true"')
 _TERM_IS_DIMENSION_VARIABLE = re.compile(r'is_valid_dimension_variable\s+"true"')
@@ -123,6 +124,7 @@ class OntologyService:
                         term_name = ''
                         term_synonyms = []
 
+                        term_value_scalar_type = None
                         term_is_microtype = False
                         term_is_dimension = False
                         term_is_dimension_variable = False
@@ -176,6 +178,10 @@ class OntologyService:
                         elif not term_is_property and _TERM_IS_PROPERTY.match(pv):
                             term_is_property = True
                         else:
+                            m = _TEMR_SCALAR_TYPE.match(pv)
+                            if m is not None:
+                                term_value_scalar_type = m.groups()[0]
+
                             m = _TERM_VALID_UNITES.match(pv)
                             if m is not None:
                                 term_valid_units = m.groups()[0].split()
@@ -194,6 +200,7 @@ class OntologyService:
                                     is_dimension=term_is_dimension,
                                     is_dimension_variable=term_is_dimension_variable,
                                     is_property=term_is_property,
+                                    microtype_value_scalar_type=term_value_scalar_type,
                                     microtype_fk=term_ref,
                                     microtype_valid_values_parent=term_oref,
                                     microtype_valid_units=term_valid_units,
@@ -214,6 +221,7 @@ class OntologyService:
                         is_dimension=term_is_dimension,
                         is_dimension_variable=term_is_dimension_variable,
                         is_property=term_is_property,
+                        microtype_value_scalar_type=term_value_scalar_type,
                         microtype_fk=term_ref,
                         microtype_valid_values_parent=term_oref,
                         microtype_valid_units=term_valid_units,
@@ -350,6 +358,7 @@ class Ontology:
                         is_dimension_variable = row['is_dimension_variable'],
                         is_property = row['is_property'],
 
+                        microtype_value_scalar_type=row['microtype_value_scalar_type'],
                         microtype_fk = row['microtype_fk'],
                         microtype_valid_values_parent = row['microtype_valid_values_parent'],
                         microtype_valid_units = row['microtype_valid_units'],
@@ -508,6 +517,7 @@ class Term:
                 is_dimension_variable=None,
                 is_property=None,
 
+                microtype_value_scalar_type=None,
                 microtype_fk=None,
                 microtype_valid_values_parent=None,
                 microtype_valid_units=None,
@@ -528,8 +538,9 @@ class Term:
         self.__is_dimension = is_dimension
         self.__is_dimension_variable = is_dimension_variable
         self.__is_property = is_property
-        self.__microtype_fk = microtype_fk
 
+        self.__microtype_value_scalar_type = microtype_value_scalar_type
+        self.__microtype_fk = microtype_fk
         self.__microtype_fk_term_id = None
         self.__microtype_fk_core_type = None
         self.__microtype_fk_core_prop_name = None
@@ -688,6 +699,10 @@ class Term:
     @property
     def is_property(self):
         return self.__safe_property('_Term__is_property')
+
+    @property
+    def microtype_value_scalar_type(self):
+        return self.__safe_property('_Term__microtype_value_scalar_type')
 
     @property
     def microtype_fk(self):
