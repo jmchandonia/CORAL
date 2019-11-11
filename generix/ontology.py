@@ -81,7 +81,7 @@ class OntologyService:
                 'is_dimension':term.is_dimension,
                 'is_dimension_variable':term.is_dimension_variable,
                 'is_property':term.is_property,
-
+                'microtype_value_scalar_type': term.microtype_value_scalar_type,
                 'microtype_fk':term.microtype_fk,
                 'microtype_valid_values_parent':term.microtype_valid_values_parent,
                 'microtype_valid_units':term.microtype_valid_units,
