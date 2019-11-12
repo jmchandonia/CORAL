@@ -18,6 +18,7 @@ from .typedef import TypeDefService
 from .indexdef import IndexTypeDefService
 from .arango_service import ArangoService
 from .report import ReportBuilderService
+from .brick import BrickTemplateProvider
 
 
 IN_ONTOLOGY_LOAD_MODE = False
@@ -56,6 +57,7 @@ term_value_validator = None
 term_provider = None
 workspace = None
 reports = None
+brick_template_provider = None
 
 def _init_services():
     _init_db_connection()
@@ -80,4 +82,8 @@ def _init_services():
 
     global reports
     reports = ReportBuilderService()
+
+    global brick_template_provider
+    if not IN_ONTOLOGY_LOAD_MODE:
+        brick_template_provider = BrickTemplateProvider(_BRICK_TYPE_TEMPLATES_FILE)
 
