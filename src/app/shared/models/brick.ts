@@ -192,6 +192,8 @@ export class TypedProperty {
     value: Term;
     units: Term;
     context: Context[] = [];
+    totalCount = 1;
+    mappedCount: number;
 
     private _type: Term;
 
