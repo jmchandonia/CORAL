@@ -54,7 +54,7 @@ export class MapComponent implements OnInit, OnDestroy {
   testMap() {
     this.loading = true;
     this.dimVars.forEach((_, i) => {
-      this.spinner.show(i.toString());
+      this.spinner.show('d' + i);
     });
     setTimeout(() => {
       this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
@@ -80,7 +80,7 @@ export class MapComponent implements OnInit, OnDestroy {
       this.loading = false;
       // this.spinner.hide();
       this.dimVars.forEach((_, i) => {
-        this.spinner.hide(i.toString());
+        this.spinner.hide('d' + i);
       });
       this.mapped = true;
     }, 1000);
