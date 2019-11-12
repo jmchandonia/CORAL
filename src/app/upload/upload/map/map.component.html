@@ -53,11 +53,10 @@
                     <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dimVar.mappedCount, dimVar.totalCount) : ''">
                       <span *ngIf="mapped">{{dimVar.mappedCount}}</span>
                       <ngx-spinner
-                      *ngIf="loading"
                       bdColor="rgba(0,0,0,0)"
                       color="#aaa"
                       size="small"
-                      [name]="i.toString()"
+                      [name]="'d' + i"
                       style="position: relative;"
                       type="ball-spin-fade-rotating"
                       [fullScreen]="false"
