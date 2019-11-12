@@ -189,11 +189,12 @@ export class TypedProperty {
     index: number;
     // type: Term;
     microType: any;
-    value: Term;
+    value: Term | string;
     units: Term;
     context: Context[] = [];
     totalCount = 1;
     mappedCount: number;
+    scalarType: string;
 
     private _type: Term;
 
@@ -201,6 +202,7 @@ export class TypedProperty {
         this._type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
+        this.scalarType = t.scalar_type;
     }
 
     get type() { return this._type; }

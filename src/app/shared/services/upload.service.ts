@@ -145,6 +145,9 @@ export class UploadService {
       prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
       prop.type = item.property as Term;
       prop.value = item.value as Term;
+      prop.value = item.property.scalar_type === 'oterm_ref'
+        ? prop.value as Term
+        : prop.value.text;
 
       // create array of context objects for every property that has context
       if (item.context && item.context.length) {
