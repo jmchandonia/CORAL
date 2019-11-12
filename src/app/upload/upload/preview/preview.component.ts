@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Brick } from 'src/app/shared/models/brick';
+import { Brick, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 
@@ -30,6 +30,12 @@ export class PreviewComponent implements OnInit {
 
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
+  }
+
+  getPropValueDisplay(prop: TypedProperty) {
+    return prop.scalarType === 'oterm_ref'
+      ? (prop.value as Term).text
+      : prop.value;
   }
 
 }
