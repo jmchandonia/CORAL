@@ -19,6 +19,7 @@ export class MapComponent implements OnInit, OnDestroy {
   loading = false;
   error = false;
   errorSub: Subscription;
+  properties: TypedProperty[];
 
 
   constructor(
@@ -29,7 +30,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
+
+    this.properties = this.brick.properties.filter(prop => prop.require_mapping);
+
+    let dimCount = 0;
     this.brick.dimensions.forEach(dim => {
+      dimCount += dim.variables.length;
       this.dimVars = [...this.dimVars, ...dim.variables.filter(variable => {
         return variable.require_mapping;
       })];
@@ -53,7 +59,7 @@ export class MapComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
       this.dimVars.forEach((dimVar, idx) => {
-        // dimVar.totalCount = 100;
+        dimVar.totalCount = 100;
         switch(this.testArray[idx]) {
           case 1:
             dimVar.mappedCount = dimVar.totalCount;
@@ -68,9 +74,8 @@ export class MapComponent implements OnInit, OnDestroy {
             dimVar.mappedCount = 0;
         }
       });
-      this.brick.dataValues.forEach(dataValue => {
-        dataValue.totalCount = 100;
-        dataValue.mappedCount = Math.floor(Math.random() * 2) === 0 ? 100 : 0;
+      this.brick.properties.forEach(prop => {
+        prop.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
       });
       this.loading = false;
       // this.spinner.hide();
