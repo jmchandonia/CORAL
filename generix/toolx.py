@@ -47,8 +47,8 @@ def _try_init_collection(collection_name, indices):
             collection.ensureHashIndex(ind['fields'], unique=ind['unique'])
         
 def upload_ontologies(argv=None):
-    services._init_services()
     services.IN_ONTOLOGY_LOAD_MODE = True
+    services._init_services()
     try:
         services.ontology._upload_ontologies(config_fname=services._UPLOAD_CONFIG_FILE)
     finally:
