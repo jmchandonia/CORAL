@@ -105,8 +105,8 @@
             </thead>
             <tbody>
               <tr *ngFor ="let item of brick?.properties">
-                <td>{{item.type.text}}</td>
-                <td>{{item.value.text}}</td>
+                <td>{{ item.type.text }}</td>
+                <td>{{ getPropValueDisplay(item) }}</td>
               </tr>
             </tbody>
           </table>
