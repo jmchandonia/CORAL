@@ -12,7 +12,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -187,7 +187,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000003",
-          "text" : ""
+          "text" : "100 Well Survey"
         },
         "units" : {
           "id" : "",
@@ -2543,7 +2543,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000003",
-          "text" : ""
+          "text" : "100 Well Survey"
         },
         "units" : {
           "id" : "",
@@ -2706,7 +2706,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -3124,20 +3124,6 @@
       } ],
       "data_vars" : [ {
         "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
           "id" : "ME:0000126",
           "text" : "Count"
         },
@@ -3179,133 +3165,7 @@
           "required" : true
         } ],
         "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
+      },  {
         "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
@@ -3563,63 +3423,8 @@
           "required" : true
         } ],
         "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
+      },
+       {
         "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
@@ -3732,34 +3537,6 @@
           },
           "required" : true
         } ],
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
         "required" : true
       }, {
         "type" : {
@@ -3908,34 +3685,6 @@
         "required" : true
       }, {
         "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
         },
@@ -3962,34 +3711,6 @@
           },
           "required" : true
         } ],
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
         "required" : true
       }, {
         "type" : {
@@ -4020,35 +3741,7 @@
           "required" : true
         } ],
         "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
+      },{
         "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
@@ -4077,21 +3770,7 @@
           "required" : true
         } ],
         "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
+      },  {
         "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
@@ -4119,34 +3798,6 @@
           },
           "required" : true
         } ],
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
         "required" : true
       }, {
         "type" : {
@@ -4179,34 +3830,6 @@
         "required" : true
       }, {
         "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
-        "required" : true
-      }, {
-        "type" : {
           "id" : "ME:0000129",
           "text" : "Concentration"
         },
@@ -4233,20 +3856,6 @@
           },
           "required" : true
         } ],
-        "required" : true
-      }, {
-        "type" : {
-          "id" : null,
-          "text" : null
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
-        "scalar_type" : {
-          "id" : "string",
-          "text" : "string"
-        },
         "required" : true
       }, {
         "type" : {
@@ -7288,7 +6897,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -7419,7 +7028,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -7550,7 +7159,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -7824,7 +7433,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -8069,7 +7678,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -8318,7 +7927,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -8542,7 +8151,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000013",
-          "text" : ""
+          "text" : "Metal Metabolism"
         },
         "units" : {
           "id" : "",
@@ -8556,7 +8165,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000030",
-          "text" : ""
+          "text" : "Adams Lab"
         },
         "units" : {
           "id" : "",
@@ -8602,7 +8211,8 @@
         "type" : {
           "id" : "ME:0000006",
           "text" : "Condition"
-        }
+        },
+        "dim_vars": []
       }, {
         "type" : {
           "id" : "ME:0000005",
@@ -8653,7 +8263,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000013",
-          "text" : ""
+          "text" : "Metal Metabolism"
         },
         "units" : {
           "id" : "",
@@ -8667,7 +8277,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000030",
-          "text" : ""
+          "text" : "Adams Lab"
         },
         "units" : {
           "id" : "",
@@ -8899,7 +8509,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000003",
-          "text" : ""
+          "text" : "100 Well Survey"
         },
         "units" : {
           "id" : "",
@@ -10200,7 +9810,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -12040,7 +11650,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000021",
-          "text" : ""
+          "text" : "Core Pilot"
         },
         "units" : {
           "id" : "",
@@ -12130,41 +11740,17 @@
           "id" : "ENIGMA:0000002",
           "text" : "ENIGMA Campaign"
         },
-        "value" : {
-          "id" : "",
-          "text" : ""
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
         "required" : true
       }, {
         "property" : {
           "id" : "ENIGMA:0000029",
           "text" : "ENIGMA Labs and Personnel"
         },
-        "value" : {
-          "id" : "",
-          "text" : ""
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
-        },
         "required" : true
       }, {
         "property" : {
           "id" : "ME:0000102",
           "text" : "Environmental Sample ID"
-        },
-        "value" : {
-          "id" : null,
-          "text" : ""
-        },
-        "units" : {
-          "id" : "",
-          "text" : ""
         },
         "required" : true
       } ],
@@ -12237,7 +11823,7 @@
         },
         "value" : {
           "id" : "ENIGMA:0000003",
-          "text" : ""
+          "text" : "100 Well Survey"
         },
         "units" : {
           "id" : "",
