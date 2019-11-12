@@ -21,13 +21,6 @@ export class MapComponent implements OnInit, OnDestroy {
   errorSub: Subscription;
 
 
-  // for testing only //
-
-  testDimension: BrickDimension;
-  testDimVar: DimensionVariable;
-
-/////////////////////////
-
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
@@ -36,24 +29,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
-    // this.brick.dimensions.forEach(dim => {
-    //   this.dimVars = [...this.dimVars, ...dim.variables];
-    // });
-
-    // for testing only //
-
-    this.testDimension = new BrickDimension(this.brick, 0);
-    this.testDimension.type = new Term('dimension', 'dimension');
-
-    for (let i = 0; i < 5; i++) {
-      const dv = new DimensionVariable(this.testDimension, i);
-      dv.type = new Term('abc', '123');
-      dv.units = new Term('abc', '123');
-      dv.totalCount = Math.floor(Math.random() * 100);
-      this.dimVars.push(dv);
-    }
-
-    //////////////////////
+    this.brick.dimensions.forEach(dim => {
+      this.dimVars = [...this.dimVars, ...dim.variables.filter(variable => {
+        return variable.require_mapping;
+      })];
+    });
 
     this.errorSub = this.validator.getValidationErrors()
       .subscribe(error => this.error = error);
@@ -96,7 +76,7 @@ export class MapComponent implements OnInit, OnDestroy {
       // this.spinner.hide();
       this.dimVars.forEach((_, i) => {
         this.spinner.hide(i.toString());
-      })
+      });
       this.mapped = true;
     }, 1000);
   }
