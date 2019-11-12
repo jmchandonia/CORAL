@@ -83,7 +83,8 @@ export class UploadService {
 
       // set units to a term if its not empty or else null
       dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
-      dataValue.type = dataVar.type as Term;
+      dataValue.type = dataVar.type;
+      // dataValue.microType = dataVar.microtype;
       dataValue.scalarType = dataVar.scalar_type as Term;
 
       // create array of context objects for every data value that has context-
@@ -115,7 +116,7 @@ export class UploadService {
 
         // set units to a term if units object does not contain empty values
         dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
-        dimVar.type = dvItem.type as Term;
+        dimVar.type = dvItem.type;
         dimVar.scalarType = dvItem.scalar_type as Term;
 
         // create array of context objects for every dimension variable that has context

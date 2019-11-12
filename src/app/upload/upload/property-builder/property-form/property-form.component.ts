@@ -138,8 +138,8 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   setPropertyType(event) {
     const item = event.data[0];
-    this.property.type = new Term(item.id, item.text);
-    this.property.microType = item.microtype;
+    this.property.type = item;
+    // this.property.microType = item.microtype;
 
     // clear reset entire property object to clear other select 2 dropdowns
     if (this.property.value || this.property.units) {
