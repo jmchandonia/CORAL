@@ -59,7 +59,6 @@ def search_data_variable_microtypes(value):
 def search_property_microtypes(value):
     return _search_microtypes(svs['ontology'].property_microtypes, value)
 
-
 def _search_microtypes(ontology, value):
     if value is None:
         value = '*'
@@ -67,24 +66,10 @@ def _search_microtypes(ontology, value):
 
     term_collection = ontology.find_name_prefix(value)
     for term in term_collection.terms:
-        res.append({
-            'id' : term.term_id,
-            'text': term.term_name,
-            'has_units': len(term.microtype_valid_units) > 0 or len(term.microtype_valid_units_parent) > 0,
-            'scalar_type': term.microtype_value_scalar_type,
-            'require_mapping': term.microtype_fk is not None,
-            'microtype':{
-                'fk': term.microtype_fk,
-                'value_scalar_type': term.microtype_value_scalar_type,
-                'valid_values_parent': term.microtype_valid_values_parent,
-                'valid_units': term.microtype_valid_units,
-                'valid_units_parent': term.microtype_valid_units_parent
-            }
-        })
+        res.append(term.to_descriptor())
     return  json.dumps({
         'results': res
     })
-
 
 @app.route("/generix/search_property_value_oterms", methods=['POST'])
 def search_property_values():
