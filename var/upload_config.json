@@ -1,7 +1,10 @@
 {
     "version": 1,
     "ontologies": [
-
+        {
+            "name": "units",
+            "file_name": "unit_standalone.obo"
+        },
         {
             "name": "chebi",
             "file_name": "chebi.obo"
@@ -43,10 +46,6 @@
         {
             "name": "process",
             "file_name": "process_ontology.obo"
-        },
-        {
-            "name": "units",
-            "file_name": "unit_standalone.obo"
         },
         {
             "name": "taxonomy",
