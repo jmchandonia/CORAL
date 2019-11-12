@@ -1577,31 +1577,64 @@ class BrickTemplateProvider:
             # Example:
             # "text" : "Chemical Measurement",
             # "data_type" : "DA:0000005",
-            self._validate_term( id=btype['data_type'], name=btype['text'])
+
+            if 'text' not in btype:
+                raise ValueError('Failed type validation: "text" property is not found')
+
+            try:
+                self._validate_term( id=btype['data_type'], name=btype['text'])
+            except Exception as e:
+                raise ValueError('Failed type validation "%s": %s ' % (btype['text'], str(e)))
 
             #validate all templates for a given btype
             for template in btype['children']:
-                # validate and update properties 
-                for prop in template['properties']:
-                    term = self._validate_and_update_type(prop['property'])
-                    self._validate_value(term, prop['value'])                    
-                    self._validate_units(term, prop['units'])
-                
-            #validate dimensions
-            for dim in btype['dims']:
-                self._validate_type(dim['type'])
+                try:
+                    # validate and update properties 
+                    for prop in template['properties']:
+                        try:
+                            term = self._validate_and_update_type(prop['property'])
+                            if 'value' in prop:
+                                self._validate_value(term, prop['value'])                    
+                            if 'units' in prop:
+                                self._validate_units(term, prop['units'])
+                        except Exception as e:
+                            raise ValueError('Failed property vlaidation: %s ' % str(e))
 
-                for dim_var in dim['dim_vars']:
-                    term = self._validate_and_update_type(dim_var['type'])
-                    self._validate_units(term, dim_var['units'])
-            
-            #validate data vars
-            for data_var in btype['data_vars']:
-                term = self._validate_and_update_type(data_var['type'])
-                self._validate_units(term, data_var['units'])
-            
-            #validate process
-            self._validate_type(btype['process'])
+
+                    
+                    #validate dimensions
+                    for dim in template['dims']:
+                        self._validate_type(dim['type'])
+
+                        for dim_var in dim['dim_vars']:
+                            try:
+                                term = self._validate_and_update_type(dim_var['type'])
+                                self._validate_units(term, dim_var['units'])
+                            except Exception as e:
+                                raise ValueError('Failed dim_var vlaidation: %s ' %  str(e))
+                    
+                    #validate data vars
+                    # TODO: temp solution
+                    data_vars = []
+                    for data_var in template['data_vars']:
+                        try:
+                            term = self._validate_and_update_type(data_var['type'])
+                            self._validate_units(term, data_var['units'])
+                            data_vars.append(data_var)
+                        except Exception as e:
+                            print('Failed data_var validation: %s ' %  str(e))                            
+                            # raise ValueError('Failed data_var validation: %s ' %  str(e))
+                        template['data_vars'] = data_vars
+                    
+                    #validate process
+                    try:
+                        self._validate_type(template['process'])
+                    except Exception as e:
+                        raise ValueError('Failed process vlaidation: %s ' %  str(e))            
+
+                except Exception as e:
+                    raise ValueError('Failed template validation "%s": %s ' % (template['text'], str(e)))
+
 
     def _validate_and_update_type(self, ptype):
         term = self._validate_type(ptype)
@@ -1630,19 +1663,16 @@ class BrickTemplateProvider:
 
         if term.microtype_value_scalar_type == 'oterm_ref':
             # Find and validate value term_id
-            vterm = self._validate_term(id=value_term_id, name=value_term_name)
+            vterm = None
+            try:
+                vterm = self._validate_term(id=value_term_id, name=value_term_name)
+            except Exception as e:
+                raise ValueError('Failed value validation: %s' % str(e))
 
             # Validate parents
             if term.microtype_valid_values_parent:
-                valid_parent_found = False
-                parent_path_ids = vterm.parent_path_ids
-                for parent_id in term.microtype_valid_values_parent:
-                    if parent_id in parent_path_ids:
-                        valid_parent_found = True
-                        break
-                if not valid_parent_found:
-                    raise ValueError('''Wrong value: the value term "%s" is not a child of 
-                        any terms defined as valid parents in the term "%s"''' % (
+                if term.microtype_valid_values_parent not in vterm.parent_path_ids:
+                    raise ValueError('Failed value validation: the value term "%s" is not a child of any terms defined as valid parents in the term "%s"' % (
                             vterm.term_id + ':' + vterm.term_name,
                             term.term_id + ':' + term.term_name
                         ))                       
@@ -1650,27 +1680,33 @@ class BrickTemplateProvider:
             
 
     def _validate_units(self, term, units):
+        #TODO will skip for now
+        if 1 == 1:
+            return
         units_term_id = units['id']    
         units_term_name = units['text']
 
         if term.has_units:
             if units_term_id:
                 # Validate untis term
-                uterm = self._validate_term(id=units_term_id, name=units_term_name)
+                uterm = None
+                try:
+                    uterm = self._validate_term(id=units_term_id, name=units_term_name)
+                except Exception as e:
+                    raise ValueError('Failed units validation: %s' % str(e))                    
 
                 parent_found = False
                 if term.microtype_valid_units:
                     if units_term_id in term.microtype_valid_units:
                         parent_found = True
-                elif term.microtype_valid_units_parent:
+                if term.microtype_valid_units_parents:
                     parent_ids = uterm.parent_path_ids
-                    for parent_id in term.microtype_valid_units_parent:
+                    for parent_id in term.microtype_valid_units_parents:
                         if parent_id in parent_ids:
                             parent_found = True
                             break
                 if not parent_found:
-                    raise ValueError('''Wrong units: the units term "%s" is not a child (or representative) of 
-                        any terms defined as valid parents in the term "%s"''' % (
+                    raise ValueError('Failed units validation: the units term "%s" is not a child (or representative) of any terms defined as valid parents in the term "%s"' % (
                             uterm.term_id + ':' + uterm.term_name,
                             term.term_id + ':' + term.term_name
                         ))                       
