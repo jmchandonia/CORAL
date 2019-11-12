@@ -98,7 +98,7 @@ def _search_oterms(ontology, value, parent_term_id=None):
 @app.route("/generix/get_property_units_oterms", methods=['POST'])
 def get_property_units_oterms():
     query = request.json
-    parent_term_ids = query['microtype']['valid_units_parent']
+    parent_term_ids = query['microtype']['valid_units_parents']
     term_ids = query['microtype']['valid_units'] 
     return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
 
@@ -155,10 +155,14 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
 
 @app.route("/generix/brick_type_templates", methods=['GET'])
 def brick_type_templates():
-    file_contxt = open(cns['_BRICK_TYPE_TEMPLATES_FILE']).read()
-    res = json.loads( file_contxt )
+    # file_contxt = open(cns['_BRICK_TYPE_TEMPLATES_FILE']).read()
+    # res = json.loads( file_contxt )
+    # return  json.dumps( {
+    #     'results': res['types']
+    # }  )
+    templates = sns['brick_template_provider'].templates
     return  json.dumps( {
-        'results': res['types']
+        'results': templates['types']
     }  )
 
 @app.route("/generix/core_types", methods=['GET'])
