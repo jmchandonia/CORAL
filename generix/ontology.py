@@ -85,7 +85,7 @@ class OntologyService:
                 'microtype_fk':term.microtype_fk,
                 'microtype_valid_values_parent':term.microtype_valid_values_parent,
                 'microtype_valid_units':term.microtype_valid_units,
-                'microtype_valid_units_parent':term.microtype_valid_units_parent,
+                'microtype_valid_units_parents':term.microtype_valid_units_parents,
 
                 'parent_path_term_ids': list(all_parent_ids.keys())
             }
@@ -132,7 +132,7 @@ class OntologyService:
                         term_ref = ''
                         term_oref = ''
                         term_valid_units = []
-                        term_valid_units_parent = []
+                        term_valid_units_parents = []
                         term_parent_ids = []                        
 
                         state = STATE_TERM_FOUND
@@ -188,7 +188,7 @@ class OntologyService:
                             
                             m = _TERM_VALID_UNITES_PARENT.match(pv)
                             if m is not None:
-                                term_valid_units_parent = m.groups()[0].split()
+                                term_valid_units_parents = m.groups()[0].split()
 
                     elif line == '':
                         term = Term(term_id, term_name=term_name,
@@ -204,7 +204,7 @@ class OntologyService:
                                     microtype_fk=term_ref,
                                     microtype_valid_values_parent=term_oref,
                                     microtype_valid_units=term_valid_units,
-                                    microtype_valid_units_parent=term_valid_units_parent                        
+                                    microtype_valid_units_parents=term_valid_units_parents                        
                                     )
                         terms[term.term_id] = term
                         if root_term is None:
@@ -225,7 +225,7 @@ class OntologyService:
                         microtype_fk=term_ref,
                         microtype_valid_values_parent=term_oref,
                         microtype_valid_units=term_valid_units,
-                        microtype_valid_units_parent=term_valid_units_parent                        
+                        microtype_valid_units_parents=term_valid_units_parents                        
                         )
 
             terms[term.term_id] = term
@@ -321,8 +321,7 @@ class Ontology:
         #     name = 'ROOT_' + term.property_name
         #     self.__dict__[name] = term
 
-    def __find_terms(self, aql_filter, aql_bind, aql_fulltext=None, size=100):
-        111
+    def __find_terms(self, aql_filter, aql_bind, aql_fulltext=None, size=100):        
         if aql_filter is None or len(aql_filter) == 0:
             aql_filter = '1==1'
 
@@ -362,7 +361,7 @@ class Ontology:
                         microtype_fk = row['microtype_fk'],
                         microtype_valid_values_parent = row['microtype_valid_values_parent'],
                         microtype_valid_units = row['microtype_valid_units'],
-                        microtype_valid_units_parent = row['microtype_valid_units_parent'],
+                        microtype_valid_units_parents = row['microtype_valid_units_parents'],
 
                         persisted=True)     
             terms.append(term)       
@@ -521,7 +520,7 @@ class Term:
                 microtype_fk=None,
                 microtype_valid_values_parent=None,
                 microtype_valid_units=None,
-                microtype_valid_units_parent=None,              
+                microtype_valid_units_parents=None,              
                 validator_name=None, 
                 persisted=False, 
                 refresh=False):
@@ -559,7 +558,7 @@ class Term:
 
         self.__microtype_valid_values_parent = microtype_valid_values_parent
         self.__microtype_valid_units = microtype_valid_units
-        self.__microtype_valid_units_parent = microtype_valid_units_parent 
+        self.__microtype_valid_units_parents = microtype_valid_units_parents 
 
         self.__validator_name = validator_name
         self.__parent_terms = []
@@ -729,12 +728,12 @@ class Term:
         return self.__safe_property('_Term__microtype_valid_units')
 
     @property
-    def microtype_valid_units_parent(self):
-        return self.__safe_property('_Term__microtype_valid_units_parent')
+    def microtype_valid_units_parents(self):
+        return self.__safe_property('_Term__microtype_valid_units_parents')
 
     @property
     def has_units(self):
-        return not not self.microtype_valid_units or not not self.microtype_valid_units_parent
+        return not not self.microtype_valid_units or not not self.microtype_valid_units_parents
 
     @property
     def require_mapping(self):
@@ -753,7 +752,7 @@ class Term:
                 'value_scalar_type': self.microtype_value_scalar_type,
                 'valid_values_parent': self.microtype_valid_values_parent,
                 'valid_units': self.microtype_valid_units,
-                'valid_units_parent': self.microtype_valid_units_parent
+                'valid_units_parents': self.microtype_valid_units_parents
             }
         }
 
@@ -804,8 +803,12 @@ class Term:
             if pid in terms:
                 self.__parent_terms.append(terms[pid])
             else:
-                # TODO we should check database here
-                pass
+                term = services.ontology.all.find_id(pid)
+                if term:
+                    self.__parent_terms.append(term)
+                else:
+                    raise ValueError('Can not find parent "%s" for term "%s"' % 
+                        (term.term_id, self.term_id))
 
 
 class CashedTermProvider:
