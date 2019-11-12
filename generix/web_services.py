@@ -155,12 +155,7 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
 
 @app.route("/generix/brick_type_templates", methods=['GET'])
 def brick_type_templates():
-    # file_contxt = open(cns['_BRICK_TYPE_TEMPLATES_FILE']).read()
-    # res = json.loads( file_contxt )
-    # return  json.dumps( {
-    #     'results': res['types']
-    # }  )
-    templates = sns['brick_template_provider'].templates
+    templates = svs['brick_template_provider'].templates
     return  json.dumps( {
         'results': templates['types']
     }  )
