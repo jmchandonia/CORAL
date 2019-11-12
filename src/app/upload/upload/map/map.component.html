@@ -4,13 +4,13 @@
       <div class="row">
         <div class="col-12">
           <h5 class="mb-0 mt-2" style="float: left">Map Properties and Dimension Variables</h5>
-          <button class="btn btn-link" style="float: right" (click)="testMap()">Map</button>
+          <button class="btn btn-primary" style="float: right" (click)="testMap()">Map Your Brick</button>
         </div>
       </div>
       <hr />
       <div class="row mt-2">
         <div class="col-12">
-          <div class="card" *ngIf="!mapped && !loading">
+          <!-- <div class="card" *ngIf="!mapped && !loading">
             <div class="card-header light-blue">
               <h5 class="mb-0">Map Brick Data</h5>
             </div>
@@ -18,8 +18,8 @@
               <p>Before uploading your brick, please check the validity of your values by mapping them to core types in our system.</p>
               <button class="btn btn-primary" (click)="testMap()">Map Your Brick</button>
             </div>
-          </div>
-          <div class="loading-container" *ngIf="loading">
+          </div> -->
+          <!-- <div class="loading-container" *ngIf="loading">
               <ngx-spinner
               bdColor="rgba(0,0,0,0)"
               color="#aaa"
@@ -27,8 +27,8 @@
               type="ball-spin-fade-rotating"
               [fullScreen]="false"
             ></ngx-spinner>
-          </div>
-          <div class="card" *ngIf="mapped">
+          </div> -->
+          <div class="card">
             <div class="card-header light-blue">
               <h5>Dimension Variables</h5>
             </div>
@@ -43,15 +43,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let dimVar of dimVars">
+                  <tr *ngFor="let dimVar of dimVars; let i = index">
                     <td>
                       {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
                     </td>
                     <td class="stats-column">
                       {{dimVar.totalCount}}
                     </td>
-                    <td class="stats-column" [ngClass]="getMappedStatus(dimVar.mappedCount, dimVar.totalCount)">
-                      {{dimVar.mappedCount}}
+                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dimVar.mappedCount, dimVar.totalCount) : ''">
+                      <span *ngIf="mapped">{{dimVar.mappedCount}}</span>
+                      <ngx-spinner
+                      *ngIf="loading"
+                      bdColor="rgba(0,0,0,0)"
+                      color="#aaa"
+                      size="small"
+                      [name]="i.toString()"
+                      style="position: relative;"
+                      type="ball-spin-fade-rotating"
+                      [fullScreen]="false"
+                    ></ngx-spinner>
                     </td>
                     <td class="stats-column">
                       <i *ngIf="dimVar.mappedCount === dimVar.totalCount" class="material-icons success">
@@ -66,7 +76,7 @@
               </table>
             </div>
           </div>
-          <div class="card mt-2" *ngIf="mapped">
+          <div class="card mt-2">
             <div class="card-header light-blue">
               <h5>Data Values</h5>
             </div>

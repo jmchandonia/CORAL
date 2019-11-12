@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Brick, BrickDimension, DimensionVariable, TypedProperty } from 'src/app/shared/models/brick';
+import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,14 @@ export class MapComponent implements OnInit, OnDestroy {
   error = false;
   errorSub: Subscription;
 
+
+  // for testing only //
+
+  testDimension: BrickDimension;
+  testDimVar: DimensionVariable;
+
+/////////////////////////
+
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
@@ -28,9 +36,24 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
-    this.brick.dimensions.forEach(dim => {
-      this.dimVars = [...this.dimVars, ...dim.variables];
-    });
+    // this.brick.dimensions.forEach(dim => {
+    //   this.dimVars = [...this.dimVars, ...dim.variables];
+    // });
+
+    // for testing only //
+
+    this.testDimension = new BrickDimension(this.brick, 0);
+    this.testDimension.type = new Term('dimension', 'dimension');
+
+    for (let i = 0; i < 5; i++) {
+      const dv = new DimensionVariable(this.testDimension, i);
+      dv.type = new Term('abc', '123');
+      dv.units = new Term('abc', '123');
+      dv.totalCount = Math.floor(Math.random() * 100);
+      this.dimVars.push(dv);
+    }
+
+    //////////////////////
 
     this.errorSub = this.validator.getValidationErrors()
       .subscribe(error => this.error = error);
@@ -44,17 +67,19 @@ export class MapComponent implements OnInit, OnDestroy {
 
   testMap() {
     this.loading = true;
-    this.spinner.show();
+    this.dimVars.forEach((_, i) => {
+      this.spinner.show(i.toString());
+    });
     setTimeout(() => {
       this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
       this.dimVars.forEach((dimVar, idx) => {
-        dimVar.totalCount = 100;
+        // dimVar.totalCount = 100;
         switch(this.testArray[idx]) {
           case 1:
-            dimVar.mappedCount = 100;
+            dimVar.mappedCount = dimVar.totalCount;
             break;
           case 2:
-            dimVar.mappedCount = 95;
+            dimVar.mappedCount = dimVar.totalCount - 5;
             break;
           case 3:
             dimVar.mappedCount = 0;
@@ -68,8 +93,11 @@ export class MapComponent implements OnInit, OnDestroy {
         dataValue.mappedCount = Math.floor(Math.random() * 2) === 0 ? 100 : 0;
       });
       this.loading = false;
-      this.spinner.hide();
-      this.mapped = true;      
+      // this.spinner.hide();
+      this.dimVars.forEach((_, i) => {
+        this.spinner.hide(i.toString());
+      })
+      this.mapped = true;
     }, 1000);
   }
 
@@ -77,7 +105,7 @@ export class MapComponent implements OnInit, OnDestroy {
     if (mapped === total) {
       return 'status-column-success';
     }
-    return mapped === 0 ? 'status-column-fail' : 'status-column-warn'
+    return mapped === 0 ? 'status-column-fail' : 'status-column-warn';
   }
 
 }
