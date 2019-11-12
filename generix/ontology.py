@@ -124,7 +124,7 @@ class OntologyService:
                         term_name = ''
                         term_synonyms = []
 
-                        term_value_scalar_type = None
+                        term_value_scalar_type = ''
                         term_is_microtype = False
                         term_is_dimension = False
                         term_is_dimension_variable = False
@@ -731,6 +731,31 @@ class Term:
     @property
     def microtype_valid_units_parent(self):
         return self.__safe_property('_Term__microtype_valid_units_parent')
+
+    @property
+    def has_units(self):
+        return not not self.microtype_valid_units or not not self.microtype_valid_units_parent
+
+    @property
+    def require_mapping(self):
+        return not not self.microtype_fk
+
+
+    def to_descriptor(self):
+        return {
+            'id' : self.term_id,
+            'text': self.term_name,
+            'has_units': self.has_units,
+            'scalar_type': self.microtype_value_scalar_type,
+            'require_mapping': self.require_mapping,
+            'microtype':{
+                'fk': self.microtype_fk,
+                'value_scalar_type': self.microtype_value_scalar_type,
+                'valid_values_parent': self.microtype_valid_values_parent,
+                'valid_units': self.microtype_valid_units,
+                'valid_units_parent': self.microtype_valid_units_parent
+            }
+        }
 
     @property
     def validator_name(self):
