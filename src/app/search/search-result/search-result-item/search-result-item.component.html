@@ -26,17 +26,6 @@
                   <td>{{searchResult?.id}}</td>
                 </tr>
                 <tr>
-                  <td>
-                    <strong>Value Type: </strong>
-                  </td>
-                  <td>
-                    <span>{{searchResult?.typed_values[0].value_type.oterm_name}}</span>
-                    <span *ngIf="searchResult?.typed_values[0].value_units">
-                      ({{searchResult?.typed_values[0].value_units.oterm_name}})
-                    </span>
-                  </td>
-                </tr>
-                <tr>
                   <td><strong>Shape: </strong></td>
                   <td>
                     <span *ngFor="let dim of searchResult?.dim_context; let last = last">
@@ -55,6 +44,38 @@
               </tbody>
             </table>
           </div>
+      </div>
+      <div class="card mt-3">
+        <div class="card-header light-blue">
+          <h5>Data Variables ({{searchResult?.typed_values.length}})</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-header">
+              <tr>
+                <th>Value Type</th>
+                <th>Value Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataVar of searchResult?.typed_values">
+                <td>{{dataVar.value_type.oterm_name}}
+                  <span *ngIf="dataVar.value_context.length">
+                    {{dataVar.value_context[0].value_type.oterm_name}}={{dataVar.value_context[0].value.value}}
+                  </span>
+                </td>
+                <td>
+                  <span *ngIf="dataVar.value_units">
+                      {{dataVar.value_units.oterm_name}}
+                  </span>
+                  <span *ngIf="!dataVar.value_units">
+                    N/A
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="card mt-3">
         <div class="card-header light-blue">
