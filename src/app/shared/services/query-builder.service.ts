@@ -95,6 +95,10 @@ export class QueryBuilderService {
     return this.http.get(`${environment.baseURL}/core_type_metadata/${id}`);
   }
 
+  getDimensionVariableValues(id: string, dimIdx: number) {
+    return this.http.get(`${environment.baseURL}/brick_dimension/${id}/${dimIdx}`);
+  }
+
   getDataTypes() {
     // return this.http.get(`${environment.baseURL}/data_types`);
     // return [...this.dataTypes.map((type, idx) => {
