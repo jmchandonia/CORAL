@@ -18,7 +18,7 @@
   </div>
   <div class="col-3">
       <select2
-        *ngIf="property.type"
+        *ngIf="property.type && property.scalarType === 'oterm_ref'"
         [cssImport]="true"
         [data]="valuesSelect2"
         [options]="valuesOptions"
@@ -26,6 +26,12 @@
         [ngClass]="{'select2-error' : errors && !property.value}"
         (valueChanged)="setValue($event)"
       ></select2>
+      <input
+        *ngIf="property.type && property.scalarType !== 'oterm_ref'"
+        class="form-control"
+        [(ngModel)]="property.value"
+        [ngModelOptions]="{standalone: true}"  
+      >
       <div class="row justify-content-center no-units" *ngIf="!property.type">
         <span>N/A</span>
       </div>

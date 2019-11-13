@@ -102,8 +102,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
 
   setDimVarType(event) {
     const term = event.data[0];
-    this.dimVar.type = new Term(term.id, term.text);
-    this.dimVar.microType = term.microtype;
+    this.dimVar.type = term;
     if (!term.has_units) {
       this.dimVar.units = null;
     } else {
