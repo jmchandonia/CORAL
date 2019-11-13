@@ -15,6 +15,7 @@ import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { SearchResultCoreItemComponent } from './search-result/search-result-core-item/search-result-core-item.component';
 import { ProcessDataComponent } from './search-result/process-data/process-data.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { DimensionVariablePreviewComponent } from './search-result/dimension-variable-preview/dimension-variable-preview.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     SearchResultComponent,
     SearchResultItemComponent,
     SearchResultCoreItemComponent,
-    ProcessDataComponent
+    ProcessDataComponent,
+    DimensionVariablePreviewComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +38,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     HttpClientModule,
     NgxSpinnerModule
   ],
-  providers: [QueryBuilderService]
+  providers: [QueryBuilderService],
+  bootstrap: [DimensionVariablePreviewComponent]
 })
 export class SearchModule { }
