@@ -12,7 +12,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 @Injectable({
   providedIn: 'root'
 })
@@ -176,7 +176,7 @@ export class UploadService {
 
   valuelessUnits(units) {
     // helper method to find empty term objects
-    return _.isEqual(units, {id: '', text: ''});
+    return isEqual(units, {id: '', text: ''});
   }
 
   public searchOntTerms(term) {
