@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-map',
@@ -20,12 +21,14 @@ export class MapComponent implements OnInit, OnDestroy {
   error = false;
   errorSub: Subscription;
   properties: TypedProperty[];
+  modalRef: BsModalRef;
 
 
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
+    private modalService: BsModalService
     ) { }
 
   ngOnInit() {
@@ -56,6 +59,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.dimVars.forEach((_, i) => {
       this.spinner.show('d' + i);
     });
+    this.properties.forEach((_, i) => {
+      this.spinner.show('p' + i);
+    });
+
     setTimeout(() => {
       this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
       this.dimVars.forEach((dimVar, idx) => {
@@ -82,6 +89,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this.dimVars.forEach((_, i) => {
         this.spinner.hide('d' + i);
       });
+      this.properties.forEach((_, i) => {
+        this.spinner.hide('p' + i);
+      })
       this.mapped = true;
     }, 1000);
   }
@@ -91,6 +101,16 @@ export class MapComponent implements OnInit, OnDestroy {
       return 'status-column-success';
     }
     return mapped === 0 ? 'status-column-fail' : 'status-column-warn';
+  }
+
+  getPropValueDisplay(prop: TypedProperty) {
+    return prop.scalarType === 'oterm_ref'
+      ? (prop.value as Term).text
+      : prop.value;
+  }
+
+  openModal(template: TemplateRef) {
+    this.modalRef = this.modalService.show(template);
   }
 
 }
