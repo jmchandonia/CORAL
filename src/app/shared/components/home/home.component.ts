@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { QueryParam, QueryMatch } from '../../models/QueryBuilder';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
 import { Router } from '@angular/router';
@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
 
     if (this.checkBoxArray.includes(event.target.id)) {
       this.filterQueryBuilder = this.filterQueryBuilder.filter(item => {
-        return !(_.isEqual(item, selected));
+        return !(isEqual(item, selected));
       });
       this.checkBoxArray = this.checkBoxArray.filter(item => item !== event.target.id);
     } else {
