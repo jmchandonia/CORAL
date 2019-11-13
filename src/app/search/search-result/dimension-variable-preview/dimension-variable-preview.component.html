@@ -1,0 +1,34 @@
+<div class="container p-0" [ngClass]="{'loading-container' : !data}">
+    <ngx-spinner
+    bdColor="rgba(0,0,0,0)"
+    color="#aaa"
+    size="medium"
+    style="position: relative; top: 240px; left: 240px;"
+    type="ball-spin-fade-rotating"
+    [fullScreen]="false"></ngx-spinner>
+    <div class="row" *ngIf="data">
+      <div class="col-12">
+        <table class="table table-bordered">
+          <thead class="table-header">
+            <tr>
+              <th style="vertical-align: top">#</th> 
+              <th *ngFor="let dv of data.dim_vars">
+                {{dv.type.text}}
+                <span *ngIf="dv.context.length">
+                  ,&nbsp;{{dv.context[0].type.text}}={{dv.context[0].value}}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of [].constructor(numberOfRows); let i = index;">
+              <td>{{i + 1}}</td>
+              <td *ngFor="let dv of data.dim_vars">
+                {{dv.values[i]}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
