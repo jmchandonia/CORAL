@@ -559,6 +559,60 @@ def generix_data_models():
 
     return  json.dumps({'results': res})
 
+@app.route('/generix/brick_dimension/<brick_id>/<dim_index>', methods=['GET'])
+def generix_brick_dimension(brick_id, dim_index):
+    MAX_ROW_COUNT = 100
+    res = {}
+    try:
+        bp = dp._get_type_provider('Brick')
+        br = bp.load(brick_id)
+        dim = br.dims[int(dim_index)]
+        res = {
+            'type':{
+                'id': dim.type_term.term_id,
+                'text': dim.type_term.term_name
+            },
+            'size': dim.size,
+            'max_row_count': MAX_ROW_COUNT,
+            'dim_var_count': dim.var_count,
+            'dim_vars':[]
+        }
+        for dim_var in dim.vars:
+            context = []
+            for attr in dim_var.attrs:
+                context.append({
+                    'type':{
+                        'id': attr.type_term.term_id,
+                        'text': attr.type_term.term_name
+                    },
+                    'units':{
+                        'id': attr.units_term.term_id if attr.units_term else '',
+                        'text': attr.units_term.term_name if attr.units_term else ''
+                    },
+                    'value': str(attr.value)
+                })            
+
+            res['dim_vars'].append({
+                'type':{
+                    'id': dim_var.type_term.term_id,
+                    'text': dim_var.type_term.term_name
+                },
+                'units':{
+                    'id': dim_var.units_term.term_id if dim_var.units_term else '',
+                    'text': dim_var.units_term.term_name if dim_var.units_term else ''
+                },
+                'values': list([ str(val) for val in dim_var.values][:MAX_ROW_COUNT]),
+                'context': context
+            })
+    except Exception as e:
+        return _err_response(e)
+
+
+    return json.dumps({
+        'results': res, 
+        'status': 'OK', 
+        'error': ''})       
+
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
 def generix_brick_metadata(brick_id):
     bp = dp._get_type_provider('Brick')
