@@ -1,7 +1,9 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DimensionVariablePreviewComponent as DimVarPreview } from '../dimension-variable-preview/dimension-variable-preview.component';
+
 
 @Component({
   selector: 'app-search-result-item',
@@ -33,8 +35,13 @@ export class SearchResultItemComponent implements OnInit {
     });
   }
 
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+  openModal(dimension: any, index: number) {
+    const initialState = {
+      title: dimension.data_type.oterm_name,
+      id: this.objectId,
+      index
+    }
+    this.modalRef = this.modalService.show(DimVarPreview, {initialState, class: 'modal-lg'});
   }
 
   useForPlot() {
