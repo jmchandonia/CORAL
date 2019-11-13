@@ -109,7 +109,7 @@ export class MapComponent implements OnInit, OnDestroy {
       : prop.value;
   }
 
-  openModal(template: TemplateRef) {
+  openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
   }
 
