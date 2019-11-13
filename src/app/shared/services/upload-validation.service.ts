@@ -25,7 +25,7 @@ export class UploadValidationService {
         return this.validateDataType();
       case 'properties':
         return this.validateProperties();
-      case 'dimensions': 
+      case 'dimensions':
         return this.validateDimensions();
       case 'data-variables':
         return this.validateDataVariables();
@@ -99,6 +99,12 @@ export class UploadValidationService {
    }
 
    validateUploadedData() {
+
+    if (!this.uploadService.uploadFile || !this.uploadService.uploadSuccessData) {
+      this.errorSub.next(true);
+      return true;
+    }
+
      // iterate through every dimension including template dimensions
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
@@ -116,6 +122,7 @@ export class UploadValidationService {
         return true;
       }
     }
+    this.errorSub.next(false);
     return false;
    }
 

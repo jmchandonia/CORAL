@@ -8,7 +8,7 @@
       >
         <a 
           href="JavaScript:void(0)"
-          [routerLink]="[step]"
+          (click)="navigateBreadcrumb(step, i)"
           >
           {{format(step)}}
         </a>

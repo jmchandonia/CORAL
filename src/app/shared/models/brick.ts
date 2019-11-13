@@ -54,6 +54,18 @@ export class Brick {
       }
 }
 
+export class Term {
+    constructor(id?, text?, has_units?) {
+        this.id = id;
+        this.text = text;
+        this.has_units = has_units;
+    }
+    id: string;
+    text: string;
+    has_units: boolean;
+}
+
+
 export class DataValue {
 
     constructor(index: number, required?: boolean) {
@@ -63,7 +75,6 @@ export class DataValue {
 
     index: number;
     required = false;
-    type: Term;
     microType: any;
     scalarType: Term;
     units: Term;
@@ -71,6 +82,15 @@ export class DataValue {
     context: Context[] = [];
     totalCount: number;
     mappedCount: number;
+
+    private _type: Term;
+
+    set type(t: any) {
+        this._type = new Term(t.id, t.text, t.has_units);
+        this.microType = t.microtype;
+    }
+
+    get type() { return this._type; }
 }
 
 export class Context {
@@ -89,15 +109,6 @@ export class Context {
     property: Term;
     value: Term;
     units: Term;
-}
-
-export class Term {
-    constructor(id?, text?) {
-        this.id = id;
-        this.text = text;
-    }
-    id: string;
-    text: string;
 }
 
 export class BrickDimension {
@@ -132,9 +143,9 @@ export class DimensionVariable {
         this.required = required;
     }
     required = true;
+    require_mapping: boolean;
     dimension: BrickDimension;
     index: number;
-    type: Term;
     microType: any;
     scalarType: Term = new Term();
     units: Term;
@@ -147,6 +158,16 @@ export class DimensionVariable {
     totalCount: number; //
     mapped = false; //
     mapPk = false; //
+
+    private _type: Term;
+
+    set type(t: any) {
+        this._type = new Term(t.id, t.text, t.has_units);
+        this.microType = t.microtype;
+        this.require_mapping = t.require_mapping;
+    }
+
+    get type() { return this._type; }
 }
 
 export class TypedProperty {
@@ -159,17 +180,32 @@ export class TypedProperty {
         ) {
         this.index = index;
         this.required = required;
-        this.type = type;
-        this.microType = microType;
+        if (type) { this.type = type; }
+        // this.microType = microType;
     }
     required = true;
+    require_mapping: boolean;
     parentCollection: TypedProperty[];
     index: number;
-    type: Term;
+    // type: Term;
     microType: any;
-    value: Term;
+    value: Term | string;
     units: Term;
     context: Context[] = [];
+    totalCount = 1;
+    mappedCount: number;
+    scalarType: string;
+
+    private _type: Term;
+
+    set type(t: any) {
+        this._type = new Term(t.id, t.text, t.has_units);
+        this.microType = t.microtype;
+        this.require_mapping = t.require_mapping;
+        this.scalarType = t.scalar_type;
+    }
+
+    get type() { return this._type; }
 }
 
 export class MicroType {

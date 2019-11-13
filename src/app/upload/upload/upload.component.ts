@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-upload',
@@ -23,10 +24,11 @@ export class UploadComponent implements OnInit {
   ];
 
   progressIndex = 0;
+  maxStep = 0;
 
   constructor(
     private router: Router,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -40,13 +42,19 @@ export class UploadComponent implements OnInit {
     });
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.maxStep = this.progressIndex;
+  }
 
   getProgressStatus(index) {
     if (index === this.progressIndex) {
       return 'active';
     }
-    return index > this.progressIndex ? 'incomplete' : 'complete';
+    if (environment.production) {
+      return index > this.maxStep ? 'incomplete' : 'complete';
+    } else {
+      return index > this.progressIndex ? 'incomplete' : 'complete';
+    }
   }
 
   format(step) {
@@ -59,6 +67,9 @@ export class UploadComponent implements OnInit {
         this.progressIndex = 7;
       } else {
         this.progressIndex++;
+        if (this.progressIndex > this.maxStep) {
+          this.maxStep = this.progressIndex;
+        }
       }
       this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
     }
@@ -67,6 +78,13 @@ export class UploadComponent implements OnInit {
   previousStep() {
     this.progressIndex--;
     this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
+  }
+
+  navigateBreadcrumb(step: string, index: number) {
+    // prod environment check is used to facilitate dev debugging (developer won't need to navigate throubgh steps)
+    if (index <= this.maxStep || !environment.production) {
+      this.router.navigate([`/upload/${step}`]);
+    }
   }
 
 }
