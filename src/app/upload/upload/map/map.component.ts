@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Brick, BrickDimension, DimensionVariable, TypedProperty } from 'src/app/shared/models/brick';
+import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-map',
@@ -19,17 +20,28 @@ export class MapComponent implements OnInit, OnDestroy {
   loading = false;
   error = false;
   errorSub: Subscription;
+  properties: TypedProperty[];
+  modalRef: BsModalRef;
+
 
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
+    private modalService: BsModalService
     ) { }
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
+
+    this.properties = this.brick.properties.filter(prop => prop.require_mapping);
+
+    let dimCount = 0;
     this.brick.dimensions.forEach(dim => {
-      this.dimVars = [...this.dimVars, ...dim.variables];
+      dimCount += dim.variables.length;
+      this.dimVars = [...this.dimVars, ...dim.variables.filter(variable => {
+        return variable.require_mapping;
+      })];
     });
 
     this.errorSub = this.validator.getValidationErrors()
@@ -44,17 +56,23 @@ export class MapComponent implements OnInit, OnDestroy {
 
   testMap() {
     this.loading = true;
-    this.spinner.show();
+    this.dimVars.forEach((_, i) => {
+      this.spinner.show('d' + i);
+    });
+    this.properties.forEach((_, i) => {
+      this.spinner.show('p' + i);
+    });
+
     setTimeout(() => {
       this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
       this.dimVars.forEach((dimVar, idx) => {
         dimVar.totalCount = 100;
         switch(this.testArray[idx]) {
           case 1:
-            dimVar.mappedCount = 100;
+            dimVar.mappedCount = dimVar.totalCount;
             break;
           case 2:
-            dimVar.mappedCount = 95;
+            dimVar.mappedCount = dimVar.totalCount - 5;
             break;
           case 3:
             dimVar.mappedCount = 0;
@@ -63,13 +81,18 @@ export class MapComponent implements OnInit, OnDestroy {
             dimVar.mappedCount = 0;
         }
       });
-      this.brick.dataValues.forEach(dataValue => {
-        dataValue.totalCount = 100;
-        dataValue.mappedCount = Math.floor(Math.random() * 2) === 0 ? 100 : 0;
+      this.brick.properties.forEach(prop => {
+        prop.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
       });
       this.loading = false;
-      this.spinner.hide();
-      this.mapped = true;      
+      // this.spinner.hide();
+      this.dimVars.forEach((_, i) => {
+        this.spinner.hide('d' + i);
+      });
+      this.properties.forEach((_, i) => {
+        this.spinner.hide('p' + i);
+      })
+      this.mapped = true;
     }, 1000);
   }
 
@@ -77,7 +100,17 @@ export class MapComponent implements OnInit, OnDestroy {
     if (mapped === total) {
       return 'status-column-success';
     }
-    return mapped === 0 ? 'status-column-fail' : 'status-column-warn'
+    return mapped === 0 ? 'status-column-fail' : 'status-column-warn';
+  }
+
+  getPropValueDisplay(prop: TypedProperty) {
+    return prop.scalarType === 'oterm_ref'
+      ? (prop.value as Term).text
+      : prop.value;
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
   }
 
 }

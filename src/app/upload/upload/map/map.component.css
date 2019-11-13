@@ -35,3 +35,7 @@ td {
 .loading-container {
     height: 300px;
 }
+
+.error-property-value {
+    color: red;
+}

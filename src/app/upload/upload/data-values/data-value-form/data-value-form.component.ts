@@ -103,8 +103,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   updateType(event) {
     const type = event.data[0];
-    this.dataValue.type = new Term(type.id, type.text);
-    this.dataValue.microType = type.microtype;
+    this.dataValue.type = type;
     if (!type.has_units) {
       this.dataValue.units = null;
     } else {

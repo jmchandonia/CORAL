@@ -20,7 +20,9 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     this.typesSelect2 = prop.type ? [prop.type] : [];
     this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
-    this.valuesSelect2 = prop.value ? [prop.value] : [{id: '', text: ''}];
+    this.valuesSelect2 = prop.value && prop.scalarType === 'oterm_ref'
+      ? [prop.value] as Select2OptionData[]
+      : [{id: '', text: ''}];
 
     this._property = prop;
 
@@ -30,8 +32,8 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     if (prop.units) {
       this.unitsItem = prop.units.id;
     }
-    if (prop.value) {
-      this.propValueItem = prop.value.id;
+    if (prop.value && prop.scalarType === 'oterm_ref') {
+      this.propValueItem = (prop.value as Term).id;
     }
 
     if (this.property.microType) {
@@ -43,10 +45,10 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     return  this._property;
   }
 
-  get valueItem() {
-    return this.property.value ?
-      this.property.value.text : '';
-  }
+  // get valueItem() {
+  //   return this.property.value ?
+  //     this.property.value.text : '';
+  // }
 
   private _property: TypedProperty;
 
@@ -138,16 +140,17 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   setPropertyType(event) {
     const item = event.data[0];
-    this.property.type = new Term(item.id, item.text);
-    this.property.microType = item.microtype;
+    this.property.type = item;
+    // this.property.microType = item.microtype;
 
     // clear reset entire property object to clear other select 2 dropdowns
     if (this.property.value || this.property.units) {
       const resetProperty = new TypedProperty(
         this.property.index,
         this.property.required,
-        this.property.type,
-        this.property.microType
+        item
+        // this.property.type,
+        // this.property.microType
       );
       // emit new typed property to replace old one in parent component array reference
       this.typeReselected.emit(resetProperty);

@@ -17,4 +17,5 @@ button {
 
 .incomplete a {
     color: #aaa!important;
+    text-decoration: none!important;
 }
