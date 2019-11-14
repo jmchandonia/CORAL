@@ -4,6 +4,8 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { ContextBuilderComponent } from 'src/app/upload/upload/property-builder/property-form/context-builder/context-builder.component';
 
 @Component({
   selector: 'app-dimension-variable-form',
@@ -39,6 +41,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   selectedType: string;
   selectedUnits: string;
   error = false;
+  modalRef: BsModalRef;
   errorSub: Subscription;
 
   private _dimVar: DimensionVariable;
@@ -68,7 +71,8 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private uploadService: UploadService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -125,6 +129,13 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     if (this.error) {
       this.validator.validateDimensions();
     }
+  }
+
+  openModal() {
+    const initialState = {
+      context: this.dimVar.context
+    };
+    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
   }
 
 }
