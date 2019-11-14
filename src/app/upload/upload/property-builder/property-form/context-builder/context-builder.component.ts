@@ -13,7 +13,6 @@ export class ContextBuilderComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('THIS DOT CONTEXT', this.context);
   }
 
   addContext() {
