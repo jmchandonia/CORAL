@@ -30,7 +30,7 @@
     <app-context-form
       *ngFor="let item of context; let i = index"
       [context]="item"
-      (resetContext)="resetContext($event)"
+      (resetContext)="resetContext($event, i)"
       (deleted)="removeContext(i)"
       ></app-context-form>
   </div>
