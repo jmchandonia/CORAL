@@ -4,6 +4,8 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ContextBuilderComponent } from './context-builder/context-builder.component';
 // tslint:disable:variable-name
 
 @Component({
@@ -93,6 +95,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
    unitsSelect2: Array<Select2OptionData> = [{ id: '', text: '' }];
    valuesSelect2: Array<Select2OptionData> = [{ id: '', text: '' }];
 
+   modalRef: BsModalRef;
    errorSub = new Subscription();
    propTypeItem: string;
    propValueItem: string;
@@ -103,6 +106,8 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   constructor(
     private uploadService: UploadService,
     private validator: UploadValidationService,
+    private modalService: BsModalService
+
   ) { }
 
   ngOnInit() {
@@ -135,7 +140,14 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
           }
           this.unitsSelect2 = [...this.unitsSelect2, ...data.results];
         }
-      });
+    });
+  }
+
+  openContextModal() {
+    const initialState = {
+      context: this.property.context
+    };
+    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
   }
 
   setPropertyType(event) {

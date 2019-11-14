@@ -166,7 +166,7 @@ export class UploadService {
 
     //set context properties
     context.required = ctx.required;
-    context.property = new Term(ctx.property.id, ctx.property.text);
+    context.type = ctx.property;
     context.value = new Term(ctx.value.id, ctx.value.text);
     if (!this.valuelessUnits(ctx.units)) {
       context.units = new Term(ctx.units.id, ctx.units.text);
