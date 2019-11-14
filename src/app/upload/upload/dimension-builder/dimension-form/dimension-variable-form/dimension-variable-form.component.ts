@@ -86,10 +86,10 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setContextLabel(type: Term, context: Context) {
-    const label = type;
-    const { property, value, units } = context;
-    label.text += `, ${property.text}=${value.text}`;
+  setContextLabel(label: Term, context: Context) {
+    // const label = type;
+    const { type, value, units } = context;
+    label.text += `, ${type.text}=${value.text}`;
     if (units) {
       label.text += ` (${units.text})`;
     }

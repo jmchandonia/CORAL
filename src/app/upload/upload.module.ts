@@ -25,6 +25,8 @@ import { MapComponent } from './upload/map/map.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
+import { ContextBuilderComponent } from './upload/property-builder/property-form/context-builder/context-builder.component';
+import { ContextFormComponent } from './upload/property-builder/property-form/context-builder/context-form/context-form.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
     PreviewComponent,
     CreateComponent,
     MapComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    ContextBuilderComponent,
+    ContextFormComponent
   ],
   imports: [
     CommonModule,
@@ -55,6 +59,7 @@ import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
     FormsModule,
     BrowserAnimationsModule
   ],
-  providers: [UploadService]
+  providers: [UploadService],
+  bootstrap: [ContextBuilderComponent, ContextFormComponent]
 })
 export class UploadModule { }

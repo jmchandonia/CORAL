@@ -96,19 +96,31 @@ export class DataValue {
 export class Context {
     constructor(
         required?: boolean,
-        property?: Term,
+        type?: Term,
         value?: Term,
         units?: Term
     ) {
         this.required = required;
-        this.property = property;
+        if (type) {
+            this.type = type;
+        }
         this.value = value;
         this.units = units;
     }
     required: boolean;
-    property: Term;
+    // type: Term;
     value: Term;
     units: Term;
+    private _type: Term;
+    microType: any;
+    scalarType: string;
+
+    get type() { return this._type; }
+    set type(t: any) {
+        this._type = new Term(t.id, t.text, t.has_units);
+        this.microType = t.microtype;
+        this.scalarType = t.scalar_type;
+    }
 }
 
 export class BrickDimension {
