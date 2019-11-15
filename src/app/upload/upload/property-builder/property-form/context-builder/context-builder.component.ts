@@ -8,7 +8,7 @@ import { Context } from 'src/app/shared/models/brick';
 })
 export class ContextBuilderComponent implements OnInit {
 
-  private context: Context[];
+  public context: Context[];
 
   constructor() { }
 
