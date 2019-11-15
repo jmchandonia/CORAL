@@ -22,7 +22,7 @@
         <input
           *ngIf="context?.type && context.scalarType !== 'oterm_ref'"
           class="form-control"
-          [(ngModel)]="context.value ? context.value.text : context.value"
+          [(ngModel)]="context.value && context.value.text ? context.value.text : context.value"
           [ngModelOptions]="{standalone: true}"  
         >
         <div class="row justify-content-center no-units" *ngIf="!context?.type">
