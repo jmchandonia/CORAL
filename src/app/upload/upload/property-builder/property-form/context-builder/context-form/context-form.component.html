@@ -31,7 +31,7 @@
     </div>
     <div class="col-2">
         <select2
-          *ngIf="context.units !== null && context.type"
+          *ngIf="context.units && context.type"
           [cssImport]="true"
           [data]="unitsSelect2"
           [options]="unitsOptions"
@@ -39,7 +39,7 @@
           (valueChanged)="setUnits($event)"
           [ngClass]="errors && context.units === undefined ? 'select2-error' : ''" 
       ></select2>
-        <div class="row justify-content-center no-units" *ngIf="!context.type || context.units === null">
+        <div class="row justify-content-center no-units" *ngIf="!context.type || !context.units">
           <span>N/A</span>
         </div>
     </div>
