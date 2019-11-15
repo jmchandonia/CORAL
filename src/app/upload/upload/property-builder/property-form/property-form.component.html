@@ -1,5 +1,5 @@
-<div class="row mt-1">
-  <div class="col-6">
+<div class="row mt-2">
+  <div class="col-5">
     <select2
       [cssImport]="true"
       [data]="typesSelect2"
@@ -16,7 +16,13 @@
       (valueChanged)="setPropertyType($event)"
     ></app-async-dropdown> -->
   </div>
-  <div class="col-3">
+  <div class="col-2">
+      <button type="button" (click)="openContextModal()" class="btn btn-primary">
+        Edit Context&nbsp;
+        <span class="badge badge-light">{{property.context.length}}</span>
+      </button>
+    </div>
+  <div class="col-2">
       <select2
         *ngIf="property.type && property.scalarType === 'oterm_ref'"
         [cssImport]="true"

@@ -1,5 +1,5 @@
 <div class="row mt-4">
-  <div class="col-5">
+  <div class="col-4">
     <select2
       [cssImport]="true"
       [value]="typeValuesItem ? typeValuesItem : ''"
@@ -10,7 +10,18 @@
       [ngClass]="error && !dataValue.type ? 'select2-error' : ''"
     ></select2>
   </div>
-  <div class="col-5">
+  <div class="col-2">
+    <button
+      class="btn btn-primary"
+      (click)="openContextModal()"
+    >
+    Edit Context
+    <span class="badge badge-light">
+      {{dataValue.context.length}}
+    </span>
+  </button>
+  </div>
+  <div class="col-4">
     <select2
       *ngIf="dataValue.units !== null && dataValue.type"
       [cssImport]="true"
