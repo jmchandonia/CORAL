@@ -16,9 +16,9 @@
           ></select2>
       </div>
       <div class="col-2">
-        <button class="btn btn-primary" (click)="openModal()">
-          Edit Context
-          <span class="badge badge-light">{{dimVar.context.length}}</span>
+        <button type="button" (click)="openModal()" class="btn btn-context">
+          <span class="text">Edit Context&nbsp;</span>
+          <span class="badge">{{dimVar.context.length}}</span>
         </button>
       </div>
       <div class="col-4" *ngIf="dimVar.units !== null && dimVar.type">

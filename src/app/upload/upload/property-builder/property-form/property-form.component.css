@@ -1,3 +1,17 @@
 .error {
     border: 1px solid red;
 }
+
+.btn-context {
+    background-color: #e9ecef;
+    color: #007Bff;
+}
+
+.btn-context > span.text:hover {
+    text-decoration: underline;
+}
+
+.btn-context > span.badge {
+    background-color: white;
+    color: black;
+}
