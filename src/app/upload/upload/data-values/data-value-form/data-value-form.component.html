@@ -11,15 +11,10 @@
     ></select2>
   </div>
   <div class="col-2">
-    <button
-      class="btn btn-primary"
-      (click)="openContextModal()"
-    >
-    Edit Context
-    <span class="badge badge-light">
-      {{dataValue.context.length}}
-    </span>
-  </button>
+    <button type="button" (click)="openContextModal()" class="btn btn-context">
+      <span class="text">Edit Context&nbsp;</span>
+      <span class="badge">{{dataValue.context.length}}</span>
+    </button>
   </div>
   <div class="col-4">
     <select2
