@@ -4,6 +4,8 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ContextBuilderComponent } from 'src/app/upload/upload/property-builder/property-form/context-builder/context-builder.component';
 
 @Component({
   selector: 'app-data-value-form',
@@ -45,6 +47,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   unitsItem: string;
   error = false;
   errorSub: Subscription;
+  modalRef: BsModalRef;
 
    unitsOptions: Select2Options = {
     width: '100%',
@@ -68,7 +71,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private uploadService: UploadService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -132,6 +136,13 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     if (this.error) {
       this.validator.validateDataVariables();
     }
+  }
+
+  openContextModal() {
+    const initialState = {
+      context: this.dataValue.context
+    };
+    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
   }
 
 }
