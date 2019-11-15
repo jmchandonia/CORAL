@@ -12,7 +12,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { isEqual } from 'lodash';
 @Injectable({
   providedIn: 'root'
 })
@@ -166,7 +166,7 @@ export class UploadService {
 
     //set context properties
     context.required = ctx.required;
-    context.property = new Term(ctx.property.id, ctx.property.text);
+    context.type = ctx.property;
     context.value = new Term(ctx.value.id, ctx.value.text);
     if (!this.valuelessUnits(ctx.units)) {
       context.units = new Term(ctx.units.id, ctx.units.text);
@@ -176,7 +176,7 @@ export class UploadService {
 
   valuelessUnits(units) {
     // helper method to find empty term objects
-    return _.isEqual(units, {id: '', text: ''});
+    return isEqual(units, {id: '', text: ''});
   }
 
   public searchOntTerms(term) {

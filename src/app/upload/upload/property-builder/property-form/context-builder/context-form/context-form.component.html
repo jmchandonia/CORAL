@@ -1,0 +1,50 @@
+<div class="row mt-2" *ngIf="context">
+    <div class="col-6">
+      <select2
+        [cssImport]="true"
+        [data]="typesSelect2"
+        [options]="typesOptions"
+        [disabled]="context.required"
+        [value]="typeItem ? typeItem : ''"
+        (valueChanged)="setContextType($event)"
+      ></select2>
+    </div>
+    <div class="col-3">
+        <select2
+          *ngIf="context.type && context.scalarType === 'oterm_ref'"
+          [cssImport]="true"
+          [data]="valuesSelect2"
+          [options]="valuesOptions"
+          [value]="valueItem ? propValueItem : ''"
+          [ngClass]="{'select2-error' : errors && !context.value}"
+          (valueChanged)="setValue($event)"
+        ></select2>
+        <input
+          *ngIf="context?.type && context.scalarType !== 'oterm_ref'"
+          class="form-control"
+          [(ngModel)]="context.value && context.value.text ? context.value.text : context.value"
+          [ngModelOptions]="{standalone: true}"  
+        >
+        <div class="row justify-content-center no-units" *ngIf="!context?.type">
+          <span>N/A</span>
+        </div>
+    </div>
+    <div class="col-2">
+        <select2
+          *ngIf="context.units && context.type"
+          [cssImport]="true"
+          [data]="unitsSelect2"
+          [options]="unitsOptions"
+          [value]="unitsItem ? unitsItem : ''"
+          (valueChanged)="setUnits($event)"
+          [ngClass]="errors && context.units === undefined ? 'select2-error' : ''" 
+      ></select2>
+        <div class="row justify-content-center no-units" *ngIf="!context.type || !context.units">
+          <span>N/A</span>
+        </div>
+    </div>
+    <div class="col-1">
+      <button *ngIf="!context.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
+    </div>
+  </div>
+  

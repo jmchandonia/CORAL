@@ -5,7 +5,6 @@ import { ObjectMetadata } from '../../shared/models/object-metadata';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { Select2OptionData } from 'ng2-select2';
 import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
-import * as _ from 'lodash';
 
 @Component({
   selector: 'app-plot-options',
@@ -113,7 +112,6 @@ export class PlotOptionsComponent implements OnInit {
   }
 
     test() {
-      console.assert(_.isEqual(this.plotBuilder, this.plotService.plotBuilder));
     }
 
     getPlotTypes() {
