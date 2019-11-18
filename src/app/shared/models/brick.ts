@@ -80,14 +80,16 @@ export class DataValue {
     units: Term;
     valuesSample: string;
     context: Context[] = [];
-    totalCount: number;
+    totalCount = 1;
     mappedCount: number;
+    require_mapping: boolean;
 
     private _type: Term;
 
     set type(t: any) {
         this._type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
+        this.require_mapping = t.require_mapping;
     }
 
     get type() { return this._type; }
