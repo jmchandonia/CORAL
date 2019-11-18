@@ -49,8 +49,8 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
 
   typeOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
+    width: 'calc(100% - 38px)',
+    containerCssClass: 'select2-custom-container select2-custom-properties-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
       if (!term || term.length < 3) {
