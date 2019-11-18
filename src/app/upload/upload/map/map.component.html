@@ -35,7 +35,11 @@
                                 = {{dataVar.context[0].value.text}}
                         </span>
                       </span>
-                      <i class="material-icons mapping-icon" *ngIf="dataVar.require_mapping">
+                      <i
+                        class="material-icons mapping-icon"
+                        *ngIf="dataVar.require_mapping"
+                        tooltip="This type of Data Variable requires mapping with core objects in our system."
+                        >
                         assignment_late
                       </i>
                     </td>
@@ -90,7 +94,11 @@
                   <tr *ngFor="let dimVar of dimVars; let i = index">
                     <td [class.error-text]="mapped && dimVar.totalCount !== dimVar.mappedCount">
                       {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
-                      <i class="material-icons mapping-icon" *ngIf="dimVar.require_mapping">
+                      <i
+                        class="material-icons mapping-icon"
+                        *ngIf="dimVar.require_mapping"
+                        tooltip="This type of Dimension Variable requires mapping with core objects in our system."
+                        >
                           assignment_late
                         </i>
                     </td>
@@ -153,7 +161,11 @@
                            ({{property.context[0].units.text}})
                         </span>
                       </span>
-                      <i class="material-icons mapping-icon" *ngIf="property.require_mapping">
+                      <i
+                        class="material-icons mapping-icon"
+                        *ngIf="property.require_mapping"
+                        tooltip="This type of property requires mapping with core objects in our system."
+                        >
                           assignment_late
                         </i>
                     </td>

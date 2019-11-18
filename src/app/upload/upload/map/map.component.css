@@ -47,3 +47,8 @@ td {
     left: 6px;
     cursor: pointer;
 }
+
+
+.tooltip {
+    opacity: 100;
+}
