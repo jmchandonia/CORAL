@@ -1,5 +1,5 @@
 <div class="row mt-2">
-  <div class="col-5">
+  <div class="col-6">
     <select2
       [cssImport]="true"
       [data]="typesSelect2"
@@ -9,6 +9,17 @@
       (valueChanged)="setPropertyType($event)"
       [ngClass]="errors && !property.type ? 'select2-error' : ''"
     ></select2>
+    <button
+      class="btn select2-custom-button"
+      (click)="openContextModal()"
+      [tooltip]="'View Property context (' + property.context.length + ' items)'"
+      [delay]="750"
+      [class.button-error]="errors && !property.type"
+      >
+      <i class="material-icons select2-custom-button-icon">
+        more_vert
+      </i>
+    </button>
     <!-- <app-async-dropdown
       [term]="property.type"
       [required]="property.required"
@@ -16,13 +27,7 @@
       (valueChanged)="setPropertyType($event)"
     ></app-async-dropdown> -->
   </div>
-  <div class="col-2">
-      <button type="button" (click)="openContextModal()" class="btn btn-context">
-        <span class="text">Edit Context&nbsp;</span>
-        <span class="badge">{{property.context.length}}</span>
-      </button>
-    </div>
-  <div class="col-2">
+  <div class="col-3">
       <select2
         *ngIf="property.type && property.scalarType === 'oterm_ref'"
         [cssImport]="true"

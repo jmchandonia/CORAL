@@ -4,7 +4,7 @@
       <div class="col-1">
         <span class="badge badge-pill badge-primary mt-2">{{dimVar.index + 1}}</span>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <select2
           [cssImport]="true"
           [options]="typeOptions"
@@ -14,14 +14,18 @@
           [disabled]="dimVar.required"
           [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
           ></select2>
-      </div>
-      <div class="col-2">
-        <button type="button" (click)="openModal()" class="btn btn-context">
-          <span class="text">Edit Context&nbsp;</span>
-          <span class="badge">{{dimVar.context.length}}</span>
+        <button
+          class="btn select2-custom-button"
+          (click)="openModal()"
+          [class.button-error]="error && !dimVar.type"
+          [tooltip]="'Click to view Dimension Variable context (' + dimVar.context.length + ' items)'"
+          [delay]="750">
+          <i class="material-icons select2-custom-button-icon">
+            more_vert
+          </i>
         </button>
       </div>
-      <div class="col-4" *ngIf="dimVar.units !== null && dimVar.type">
+      <div class="col-5" *ngIf="dimVar.units !== null && dimVar.type">
         <select2
           [cssImport]="true"
           [options]="unitsOptions"
@@ -31,7 +35,7 @@
           [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
         ></select2>
       </div>
-      <div class="col-4" *ngIf="dimVar.units === null || !dimVar.type">
+      <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
         <div class="row justify-content-center no-units">
           <span>N/A</span>
         </div>
