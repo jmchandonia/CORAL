@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { UploadModule } from './upload/upload.module';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -38,7 +39,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     PlotlyModule,
     FormsModule,
     UploadModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   providers: [
     {
