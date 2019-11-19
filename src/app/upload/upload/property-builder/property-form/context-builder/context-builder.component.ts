@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Context } from 'src/app/shared/models/brick';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-context-builder',
@@ -9,8 +10,11 @@ import { Context } from 'src/app/shared/models/brick';
 export class ContextBuilderComponent implements OnInit {
 
   public context: Context[];
+  public title: string;
 
-  constructor() { }
+  constructor(
+    public modalRef: BsModalRef
+  ) { }
 
   ngOnInit() {
   }

@@ -1,5 +1,5 @@
 <div class="row mt-2" *ngIf="context">
-    <div class="col-6">
+    <div class="col-4">
       <select2
         [cssImport]="true"
         [data]="typesSelect2"
@@ -29,7 +29,7 @@
           <span>N/A</span>
         </div>
     </div>
-    <div class="col-2">
+    <div class="col-3">
         <select2
           *ngIf="context.units && context.type"
           [cssImport]="true"
@@ -43,7 +43,7 @@
           <span>N/A</span>
         </div>
     </div>
-    <div class="col-1">
+    <div class="col-2" style="text-align: center;">
       <button *ngIf="!context.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
     </div>
   </div>
