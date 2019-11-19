@@ -150,7 +150,8 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   openContextModal() {
     const initialState = {
-      context: this.property.context
+      context: this.property.context,
+      title: this.property.type.text
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
     this.modalHiddenSub = this.modalService.onHidden

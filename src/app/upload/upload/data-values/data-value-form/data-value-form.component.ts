@@ -147,7 +147,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   openContextModal() {
     const initialState = {
-      context: this.dataValue.context
+      context: this.dataValue.context,
+      title: this.dataValue.type.text
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
     const modalSub = this.modalService.onHidden.subscribe(() => {
