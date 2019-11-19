@@ -26,6 +26,7 @@
               <app-data-value-form
                 *ngIf="!dataValue.hidden"
                 (removed)="removeDataValue(dataValue.index)"
+                (reset)="resetDataValue($event, dataValue.index)"
                 [dataValue]="dataValue"
                 ></app-data-value-form>
             </ng-container>
