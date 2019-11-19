@@ -19,7 +19,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     this._dimVar = d;
     if (d.type) {
       if (d.context.length) {
-        this.typeData = [this.setContextLabel(d.type, d.context[0])];
+        this.typeData = [this.setContextLabel(d.type, d.context)];
       } else {
         this.typeData = [d.type];
       }
@@ -47,6 +47,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   private _dimVar: DimensionVariable;
 
   @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
+  @Output() reset: EventEmitter<DimensionVariable> = new EventEmitter();
 
   typeOptions: Select2Options = {
     width: 'calc(100% - 38px)',
@@ -90,13 +91,15 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setContextLabel(label: Term, context: Context) {
-    // const label = type;
-    const { type, value, units } = context;
-    label.text += `, ${type.text}=${value.text}`;
-    if (units) {
-      label.text += ` (${units.text})`;
-    }
+  setContextLabel(dimVarType: Term, context: Context[]): Select2OptionData {
+    const label: Select2OptionData = Object.assign({}, dimVarType);
+    context.forEach(ctx => {
+      const { type, value, units } = ctx;
+      label.text += `, ${type.text}=${value.text ? value.text : value}`;
+      if (units) {
+        label.text += ` (${units.text})`;
+      }
+    });
     return label;
   }
 
@@ -136,6 +139,14 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
       context: this.dimVar.context
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    const modalSub = this.modalService.onHidden.subscribe(() => {
+      const newDimVar = Object.assign(
+        new DimensionVariable(this.dimVar.dimension, this.dimVar.index, this.dimVar.required),
+        this.dimVar
+      ) as DimensionVariable;
+      this.reset.emit(newDimVar);
+      modalSub.unsubscribe();
+    });
   }
 
 }

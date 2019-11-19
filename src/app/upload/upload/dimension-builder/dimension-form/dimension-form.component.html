@@ -50,6 +50,7 @@
     <ng-container *ngFor="let dimVar of dimension.variables">
         <app-dimension-variable-form
           (deleted)="removeDimensionVariable($event)"
+          (reset)="resetDimensionVariable($event, dimVar.index)"
           *ngIf="!dimVar.hidden"
           [dimVar]="dimVar"
         ></app-dimension-variable-form>
