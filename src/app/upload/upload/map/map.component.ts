@@ -60,14 +60,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.uploadService.getValidationResults()
       .subscribe((data: any) => {
-        console.log('DATA', data);
         this.dimVars.forEach((_, i) => { this.spinner.hide('d' + i); });
         this.dataVars.forEach((_, i) => { this.spinner.hide('v' + i); });
         const { data_vars, dims } = data.results;
 
         // assign counts to data vars
         data_vars.forEach((dv, i) => {
-          const brickDv = this.brick.dataValues[i];
+          const brickDv: DataValue = this.brick.dataValues[i];
           brickDv.validCount = dv.valid_count;
           brickDv.invalidCount = dv.invalid_count;
           brickDv.totalCount = dv.total_count;
@@ -75,7 +74,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
         // assign counts to dim vars
         dims.forEach((dim, i) => {
-          const brickDim = this.brick.dimensions[i];
+          const brickDim: BrickDimension = this.brick.dimensions[i];
           dim.dim_vars.forEach((dv, j) => {
             const brickDimVar = brickDim.variables[j];
             brickDimVar.validCount = dv.valid_count;
