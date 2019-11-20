@@ -37,6 +37,14 @@ _BRICK_FILE_PREFIX = 'brick_'
 _TEMPATE_FILE_PREFIX = 'template_'
 
 
+_UPLOAD_TEMPLAT_PREFIX = 'utp_'
+_UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
+_UPLOAD_DATA_FILE_PREFIX = 'udf_'
+_UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
+_UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
+_UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
+
+
 @app.route("/")
 def hello():
     return "Welcome!"
