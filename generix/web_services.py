@@ -32,8 +32,6 @@ _PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
 _CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
 _PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
 
-_BRICK_DATA_FILE_PREFIX = 'brick_data_'
-
 _UPLOAD_TEMPLAT_PREFIX = 'utp_'
 _UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
 _UPLOAD_DATA_FILE_PREFIX = 'udf_'
@@ -355,12 +353,11 @@ def create_brick():
             'error': ''
     } )
 
-111
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
     query = request.json
     data_id = query['data_id']
-    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX 
+    file_name = os.path.join(TMP_DIR,_UPLOAD_PROCESSED_DATA_PREFIX 
         + data_id)
     data = json.loads(open(file_name).read())
 
@@ -401,7 +398,7 @@ def upload_file():
     # Save file
     f = request.files['files']
     data_id = uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX 
+    file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_FILE_PREFIX 
         + data_id + '_' + f.filename)
     f.save( file_name )
 
