@@ -387,7 +387,7 @@ def validate_upload():
             })
 
         return _ok_response(res) 
-        
+
     except Exception as e:
         return _err_response(e)
 
@@ -1182,23 +1182,33 @@ def generix_core_type_metadata(obj_id):
     
 @app.route('/generix/generate_brick_template', methods=['POST'])
 def generate_brick_template():
-    brick = json.loads(request.form['brick'])
-    data_id = uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLAT_PREFIX + data_id)
+    try:
+        data_id = uuid.uuid4().hex
 
-    dim_count = len(brick['dimensions'])
-    data_var_count = len(brick['dataValues'])
+        brick = json.loads(request.form['brick'])
 
-    if dim_count == 1:
-        template.generate_brick_1dm_template(brick, file_name)
-    elif dim_count == 2:
-        if data_var_count == 1:
-            template.generate_brick_2d_template(brick, file_name)
+        # Save birck data structure
+        uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        with open(uds_file_name, 'w') as f:
+            json.dump(brick_ds, f, sort_keys=True, indent=4)
 
-    return send_file(file_name, 
-        as_attachment=True,
-        attachment_filename='data_template.xlsx',
-        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        utp_file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLAT_PREFIX + data_id)
+
+        dim_count = len(brick['dimensions'])
+        data_var_count = len(brick['dataValues'])
+
+        if dim_count == 1:
+            template.generate_brick_1dm_template(brick, utp_file_name)
+        elif dim_count == 2:
+            if data_var_count == 1:
+                template.generate_brick_2d_template(brick, utp_file_name)
+
+        return send_file(utp_file_name, 
+            as_attachment=True,
+            attachment_filename='data_template.xlsx',
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    except Exception as e:
+        return _err_response(r)
 
 def _ok_response(res):
     return  json.dumps( {
