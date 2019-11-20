@@ -110,24 +110,6 @@ export class UploadValidationService {
       this.errorSub.next(true);
       return true;
     }
-
-     // iterate through every dimension including template dimensions
-    for (const dimension of this.brick.dimensions) {
-      for (const variable of dimension.variables) {
-        // if there is no values sample then the brick was not uploaded correctly or at all
-        if (!variable.valuesSample) {
-          this.errorSub.next(true);
-          return true;
-        }
-      }
-    }
-    for (const value of this.brick.dataValues) {
-      // check if datavalues each have a values sample
-      if (!value.valuesSample) {
-        this.errorSub.next(true);
-        return true;
-      }
-    }
     this.errorSub.next(false);
     return false;
    }
