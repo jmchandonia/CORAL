@@ -351,46 +351,51 @@ def create_brick():
 
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
-    query = request.json
-    data_id = query['data_id']
-    file_name = os.path.join(TMP_DIR,_UPLOAD_PROCESSED_DATA_PREFIX 
-        + data_id)
-    data = json.loads(open(file_name).read())
+    try:
+        query = request.json
+        data_id = query['data_id']
+        file_name = os.path.join(TMP_DIR,_UPLOAD_PROCESSED_DATA_PREFIX 
+            + data_id)
+        data = json.loads(open(file_name).read())
 
-    res = {
-        'dims':[],
-        'data_vars': []
-    }
+        res = {
+            'dims':[],
+            'data_vars': []
+        }
 
-    for dim in data['dims']:
-        res_dim_vars = []
-        res['dims'].append({
-            'dim_vars': res_dim_vars
-        })
-        for dim_var in dim['dim_vars']:
-            size = len(dim_var['values'])
-            res_dim_vars.append({
+        for dim in data['dims']:
+            res_dim_vars = []
+            res['dims'].append({
+                'dim_vars': res_dim_vars
+            })
+            for dim_var in dim['dim_vars']:
+                size = len(dim_var['values'])
+                res_dim_vars.append({
+                    'total_count': size,
+                    'valid_count': size,
+                    'invalid_count': 0
+                })
+
+        for data_var in data['data_vars']:
+            size = 1
+            for dim_size in np.array(data_var['values']).shape:
+                size *= dim_size 
+            res['data_vars'].append({
                 'total_count': size,
                 'valid_count': size,
                 'invalid_count': 0
             })
 
-    for data_var in data['data_vars']:
-        size = 1
-        for dim_size in np.array(data_var['values']).shape:
-            size *= dim_size 
-        res['data_vars'].append({
-            'total_count': size,
-            'valid_count': size,
-            'invalid_count': 0
-        })
+        return _ok_response(res) 
+        
+    except Exception as e:
+        return _err_response(e)
 
 
 
 @app.route('/generix/upload', methods=['POST'])
 def upload_file():
     try:
-
         data_id = uuid.uuid4().hex
 
         brick_ds = json.loads(request.form['brick'])
