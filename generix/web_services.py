@@ -3,6 +3,7 @@ from flask import Response
 from flask import request
 from flask_cors import CORS
 import pandas as pd
+import numpy as np
 import re
 import random 
 from simplepam import authenticate
@@ -349,6 +350,42 @@ def create_brick():
             'error': ''
     } )
 
+111
+@app.route('/generix/validate_upload', methods=['POST'])
+def validate_upload():
+    query = request.json
+    data_id = query['data_id']
+    file_name = os.path.join(TMP_DIR,_BRICK_DATA_FILE_PREFIX 
+        + data_id)
+    data = json.loads(open(file_name).read())
+
+    res = {
+        'dims':[],
+        'data_vars': []
+    }
+
+    for dim in data['dims']:
+        res_dim_vars = []
+        res['dims'].append({
+            'dim_vars': res_dim_vars
+        })
+        for dim_var in dim['dim_vars']:
+            size = len(dim_var['values'])
+            res_dim_vars.append({
+                'total_count': size,
+                'valid_count': size,
+                'invalid_count': 0
+            })
+
+    for data_var in data['data_vars']:
+        size = 1
+        for dim_size in np.array(data_var['values']).shape:
+            size *= dim_size 
+        res['data_vars'].append({
+            'total_count': size,
+            'valid_count': size,
+            'invalid_count': 0
+        })
 
 
 
@@ -1237,4 +1274,6 @@ if __name__ == "__main__":
             ssl_context = (cns['_WEB_SERVICE']['cert_pem'], cns['_WEB_SERVICE']['key_pem']) )
     else:
         app.run(host='0.0.0.0', port=port)
+
+
 
