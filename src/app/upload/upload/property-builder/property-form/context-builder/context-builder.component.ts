@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Context } from 'src/app/shared/models/brick';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
 @Component({
   selector: 'app-context-builder',
@@ -11,9 +12,11 @@ export class ContextBuilderComponent implements OnInit {
 
   public context: Context[];
   public title: string;
+  error = false;
 
   constructor(
-    public modalRef: BsModalRef
+    public modalRef: BsModalRef,
+    private validator: UploadValidationService
   ) { }
 
   ngOnInit() {
@@ -29,6 +32,15 @@ export class ContextBuilderComponent implements OnInit {
 
   resetContext(event: Context, index: number) {
     this.context.splice(index, 1, event);
+  }
+
+  onClose() {
+    const error = this.validator.validateContext(this.context);
+    if (error) {
+      this.error = true;
+    } else {
+      this.modalRef.hide();
+    }
   }
 
 }

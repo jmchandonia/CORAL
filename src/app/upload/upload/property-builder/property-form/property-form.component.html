@@ -41,7 +41,8 @@
         *ngIf="property.type && property.scalarType !== 'oterm_ref'"
         class="form-control"
         [(ngModel)]="property.value"
-        [ngModelOptions]="{standalone: true}"  
+        [ngModelOptions]="{standalone: true}" 
+        [ngClass]="{'button-error' : errors && !property.value}" 
       >
       <div class="row justify-content-center no-units" *ngIf="!property.type">
         <span>N/A</span>
