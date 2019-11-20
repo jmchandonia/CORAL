@@ -4,7 +4,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ContextBuilderComponent } from 'src/app/upload/upload/property-builder/property-form/context-builder/context-builder.component';
 
 @Component({
@@ -20,7 +20,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
     if (d.type) {
       if (d.context && d.context.length) {
-        this.typeValues = [this.setContextLabel(d.type, d.context[0])];
+        this.typeValues = [this.setContextLabel(d.type, d.context)];
       } else {
         this.typeValues = [d.type];
       }
@@ -31,11 +31,16 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
       this.unitsValues = [d.units];
       this.unitsItem = d.units.id;
     }
+
+    if (d.microType) {
+      this.getUnits();
+    }
   }
 
   get dataValue() { return this._dataValue; }
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
+  @Output() reset: EventEmitter<any> = new EventEmitter();
 
   // tslint:disable-next-line:variable-name
   private _dataValue: DataValue;
@@ -55,8 +60,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
    };
 
    typesOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
+    width: 'calc(100% - 38px)',
+    containerCssClass: 'select2-custom-container select2-custom-properties-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
       if (!term || term.length < 3) {
@@ -90,13 +95,15 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setContextLabel(dataType: Term, context: Context) {
+  setContextLabel(dataType: Term, context: Context[]) {
     const label: Select2OptionData = Object.assign({}, dataType);
-    const { type, value, units } = context;
-    label.text += `, ${type.text}=${value.text}`;
-    if (units) {
-      label.text += ` (${units.text})`;
-    }
+    context.forEach(ctx => {
+      const { type, value, units } = ctx;
+      label.text += `, ${type.text}=${value.text ? value.text : value}`;
+      if (units) {
+        label.text += ` (${units.text})`;
+      }
+    });
     return label;
   }
 
@@ -120,7 +127,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   getUnits() {
     this.uploadService.searchOntPropertyUnits(this.dataValue.microType)
       .subscribe(data => {
-        this.unitsValues = [{id: '', text: ''}, ...data.results];
+        this.unitsValues = [this.unitsValues[0], ...data.results];
       });
   }
 
@@ -139,10 +146,22 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   openContextModal() {
-    const initialState = {
-      context: this.dataValue.context
+    const config = {
+      initialState: {
+        context: this.dataValue.context,
+        title: this.dataValue.type.text
+      },
+      class: 'modal-lg',
+      ignoreBackdropClick: true
     };
-    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    this.modalRef = this.modalService.show(ContextBuilderComponent, config);
+    const modalSub = this.modalService.onHidden.subscribe(() => {
+      const newDataVar = Object.assign(
+        new DataValue(this.dataValue.index, this.dataValue.required), this.dataValue
+        ) as DataValue;
+      this.reset.emit(newDataVar);
+      modalSub.unsubscribe();
+    });
   }
 
 }

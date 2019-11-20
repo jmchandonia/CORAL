@@ -36,12 +36,13 @@ export class SearchResultItemComponent implements OnInit {
   }
 
   openModal(dimension: any, index: number) {
-    const initialState = {
-      title: dimension.data_type.oterm_name,
-      id: this.objectId,
-      index
-    }
-    this.modalRef = this.modalService.show(DimVarPreview, {initialState, class: 'modal-lg'});
+    this.qb.getDimensionVariableValues(this.objectId, index)
+      .subscribe((res: any) => {
+        const initialState = {
+          data: res.results
+        };
+        this.modalRef = this.modalService.show(DimVarPreview, {initialState, class: 'modal-lg'});
+      });
   }
 
   useForPlot() {

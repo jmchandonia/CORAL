@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Brick, TypedProperty, BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick'; 
+import { Brick, TypedProperty, BrickDimension, DimensionVariable, Term, Context } from 'src/app/shared/models/brick'; 
 import { UploadService } from './upload.service';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class UploadValidationService {
 
   // subsject that emits if errors are true
   private errorSub: Subject<boolean> = new Subject();
+  private contextErrorSub: Subject<any> = new Subject();
 
   // brick builder from upload service
   brick: Brick;
@@ -41,6 +42,11 @@ export class UploadValidationService {
    getValidationErrors() {
      // components subscribe to this method to display errors if there are any
      return this.errorSub.asObservable();
+   }
+
+   getContextValidationErrors() {
+     // context modals subscribe to a sepaarate subject in order to not conflict with other errors
+     return this.contextErrorSub.asObservable();
    }
 
    validateDataType() {
@@ -143,6 +149,16 @@ export class UploadValidationService {
        // if the mapped count does not match the total count then user needs to fix values
        if (dataValue.mappedCount !== dataValue.totalCount) {
          this.errorSub.next(true);
+         return true;
+       }
+     }
+     return false;
+   }
+
+   validateContext(context: Context[]) {
+     for (const ctx of context) {
+       if (!ctx.type || !ctx.value || ctx.units === undefined) {
+         this.contextErrorSub.next(true);
          return true;
        }
      }

@@ -100,12 +100,17 @@ body {
     background-color: #eeeeff;
 }
 
+
 .select2-custom-container {
     height: 38px!important;
     border: 1px solid #ced4da!important;
 }
 
 .select2-error .select2-custom-container {
+    border: 1px solid red!important;
+}
+
+.button-error {
     border: 1px solid red!important;
 }
 
@@ -123,10 +128,36 @@ body {
     border-bottom-right-radius: 4px!important;
 }
 
+.select2-custom-properties-container .select2-selection__arrow {
+    border-top-right-radius: 0px!important;
+    border-bottom-right-radius: 0px!important;
+}
+
 .select2-error .select2-custom-container .select2-selection__arrow {
     border: 1px solid red!important;
     border-right: 0px!important;
 }
+
+.select2-custom-button {
+    height: 38px;
+    width: 38px;
+    margin: 0!important;
+    background-color: #EEEEFF;
+    color: #888;
+    border-top-left-radius: 0px!important;
+    border-bottom-left-radius: 0px!important;
+    border: 1px solid #CED4DA;
+    border-left: none;
+    padding: 0px!important;
+    padding-top: 5px;
+}
+
+.select2-custom-button-icon {
+    margin: 0px auto;
+    margin-top: 6px;
+}
+
+
 
 
 

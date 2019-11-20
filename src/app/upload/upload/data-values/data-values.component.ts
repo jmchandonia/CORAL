@@ -43,4 +43,8 @@ export class DataValuesComponent implements OnInit, OnDestroy {
     this.brick.resetDataValueIndices();
   }
 
+  resetDataValue(event: DataValue, index: number) {
+    this.dataValues.splice(index, 1, event);
+  }
+
 }

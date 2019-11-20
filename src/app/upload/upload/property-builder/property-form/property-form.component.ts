@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
-import { TypedProperty, Term } from 'src/app/shared/models/brick';
+import { TypedProperty, Term, Context } from 'src/app/shared/models/brick';
 import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
@@ -19,8 +19,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   @Output() deleted = new EventEmitter();
   @Output() typeReselected: EventEmitter<TypedProperty> = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
-
-    this.typesSelect2 = prop.type ? [prop.type] : [];
+    // this.typesSelect2 = prop.type ? [prop.type] : [];
     this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
     this.valuesSelect2 = prop.value && prop.scalarType === 'oterm_ref'
       ? [prop.value] as Select2OptionData[]
@@ -29,6 +28,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     this._property = prop;
 
     if (prop.type) {
+      const typeWithContext = Object.assign({}, prop.type);
+      prop.context.forEach(ctx => {
+        typeWithContext.text += `, ${ctx.type.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
+      });
+      this.typesSelect2 = [typeWithContext];
       this.propTypeItem = prop.type.id;
     }
     if (prop.units) {
@@ -52,11 +56,12 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   //     this.property.value.text : '';
   // }
 
+
   private _property: TypedProperty;
 
   propertiesOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
+    width: 'calc(100% - 38px)',
+    containerCssClass: 'select2-custom-container select2-custom-properties-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
       if (!term || term.length < 3) {
@@ -97,6 +102,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
    modalRef: BsModalRef;
    errorSub = new Subscription();
+   modalHiddenSub = new Subscription();
    propTypeItem: string;
    propValueItem: string;
    unitsItem: string;
@@ -106,8 +112,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   constructor(
     private uploadService: UploadService,
     private validator: UploadValidationService,
-    private modalService: BsModalService
-
+    private modalService: BsModalService,
   ) { }
 
   ngOnInit() {
@@ -144,10 +149,31 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   }
 
   openContextModal() {
-    const initialState = {
-      context: this.property.context
+    const config = {
+      initialState: {
+        context: this.property.context,
+        title: this.property.type.text
+      },
+      class: 'modal-lg',
+      ignoreBackdropClick: true
     };
-    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    this.modalRef = this.modalService.show(ContextBuilderComponent, config);
+    this.modalHiddenSub = this.modalService.onHidden
+    .subscribe(() => {
+      /*
+      The following code will allow the preselected value in the types select2 component to be updated with
+      a new string value containing the context. the only way this can be easily accomplished is to remove
+      the entire typed property, splice in a new one with the same properties, and trigger the input setters.
+      This appears to be the simplest way to programmatically change the selected text in an ng2-select2
+      component without going into the internals.
+      */
+      const { type, index, required }  = this.property;
+      const newProperty = Object.assign(
+        new TypedProperty(index, required, type), this.property
+        ) as TypedProperty;
+      this.typeReselected.emit(newProperty);
+      this.modalHiddenSub.unsubscribe();
+    });
   }
 
   setPropertyType(event) {

@@ -1,14 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Context, Term } from 'src/app/shared/models/brick';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Select2OptionData } from 'ng2-select2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-context-form',
   templateUrl: './context-form.component.html',
   styleUrls: ['./context-form.component.css']
 })
-export class ContextFormComponent implements OnInit {
+export class ContextFormComponent implements OnInit, OnDestroy {
 
 
   private _context: Context;
@@ -34,6 +36,25 @@ export class ContextFormComponent implements OnInit {
 
     if (this.context.microType) {
       this.getUnits();
+    } else {
+      if (this.context.type) {
+        // this code should be removed in the future as template context microtypes shoud ideally be provided in the JSON file
+        // it is here to prevent fields from not being able to load units
+        this.uploadService.searchPropertyMicroTypes(this.context.type.text)
+          .subscribe((data: any) => {
+
+            // get results from API call and find microtype from there
+            const typeData = data.results.find(item => item.id === this.context.type.id);
+
+            // if we still cant find the microtype after the API call, set the units to null
+            if (!typeData) {
+              this.context.units = null as Term;
+            } else {
+              this.context.microType = typeData.microtype;
+              this.getUnits();
+            }
+          });
+      }
     }
   }
 
@@ -41,6 +62,7 @@ export class ContextFormComponent implements OnInit {
 
   @Output() resetContext: EventEmitter<Context> = new EventEmitter();
   @Output() deleted: EventEmitter<any> = new EventEmitter();
+  errorSub: Subscription;
 
   typesOptions: Select2Options = {
     width: '100%',
@@ -85,12 +107,22 @@ export class ContextFormComponent implements OnInit {
   typeItem: string;
   unitsItem: string;
   valueItem: string;
+  error = false;
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private validator: UploadValidationService
   ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getContextValidationErrors()
+      .subscribe(error => this.error = error);
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   getUnits() {

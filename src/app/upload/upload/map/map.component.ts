@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term } from 'src/app/shared/models/brick';
+import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term, DataValue } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
@@ -15,12 +15,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
   brick: Brick;
   dimVars: DimensionVariable[] = [];
+  properties: TypedProperty[];
+  dataVars: DataValue[];
   testArray = [];
   mapped = false;
   loading = false;
   error = false;
   errorSub: Subscription;
-  properties: TypedProperty[];
   modalRef: BsModalRef;
 
 
@@ -33,15 +34,13 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
-
-    this.properties = this.brick.properties.filter(prop => prop.require_mapping);
+    this.dataVars = this.brick.dataValues;
+    this.properties = this.brick.properties;
 
     let dimCount = 0;
     this.brick.dimensions.forEach(dim => {
       dimCount += dim.variables.length;
-      this.dimVars = [...this.dimVars, ...dim.variables.filter(variable => {
-        return variable.require_mapping;
-      })];
+      this.dimVars = [...this.dimVars, ...dim.variables];
     });
 
     this.errorSub = this.validator.getValidationErrors()
@@ -61,6 +60,9 @@ export class MapComponent implements OnInit, OnDestroy {
     });
     this.properties.forEach((_, i) => {
       this.spinner.show('p' + i);
+    });
+    this.dataVars.forEach((_, i) => {
+      this.spinner.show('v' + i);
     });
 
     setTimeout(() => {
@@ -84,6 +86,11 @@ export class MapComponent implements OnInit, OnDestroy {
       this.brick.properties.forEach(prop => {
         prop.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
       });
+
+      this.dataVars.forEach(dataVar => {
+        dataVar.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
+      });
+
       this.loading = false;
       // this.spinner.hide();
       this.dimVars.forEach((_, i) => {
@@ -91,6 +98,9 @@ export class MapComponent implements OnInit, OnDestroy {
       });
       this.properties.forEach((_, i) => {
         this.spinner.hide('p' + i);
+      });
+      this.dataVars.forEach((_, i) => {
+        this.spinner.hide('v' + i);
       })
       this.mapped = true;
     }, 1000);
