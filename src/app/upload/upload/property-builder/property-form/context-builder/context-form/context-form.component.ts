@@ -1,14 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Context, Term } from 'src/app/shared/models/brick';
 import { UploadService } from 'src/app/shared/services/upload.service';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Select2OptionData } from 'ng2-select2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-context-form',
   templateUrl: './context-form.component.html',
   styleUrls: ['./context-form.component.css']
 })
-export class ContextFormComponent implements OnInit {
+export class ContextFormComponent implements OnInit, OnDestroy {
 
 
   private _context: Context;
@@ -41,6 +43,7 @@ export class ContextFormComponent implements OnInit {
 
   @Output() resetContext: EventEmitter<Context> = new EventEmitter();
   @Output() deleted: EventEmitter<any> = new EventEmitter();
+  errorSub: Subscription;
 
   typesOptions: Select2Options = {
     width: '100%',
@@ -85,12 +88,22 @@ export class ContextFormComponent implements OnInit {
   typeItem: string;
   unitsItem: string;
   valueItem: string;
+  error = false;
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private validator: UploadValidationService
   ) { }
 
   ngOnInit() {
+    this.errorSub = this.validator.getContextValidationErrors()
+      .subscribe(error => this.error = error);
+  }
+
+  ngOnDestroy() {
+    if (this.errorSub) {
+      this.errorSub.unsubscribe();
+    }
   }
 
   getUnits() {
