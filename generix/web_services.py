@@ -347,11 +347,7 @@ def create_brick():
     #     input_obj_ids=input_obj_ids)
 
 
-    return  json.dumps( {
-            'status': 'OK',
-            'results': brick_id,
-            'error': ''
-    } )
+    return  _ok_response(brick_id)
 
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
@@ -441,15 +437,11 @@ def upload_file():
             'value_example': _data_var_example(data_var_data['values'])
         })
 
-    return  json.dumps( {
-            'status': 'OK',
-            'results': {
+    return  _ok_response({
                 'dims': dims,
                 'data_vars': data_vars,
                 'data_id': data_id
-            },
-            'error': ''
-    } )
+            })
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
@@ -646,11 +638,7 @@ def generix_brick_dimension(brick_id, dim_index):
     except Exception as e:
         return _err_response(e)
 
-
-    return json.dumps({
-        'results': res, 
-        'status': 'OK', 
-        'error': ''})       
+    return _ok_response(res)
 
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
 def generix_brick_metadata(brick_id):
@@ -924,10 +912,7 @@ def generix_plot_types():
     except Exception as e:
         return _err_response(e)
         
-    return json.dumps({
-        'results': plot_types, 
-        'status': 'OK', 
-        'error': ''})
+    return _ok_response(plot_types)
 
 @app.route("/generix/reports", methods=['GET'])
 def generix_reports():
@@ -958,10 +943,7 @@ def generix_reports():
             'id': 'process_campaigns'
         }
     ]        
-    return json.dumps({
-        'results': reports, 
-        'status': 'OK', 
-        'error': ''})
+    return _ok_response(reports)
 
 @app.route("/generix/reports/<id>", methods=['GET'])
 def generix_report(id):
@@ -973,11 +955,7 @@ def generix_report(id):
     except Exception as e:
         return _err_response(e)
 
-    return  json.dumps( {
-        'results': res, 
-        'status': 'OK', 
-        'error': ''
-    } )
+    return  _ok_response(res)
 
 @app.route("/generix/filters", methods=['GET'])
 def generix_filters():
@@ -995,11 +973,7 @@ def generix_filters():
             'items': _get_category_items(df_persons, 'person')
         },
     ]
-    return  json.dumps( {
-        'results': res, 
-        'status': 'OK', 
-        'error': ''
-    } )    
+    return _ok_response(res)
 
 def _get_category_items(process_stat_df, attr):
     res = []
@@ -1100,11 +1074,7 @@ def generix_type_stat():
         }
     }
 
-    return  json.dumps( {
-        'results': res, 
-        'status': 'OK', 
-        'error': ''
-    } )  
+    return  _ok_response(res)
 
 
 @app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
@@ -1122,12 +1092,7 @@ def generix_dn_process_docs(obj_id):
     rows = arango_service.get_dn_process_docs(itdef, obj_id)
     process_docs = _to_process_docs(rows)
 
-    return  json.dumps( {
-            'results': process_docs, 
-            'status': 'OK', 
-            'error': ''
-        })   
-
+    return  _ok_response(process_docs)
 
 @app.route('/generix/up_process_docs/<obj_id>', methods=['GET'])
 def generix_up_process_docs(obj_id):
@@ -1144,12 +1109,7 @@ def generix_up_process_docs(obj_id):
     rows = arango_service.get_up_process_docs(itdef, obj_id)
     process_docs = _to_process_docs(rows)
 
-
-    return  json.dumps( {
-            'results': process_docs, 
-            'status': 'OK', 
-            'error': ''
-        })   
+    return _ok_response(process_docs)
 
 
 def _to_process_docs(rows):
@@ -1199,11 +1159,8 @@ def generix_core_type_metadata(obj_id):
                     'value': doc[prop]
                 }
             )
-        return  json.dumps( {
-            'results': { "items": res, "type": obj_type  }, 
-            'status': 'OK', 
-            'error': ''
-        })          
+        return  _ok_response({ "items": res, "type": obj_type  })
+       
     except:
         return _err_response('Wrong object ID format')
 
