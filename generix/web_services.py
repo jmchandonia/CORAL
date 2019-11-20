@@ -34,8 +34,6 @@ _PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
 
 _BRICK_DATA_FILE_PREFIX = 'brick_data_'
 _BRICK_FILE_PREFIX = 'brick_'
-_TEMPATE_FILE_PREFIX = 'template_'
-
 
 _UPLOAD_TEMPLAT_PREFIX = 'utp_'
 _UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
@@ -1252,7 +1250,7 @@ def generix_core_type_metadata(obj_id):
 def generate_brick_template():
     brick = json.loads(request.form['brick'])
     data_id = uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR,_TEMPATE_FILE_PREFIX + data_id)
+    file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLAT_PREFIX + data_id)
 
     dim_count = len(brick['dimensions'])
     data_var_count = len(brick['dataValues'])
