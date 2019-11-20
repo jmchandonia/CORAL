@@ -4,7 +4,7 @@ import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ContextBuilderComponent } from 'src/app/upload/upload/property-builder/property-form/context-builder/context-builder.component';
 
 @Component({
@@ -146,11 +146,15 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   openContextModal() {
-    const initialState = {
-      context: this.dataValue.context,
-      title: this.dataValue.type.text
+    const config = {
+      initialState: {
+        context: this.dataValue.context,
+        title: this.dataValue.type.text
+      },
+      class: 'modal-lg',
+      ignoreBackdropClick: true
     };
-    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    this.modalRef = this.modalService.show(ContextBuilderComponent, config);
     const modalSub = this.modalService.onHidden.subscribe(() => {
       const newDataVar = Object.assign(
         new DataValue(this.dataValue.index, this.dataValue.required), this.dataValue

@@ -135,11 +135,15 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
-    const initialState = {
-      context: this.dimVar.context,
-      title: this.dimVar.type.text
+    const config = {
+      initialState: {
+        context: this.dimVar.context,
+        title: this.dimVar.type.text
+      },
+      class: 'modal-lg',
+      ignoreBackdropClick: true
     };
-    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    this.modalRef = this.modalService.show(ContextBuilderComponent, config);
     const modalSub = this.modalService.onHidden.subscribe(() => {
       const newDimVar = Object.assign(
         new DimensionVariable(this.dimVar.dimension, this.dimVar.index, this.dimVar.required),
