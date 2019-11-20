@@ -1185,7 +1185,7 @@ def generate_brick_template():
     try:
         data_id = uuid.uuid4().hex
 
-        brick = json.loads(request.form['brick'])
+        brick_ds = json.loads(request.form['brick'])
 
         # Save birck data structure
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
@@ -1194,8 +1194,8 @@ def generate_brick_template():
 
         utp_file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLAT_PREFIX + data_id)
 
-        dim_count = len(brick['dimensions'])
-        data_var_count = len(brick['dataValues'])
+        dim_count = len(brick_ds['dimensions'])
+        data_var_count = len(brick_ds['dataValues'])
 
         if dim_count == 1:
             template.generate_brick_1dm_template(brick, utp_file_name)
@@ -1208,7 +1208,7 @@ def generate_brick_template():
             attachment_filename='data_template.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except Exception as e:
-        return _err_response(r)
+        return _err_response(e)
 
 def _ok_response(res):
     return  json.dumps( {
