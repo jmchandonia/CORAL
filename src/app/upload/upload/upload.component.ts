@@ -18,7 +18,6 @@ export class UploadComponent implements OnInit {
     'dimensions',
     'load',
     'validate',
-    'map',
     'preview',
     'create'
   ];
@@ -63,14 +62,10 @@ export class UploadComponent implements OnInit {
 
   nextStep() {
     if (!this.validator.validationErrors(this.currentUrl)) {
-      if (this.progressIndex === 4) {
-        this.progressIndex = 7;
-      } else {
-        this.progressIndex++;
-        if (this.progressIndex > this.maxStep) {
-          this.maxStep = this.progressIndex;
+      this.progressIndex++;
+      if (this.progressIndex > this.maxStep) {
+        this.maxStep = this.progressIndex;
         }
-      }
       this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
     }
   }

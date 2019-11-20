@@ -1,5 +1,5 @@
 <div class="row mt-4">
-  <div class="col-4">
+  <div class="col-5">
     <select2
       [cssImport]="true"
       [value]="typeValuesItem ? typeValuesItem : ''"
@@ -9,19 +9,19 @@
       [disabled]="dataValue.required"
       [ngClass]="error && !dataValue.type ? 'select2-error' : ''"
     ></select2>
-  </div>
-  <div class="col-2">
     <button
-      class="btn btn-primary"
+      class="btn select2-custom-button"
       (click)="openContextModal()"
+      [class.button-error]="error && !dataValue.type"
+      [tooltip]="'Click to view data value context (' + dataValue.context.length + ' items)'"
+      [delay]="750"
     >
-    Edit Context
-    <span class="badge badge-light">
-      {{dataValue.context.length}}
-    </span>
+    <i class="material-icons select2-custom-button-icon">
+      more_horiz
+    </i>
   </button>
   </div>
-  <div class="col-4">
+  <div class="col-5">
     <select2
       *ngIf="dataValue.units !== null && dataValue.type"
       [cssImport]="true"
