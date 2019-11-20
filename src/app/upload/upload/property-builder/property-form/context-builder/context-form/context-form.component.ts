@@ -36,6 +36,25 @@ export class ContextFormComponent implements OnInit, OnDestroy {
 
     if (this.context.microType) {
       this.getUnits();
+    } else {
+      if (this.context.type) {
+        // this code should be removed in the future as template context microtypes shoud ideally be provided in the JSON file
+        // it is here to prevent fields from not being able to load units
+        this.uploadService.searchPropertyMicroTypes(this.context.type.text)
+          .subscribe((data: any) => {
+
+            // get results from API call and find microtype from there
+            const typeData = data.results.find(item => item.id === this.context.type.id);
+
+            // if we still cant find the microtype after the API call, set the units to null
+            if (!typeData) {
+              this.context.units = null as Term;
+            } else {
+              this.context.microType = typeData.microtype;
+              this.getUnits();
+            }
+          });
+      }
     }
   }
 
