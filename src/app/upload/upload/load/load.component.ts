@@ -57,6 +57,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
   handleFileInput(files: FileList) {
     this.file = files.item(0);
+    this.uploadService.setFile(this.file);
     this.calculateFileSize();
     this.validationError = false;
    }
