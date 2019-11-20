@@ -668,10 +668,7 @@ def _get_plot_data(query):
     try:
         br = bp.load(brick_id)  
     except:
-        return {
-            'results': '', 
-            'status': 'ERR', 
-            'error': 'Can not load brick: %s' % brick_id}
+        raise ValueError('Can not load brick: %s' % brick_id)
 
     # support mean
     if 'constraints' in query:
@@ -681,18 +678,12 @@ def _get_plot_data(query):
                 br = br.mean(br.dims[dimIndex])
 
     if br.dim_count > 2:
-        return {
-            'results': '', 
-            'status': 'ERR', 
-            'error': 'The current version can support only 1D and 2D objects'}
+        raise ValueError('The current version can support only 1D and 2D objects')
 
     # Get all axes
     axes = list(query['data'].keys())
     if len(axes) != br.dim_count + 1:
-        return {
-            'results': '', 
-            'status': 'ERR', 
-            'error': '#axes should equal to #dimensions -1'}
+        raise ValueError('#axes should equal to #dimensions -1')
 
     # Dimension indeces to axes
     dim_index2axis = {}
@@ -716,84 +707,77 @@ def _get_plot_data(query):
                 else:
                     res[axis] = br.data_vars[0].values.T.tolist()
 
-    return  {
-                'results': res,     
-                'status': 'OK', 
-                'error': ''
-            }
+    return res
 
 @app.route('/generix/plotly_data', methods=['POST'])
 def generix_plotly_data():
     query = request.json
-    d = _get_plot_data(query)
-    if d['status'] != 'OK':
-        return json.dumps(d)
+    try:
+        rs = _get_plot_data(query)
 
-    rs = d['results']
-
-    # Build layout
-    layout = {
-        'width': 800,
-        'height': 600,
-        'title': query['config']['title'],
-        **query['plotly_layout']
-    }
-    if 'x' in query['config']:
-        if query['config']['x']['show_title']:
-            layout['xaxis'] = {
-              'title': query['config']['x']['title']  
-            }
-
-    if 'y' in query['config']:
-        if query['config']['y']['show_title']:
-            layout['yaxis'] = {
-              'title': query['config']['y']['title']  
-            }
-
-    # Build layout
-    data = []
-    plot_type = query['plotly_trace'].get('type')
-    if plot_type == 'heatmap':
-        trace = {
-            'x': rs['x'],
-            'y': rs['y'],
-            'z': rs['z'],
-            **query['plotly_trace']             
-        }        
-        data.append(trace)        
-    else:
-        if 'z' in d['results']:
-            for zindex, zval in enumerate(rs['z']):
-                trace = {
-                    'x': rs['x'][zindex] if query['data']['x'] == 'D' else rs['x'],
-                    'y': rs['y'][zindex] if query['data']['y'] == 'D' else rs['y'],
-                    'name': zval,
-                    **query['plotly_trace']            
+        # Build layout
+        layout = {
+            'width': 800,
+            'height': 600,
+            'title': query['config']['title'],
+            **query['plotly_layout']
+        }
+        if 'x' in query['config']:
+            if query['config']['x']['show_title']:
+                layout['xaxis'] = {
+                'title': query['config']['x']['title']  
                 }
-                data.append(trace)
-        else:
+
+        if 'y' in query['config']:
+            if query['config']['y']['show_title']:
+                layout['yaxis'] = {
+                'title': query['config']['y']['title']  
+                }
+
+        # Build layout
+        data = []
+        plot_type = query['plotly_trace'].get('type')
+        if plot_type == 'heatmap':
             trace = {
                 'x': rs['x'],
                 'y': rs['y'],
+                'z': rs['z'],
                 **query['plotly_trace']             
             }        
-            data.append(trace)
+            data.append(trace)        
+        else:
+            if 'z' in rs:
+                for zindex, zval in enumerate(rs['z']):
+                    trace = {
+                        'x': rs['x'][zindex] if query['data']['x'] == 'D' else rs['x'],
+                        'y': rs['y'][zindex] if query['data']['y'] == 'D' else rs['y'],
+                        'name': zval,
+                        **query['plotly_trace']            
+                    }
+                    data.append(trace)
+            else:
+                trace = {
+                    'x': rs['x'],
+                    'y': rs['y'],
+                    **query['plotly_trace']             
+                }        
+                data.append(trace)
 
-    return json.dumps({
-        'results': {
-            'layout': layout,
-            'data': data
-        },     
-        'status': 'OK', 
-        'error': ''
-    })
+        return _ok_response({
+                'layout': layout,
+                'data': data
+            })
 
-
+    except Exception as e:
+        return _err_response(e)
 
 @app.route('/generix/plot_data', methods=['POST'])
 def generix_plot_data():
-    d = _get_plot_data(request.json)
-    return json.dumps(d)
+    try:
+        res = _get_plot_data(request.json)
+        return _ok_response(res)
+    except Exception as e:
+        return _err_response(e)
 
 def _build_dim_labels(dim, pattern):
     labels = []
@@ -938,10 +922,7 @@ def generix_plot_types():
     try:
         plot_types = json.loads(open(fname).read())['plot_types']
     except Exception as e:
-        return json.dumps({
-            'results': '', 
-            'status': 'ERR', 
-            'error': str(e)})
+        return _err_response(e)
         
     return json.dumps({
         'results': plot_types, 
@@ -990,10 +971,7 @@ def generix_report(id):
         df.columns = ['Category', 'Term ID', 'Count']
         res = df.head(n=1000).to_json(orient="table", index=False)
     except Exception as e:
-        return json.dumps({
-            'results': '', 
-            'status': 'ERR', 
-            'error': str(e)})
+        return _err_response(e)
 
     return  json.dumps( {
         'results': res, 
@@ -1138,11 +1116,7 @@ def generix_dn_process_docs(obj_id):
     try:
         obj_type = to_object_type(obj_id)
     except:
-        return  json.dumps( {
-            'results': '', 
-            'status': 'ERR', 
-            'error': 'Wrong object ID format'
-        })
+        return _err_response('Wrong object ID format')
 
     itdef = indexdef.get_type_def(obj_type)
     rows = arango_service.get_dn_process_docs(itdef, obj_id)
@@ -1164,11 +1138,7 @@ def generix_up_process_docs(obj_id):
     try:
         obj_type = to_object_type(obj_id)
     except:
-        return  json.dumps( {
-            'results': '', 
-            'status': 'ERR', 
-            'error': 'Wrong object ID format'
-        })
+        return _err_response('Wrong object ID format')
 
     itdef = indexdef.get_type_def(obj_type)
     rows = arango_service.get_up_process_docs(itdef, obj_id)
@@ -1235,11 +1205,7 @@ def generix_core_type_metadata(obj_id):
             'error': ''
         })          
     except:
-        return  json.dumps( {
-            'results': '', 
-            'status': 'ERR', 
-            'error': 'Wrong object ID format'
-        })
+        return _err_response('Wrong object ID format')
 
     
 @app.route('/generix/generate_brick_template', methods=['POST'])
