@@ -53,64 +53,46 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-  testMap() {
-    this.loading = true;
-    this.dimVars.forEach((_, i) => {
-      this.spinner.show('d' + i);
-    });
-    this.properties.forEach((_, i) => {
-      this.spinner.show('p' + i);
-    });
-    this.dataVars.forEach((_, i) => {
-      this.spinner.show('v' + i);
-    });
 
-    setTimeout(() => {
-      this.testArray = this.dimVars.map(() => Math.floor(Math.random() * 3 ) + 1);
-      this.dimVars.forEach((dimVar, idx) => {
-        dimVar.totalCount = 100;
-        switch(this.testArray[idx]) {
-          case 1:
-            dimVar.mappedCount = dimVar.totalCount;
-            break;
-          case 2:
-            dimVar.mappedCount = dimVar.totalCount - 5;
-            break;
-          case 3:
-            dimVar.mappedCount = 0;
-            break;
-          default:
-            dimVar.mappedCount = 0;
-        }
-      });
-      this.brick.properties.forEach(prop => {
-        prop.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
-      });
+  getValidationResults() {
+    this.dimVars.forEach((_, i) => { this.spinner.show('d' + i); });
+    this.dataVars.forEach((_, i) => { this.spinner.show('v' + i); });
 
-      this.dataVars.forEach(dataVar => {
-        dataVar.mappedCount = Math.floor(Math.random() * 2) === 0 ? 1 : 0;
-      });
+    this.uploadService.getValidationResults()
+      .subscribe((data: any) => {
+        console.log('DATA', data);
+        this.dimVars.forEach((_, i) => { this.spinner.hide('d' + i); });
+        this.dataVars.forEach((_, i) => { this.spinner.hide('v' + i); });
+        const { data_vars, dims } = data.results;
 
-      this.loading = false;
-      // this.spinner.hide();
-      this.dimVars.forEach((_, i) => {
-        this.spinner.hide('d' + i);
+        // assign counts to data vars
+        data_vars.forEach((dv, i) => {
+          const brickDv = this.brick.dataValues[i];
+          brickDv.validCount = dv.valid_count;
+          brickDv.invalidCount = dv.invalid_count;
+          brickDv.totalCount = dv.total_count;
+        });
+
+        // assign counts to dim vars
+        dims.forEach((dim, i) => {
+          const brickDim = this.brick.dimensions[i];
+          dim.dim_vars.forEach((dv, j) => {
+            const brickDimVar = brickDim.variables[j];
+            brickDimVar.validCount = dv.valid_count;
+            brickDimVar.invalidCount = dv.invalid_count;
+            brickDimVar.totalCount = dv.total_count;
+          });
+        });
+
+        this.mapped = true;
       });
-      this.properties.forEach((_, i) => {
-        this.spinner.hide('p' + i);
-      });
-      this.dataVars.forEach((_, i) => {
-        this.spinner.hide('v' + i);
-      })
-      this.mapped = true;
-    }, 1000);
   }
 
-  getMappedStatus(mapped, total) {
-    if (mapped === total) {
+  getMappedStatus(valid, total) {
+    if (valid === total) {
       return 'status-column-success';
     }
-    return mapped === 0 ? 'status-column-fail' : 'status-column-warn';
+    return valid === 0 ? 'status-column-fail' : 'status-column-warn';
   }
 
   getPropValueDisplay(prop: TypedProperty) {

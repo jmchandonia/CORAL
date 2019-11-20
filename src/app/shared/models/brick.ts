@@ -80,8 +80,9 @@ export class DataValue {
     units: Term;
     valuesSample: string;
     context: Context[] = [];
-    totalCount = 1;
-    mappedCount: number;
+    totalCount: number;
+    validCount: number;
+    invalidCount: number;
     require_mapping: boolean;
 
     private _type: Term;
@@ -168,8 +169,9 @@ export class DimensionVariable {
     valuesSample: string; //
     mapCoreType: string; //
     mapCoreProp: string; //
-    mappedCount: number; //
-    totalCount: number; //
+    validCount: number;
+    totalCount: number;
+    invalidCount: number;
     mapped = false; //
     mapPk = false; //
 

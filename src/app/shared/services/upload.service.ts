@@ -227,6 +227,11 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
   }
 
+  public getValidationResults() {
+    const body = { data_id: this.brickBuilder.data_id };
+    return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
+  }
+
   mapDimVarToCoreTypes(dimVar) {
     // mapping dimension variable to core types, still prototyping
     const formData: FormData = new FormData();
