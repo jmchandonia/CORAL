@@ -1198,10 +1198,10 @@ def generate_brick_template():
         data_var_count = len(brick_ds['dataValues'])
 
         if dim_count == 1:
-            template.generate_brick_1dm_template(brick, utp_file_name)
+            template.generate_brick_1dm_template(brick_ds, utp_file_name)
         elif dim_count == 2:
             if data_var_count == 1:
-                template.generate_brick_2d_template(brick, utp_file_name)
+                template.generate_brick_2d_template(brick_ds, utp_file_name)
 
         return send_file(utp_file_name, 
             as_attachment=True,
