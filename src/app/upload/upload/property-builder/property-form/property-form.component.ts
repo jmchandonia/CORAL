@@ -149,11 +149,15 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   }
 
   openContextModal() {
-    const initialState = {
-      context: this.property.context,
-      title: this.property.type.text
+    const config = {
+      initialState: {
+        context: this.property.context,
+        title: this.property.type.text
+      },
+      class: 'modal-lg',
+      ignoreBackdropClick: true
     };
-    this.modalRef = this.modalService.show(ContextBuilderComponent, { initialState, class: 'modal-lg' });
+    this.modalRef = this.modalService.show(ContextBuilderComponent, config);
     this.modalHiddenSub = this.modalService.onHidden
     .subscribe(() => {
       /*
