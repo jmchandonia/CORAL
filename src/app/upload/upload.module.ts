@@ -27,7 +27,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { ContextBuilderComponent } from './upload/property-builder/property-form/context-builder/context-builder.component';
 import { ContextFormComponent } from './upload/property-builder/property-form/context-builder/context-form/context-form.component';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+ 
 @NgModule({
   declarations: [
     UploadComponent,
@@ -57,7 +58,8 @@ import { ContextFormComponent } from './upload/property-builder/property-form/co
     UploadRoutingModule,
     Select2Module,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    TooltipModule
   ],
   providers: [UploadService],
   bootstrap: [ContextBuilderComponent, ContextFormComponent]

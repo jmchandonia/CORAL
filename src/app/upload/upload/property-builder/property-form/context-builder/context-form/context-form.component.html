@@ -1,5 +1,5 @@
 <div class="row mt-2" *ngIf="context">
-    <div class="col-6">
+    <div class="col-4">
       <select2
         [cssImport]="true"
         [data]="typesSelect2"
@@ -7,6 +7,7 @@
         [disabled]="context.required"
         [value]="typeItem ? typeItem : ''"
         (valueChanged)="setContextType($event)"
+        [ngClass]="{'select2-error': error && !context.type}"
       ></select2>
     </div>
     <div class="col-3">
@@ -16,34 +17,35 @@
           [data]="valuesSelect2"
           [options]="valuesOptions"
           [value]="valueItem ? propValueItem : ''"
-          [ngClass]="{'select2-error' : errors && !context.value}"
+          [ngClass]="{'select2-error' : error && !context.value}"
           (valueChanged)="setValue($event)"
         ></select2>
         <input
           *ngIf="context?.type && context.scalarType !== 'oterm_ref'"
           class="form-control"
           [(ngModel)]="context.value && context.value.text ? context.value.text : context.value"
-          [ngModelOptions]="{standalone: true}"  
-        >
+          [ngModelOptions]="{standalone: true}"
+          [ngClass]="{'button-error' : error && !context.value}"
+        />
         <div class="row justify-content-center no-units" *ngIf="!context?.type">
           <span>N/A</span>
         </div>
     </div>
-    <div class="col-2">
+    <div class="col-3">
         <select2
-          *ngIf="context.units && context.type"
+          *ngIf="context.units !== null && context.type"
           [cssImport]="true"
           [data]="unitsSelect2"
           [options]="unitsOptions"
           [value]="unitsItem ? unitsItem : ''"
           (valueChanged)="setUnits($event)"
-          [ngClass]="errors && context.units === undefined ? 'select2-error' : ''" 
+          [ngClass]="error && context.units === undefined ? 'select2-error' : ''" 
       ></select2>
-        <div class="row justify-content-center no-units" *ngIf="!context.type || !context.units">
+        <div class="row justify-content-center no-units" *ngIf="!context.type || context.units === null">
           <span>N/A</span>
         </div>
     </div>
-    <div class="col-1">
+    <div class="col-2" style="text-align: center;">
       <button *ngIf="!context.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
     </div>
   </div>

@@ -21,7 +21,7 @@ const routes: Routes = [
         {path: 'data-variables', component: DataValuesComponent},
         {path: 'preview', component: PreviewComponent},
         {path: 'create', component: CreateComponent},
-        {path: 'map', component: MapComponent}
+        {path: 'validate', component: MapComponent}
     ]}
 ];
 

@@ -86,6 +86,10 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
     this.validate();
   }
 
+  resetDimensionVariable(event: DimensionVariable, index: number) {
+    this.dimension.variables.splice(index, 1, event);
+  }
+
   delete() {
     this.deleted.emit(this.dimension);
   }

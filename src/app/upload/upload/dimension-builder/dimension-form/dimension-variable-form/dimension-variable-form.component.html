@@ -1,10 +1,7 @@
 <div class="row mt-3">
   <div class="col-12">
     <div class="row">
-      <div class="col-1">
-        <span class="badge badge-pill badge-primary mt-2">{{dimVar.index + 1}}</span>
-      </div>
-      <div class="col-4">
+      <div class="col-6">
         <select2
           [cssImport]="true"
           [options]="typeOptions"
@@ -14,14 +11,18 @@
           [disabled]="dimVar.required"
           [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
           ></select2>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-primary" (click)="openModal()">
-          Edit Context
-          <span class="badge badge-light">{{dimVar.context.length}}</span>
+        <button
+          class="btn select2-custom-button"
+          (click)="openModal()"
+          [class.button-error]="error && !dimVar.type"
+          [tooltip]="'Click to view Dimension Variable context (' + dimVar.context.length + ' items)'"
+          [delay]="750">
+          <i class="material-icons select2-custom-button-icon">
+            more_horiz
+          </i>
         </button>
       </div>
-      <div class="col-4" *ngIf="dimVar.units !== null && dimVar.type">
+      <div class="col-5" *ngIf="dimVar.units !== null && dimVar.type">
         <select2
           [cssImport]="true"
           [options]="unitsOptions"
@@ -31,7 +32,7 @@
           [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
         ></select2>
       </div>
-      <div class="col-4" *ngIf="dimVar.units === null || !dimVar.type">
+      <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
         <div class="row justify-content-center no-units">
           <span>N/A</span>
         </div>

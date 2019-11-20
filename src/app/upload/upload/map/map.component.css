@@ -36,6 +36,19 @@ td {
     height: 300px;
 }
 
-.error-property-value {
+.error-text {
     color: red;
+}
+
+.mapping-icon {
+    color: #007BFF; 
+    position: relative;
+    top: 6px;
+    left: 6px;
+    cursor: pointer;
+}
+
+
+.tooltip {
+    opacity: 100;
 }

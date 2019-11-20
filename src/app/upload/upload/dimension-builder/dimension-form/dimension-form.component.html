@@ -36,16 +36,10 @@
     <ng-container *ngIf="dimension.variables.length">
       <hr class="mt-0" />
       <div class="row">
-        <div class="col-1">
-          <strong>#</strong>
-        </div>
-        <div class="col-4">
+        <div class="col-6">
           <strong>Data Type</strong>
         </div>
-        <div class="col-2">
-          <strong>Context</strong>
-        </div>
-        <div class="col-4">
+        <div class="col-5">
           <strong>Units</strong>
         </div>
       </div>
@@ -53,6 +47,7 @@
     <ng-container *ngFor="let dimVar of dimension.variables">
         <app-dimension-variable-form
           (deleted)="removeDimensionVariable($event)"
+          (reset)="resetDimensionVariable($event, dimVar.index)"
           *ngIf="!dimVar.hidden"
           [dimVar]="dimVar"
         ></app-dimension-variable-form>
