@@ -389,59 +389,69 @@ def validate_upload():
 
 @app.route('/generix/upload', methods=['POST'])
 def upload_file():
-    brick_ui = json.loads(request.form['brick'])
-    
-    # Save file
-    f = request.files['files']
-    data_id = uuid.uuid4().hex
-    file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_FILE_PREFIX 
-        + data_id + '_' + f.filename)
-    f.save( file_name )
-
-    # Parse brick data    
-    brick_data = {}
     try:
-        dim_count = len(brick_ui['dimensions'])
+
+        data_id = uuid.uuid4().hex
+
+        brick_ds = json.loads(request.form['brick'])
+
+        # Save birck data structure
+        uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        with open(uds_file_name, 'w') as f:
+            json.dump(brick_ds, f, sort_keys=True, indent=4)
+        
+        # Save data file
+        f = request.files['files']
+        udf_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_FILE_PREFIX 
+            + data_id + '_' + f.filename)
+        f.save( udf_file_name )
+
+        # Parse brick data    
+        brick_data = {}
+
+        dim_count = len(brick_ds['dimensions'])
         if dim_count == 1:
-            brick_data = template.parse_brick_F1DM_data(brick_ui, file_name)
+            brick_data = template.parse_brick_F1DM_data(brick_ds, udf_file_name)
         elif dim_count == 2:
-            brick_data = template.parse_brick_F2DT_data(brick_ui, file_name)
+            brick_data = template.parse_brick_F2DT_data(brick_ds, udf_file_name)
         else:
             raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
+
+        # Save brick processed data
+        upd_file_name = os.path.join(TMP_DIR, _UPLOAD_PROCESSED_DATA_PREFIX + data_id )
+        with open(upd_file_name, 'w') as f:
+            json.dump(brick_data, f, sort_keys=True, indent=4)
+
+
+        # Build output (examples of values for dim vars and data vars)
+        dims = []
+        data_vars = []
+
+        for dim_data in brick_data['dims']:
+            dim = {
+                'size' : dim_data['size'],
+                'dim_vars': []
+            }
+            dims.append(dim)
+
+            for dim_var_data in dim_data['dim_vars']:
+                dim['dim_vars'].append({
+                    'value_example': _dim_var_example(dim_var_data['values'])
+                })
+
+        for data_var_data in brick_data['data_vars']:
+            data_vars.append({
+                'value_example': _data_var_example(data_var_data['values'])
+            })
+
+        return  _ok_response({
+                    'dims': dims,
+                    'data_vars': data_vars,
+                    'data_id': data_id
+                })
+
     except Exception as e:
         return _err_response(e)
-
-    # # Build proto brick and save it in tmp file
-    # brick_proto = _create_brick(brick_ui, brick_data)
-    # file_name = os.path.join(TMP_DIR,_BRICK_FILE_PREFIX + data_id)
-    # _save_brick_proto(brick_proto, file_name)
-
-    # Build output (examples of values for dim vars and data vars)
-    dims = []
-    data_vars = []
-
-    for dim_data in brick_data['dims']:
-        dim = {
-            'size' : dim_data['size'],
-            'dim_vars': []
-        }
-        dims.append(dim)
-
-        for dim_var_data in dim_data['dim_vars']:
-            dim['dim_vars'].append({
-                'value_example': _dim_var_example(dim_var_data['values'])
-            })
-
-    for data_var_data in brick_data['data_vars']:
-        data_vars.append({
-            'value_example': _data_var_example(data_var_data['values'])
-        })
-
-    return  _ok_response({
-                'dims': dims,
-                'data_vars': data_vars,
-                'data_id': data_id
-            })
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
