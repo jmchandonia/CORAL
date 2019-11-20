@@ -1262,6 +1262,13 @@ def generate_brick_template():
         attachment_filename='data_template.xlsx',
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
+def _ok_response(res):
+    return  json.dumps( {
+            'results': res, 
+            'status': 'OK', 
+            'error': ''
+        })
+
 def _err_response(e):
     return  json.dumps( {
             'results': '', 
