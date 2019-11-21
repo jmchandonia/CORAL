@@ -208,7 +208,7 @@ export class UploadValidationService {
      return {messages, startDateError, endDateError};
    }
 
-  private validScalarType(scalarType: string, value): boolean {
+  public validScalarType(scalarType: string, value): boolean {
     const val = value.text ? value.text : value;
     switch (scalarType) {
       case 'int':

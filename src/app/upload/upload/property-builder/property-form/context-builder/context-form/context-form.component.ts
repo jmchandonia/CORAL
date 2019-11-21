@@ -62,6 +62,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
 
   @Output() resetContext: EventEmitter<Context> = new EventEmitter();
   @Output() deleted: EventEmitter<any> = new EventEmitter();
+  @Output() valueError: EventEmitter<any> = new EventEmitter();
   errorSub: Subscription;
 
   typesOptions: Select2Options = {
@@ -108,6 +109,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
   unitsItem: string;
   valueItem: string;
   error = false;
+  scalarError = false;
 
   constructor(
     private uploadService: UploadService,
@@ -170,6 +172,18 @@ export class ContextFormComponent implements OnInit, OnDestroy {
       const item = event.data[0];
       this.context.units = new Term(item.id, item.text);
       // this.validate();
+    }
+  }
+
+  validateValue() {
+    if (!this.validator.validScalarType(this.context.scalarType, this.context.value)) {
+      this.scalarError = true;
+      this.context.invalidValue = true;
+      this.valueError.emit(this.validator.INVALID_VALUE);
+    } else {
+      this.scalarError = false;
+      this.context.invalidValue = false;
+      this.valueError.emit(null);
     }
   }
 
