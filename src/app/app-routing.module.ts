@@ -6,6 +6,7 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthGuardService as AuthGuard } from './shared/services/auth-guard.service';
+import { ErrorComponent } from './shared/components/error/error.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'error',
+    component: ErrorComponent,
   }
 ];
 
