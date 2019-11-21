@@ -18,6 +18,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   selectedValue: any;
   @Output() deleted = new EventEmitter();
   @Output() typeReselected: EventEmitter<TypedProperty> = new EventEmitter();
+  @Output() valueError: EventEmitter<any> = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
     // this.typesSelect2 = prop.type ? [prop.type] : [];
     this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
@@ -108,6 +109,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
    unitsItem: string;
    required = true;
    errors = false;
+   scalarError = false;
 
   constructor(
     private uploadService: UploadService,
@@ -219,6 +221,17 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   validate() {
     if (this.errors) {
       this.validator.validateProperties();
+    }
+  }
+
+  validateScalarType() {
+    if (!this.validator.validScalarType(this.property.scalarType, this.property.value)) {
+      // this.scalarError = true;
+      this.property.invalidValue = true;
+      this.valueError.emit(this.validator.INVALID_VALUE);
+    } else {
+      this.property.invalidValue = false;
+      this.valueError.emit(null);
     }
   }
 

@@ -150,28 +150,23 @@ export class ContextFormComponent implements OnInit, OnDestroy {
       const resetProperty = new Context(
         this.context.required,
         item
-        // this.property.type,
-        // this.property.microType
       );
       // emit new typed property to replace old one in parent component array reference
       this.resetContext.emit(resetProperty);
     } else {
       this.getUnits();
-      // this.validate();
     }
   }
 
   setValue(event) {
     const item = event.data[0];
     this.context.value = new Term(item.id, item.text);
-    // this.validate();
   }
 
   setUnits(event) {
     if (event.value.length) {
       const item = event.data[0];
       this.context.units = new Term(item.id, item.text);
-      // this.validate();
     }
   }
 
