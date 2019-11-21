@@ -36,6 +36,7 @@
               [property]="property"
               (deleted)="deleteProperty(property)"
               (typeReselected)="resetProperty($event)"
+              (valueError)="setValueError($event)"
             ></app-property-form>
           </ng-container>
         </div>
