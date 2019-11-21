@@ -12,6 +12,9 @@ export class UploadValidationService {
   private errorSub: Subject<boolean> = new Subject();
   private contextErrorSub: Subject<any> = new Subject();
 
+  public readonly INVALID_VALUE = 'Error: invalid value for scalar type ';
+  public readonly INCOMPLETE_FIELDS = 'Error: please fill out all field values before submitting.';
+
   // brick builder from upload service
   brick: Brick;
 
@@ -119,7 +122,7 @@ export class UploadValidationService {
      for (const dimension of this.brick.dimensions) {
        for (const variable of dimension.variables) {
          // if the mapped count does not match the total count then user needs to fix values
-         if (variable.mappedCount !== variable.totalCount) {
+         if (variable.validCount !== variable.totalCount) {
            this.errorSub.next(true);
            return true;
          }
@@ -129,7 +132,7 @@ export class UploadValidationService {
      // iterate through all data values
      for (const dataValue of this.brick.dataValues) {
        // if the mapped count does not match the total count then user needs to fix values
-       if (dataValue.mappedCount !== dataValue.totalCount) {
+       if (dataValue.validCount !== dataValue.totalCount) {
          this.errorSub.next(true);
          return true;
        }
@@ -137,14 +140,36 @@ export class UploadValidationService {
      return false;
    }
 
-   validateContext(context: Context[]) {
+   validateContext(context: Context[]): string[] {
+     let error = false;
+     const messages = [];
      for (const ctx of context) {
        if (!ctx.type || !ctx.value || ctx.units === undefined) {
-         this.contextErrorSub.next(true);
-         return true;
+         error = true;
+         messages.push(this.INCOMPLETE_FIELDS);
+       }
+       if (ctx.value && !this.validScalarType(ctx.scalarType, ctx.value)) {
+         messages.push(`${this.INVALID_VALUE}${ctx.scalarType}`);
+         ctx.invalidValue = true;
+         error = true;
+       } else {
+         ctx.invalidValue = false;
        }
      }
-     return false;
+     this.contextErrorSub.next(error);
+     return messages;
+   }
+
+  private validScalarType(scalarType: string, value): boolean {
+    const val = value.text ? value.text : value;
+    switch (scalarType) {
+      case 'int':
+        return !isNaN(parseInt(val, 10)) && /^-?\d+$/.test(val);
+      case 'float':
+        return !isNaN(parseFloat(val)) && /^-?\d+(?:[.]\d*?)?$/.test(val);
+      default:
+        return true;
+     }
    }
 
    get nonRequiredProperties() {
