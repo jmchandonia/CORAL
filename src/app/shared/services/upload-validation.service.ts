@@ -9,7 +9,7 @@ import { UploadService } from './upload.service';
 export class UploadValidationService {
 
   // subsject that emits if errors are true
-  private errorSub: Subject<boolean> = new Subject();
+  private errorSub: Subject<any> = new Subject();
   private contextErrorSub: Subject<any> = new Subject();
 
   public readonly INVALID_VALUE = 'Error: invalid value for scalar type ';
@@ -64,15 +64,26 @@ export class UploadValidationService {
 
    validateProperties() {
      // filter only user input properties
+    let error = false;
+    const messages = [];
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
       if (!property.type || !property.value || property.units === undefined) {
-        this.errorSub.next(true);
-        return true;
+        // this.errorSub.next(true);
+        // return true;
+        error = true;
+        messages.push(this.INCOMPLETE_FIELDS);
+      }
+      if (property.value && !this.validScalarType(property.scalarType, property.value)) {
+        error = true;
+        property.invalidValue = true;
+        messages.push(`${this.INVALID_VALUE}${property.scalarType}`);
+      } else {
+        property.invalidValue = false;
       }
     }
-    this.errorSub.next(false);
-    return false;
+    this.errorSub.next({error, messages});
+    return error;
    }
 
    validateDimensions() {

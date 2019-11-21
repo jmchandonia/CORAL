@@ -42,8 +42,8 @@
       </div>
     </div>
     <div class="col-12 mt-2" *ngIf="errors">
-      <div class="alert alert-danger" role="alert">
-        Error: Please fill out all fields for brick properties
+      <div class="alert alert-danger" role="alert" *ngFor="let message of errorMessages">
+        {{message}}
       </div>
     </div>
   </div>
