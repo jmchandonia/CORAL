@@ -109,7 +109,7 @@ export class UploadValidationService {
       // filter only user input data values
       for (const dataValue of this.nonRequiredDataValues) {
         // check if data value has selected type and units
-        if (!dataValue.type || !dataValue.units) {
+        if (!dataValue.type || dataValue.units === undefined) {
           this.errorSub.next(true);
           return true;
         }

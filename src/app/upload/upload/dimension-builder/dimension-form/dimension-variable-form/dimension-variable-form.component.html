@@ -15,6 +15,7 @@
           class="btn select2-custom-button"
           (click)="openModal()"
           [class.button-error]="error && !dimVar.type"
+          [disabled]="!dimVar.type"
           [tooltip]="'Click to view Dimension Variable context (' + dimVar.context.length + ' items)'"
           [delay]="750">
           <i class="material-icons select2-custom-button-icon">
