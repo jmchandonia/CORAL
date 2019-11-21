@@ -13,7 +13,7 @@ import * as $ from 'jquery';
 export class DimensionVariablePreviewComponent implements OnInit, AfterViewInit {
 
   constructor(
-    private modalRef: BsModalRef
+    public modalRef: BsModalRef
   ) { }
 
   id: string;
