@@ -117,6 +117,7 @@ export class Context {
     private _type: Term;
     microType: any;
     scalarType: string;
+    invalidValue = false;
 
     get type() { return this._type; }
     set type(t: any) {
