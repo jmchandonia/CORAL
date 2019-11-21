@@ -42,7 +42,7 @@
         class="form-control"
         [(ngModel)]="property.value"
         [ngModelOptions]="{standalone: true}" 
-        [ngClass]="{'button-error' : errors && !property.value}" 
+        [ngClass]="{'button-error' : errors && (!property.value || property.invalidValue)}" 
       >
       <div class="row justify-content-center no-units" *ngIf="!property.type">
         <span>N/A</span>

@@ -207,6 +207,7 @@ export class TypedProperty {
     // type: Term;
     microType: any;
     value: Term | string;
+    invalidValue = false;
     units: Term;
     context: Context[] = [];
     totalCount = 1;
