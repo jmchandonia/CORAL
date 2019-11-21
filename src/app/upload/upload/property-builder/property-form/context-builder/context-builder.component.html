@@ -38,6 +38,7 @@
                 [context]="item"
                 (resetContext)="resetContext($event, i)"
                 (deleted)="removeContext(i)"
+                (valueError)="setValueError($event)"
                 ></app-context-form>
             </div>
           </div>

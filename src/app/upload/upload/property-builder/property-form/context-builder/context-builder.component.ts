@@ -13,7 +13,7 @@ export class ContextBuilderComponent implements OnInit {
   public context: Context[];
   public title: string;
   error = false;
-  errorMessages: string[];
+  errorMessages: string[] = [];
 
   constructor(
     public modalRef: BsModalRef,
@@ -33,6 +33,18 @@ export class ContextBuilderComponent implements OnInit {
 
   resetContext(event: Context, index: number) {
     this.context.splice(index, 1, event);
+  }
+
+  setValueError(event) {
+    if (event) {
+      this.error = true;
+      this.errorMessages.push(event);
+    } else {
+      if (this.errorMessages.length === 1) {
+        this.errorMessages = [];
+        this.error = false;
+      }
+    }
   }
 
   onClose() {

@@ -25,7 +25,8 @@
           class="form-control"
           [(ngModel)]="context.value && context.value.text ? context.value.text : context.value"
           [ngModelOptions]="{standalone: true}"
-          [ngClass]="{'button-error' : error && (!context.value || context.invalidValue)}"
+          [ngClass]="{'button-error' : (scalarError || error) && (!context.value || context.invalidValue)}"
+          (focusout)="validateValue()"
         />
         <div class="row justify-content-center no-units" *ngIf="!context?.type">
           <span>N/A</span>
