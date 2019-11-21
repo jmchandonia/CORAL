@@ -14,6 +14,9 @@ export class UploadValidationService {
 
   public readonly INVALID_VALUE = 'Error: invalid value for scalar type ';
   public readonly INCOMPLETE_FIELDS = 'Error: please fill out all field values before submitting.';
+  public readonly INVALID_START_DATE = 'Error: Invalid brick start date';
+  public readonly INVALID_END_DATE = 'Error: Invalid brick end date';
+  public readonly INVALID_DATE_RANGE = 'Error: Invalid date range';
 
   // brick builder from upload service
   brick: Brick;
@@ -37,6 +40,8 @@ export class UploadValidationService {
         return this.validateUploadedData();
       case 'map':
         return this.validateMappedData();
+      case 'create':
+        return this.validateCreateStep();
       default:
         return false;
      }
@@ -169,6 +174,38 @@ export class UploadValidationService {
      }
      this.contextErrorSub.next(error);
      return messages;
+   }
+
+   validateCreateStep() {
+     const messages = [];
+     let startDateError = false;
+     let endDateError = false;
+     if (
+       !this.brick.name ||
+       !this.brick.campaign ||
+       !this.brick.personnel ||
+       !this.brick.start_date ||
+       !this.brick.end_date
+     ) {
+       messages.push(this.INCOMPLETE_FIELDS);
+     }
+
+     if (this.brick.start_date > new Date()) {
+       messages.push(this.INVALID_START_DATE);
+       startDateError = true;
+     }
+
+     if (this.brick.end_date > new Date()) {
+       messages.push(this.INVALID_END_DATE);
+       endDateError = true;
+     }
+
+     if (this.brick.start_date > this.brick.end_date) {
+       messages.push(this.INVALID_DATE_RANGE);
+       startDateError = endDateError = true;
+     }
+
+     return {messages, startDateError, endDateError};
    }
 
   private validScalarType(scalarType: string, value): boolean {
