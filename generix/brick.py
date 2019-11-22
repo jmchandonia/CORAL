@@ -1565,12 +1565,100 @@ class DimensionFilter:
 class BrickTemplateProvider:
     def __init__(self, file_name):
         self.__templates = json.loads(open(file_name).read())    
-        self._validate_and_update()
+        self.__errors = []
+        # self._validate_and_update()
     
     @property
     def templates(self):
         return self.__templates
     
+    @property
+    def errors(self):
+        return self.__errors
+
+    def __add_error(self, btype, template, prop, e):
+        self.__errors.append({
+            'type': btype['text'],
+            'template': template['text'] if template else None,
+            'property': prop,
+            'error_msg': str(e)
+        })
+
+    def _validate_and_log(self):
+        self.__errors = []
+        for btype in self.__templates['types']:
+
+            try:
+                self._validate_term( id=btype['data_type'], name=btype['text'])
+            except Exception as e:
+                self.__add_error(btype, None, None, e)
+
+            #validate all templates for a given btype
+            for template in btype['children']:
+                # validate and update properties 
+                if 'properties' in template:
+                    for prop in template['properties']:
+                        try:
+                            term = self._validate_and_update_type(prop['property'])
+                        except Exception as e:
+                            self.__add_error(btype, template, 'property', e)
+
+                        if 'value' in prop:
+                            try:
+                                self._validate_value(term, prop['value'])                    
+                            except Exception as e:
+                                self.__add_error(btype, template, 'property',e)
+                            
+                        if 'units' in prop:
+                            try:
+                                self._validate_units(term, prop['units'])
+                            except Exception as e:
+                                self.__add_error(btype, template, 'property',e)
+                else:
+                    template['properties'] = []
+                
+                #validate dimensions
+                for dim in template['dims']:
+                    try:
+                        self._validate_type(dim['type'])
+                    except Exception as e:
+                        self.__add_error(btype, template, 'dimension',e)
+
+                    for dim_var in dim['dim_vars']:
+                        try:
+                            term = self._validate_and_update_type(dim_var['type'])
+                        except Exception as e:
+                            self.__add_error(btype, template, 'dim_var',e)
+                        
+                        try:
+                            self._validate_units(term, dim_var['units'])
+                        except Exception as e:
+                            self.__add_error(btype, template, 'dim_var',e)
+                
+                #validate data vars
+                # TODO: temp solution
+                data_vars = []
+                for data_var in template['data_vars']:
+                    try:
+                        term = self._validate_and_update_type(data_var['type'])
+                    except Exception as e:
+                        self.__add_error(btype, template, 'data_var',e)
+
+                    try:
+                        self._validate_units(term, data_var['units'])
+                        data_vars.append(data_var)
+                    except Exception as e:
+                        self.__add_error(btype, template, 'data_var',e)
+
+                template['data_vars'] = data_vars
+                
+                #validate process
+                try:
+                    self._validate_type(template['process'])
+                except Exception as e:
+                    self.__add_error(btype, template, 'process',e)
+
+
     def _validate_and_update(self):
         for btype in self.__templates['types']:
             # Validate category:
@@ -1675,14 +1763,12 @@ class BrickTemplateProvider:
                     raise ValueError('Failed value validation: the value term "%s" is not a child of any terms defined as valid parents in the term "%s"' % (
                             vterm.term_id + ':' + vterm.term_name,
                             term.term_id + ':' + term.term_name
-                        ))                       
-
-            
+                        ))                                   
 
     def _validate_units(self, term, units):
-        #TODO will skip for now
-        if 1 == 1:
-            return
+        # #TODO will skip for now
+        # if 1 == 1:
+        #     return
         units_term_id = units['id']    
         units_term_name = units['text']
 
