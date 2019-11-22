@@ -6,15 +6,22 @@ import { Router } from '@angular/router';
 
 export class GlobalErrorHandler implements ErrorHandler {
 
-    constructor(private injector: Injector, private zone: NgZone) {}
+    private router: Router;
+
+    constructor(private injector: Injector, private zone: NgZone) {
+        setTimeout(() => {
+            this.router = this.injector.get(Router);
+        });
+    }
 
     handleError(error: Error | HttpErrorResponse) {
 
-        const router = this.injector.get(Router);
-
         if (error instanceof HttpErrorResponse) {
             const {status, message} = error;
-            this.zone.run(() => router.navigate(['/error', {status, message}]));
+            this.zone.run(() => this.router.navigate(['/error', {status, message}]));
+            console.error(error);
+        } else {
+            this.zone.run(() => this.router.navigate(['/error', {message: error.message}]));
             console.error(error);
         }
 

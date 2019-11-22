@@ -11,8 +11,9 @@ import {
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -278,6 +279,7 @@ export class UploadService {
 
   downloadBrickTemplate() {
     const formData: FormData = new FormData();
+    const blobOrJson = this.brickBuilder.isEmpty ? 'json' : 'blob';
 
     // we need to upload the brick data to get the right download template
     formData.append('brick', this.brickBuilder.toJson());
@@ -287,9 +289,21 @@ export class UploadService {
       headers: new HttpHeaders({
         'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       }),
-      responseType: 'blob' as 'json'
+      // responseType: 'blob' as 'json'
+      responseType: blobOrJson as 'json'
     };
-    return this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config);
+
+    return new Promise((resolve) => {
+      this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config)
+        .subscribe(res => {
+          if (res.error) {
+            // reject(res);
+            // throw new Error(res.error);
+          } else {
+            resolve(res);
+          }
+        });
+    });
   }
 
   mapBrickData(res: any) {

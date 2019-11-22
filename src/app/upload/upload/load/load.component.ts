@@ -83,7 +83,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
    downloadTemplate() {
      this.uploadService.downloadBrickTemplate()
-      .subscribe((data: Blob) => {
+      .then((data: Blob) => {
         const url = window.URL.createObjectURL(data);
         const a = document.createElement('a');
         document.body.appendChild(a);
