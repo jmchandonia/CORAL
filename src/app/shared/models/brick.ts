@@ -1,5 +1,7 @@
 // tslint:disable:variable-name
 
+import { isEqual } from 'lodash';
+
 export class Brick {
 
     id: string;
@@ -18,6 +20,10 @@ export class Brick {
     personnel: Term;
     start_date: Date;
     end_date: Date;
+
+    get isEmpty() {
+        return isEqual(this, new Brick());
+    }
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
