@@ -24,6 +24,7 @@ _TERM_IS_MICROTYPE = re.compile(r'is_microtype\s+"true"')
 _TERM_IS_DIMENSION = re.compile(r'is_valid_dimension\s+"true"')
 _TERM_IS_DIMENSION_VARIABLE = re.compile(r'is_valid_dimension_variable\s+"true"')
 _TERM_IS_PROPERTY = re.compile(r'is_valid_property\s+"true"')
+_TERM_IS_HIDDEN = re.compile(r'is_hidden\s+"true"')
 _TERM_VALID_UNITES = re.compile(r'valid_units\s+"([\w+:\d+\s*]+)"')
 _TERM_VALID_UNITES_PARENT = re.compile(r'valid_units_parent\s+"([\w+:\d+\s*]+)"')
 _TERM_OREF = re.compile(r'ORef:\s+(\w+:\d+)')
@@ -81,6 +82,7 @@ class OntologyService:
                 'is_dimension':term.is_dimension,
                 'is_dimension_variable':term.is_dimension_variable,
                 'is_property':term.is_property,
+                'is_hidden':term.is_hidden,
                 'microtype_value_scalar_type': term.microtype_value_scalar_type,
                 'microtype_fk':term.microtype_fk,
                 'microtype_valid_values_parent':term.microtype_valid_values_parent,
@@ -129,6 +131,7 @@ class OntologyService:
                         term_is_dimension = False
                         term_is_dimension_variable = False
                         term_is_property = False
+                        term_is_hidden = False
                         term_ref = ''
                         term_oref = ''
                         term_valid_units = []
@@ -177,6 +180,9 @@ class OntologyService:
                             term_is_dimension_variable = True
                         elif not term_is_property and _TERM_IS_PROPERTY.match(pv):
                             term_is_property = True
+                        elif not term_is_hidden and _TERM_IS_HIDDEN.match(pv):
+                            term_is_hidden = True
+
                         else:
                             m = _TEMR_SCALAR_TYPE.match(pv)
                             if m is not None:
@@ -200,6 +206,7 @@ class OntologyService:
                                     is_dimension=term_is_dimension,
                                     is_dimension_variable=term_is_dimension_variable,
                                     is_property=term_is_property,
+                                    is_hidden=term_is_hidden,
                                     microtype_value_scalar_type=term_value_scalar_type,
                                     microtype_fk=term_ref,
                                     microtype_valid_values_parent=term_oref,
@@ -221,6 +228,7 @@ class OntologyService:
                         is_dimension=term_is_dimension,
                         is_dimension_variable=term_is_dimension_variable,
                         is_property=term_is_property,
+                        is_hidden=term_is_hidden,
                         microtype_value_scalar_type=term_value_scalar_type,
                         microtype_fk=term_ref,
                         microtype_valid_values_parent=term_oref,
@@ -356,6 +364,7 @@ class Ontology:
                         is_dimension = row['is_dimension'],
                         is_dimension_variable = row['is_dimension_variable'],
                         is_property = row['is_property'],
+                        is_hidden = row['is_hidden'],
 
                         microtype_value_scalar_type=row['microtype_value_scalar_type'],
                         microtype_fk = row['microtype_fk'],
@@ -515,6 +524,7 @@ class Term:
                 is_dimension=None,
                 is_dimension_variable=None,
                 is_property=None,
+                is_hidden=None,
 
                 microtype_value_scalar_type=None,
                 microtype_fk=None,
@@ -525,7 +535,7 @@ class Term:
                 persisted=False, 
                 refresh=False):
 
-        self.__persisted = persisted
+
         self.__term_id = term_id
         self.__term_name = term_name
         self.__ontology_id = ontology_id
@@ -537,33 +547,65 @@ class Term:
         self.__is_dimension = is_dimension
         self.__is_dimension_variable = is_dimension_variable
         self.__is_property = is_property
+        self.__is_hidden = is_hidden
 
         self.__microtype_value_scalar_type = microtype_value_scalar_type
         self.__microtype_fk = microtype_fk
         self.__microtype_fk_term_id = None
         self.__microtype_fk_core_type = None
         self.__microtype_fk_core_prop_name = None
-
-        if microtype_fk is not None:
-            self.__microtype_fk_term_id = ''
-            self.__microtype_fk_core_type = ''
-            self.__microtype_fk_core_prop_name = ''
-            if microtype_fk != '':
-                m = _MICROTYPE_FK_PATTERN.match(microtype_fk)
-                if m is not None:
-                    vals = m.groups()
-                    self.__microtype_fk_term_id = vals[0]
-                    self.__microtype_fk_core_type = vals[1]
-                    self.__microtype_fk_core_prop_name = vals[2]
-
         self.__microtype_valid_values_parent = microtype_valid_values_parent
         self.__microtype_valid_units = microtype_valid_units
         self.__microtype_valid_units_parents = microtype_valid_units_parents 
 
         self.__validator_name = validator_name
+        self.__update_microtype_fk()
+
         self.__parent_terms = []
+        self.__persisted = persisted
         if refresh:
             self.refresh()
+
+    def __init(self, term):
+        self.__persisted = True
+
+        #self.__term_id = term_id
+        self.__term_name = term.term_name
+        self.__ontology_id = term.ontology_id
+        self.__parent_ids = term.parent_ids
+        self.__parent_path_ids = term.parent_path_ids
+
+        self.__synonyms = term.synonyms
+        self.__is_microtype = term.is_microtype
+        self.__is_dimension = term.is_dimension
+        self.__is_dimension_variable = term.is_dimension_variable
+        self.__is_property = term.is_property
+        self.__is_hidden = term.is_hidden
+
+        self.__microtype_value_scalar_type = term.microtype_value_scalar_type
+        self.__microtype_fk = term.microtype_fk
+        self.__microtype_fk_term_id = term.microtype_fk_term_id
+        self.__microtype_fk_core_type = term.microtype_fk_core_type
+        self.__microtype_fk_core_prop_name = term.microtype_fk_core_prop_name
+        self.__microtype_valid_values_parent = term.microtype_valid_values_parent
+        self.__microtype_valid_units = term.microtype_valid_units
+        self.__microtype_valid_units_parents = term.microtype_valid_units_parents 
+
+        self.__validator_name = term.validator_name
+
+    def __update_microtype_fk(self):
+        if self.__microtype_fk is not None:
+            self.__microtype_fk_term_id = ''
+            self.__microtype_fk_core_type = ''
+            self.__microtype_fk_core_prop_name = ''
+            if self.__microtype_fk != '':
+                m = _MICROTYPE_FK_PATTERN.match(self.__microtype_fk)
+                if m is not None:
+                    vals = m.groups()
+                    self.__microtype_fk_term_id = vals[0]
+                    self.__microtype_fk_core_type = vals[1]
+                    self.__microtype_fk_core_prop_name = vals[2]
+        
 
     '''
         term_id_names is an array. The elements of this array can be one of:
@@ -635,14 +677,12 @@ class Term:
         self.__lazzy_load()
 
     def __lazzy_load(self):
+        #TODO: init all properties
+
         term = services.ontology.all.find_id(self.term_id)
         if term is None:
             raise ValueError('Can not find term with id: %s' % self.term_id)
-        self.__term_name = term.term_name
-        self.__ontology_id = term.ontology_id
-        self.__parent_ids = term.parent_ids
-        self.__parent_path_ids = term.parent_path_ids
-        self.__validator_name = term.validator_name
+        self.__init(term)
         self.__persisted = True
 
     def __eq__(self, value):
@@ -700,6 +740,10 @@ class Term:
         return self.__safe_property('_Term__is_property')
 
     @property
+    def is_hidden(self):
+        return self.__safe_property('_Term__is_hidden')
+
+    @property
     def microtype_value_scalar_type(self):
         return self.__safe_property('_Term__microtype_value_scalar_type')
 
@@ -745,6 +789,7 @@ class Term:
             'id' : self.term_id,
             'text': self.term_name,
             'has_units': self.has_units,
+            'is_hidden': self.is_hidden,
             'scalar_type': self.microtype_value_scalar_type,
             'require_mapping': self.require_mapping,
             'microtype':{
