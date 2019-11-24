@@ -1561,102 +1561,116 @@ class DimensionFilter:
     def __or__(self, data_filter):
         return self.__logical_trasnform(data_filter, '__or__', np.logical_or)
 
+
+class BrickTemplateTemplateLogger:
+    def __init__(self):
+        self.init()
     
-class BrickTemplateProvider:
-    def __init__(self, file_name):
-        self.__templates = json.loads(open(file_name).read())    
+    def init(self):
         self.__errors = []
-        # self._validate_and_update()
-    
-    @property
-    def templates(self):
-        return self.__templates
-    
+        self.__current_brick_type = None
+        self.__current_template_name = None
+        self.__current_brick_part = None
+
     @property
     def errors(self):
         return self.__errors
 
-    def __add_error(self, btype, template, prop, e):
+    def set_current_brick_type(self, value):
+        self.__current_brick_type = value
+
+    def set_current_template_name(self, value):
+        self.__current_template_name = value
+
+    def set_current_brick_part(self, value):
+        self.__current_brick_part = value
+
+    def log_error(self, e):
         self.__errors.append({
-            'type': btype['text'],
-            'template': template['text'] if template else None,
-            'property': prop,
-            'error_msg': str(e)
+            'brick_type': self.__current_brick_type,
+            'template_name': self.__current_template_name,
+            'brick_part': self.__current_brick_part,
+            'error': str(e)
         })
 
-    def _validate_and_log(self):
-        self.__errors = []
+class BrickTemplateProvider:
+    def __init__(self, file_name, logger=None):
+        self.__templates = json.loads(open(file_name).read())    
+        self.__logger = BrickTemplateTemplateLogger() if not logger else logger
+        # self._validate_and_update()
+
+    @property
+    def logger(self):
+        return self.__logger
+
+
+    @property
+    def templates(self):
+        return self.__templates
+    
+    def _validate_all(self):
+        self.logger.init()
         for btype in self.__templates['types']:
 
-            try:
-                self._validate_term( id=btype['data_type'], name=btype['text'])
-            except Exception as e:
-                self.__add_error(btype, None, None, e)
+            self.logger.set_current_brick_type(btype['text'])
 
-            #validate all templates for a given btype
+            # Validate brick type
+            self.logger.set_current_template_name(None)
+            self.logger.set_current_brick_part('brick:type')
+            self._validate_term( id=btype['data_type'], name=btype['text'])
+
+            # Validate all templates for a given btype
             for template in btype['children']:
+                self.logger.set_current_template_name(template['text'])
+
                 # validate and update properties 
                 if 'properties' in template:
-                    for prop in template['properties']:
-                        try:
-                            term = self._validate_and_update_type(prop['property'])
-                        except Exception as e:
-                            self.__add_error(btype, template, 'property', e)
 
+                    for prop in template['properties']:
+
+                        # Validate property type
+                        self.logger.set_current_brick_part('property:type')
+                        term = self._validate_term(term_desc=prop['property'])
+
+                        # Validate property value                            
                         if 'value' in prop:
-                            try:
-                                self._validate_value(term, prop['value'])                    
-                            except Exception as e:
-                                self.__add_error(btype, template, 'property',e)
-                            
+                            self.logger.set_current_brick_part('property:value')
+                            self._validate_value(term, prop['value'])
+
+                        # Validate property units
                         if 'units' in prop:
-                            try:
-                                self._validate_units(term, prop['units'])
-                            except Exception as e:
-                                self.__add_error(btype, template, 'property',e)
-                else:
-                    template['properties'] = []
+                            self.logger.set_current_brick_part('property:units')
+                            self._validate_units(term, prop['units'])
                 
                 #validate dimensions
                 for dim in template['dims']:
-                    try:
-                        self._validate_type(dim['type'])
-                    except Exception as e:
-                        self.__add_error(btype, template, 'dimension',e)
+
+                    # Validate dimension type
+                    self.logger.set_current_brick_part('dimension:type')
+                    self._validate_term(term_desc=dim['type'])
 
                     for dim_var in dim['dim_vars']:
-                        try:
-                            term = self._validate_and_update_type(dim_var['type'])
-                        except Exception as e:
-                            self.__add_error(btype, template, 'dim_var',e)
-                        
-                        try:
-                            self._validate_units(term, dim_var['units'])
-                        except Exception as e:
-                            self.__add_error(btype, template, 'dim_var',e)
+                        # Validate dimension variable type
+                        self.logger.set_current_brick_part('dimension:variable:type')
+                        term = self._validate_term(term_desc=dim_var['type'])
+
+                        # Validate dimension variable units
+                        self.logger.set_current_brick_part('dimension:variable:units')
+                        self._validate_units(term, dim_var['units'])
                 
                 #validate data vars
-                # TODO: temp solution
-                data_vars = []
                 for data_var in template['data_vars']:
-                    try:
-                        term = self._validate_and_update_type(data_var['type'])
-                    except Exception as e:
-                        self.__add_error(btype, template, 'data_var',e)
+                    # Validate data variable type
+                    self.logger.set_current_brick_part('data:variable:type')
+                    term = self._validate_term(term_desc=data_var['type'])
 
-                    try:
-                        self._validate_units(term, data_var['units'])
-                        data_vars.append(data_var)
-                    except Exception as e:
-                        self.__add_error(btype, template, 'data_var',e)
-
-                template['data_vars'] = data_vars
+                    # Validate data variable units
+                    self.logger.set_current_brick_part('data:variable:units')
+                    self._validate_units(term, data_var['units'])
                 
                 #validate process
-                try:
-                    self._validate_type(template['process'])
-                except Exception as e:
-                    self.__add_error(btype, template, 'process',e)
+                self.logger.set_current_brick_part('process:type')
+                self._validate_term(term_desc=template['process'])
 
 
     def _validate_and_update(self):
@@ -1730,80 +1744,130 @@ class BrickTemplateProvider:
         ptype.update(term.to_descriptor())
         return term
 
-    def _validate_type(self, ptype):
-        return self._validate_term( id=ptype['id'], name=ptype['text'])
 
-    def _validate_term(self, id=None, name=None):
-        # Find and validate term_id
-        term = services.term_provider.get_term(id)            
+    def _validate_term_id(self, id=None, term_desc=None):
+        if term_desc is not None:
+            id = term_desc['id']
 
-        # Validate term_name
+        term = None
+        try:
+            term = services.term_provider.get_term(id)            
+        except Exception as e:
+            self.logger.log_error(e)
+        return term
+
+    def _validate_term_name(self, term, name=None, term_desc=None):
+        validated = True        
+
+        if term_desc is not None:
+            name = term_desc['text']
+
         if term.term_name != name:
-            raise ValueError('Wrong term (%s) name: expected %s, observed %s' % (
-                term.term_id, name, term.term_name
-                ))
+            err_msg = 'Wrong term (%s) name: expected %s, observed %s' % (term.term_id, 
+                name, term.term_name)
+            self.logger.log_error(err_msg)
+            validated = False
+
+        return validated
+
+
+    def _validate_term(self, id=None, name=None, term_desc=None):
+        if term_desc is not None:
+            id = term_desc['id']
+            name = term_desc['text']
+
+        # Validate term id
+        term = self._validate_term_id(id=id)
+
+        # Validate term name (if term id is found)
+        if term is not None:
+            self._validate_term_name(term, name=name)
 
         return term
 
     def _validate_value(self, term, value):
+        # We can not valdiate value term without type term
+        if term is None:
+            return False
+
+        validated = True
         value_term_id = value['id']    
         value_term_name = value['text']
 
         if term.microtype_value_scalar_type == 'oterm_ref':
             # Find and validate value term_id
-            vterm = None
-            try:
-                vterm = self._validate_term(id=value_term_id, name=value_term_name)
-            except Exception as e:
-                raise ValueError('Failed value validation: %s' % str(e))
+            vterm = self._validate_term(id=value_term_id, name=value_term_name)
+            if vterm is None:
+                validated = False
 
+            else:
             # Validate parents
-            if term.microtype_valid_values_parent:
-                if term.microtype_valid_values_parent not in vterm.parent_path_ids:
-                    raise ValueError('Failed value validation: the value term "%s" is not a child of any terms defined as valid parents in the term "%s"' % (
-                            vterm.term_id + ':' + vterm.term_name,
-                            term.term_id + ':' + term.term_name
-                        ))                                   
+                if term.microtype_valid_values_parent:
+                    if term.microtype_valid_values_parent not in vterm.parent_path_ids:
+                        err_msg = 'The value term "%s" is not a child of any terms defined as valid parents in the term "%s"' % (
+                                vterm.term_id + ':' + vterm.term_name,
+                                term.term_id + ':' + term.term_name
+                            )
+                        self.logger.log_error(err_msg)
+                        validated = False
+
+        elif term.microtype_value_scalar_type == 'int':
+            if not isinstance(value['text'], int):
+                err_msg = 'The value %s is not int as defined in the type term "%s"' % (
+                        value['text'],
+                        term.term_id + ':' + term.term_name
+                    )
+                self.logger.log_error(err_msg)
+                validated = False
+
+        elif term.microtype_value_scalar_type == 'float':
+            if not isinstance(value['text'], float):
+                err_msg = 'The value %s is not float as defined in the type term "%s"' % (
+                        value['text'],
+                        term.term_id + ':' + term.term_name
+                    )
+                self.logger.log_error(err_msg)
+                validated = False
+
+        return validated
+
 
     def _validate_units(self, term, units):
-        # #TODO will skip for now
-        # if 1 == 1:
-        #     return
+        validated = True
         units_term_id = units['id']    
         units_term_name = units['text']
 
-        if term.has_units:
-            if units_term_id:
-                # Validate untis term
-                uterm = None
-                try:
-                    uterm = self._validate_term(id=units_term_id, name=units_term_name)
-                except Exception as e:
-                    raise ValueError('Failed units validation: %s' % str(e))                    
+        if units_term_id:
+            # Validate untis term
+            uterm = self._validate_term(id=units_term_id, name=units_term_name)
 
-                parent_found = False
-                if term.microtype_valid_units:
-                    if units_term_id in term.microtype_valid_units:
-                        parent_found = True
-                if term.microtype_valid_units_parents:
-                    parent_ids = uterm.parent_path_ids
-                    for parent_id in term.microtype_valid_units_parents:
-                        if parent_id in parent_ids:
+            if term is None:
+                validated = False
+            elif not term.has_units:
+                err_msg = 'The units term "%s" is defined but the type term "%s" defined as "has no units"' % (
+                        uterm.term_id + ':' + uterm.term_name,
+                        term.term_id + ':' + term.term_name)
+                self.logger.log_error(err_msg)
+                validated = False
+            else:
+                if uterm is not None:
+                    parent_found = False
+                    if term.microtype_valid_units:
+                        if units_term_id in term.microtype_valid_units:
                             parent_found = True
-                            break
-                if not parent_found:
-                    raise ValueError('Failed units validation: the units term "%s" is not a child (or representative) of any terms defined as valid parents in the term "%s"' % (
-                            uterm.term_id + ':' + uterm.term_name,
-                            term.term_id + ':' + term.term_name
-                        ))                       
-                    
+                    if term.microtype_valid_units_parents:
+                        parent_ids = uterm.parent_path_ids
+                        for parent_id in term.microtype_valid_units_parents:
+                            if parent_id in parent_ids:
+                                parent_found = True
+                                break
 
+                    if not parent_found:
+                        err_msg = 'The units term "%s" is not a child (or representative) of any terms defined as valid parents in the term "%s"' % (
+                                uterm.term_id + ':' + uterm.term_name,
+                                term.term_id + ':' + term.term_name)
+                        self.logger.log_error(err_msg)
+                        validated = False
 
-
-
-
-
-
-
-    
-        
+        return validated                    
+ 
