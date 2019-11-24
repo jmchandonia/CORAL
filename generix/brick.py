@@ -1597,18 +1597,21 @@ class BrickTemplateProvider:
     def __init__(self, file_name, logger=None):
         self.__templates = json.loads(open(file_name).read())    
         self.__logger = BrickTemplateTemplateLogger() if not logger else logger
-        # self._validate_and_update()
+        self.__upgraded = False
 
     @property
     def logger(self):
         return self.__logger
 
-
     @property
     def templates(self):
+        if not self.__upgraded:
+            self.upgrade_templates()
+            print('Templates are ready!')
+
         return self.__templates
     
-    def _validate_all(self):
+    def validate(self):
         self.logger.init()
         for btype in self.__templates['types']:
 
@@ -1673,76 +1676,30 @@ class BrickTemplateProvider:
                 self._validate_term(term_desc=template['process'])
 
 
-    def _validate_and_update(self):
+    def upgrade_templates(self):
         for btype in self.__templates['types']:
-            # Validate category:
-            # Example:
-            # "text" : "Chemical Measurement",
-            # "data_type" : "DA:0000005",
-
-            if 'text' not in btype:
-                raise ValueError('Failed type validation: "text" property is not found')
-
-            try:
-                self._validate_term( id=btype['data_type'], name=btype['text'])
-            except Exception as e:
-                raise ValueError('Failed type validation "%s": %s ' % (btype['text'], str(e)))
-
-            #validate all templates for a given btype
+            # process all templates for a given btype
             for template in btype['children']:
-                try:
-                    # validate and update properties 
+                # update property types
+                if 'properties' in template:
                     for prop in template['properties']:
-                        try:
-                            term = self._validate_and_update_type(prop['property'])
-                            if 'value' in prop:
-                                self._validate_value(term, prop['value'])                    
-                            if 'units' in prop:
-                                self._validate_units(term, prop['units'])
-                        except Exception as e:
-                            raise ValueError('Failed property vlaidation: %s ' % str(e))
-
-
+                        self._update_type(prop['property'])                        
                     
-                    #validate dimensions
-                    for dim in template['dims']:
-                        self._validate_type(dim['type'])
+                # update dimension variable types
+                for dim in template['dims']:
+                    for dim_var in dim['dim_vars']:
+                        self._update_type(dim_var['type'])                        
+                
+                # data_vars = []
+                # update data variable types
+                for data_var in template['data_vars']:
+                    self._update_type(data_var['type'])  
+        self.__upgraded = True                                          
 
-                        for dim_var in dim['dim_vars']:
-                            try:
-                                term = self._validate_and_update_type(dim_var['type'])
-                                self._validate_units(term, dim_var['units'])
-                            except Exception as e:
-                                raise ValueError('Failed dim_var vlaidation: %s ' %  str(e))
-                    
-                    #validate data vars
-                    # TODO: temp solution
-                    data_vars = []
-                    for data_var in template['data_vars']:
-                        try:
-                            term = self._validate_and_update_type(data_var['type'])
-                            self._validate_units(term, data_var['units'])
-                            data_vars.append(data_var)
-                        except Exception as e:
-                            print('Failed data_var validation: %s ' %  str(e))                            
-                            # raise ValueError('Failed data_var validation: %s ' %  str(e))
-                        template['data_vars'] = data_vars
-                    
-                    #validate process
-                    try:
-                        self._validate_type(template['process'])
-                    except Exception as e:
-                        raise ValueError('Failed process vlaidation: %s ' %  str(e))            
-
-                except Exception as e:
-                    raise ValueError('Failed template validation "%s": %s ' % (template['text'], str(e)))
-
-
-    def _validate_and_update_type(self, ptype):
-        term = self._validate_type(ptype)
+    def _update_type(self, ptype):
+        term = services.term_provider.get_term(ptype['id'])
         ptype.clear()
         ptype.update(term.to_descriptor())
-        return term
 
 
     def _validate_term_id(self, id=None, term_desc=None):
