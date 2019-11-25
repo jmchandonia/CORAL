@@ -279,7 +279,6 @@ export class UploadService {
 
   downloadBrickTemplate() {
     const formData: FormData = new FormData();
-    const blobOrJson = this.brickBuilder.isEmpty ? 'json' : 'blob';
 
     // we need to upload the brick data to get the right download template
     formData.append('brick', this.brickBuilder.toJson());
@@ -289,16 +288,15 @@ export class UploadService {
       headers: new HttpHeaders({
         'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       }),
-      // responseType: 'blob' as 'json'
-      responseType: blobOrJson as 'json'
+      responseType: 'blob' as 'json'
     };
 
     return new Promise((resolve) => {
       this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config)
         .subscribe(res => {
-          if (res.error) {
-            // reject(res);
-            // throw new Error(res.error);
+          if (res.type === 'text/html') {
+            // TODO: figure out a way to have a responseType of both JSON and blob in order to read errors sent from server
+            throw new Error('We\'re sorry, but something went wrong with the file type that you have currently uploaded');
           } else {
             resolve(res);
           }
