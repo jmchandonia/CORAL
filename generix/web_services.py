@@ -320,6 +320,37 @@ def do_report(value):
     } )
 
 
+@app.route('/generix/dim_var_validation_errors/<data_id>/<dim_index>/<dim_var_index>', methods=['GET'])
+def dim_var_validation_errors(data_id, dim_index, dim_var_index):
+    try:
+        dim_index = int(dim_index)
+        dim_var_index = int(dim_var_index)
+
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        validated_data = json.loads(open(uvd_file_name).read())
+
+        res = validated_data['dims'][dim_index]['dim_vars'][dim_var_index]['errors']
+        return _ok_response(res) 
+
+    except Exception as e:
+        return _err_response(e)
+
+
+@app.route('/generix/data_var_validation_errors/<data_id>/<data_var_index>', methods=['GET'])
+def data_var_validation_errors(data_id, data_var_index):
+    try:
+        data_var_index = int(data_var_index)
+
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        validated_data = json.loads(open(uvd_file_name).read())
+
+        res = validated_data['data_vars'][data_var_index]['errors']
+        return _ok_response(res) 
+
+    except Exception as e:
+        return _err_response(e)
+
+
 @app.route('/generix/create_brick', methods=['POST'])
 def create_brick():
 
@@ -388,7 +419,7 @@ def validate_upload():
             })
             for dim_var_index, dim_var in enumerate(dim['dim_vars']):
                 dim_var_ds = dim_ds['variables'][dim_var_index]
-                vtype_term_id = dim_var_ds['_type']['id']
+                vtype_term_id = dim_var_ds['type']['id']
                 values = np.array(dim_var['values'], dtype='object')
                 
                 errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
@@ -408,7 +439,7 @@ def validate_upload():
 
         for data_var_index, data_var in enumerate(data['data_vars']):
             data_var_ds = brick_ds['dataValues'][data_var_index]
-            vtype_term_id = data_var_ds['_type']['id']
+            vtype_term_id = data_var_ds['type']['id']
             values = np.array(data_var['values'], dtype='object')
             
             errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
