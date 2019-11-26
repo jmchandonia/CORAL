@@ -521,11 +521,18 @@ def upload_file():
 
             for dim_var_data in dim_data['dim_vars']:
                 dim['dim_vars'].append({
+                    'size' : dim_data['size'],
                     'value_example': _dim_var_example(dim_var_data['values'])
                 })
 
+        # Calculate the expected data_var_size
+        data_var_size = 1
+        for dim in dims:
+            data_var_size *= dim['size']
+
         for data_var_data in brick_data['data_vars']:
             data_vars.append({
+                'size' : data_var_size,
                 'value_example': _data_var_example(data_var_data['values'])
             })
 
