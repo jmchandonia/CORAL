@@ -4,8 +4,6 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
 
-OTERM_TYPE_PNAME = '_type'
-
 def generate_brick_2d_template_draft(brick_skeleton,file_name):
     book = Workbook()
     sheet = book.active
@@ -96,16 +94,16 @@ def generate_brick_2d_template(brick_skeleton,file_name):
 
 
     data_type = brick_skeleton['type']
-    data_var = data_vars[0][OTERM_TYPE_PNAME]['text']
+    data_var = data_vars[0]['type']['text']
 
     dims = [brick_dims[0]['type']['text'], brick_dims[1]['type']['text']]
     dim1_vars = []
     for dim_var in brick_dims[0]['variables']:
-        dim1_vars.append( '%s:%s' % (dims[0], dim_var[OTERM_TYPE_PNAME]['text'])  )
+        dim1_vars.append( '%s:%s' % (dims[0], dim_var['type']['text'])  )
 
     dim2_vars = []
     for dim_var in brick_dims[1]['variables']:
-        dim2_vars.append('%s:%s' % (dims[1], dim_var[OTERM_TYPE_PNAME]['text']) )
+        dim2_vars.append('%s:%s' % (dims[1], dim_var['type']['text']) )
 
     rows = [
         ['Automatically generated template '],
@@ -197,12 +195,12 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
 
 
     data_type = brick_skeleton['type']
-    data_vars = [ dvar[OTERM_TYPE_PNAME]['text'] for dvar in data_vars ] 
+    data_vars = [ dvar['type']['text'] for dvar in data_vars ] 
 
     dims = [brick_dims[0]['type']['text']]
     dim1_vars = []
     for dim_var in brick_dims[0]['variables']:
-        dim1_vars.append( '%s:%s' % (dims[0], dim_var[OTERM_TYPE_PNAME]['text'])  )
+        dim1_vars.append( '%s:%s' % (dims[0], dim_var['type']['text'])  )
 
     rows = [
         ['Automatically generated template '],
@@ -267,11 +265,11 @@ def parse_brick_F1DM_data(brick_ui, file_name):
 
     dims_ui = brick_ui['dimensions']
 
-    template_data_vars = [ dvar[OTERM_TYPE_PNAME]['text'] for dvar in brick_ui['dataValues'] ] 
+    template_data_vars = [ dvar['type']['text'] for dvar in brick_ui['dataValues'] ] 
     template_dim = dims_ui[0]['type']['text']
     template_dim1_vars = []
     for dim_var in dims_ui[0]['variables']:
-        template_dim1_vars.append( '%s:%s' % (template_dim, dim_var[OTERM_TYPE_PNAME]['text'])  )
+        template_dim1_vars.append( '%s:%s' % (template_dim, dim_var['type']['text'])  )
 
     dims = [{
         'size' : 0,
