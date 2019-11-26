@@ -355,42 +355,88 @@ def validate_upload():
         query = request.json
         data_id = query['data_id']
         file_name = os.path.join(TMP_DIR,_UPLOAD_PROCESSED_DATA_PREFIX 
-            + data_id)
+            + data_id)            
         data = json.loads(open(file_name).read())
+
+        file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        brick_ds = json.loads(open(file_name).read())
+
+        validated_data = {
+            'dims':[],
+            'data_vars': []
+        } 
 
         res = {
             'dims':[],
             'data_vars': []
         }
 
-        for dim in data['dims']:
+        # dataValues: scalarType: "text": "float"
+        # dimensions: variables: scalarType: "text": "string"
+        for dim_index, dim in enumerate(data['dims']):
+            dim_ds = brick_ds['dimensions'][dim_index]
             res_dim_vars = []
             res['dims'].append({
                 'dim_vars': res_dim_vars
             })
-            for dim_var in dim['dim_vars']:
-                size = len(dim_var['values'])
+            validated_dim_vars = []
+            validated_data['dims'].append({
+                'dim_vars': validated_dim_vars
+            })
+            for dim_var_index, dim_var in enumerate(dim['dim_vars']):
+                dim_var_ds = dim_ds['variables'][dim_var_index]
+                vtype_term_id = dim_var_ds['_type']['id']
+                values = np.array(dim_var['values'], dtype='object')
+                
+                errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
+
+                total_count = values.size
+                invalid_count = len(errors) 
                 res_dim_vars.append({
-                    'total_count': size,
-                    'valid_count': size,
-                    'invalid_count': 0
+                    'total_count': total_count,
+                    'valid_count': total_count - invalid_count,
+                    'invalid_count': invalid_count
                 })
 
-        for data_var in data['data_vars']:
-            size = 1
-            for dim_size in np.array(data_var['values']).shape:
-                size *= dim_size 
+                validated_dim_vars.append({
+                    'values': values.tolist(),
+                    'errors': errors
+                })
+
+        for data_var_index, data_var in enumerate(data['data_vars']):
+            data_var_ds = brick_ds['dataValues'][data_var_index]
+            vtype_term_id = data_var_ds['_type']['id']
+            values = np.array(data_var['values'], dtype='object')
+            
+            errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
+
+            total_count = values.size
+            invalid_count = len(errors) 
             res['data_vars'].append({
-                'total_count': size,
-                'valid_count': size,
-                'invalid_count': 0
+                'total_count': total_count,
+                'valid_count': total_count - invalid_count,
+                'invalid_count': invalid_count
             })
+
+            validated_data['data_vars'].append({
+                'values': values.tolist(),
+                'errors': errors
+            })
+
+        # Save validated data
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        with open(uvd_file_name, 'w') as f:
+            json.dump(validated_data, f, sort_keys=True, indent=4)
+
+        # Save validated report
+        uvr_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATION_REPORT_PREFIX + data_id )
+        with open(uvr_file_name, 'w') as f:
+            json.dump(res, f, sort_keys=True, indent=4)
 
         return _ok_response(res) 
 
     except Exception as e:
         return _err_response(e)
-
 
 
 @app.route('/generix/upload', methods=['POST'])
