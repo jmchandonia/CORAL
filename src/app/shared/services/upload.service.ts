@@ -84,7 +84,7 @@ export class UploadService {
 
       // set units to a term if its not empty or else null
       dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
-      dataValue.type = dataVar.type;
+      dataValue.typeTerm = dataVar.type;
       // dataValue.microType = dataVar.microtype;
       dataValue.scalarType = dataVar.scalar_type as Term;
 
@@ -117,7 +117,7 @@ export class UploadService {
 
         // set units to a term if units object does not contain empty values
         dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
-        dimVar.type = dvItem.type;
+        dimVar.typeTerm = dvItem.type;
         dimVar.scalarType = dvItem.scalar_type as Term;
 
         // create array of context objects for every dimension variable that has context
@@ -144,7 +144,7 @@ export class UploadService {
 
       // set units to a term if units object does not containe empty values
       prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
-      prop.type = item.property as Term;
+      prop.typeTerm = item.property as Term;
       prop.value = item.value as Term;
       prop.value = item.property.scalar_type === 'oterm_ref'
         ? prop.value as Term
@@ -167,7 +167,7 @@ export class UploadService {
 
     //set context properties
     context.required = ctx.required;
-    context.type = ctx.property;
+    context.typeTerm = ctx.property;
     context.value = new Term(ctx.value.id, ctx.value.text);
     if (!this.valuelessUnits(ctx.units)) {
       context.units = new Term(ctx.units.id, ctx.units.text);
@@ -294,7 +294,7 @@ export class UploadService {
     return new Promise((resolve) => {
       this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config)
         .subscribe(res => {
-          if (res.type === 'text/html') {
+          if (res.tiype === 'text/html') {
             // TODO: figure out a way to have a responseType of both JSON and blob in order to read errors sent from server
             throw new Error('We\'re sorry, but something went wrong with the file type that you have currently uploaded');
           } else {

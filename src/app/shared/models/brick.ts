@@ -91,15 +91,15 @@ export class DataValue {
     invalidCount: number;
     require_mapping: boolean;
 
-    private _type: Term;
+    private type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
 
 export class Context {
@@ -120,14 +120,14 @@ export class Context {
     // type: Term;
     value: Term;
     units: Term;
-    private _type: Term;
+    private type: Term;
     microType: any;
     scalarType: string;
     invalidValue = false;
 
-    get type() { return this._type; }
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    get typeTerm() { return this.type; }
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.scalarType = t.scalar_type;
     }
@@ -182,15 +182,15 @@ export class DimensionVariable {
     mapped = false; //
     mapPk = false; //
 
-    private _type: Term;
+    private type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
 
 export class TypedProperty {
@@ -220,17 +220,19 @@ export class TypedProperty {
     mappedCount: number;
     scalarType: string;
 
-    private _type: Term;
+    private type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
         this.scalarType = t.scalar_type;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
+
+// this.brick.property.typeTerm = ...
 
 export class MicroType {
     constructor(

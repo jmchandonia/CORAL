@@ -73,7 +73,7 @@ export class UploadValidationService {
     const messages = [];
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.type || !property.value || property.units === undefined) {
+      if (!property.typeTerm || !property.value || property.units === undefined) {
         // this.errorSub.next(true);
         // return true;
         error = true;
@@ -95,7 +95,7 @@ export class UploadValidationService {
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
         // check if there is type and units for all user input dimension variables
-        if ((!variable.type || variable.units === undefined) && !variable.required) {
+        if ((!variable.typeTerm || variable.units === undefined) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
@@ -114,7 +114,7 @@ export class UploadValidationService {
       // filter only user input data values
       for (const dataValue of this.nonRequiredDataValues) {
         // check if data value has selected type and units
-        if (!dataValue.type || dataValue.units === undefined) {
+        if (!dataValue.typeTerm || dataValue.units === undefined) {
           this.errorSub.next(true);
           return true;
         }
@@ -160,7 +160,7 @@ export class UploadValidationService {
      let error = false;
      const messages = [];
      for (const ctx of context) {
-       if (!ctx.type || !ctx.value || ctx.units === undefined) {
+       if (!ctx.typeTerm || !ctx.value || ctx.units === undefined) {
          error = true;
          messages.push(this.INCOMPLETE_FIELDS);
        }
