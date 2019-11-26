@@ -92,7 +92,7 @@ export class DataValue {
     invalidCount: number;
     require_mapping: boolean;
 
-    private type: Term;
+    type: Term;
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
@@ -121,7 +121,7 @@ export class Context {
     // type: Term;
     value: Term;
     units: Term;
-    private type: Term;
+    type: Term;
     microType: any;
     scalarType: string;
     invalidValue = false;
@@ -183,7 +183,7 @@ export class DimensionVariable {
     mapped = false; //
     mapPk = false; //
 
-    private type: Term;
+    type: Term;
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
@@ -221,7 +221,7 @@ export class TypedProperty {
     mappedCount: number;
     scalarType: string;
 
-    private type: Term;
+    type: Term;
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
