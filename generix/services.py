@@ -12,7 +12,7 @@ from pyArango.connection import Connection
 
 
 from .ontology import OntologyService, CashedTermProvider
-from .validator import TermValueValidationService
+from .validator import ValueValidationService
 from .workspace import Workspace
 from .typedef import TypeDefService
 from .indexdef import IndexTypeDefService
@@ -53,7 +53,7 @@ def _init_db_connection():
 ontology = None
 typedef = None
 indexdef = None
-term_value_validator = None
+value_validator = None
 term_provider = None
 workspace = None
 reports = None
@@ -71,8 +71,8 @@ def _init_services():
     global indexdef
     indexdef = IndexTypeDefService()
 
-    global term_value_validator
-    term_value_validator = TermValueValidationService()
+    global value_validator
+    value_validator = ValueValidationService()
 
     global term_provider
     term_provider = CashedTermProvider()
