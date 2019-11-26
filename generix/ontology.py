@@ -96,6 +96,8 @@ class OntologyService:
             except Exception as e:
                 print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']), e )
 
+    def _get_term(self, term_id_name):
+        return Term.get_term(term_id_name)
 
     def _collect_all_parent_ids(self, term, all_parent_ids):
         for pt in term._parent_terms:
@@ -810,16 +812,16 @@ class Term:
         # return re.sub('[^A-Za-z0-9]+', '_', self.term_name)
         return to_var_name('', self.term_name)
 
-    def validate_value(self, val):
-        if self.validator_name is None:
-            return True
+    # def validate_value(self, val):
+    #     if self.validator_name is None:
+    #         return True
 
-        validator = services.term_value_validator.validator(
-            self.validator_name)
-        if validator is None:
-            return True
+    #     validator = services.term_value_validator.validator(
+    #         self.validator_name)
+    #     if validator is None:
+    #         return True
 
-        return validator(val)
+    #     return validator(val)
 
     @property
     def parents(self):
