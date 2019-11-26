@@ -8,7 +8,8 @@ export class Brick {
     data_id: string;
     createStatus: string; //
     name: string;
-    type: string;
+    type: Term;
+    template_type: string;
     template_id: string;
     dimensions: BrickDimension[] = [];
     properties: TypedProperty[] = [];

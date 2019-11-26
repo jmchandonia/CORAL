@@ -59,7 +59,8 @@ export class UploadService {
   setSelectedTemplate(template) {
     // map template values to brick builder object
     this.selectedTemplate = template.id;
-    this.brickBuilder.type = template.text;
+    this.brickBuilder.template_type = template.text;
+    this.brickBuilder.type = template.data_type as Term;
     this.brickBuilder.template_id = template.id;
     if (template.process) {
       this.requiredProcess = true;
