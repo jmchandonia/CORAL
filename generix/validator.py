@@ -100,7 +100,7 @@ class ValueValidationService:
 
     def cast_var_values(self, values, var_term_id):
         var_term = services.ontology._get_term(var_term_id)
-        scalar_type = var_term.scalar_type
+        scalar_type = var_term.microtype_value_scalar_type
         errors = []
         if scalar_type == 'int':
             errors = self.cast_values(values, int, 'int')
@@ -108,7 +108,7 @@ class ValueValidationService:
             errors = self.cast_values(values, float, 'float')
         elif scalar_type == 'string':
             errors = self.cast_values(values, str, 'string')
-        elif scalar_type == 'oterm':
+        elif scalar_type == 'oterm_ref':
             errors = self.cast_oterm_values(values, var_term)
 
         # TODO: cast object refs
@@ -161,10 +161,10 @@ class ValueValidationService:
         for term_id_name in terms.keys():
             try:
                 term = ont._get_term(term_id_name)
-                if var_term.term_id in term.parent_path_ids:
+                if var_term.microtype_valid_values_parent in term.parent_path_ids:
                     terms[term_id_name]['term'] = term                
                 else:
-                    terms[term_id_name]['error'] = 'Term %s does not have a valid parent %s' % (str(term), str(var_term) )    
+                    terms[term_id_name]['error'] = 'Term %s does not have a valid parent (%s) defined in  %s' % (str(term), var_term.microtype_valid_values_parent, str(var_term) )    
             except:
                 terms[term_id_name]['error'] = 'Can not find term: %s' % term_id_name
 
