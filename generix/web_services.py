@@ -353,35 +353,37 @@ def data_var_validation_errors(data_id, data_var_index):
 
 @app.route('/generix/create_brick', methods=['POST'])
 def create_brick():
+    try:
+        brick_ds = json.loads(request.form['brick'])       
+        data_id = brick_ds['data_id']
+        brick_id = svs['workspace'].next_id('Brick')
 
-    # brick_ds = json.loads(request.form['brick'])       
-    # query = request.json
-    # data_id = query['data_id']
+        # Save birck data structure (update)
+        uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        with open(uds_file_name, 'w') as f:
+            json.dump(brick_ds, f, sort_keys=True, indent=4)
 
-    # uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
-    # validated_data = json.loads(open(uvd_file_name).read())
+        if 1 == 1: return _ok_response(brick_id)
 
-    brick_id = svs['workspace'].next_id('Brick')
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        brick_data = json.loads(open(uvd_file_name).read())
 
-    # br = _create_brick(brick_data)
+        br = _create_brick(brick_ds, brick_data)
 
-    # print('Brick created')
-    # print(br.data_vars[0].values)
-    # print(br._repr_html_())
+        process_term = _get_term(brick_ds['process'])
+        person_term = _get_term(brick_ds['person'])
+        campaign_term = _get_term(brick_ds['campaign'])
+        input_obj_ids = 'Well:Well0000000'
 
-    # process_term = _get_term({'id':'PROCESS:0000031'})
-    # person_term = _get_term({'id':'ENIGMA:0000090'})
-    # campaign_term = _get_term({'id':'ENIGMA:0000021'})
-    # input_obj_ids = 'Well:Well0000000'
+        br.save(process_term=process_term, 
+            person_term=person_term, 
+            campaign_term=campaign_term,
+            input_obj_ids=input_obj_ids)            
 
+        return _ok_response(brick_id)
 
-    # br.save(process_term=process_term, 
-    #     person_term=person_term, 
-    #     campaign_term=campaign_term,
-    #     input_obj_ids=input_obj_ids)
-
-
-    return  _ok_response(brick_id)
+    except Exception as e:
+        return _err_response(e)
 
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
@@ -563,7 +565,7 @@ def _dim_var_example(vals, max_items=5):
         '...' if len(vals) > max_items else '' ) 
 
 def _create_brick(brick_ds, brick_data):
-
+    # TODO: check "brick type" and "brick name"
     brick_dims = brick_ds['dimensions']
     brick_data_vars = brick_ds['dataValues']
     brick_properties = brick_ds['properties']
@@ -581,6 +583,8 @@ def _create_brick(brick_ds, brick_data):
         
     brick_type_term = _get_term(brick_data['type'])
     brick_name = brick_data['name'] 
+
+    from .brick import Brick
     br = Brick(type_term=brick_type_term, 
         dim_terms = dim_type_terms, 
         shape=dim_sizes,
@@ -593,7 +597,7 @@ def _create_brick(brick_ds, brick_data):
             var_units_term = _get_term(dim_var['units'])
             br.dims[dim_index].add_var(var_type_term, var_units_term, 
                 brick_data['dims'][dim_index]['dim_vars'][dim_var_index]['values'])
-                
+
     # add data
     for data_var_index, data_var in enumerate(brick_data_vars):
         data_type_term = _get_term(data_var['type'])
