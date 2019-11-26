@@ -203,41 +203,41 @@ def core_types():
     })
 
 
-@app.route('/generix/map_dim_variable', methods=['GET', 'POST'])
-def map_dim_variable():
-    if request.method == 'POST':
-        brick_data = json.loads(request.form['brick'])
-        br = _create_brick(brick_data)
+# @app.route('/generix/map_dim_variable', methods=['GET', 'POST'])
+# def map_dim_variable():
+#     if request.method == 'POST':
+#         brick_data = json.loads(request.form['brick'])
+#         br = _create_brick(brick_data)
 
-        dimIndex = int(request.form['dimIndex'])
-        dimVarIndex = int(request.form['dimVarIndex'])
-        mapCoreType = request.form['mapCoreType']
-        mapCoreProp = request.form['mapCoreProp']      
+#         dimIndex = int(request.form['dimIndex'])
+#         dimVarIndex = int(request.form['dimVarIndex'])
+#         mapCoreType = request.form['mapCoreType']
+#         mapCoreProp = request.form['mapCoreProp']      
 
-        br.dims[dimIndex].vars[dimVarIndex].map_to_core_type(mapCoreType, mapCoreProp)
-        idVar = br.dims[dimIndex].vars[-1]
+#         br.dims[dimIndex].vars[dimVarIndex].map_to_core_type(mapCoreType, mapCoreProp)
+#         idVar = br.dims[dimIndex].vars[-1]
 
-        totalCount = 0
-        mappedCount = 0
-        for val in idVar.values:
-            totalCount += 1
-            if val is not None:
-                mappedCount += 1
+#         totalCount = 0
+#         mappedCount = 0
+#         for val in idVar.values:
+#             totalCount += 1
+#             if val is not None:
+#                 mappedCount += 1
         
-        res = {
-            'totalCount': totalCount,
-            'mappedCount': mappedCount,
-            'dimIndex': dimIndex,
-            'dimVarIndex': dimVarIndex,
-            'type_term': { 
-                'id': idVar.type_term.term_id, 
-                'name': idVar.type_term.term_name},
-            'values': list(idVar.values)
-        }
+#         res = {
+#             'totalCount': totalCount,
+#             'mappedCount': mappedCount,
+#             'dimIndex': dimIndex,
+#             'dimVarIndex': dimVarIndex,
+#             'type_term': { 
+#                 'id': idVar.type_term.term_id, 
+#                 'name': idVar.type_term.term_name},
+#             'values': list(idVar.values)
+#         }
 
-    return  json.dumps({
-        'results': res
-    })
+#     return  json.dumps({
+#         'results': res
+#     })
 
 
 @app.route('/generix/do_search', methods=['GET', 'POST'])
@@ -322,11 +322,14 @@ def do_report(value):
 
 @app.route('/generix/create_brick', methods=['POST'])
 def create_brick():
-    brick_data = json.loads(request.form['brick'])
-    print(json.dumps(brick_data, 
-        sort_keys=True, 
-        indent=4, separators=(',', ': ') ) )
-        
+
+    # brick_ds = json.loads(request.form['brick'])       
+    # query = request.json
+    # data_id = query['data_id']
+
+    # uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+    # validated_data = json.loads(open(uvd_file_name).read())
+
     brick_id = svs['workspace'].next_id('Brick')
 
     # br = _create_brick(brick_data)
