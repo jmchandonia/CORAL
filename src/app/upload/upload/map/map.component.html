@@ -58,9 +58,12 @@
                         [fullScreen]="false"></ngx-spinner>
                     </td>
                     <td class="stats-column">
-                      <button *ngIf="mapped" class="btn btn-link" role="button" (click)="openModal(i)">
+                      <button *ngIf="mapped && dataVar.invalidCount > 0" class="btn btn-link" role="button" (click)="openModal(i)">
                         {{dataVar.invalidCount}}
                       </button>
+                      <span *ngIf="mapped && dataVar.invalidCount === 0">
+                        {{dataVar.invalidCount}}
+                      </span>
                     </td>
                     <td class="stats-column">
                       <i *ngIf="mapped && dataVar.validCount === dataVar.totalCount" class="material-icons success">
@@ -118,9 +121,10 @@
                     ></ngx-spinner>
                     </td>
                     <td class="stats-column">
-                      <button *ngIf="mapped" class="btn btn-link" role="button" (click)="openModal(dimVar.dimension.index, dimVar.index)">
+                      <button *ngIf="mapped && dimVar.validCount !== dimVar.totalCount" class="btn btn-link" role="button" (click)="openModal(dimVar.dimension.index, dimVar.index)">
                         {{dimVar.invalidCount}}
                       </button>
+                      <span *ngIf="mapped && dimVar.validCount === dimVar.totalCount">{{dimVar.invalidCount}}</span>
                     </td>
                     <td class="stats-column">
                       <i *ngIf="mapped && dimVar.validCount === dimVar.totalCount" class="material-icons success">
