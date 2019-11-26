@@ -107,7 +107,7 @@ export class LoadComponent implements OnInit, OnDestroy {
     err => {
       this.spinner.hide();
       this.error = true;
-      this.errorMessage = err.error;
+      this.errorMessage = err;
       this.loading = false;
     }
     );
