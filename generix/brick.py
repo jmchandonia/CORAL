@@ -1678,8 +1678,16 @@ class BrickTemplateProvider:
 
     def upgrade_templates(self):
         for btype in self.__templates['types']:
+            data_type_term_id = btype['data_type']
+            data_type_term = services.term_provider.get_term(data_type_term_id)
             # process all templates for a given btype
             for template in btype['children']:
+
+                template['data_type'] = {
+                    'id': data_type_term.term_id,
+                    'text': data_type_term.term_name
+                }
+                
                 # update property types
                 if 'properties' in template:
                     for prop in template['properties']:
