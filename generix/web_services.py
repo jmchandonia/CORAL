@@ -562,52 +562,53 @@ def _dim_var_example(vals, max_items=5):
         ','.join(str(val) for val in vals[0:max_items]), 
         '...' if len(vals) > max_items else '' ) 
 
-def _create_brick(brick_ui, brick_data):
-    dims_data = brick_ui['dimensions']
+def _create_brick(brick_ds, brick_data):
+
+    brick_dims = brick_ds['dimensions']
+    brick_data_vars = brick_ds['dataValues']
+    brick_properties = brick_ds['properties']
 
     dim_type_terms = []
-    dim_shapes = []
-    for dim_data in dims_data:
-        dim_type_term = _get_term(dim_data['type'])
+    dim_sizes = []
+
+    for dim_index, dim in enumerate(brick_dims):
+        dim_type_term = _get_term(dim['type'])
         dim_type_terms.append( dim_type_term )
-        for var_data in dim_data['variables']:
-            dim_size = len(var_data['values']) 
-        dim_shapes.append( dim_size )
-        print('Dim type = %s' % (str(dim_type_term)))
-        print('Dim size = %s' % dim_size)
+
+        for dim_var in brick_data['dims'][dim_index]['dim_vars']:
+            dim_size = len(dim_var['values']) 
+        dim_sizes.append( dim_size )
         
-    #TODO: get type term 
-    brick_type_term = svs['ontology'].data_types.find_id('DA:0000028')
-    brick_name = brick_data['name'] if "name" in brick_data else ""
+    brick_type_term = _get_term(brick_data['type'])
+    brick_name = brick_data['name'] 
     br = Brick(type_term=brick_type_term, 
         dim_terms = dim_type_terms, 
-        shape=dim_shapes,
+        shape=dim_sizes,
         name=brick_name)
 
     # add dim variables
-    for dim_index, dim_data in enumerate(dims_data):
-        print('dim_index = %s, shape = %s' %(dim_index, br.dims[dim_index].size) )
-        for var_data in dim_data['variables']:
-            print('\tdim_inde = %s, values_size = %s' %(dim_index, len(var_data['values']) ) )
-            var_type_term = _get_term(var_data['type'])
-            var_units_term = _get_term(var_data['units'])
-            br.dims[dim_index].add_var(var_type_term, var_units_term, var_data['values'])
+    for dim_index, dim in enumerate(brick_dims):
+        for dim_var_index, dim_var in enumerate(dim['variables']):
+            var_type_term = _get_term(dim_var['type'])
+            var_units_term = _get_term(dim_var['units'])
+            br.dims[dim_index].add_var(var_type_term, var_units_term, 
+                brick_data['dims'][dim_index]['dim_vars'][dim_var_index]['values'])
+                
+    # add data
+    for data_var_index, data_var in enumerate(brick_data_vars):
+        data_type_term = _get_term(data_var['type'])
+        data_units_term = _get_term(data_var['units'])
+        br.add_data_var(data_type_term, data_units_term, 
+            brick_data['data_vars'][data_var_index]['values'])
+
 
     # add brick properties
-    for prop_data in brick_data['properties']:
-        var_type_term = _get_term(prop_data['type'])
-        var_units_term = _get_term(prop_data['units'])
-        br.add_attr(var_type_term, var_units_term, 'text', prop_data['value'])
-
-    # add data
-    df = pd.read_csv(brick_data['data_file_name'], sep='\t') 
-    offset = len(dims_data[0]['variables'])
-    df = df[df.columns[offset:].values]
-
-    # TODO: switch to real value
-    data_type_term = _get_term({'id':'ME:0000126'})
-    data_units_term = None
-    br.add_data_var(data_type_term, data_units_term, df.values)        
+    for prop in brick_properties:
+        var_type_term = _get_term(prop['type'])
+        var_units_term = _get_term(prop['units'])
+        scalarType = prop['scalarType']
+        value = prop['value']
+        br.add_attr(var_type_term, var_units_term, scalarType, value)
 
     return br
 
