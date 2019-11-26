@@ -6,22 +6,24 @@
   </div>
   <div class="row" *ngIf="errors.length">
     <div class="col-12">
-      <div class="row">
-        <div class="col-1">Index</div>
-        <div class="col-11">Error</div>
-      </div>
-      <div class="row" *ngFor="let error of errors;">
-        <div class="col-1">
-          <div class="alert alert-secondary">
-            {{error.index}}
-          </div>
-        </div>
-        <div class="col-11">
-          <div class="alert alert-danger">
-            {{error.error_msg}}
-          </div>
-        </div>
-      </div>
+      <table #tableModal class="table table-bordered">
+        <thead class="table-header">
+          <tr>
+            <th class="index">
+              #
+            </th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let error of errors;">
+            <td class="index">
+              {{error.index}}
+            </td>
+            <td class="error-cell">{{error.error_msg}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
   <div class="row mt-3 mb-3">
