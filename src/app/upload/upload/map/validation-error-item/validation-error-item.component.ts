@@ -1,36 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import * as $ from 'jquery';
+import 'datatables.net';
+import 'datatables.net-bs4';
 
 @Component({
   selector: 'app-validation-error-item',
   templateUrl: './validation-error-item.component.html',
   styleUrls: ['./validation-error-item.component.css']
 })
-export class ValidationErrorItemComponent implements OnInit {
+export class ValidationErrorItemComponent implements AfterViewInit {
 
-  index: number;
-  dimVarIndex: number;
-  errors = [];
+  errors: any[];
+  dataTable: any;
+  @ViewChild('tableModal') el: ElementRef;
 
   constructor(
     private uploadService: UploadService,
     private modalRef: BsModalRef
   ) { }
 
-  ngOnInit() {
-    if (!this.dimVarIndex) {
-      // get errors for data variables
-      this.uploadService.getDataVarValidationErrors(this.index)
-        .subscribe((res: any) => {
-          this.errors = res.results;
-        });
-    } else {
-      // get errors for dimension variables
-      this.uploadService.getDimVarValidationErrors(this.index, this.dimVarIndex)
-        .subscribe((res: any) => {
-          this.errors = res.results;
-        });
+  ngAfterViewInit() {
+    if (this.el) {
+      const table: any = $(this.el.nativeElement);
+      this.dataTable = table.DataTable();
     }
   }
 

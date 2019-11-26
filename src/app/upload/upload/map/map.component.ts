@@ -102,11 +102,22 @@ p
   }
 
   openModal(index: number, dimVarIndex?: string) {
-    const config = {
-      initialState: { index, dimVarIndex },
-      class: 'modal-lg'
-    };
-    this.modalRef = this.modalService.show(ValidationErrorItemComponent, config);
+    const config: any = { class: 'modal-lg' };
+    if (dimVarIndex) {
+      // open modal ref for dimension variables
+      this.uploadService.getDimVarValidationErrors(index, dimVarIndex)
+        .subscribe((res: any) => {
+          config.initialState = { errors: res.results };
+          this.modalRef = this.modalService.show(ValidationErrorItemComponent, config);
+        });
+    } else {
+      // open modal ref for data variables
+      this.uploadService.getDataVarValidationErrors(index)
+        .subscribe((res: any) => {
+          config.initialState = { errors: res.results };
+          this.modalRef = this.modalService.show(ValidationErrorItemComponent, config);
+        });
+    }
   }
 
 }
