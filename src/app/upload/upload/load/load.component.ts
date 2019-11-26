@@ -56,6 +56,8 @@ export class LoadComponent implements OnInit, OnDestroy {
   }
 
   handleFileInput(files: FileList) {
+    this.successData = null;
+    this.error = false;
     this.file = files.item(0);
     this.uploadService.setFile(this.file);
     this.calculateFileSize();
@@ -63,6 +65,8 @@ export class LoadComponent implements OnInit, OnDestroy {
    }
 
    handleFileInputFromBrowse(event) {
+     this.successData = null;
+     this.error = false;
      if (event.target && event.target.files) {
        this.file = event.target.files.item(0);
        this.uploadService.setFile(this.file);
