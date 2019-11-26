@@ -38,7 +38,8 @@ class DataProvider:
             'indexdef': services.indexdef,
             'arango_service': services.arango_service,
             'workspace': services.workspace,
-            'brick_template_provider': services.brick_template_provider
+            'brick_template_provider': services.brick_template_provider,
+            'value_validator': services.value_validator: 
         }
     def _get_constants(self):
         return {
