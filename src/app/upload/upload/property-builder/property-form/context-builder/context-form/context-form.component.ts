@@ -18,14 +18,14 @@ export class ContextFormComponent implements OnInit, OnDestroy {
   @Input() set context(c: Context) {
     this._context = c;
 
-    this.typesSelect2 = c.type ? [c.type] : [];
+    this.typesSelect2 = c.typeTerm ? [c.typeTerm] : [];
     this.unitsSelect2 = c.units ? [c.units] : [{id: '', text: ''}];
     this.valuesSelect2 = c.value && c.scalarType === 'oterm_ref'
       ? [c.value] as Select2OptionData[]
       : [{id: '', text: ''}];
 
-    if (c.type) {
-      this.typeItem = c.type.id;
+    if (c.typeTerm) {
+      this.typeItem = c.typeTerm.id;
     }
     if (c.units) {
       this.unitsItem = c.units.id;
@@ -37,14 +37,14 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     if (this.context.microType) {
       this.getUnits();
     } else {
-      if (this.context.type) {
+      if (this.context.typeTerm) {
         // this code should be removed in the future as template context microtypes shoud ideally be provided in the JSON file
         // it is here to prevent fields from not being able to load units
-        this.uploadService.searchPropertyMicroTypes(this.context.type.text)
+        this.uploadService.searchPropertyMicroTypes(this.context.typeTerm.text)
           .subscribe((data: any) => {
 
             // get results from API call and find microtype from there
-            const typeData = data.results.find(item => item.id === this.context.type.id);
+            const typeData = data.results.find(item => item.id === this.context.typeTerm.id);
 
             // if we still cant find the microtype after the API call, set the units to null
             if (!typeData) {
@@ -143,7 +143,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
 
   setContextType(event) {
     const item = event.data[0];
-    this.context.type = item;
+    this.context.typeTerm = item;
 
     // clear reset entire property object to clear other select 2 dropdowns
     if (this.context.value || this.context.units) {

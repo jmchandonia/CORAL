@@ -28,13 +28,13 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     this._property = prop;
 
-    if (prop.type) {
-      const typeWithContext = Object.assign({}, prop.type);
+    if (prop.typeTerm) {
+      const typeWithContext = Object.assign({}, prop.typeTerm);
       prop.context.forEach(ctx => {
-        typeWithContext.text += `, ${ctx.type.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
+        typeWithContext.text += `, ${ctx.typeTerm.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
       });
       this.typesSelect2 = [typeWithContext];
-      this.propTypeItem = prop.type.id;
+      this.propTypeItem = prop.typeTerm.id;
     }
     if (prop.units) {
       this.unitsItem = prop.units.id;
@@ -154,7 +154,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     const config = {
       initialState: {
         context: this.property.context,
-        title: this.property.type.text
+        title: this.property.typeTerm.text
       },
       class: 'modal-lg',
       ignoreBackdropClick: true
@@ -169,9 +169,9 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       This appears to be the simplest way to programmatically change the selected text in an ng2-select2
       component without going into the internals.
       */
-      const { type, index, required }  = this.property;
+      const { typeTerm, index, required }  = this.property;
       const newProperty = Object.assign(
-        new TypedProperty(index, required, type), this.property
+        new TypedProperty(index, required, typeTerm), this.property
         ) as TypedProperty;
       this.typeReselected.emit(newProperty);
       this.modalHiddenSub.unsubscribe();
@@ -180,7 +180,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
   setPropertyType(event) {
     const item = event.data[0];
-    this.property.type = item;
+    this.property.typeTerm = item;
     // this.property.microType = item.microtype;
 
     // clear reset entire property object to clear other select 2 dropdowns
