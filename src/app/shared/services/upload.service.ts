@@ -228,6 +228,14 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
   }
 
+  public getDataVarValidationErrors(idx) {
+    return this.http.get(`${environment.baseURL}/data_var_validation_errors/${this.brickBuilder.data_id}/${idx}`);
+  }
+
+  public getDimVarValidationErrors(idx, dvIdx) {
+    return this.http.get(`${environment.baseURL}/dim_var_validation_errors/${this.brickBuilder.data_id}/${idx}/${dvIdx}`);
+  }
+
   public getValidationResults() {
     const body = { data_id: this.brickBuilder.data_id };
     return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
@@ -317,6 +325,7 @@ export class UploadService {
       // set value sample of variables for each dimension variable
       dim.variables.forEach((dimVar, dvIdx) => {
         dimVar.valuesSample = dimData.dim_vars[dvIdx].value_example;
+        dimVar.totalCount = dim.size;
       });
     });
 
@@ -324,6 +333,7 @@ export class UploadService {
     this.brickBuilder.dataValues.forEach((val, idx) => {
       const valueData = res.results.data_vars[idx];
       val.valuesSample = valueData.value_example;
+      val.totalCount = valueData.size;
     });
   }
 
