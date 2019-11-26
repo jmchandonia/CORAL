@@ -38,7 +38,7 @@ export class UploadValidationService {
         return this.validateDataVariables();
       case 'load':
         return this.validateUploadedData();
-      case 'map':
+      case 'validate':
         return this.validateMappedData();
       case 'create':
         return this.validateCreateStep();
