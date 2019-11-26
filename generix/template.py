@@ -394,14 +394,14 @@ def _validate(dims, data_vars):
 
     # Validate data vars
     for data_var in data_vars:
-        data_shape = np.array(data_var['values']).shape
+        data_shape = list(np.array(data_var['values']).shape)
 
         if len(data_shape) != len(dim_sizes):
             raise ValueError('The dimensionality of data (%s) is different from the context (%s)' % (len(data_shape), len(dim_sizes)))
 
-        for dim_index, dim_size in enumerate(data_shape):
-            if dim_size == dim_sizes[dim_index]:
-                raise ValueError('The size of dimension for data var (%s) and context (%s) ' % (dim_size, dim_sizes[dim_index]))
+        for dim_index, dim_size in enumerate(dim_sizes):
+            if dim_size != data_shape[dim_index]:
+                raise ValueError('The size of dimension for data var (%s) and context (%s) ' % (dim_size, data_shape[dim_index]))
 
 def _get_1d_column_data(sheet, ri, ci):
     data = []
