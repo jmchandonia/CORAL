@@ -398,7 +398,33 @@ class Ontology:
     def find_id(self, term_id):
         aql_bind = {'term_id': term_id}
         aql_filter = 'x.term_id == @term_id'
-        return self.__find_term(aql_filter, aql_bind)
+        return self.__find_term(aql_filter, aql_bind)        
+
+
+    def find_microtype_dimensions(self, size=1000):    
+        aql_bind = {}
+        aql_filter = 'x.is_dimension == true'
+        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
+
+    def find_microtype_dimension_variables(self, size=1000):    
+        aql_bind = {}
+        aql_filter = 'x.is_dimension_variable == true'
+        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
+
+    def find_microtype_data_variables(self, size=1000):    
+        aql_bind = {}
+        aql_filter = 'x.is_dimension_variable == true'
+        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
+
+    def find_microtype_properties(self, size=1000):    
+        aql_bind = {}
+        aql_filter = 'x.is_property == true'
+        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
+
+    def find_microtypes(self, size=1000):    
+        aql_bind = {}
+        aql_filter = 'x.is_microtype == true'
+        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
 
     def find_ids(self, term_ids, size=100):
         aql_bind = {'term_ids': term_ids}
@@ -452,6 +478,54 @@ class Ontology:
         aql_filter = 'x.term_name in @term_names'
         return self.__find_terms_hash(aql_filter, aql_bind)
 
+class MicrotypeCollection:
+    def __init__(self, terms):
+        self.__terms = terms
+        self.__terms.sort(key=lambda term: term.term_name)
+        # self.__inflate_terms()
+
+    def __inflate_terms(self):
+        for term in self.__terms:
+            name = to_var_name('TERM_', term.term_name)
+            self.__dict__[name] = term
+
+    def __getitem__(self, i):
+        return self.__terms[i]
+
+    @property
+    def term_ids(self):
+        return [t.term_id for t in self.__terms]
+
+    @property
+    def terms(self):
+        return self.__terms
+
+    @property
+    def size(self):
+        return len(self.__terms)
+
+
+    def head(self, n=5):
+        return MicrotypeCollection(self.__terms[:n])
+
+    def _repr_html_(self):
+        columns = ['Term ID', 'Term Name', 'Dimension', 'Dim. Var', 'Data Var', 'Property']
+        header = '<tr>%s</tr>' % ''.join(['<th>%s</th>' % x for x in columns])
+        rows = []
+        for term in self.terms:
+            rows.append(
+                '<tr>%s%s%s%s%s%s</tr>' % (
+                    '<td>%s</td>' % term.term_id,
+                    '<td>%s</td>' % term.term_name,
+                    '<td>%s</td>' % term.is_dimension, 
+                    '<td>%s</td>' % term.is_dimension_variable,
+                    '<td>%s</td>' % term.is_dimension_variable,
+                    '<td>%s</td>' % term.is_property
+                )
+            )
+
+        table = '<table>%s%s</table>' % (header, ''.join(rows))
+        return '%s <br> %s terms' % (table, len(self.terms))
 
 class TermCollection:
     def __init__(self, terms):
