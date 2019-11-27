@@ -363,8 +363,6 @@ def create_brick():
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
 
-        if 1 == 1: return _ok_response(brick_id)
-
         uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
         brick_data = json.loads(open(uvd_file_name).read())
 
