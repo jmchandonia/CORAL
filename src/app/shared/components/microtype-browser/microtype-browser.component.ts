@@ -6,13 +6,13 @@ import 'datatables.net';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-  selector: 'app-ontology-browser',
-  templateUrl: './ontology-browser.component.html',
-  styleUrls: ['./ontology-browser.component.css']
+  selector: 'app-microtype-browser',
+  templateUrl: './microtype-browser.component.html',
+  styleUrls: ['./microtype-browser.component.css']
 })
-export class OntologyBrowserComponent implements OnInit {
+export class MicrotypeBrowserComponent implements OnInit {
 
-  public ontologies: any[];
+  public microtypes: any[];
   dataTables: any;
 
   constructor(
@@ -26,7 +26,7 @@ export class OntologyBrowserComponent implements OnInit {
     this.uploadService.getMicroTypes()
       .subscribe((res: any) => {
         this.spinner.hide('spinner');
-        this.ontologies = res.results;
+        this.microtypes = res.results;
         this.chRef.detectChanges();
         const table: any = $('table');
         this.dataTables = table.DataTable();

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OntologyBrowserComponent } from './ontology-browser.component';
+import { MicrotypeBrowserComponent } from './microtype-browser.component';
 
-describe('OntologyBrowserComponent', () => {
-  let component: OntologyBrowserComponent;
-  let fixture: ComponentFixture<OntologyBrowserComponent>;
+describe('MicrotypeBrowserComponent', () => {
+  let component: MicrotypeBrowserComponent;
+  let fixture: ComponentFixture<MicrotypeBrowserComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OntologyBrowserComponent ]
+      declarations: [ MicrotypeBrowserComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OntologyBrowserComponent);
+    fixture = TestBed.createComponent(MicrotypeBrowserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

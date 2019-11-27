@@ -3,7 +3,7 @@
     <div class="col-12">
       <div class="card">
         <div class="card-header light-blue">
-          <h5>Browse Ontologies</h5>
+          <h5>Browse Microtypes</h5>
         </div>
         <div class="card-body">
           This is where you can browse for microtype ontologies in our system to see which types are supported 
@@ -24,7 +24,7 @@
         type="ball-spin-fade-rotating"></ngx-spinner>
     </div>
   </div>
-  <div class="row justify-content-center mb-3" *ngIf="ontologies">
+  <div class="row justify-content-center mb-3" *ngIf="microtypes">
     <div class="col-12">
       <table class="table table-bordered table-striped">
         <thead class="table-header">
@@ -57,29 +57,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let ontology of ontologies">
-            <td>{{ontology.term_name}}</td>
-            <td>{{ontology.term_id}}</td>
-            <td>{{ontology.mt_value_scalar_type}}</td>
-            <td>{{ontology.mt_valid_values}}</td>
-            <td>{{ontology.mt_valid_units}}</td>
+          <tr *ngFor="let microtype of microtypes">
+            <td>{{microtype.term_name}}</td>
+            <td>{{microtype.term_id}}</td>
+            <td>{{microtype.mt_value_scalar_type}}</td>
+            <td>{{microtype.mt_valid_values}}</td>
+            <td>{{microtype.mt_valid_units}}</td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.mt_dimension" class="material-icons blue">
+              <i *ngIf="microtype.mt_dimension" class="material-icons blue">
                 check_circle
               </i>
             </td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.mt_dim_var" class="material-icons blue">
+              <i *ngIf="microtype.mt_dim_var" class="material-icons blue">
                 check_circle
               </i>
             </td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.mt_data_var" class="material-icons">
+              <i *ngIf="microtype.mt_data_var" class="material-icons">
                 check_circle
               </i>
             </td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.mt_property" class="material-icons blue">
+              <i *ngIf="microtype.mt_property" class="material-icons blue">
                 check_circle
               </i>
             </td>
