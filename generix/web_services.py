@@ -1262,7 +1262,10 @@ def generix_microtypes():
                 'mt_dimension': term.is_dimension,
                 'mt_dim_var': term.is_dimension_variable,
                 'mt_data_var': term.is_dimension_variable,
-                'mt_property': term.is_property
+                'mt_property': term.is_property,
+                'mt_value_scalar_type': term.microtype_value_scalar_type,
+                'mt_valid_values': ' valid values',
+                'mt_valid_units': ' valid units'                
             })
         return  _ok_response(res)       
     except Exception as e:
