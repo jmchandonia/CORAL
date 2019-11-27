@@ -61,4 +61,3 @@ export class SearchResultComponent implements OnInit {
   }
 
 }
- 

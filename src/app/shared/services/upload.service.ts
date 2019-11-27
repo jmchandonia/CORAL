@@ -191,6 +191,11 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
   }
 
+  // method to be used for microtype browser component
+  public getMicroTypes() {
+    return this.http.get(`${environment.baseURL}/microtypes`);
+  }
+
   public searchOntPropertyValues(value: string, microtype: any) {
     const body = { microtype, value };
     return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body).pipe(delay(500));

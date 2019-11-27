@@ -5,7 +5,10 @@
         <thead class="table-header">
           <tr>
             <th>
-              Ontology Name
+              Name
+            </th>
+            <th>
+              ID
             </th>
             <th class="checkbox">
               Properties
@@ -13,6 +16,7 @@
             <th>
               Data Variables
             </th>
+            <th>Dimensions</th>
             <th>
               Dimension Variables
             </th>
@@ -20,19 +24,25 @@
         </thead>
         <tbody>
           <tr *ngFor="let ontology of ontologies">
-            <td>{{ontology.title}}</td>
+            <td>{{ontology.term_name}}</td>
+            <td>{{ontology.term_id}}</td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.valid_for_properties" class="material-icons blue">
+              <i *ngIf="ontology.mt_property" class="material-icons blue">
                 check_circle
               </i>
             </td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.valid_for_data_vars" class="material-icons blue">
+              <i *ngIf="ontology.mt_data_var" class="material-icons blue">
                 check_circle
               </i>
             </td>
             <td class="checkbox-container">
-              <i *ngIf="ontology.valid_for_dim_vars" class="material-icons blue">
+              <i *ngIf="ontology.mt_dimension" class="material-icons">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="ontology.mt_dim_var" class="material-icons blue">
                 check_circle
               </i>
             </td>
