@@ -7,6 +7,7 @@ import { ReportsComponent } from './shared/components/reports/reports.component'
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthGuardService as AuthGuard } from './shared/services/auth-guard.service';
 import { ErrorComponent } from './shared/components/error/error.component';
+import { OntologyBrowserComponent } from './shared/components/ontology-browser/ontology-browser.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,11 @@ const routes: Routes = [
   {
     path: 'error',
     component: ErrorComponent,
+  },
+  {
+    path: 'ontologies',
+    component: OntologyBrowserComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

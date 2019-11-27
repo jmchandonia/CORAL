@@ -21,6 +21,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { GlobalErrorHandler } from 'src/app/shared/services/global-error-handler';
 import { ServerErrorInterceptor } from 'src/app/shared/services/server-error-interceptor';
 import { ErrorComponent } from './shared/components/error/error.component';
+import { OntologyBrowserComponent } from './shared/components/ontology-browser/ontology-browser.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -31,6 +32,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ReportsComponent,
     DashboardComponent,
     ErrorComponent,
+    OntologyBrowserComponent,
   ],
   imports: [
     BrowserModule,

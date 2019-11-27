@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <table class="table table-bordered table-striped">
+        <thead class="table-header">
+          <tr>
+            <th>
+              Ontology Name
+            </th>
+            <th class="checkbox">
+              Properties
+            </th>
+            <th>
+              Data Variables
+            </th>
+            <th>
+              Dimension Variables
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ontology of ontologies">
+            <td>{{ontology.title}}</td>
+            <td class="checkbox-container">
+              <i *ngIf="ontology.valid_for_properties" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="ontology.valid_for_data_vars" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="ontology.valid_for_dim_vars" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
