@@ -356,7 +356,6 @@ def create_brick():
     try:
         brick_ds = json.loads(request.form['brick'])       
         data_id = brick_ds['data_id']
-        brick_id = svs['workspace'].next_id('Brick')
 
         # Save birck data structure (update)
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
@@ -366,8 +365,7 @@ def create_brick():
         uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
         brick_data = json.loads(open(uvd_file_name).read())
 
-        br = _create_brick(brick_ds, brick_data)
-        br.set_id(brick_id)
+        br = _create_brick(brick_ds, brick_data)        
 
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
@@ -379,7 +377,7 @@ def create_brick():
             campaign_term=campaign_term,
             input_obj_ids=input_obj_ids)            
 
-        return _ok_response(brick_id)
+        return _ok_response(br.id)
 
     except Exception as e:
         return _err_response(e)
