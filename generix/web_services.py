@@ -1021,6 +1021,26 @@ def generix_plot_types():
         
     return _ok_response(plot_types)
 
+@app.route("/generix/report_plot_data/<report_id>", methods=['GET'])
+def generix_report_plot_data():
+    try:
+        # Build layout
+        layout = {
+            'width': 800,
+            'height': 600,
+            'title': ''
+        }
+        data = []
+
+        return _ok_response({
+                'layout': layout,
+                'data': data
+            })
+
+    except Exception as e:
+        return _err_response(e)
+
+
 @app.route("/generix/reports", methods=['GET'])
 def generix_reports():
 
