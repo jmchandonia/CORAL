@@ -1251,6 +1251,24 @@ def _to_process_docs(rows):
     return process_docs
 
 
+@app.route('/generix/microtypes', methods=['GET'])
+def generix_microtypes():
+    try:
+        res = []
+        for term in svs['ontology'].all.find_microtypes().terms:
+            res.append({
+                'term_id': term.term_id,
+                'term_name': term.term_name,
+                'mt_dimension': term.is_dimension,
+                'mt_dim_var': term.is_dimension_variable,
+                'mt_data_var': term.is_dimension_variable,
+                'mt_property': term.is_property
+            })
+        return  _ok_response(res)       
+    except Exception as e:
+        return _err_response(e)
+
+
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET'])
 def generix_core_type_metadata(obj_id):
     obj_type = ''
