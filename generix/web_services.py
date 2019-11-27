@@ -367,6 +367,7 @@ def create_brick():
         brick_data = json.loads(open(uvd_file_name).read())
 
         br = _create_brick(brick_ds, brick_data)
+        br.set_id(brick_id)
 
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
@@ -1020,13 +1021,13 @@ def generix_plot_types():
     return _ok_response(plot_types)
 
 @app.route("/generix/report_plot_data/<report_id>", methods=['GET'])
-def generix_report_plot_data():
+def generix_report_plot_data(report_id):
     try:
         # Build layout
         layout = {
             'width': 800,
             'height': 600,
-            'title': ''
+            'title': report_id
         }
         data = []
 
