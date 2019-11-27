@@ -369,7 +369,7 @@ def create_brick():
         br = _create_brick(brick_ds, brick_data)
 
         process_term = _get_term(brick_ds['process'])
-        person_term = _get_term(brick_ds['person'])
+        person_term = _get_term(brick_ds['personnel'])
         campaign_term = _get_term(brick_ds['campaign'])
         input_obj_ids = 'Well:Well0000000'
 
