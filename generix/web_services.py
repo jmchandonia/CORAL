@@ -615,7 +615,7 @@ def _create_brick(brick_ds, brick_data):
     return br
 
 def _get_term(term_data):
-    return svs['ontology'].all.find_id( term_data['id'] ) if term_data['id'] != '' else None
+    return svs['ontology'].all.find_id( term_data['id'] ) if term_data and term_data['id'] != '' else None
 
 
 ########################################################################################
