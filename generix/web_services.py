@@ -584,8 +584,8 @@ def _create_brick(brick_ds, brick_data):
     brick_type_term = _get_term(brick_data['type'])
     brick_name = brick_data['name'] 
 
-    from .brick import Brick
-    br = Brick(type_term=brick_type_term, 
+    bp = dp._get_type_provider('Brick')
+    br = bp.create_brick(type_term=brick_type_term, 
         dim_terms = dim_type_terms, 
         shape=dim_sizes,
         name=brick_name)
