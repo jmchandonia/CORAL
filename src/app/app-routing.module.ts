@@ -7,7 +7,7 @@ import { ReportsComponent } from './shared/components/reports/reports.component'
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthGuardService as AuthGuard } from './shared/services/auth-guard.service';
 import { ErrorComponent } from './shared/components/error/error.component';
-import { OntologyBrowserComponent } from './shared/components/ontology-browser/ontology-browser.component';
+import { MicrotypeBrowserComponent } from './shared/components/microtype-browser/microtype-browser.component';
 
 const routes: Routes = [
   {
@@ -39,8 +39,8 @@ const routes: Routes = [
     component: ErrorComponent,
   },
   {
-    path: 'ontologies',
-    component: OntologyBrowserComponent,
+    path: 'microtypes',
+    component: MicrotypeBrowserComponent,
     canActivate: [AuthGuard]
   }
 ];
