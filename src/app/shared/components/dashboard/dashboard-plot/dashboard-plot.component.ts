@@ -21,7 +21,9 @@ export class DashboardPlotComponent implements OnInit {
     if (this.id) {
       this.plotService.getReportPlotData(this.id)
         .subscribe((res: any) => {
-          console.log('RES', res);
+          const { results } = res;
+          this.data = results.data;
+          this.layout = results.layout;
         });
     }
   }
