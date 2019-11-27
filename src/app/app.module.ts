@@ -22,6 +22,7 @@ import { GlobalErrorHandler } from 'src/app/shared/services/global-error-handler
 import { ServerErrorInterceptor } from 'src/app/shared/services/server-error-interceptor';
 import { ErrorComponent } from './shared/components/error/error.component';
 import { MicrotypeBrowserComponent } from './shared/components/microtype-browser/microtype-browser.component';
+import { DashboardPlotComponent } from './shared/components/dashboard/dashboard-plot/dashboard-plot.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -33,6 +34,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     DashboardComponent,
     ErrorComponent,
     MicrotypeBrowserComponent,
+    DashboardPlotComponent,
   ],
   imports: [
     BrowserModule,
