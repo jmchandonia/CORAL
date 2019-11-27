@@ -119,6 +119,12 @@ class BrickProvider(EntityProvider):
         brick.session_provenance.provenance_items.append(provenance)
         return brick
 
+    def create_brick(self,type_term=None, dim_terms=None, shape=None, name=None):
+        return Brick(type_term=type_term, 
+            dim_terms = dim_terms, 
+            shape=shape,
+            name=name)
+
     def load(self, brick_id):
         return BrickProvider._load_brick(brick_id)
 
