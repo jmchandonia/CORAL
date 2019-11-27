@@ -15,6 +15,17 @@
   </div>
   <div class="row justify-content-center mb-3">
     <div class="col-12">
+      <ngx-spinner
+        [fullScreen]="false"
+        name="spinner"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        style="position: relative; top: 200px; left: 50%;"
+        type="ball-spin-fade-rotating"></ngx-spinner>
+    </div>
+  </div>
+  <div class="row justify-content-center mb-3" *ngIf="ontologies">
+    <div class="col-12">
       <table class="table table-bordered table-striped">
         <thead class="table-header">
           <tr>

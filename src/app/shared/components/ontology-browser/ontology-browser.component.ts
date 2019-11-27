@@ -3,6 +3,7 @@ import { UploadService } from '../../services/upload.service';
 import * as $ from 'jquery';
 import 'datatables.net-bs4';
 import 'datatables.net';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-ontology-browser',
@@ -16,12 +17,15 @@ export class OntologyBrowserComponent implements OnInit {
 
   constructor(
     private uploadService: UploadService,
-    private chRef: ChangeDetectorRef
+    private chRef: ChangeDetectorRef,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit() {
+    this.spinner.show('spinner');
     this.uploadService.getMicroTypes()
       .subscribe((res: any) => {
+        this.spinner.hide('spinner');
         this.ontologies = res.results;
         this.chRef.detectChanges();
         const table: any = $('table');
