@@ -588,6 +588,7 @@ def generix_data_types():
     # Core types
     type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     for td in type_defs:
+        if td.name == 'ENIGMA': continue
         res.append({
             'dataType': td.name, 
             'dataModel': td.name,
