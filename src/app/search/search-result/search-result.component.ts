@@ -44,12 +44,7 @@ export class SearchResultComponent implements OnInit {
         this.dataTable = table.DataTable();
         this.spinner.hide();
       },
-      err => {
-        this.spinner.hide();
-        this.error = err;
-      }
-      );
-
+    );
   }
 
   viewData(id) {
@@ -66,4 +61,3 @@ export class SearchResultComponent implements OnInit {
   }
 
 }
- 

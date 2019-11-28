@@ -10,13 +10,13 @@
     height: 100px;
     width: 100px;
     margin-bottom: 15px;
-    margin-right: calc(100% - 1000px);
+    margin-right: calc(100% - 1200px);
     padding: 10px;
 }
 
 .nav-container {
     margin-top: 45px;
-    width: 800px;
+    width: 1000px;
     height: 42px;
     display: flex;
     flex-wrap: wrap;

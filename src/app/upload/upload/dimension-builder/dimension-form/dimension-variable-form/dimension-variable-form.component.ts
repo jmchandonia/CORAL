@@ -17,13 +17,13 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
 
   @Input() set dimVar(d: DimensionVariable) {
     this._dimVar = d;
-    if (d.type) {
+    if (d.typeTerm) {
       if (d.context.length) {
-        this.typeData = [this.setContextLabel(d.type, d.context)];
+        this.typeData = [this.setContextLabel(d.typeTerm, d.context)];
       } else {
-        this.typeData = [d.type];
+        this.typeData = [d.typeTerm];
       }
-      this.selectedType = d.type.id;
+      this.selectedType = d.typeTerm.id;
     }
 
     if (d.units) {
@@ -94,8 +94,8 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   setContextLabel(dimVarType: Term, context: Context[]): Select2OptionData {
     const label: Select2OptionData = Object.assign({}, dimVarType);
     context.forEach(ctx => {
-      const { type, value, units } = ctx;
-      label.text += `, ${type.text}=${value.text ? value.text : value}`;
+      const { typeTerm, value, units } = ctx;
+      label.text += `, ${typeTerm.text}=${value.text ? value.text : value}`;
       if (units) {
         label.text += ` (${units.text})`;
       }
@@ -109,7 +109,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
 
   setDimVarType(event) {
     const term = event.data[0];
-    this.dimVar.type = term;
+    this.dimVar.typeTerm = term;
     if (!term.has_units) {
       this.dimVar.units = null;
     } else {
@@ -138,7 +138,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     const config = {
       initialState: {
         context: this.dimVar.context,
-        title: this.dimVar.type.text
+        title: this.dimVar.typeTerm.text
       },
       class: 'modal-lg',
       ignoreBackdropClick: true

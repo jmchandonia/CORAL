@@ -1,11 +1,7 @@
-<div class="container loading-container pt-2" style="overflow: scroll;">
-    <ngx-spinner
-    bdColor="rgba(0,0,0,0)"
-    color="#aaa"
-    size="medium"
-    style="position: relative; top: 240px; left: 240px;"
-    type="ball-spin-fade-rotating"
-    [fullScreen]="false"></ngx-spinner>
+<div class="container pt-2">
+    <div class="row mt-3 mb-3">
+        <h4 class="ml-3">{{title}}</h4>
+      </div>
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered table-modal" #tableModal>
@@ -29,6 +25,13 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-12">
+        <button style="float: right;" class="btn btn-primary" (click)="modalRef.hide()">
+          Close
+        </button>
       </div>
     </div>
 </div>

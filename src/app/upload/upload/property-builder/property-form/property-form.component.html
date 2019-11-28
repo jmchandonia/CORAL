@@ -14,6 +14,7 @@
       (click)="openContextModal()"
       [tooltip]="'View Property context (' + property.context.length + ' items)'"
       [delay]="750"
+      [disabled]="!property.type"
       [class.button-error]="errors && !property.type"
       >
       <i class="material-icons select2-custom-button-icon">
@@ -42,7 +43,8 @@
         class="form-control"
         [(ngModel)]="property.value"
         [ngModelOptions]="{standalone: true}" 
-        [ngClass]="{'button-error' : errors && !property.value}" 
+        [ngClass]="{'button-error' : (errors && !property.value) || property.invalidValue}" 
+        (focusout)="validateScalarType()"
       >
       <div class="row justify-content-center no-units" *ngIf="!property.type">
         <span>N/A</span>

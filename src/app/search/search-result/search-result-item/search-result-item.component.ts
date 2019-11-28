@@ -39,7 +39,8 @@ export class SearchResultItemComponent implements OnInit {
     this.qb.getDimensionVariableValues(this.objectId, index)
       .subscribe((res: any) => {
         const initialState = {
-          data: res.results
+          data: res.results,
+          title: dimension.data_type.oterm_name
         };
         this.modalRef = this.modalService.show(DimVarPreview, {initialState, class: 'modal-lg'});
       });

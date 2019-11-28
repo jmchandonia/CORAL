@@ -12,7 +12,13 @@
           <div class="row">
             <div class="col-12">
               <label for="brick-name">Brick Name:</label>
-              <input type="text" [(ngModel)]="brick.name" [ngModelOptions]="{standalone: true}" class="form-control" id="brick-name" />
+              <input
+                type="text"
+                [class.button-error]="error && !brick.name"
+                [(ngModel)]="brick.name"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control"
+                id="brick-name" />
             </div>
           </div>
           <div class="row mt-2">
@@ -21,6 +27,7 @@
               <select2
                 id="brick-process"
                 [cssImport]="true"
+                [ngClass]="{'select2-error': error && !brick.process}"
                 [options]="options"
                 [data]="processData"
                 [value]="processValue ? processValue : ''"
@@ -35,6 +42,7 @@
               <select2
                 id="brick-campaign"
                 [cssImport]="true"
+                [ngClass]="{'select2-error': error && !brick.campaign}"
                 [options]="options"
                 [data]="campaignData"
                 (valueChanged)="setBrickCampaign($event)"
@@ -48,6 +56,7 @@
                 id="brick-personnel"
                 [cssImport]="true"
                 [options]="options"
+                [ngClass]="{'select2-error': error && !brick.personnel}"
                 [data]="personnelData"
                 (valueChanged)="setBrickPersonnel($event)"
                 ></select2>
@@ -63,6 +72,7 @@
                 placeholder="mm/dd/yyyy"
                 bsDatepicker
                 placement="top"
+                [class.button-error]="error && (!brick.start_date || startDateError)"
                 [bsConfig]="datepickerConfig"
                 [(ngModel)]="brick.start_date"
                 [ngModelOptions]="{standalone: true}"
@@ -77,6 +87,7 @@
                 placeholder="mm/dd/yyyy"
                 bsDatepicker
                 placement="top"
+                [class.button-error]="error && (!brick.end_date || endDateError)"
                 [bsConfig]="datepickerConfig"
                 [(ngModel)]="brick.end_date"
                 [ngModelOptions]="{standalone: true}"
@@ -102,7 +113,14 @@
             ></ngx-spinner>
           </div>
         </div>
-        <div class="row" *ngIf="successId">
+        <div class="row mt-3 mr-1 ml-1" *ngFor="let message of errorMessages">
+          <div class="col-12">
+              <div class="alert alert-danger">
+                  {{message}}
+              </div>
+          </div>
+        </div>
+        <div class="row mt-3" *ngIf="successId">
           <div class="col-12">
             <div class="card">
               <div class="card-header light-blue">
