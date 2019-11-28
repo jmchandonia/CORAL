@@ -4,6 +4,7 @@ from flask import request
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
+import traceback as tb
 import re
 import random 
 from simplepam import authenticate
@@ -11,6 +12,8 @@ import jwt
 import datetime
 import uuid 
 import os
+import cgi
+
 
 
 # from . import services
@@ -380,7 +383,7 @@ def create_brick():
         return _ok_response(br.id)
 
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
@@ -1347,11 +1350,16 @@ def _ok_response(res):
             'error': ''
         })
 
-def _err_response(e):
+def _err_response(e, traceback=False):
+    err = str(e)
+    if traceback:
+        body = tb.format_exc()
+        err = '<PRE>' +  cgi.escape(body) + '</PRE>' 
+
     return  json.dumps( {
             'results': '', 
             'status': 'ERR', 
-            'error': str(e)
+            'error': err
         })
 
 if __name__ == "__main__":
