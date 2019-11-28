@@ -28,6 +28,7 @@ import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { ContextBuilderComponent } from './upload/property-builder/property-form/context-builder/context-builder.component';
 import { ContextFormComponent } from './upload/property-builder/property-form/context-builder/context-form/context-form.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ValidationErrorItemComponent } from './upload/map/validation-error-item/validation-error-item.component';
  
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     MapComponent,
     SafeHtmlPipe,
     ContextBuilderComponent,
-    ContextFormComponent
+    ContextFormComponent,
+    ValidationErrorItemComponent
   ],
   imports: [
     CommonModule,
@@ -62,6 +64,10 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     TooltipModule
   ],
   providers: [UploadService],
-  bootstrap: [ContextBuilderComponent, ContextFormComponent]
+  bootstrap: [
+    ContextBuilderComponent,
+    ContextFormComponent,
+    ValidationErrorItemComponent
+  ]
 })
 export class UploadModule { }

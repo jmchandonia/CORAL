@@ -6,6 +6,8 @@ import { HomeComponent } from './shared/components/home/home.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { AuthGuardService as AuthGuard } from './shared/services/auth-guard.service';
+import { ErrorComponent } from './shared/components/error/error.component';
+import { MicrotypeBrowserComponent } from './shared/components/microtype-browser/microtype-browser.component';
 
 const routes: Routes = [
   {
@@ -30,6 +32,15 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'error',
+    component: ErrorComponent,
+  },
+  {
+    path: 'microtypes',
+    component: MicrotypeBrowserComponent,
     canActivate: [AuthGuard]
   }
 ];

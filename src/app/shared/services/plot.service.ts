@@ -121,6 +121,11 @@ export class PlotService {
     return this.http.get(`${environment.baseURL}/plot_types`);
   }
 
+  getReportPlotData(id) {
+    // method used to get data for dashboard component
+    return this.http.get(`${environment.baseURL}/report_plot_data/${id}`);
+  }
+
 
 
 

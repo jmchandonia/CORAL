@@ -4,6 +4,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
 @Component({
   selector: 'app-create',
@@ -14,7 +15,8 @@ export class CreateComponent implements OnInit {
 
   constructor(
     private uploadService: UploadService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private validator: UploadValidationService
   ) { }
 
   loading = false;
@@ -27,6 +29,10 @@ export class CreateComponent implements OnInit {
   personnelData: Array<Select2OptionData> = [{id: '', text: ''}];
   processValue: string;
   requiredProcess = false;
+  errorMessages: string[] = [];
+  error = false;
+  startDateError = false;
+  endDateError = false;
 
   options: Select2Options = {
     width: '100%',
@@ -69,29 +75,44 @@ export class CreateComponent implements OnInit {
   }
 
   setBrickProcess(event) {
-    const process = event.data[0];
-    this.brick.process = new Term(process.id, process.text);
+    if (event.value.length) {
+      const process = event.data[0];
+      this.brick.process = new Term(process.id, process.text);
+    }
   }
 
   setBrickCampaign(event) {
-    const campaign = event.data[0];
-    this.brick.campaign = new Term(campaign.id, campaign.text);
+    if (event.value.length) {
+      const campaign = event.data[0];
+      this.brick.campaign = new Term(campaign.id, campaign.text);
+    }
   }
 
   setBrickPersonnel(event) {
-    const person = event.data[0];
-    this.brick.personnel = new Term(person.id, person.text);
+    if (event.value.length) {
+      const person = event.data[0];
+      this.brick.personnel = new Term(person.id, person.text);
+    }
   }
 
   submitBrick() {
-    this.loading = true;
-    this.spinner.show();
-    this.uploadService.submitBrick()
-      .subscribe((data: any) => {
-        this.loading = false;
-        this.spinner.hide();
-        this.successId = data.results;
+    const errors = this.validator.validateCreateStep()
+    this.errorMessages = errors.messages;
+    if (!this.errorMessages.length) {
+      this.loading = true;
+      this.spinner.show();
+      this.uploadService.submitBrick()
+        .subscribe((data: any) => {
+          this.loading = false;
+          this.spinner.hide();
+          this.successId = data.results;
+          this.startDateError = false;
+          this.endDateError = false;
       });
+    } else {
+      this.error = true;
+      this.startDateError = errors.startDateError;
+      this.endDateError = errors.endDateError;
+    }
   }
-
 }

@@ -18,13 +18,13 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   @Input() set dataValue(d: DataValue) {
     this._dataValue = d;
 
-    if (d.type) {
+    if (d.typeTerm) {
       if (d.context && d.context.length) {
-        this.typeValues = [this.setContextLabel(d.type, d.context)];
+        this.typeValues = [this.setContextLabel(d.typeTerm, d.context)];
       } else {
-        this.typeValues = [d.type];
+        this.typeValues = [d.typeTerm];
       }
-      this.typeValuesItem = d.type.id;
+      this.typeValuesItem = d.typeTerm.id;
     }
 
     if (d.units) {
@@ -98,8 +98,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   setContextLabel(dataType: Term, context: Context[]) {
     const label: Select2OptionData = Object.assign({}, dataType);
     context.forEach(ctx => {
-      const { type, value, units } = ctx;
-      label.text += `, ${type.text}=${value.text ? value.text : value}`;
+      const { typeTerm, value, units } = ctx;
+      label.text += `, ${typeTerm.text}=${value.text ? value.text : value}`;
       if (units) {
         label.text += ` (${units.text})`;
       }
@@ -114,7 +114,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   updateType(event) {
     const type = event.data[0];
-    this.dataValue.type = type;
+    this.dataValue.typeTerm = type;
     if (!type.has_units) {
       this.dataValue.units = null;
     } else {
@@ -149,7 +149,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     const config = {
       initialState: {
         context: this.dataValue.context,
-        title: this.dataValue.type.text
+        title: this.dataValue.typeTerm.text
       },
       class: 'modal-lg',
       ignoreBackdropClick: true
