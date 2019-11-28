@@ -26,6 +26,8 @@ from . import template
 
 app = Flask(__name__)
 CORS(app)
+
+DEBUG_MODE = True
 dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
@@ -1366,7 +1368,7 @@ def _ok_response(res):
 
 def _err_response(e, traceback=False):
     err = str(e)
-    if traceback:
+    if traceback or DEBUG_MODE:
         body = tb.format_exc()
         err = '<PRE>' +  cgi.escape(body) + '</PRE>' 
 
