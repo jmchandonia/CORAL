@@ -11,8 +11,9 @@ import {
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -58,7 +59,8 @@ export class UploadService {
   setSelectedTemplate(template) {
     // map template values to brick builder object
     this.selectedTemplate = template.id;
-    this.brickBuilder.type = template.text;
+    this.brickBuilder.template_type = template.text;
+    this.brickBuilder.type = template.data_type as Term;
     this.brickBuilder.template_id = template.id;
     if (template.process) {
       this.requiredProcess = true;
@@ -83,7 +85,7 @@ export class UploadService {
 
       // set units to a term if its not empty or else null
       dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
-      dataValue.type = dataVar.type;
+      dataValue.typeTerm = dataVar.type;
       // dataValue.microType = dataVar.microtype;
       dataValue.scalarType = dataVar.scalar_type as Term;
 
@@ -116,7 +118,7 @@ export class UploadService {
 
         // set units to a term if units object does not contain empty values
         dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
-        dimVar.type = dvItem.type;
+        dimVar.typeTerm = dvItem.type;
         dimVar.scalarType = dvItem.scalar_type as Term;
 
         // create array of context objects for every dimension variable that has context
@@ -143,7 +145,7 @@ export class UploadService {
 
       // set units to a term if units object does not containe empty values
       prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
-      prop.type = item.property as Term;
+      prop.typeTerm = item.property as Term;
       prop.value = item.value as Term;
       prop.value = item.property.scalar_type === 'oterm_ref'
         ? prop.value as Term
@@ -166,7 +168,7 @@ export class UploadService {
 
     //set context properties
     context.required = ctx.required;
-    context.type = ctx.property;
+    context.typeTerm = ctx.property;
     context.value = new Term(ctx.value.id, ctx.value.text);
     if (!this.valuelessUnits(ctx.units)) {
       context.units = new Term(ctx.units.id, ctx.units.text);
@@ -187,6 +189,11 @@ export class UploadService {
   public searchOntUnits(term) {
     // get any ontological units from database that match term
     return this.http.get(`${environment.baseURL}/search_ont_units/${term}`);
+  }
+
+  // method to be used for microtype browser component
+  public getMicroTypes() {
+    return this.http.get(`${environment.baseURL}/microtypes`);
   }
 
   public searchOntPropertyValues(value: string, microtype: any) {
@@ -225,6 +232,19 @@ export class UploadService {
 
   public getPersonnelOterms() {
     return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
+  }
+
+  public getDataVarValidationErrors(idx) {
+    return this.http.get(`${environment.baseURL}/data_var_validation_errors/${this.brickBuilder.data_id}/${idx}`);
+  }
+
+  public getDimVarValidationErrors(idx, dvIdx) {
+    return this.http.get(`${environment.baseURL}/dim_var_validation_errors/${this.brickBuilder.data_id}/${idx}/${dvIdx}`);
+  }
+
+  public getValidationResults() {
+    const body = { data_id: this.brickBuilder.data_id };
+    return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
   }
 
   mapDimVarToCoreTypes(dimVar) {
@@ -284,7 +304,18 @@ export class UploadService {
       }),
       responseType: 'blob' as 'json'
     };
-    return this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config);
+
+    return new Promise((resolve) => {
+      this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config)
+        .subscribe(res => {
+          if (res.tiype === 'text/html') {
+            // TODO: figure out a way to have a responseType of both JSON and blob in order to read errors sent from server
+            throw new Error('We\'re sorry, but something went wrong with the file type that you have currently uploaded');
+          } else {
+            resolve(res);
+          }
+        });
+    });
   }
 
   mapBrickData(res: any) {
@@ -300,6 +331,7 @@ export class UploadService {
       // set value sample of variables for each dimension variable
       dim.variables.forEach((dimVar, dvIdx) => {
         dimVar.valuesSample = dimData.dim_vars[dvIdx].value_example;
+        dimVar.totalCount = dim.size;
       });
     });
 
@@ -307,6 +339,7 @@ export class UploadService {
     this.brickBuilder.dataValues.forEach((val, idx) => {
       const valueData = res.results.data_vars[idx];
       val.valuesSample = valueData.value_example;
+      val.totalCount = valueData.size;
     });
   }
 

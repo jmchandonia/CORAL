@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="row">
+    <h4 class="ml-3 mt-3">
+      Validation Errors ({{errors.length}});
+    </h4>
+  </div>
+  <div class="row" *ngIf="errors.length">
+    <div class="col-12">
+      <table #tableModal class="table table-bordered">
+        <thead class="table-header">
+          <tr>
+            <th class="index">
+              #
+            </th>
+            <th>Error</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let error of errors;">
+            <td class="index">
+              {{error.index}}
+            </td>
+            <td class="error-cell">{{error.error_msg}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row mt-3 mb-3">
+    <div class="col-12">
+      <button style="float: right;" (click)="onClose()" class="btn btn-primary">Close</button>
+    </div>
+  </div>
+</div>

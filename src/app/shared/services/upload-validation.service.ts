@@ -9,8 +9,14 @@ import { UploadService } from './upload.service';
 export class UploadValidationService {
 
   // subsject that emits if errors are true
-  private errorSub: Subject<boolean> = new Subject();
+  private errorSub: Subject<any> = new Subject();
   private contextErrorSub: Subject<any> = new Subject();
+
+  public readonly INVALID_VALUE = 'Error: invalid value for scalar type ';
+  public readonly INCOMPLETE_FIELDS = 'Error: please fill out all field values before submitting.';
+  public readonly INVALID_START_DATE = 'Error: Invalid brick start date';
+  public readonly INVALID_END_DATE = 'Error: Invalid brick end date';
+  public readonly INVALID_DATE_RANGE = 'Error: Invalid date range';
 
   // brick builder from upload service
   brick: Brick;
@@ -32,8 +38,10 @@ export class UploadValidationService {
         return this.validateDataVariables();
       case 'load':
         return this.validateUploadedData();
-      case 'map':
+      case 'validate':
         return this.validateMappedData();
+      case 'create':
+        return this.validateCreateStep();
       default:
         return false;
      }
@@ -61,22 +69,33 @@ export class UploadValidationService {
 
    validateProperties() {
      // filter only user input properties
+    let error = false;
+    const messages = [];
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.type || !property.value || property.units === undefined) {
-        this.errorSub.next(true);
-        return true;
+      if (!property.typeTerm || !property.value || property.units === undefined) {
+        // this.errorSub.next(true);
+        // return true;
+        error = true;
+        messages.push(this.INCOMPLETE_FIELDS);
+      }
+      if (property.value && !this.validScalarType(property.scalarType, property.value)) {
+        error = true;
+        property.invalidValue = true;
+        messages.push(`${this.INVALID_VALUE}${property.scalarType}`);
+      } else {
+        property.invalidValue = false;
       }
     }
-    this.errorSub.next(false);
-    return false;
+    this.errorSub.next({error, messages});
+    return error;
    }
 
    validateDimensions() {
     for (const dimension of this.brick.dimensions) {
       for (const variable of dimension.variables) {
         // check if there is type and units for all user input dimension variables
-        if ((!variable.type || variable.units === undefined) && !variable.required) {
+        if ((!variable.typeTerm || variable.units === undefined) && !variable.required) {
           this.errorSub.next(true);
           return true;
         }
@@ -95,7 +114,7 @@ export class UploadValidationService {
       // filter only user input data values
       for (const dataValue of this.nonRequiredDataValues) {
         // check if data value has selected type and units
-        if (!dataValue.type || !dataValue.units) {
+        if (!dataValue.typeTerm || dataValue.units === undefined) {
           this.errorSub.next(true);
           return true;
         }
@@ -110,24 +129,6 @@ export class UploadValidationService {
       this.errorSub.next(true);
       return true;
     }
-
-     // iterate through every dimension including template dimensions
-    for (const dimension of this.brick.dimensions) {
-      for (const variable of dimension.variables) {
-        // if there is no values sample then the brick was not uploaded correctly or at all
-        if (!variable.valuesSample) {
-          this.errorSub.next(true);
-          return true;
-        }
-      }
-    }
-    for (const value of this.brick.dataValues) {
-      // check if datavalues each have a values sample
-      if (!value.valuesSample) {
-        this.errorSub.next(true);
-        return true;
-      }
-    }
     this.errorSub.next(false);
     return false;
    }
@@ -137,7 +138,7 @@ export class UploadValidationService {
      for (const dimension of this.brick.dimensions) {
        for (const variable of dimension.variables) {
          // if the mapped count does not match the total count then user needs to fix values
-         if (variable.mappedCount !== variable.totalCount) {
+         if (variable.validCount !== variable.totalCount) {
            this.errorSub.next(true);
            return true;
          }
@@ -147,7 +148,7 @@ export class UploadValidationService {
      // iterate through all data values
      for (const dataValue of this.brick.dataValues) {
        // if the mapped count does not match the total count then user needs to fix values
-       if (dataValue.mappedCount !== dataValue.totalCount) {
+       if (dataValue.validCount !== dataValue.totalCount) {
          this.errorSub.next(true);
          return true;
        }
@@ -155,14 +156,68 @@ export class UploadValidationService {
      return false;
    }
 
-   validateContext(context: Context[]) {
+   validateContext(context: Context[]): string[] {
+     let error = false;
+     const messages = [];
      for (const ctx of context) {
-       if (!ctx.type || !ctx.value || ctx.units === undefined) {
-         this.contextErrorSub.next(true);
-         return true;
+       if (!ctx.typeTerm || !ctx.value || ctx.units === undefined) {
+         error = true;
+         messages.push(this.INCOMPLETE_FIELDS);
+       }
+       if (ctx.value && !this.validScalarType(ctx.scalarType, ctx.value)) {
+         messages.push(`${this.INVALID_VALUE}${ctx.scalarType}`);
+         ctx.invalidValue = true;
+         error = true;
+       } else {
+         ctx.invalidValue = false;
        }
      }
-     return false;
+     this.contextErrorSub.next(error);
+     return messages;
+   }
+
+   validateCreateStep() {
+     const messages = [];
+     let startDateError = false;
+     let endDateError = false;
+     if (
+       !this.brick.name ||
+       !this.brick.campaign ||
+       !this.brick.personnel ||
+       !this.brick.start_date ||
+       !this.brick.end_date
+     ) {
+       messages.push(this.INCOMPLETE_FIELDS);
+     }
+
+     if (this.brick.start_date > new Date()) {
+       messages.push(this.INVALID_START_DATE);
+       startDateError = true;
+     }
+
+     if (this.brick.end_date > new Date()) {
+       messages.push(this.INVALID_END_DATE);
+       endDateError = true;
+     }
+
+     if (this.brick.start_date > this.brick.end_date) {
+       messages.push(this.INVALID_DATE_RANGE);
+       startDateError = endDateError = true;
+     }
+
+     return {messages, startDateError, endDateError};
+   }
+
+  public validScalarType(scalarType: string, value): boolean {
+    const val = value.text ? value.text : value;
+    switch (scalarType) {
+      case 'int':
+        return !isNaN(parseInt(val, 10)) && /^-?\d+$/.test(val);
+      case 'float':
+        return !isNaN(parseFloat(val)) && /^-?\d+(?:[.]\d*?)?$/.test(val);
+      default:
+        return true;
+     }
    }
 
    get nonRequiredProperties() {

@@ -56,12 +56,17 @@ export class LoadComponent implements OnInit, OnDestroy {
   }
 
   handleFileInput(files: FileList) {
+    this.successData = null;
+    this.error = false;
     this.file = files.item(0);
+    this.uploadService.setFile(this.file);
     this.calculateFileSize();
     this.validationError = false;
    }
 
    handleFileInputFromBrowse(event) {
+     this.successData = null;
+     this.error = false;
      if (event.target && event.target.files) {
        this.file = event.target.files.item(0);
        this.uploadService.setFile(this.file);
@@ -82,7 +87,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
    downloadTemplate() {
      this.uploadService.downloadBrickTemplate()
-      .subscribe((data: Blob) => {
+      .then((data: Blob) => {
         const url = window.URL.createObjectURL(data);
         const a = document.createElement('a');
         document.body.appendChild(a);
@@ -106,7 +111,7 @@ export class LoadComponent implements OnInit, OnDestroy {
     err => {
       this.spinner.hide();
       this.error = true;
-      this.errorMessage = err.error;
+      this.errorMessage = err;
       this.loading = false;
     }
     );

@@ -14,6 +14,7 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
   public properties: TypedProperty[];
   brick: Brick;
   errors = false;
+  errorMessages: string[] = [];
   errorSub = new Subscription();
 
   constructor(
@@ -26,8 +27,9 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.errorSub = this.validator.getValidationErrors()
-      .subscribe(errors => {
-        this.errors = errors;
+      .subscribe(res => {
+        this.errors = res.error;
+        this.errorMessages = res.messages;
       });
   }
 
@@ -48,6 +50,18 @@ export class PropertyBuilderComponent implements OnInit, OnDestroy {
 
   resetProperty(event: TypedProperty) {
     this.brick.properties.splice(event.index, 1, event);
+  }
+
+  setValueError(event) {
+    if (event) {
+      this.errors = true;
+      this.errorMessages.push(event);
+    } else {
+      if (this.errorMessages.length === 1) {
+        this.errors = false;
+        this.errorMessages = [];
+      }
+    }
   }
 
 }

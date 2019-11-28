@@ -3,8 +3,8 @@
     <div class="col-12">
       <div class="row">
         <div class="col-12">
-          <h5 class="mb-0 mt-2" style="float: left">Validate Brick Data and Properties</h5>
-          <button class="btn btn-primary" style="float: right" (click)="testMap()">Map Your Brick</button>
+          <h5 class="mb-0 mt-2" style="float: left">Validate Brick Data</h5>
+          <button class="btn btn-primary" style="float: right" (click)="getValidationResults()">Validate</button>
         </div>
       </div>
       <hr />
@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let dataVar of dataVars; let i = index;">
-                    <td [class.error-text]="mapped && dataVar.totalCount !== dataVar.mappedCount">
+                    <td [class.error-text]="mapped && dataVar.totalCount !== dataVar.validCount">
                       {{dataVar.type.text}}
                       <span *ngIf="dataVar.context.length">
                         : {{dataVar.context[0].type.text}}
@@ -46,8 +46,8 @@
                     <td class="stats-column">
                       {{dataVar.totalCount}}
                     </td>
-                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dataVar.mappedCount, dataVar.totalCount) : ''">
-                      <span *ngIf="mapped">{{dataVar.mappedCount}}</span>
+                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dataVar.validCount, dataVar.totalCount) : ''">
+                      <span *ngIf="mapped">{{dataVar.validCount}}</span>
                       <ngx-spinner
                         bdColor="rgba(0,0,0,0)"
                         color="#aaa"
@@ -58,15 +58,18 @@
                         [fullScreen]="false"></ngx-spinner>
                     </td>
                     <td class="stats-column">
-                      <button *ngIf="mapped" class="btn btn-link" role="button" (click)="openModal(template)">
-                        {{dataVar.totalCount - dataVar.mappedCount}}
+                      <button *ngIf="mapped && dataVar.invalidCount > 0" class="btn btn-link" role="button" (click)="openModal(i)">
+                        {{dataVar.invalidCount}}
                       </button>
+                      <span *ngIf="mapped && dataVar.invalidCount === 0">
+                        {{dataVar.invalidCount}}
+                      </span>
                     </td>
                     <td class="stats-column">
-                      <i *ngIf="mapped && dataVar.mappedCount === dataVar.totalCount" class="material-icons success">
+                      <i *ngIf="mapped && dataVar.validCount === dataVar.totalCount" class="material-icons success">
                         check_circle
                       </i>
-                      <i *ngIf="mapped && dataVar.mappedCount !== dataVar.totalCount" class="material-icons fail">
+                      <i *ngIf="mapped && dataVar.validCount !== dataVar.totalCount" class="material-icons fail">
                         cancel
                       </i>
                     </td>
@@ -92,7 +95,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let dimVar of dimVars; let i = index">
-                    <td [class.error-text]="mapped && dimVar.totalCount !== dimVar.mappedCount">
+                    <td [class.error-text]="mapped && dimVar.totalCount !== dimVar.validCount">
                       {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
                       <i
                         class="material-icons mapping-icon"
@@ -105,8 +108,8 @@
                     <td class="stats-column">
                       {{dimVar.totalCount}}
                     </td>
-                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dimVar.mappedCount, dimVar.totalCount) : ''">
-                      <span *ngIf="mapped">{{dimVar.mappedCount}}</span>
+                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dimVar.validCount, dimVar.totalCount) : ''">
+                      <span *ngIf="mapped">{{dimVar.validCount}}</span>
                       <ngx-spinner
                       bdColor="rgba(0,0,0,0)"
                       color="#aaa"
@@ -118,83 +121,16 @@
                     ></ngx-spinner>
                     </td>
                     <td class="stats-column">
-                      <button *ngIf="mapped" class="btn btn-link" role="button" (click)="openModal(template)">
-                        {{dimVar.totalCount - dimVar.mappedCount}}
+                      <button *ngIf="mapped && dimVar.validCount !== dimVar.totalCount" class="btn btn-link" role="button" (click)="openModal(dimVar.dimension.index, dimVar.index)">
+                        {{dimVar.invalidCount}}
                       </button>
+                      <span *ngIf="mapped && dimVar.validCount === dimVar.totalCount">{{dimVar.invalidCount}}</span>
                     </td>
                     <td class="stats-column">
-                      <i *ngIf="mapped && dimVar.mappedCount === dimVar.totalCount" class="material-icons success">
+                      <i *ngIf="mapped && dimVar.validCount === dimVar.totalCount" class="material-icons success">
                         check_circle
                       </i>
-                      <i *ngIf="mapped && dimVar.mappedCount !== dimVar.totalCount" class="material-icons fail">
-                        cancel
-                      </i>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card mt-2" *ngIf="properties.length">
-            <div class="card-header light-blue">
-              <h5>Properties</h5>
-            </div>
-            <div class="card-body">
-              <table class="table table-bordered">
-                <thead class="table-header">
-                  <tr>
-                    <th>Type</th>
-                    <th>Value</th>
-                    <th class="stats-column">Total</th>
-                    <th class="stats-column">Valid</th>
-                    <th class="stats-column">Errors</th>
-                    <th class="stats-column"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let property of properties; let i = index">
-                    <td>
-                      {{property.type.text}}
-                      <span *ngIf="property.context.length">
-                        , {{property.context[0].property.text}}={{property.context[0].value.text}}
-                        <span *ngIf="property.context[0].units">
-                           ({{property.context[0].units.text}})
-                        </span>
-                      </span>
-                      <i
-                        class="material-icons mapping-icon"
-                        *ngIf="property.require_mapping"
-                        tooltip="This type of property requires mapping with core objects in our system."
-                        >
-                          assignment_late
-                        </i>
-                    </td>
-                    <td [ngClass]="{'error-text' : mapped && property.mappedCount !== property.totalCount}">
-                      {{getPropValueDisplay(property)}}
-                    </td>
-                    <td class="stats-column">{{property.totalCount}}</td>
-                    <td class="stats-column"[ngClass]="mapped ? getMappedStatus(property.mappedCount, property.totalCount) : ''">
-                      <span *ngIf="mapped">{{property.mappedCount}}</span>
-                      <ngx-spinner
-                        bdColor="rgba(0,0,0,0)"
-                        color="#aaa"
-                        size="small"
-                        [name]="'p' + i"
-                        style="position: relative;"
-                        type="ball-spin-fade-rotating"
-                        [fullScreen]="false"
-                      ></ngx-spinner>
-                    </td>
-                    <td class="stats-column">
-                      <button class="btn btn-link" *ngIf="mapped" (click)="openModal(template)">
-                        {{property.totalCount - property.mappedCount}}
-                      </button>
-                    </td>
-                    <td class="stats-column">
-                      <i *ngIf="property.mappedCount === property.totalCount" class="material-icons success">
-                        check_circle
-                      </i>
-                      <i *ngIf="mapped && property.mappedCount !== property.totalCount" class="material-icons fail">
+                      <i *ngIf="mapped && dimVar.validCount !== dimVar.totalCount" class="material-icons fail">
                         cancel
                       </i>
                     </td>
@@ -216,61 +152,3 @@
   </div>
 </div>
 
-<ng-template #template>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Condition</h4>
-      <button type="button" class="close pull-right" (click)="modalRef.hide()">
-        <span>&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <table class="table table-striped table-bordered">
-        <thead class="table-header">
-          <tr>
-            <th>Carbon Source</th>
-            <th>Presence</th>
-            <th>Concentration</th>
-            <th>Media Addition</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </ng-template>

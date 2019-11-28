@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="row jusity-content-center mb-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5>Browse Microtypes</h5>
+        </div>
+        <div class="card-body">
+          This is where you can browse for microtype ontologies in our system to see which types are supported 
+          by which parts of our brick data type. Click below on the arrows to sort by microtypes supported by 
+          specific members of a brick.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <ngx-spinner
+        [fullScreen]="false"
+        name="spinner"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        style="position: relative; top: 200px; left: 50%;"
+        type="ball-spin-fade-rotating"></ngx-spinner>
+    </div>
+  </div>
+  <div class="row justify-content-center mb-3" *ngIf="microtypes">
+    <div class="col-12">
+      <table class="table table-bordered table-striped">
+        <thead class="table-header">
+          <tr>
+            <th>
+              Name
+            </th>
+            <th>
+              ID
+            </th>
+            <th>
+              Value Type
+            </th>
+            <th>
+              Valid Values
+            </th>
+            <th>
+              Valid Units
+            </th>
+            <th class="checkbox">
+              Dimension
+            </th>
+            <th>
+              Dim Variable
+            </th>
+            <th>Data Variable</th>
+            <th>
+              Property
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let microtype of microtypes">
+            <td>{{microtype.term_name}}</td>
+            <td>{{microtype.term_id}}</td>
+            <td>{{microtype.mt_value_scalar_type}}</td>
+            <td>{{microtype.mt_valid_values}}</td>
+            <td>{{microtype.mt_valid_units}}</td>
+            <td class="checkbox-container">
+              <i *ngIf="microtype.mt_dimension" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="microtype.mt_dim_var" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="microtype.mt_data_var" class="material-icons">
+                check_circle
+              </i>
+            </td>
+            <td class="checkbox-container">
+              <i *ngIf="microtype.mt_property" class="material-icons blue">
+                check_circle
+              </i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

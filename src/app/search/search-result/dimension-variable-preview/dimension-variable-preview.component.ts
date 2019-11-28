@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BsModalRef } from 'ngx-bootstrap';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import * as $ from 'jquery';
@@ -12,10 +13,12 @@ import * as $ from 'jquery';
 export class DimensionVariablePreviewComponent implements OnInit, AfterViewInit {
 
   constructor(
+    public modalRef: BsModalRef
   ) { }
 
   id: string;
   index: number;
+  title: string;
   numberOfRows: number;
   data: any;
   dataResults: any[] = [];

@@ -1,0 +1,8 @@
+.checkbox-container > i {
+    vertical-align: middle;
+    color: #007BFF;
+}
+
+.checkbox-container {
+    text-align: center;
+}

@@ -1,12 +1,15 @@
 // tslint:disable:variable-name
 
+import { isEqual } from 'lodash';
+
 export class Brick {
 
     id: string;
     data_id: string;
     createStatus: string; //
     name: string;
-    type: string;
+    type: Term;
+    template_type: string;
     template_id: string;
     dimensions: BrickDimension[] = [];
     properties: TypedProperty[] = [];
@@ -18,6 +21,10 @@ export class Brick {
     personnel: Term;
     start_date: Date;
     end_date: Date;
+
+    get isEmpty() {
+        return isEqual(this, new Brick());
+    }
 
     resetDimensionIndices() {
         this.dimensions.forEach((dimension, index) => {
@@ -80,19 +87,20 @@ export class DataValue {
     units: Term;
     valuesSample: string;
     context: Context[] = [];
-    totalCount = 1;
-    mappedCount: number;
+    totalCount: number;
+    validCount: number;
+    invalidCount: number;
     require_mapping: boolean;
 
-    private _type: Term;
+    type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
 
 export class Context {
@@ -113,13 +121,14 @@ export class Context {
     // type: Term;
     value: Term;
     units: Term;
-    private _type: Term;
+    type: Term;
     microType: any;
     scalarType: string;
+    invalidValue = false;
 
-    get type() { return this._type; }
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    get typeTerm() { return this.type; }
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.scalarType = t.scalar_type;
     }
@@ -168,20 +177,21 @@ export class DimensionVariable {
     valuesSample: string; //
     mapCoreType: string; //
     mapCoreProp: string; //
-    mappedCount: number; //
-    totalCount: number; //
+    validCount: number;
+    totalCount: number;
+    invalidCount: number;
     mapped = false; //
     mapPk = false; //
 
-    private _type: Term;
+    type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
 
 export class TypedProperty {
@@ -204,23 +214,26 @@ export class TypedProperty {
     // type: Term;
     microType: any;
     value: Term | string;
+    invalidValue = false;
     units: Term;
     context: Context[] = [];
     totalCount = 1;
     mappedCount: number;
     scalarType: string;
 
-    private _type: Term;
+    type: Term;
 
-    set type(t: any) {
-        this._type = new Term(t.id, t.text, t.has_units);
+    set typeTerm(t: any) {
+        this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
         this.scalarType = t.scalar_type;
     }
 
-    get type() { return this._type; }
+    get typeTerm() { return this.type; }
 }
+
+// this.brick.property.typeTerm = ...
 
 export class MicroType {
     constructor(

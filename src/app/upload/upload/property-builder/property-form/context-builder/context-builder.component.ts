@@ -13,6 +13,7 @@ export class ContextBuilderComponent implements OnInit {
   public context: Context[];
   public title: string;
   error = false;
+  errorMessages: string[] = [];
 
   constructor(
     public modalRef: BsModalRef,
@@ -34,10 +35,23 @@ export class ContextBuilderComponent implements OnInit {
     this.context.splice(index, 1, event);
   }
 
-  onClose() {
-    const error = this.validator.validateContext(this.context);
-    if (error) {
+  setValueError(event) {
+    if (event) {
       this.error = true;
+      this.errorMessages.push(event);
+    } else {
+      if (this.errorMessages.length === 1) {
+        this.errorMessages = [];
+        this.error = false;
+      }
+    }
+  }
+
+  onClose() {
+    const errors = this.validator.validateContext(this.context);
+    if (errors.length) {
+      this.error = true;
+      this.errorMessages = errors;
     } else {
       this.modalRef.hide();
     }
