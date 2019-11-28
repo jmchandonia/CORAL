@@ -122,6 +122,25 @@ class PlainReport:
         self.__prop_count_name = prop_count_name
         self.__report_items = report_items
 
+    @property
+    def name(self):
+        return self.__report_name
+
+    @property
+    def counts(self):
+        vals = []
+        for item in self.__report_items:
+            vals.append(item.count)
+        return vals
+
+    def values(self, index):
+        vals = []
+        for item in self.__report_items:
+            vals.append(item.value(index))
+        return vals
+    
+
+
     def _repr_html_(self):
         rows = []
         for item in self.__report_items:
