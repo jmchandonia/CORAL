@@ -1032,7 +1032,7 @@ def generix_report_plot_data(report_id):
         report = getattr(svs['reports'], reports_map[report_id])
         title = report.name
         x = report.values(0)
-        y = report.counts()  
+        y = report.counts
 
         # Build layout
         layout = {
