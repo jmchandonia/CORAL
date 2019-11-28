@@ -69,16 +69,18 @@ def search_property_microtypes(value):
     return _search_microtypes(svs['ontology'].property_microtypes, value)
 
 def _search_microtypes(ontology, value):
-    if value is None:
-        value = '*'
-    res = []
+    try:
+        if value is None:
+            value = '*'
+        res = []
 
-    term_collection = ontology.find_name_prefix(value)
-    for term in term_collection.terms:
-        res.append(term.to_descriptor())
-    return  json.dumps({
-        'results': res
-    })
+        term_collection = ontology.find_name_prefix(value)
+        for term in term_collection.terms:
+            res.append(term.to_descriptor())
+
+        return _ok_response(res)
+    except Exception as e:
+        return _err_response(e)
 
 @app.route("/generix/search_property_value_oterms", methods=['POST'])
 def search_property_values():
@@ -164,143 +166,73 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
 
 @app.route("/generix/brick_type_templates", methods=['GET'])
 def brick_type_templates():
-    templates = svs['brick_template_provider'].templates
-    return  json.dumps( {
-        'results': templates['types']
-    }  )
+    try:
+        templates = svs['brick_template_provider'].templates
+        return _ok_response(templates['types'])
+    except Exception as e:
+        return _err_response(e)
 
 @app.route("/generix/core_types", methods=['GET'])
 def core_types():
-    res = []
-    
-    # ctypes = []
-    # for ctype in services.indexdef.get_type_names(category=TYPE_CATEGORY_STATIC):
-    #     cType = []
-    #     wordStart = True
-    #     for c in ctype:
-    #         if c == '_':
-    #             wordStart = True
-    #             continue
-            
-    #         if wordStart:
-    #             c = c.upper()
-    #             wordStart = False
-    #         cType.append(c)
-    #     ctypes.append( ''.join(cType) )
-
-    # ctypes.sort()
-    # for ctype in ctypes:
-    #     props = services.arango_service.get_entity_properties(ctype)        
-    #     res.append( { 'type' :ctype, 'props': props} )
-
-
-    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
-    for td in type_defs:
-        res.append({'type': td.name, 'props': td.property_names})
-
-    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
-    # res = [ {'type': td.name, 'props': td.property_names} for td in type_defs]
-    for td in type_defs:
-        res.append({'type': td.name, 'props': td.property_names})
-
-    return  json.dumps({
-        'results': res
-    })
-
-
-# @app.route('/generix/map_dim_variable', methods=['GET', 'POST'])
-# def map_dim_variable():
-#     if request.method == 'POST':
-#         brick_data = json.loads(request.form['brick'])
-#         br = _create_brick(brick_data)
-
-#         dimIndex = int(request.form['dimIndex'])
-#         dimVarIndex = int(request.form['dimVarIndex'])
-#         mapCoreType = request.form['mapCoreType']
-#         mapCoreProp = request.form['mapCoreProp']      
-
-#         br.dims[dimIndex].vars[dimVarIndex].map_to_core_type(mapCoreType, mapCoreProp)
-#         idVar = br.dims[dimIndex].vars[-1]
-
-#         totalCount = 0
-#         mappedCount = 0
-#         for val in idVar.values:
-#             totalCount += 1
-#             if val is not None:
-#                 mappedCount += 1
+    try:
+        res = []
         
-#         res = {
-#             'totalCount': totalCount,
-#             'mappedCount': mappedCount,
-#             'dimIndex': dimIndex,
-#             'dimVarIndex': dimVarIndex,
-#             'type_term': { 
-#                 'id': idVar.type_term.term_id, 
-#                 'name': idVar.type_term.term_name},
-#             'values': list(idVar.values)
-#         }
+        type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_DYNAMIC)
+        for td in type_defs:
+            res.append({'type': td.name, 'props': td.property_names})
 
-#     return  json.dumps({
-#         'results': res
-#     })
+        type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+        # res = [ {'type': td.name, 'props': td.property_names} for td in type_defs]
+        for td in type_defs:
+            res.append({'type': td.name, 'props': td.property_names})
 
+        return _ok_response(res)
+    except Exception as e:
+        return _err_response(e)
 
 @app.route('/generix/do_search', methods=['GET', 'POST'])
 def do_search():
-    if request.method == 'POST':
-        search_data = json.loads(request.form['searchBuilder'])
+    try:
+        if request.method == 'POST':
+            search_data = json.loads(request.form['searchBuilder'])
 
-        print('Searching data')
-        print(search_data)
+            print('Searching data')
+            print(search_data)
 
-        # dp = DataProvider()
-        provider = dp._get_type_provider(search_data['dataType'])
-        q = provider.query()
-        for criterion in search_data['criteriaHas']:
-            # print('criterion = ', criterion)
-            if 'property' not in criterion:
-                continue
+            # dp = DataProvider()
+            provider = dp._get_type_provider(search_data['dataType'])
+            q = provider.query()
+            for criterion in search_data['criteriaHas']:
+                # print('criterion = ', criterion)
+                if 'property' not in criterion:
+                    continue
 
-            prop_name = criterion['property']
-            value = criterion['value']
+                prop_name = criterion['property']
+                value = criterion['value']
 
-            # update value
-            itype_def = svs['indexdef'].get_type_def(search_data['dataType'])
-            iprop_def = itype_def.get_property_def(prop_name)
-            if iprop_def.scalar_type == 'int':
-                value = int(value)
-            if iprop_def.scalar_type == 'float':
-                value = float(value)            
+                # update value
+                itype_def = svs['indexdef'].get_type_def(search_data['dataType'])
+                iprop_def = itype_def.get_property_def(prop_name)
+                if iprop_def.scalar_type == 'int':
+                    value = int(value)
+                if iprop_def.scalar_type == 'float':
+                    value = float(value)            
 
-            q.has({prop_name: {criterion['operation']: value}})
+                q.has({prop_name: {criterion['operation']: value}})
 
-        for criterion in search_data['criteriaProcessOutput']:
-            prop_name = criterion['property']
-            value = criterion['value']
-            q.is_output_of_process({prop_name: {criterion['operation']: value}})
+            for criterion in search_data['criteriaProcessOutput']:
+                prop_name = criterion['property']
+                value = criterion['value']
+                q.is_output_of_process({prop_name: {criterion['operation']: value}})
 
-        res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
-        print(res)
-        
+            res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
+        return  json.dumps( {
+                'status': 'success',
+                'res': res
+        } )
 
-        # print(br._repr_html_())
-
-        # process_term = _get_term({'id':'PROCESS:0000031'})
-        # person_term = _get_term({'id':'ENIGMA:0000090'})
-        # campaign_term = _get_term({'id':'ENIGMA:0000021'})
-        # input_obj_ids = 'Well:Well0000000'
-
-
-        # br.save(process_term=process_term, 
-        #     person_term=person_term, 
-        #     campaign_term=campaign_term,
-        #     input_obj_ids=input_obj_ids)
-
-
-    return  json.dumps( {
-            'status': 'success',
-            'res': res
-    } )
+    except Exception as e:
+        return _err_response(e)        
 
 @app.route("/generix/brick/<brick_id>", methods=['GET'])
 def get_brick(brick_id):
