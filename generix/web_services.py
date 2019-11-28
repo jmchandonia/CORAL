@@ -1023,14 +1023,28 @@ def generix_plot_types():
 
 @app.route("/generix/report_plot_data/<report_id>", methods=['GET'])
 def generix_report_plot_data(report_id):
+    reports_map = {
+        'report1': 'brick_types',
+        'report2': 'process_campaigns'
+    }
+
     try:
+        report = getattr(svs['reports'], reports_map[report_id])
+        title = report.name
+        x = report.values(0)
+        y = report.counts()  
+
         # Build layout
         layout = {
-            'width': 800,
-            'height': 600,
-            'title': report_id
+            # 'width': 800,
+            # 'height': 600,
+            'title': title
         }
-        data = []
+        data = [{
+            'x': x,
+            'y': y,
+            'type': 'bar'
+        }]
 
         return _ok_response({
                 'layout': layout,
