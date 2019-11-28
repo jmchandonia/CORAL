@@ -869,57 +869,60 @@ def _extract_criterion_props(criterion):
     return (prop_name, prop_value, operation)           
 
 
-@app.route('/generix/search', methods=['GET','POST'])
+@app.route('/generix/search', methods=['POST'])
 def generix_search():
-    search_data = request.json
+    try:
+        search_data = request.json
 
-    # Do queryMatch
-    query_match = search_data['queryMatch']
-    provider = dp._get_type_provider(query_match['dataModel'])
-    q = provider.query()
+        # Do queryMatch
+        query_match = search_data['queryMatch']
+        provider = dp._get_type_provider(query_match['dataModel'])
+        q = provider.query()
 
-    if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
-        q.has({'data_type': {'=': query_match['dataType']}})
+        if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
+            q.has({'data_type': {'=': query_match['dataType']}})
 
-    for criterion in query_match['params']:
-        (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-        q.has({prop_name: {operation: prop_value}})
-
-    # Do processesUp
-    if 'processesUp' in search_data:
-        for criterion in search_data['processesUp']:
+        for criterion in query_match['params']:
             (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-            q.is_output_of_process({prop_name: {operation: prop_value}})
+            q.has({prop_name: {operation: prop_value}})
 
-    # Do processesDown
-    if 'processesDown' in search_data:
-        for criterion in search_data['processesDown']:
-            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-            q.is_input_of_process({prop_name: {operation: prop_value}})
+        # Do processesUp
+        if 'processesUp' in search_data:
+            for criterion in search_data['processesUp']:
+                (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+                q.is_output_of_process({prop_name: {operation: prop_value}})
 
-    # Do connectsUpTo
-    if 'connectsUpTo' in search_data:
-        connects_up_to = search_data['connectsUpTo']
-        params = {}
-        for criterion in connects_up_to['params']:
-            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-            params['prop_name'] = {operation: prop_value}
+        # Do processesDown
+        if 'processesDown' in search_data:
+            for criterion in search_data['processesDown']:
+                (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+                q.is_input_of_process({prop_name: {operation: prop_value}})
 
-        q.linked_up_to(connects_up_to['dataModel'],  params )
+        # Do connectsUpTo
+        if 'connectsUpTo' in search_data:
+            connects_up_to = search_data['connectsUpTo']
+            params = {}
+            for criterion in connects_up_to['params']:
+                (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+                params['prop_name'] = {operation: prop_value}
 
-    # Do connectsDownTo
-    if 'connectsDownTo' in search_data:
-        connects_down_to = search_data['connectsDownTo']
-        params = {}
-        for criterion in connects_down_to['params']:
-            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-            params['prop_name'] = {operation: prop_value}
+            q.linked_up_to(connects_up_to['dataModel'],  params )
 
-        q.linked_down_to(connects_down_to['dataModel'],  params )
+        # Do connectsDownTo
+        if 'connectsDownTo' in search_data:
+            connects_down_to = search_data['connectsDownTo']
+            params = {}
+            for criterion in connects_down_to['params']:
+                (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+                params['prop_name'] = {operation: prop_value}
 
-    res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
-    # return  json.dumps( {'res': res} )
-    return res
+            q.linked_down_to(connects_down_to['dataModel'],  params )
+
+        res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
+        # return  json.dumps( {'res': res} )
+        return res
+    except Exception as e:
+        return _err_response(e)
 
 
 
