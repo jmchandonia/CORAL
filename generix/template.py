@@ -4,7 +4,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
 
-def generate_brick_2d_template_draft(brick_skeleton,file_name):
+def generate_brick_2d_template_draft(brick_ds,file_name):
     book = Workbook()
     sheet = book.active
 
@@ -72,7 +72,7 @@ def generate_brick_2d_template_draft(brick_skeleton,file_name):
     book.save(file_name)    
 
 
-def generate_brick_2d_template(brick_skeleton,file_name):
+def generate_brick_2d_template(brick_ds,file_name):
 
     TITLE_FONT = Font(name='Calibri', size=14) 
     INSTRUCTIONS_FONT = Font(name='Calibri', size=10, bold=True, italic=True)
@@ -89,11 +89,11 @@ def generate_brick_2d_template(brick_skeleton,file_name):
     book = Workbook()
     sheet = book.active
 
-    data_vars = brick_skeleton['dataValues']
-    brick_dims = brick_skeleton['dimensions']
+    data_vars = brick_ds['dataValues']
+    brick_dims = brick_ds['dimensions']
 
 
-    data_type = brick_skeleton['type']
+    data_type = brick_ds['type']
     data_var = data_vars[0]['type']['text']
 
     dims = [brick_dims[0]['type']['text'], brick_dims[1]['type']['text']]
@@ -176,7 +176,7 @@ def generate_brick_2d_template(brick_skeleton,file_name):
 
     book.save(file_name)    
 
-def generate_brick_1dm_template(brick_skeleton,file_name):
+def generate_brick_1dm_template(brick_ds,file_name):
 
     TITLE_FONT = Font(name='Calibri', size=14) 
     INSTRUCTIONS_FONT = Font(name='Calibri', size=10, bold=True, italic=True)
@@ -190,11 +190,11 @@ def generate_brick_1dm_template(brick_skeleton,file_name):
 
     format_name = 'F1DM'
 
-    data_vars = brick_skeleton['dataValues']
-    brick_dims = brick_skeleton['dimensions']
+    data_vars = brick_ds['dataValues']
+    brick_dims = brick_ds['dimensions']
 
 
-    data_type = brick_skeleton['type']
+    data_type = brick_ds['type']
     data_vars = [ dvar['type']['text'] for dvar in data_vars ] 
 
     dims = [brick_dims[0]['type']['text']]
