@@ -92,8 +92,8 @@ def generate_brick_2d_template(brick_ds,file_name):
     data_vars = brick_ds['dataValues']
     brick_dims = brick_ds['dimensions']
 
-
-    data_type = brick_ds['type']
+    template_name = brick_ds['template_type']
+    data_type = brick_ds['type']['text']
     data_var = data_vars[0]['type']['text']
 
     dims = [brick_dims[0]['type']['text'], brick_dims[1]['type']['text']]
@@ -107,6 +107,7 @@ def generate_brick_2d_template(brick_ds,file_name):
 
     rows = [
         ['Automatically generated template '],
+        ['Name', template_name],
         ['Type', data_type],    
         ['Dimension 1', dims[0]],
         ['Dimension 2', dims[1]],
@@ -136,17 +137,17 @@ def generate_brick_2d_template(brick_ds,file_name):
         
     sheet['A1'].font = TITLE_FONT
 
-    sheet['A3'].fill = DIM1_FILL
-    sheet['B3'].fill = DIM1_FILL
+    sheet['A4'].fill = DIM1_FILL
+    sheet['B4'].fill = DIM1_FILL
 
-    sheet['A4'].fill = DIM2_FILL 
-    sheet['B4'].fill = DIM2_FILL 
+    sheet['A5'].fill = DIM2_FILL 
+    sheet['B5'].fill = DIM2_FILL 
 
-    sheet['A5'].fill = DATA_FILL
-    sheet['B5'].fill = DATA_FILL
+    sheet['A6'].fill = DATA_FILL
+    sheet['B6'].fill = DATA_FILL
 
-    sheet['A7'].font = INSTRUCTIONS_FONT
     sheet['A8'].font = INSTRUCTIONS_FONT
+    sheet['A9'].font = INSTRUCTIONS_FONT
 
     # Color Dim 1
     start_row = len(rows) + 1        
@@ -194,7 +195,8 @@ def generate_brick_1dm_template(brick_ds,file_name):
     brick_dims = brick_ds['dimensions']
 
 
-    data_type = brick_ds['type']
+    template_name = brick_ds['template_type']
+    data_type = brick_ds['type']['text']
     data_vars = [ dvar['type']['text'] for dvar in data_vars ] 
 
     dims = [brick_dims[0]['type']['text']]
@@ -204,6 +206,7 @@ def generate_brick_1dm_template(brick_ds,file_name):
 
     rows = [
         ['Automatically generated template '],
+        ['Name', template_name],
         ['Type', data_type],    
         ['Dimension 1', dims[0]],
         ['Data values', ', '.join(data_vars)],
@@ -225,14 +228,14 @@ def generate_brick_1dm_template(brick_ds,file_name):
         
     sheet['A1'].font = TITLE_FONT
 
-    sheet['A3'].fill = DIM1_FILL
-    sheet['B3'].fill = DIM1_FILL
+    sheet['A4'].fill = DIM1_FILL
+    sheet['B4'].fill = DIM1_FILL
 
-    sheet['A4'].fill = DATA_FILL
-    sheet['B4'].fill = DATA_FILL
+    sheet['A5'].fill = DATA_FILL
+    sheet['B5'].fill = DATA_FILL
 
-    sheet['A6'].font = INSTRUCTIONS_FONT
     sheet['A7'].font = INSTRUCTIONS_FONT
+    sheet['A8'].font = INSTRUCTIONS_FONT
 
     # Color Dim 1
     start_row = len(rows) + 1        
