@@ -894,6 +894,7 @@ class Brick:
 
         self.__data_vars.append(var)
         self.__inflate_data_vars()
+        return var
 
     def mean(self, dim):
         dim_index = dim.dim_index
@@ -1087,6 +1088,7 @@ class BrickDimension:
 
         self.__vars.append(var)
         self.__inflate_vars()
+        return var
 
     def add_brick_data_var(self, match_src_var, match_dst_var, data_var):
         # index dst values
