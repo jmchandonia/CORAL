@@ -1285,7 +1285,10 @@ class BrickVariable:
         
     def __get_attr(self, name):
         return self.__xds[self.__var_prefix].attrs[name]
-            
+
+    def __set_attr(self, name, value):
+        self.__xds[self.__var_prefix].attrs[name] = value
+
     @property    
     def name(self):
         return self.__get_attr('__name')
@@ -1361,6 +1364,14 @@ class BrickVariable:
 
     def has_attrs(self):
         return self.__get_attr('__attr_count') > 0
+
+    def add_attr(self, type_term=None, units_term=None, scalar_type=None, value=None):        
+        pv = PropertyValue(type_term=type_term, units_term=units_term, scalar_type=scalar_type, value=value)
+
+        attr_count =  self.__get_attr('__attr_count')
+        attr_count += 1
+        self.__set_attr('__attr%s' % attr_count, pv)
+        self.__set_attr('__attr_count', attr_count)
 
     # def data_df(self):
     #     return pd.DataFrame(self.data, columns=[self.name])
@@ -1687,7 +1698,7 @@ class BrickTemplateProvider:
                     'id': data_type_term.term_id,
                     'text': data_type_term.term_name
                 }
-                
+
                 # update property types
                 if 'properties' in template:
                     for prop in template['properties']:
