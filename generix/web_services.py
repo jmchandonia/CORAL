@@ -1158,37 +1158,44 @@ def generix_type_stat():
 
 @app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
 def generix_dn_process_docs(obj_id):
-    arango_service = svs['arango_service']
-    indexdef = svs['indexdef']
-
-    obj_type = ''
     try:
-        obj_type = to_object_type(obj_id)
-    except:
-        return _err_response('Wrong object ID format')
+        arango_service = svs['arango_service']
+        indexdef = svs['indexdef']
 
-    itdef = indexdef.get_type_def(obj_type)
-    rows = arango_service.get_dn_process_docs(itdef, obj_id)
-    process_docs = _to_process_docs(rows)
+        obj_type = ''
+        try:
+            obj_type = to_object_type(obj_id)
+        except:
+            raise ValueError('Wrong object ID format: %s' % obj_id)
 
-    return  _ok_response(process_docs)
+        itdef = indexdef.get_type_def(obj_type)
+        rows = arango_service.get_dn_process_docs(itdef, obj_id)
+        process_docs = _to_process_docs(rows)
+
+        return  _ok_response(process_docs)
+    except Exception as e:
+        return _err_response(e)
+
 
 @app.route('/generix/up_process_docs/<obj_id>', methods=['GET'])
 def generix_up_process_docs(obj_id):
-    arango_service = svs['arango_service']
-    indexdef = svs['indexdef']
-
-    obj_type = ''
     try:
-        obj_type = to_object_type(obj_id)
-    except:
-        return _err_response('Wrong object ID format')
+        arango_service = svs['arango_service']
+        indexdef = svs['indexdef']
 
-    itdef = indexdef.get_type_def(obj_type)
-    rows = arango_service.get_up_process_docs(itdef, obj_id)
-    process_docs = _to_process_docs(rows)
+        obj_type = ''
+        try:
+            obj_type = to_object_type(obj_id)
+        except:
+            raise ValueError('Wrong object ID format: %s' % obj_id)
 
-    return _ok_response(process_docs)
+        itdef = indexdef.get_type_def(obj_type)
+        rows = arango_service.get_up_process_docs(itdef, obj_id)
+        process_docs = _to_process_docs(rows)
+
+        return _ok_response(process_docs)
+    except Exception as e:
+        return _err_response(e)
 
 
 def _to_process_docs(rows):
