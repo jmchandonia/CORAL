@@ -529,8 +529,13 @@ def _create_brick(brick_ds, brick_data):
         for dim_var_index, dim_var in enumerate(dim['variables']):
             var_type_term = _get_term(dim_var['type'])
             var_units_term = _get_term(dim_var['units'])
-            v = br.dims[dim_index].add_var(var_type_term, var_units_term, 
-                brick_data['dims'][dim_index]['dim_vars'][dim_var_index]['values'])
+
+            values = brick_data['dims'][dim_index]['dim_vars'][dim_var_index]['values']
+            if var_type_term.microtype_value_scalar_type == 'oterm_ref':
+                for i, val in enumerate(values):
+                    values[i] = _get_term(val)
+
+            v = br.dims[dim_index].add_var(var_type_term, var_units_term, values)
             if 'context' in dim_var: 
                 _add_var_context(v, dim_var['context'])
 
@@ -565,7 +570,7 @@ def _add_var_context(brick_var, context_elems):
             scalar_type=scalar_type, values=value)
 
 def _get_term(term_data):
-    return svs['ontology'].all.find_id( term_data['id'] ) if term_data and term_data['id'] != '' else None
+    return svs['term_provider'].get_term( term_data['id'] ) if term_data and term_data['id'] != '' else None
 
 
 ########################################################################################
