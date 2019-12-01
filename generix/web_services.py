@@ -529,15 +529,19 @@ def _create_brick(brick_ds, brick_data):
         for dim_var_index, dim_var in enumerate(dim['variables']):
             var_type_term = _get_term(dim_var['type'])
             var_units_term = _get_term(dim_var['units'])
-            br.dims[dim_index].add_var(var_type_term, var_units_term, 
+            v = br.dims[dim_index].add_var(var_type_term, var_units_term, 
                 brick_data['dims'][dim_index]['dim_vars'][dim_var_index]['values'])
+            if 'context' in dim_var: 
+                _add_var_context(v, dim_var['context'])
 
     # add data
     for data_var_index, data_var in enumerate(brick_data_vars):
         data_type_term = _get_term(data_var['type'])
         data_units_term = _get_term(data_var['units'])
-        br.add_data_var(data_type_term, data_units_term, 
+        v = br.add_data_var(data_type_term, data_units_term, 
             brick_data['data_vars'][data_var_index]['values'])
+        if 'context' in dim_var: 
+            _add_var_context(v, dim_var['context'])
 
 
     # add brick properties
@@ -549,6 +553,16 @@ def _create_brick(brick_ds, brick_data):
         br.add_attr(var_type_term, var_units_term, scalarType, value)
 
     return br
+
+
+def _add_var_context(brick_var, context_elems):
+    for ce in context_elems:
+        type_term = _get_term(ce.get('type'))
+        units_term = _get_term(ce.get('units'))
+        scalar_type = type_term.microtype_value_scalar_type        
+        value = _get_term(ce.get('value')) if  scalar_type == 'oterm_ref' else ce.get('value')['text']
+        brick_var.add_attr(type_term=type_term, units_term=units_term, 
+            scalar_type=scalar_type, values=value)
 
 def _get_term(term_data):
     return svs['ontology'].all.find_id( term_data['id'] ) if term_data and term_data['id'] != '' else None
