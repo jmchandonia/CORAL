@@ -183,7 +183,10 @@ class ValueValidationService:
                         self.__add_error(errors, it.multi_index, value, 'Term', error)
 
                 if casted_value is not None:
-                    casted_value = str(casted_value)
+                    casted_value = {
+                        'id': casted_value.term_id,
+                        'text': casted_value.term_name
+                    }
                 it[0] = casted_value
                 it.iternext()
         return errors 
