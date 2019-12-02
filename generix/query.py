@@ -164,7 +164,7 @@ class Query:
         })
         return self
 
-    def _find_pks(self, upks):        
+    def _find_upks(self, upks):        
         cname = self.__index_type_def.collection_name
         typedef = services.typedef.get_type_def(self.__index_type_def.name)
         pk = typedef.pk_property_def
@@ -186,6 +186,25 @@ class Query:
                 'upk': row['upk']
             })
         return pk_upks
+
+    def _find_pks(self, pks):        
+        cname = self.__index_type_def.collection_name
+        typedef = services.typedef.get_type_def(self.__index_type_def.name)
+        pk = typedef.pk_property_def
+
+        aql = '''
+            FOR x in %s 
+            filter x.%s in @pk_ids
+            return {'pk': x.%s }           
+        ''' % (cname, pk.name, pk.names)
+
+        aql_bind = {'pk_ids': pks}
+        rs = services.arango_service.find(aql, aql_bind, len(pks))
+
+        pks = []
+        for row in rs:
+            pks.append(row['pk'])
+        return pks
 
     def find_ids(self):
         return []
