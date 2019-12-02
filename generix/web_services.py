@@ -307,7 +307,7 @@ def create_brick():
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
         campaign_term = _get_term(brick_ds['campaign'])
-        input_obj_ids = ['Well:Well0000000']
+        input_obj_ids = br.get_fk_refs(process_ufk=True)
 
         br.save(process_term=process_term, 
             person_term=person_term, 
