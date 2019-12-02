@@ -575,11 +575,11 @@ class Brick:
         query = index_type_def.data_provider.query()
 
         if type(ufk_values) == list:         
-            pk_upks = query._find_pks(ufk_values)
+            pk_upks = query._find_upks(ufk_values)
             return [pk_upk['pk'] for pk_upk in pk_upks]
         else:
             # Single value
-            pk_upks = query._find_pks([ufk_values])
+            pk_upks = query._find_upks([ufk_values])
             return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
 
     def to_json(self, exclude_data_values=False, typed_values_property_name=True):
