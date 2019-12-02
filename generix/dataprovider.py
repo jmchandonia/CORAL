@@ -89,6 +89,9 @@ class EntityProvider:
         self.__index_type_def = index_type_def
         self.__inflate_properties()
 
+        # TODO: hack
+        index_type_def._register_data_provider(self)
+
     def __inflate_properties(self):
         for index_prop_def in self.__index_type_def.property_defs:
             key = to_var_name('PROPERTY_', index_prop_def.name)
@@ -110,7 +113,12 @@ class EntityProvider:
 
 class BrickProvider(EntityProvider):
     def __init__(self):
-        super().__init__(services.indexdef.get_type_def(TYPE_NAME_BRICK) )
+        index_type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK) 
+        super().__init__(index_type_def)
+        
+        # TODO: hack
+        index_type_def._register_data_provider(self)
+
 
     @staticmethod
     def _load_brick(brick_id):
