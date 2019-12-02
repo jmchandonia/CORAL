@@ -10,7 +10,11 @@ class IndexTypeDef:
         self.__name = type_name
         self.__category = type_category
         self.__prop_defs = index_prop_defs
+        self.__data_provider = None
     
+    def _register_data_provider(self, data_provider):
+        self.__data_provider = data_provider
+
     @property
     def name(self):
         return self.__name
@@ -30,6 +34,10 @@ class IndexTypeDef:
     @property
     def property_names(self):
         return [pd.name for pd in self.__prop_defs]
+
+    @property 
+    def data_provider(self):
+        return self.__data_provider
 
     def _ensure_init_index(self):
         try:
