@@ -1739,6 +1739,7 @@ class BrickTemplateProvider:
 
 
     def upgrade_templates(self):
+        custom_template_id = 1
         for btype in self.__templates['types']:
             data_type_term_id = btype['data_type']
             data_type_term = services.term_provider.get_term(data_type_term_id)
@@ -1764,6 +1765,21 @@ class BrickTemplateProvider:
                 # update data variable types
                 for data_var in template['data_vars']:
                     self._update_type(data_var['type'])  
+            
+            # Add custom template
+            custom_template_id += 1
+            btype['children'].insert(0, {
+                'id' : 'CT%s' % custom_template_id,
+                'text' : 'Custom %s' % btype['text'],
+                'data_type':{
+                    'id': data_type_term.term_id,
+                    'text': data_type_term.term_name                    
+                },
+                'properties' : [],
+                'dims' :[],
+                'data_vars': []
+            })
+
         self.__upgraded = True                                          
 
     def _update_type(self, ptype):
