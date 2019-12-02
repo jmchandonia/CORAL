@@ -458,7 +458,7 @@ class Brick:
     def id(self):
         return self.__get_attr('__id')
     
-    def set_id(self, id):
+    def _set_id(self, id):
         self.__xds.attrs['__id'] = id
 
     @property
@@ -993,7 +993,7 @@ class Brick:
 
         brick_data_holder = BrickDataHolder(self)
         services.workspace.save_data(brick_data_holder)
-        self.set_id(brick_data_holder.id)
+        self._set_id(brick_data_holder.id)
 
         process_data = {
             'person': str(person_term),
