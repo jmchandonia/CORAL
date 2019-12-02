@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { PlotService } from '../../../services/plot.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class DashboardPlotComponent implements OnInit {
   layout: any;
 
   constructor(
-    private plotService: PlotService
+    private plotService: PlotService,
+    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -24,6 +25,17 @@ export class DashboardPlotComponent implements OnInit {
           const { results } = res;
           this.data = results.data;
           this.layout = results.layout;
+          if (this.layout.xaxis) {
+            this.layout.xaxis.automargin = true;
+          } else {
+            this.layout.xaxis = { automargin: true };
+          }
+          if (this.layout.yaxis) {
+            this.layout.yaxis.automargin = true;
+          } else {
+            this.layout.yaxis = { automargin: true };
+          }
+          this.chRef.detectChanges();
         });
     }
   }
