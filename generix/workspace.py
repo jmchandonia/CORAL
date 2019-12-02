@@ -91,7 +91,7 @@ class BrickDataHolder(DataHolder):
         return self.data
 
     def _set_data_id(self, val):
-        self.brick.set_id(val)
+        self.brick._set_id(val)
 
 
 class Workspace:
