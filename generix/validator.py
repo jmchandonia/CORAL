@@ -110,8 +110,11 @@ class ValueValidationService:
             errors = self.cast_values(values, str, 'string')
         elif scalar_type == 'oterm_ref':
             errors = self.cast_oterm_values(values, var_term)
+        elif scalar_type == 'object_ref':
+            errors = self.cast_object_ref_values(values, var_term)
+        else:
+            raise ValueError('Unsupported scalar type %s' % scalar_type)
 
-        # TODO: cast object refs
         return errors
 
     def __validate_values_type(self, values):
@@ -191,6 +194,52 @@ class ValueValidationService:
                 it.iternext()
         return errors 
 
+    def cast_object_ref_values(self, values, var_term):
+        self.__validate_values_type(values)
+
+        if not var_term.require_mapping:
+            raise ValueError('Type term wiht scalar_type=object_ref does not require mapping')
+
+        # Get a unique set of fks
+        values_set = set()
+        for val in np.nditer(values, flags=['refs_ok']):
+            val = val.item()
+            if val is not None:
+                values_set.add(val)
+
+        # Get mapped values
+        index_type_def = services.indexdef.get_type_def(var_term.microtype_fk_core_type)
+        query = index_type_def.data_provider.query()
+
+        values_mapped = set()
+        if var_term.is_ufk:
+            pk_upks = query._find_upks(list(values_set))
+            for pk_upk in pk_upks:
+                values_mapped.add(pk_upk['upk'])
+        elif var_term.is_fk:
+            pks = query._find_pks(list(values_set))
+            for pk in pks:
+                values_mapped.add(pk)
+
+        # cast values
+        errors = []
+        with np.nditer(values, op_flags=['readwrite'], flags=['multi_index', 'refs_ok']) as it:
+            while not it.finished:                 
+                casted_value = None
+                
+                value = it[0].item()
+                if value:
+                    if value in values_mapped:
+                        casted_value = value    
+                    else:
+                        self.__add_error(errors, it.multi_index, value, 'Object Ref', 
+                            'Can not map value %s to core type %s.%s' % (value,
+                                var_term.microtype_fk_core_type, 
+                                var_term.microtype_fk_core_prop_name))
+
+                it[0] = casted_value
+                it.iternext()
+        return errors 
 
     def __add_error(self, errors, index, value, cast_type, err_msg = ''):
         errors.append({
