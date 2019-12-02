@@ -1220,6 +1220,7 @@ def generix_up_process_docs(obj_id):
 
 
 def _to_process_docs(rows):
+    typedef = svs['typedef']
     indexdef = svs['indexdef']
     process_docs = []
     for row in rows:
@@ -1230,11 +1231,15 @@ def _to_process_docs(rows):
         for doc in row['docs']:
             obj_type = to_object_type(doc['_key'])
             itdef = indexdef.get_type_def(obj_type)
+
+            upk = typedef.get_type_def(obj_type).upk_property_def
+            description = doc[upk.name] if upk else ''
+
             docs.append({
                 'id': doc['_key'],
                 'type': obj_type,
                 'category': itdef.category,
-                'description': '' 
+                'description': description
             })
 
         process_docs.append({
