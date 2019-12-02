@@ -533,6 +533,55 @@ class Brick:
         q.has({'id': self.id})
         return q.find_one()
 
+    def get_fk_refs(self, process_ufk=False):
+        fk_refs = set()
+
+        # Collect foreign keys from properties (attrs)
+        for pv in self.attrs:     
+            if pv.type_term.require_mapping:       
+                core_type = pv.type_term.microtype_fk_core_type
+
+                fk_id = None
+                if pv.type_term.is_fk:
+                    fk_id = pv.value
+                elif process_ufk and pv.type_term.is_ufk:
+                    fk_id = self._convert_ufk_to_fk(core_type, pv.value)
+
+                if fk_id is not None:
+                    fk_refs.add('%s:%s' % (core_type, fk_id))
+
+        # Collect foreign keys from dim vars
+        for dim in self.dims:
+            for dim_var in dim.vars:
+                if dim_var.type_term.require_mapping:       
+                    core_type = dim_var.type_term.microtype_fk_core_type
+
+                    fk_ids = []
+                    if dim_var.type_term.is_fk:
+                        fk_ids = dim_var.values
+                    elif process_ufk and dim_var.type_term.is_ufk:
+                        fk_ids = self._convert_ufk_to_fk(core_type, dim_var.values.tolist())
+                    
+                    for fk_id in fk_ids:
+                        fk_refs.add('%s:%s' % (core_type, fk_id))
+
+        # TODO: needs to make a decision whether 
+        #  to collect fk_ids from data_vars
+
+        return fk_refs
+
+    def _convert_ufk_to_fk(self, core_type, ufk_values):
+        index_type_def = services.indexdef.get_type_def(core_type)        
+        query = index_type_def.data_provider.query()
+
+        if type(ufk_values) == list:         
+            pk_upks = query._find_pks(ufk_values)
+            return [pk_upk['pk'] for pk_upk in pk_upks]
+        else:
+            # Single value
+            pk_upks = query._find_pks([ufk_values])
+            return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
+
     def to_json(self, exclude_data_values=False, typed_values_property_name=True):
         return json.dumps(
             self.to_dict(exclude_data_values=exclude_data_values,
