@@ -859,6 +859,26 @@ class Term:
     def require_mapping(self):
         return not not self.microtype_fk
 
+    @property
+    def is_fk(self):
+        if self.microtype_fk is not None:
+            core_type = self.microtype_fk_core_type
+            type_def = services.typedef.get_type_def(core_type)
+            prop_def = type_def.property_def(self.microtype_fk_core_prop_name)
+            if prop_def.is_pk:
+                return True
+        return False
+
+    @property
+    def is_ufk(self):
+        if self.microtype_fk is not None:
+            core_type = self.microtype_fk_core_type
+            type_def = services.typedef.get_type_def(core_type)
+            prop_def = type_def.property_def(self.microtype_fk_core_prop_name)
+            if prop_def.is_upk:
+                return True
+        return False
+
 
     def to_descriptor(self):
         return {
