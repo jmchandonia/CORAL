@@ -36,6 +36,7 @@ class DataProvider:
             'ontology': services.ontology,
             'reports' : services.reports,
             'indexdef': services.indexdef,
+            'typedef' : services.typedef,
             'arango_service': services.arango_service,
             'workspace': services.workspace,
             'brick_template_provider': services.brick_template_provider,
@@ -115,7 +116,7 @@ class BrickProvider(EntityProvider):
     def __init__(self):
         index_type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK) 
         super().__init__(index_type_def)
-        
+
         # TODO: hack
         index_type_def._register_data_provider(self)
 
