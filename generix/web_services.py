@@ -1232,7 +1232,7 @@ def _to_process_docs(rows):
             obj_type = to_object_type(doc['_key'])
             itdef = indexdef.get_type_def(obj_type)
 
-            upk = typedef.get_type_def(obj_type).upk_property_def
+            upk = typedef.get_type_def(obj_type).upk_property_def if obj_type != 'Brick' else None
             description = doc[upk.name] if upk else ''
 
             docs.append({
