@@ -861,7 +861,7 @@ class Term:
 
     @property
     def is_fk(self):
-        if self.microtype_fk is not None:
+        if self.require_mapping():
             core_type = self.microtype_fk_core_type
             type_def = services.typedef.get_type_def(core_type)
             prop_def = type_def.property_def(self.microtype_fk_core_prop_name)
@@ -871,7 +871,7 @@ class Term:
 
     @property
     def is_ufk(self):
-        if self.microtype_fk is not None:
+        if self.require_mapping():
             core_type = self.microtype_fk_core_type
             type_def = services.typedef.get_type_def(core_type)
             prop_def = type_def.property_def(self.microtype_fk_core_prop_name)
