@@ -535,7 +535,8 @@ def _create_brick(brick_ds, brick_data):
                 for i, val in enumerate(values):
                     values[i] = _get_term(val)
 
-            v = br.dims[dim_index].add_var(var_type_term, var_units_term, values)
+            v = br.dims[dim_index].add_var(var_type_term, var_units_term, values, 
+                scalar_type=var_type_term.microtype_value_scalar_type)
             if 'context' in dim_var: 
                 _add_var_context(v, dim_var['context'])
 
@@ -544,7 +545,8 @@ def _create_brick(brick_ds, brick_data):
         data_type_term = _get_term(data_var['type'])
         data_units_term = _get_term(data_var['units'])
         v = br.add_data_var(data_type_term, data_units_term, 
-            brick_data['data_vars'][data_var_index]['values'])
+            brick_data['data_vars'][data_var_index]['values'],
+            scalar_type=data_type_term.microtype_value_scalar_type)
         if 'context' in dim_var: 
             _add_var_context(v, dim_var['context'])
 
@@ -553,7 +555,7 @@ def _create_brick(brick_ds, brick_data):
     for prop in brick_properties:
         var_type_term = _get_term(prop['type'])
         var_units_term = _get_term(prop['units'])
-        scalarType = prop['scalarType']
+        scalarType = var_type_term.microtype_value_scalar_type
         value = prop['value']
         br.add_attr(var_type_term, var_units_term, scalarType, value)
 
