@@ -680,7 +680,7 @@ class Term:
                     vals = m.groups()
                     self.__microtype_fk_term_id = vals[0]
                     self.__microtype_fk_core_type = vals[1]
-                    self.__microtype_fk_core_prop_name = vals[2]
+                    self.__microtype_fk_core_prop_name = vals[2].lower()
         
 
     '''
