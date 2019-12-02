@@ -233,8 +233,7 @@ class ValueValidationService:
                         casted_value = value    
                     else:
                         self.__add_error(errors, it.multi_index, value, 'Object Ref', 
-                            'Can not map value %s to core type %s.%s' % (value,
-                                var_term.microtype_fk_core_type, 
+                            'Mapping to core type %s.%s' % (var_term.microtype_fk_core_type, 
                                 var_term.microtype_fk_core_prop_name))
 
                 it[0] = casted_value
