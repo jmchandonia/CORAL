@@ -455,10 +455,10 @@ def _get_1d_row_data(sheet, ri, ci):
 
 def _get_2d_data(sheet, ri_start, ci_start, r_len, c_len):
     data = []
-    for ci in range(ci_start, ci_start + c_len):
+    for ri in range(ri_start, ri_start + r_len):
         row = []
-        for ri in range(ri_start, ri_start + r_len):
-            value = sheet.cell(row=ri, column=ci ).value
+        for ci in range(ci_start, ci_start + c_len):
+            value = sheet.cell(row=ri, column=ci).value
             row.append(value)
         data.append(row)
     return data
