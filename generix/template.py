@@ -363,14 +363,14 @@ def _get_1d_column_data(sheet, ri, ci):
 
 def _get_contexted_var_name(dvar):
     var_name = dvar['type']['text']
-    if 'units' in dvar and dvar['units']['text']:
+    if 'units' in dvar and dvar['units'] and dvar['units']['text']:
         var_name += ' (%s)' % dvar['units']['text']
 
     items = []
     if 'context' in dvar:
         for ce in dvar['context']:
             item = '%s=%s' % (ce['type']['text'], ce['value']['text'])
-            if 'units' in ce and ce['units']['text']:
+            if 'units' in ce and ce['units'] and ce['units']['text']:
                 item += ' (%s)' % ce['units']['text']
             items.append(item)
 
