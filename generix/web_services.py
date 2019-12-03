@@ -49,6 +49,18 @@ _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 def hello():
     return "Welcome!"
 
+@app.route("/generix/refs_to_core_objects/<data_id>", methods=['GET'])
+def generix_refs_to_core_objects(data_id):
+    res = [{
+        'var_name': 'qqq',
+        'count': 5
+    },{
+        'var_name': 'aaa',
+        'count': 4
+    }]
+    return _ok_response(res)
+
+
 
 @app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
