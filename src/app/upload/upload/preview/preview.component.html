@@ -65,6 +65,37 @@
       </div>
       <div class="card mt-3">
         <div class="card-header light-blue">
+          <h5>Data Variables ({{brick?.dataValues.length}})</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-header">
+              <tr>
+                <td>#</td>
+                <td>Type</td>
+                <td>Units</td>
+                <td>Value Sample</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let dataValue of brick?.dataValues">
+                <td>{{dataValue.index + 1}}</td>
+                <td>
+                  {{dataValue.type.text}}
+                  <span *ngFor="let item of dataValue.context">
+                    , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                    <span *ngIf="item.units"> {{item.units.text}}</span>
+                  </span>
+                </td>
+                <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
+                <td>{{dataValue.valuesSample}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card mt-3">
+        <div class="card-header light-blue">
           <h5>Dimensions  ({{brick?.dimensions.length}})</h5>
         </div>
         <div class="card-body">

@@ -102,6 +102,7 @@ export class LoadComponent implements OnInit, OnDestroy {
    upload() {
     this.loading = true;
     this.spinner.show();
+    this.successData = null;
     this.uploadService.uploadBrick(this.file).then((res: any) => {
       this.loading = false;
       this.spinner.hide();
