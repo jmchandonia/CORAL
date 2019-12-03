@@ -231,6 +231,11 @@ export class TypedProperty {
     }
 
     get typeTerm() { return this.type; }
+
+    get requireSelect2ForVal() {
+        return this.scalarType === 'object_ref'
+        || this.scalarType === 'oterm_ref';
+    }
 }
 
 // this.brick.property.typeTerm = ...

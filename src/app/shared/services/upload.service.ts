@@ -201,6 +201,12 @@ export class UploadService {
     return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body).pipe(delay(500));
   }
 
+  // tslint:disable-next-line
+  public searchPropertyValueObjectRefs(value: string, term_id: string, microtype: any) {
+    const body = { value, microtype, term_id };
+    return this.http.post<any>(`${environment.baseURL}/search_property_value_objrefs`, body).pipe(delay(500));
+  }
+
   public searchOntPropertyUnits(microtype: any) {
     const body = { microtype };
     return this.http.post<any>(`${environment.baseURL}/get_property_units_oterms`, body);
