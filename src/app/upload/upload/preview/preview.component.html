@@ -68,33 +68,35 @@
           <h5>Dimensions  ({{brick?.dimensions.length}})</h5>
         </div>
         <div class="card-body">
-          <table class="table table-bordered table-striped">
-            <thead class="table-header">
-              <tr>
-                <th>Data Type</th>
-                <th>Size</th>
-                <th>Variables</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let dim of brick?.dimensions; let i = index">
-                <td>{{dim.type.text}}</td>
-                <td>{{dim.size}}</td>
-                <td>
-                  <span *ngFor="let v of dim.variables; let last = last">
-                    {{v.type.text}}
-                    <span *ngIf="!last">, </span>
-                  </span>
-                </td>
-                <td>
-                  <span *ngFor="let v of dim.variables;">
-                    {{v.valuesSample}}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="row" *ngFor="let dim of brick?.dimensions">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5>{{dim.type.text}}, size={{dim.size}}</h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <table class="table table-bordered table-striped">
+                  <thead class="table-header">
+                    <tr>
+                      <th>#</th>
+                      <th>Variable Type</th>
+                      <th>Value Sample</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let dv of dim.variables;">
+                      <td>{{dv.index + 1}}</td>
+                      <td>{{dv.type.text}}</td>
+                      <td>{{dv.valuesSample}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card mt-3">
