@@ -83,11 +83,32 @@ def _search_microtypes(ontology, value):
         return _err_response(e)
 
 @app.route("/generix/search_property_value_oterms", methods=['POST'])
-def search_property_values():
+def search_property_value_oterms():
     query = request.json
     value = query['value']
     parent_term_id = query['microtype']['valid_values_parent']
     return _search_oterms(svs['ontology'].all, value, parent_term_id=parent_term_id)
+
+@app.route("/generix/search_property_value_objrefs", methods=['POST'])
+def search_property_value_objrefs():
+    try:
+        query = request.json
+        term = _get_term(query)
+        value = query['value']
+        res = []
+
+        res.append({
+            'id' : 0,
+            'text': value + ' - 00'
+        })
+        res.append({
+            'id' : 1,
+            'text': value + ' - 01'
+        })
+        return _ok_response(res)
+    except Exception as e:
+        return _err_response(e)
+
 
 def _search_oterms(ontology, value, parent_term_id=None):
     if value is None:
