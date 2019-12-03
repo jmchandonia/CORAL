@@ -344,7 +344,7 @@ def parse_brick_F2D_data(brick_ds, file_name):
 
 
     # Do data variable
-    ri = start_row + len(template_dim2_vars) - 1
+    ri = start_row + len(template_dim2_vars)
     ci = len(template_dim1_vars) + 1 + 1
     vals = _get_2d_data(sheet, ri, ci, dims[0]['size'], dims[1]['size'])
     data_vars.append({
