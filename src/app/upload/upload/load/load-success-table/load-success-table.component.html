@@ -27,7 +27,13 @@
                   <tbody>
                     <tr *ngFor="let dimVar of dim.variables">
                       <td>{{dimVar.index + 1}}</td>
-                      <td>{{dimVar.type.text}}</td>
+                      <td>
+                        {{dimVar.type.text}}
+                        <span *ngFor="let item of dimVar.context">
+                          , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                          <span *ngIf="item.units"> {{item.units.text}}</span>
+                        </span>
+                      </td>
                       <td>{{dimVar.units ? dimVar.units.text : 'N/A'}}</td>
                       <td>{{dimVar.valuesSample}}</td>
                     </tr>
@@ -60,7 +66,13 @@
           <tbody>
             <tr *ngFor="let dataValue of brick.dataValues">
               <td>{{dataValue.index + 1}}</td>
-              <td>{{dataValue.type.text}}</td>
+              <td>
+                {{dataValue.type.text}}
+                <span *ngFor="let item of dataValue.context">
+                  , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                  <span *ngIf="item.units"> {{item.units.text}}</span>
+                </span>
+              </td>
               <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
               <!-- <td [innerHTML]="dataValue.valuesSample | safeHtml"></td> -->
               <td>{{dataValue.valuesSample}}</td>

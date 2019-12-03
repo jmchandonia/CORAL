@@ -119,7 +119,13 @@
                   <tbody>
                     <tr *ngFor="let dv of dim.variables;">
                       <td>{{dv.index + 1}}</td>
-                      <td>{{dv.type.text}}</td>
+                      <td>
+                        {{dv.type.text}}
+                        <span *ngFor="let item of dv.context">
+                          , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                          <span *ngIf="item.units">{{item.units.text}}</span>
+                        </span>
+                      </td>
                       <td>{{dv.valuesSample}}</td>
                     </tr>
                   </tbody>
