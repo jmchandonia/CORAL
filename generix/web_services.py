@@ -93,7 +93,7 @@ def search_property_value_oterms():
 def search_property_value_objrefs():
     try:
         query = request.json
-        term = _get_term(query)
+        term = _get_term({ 'id':query['term_id']})
         value = query['value']
         res = []
 
