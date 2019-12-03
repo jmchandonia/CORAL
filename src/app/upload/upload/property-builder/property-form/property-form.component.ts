@@ -197,9 +197,9 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
         this.property.required,
         item
       );
-      if (this.property.units === null) {
-        resetProperty.units = null;
-      }
+      // if (this.property.units === null) {
+      //   resetProperty.units = null;
+      // }
       // emit new typed property to replace old one in parent component array reference
       this.typeReselected.emit(resetProperty);
     } else {
