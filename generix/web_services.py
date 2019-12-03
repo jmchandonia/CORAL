@@ -455,7 +455,7 @@ def upload_file():
         if dim_count == 1:
             brick_data = template.parse_brick_F1DM_data(brick_ds, udf_file_name)
         elif dim_count == 2:
-            brick_data = template.parse_brick_F2DT_data(brick_ds, udf_file_name)
+            brick_data = template.parse_brick_F2D_data(brick_ds, udf_file_name)
         else:
             raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
 
@@ -1337,10 +1337,10 @@ def generate_brick_template():
         data_var_count = len(brick_ds['dataValues'])
 
         if dim_count == 1:
-            template.generate_brick_1dm_template(brick_ds, utp_file_name)
+            template.generate_brick_F1DM_template(brick_ds, utp_file_name)
         elif dim_count == 2:
             if data_var_count == 1:
-                template.generate_brick_2d_template(brick_ds, utp_file_name)
+                template.generate_brick_F2D_template(brick_ds, utp_file_name)
 
         return send_file(utp_file_name, 
             as_attachment=True,
