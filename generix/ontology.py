@@ -348,7 +348,9 @@ class Ontology:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (OTERM_COLLECTION_NAME, aql_filter )
         else:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (aql_fulltext, aql_filter )
-
+        
+        print('aql=%s' % aql)
+        print('aql_bind:', aql_bind)
         result_set =  self.__arango_service.find(aql, aql_bind, size)
 
         return self.__build_terms(result_set)
@@ -450,7 +452,7 @@ class Ontology:
 
         if parent_term_id is not None and parent_term_id != '':
             aql_bind['parent_term_id'] = parent_term_id
-            aql_filter = '@parent_term_id in x.parent_term_ids'
+            aql_filter = '@parent_term_id in x.parent_path_term_ids'
 
         return TermCollection(self.__find_terms(aql_filter, aql_bind, 
             aql_fulltext=aql_fulltext, size=size))
