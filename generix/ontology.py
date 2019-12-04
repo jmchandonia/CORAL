@@ -349,8 +349,8 @@ class Ontology:
         else:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (aql_fulltext, aql_filter )
         
-        print('aql=%s' % aql)
-        print('aql_bind:', aql_bind)
+        # print('aql=%s' % aql)
+        # print('aql_bind:', aql_bind)
         result_set =  self.__arango_service.find(aql, aql_bind, size)
 
         return self.__build_terms(result_set)
