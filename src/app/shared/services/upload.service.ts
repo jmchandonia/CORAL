@@ -176,6 +176,13 @@ export class UploadService {
     return context;
   }
 
+  clearCache() {
+    this.brickBuilder = new Brick();
+    this.uploadFile = null;
+    this.uploadSuccessData = null;
+    delete this.selectedTemplate;
+  }
+
   valuelessUnits(units) {
     // helper method to find empty term objects
     return isEqual(units, {id: '', text: ''});
