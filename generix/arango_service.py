@@ -130,8 +130,8 @@ class ArangoService:
         '''
         aql_bind = {'id': process_itd.collection_name  + '/' + process_id}
 
-        print('aql', aql)
-        print('aql_bind', aql_bind)
+        # print('aql', aql)
+        # print('aql_bind', aql_bind)
         rs = self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
         return self.__to_type2objects(rs)
 
