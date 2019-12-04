@@ -21,6 +21,7 @@ export class Brick {
     personnel: Term;
     start_date: Date;
     end_date: Date;
+    coreObjectRefsError = false;
 
     get isEmpty() {
         return isEqual(this, new Brick());
