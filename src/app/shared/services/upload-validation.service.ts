@@ -40,6 +40,8 @@ export class UploadValidationService {
         return this.validateUploadedData();
       case 'validate':
         return this.validateMappedData();
+      case 'preview':
+        return this.validatePreview();
       case 'create':
         return this.validateCreateStep();
       default:
@@ -174,6 +176,10 @@ export class UploadValidationService {
      }
      this.contextErrorSub.next(error);
      return messages;
+   }
+
+   validatePreview() {
+     return this.brick.coreObjectRefsError;
    }
 
    validateCreateStep() {

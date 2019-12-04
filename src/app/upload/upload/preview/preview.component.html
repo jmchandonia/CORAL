@@ -63,7 +63,7 @@
             </table>
           </div>
       </div>
-      <div class="row mt-3" *ngIf="coreObjectError">
+      <div class="row mt-3" *ngIf="brick.coreObjectRefsError">
         <div class="col-12">
           <div class="alert alert-danger">
             Error: Your brick currently does not have any items that are mapped to core types in our system. 
@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="card mt-3">
-        <div class="card-header" [ngClass]="coreObjectError ? 'error-header' : 'light-blue'">
+        <div class="card-header" [ngClass]="brick.coreObjectRefsError ? 'error-header' : 'light-blue'">
           <h5>Objects Mapped to Core Types ({{totalObjectsMapped}})</h5>
         </div>
         <div class="card-body">

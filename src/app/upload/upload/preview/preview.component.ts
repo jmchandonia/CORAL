@@ -14,7 +14,7 @@ export class PreviewComponent implements OnInit {
   modalRef: BsModalRef;
   coreObjectRefs: any[];
   totalObjectsMapped = 0;
-  coreObjectError = false;
+  // coreObjectError = false;
 
   constructor(
     private uploadService: UploadService,
@@ -33,9 +33,7 @@ export class PreviewComponent implements OnInit {
       .subscribe((res: any) => {
         this.coreObjectRefs = res.results;
         this.totalObjectsMapped = this.coreObjectRefs.reduce((a, c) => a.count + c.count);
-        if (this.totalObjectsMapped === 0) {
-          this.coreObjectError = true;
-        }
+        this.brick.coreObjectRefsError = this.totalObjectsMapped === 0;
       });
   }
 
