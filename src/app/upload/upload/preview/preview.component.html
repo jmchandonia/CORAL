@@ -10,7 +10,15 @@
       <div class="card">
         <div class="card-header light-blue">
           <h5>
-            <span style="font-weight: bold">{{brick?.template_type}}&nbsp;</span>
+            <span style="font-weight: bold">
+                {{brick?.type.text}}&nbsp;
+                &lt;
+                <span *ngFor="let dim of brick?.dimensions; let last = last">
+                  {{dim.type.text}}
+                  <span *ngIf="!last">, </span>
+                </span>
+                &gt;
+            </span>
             <!-- <span style="font-size: 18px;">&lt;</span> -->
             <!-- <span style="font-size: 18px;" *ngFor="let dim of brick?.dimensions; let last = last;">
             {{dim.type.text}}
