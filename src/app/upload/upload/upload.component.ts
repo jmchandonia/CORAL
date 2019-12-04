@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,7 +9,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.css']
 })
-export class UploadComponent implements OnInit {
+export class UploadComponent implements OnInit, OnDestroy {
 
   currentUrl: string;
   public uploadSteps = [
@@ -28,6 +29,7 @@ export class UploadComponent implements OnInit {
   constructor(
     private router: Router,
     private validator: UploadValidationService,
+    private uploadService: UploadService
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -43,6 +45,10 @@ export class UploadComponent implements OnInit {
 
   ngOnInit() {
     this.maxStep = this.progressIndex;
+  }
+
+  ngOnDestroy() {
+    this.uploadService.clearCache();
   }
 
   getProgressStatus(index) {
