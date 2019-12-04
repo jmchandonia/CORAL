@@ -60,7 +60,7 @@ export class PlotService {
     callback: (dims: Dimension[]) => void
     ) {
     const { config } = this.plotBuilder;
-    config.title = title;
+    config.title = title + ` (${this.plotBuilder.objectId})`;
     config.x = new Dimension();
     config.y = new Dimension();
     if (length > 1) {
