@@ -27,7 +27,7 @@ from . import template
 app = Flask(__name__)
 CORS(app)
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
@@ -51,14 +51,21 @@ def hello():
 
 @app.route("/generix/refs_to_core_objects/<data_id>", methods=['GET'])
 def generix_refs_to_core_objects(data_id):
-    res = [{
-        'var_name': 'qqq',
-        'count': 5
-    },{
-        'var_name': 'aaa',
-        'count': 4
-    }]
-    return _ok_response(res)
+    try:
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        vdata = json.loads(open(uvd_file_name).read())
+        res = vdata['obj_refs']
+
+        # res = [{
+        #     'var_name': 'qqq',
+        #     'count': 5
+        # },{
+        #     'var_name': 'aaa',
+        #     'count': 4
+        # }]
+        return _ok_response(res)
+    except Exception as e:
+        return _err_response(e)
 
 
 
@@ -366,7 +373,8 @@ def validate_upload():
 
         validated_data = {
             'dims':[],
-            'data_vars': []
+            'data_vars': [],
+            'obj_refs': []
         } 
 
         res = {
@@ -391,7 +399,7 @@ def validate_upload():
                 vtype_term_id = dim_var_ds['type']['id']
                 values = np.array(dim_var['values'], dtype='object')
                 
-                errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
+                errors = svs['value_validator'].cast_var_values(values, vtype_term_id, validated_data['obj_refs'])
 
                 total_count = values.size
                 invalid_count = len(errors) 
