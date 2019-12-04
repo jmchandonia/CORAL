@@ -253,6 +253,10 @@ export class UploadService {
     return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
   }
 
+  public getRefsToCoreObjects() {
+    return this.http.get(`${environment.baseURL}/refs_to_core_objects/${this.brickBuilder.data_id}`);
+  }
+
   mapDimVarToCoreTypes(dimVar) {
     // mapping dimension variable to core types, still prototyping
     const formData: FormData = new FormData();
