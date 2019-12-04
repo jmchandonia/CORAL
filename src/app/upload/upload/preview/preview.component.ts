@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class PreviewComponent implements OnInit {
 
   modalRef: BsModalRef;
-  coreObjectRefs: any[];
+  coreObjectRefs: any[] = [];
   totalObjectsMapped = 0;
   // coreObjectError = false;
 
@@ -32,7 +32,8 @@ export class PreviewComponent implements OnInit {
     this.uploadService.getRefsToCoreObjects()
       .subscribe((res: any) => {
         this.coreObjectRefs = res.results;
-        this.totalObjectsMapped = this.coreObjectRefs.reduce((a, c) => a.count + c.count);
+        this.totalObjectsMapped = this.coreObjectRefs.length
+          ? this.coreObjectRefs.reduce((a, c) => a.count + c.count) : 0;
         this.brick.coreObjectRefsError = this.totalObjectsMapped === 0;
       });
   }
