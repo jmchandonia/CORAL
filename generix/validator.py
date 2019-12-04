@@ -134,7 +134,7 @@ class ValueValidationService:
                 casted_value = None
                 
                 value = it[0].item()
-                if value:
+                if value is not None:
                     try: 
                         casted_value = cast_function(value)
                     except: 
