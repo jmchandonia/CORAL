@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
+import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ import { isEqual } from 'lodash';
 export class UploadService {
 
   // brick builder that will be referenced in all components
-  public brickBuilder: Brick = new Brick();
+  public brickBuilder: Brick;
   // templates from server and subject that will pass it to type selector combobox
   public brickTypeTemplates: any[];
   templateSub = new Subject();
@@ -30,7 +31,8 @@ export class UploadService {
   requiredProcess = false;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private brickFactory: BrickFactoryService
   ) {
     // get brick type templates once the user is in /upload
     this.getBrickTypeTemplates();
@@ -57,20 +59,25 @@ export class UploadService {
   }
 
   setSelectedTemplate(template) {
+
+    this.brickBuilder = this.brickFactory.createUploadInstance(template);
+    console.log('BRICK BUILDER', this.brickBuilder);
+    // if this.brickbuilder.process this.requiredProcess equals true
+
     // map template values to brick builder object
     this.selectedTemplate = template.id;
-    this.brickBuilder.template_type = template.text;
-    this.brickBuilder.type = template.data_type as Term;
-    this.brickBuilder.template_id = template.id;
-    if (template.process) {
-      this.requiredProcess = true;
-      this.brickBuilder.process = template.process as Term;
-    }
+    // this.brickBuilder.template_type = template.text;
+    // this.brickBuilder.type = template.data_type as Term;
+    // this.brickBuilder.template_id = template.id;
+    // if (template.process) {
+    //   this.requiredProcess = true;
+    //   this.brickBuilder.process = template.process as Term;
+    // }
 
-    // map complex objects from template to brick builder
-    this.setTemplateDataValues(template.data_vars);
-    this.setTemplateDimensions(template.dims);
-    this.setTemplateProperties(template.properties);
+    // // map complex objects from template to brick builder
+    // this.setTemplateDataValues(template.data_vars);
+    // this.setTemplateDimensions(template.dims);
+    // this.setTemplateProperties(template.properties);
   }
 
   // map each data value from template as a new datavalue object belonging to the brick
