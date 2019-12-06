@@ -22,7 +22,7 @@ export class UploadValidationService {
   brick: Brick;
 
   constructor(private uploadService: UploadService) {
-    this.brick = this.uploadService.getBrickBuilder();
+    // this.brick = this.uploadService.getBrickBuilder();
    }
 
    validationErrors(step: string) {
@@ -60,13 +60,21 @@ export class UploadValidationService {
    }
 
    validateDataType() {
+    console.log('BRICK IN VALIDATION', this.brick);
      // check if brick has selected type
-     if (!this.brick.type) {
-       this.errorSub.next(true);
-       return true;
-     }
-     this.errorSub.next(false);
-     return false;
+    //  if (!this.brick.type) {
+    //    this.errorSub.next(true);
+    //    return true;
+    //  }
+    //  this.errorSub.next(false);
+    //  return false;
+    this.brick = this.uploadService.getBrickBuilder();
+    if (!this.brick) {
+      this.errorSub.next(true);
+      return true;
+    }
+    this.errorSub.next(false);
+    return false;
    }
 
    validateProperties() {
