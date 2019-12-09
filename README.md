@@ -114,3 +114,70 @@ export class SomeComponent implements afterViewInit {
     }
 }
 ```
+**Select2**
+
+[Select2](https://select2.org/) is used to create comboboxes that populate with data from our system. It
+is configured to work with angular using [ng2-select2](https://github.com/NejcZdovc/ng2-select2). Select2
+elements can be rendered using a `<select2>` tag and take an input of `options` and `data`, where data is
+the data with will populate the dropdown and options take the congiguration for the dropdown. The `cssImport` input is necessary for select2 to add styles. User selection can be handled using the `(valueChanged)` event handler.
+
+```html
+
+<select2
+    [data]="data"
+    [options]="options"
+    [cssImport]="true"
+    [value]="selectedValue"
+    (valueChanged)="setValue($event)"
+</select2>
+>
+
+```
+```javascript
+
+import { Select2OptionData } from 'ng2-select2';
+
+@Component({...})
+
+export class ComponentWithSelect2 implements OnInit {
+
+    selectedValue = '0';
+
+    // typical select 2 options config
+    public options: Select2Options = {
+        width: '100%' // width is calculated here
+        containerCssClass: 'select2-custom-container'
+        // ^ class defined in styles.css, ensures consistent UI with the rest of app
+        placeholder: 'placeholders can be put here'
+        // placeholders only work if there is an empty data element in the data file
+        query: (options: Select2QueryOptions) => {
+            // this is the option used to get data asynchronously based on user search term
+            const text = options.term;
+            this.someService.getSomeData().subscribe((res: any) => {
+                options.callback(res.results);
+            })
+        }
+    }
+
+    public data: Select2OptionData[] = [
+        {id: '', text: ''}, // necessary to create placeholders and non default selections
+        {id: '0', text: 'value that the user sees'}
+    ];
+}
+```
+
+**Important things to note about Select2:**
+
+- if a default placeholder value is specified, the `valueChanged` event is fired initially. In order to prevent unexpected behavior, it is best to check for an id of `''` in your event handler.
+
+- Select 2 option data is in the format of `{id: string, text: string}`. When `valueChanged` is fired, 
+the `$event` released has a property of `value` containing the ID of the item. The data itself can be found in `$event.data`.
+
+- In order to populate a select2 dropdown with a predefined element, the `[value]` input must be the `id`
+of the desired data item. 
+
+**Bootstrap 4 and Ngx-Bootstrap**
+
+for CSS UI, [Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is used along 
+with [ngx-bootstrap](https://valor-software.com/ngx-bootstrap/#/) for advanced javascript features (e.g
+modals and tooltips).
