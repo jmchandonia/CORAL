@@ -103,7 +103,7 @@ p
 
   openModal(index: number, dimVarIndex?: string) {
     const config: any = { class: 'modal-lg' };
-    if (dimVarIndex) {
+    if (typeof dimVarIndex === 'number') {
       // open modal ref for dimension variables
       this.uploadService.getDimVarValidationErrors(index, dimVarIndex)
         .subscribe((res: any) => {

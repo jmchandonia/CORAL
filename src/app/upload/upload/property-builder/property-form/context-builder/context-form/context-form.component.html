@@ -12,7 +12,7 @@
     </div>
     <div class="col-3">
         <select2
-          *ngIf="context.type && context.scalarType === 'oterm_ref'"
+          *ngIf="context.type && context.requireSelect2ForVal"
           [cssImport]="true"
           [data]="valuesSelect2"
           [options]="valuesOptions"
@@ -21,7 +21,7 @@
           (valueChanged)="setValue($event)"
         ></select2>
         <input
-          *ngIf="context?.type && context.scalarType !== 'oterm_ref'"
+          *ngIf="context?.type && !context.requireSelect2ForVal"
           class="form-control"
           [(ngModel)]="context.value && context.value.text ? context.value.text : context.value"
           [ngModelOptions]="{standalone: true}"

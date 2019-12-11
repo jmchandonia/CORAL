@@ -20,7 +20,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
 
     this.typesSelect2 = c.typeTerm ? [c.typeTerm] : [];
     this.unitsSelect2 = c.units ? [c.units] : [{id: '', text: ''}];
-    this.valuesSelect2 = c.value && c.scalarType === 'oterm_ref'
+    this.valuesSelect2 = c.value && c.requireSelect2ForVal
       ? [c.value] as Select2OptionData[]
       : [{id: '', text: ''}];
 
@@ -30,7 +30,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     if (c.units) {
       this.unitsItem = c.units.id;
     }
-    if (c.value && c.scalarType === 'oterm_ref') {
+    if (c.value && c.requireSelect2ForVal) {
       this.valueItem = (c.value as Term).id;
     }
 
@@ -88,10 +88,18 @@ export class ContextFormComponent implements OnInit, OnDestroy {
        if (!term || term.length < 3) {
          options.callback({results: []});
        } else {
-         this.uploadService.searchOntPropertyValues(term, this.context.microType) // ADD POST DATA
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
+          if (this.context.scalarType === 'oterm_ref') {
+            this.uploadService.searchOntPropertyValues(term, this.context.microType)
+            .subscribe((data: any) => {
+              options.callback({results: data.results as Select2OptionData});
+            });
+          } else {
+            // scalar type is object_ref
+            this.uploadService.searchPropertyValueObjectRefs(term, this.context.type.id, this.context.microType)
+              .subscribe((data: any) => {
+                options.callback({results: data.results as Select2OptionData});
+              });
+          }
        }
      }
    };

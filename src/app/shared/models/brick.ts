@@ -21,6 +21,7 @@ export class Brick {
     personnel: Term;
     start_date: Date;
     end_date: Date;
+    coreObjectRefsError = false;
 
     get isEmpty() {
         return isEqual(this, new Brick());
@@ -112,7 +113,7 @@ export class Context {
     ) {
         this.required = required;
         if (type) {
-            this.type = type;
+            this.typeTerm = type;
         }
         this.value = value;
         this.units = units;
@@ -131,6 +132,11 @@ export class Context {
         this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.scalarType = t.scalar_type;
+    }
+
+    get requireSelect2ForVal() {
+        return this.scalarType === 'oterm_ref' ||
+        this.scalarType === 'object_ref';
     }
 }
 
@@ -204,7 +210,7 @@ export class TypedProperty {
         ) {
         this.index = index;
         this.required = required;
-        if (type) { this.type = type; }
+        if (type) { this.typeTerm = type; }
         // this.microType = microType;
     }
     required = true;
@@ -231,6 +237,11 @@ export class TypedProperty {
     }
 
     get typeTerm() { return this.type; }
+
+    get requireSelect2ForVal() {
+        return this.scalarType === 'object_ref'
+        || this.scalarType === 'oterm_ref';
+    }
 }
 
 // this.brick.property.typeTerm = ...

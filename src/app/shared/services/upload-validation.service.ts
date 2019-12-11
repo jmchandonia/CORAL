@@ -22,7 +22,7 @@ export class UploadValidationService {
   brick: Brick;
 
   constructor(private uploadService: UploadService) {
-    this.brick = this.uploadService.getBrickBuilder();
+    // this.brick = this.uploadService.getBrickBuilder();
    }
 
    validationErrors(step: string) {
@@ -40,6 +40,8 @@ export class UploadValidationService {
         return this.validateUploadedData();
       case 'validate':
         return this.validateMappedData();
+      case 'preview':
+        return this.validatePreview();
       case 'create':
         return this.validateCreateStep();
       default:
@@ -58,13 +60,13 @@ export class UploadValidationService {
    }
 
    validateDataType() {
-     // check if brick has selected type
-     if (!this.brick.type) {
-       this.errorSub.next(true);
-       return true;
-     }
-     this.errorSub.next(false);
-     return false;
+    this.brick = this.uploadService.getBrickBuilder();
+    if (!this.brick) {
+      this.errorSub.next(true);
+      return true;
+    }
+    this.errorSub.next(false);
+    return false;
    }
 
    validateProperties() {
@@ -174,6 +176,10 @@ export class UploadValidationService {
      }
      this.contextErrorSub.next(error);
      return messages;
+   }
+
+   validatePreview() {
+     return this.brick.coreObjectRefsError;
    }
 
    validateCreateStep() {

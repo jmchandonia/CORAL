@@ -20,7 +20,7 @@ export class PlotResultComponent implements OnInit {
   objectId: string;
   loading = false;
   data: any;
-  layout = {
+  layout: any = {
     width: 800,
     height: 600,
   };
@@ -41,6 +41,8 @@ export class PlotResultComponent implements OnInit {
         const { data, layout } = res.results;
         this.data = data;
         this.layout = layout;
+        if (this.layout.yaxis) { this.layout.yaxis.automargin = true; }
+        if (this.layout.xaxis) { this.layout.xaxis.automargin = true; }
         this.loading = false;
         this.spinner.hide();
       });

@@ -22,7 +22,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   @Input() set property(prop: TypedProperty) {
     // this.typesSelect2 = prop.type ? [prop.type] : [];
     this.unitsSelect2 = prop.units ? [prop.units] : [{id: '', text: ''}];
-    this.valuesSelect2 = prop.value && prop.scalarType === 'oterm_ref'
+    this.valuesSelect2 = prop.value && prop.requireSelect2ForVal
       ? [prop.value] as Select2OptionData[]
       : [{id: '', text: ''}];
 
@@ -39,7 +39,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     if (prop.units) {
       this.unitsItem = prop.units.id;
     }
-    if (prop.value && prop.scalarType === 'oterm_ref') {
+    if (prop.value && prop.requireSelect2ForVal) {
       this.propValueItem = (prop.value as Term).id;
     }
 
@@ -83,10 +83,18 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
        if (!term || term.length < 3) {
          options.callback({results: []});
        } else {
-         this.uploadService.searchOntPropertyValues(term, this.property.microType) // ADD POST DATA
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
+          if (this.property.scalarType === 'oterm_ref') {
+            this.uploadService.searchOntPropertyValues(term, this.property.microType)
+            .subscribe((data: any) => {
+              options.callback({results: data.results as Select2OptionData});
+            });
+          } else {
+            // property scalar type is object_ref
+            this.uploadService.searchPropertyValueObjectRefs(term, this.property.type.id, this.property.microType)
+              .subscribe((data: any) => {
+                options.callback({results: data.results as Select2OptionData});
+              });
+          }
        }
      }
    };
@@ -181,7 +189,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   setPropertyType(event) {
     const item = event.data[0];
     this.property.typeTerm = item;
-    // this.property.microType = item.microtype;
 
     // clear reset entire property object to clear other select 2 dropdowns
     if (this.property.value || this.property.units) {
@@ -189,9 +196,10 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
         this.property.index,
         this.property.required,
         item
-        // this.property.type,
-        // this.property.microType
       );
+      // if (this.property.units === null) {
+      //   resetProperty.units = null;
+      // }
       // emit new typed property to replace old one in parent component array reference
       this.typeReselected.emit(resetProperty);
     } else {
