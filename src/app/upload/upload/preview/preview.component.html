@@ -10,7 +10,15 @@
       <div class="card">
         <div class="card-header light-blue">
           <h5>
-            <span style="font-weight: bold">{{brick?.type}}&nbsp;</span>
+            <span style="font-weight: bold">
+                {{brick?.type.text}}&nbsp;
+                &lt;
+                <span *ngFor="let dim of brick?.dimensions; let last = last">
+                  {{dim.type.text}}
+                  <span *ngIf="!last">, </span>
+                </span>
+                &gt;
+            </span>
             <!-- <span style="font-size: 18px;">&lt;</span> -->
             <!-- <span style="font-size: 18px;" *ngFor="let dim of brick?.dimensions; let last = last;">
             {{dim.type.text}}
@@ -32,7 +40,7 @@
                   <td><strong>Id: </strong></td>
                   <td>{{brick?.id}}</td>
                 </tr> -->
-                <tr>
+                <!-- <tr>
                   <td>
                     <strong>Value Type: </strong>
                   </td>
@@ -42,7 +50,7 @@
                       ({{brick?.dataValues[0].units.text}})
                     </span>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td><strong>Shape: </strong></td>
                   <td>
@@ -65,36 +73,75 @@
       </div>
       <div class="card mt-3">
         <div class="card-header light-blue">
-          <h5>Dimensions  ({{brick?.dimensions.length}})</h5>
+          <h5>Data Variables ({{brick?.dataValues.length}})</h5>
         </div>
         <div class="card-body">
           <table class="table table-bordered table-striped">
             <thead class="table-header">
               <tr>
-                <th>Data Type</th>
-                <th>Size</th>
-                <th>Variables</th>
-                <th></th>
+                <td>#</td>
+                <td>Type</td>
+                <td>Units</td>
+                <td>Value Sample</td>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let dim of brick?.dimensions; let i = index">
-                <td>{{dim.type.text}}</td>
-                <td>{{dim.size}}</td>
+              <tr *ngFor="let dataValue of brick?.dataValues">
+                <td>{{dataValue.index + 1}}</td>
                 <td>
-                  <span *ngFor="let v of dim.variables; let last = last">
-                    {{v.type.text}}
-                    <span *ngIf="!last">, </span>
+                  {{dataValue.type.text}}
+                  <span *ngFor="let item of dataValue.context">
+                    , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                    <span *ngIf="item.units"> {{item.units.text}}</span>
                   </span>
                 </td>
-                <td>
-                  <span *ngFor="let v of dim.variables;">
-                    {{v.valuesSample}}
-                  </span>
-                </td>
+                <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
+                <td>{{dataValue.valuesSample}}</td>
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="card mt-3">
+        <div class="card-header light-blue">
+          <h5>Dimensions  ({{brick?.dimensions.length}})</h5>
+        </div>
+        <div class="card-body">
+          <div class="row" *ngFor="let dim of brick?.dimensions">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <h5>{{dim.type.text}}, size={{dim.size}}</h5>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <table class="table table-bordered table-striped">
+                  <thead class="table-header">
+                    <tr>
+                      <th>#</th>
+                      <th>Variable Type</th>
+                      <th>Value Sample</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let dv of dim.variables;">
+                      <td>{{dv.index + 1}}</td>
+                      <td>
+                        {{dv.type.text}}
+                        <span *ngFor="let item of dv.context">
+                          , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                          <span *ngIf="item.units">{{item.units.text}}</span>
+                        </span>
+                      </td>
+                      <td>{{dv.valuesSample}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card mt-3">
@@ -118,73 +165,36 @@
           </table>
         </div>
       </div>
-      <!-- <app-process-data [id]="objectId"></app-process-data> -->
-      <!-- <div class="row mt-3 mb-3">
-        <div class="col-2 offset-10">
-          <button class="btn btn-block btn-secondary" (click)="useForPlot()">
-            Plot
-          </button>
+      <div class="row mt-3" *ngIf="brick.coreObjectRefsError">
+          <div class="col-12">
+            <div class="alert alert-danger">
+              Error: Your brick currently does not have any items that are mapped to core types in our system. 
+              Please make sure that your brick has at least 1 item that can be mapped to the rest of our system
+              to prevent isolation.
+            </div>
+          </div>
         </div>
-      </div> -->
+        <div class="card mt-3">
+          <div class="card-header" [ngClass]="brick.coreObjectRefsError ? 'error-header' : 'light-blue'">
+            <h5>Objects Mapped to Core Types ({{totalObjectsMapped}})</h5>
+          </div>
+          <div class="card-body">
+            <table class="table table-striped table-bordered">
+              <thead class="table-header">
+                <tr>
+                  <th>Variable Name</th>
+                  <th>Number of objects mapped</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of coreObjectRefs">
+                  <td>{{item.var_name}}</td>
+                  <td>{{item.count}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
     </div>
   </div>
-
-  <ng-template #template>
-    <div class="modal-header">
-      <h4 class="modal-title pull-left">Condition</h4>
-      <button type="button" class="close pull-right" (click)="modalRef.hide()">
-        <span>&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <table class="table table-striped table-bordered">
-        <thead class="table-header">
-          <tr>
-            <th>Carbon Source</th>
-            <th>Presence</th>
-            <th>Concentration</th>
-            <th>Media Addition</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-            <td>Data</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </ng-template>
 </div>

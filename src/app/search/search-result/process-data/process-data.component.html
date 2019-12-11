@@ -41,12 +41,12 @@
               </div>
             </div>
             <hr class="my-6" />
-            <div class="row" *ngIf="processesUp[0].docs[0].length && processesUp[0].docs[0].length > 1">
+            <div class="row" *ngIf="processesUp && processesUp[0].docs.length > 1">
               <div class="col-12">
                   <button class="btn btn-primary" (click)="hideProcessInputs = !hideProcessInputs">
                       {{
                         hideProcessInputs 
-                          ? 'View Input Objects (' + processesUp[0].docs[0].length + ')' 
+                          ? 'View Input Objects (' + processesUp[0].docs.length + ')' 
                           : 'Hide Input Objects'
                         }}
                     </button>

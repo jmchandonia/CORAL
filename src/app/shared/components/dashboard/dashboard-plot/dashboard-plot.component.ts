@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { PlotService } from '../../../services/plot.service';
 
 @Component({
@@ -14,7 +14,8 @@ export class DashboardPlotComponent implements OnInit {
   layout: any;
 
   constructor(
-    private plotService: PlotService
+    private plotService: PlotService,
+    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {

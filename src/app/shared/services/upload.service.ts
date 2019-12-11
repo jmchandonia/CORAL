@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { isEqual } from 'lodash';
+import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ import { isEqual } from 'lodash';
 export class UploadService {
 
   // brick builder that will be referenced in all components
-  public brickBuilder: Brick = new Brick();
+  public brickBuilder: Brick;
   // templates from server and subject that will pass it to type selector combobox
   public brickTypeTemplates: any[];
   templateSub = new Subject();
@@ -30,7 +31,8 @@ export class UploadService {
   requiredProcess = false;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private brickFactory: BrickFactoryService
   ) {
     // get brick type templates once the user is in /upload
     this.getBrickTypeTemplates();
@@ -57,123 +59,16 @@ export class UploadService {
   }
 
   setSelectedTemplate(template) {
-    // map template values to brick builder object
+
+    this.brickBuilder = this.brickFactory.createUploadInstance(template);
     this.selectedTemplate = template.id;
-    this.brickBuilder.template_type = template.text;
-    this.brickBuilder.type = template.data_type as Term;
-    this.brickBuilder.template_id = template.id;
-    if (template.process) {
-      this.requiredProcess = true;
-      this.brickBuilder.process = template.process as Term;
-    }
-
-    // map complex objects from template to brick builder
-    this.setTemplateDataValues(template.data_vars);
-    this.setTemplateDimensions(template.dims);
-    this.setTemplateProperties(template.properties);
   }
 
-  // map each data value from template as a new datavalue object belonging to the brick
-  setTemplateDataValues(dataVars) {
-
-    // clear brickbuilder datavalues if different template is selected
-    this.brickBuilder.dataValues = [];
-
-    dataVars.forEach((dataVar, idx) => {
-      // set required to true in constructor
-      const dataValue = new DataValue(idx, true);
-
-      // set units to a term if its not empty or else null
-      dataValue.units = (this.valuelessUnits(dataVar.units) ? null : dataVar.units) as Term;
-      dataValue.typeTerm = dataVar.type;
-      // dataValue.microType = dataVar.microtype;
-      dataValue.scalarType = dataVar.scalar_type as Term;
-
-      // create array of context objects for every data value that has context-
-      if (dataVar.context && dataVar.context.length) {
-        dataVar.context.forEach(ctx => {
-          dataValue.context.push(this.setContext(ctx));
-        });
-      }
-
-      // add dataValue to brick builder once values are set
-      this.brickBuilder.dataValues.push(dataValue);
-    });
-  }
-
-  setTemplateDimensions(dims) {
-
-    // clear previous dimensions if new template is selected
-    this.brickBuilder.dimensions = [];
-
-    dims.forEach((item, idx) => {
-      // set required to true in constructor
-      const dim = new BrickDimension(this.brickBuilder, idx, true);
-      // set dimension type
-      dim.type = new Term(item.type.id, item.type.text);
-
-      // create array of dimension variables from template
-      item.dim_vars.forEach((dvItem, dvIdx) => {
-        const dimVar = new DimensionVariable(dim, dvIdx, true);
-
-        // set units to a term if units object does not contain empty values
-        dimVar.units = (this.valuelessUnits(dvItem.units) ? null : dvItem.units) as Term;
-        dimVar.typeTerm = dvItem.type;
-        dimVar.scalarType = dvItem.scalar_type as Term;
-
-        // create array of context objects for every dimension variable that has context
-        if (dvItem.context && dvItem.context.length) {
-          dvItem.context.forEach(ctx => {
-            dimVar.context.push(this.setContext(ctx));
-          });
-        }
-        // add variables to dimension once values are set
-        dim.variables.push(dimVar);
-      });
-      // add dimension to brick once values are set
-      this.brickBuilder.dimensions.push(dim);
-    });
-  }
-
-  setTemplateProperties(props) {
-    // clear previous properties if new template is selected
-    this.brickBuilder.properties = [];
-
-    props.forEach((item, idx) => {
-      // set required to true in constructor
-      const prop = new TypedProperty(idx, true);
-
-      // set units to a term if units object does not containe empty values
-      prop.units = (this.valuelessUnits(item.units) ? null : item.units) as Term;
-      prop.typeTerm = item.property as Term;
-      prop.value = item.value as Term;
-      prop.value = item.property.scalar_type === 'oterm_ref'
-        ? prop.value as Term
-        : prop.value.text;
-
-      // create array of context objects for every property that has context
-      if (item.context && item.context.length) {
-        item.context.forEach(ctx => {
-          prop.context.push(this.setContext(ctx));
-         });
-      }
-      // add property to brick once values are set
-      this.brickBuilder.properties.push(prop);
-    });
-  }
-
-  setContext(ctx): Context {
-    // create new context from template
-    const context = new Context();
-
-    //set context properties
-    context.required = ctx.required;
-    context.typeTerm = ctx.property;
-    context.value = new Term(ctx.value.id, ctx.value.text);
-    if (!this.valuelessUnits(ctx.units)) {
-      context.units = new Term(ctx.units.id, ctx.units.text);
-    }
-    return context;
+  clearCache() {
+    this.brickBuilder = new Brick();
+    this.uploadFile = null;
+    this.uploadSuccessData = null;
+    delete this.selectedTemplate;
   }
 
   valuelessUnits(units) {
@@ -199,6 +94,12 @@ export class UploadService {
   public searchOntPropertyValues(value: string, microtype: any) {
     const body = { microtype, value };
     return this.http.post<any>(`${environment.baseURL}/search_property_value_oterms`, body).pipe(delay(500));
+  }
+
+  // tslint:disable-next-line
+  public searchPropertyValueObjectRefs(value: string, term_id: string, microtype: any) {
+    const body = { value, microtype, term_id };
+    return this.http.post<any>(`${environment.baseURL}/search_property_value_objrefs`, body).pipe(delay(500));
   }
 
   public searchOntPropertyUnits(microtype: any) {
@@ -245,6 +146,10 @@ export class UploadService {
   public getValidationResults() {
     const body = { data_id: this.brickBuilder.data_id };
     return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
+  }
+
+  public getRefsToCoreObjects() {
+    return this.http.get(`${environment.baseURL}/refs_to_core_objects/${this.brickBuilder.data_id}`);
   }
 
   mapDimVarToCoreTypes(dimVar) {

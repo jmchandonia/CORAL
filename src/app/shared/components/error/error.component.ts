@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalRef } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-error',
@@ -10,7 +11,8 @@ export class ErrorComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalRef: BsModalRef
   ) { }
 
   data: any;
@@ -18,11 +20,10 @@ export class ErrorComponent implements OnInit {
   status: string;
 
   ngOnInit() {
-    this.route.paramMap.subscribe((p: any) => {
-      this.status = p.params.status;
-      this.message = p.params.message;
-    });
+  }
 
+  onClose() {
+    this.modalRef.hide();
   }
 
 }

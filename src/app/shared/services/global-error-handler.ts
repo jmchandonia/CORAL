@@ -1,16 +1,18 @@
 import { Injector, ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ErrorComponent } from 'src/app/shared/components/error/error.component';
 
 @Injectable()
 
 export class GlobalErrorHandler implements ErrorHandler {
 
-    private router: Router;
+    private modalRef: BsModalRef;
+    private modalService: BsModalService;
 
     constructor(private injector: Injector, private zone: NgZone) {
         setTimeout(() => {
-            this.router = this.injector.get(Router);
+            this.modalService = this.injector.get(BsModalService);
         });
     }
 
@@ -18,10 +20,22 @@ export class GlobalErrorHandler implements ErrorHandler {
 
         if (error instanceof HttpErrorResponse) {
             const {status, message} = error;
-            this.zone.run(() => this.router.navigate(['/error', {status, message}]));
+            this.zone.run(() => {
+                const config = {
+                    class: 'modal-lg',
+                    initialState: {status, message}
+                };
+                this.modalRef = this.modalService.show(ErrorComponent, config);
+            });
             console.error(error);
         } else {
-            this.zone.run(() => this.router.navigate(['/error', {message: error.message}]));
+            this.zone.run(() => {
+                const config = {
+                    class: 'modal-lg',
+                    initialState: { message: error.message }
+                };
+                this.modalRef = this.modalService.show(ErrorComponent, config);
+            });
             console.error(error);
         }
 

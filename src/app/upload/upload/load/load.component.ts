@@ -29,7 +29,7 @@ export class LoadComponent implements OnInit, OnDestroy {
   errorMessage: string;
   loading = false;
   validationError = false;
-  validationErrorSub: Subscription
+  validationErrorSub: Subscription;
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
@@ -102,6 +102,7 @@ export class LoadComponent implements OnInit, OnDestroy {
    upload() {
     this.loading = true;
     this.spinner.show();
+    this.successData = null;
     this.uploadService.uploadBrick(this.file).then((res: any) => {
       this.loading = false;
       this.spinner.hide();
@@ -127,5 +128,4 @@ export class LoadComponent implements OnInit, OnDestroy {
      this.uploadService.setFile(null as File);
      this.validationError = false;
    }
-
 }

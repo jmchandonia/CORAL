@@ -72,7 +72,6 @@ export class PlotOptionsComponent implements OnInit {
     this.queryBuilder.getObjectMetadata(this.objectId)
       .subscribe((result: any) => {
         this.metadata = result;
-        this.plotBuilder.config.title = result.data_type.oterm_name;
 
         // get list of plot types from server
         this.getPlotTypes();

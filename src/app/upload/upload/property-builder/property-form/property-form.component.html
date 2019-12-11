@@ -30,7 +30,7 @@
   </div>
   <div class="col-3">
       <select2
-        *ngIf="property.type && property.scalarType === 'oterm_ref'"
+        *ngIf="property.type && property.requireSelect2ForVal"
         [cssImport]="true"
         [data]="valuesSelect2"
         [options]="valuesOptions"
@@ -39,7 +39,7 @@
         (valueChanged)="setValue($event)"
       ></select2>
       <input
-        *ngIf="property.type && property.scalarType !== 'oterm_ref'"
+        *ngIf="property.type && !property.requireSelect2ForVal"
         class="form-control"
         [(ngModel)]="property.value"
         [ngModelOptions]="{standalone: true}" 
