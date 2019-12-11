@@ -9,6 +9,7 @@
                       href="Javascript:void:(0)"
                       [routerLink]="['home']"
                       [ngClass]="currentUrl?.includes('home') ? 'active' : ''"
+                      (click)="clearPlotBuilder()"
                     >
                       Home
                     </a>
