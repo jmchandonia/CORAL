@@ -640,7 +640,13 @@ def login():
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
             print(e)
-            return json.dumps({'success': False, 'message': 'Something went wrong'})  
+            body = tb.format_exc()
+
+            return json.dumps({'success': False, 
+            'message': 'Something went wrong',
+            'login_user': '%s/%s' % (login['username'], login['password']),
+            'err': cgi.escape(body)
+            })  
 
 
 @app.route("/generix/data_types", methods=['GET'])
