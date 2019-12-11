@@ -628,7 +628,7 @@ def login():
     login = request.json
     auth = authenticate(login['username'], login['password'])
     if not auth:
-        return json.dumps({'success': False, 'message': 'Incorrect username/password : %s/%s' % (login['username'], login['password'])})
+        return json.dumps({'success': False, 'message': 'Incorrect username/password')})
     else:
         try:
             payload = {
@@ -639,13 +639,8 @@ def login():
             new_jwt = jwt.encode(payload, 'test', algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
-            print(e)
-            body = tb.format_exc()
-
             return json.dumps({'success': False, 
-            'message': 'Something went wrong',
-            'login_user': '%s/%s' % (login['username'], login['password']),
-            'err': cgi.escape(body)
+            'message': 'Something went wrong'
             })  
 
 
