@@ -628,7 +628,7 @@ def login():
     login = request.json
     auth = authenticate(login['username'], login['password'])
     if not auth:
-        return json.dumps({'success': False, 'message': 'Incorrect username/password'})
+        return json.dumps({'success': False, 'message': 'Incorrect username/password : %s/%s' % (login['username'], login['password'])})
     else:
         try:
             payload = {
