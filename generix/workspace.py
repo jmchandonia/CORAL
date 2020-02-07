@@ -92,7 +92,7 @@ class BrickDataHolder(DataHolder):
         return self.data
 
     def _set_data_id(self, val):
-        self.brick.set_id(val)
+        self.brick._set_id(val)
 
 
 class Workspace:
@@ -102,7 +102,7 @@ class Workspace:
         self.__arango_service = arango_service
         self.__dtype_2_id_offset = {}
         self.__init_id_offsets()
-        print('Workspace initialized!')
+        # print('Workspace initialized!')
 
 
         # self.__dtype_2_id_offset = {}
@@ -148,7 +148,7 @@ class Workspace:
 
 
     def get_brick_data(self, brick_id):
-        file_name = services._DATA_DIR + '/' + brick_id
+        file_name = services._DATA_DIR + brick_id
         with open(file_name, 'r') as f:
             doc = json.loads(f.read())
         return doc
@@ -217,12 +217,12 @@ class Workspace:
             # self.__enigma_db.get_collection(
             #     data_holder.type_name).insert_one(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
-            upk_id = data_holder.brick.name
+            upk_id = data_holder.brick.id
             brick_id = data_holder.brick.id
             data_json = data_holder.brick.to_json()
             data = json.loads(data_json)
 
-            file_name = services._DATA_DIR + '/' + brick_id
+            file_name = services._DATA_DIR + brick_id
             with open(file_name, 'w') as outfile:  
                 json.dump(data, outfile)
 

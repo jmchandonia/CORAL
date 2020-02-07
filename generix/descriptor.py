@@ -243,7 +243,7 @@ class BrickIndexDocumnet:
     @staticmethod
     def properties():
         return { 
-            'id': 'int',
+            'id': 'text',
             'name': 'text',
             'description': 'text',
             'n_dimensions': 'int',
