@@ -8,7 +8,6 @@ from .user_profile import UserProfile
 
 class DataProvider:
     def __init__(self):
-        services._init_db_connection()
         services._init_services()
 
         self.__user_name = 'default'
@@ -32,6 +31,26 @@ class DataProvider:
             provider = EntityProvider(type_def)
         return provider
 
+    def _get_services(self):
+        return {
+            'ontology': services.ontology,
+            'reports' : services.reports,
+            'indexdef': services.indexdef,
+            'typedef' : services.typedef,
+            'arango_service': services.arango_service,
+            'workspace': services.workspace,
+            'brick_template_provider': services.brick_template_provider,
+            'value_validator': services.value_validator,
+            'term_provider': services.term_provider
+        }
+    def _get_constants(self):
+        return {
+            '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE,
+            '_WEB_SERVICE': services._WEB_SERVICE,
+            '_PLOT_TYPES_FILE': services._PLOT_TYPES_FILE,
+            '_DATA_DIR': services._DATA_DIR
+        }
+
 class GenericsProvider:
     def __init__(self):
         self.__load_providers()
@@ -46,6 +65,9 @@ class GenericsProvider:
 class EntitiesProvider:
     def __init__(self):
         self.__load_entity_providers()
+
+    def __getitem__(self, core_type):
+        return self.__dict__[core_type]
 
     def __load_entity_providers(self):
         index_type_defs = services.indexdef.get_type_defs(category=TYPE_CATEGORY_STATIC)
@@ -68,6 +90,9 @@ class EntityProvider:
         self.__index_type_def = index_type_def
         self.__inflate_properties()
 
+        # TODO: hack
+        index_type_def._register_data_provider(self)
+
     def __inflate_properties(self):
         for index_prop_def in self.__index_type_def.property_defs:
             key = to_var_name('PROPERTY_', index_prop_def.name)
@@ -89,7 +114,12 @@ class EntityProvider:
 
 class BrickProvider(EntityProvider):
     def __init__(self):
-        super().__init__(services.indexdef.get_type_def(TYPE_NAME_BRICK) )
+        index_type_def = services.indexdef.get_type_def(TYPE_NAME_BRICK) 
+        super().__init__(index_type_def)
+
+        # TODO: hack
+        index_type_def._register_data_provider(self)
+
 
     @staticmethod
     def _load_brick(brick_id):
@@ -99,5 +129,21 @@ class BrickProvider(EntityProvider):
         brick.session_provenance.provenance_items.append(provenance)
         return brick
 
+    def create_brick(self,type_term=None, dim_terms=None, shape=None, name=None):
+        return Brick(type_term=type_term, 
+            dim_terms = dim_terms, 
+            shape=shape,
+            name=name)
+
     def load(self, brick_id):
         return BrickProvider._load_brick(brick_id)
+
+    def type_names(self):
+        names = []
+        itype_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)        
+        term_counts = services.ontology.term_stat( itype_def, 'data_type')        
+        for term_count in term_counts:
+            term = term_count[0]
+            names.append(term.term_name)
+        names.sort()
+        return names

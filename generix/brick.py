@@ -462,7 +462,7 @@ class Brick:
     def id(self):
         return self.__get_attr('__id')
     
-    def set_id(self, id):
+    def _set_id(self, id):
         self.__xds.attrs['__id'] = id
 
     @property
@@ -537,10 +537,62 @@ class Brick:
         q.has({'id': self.id})
         return q.find_one()
 
-    def to_json(self):
-        return json.dumps(self.to_dict(), cls=NPEncoder)
+    def get_fk_refs(self, process_ufk=False):
+        fk_refs = set()
 
-    def to_dict(self):
+        # Collect foreign keys from properties (attrs)
+        for pv in self.attrs:     
+            if pv.type_term.require_mapping:       
+                core_type = pv.type_term.microtype_fk_core_type
+
+                fk_id = None
+                if pv.type_term.is_fk:
+                    fk_id = pv.value
+                elif process_ufk and pv.type_term.is_ufk:
+                    fk_id = self._convert_ufk_to_fk(core_type, pv.value)
+
+                if fk_id is not None:
+                    fk_refs.add('%s:%s' % (core_type, fk_id))
+
+        # Collect foreign keys from dim vars
+        for dim in self.dims:
+            for dim_var in dim.vars:
+                if dim_var.type_term.require_mapping:       
+                    core_type = dim_var.type_term.microtype_fk_core_type
+
+                    fk_ids = []
+                    if dim_var.type_term.is_fk:
+                        fk_ids = dim_var.values
+                    elif process_ufk and dim_var.type_term.is_ufk:
+                        fk_ids = self._convert_ufk_to_fk(core_type, dim_var.values.tolist())
+                    
+                    for fk_id in fk_ids:
+                        fk_refs.add('%s:%s' % (core_type, fk_id))
+
+        # TODO: needs to make a decision whether 
+        #  to collect fk_ids from data_vars
+
+        return fk_refs
+
+    def _convert_ufk_to_fk(self, core_type, ufk_values):
+        index_type_def = services.indexdef.get_type_def(core_type)        
+        query = index_type_def.data_provider.query()
+
+        if type(ufk_values) == list:         
+            pk_upks = query._find_upks(ufk_values)
+            return [pk_upk['pk'] for pk_upk in pk_upks]
+        else:
+            # Single value
+            pk_upks = query._find_upks([ufk_values])
+            return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
+
+    def to_json(self, exclude_data_values=False, typed_values_property_name=True):
+        return json.dumps(
+            self.to_dict(exclude_data_values=exclude_data_values,
+                typed_values_property_name=typed_values_property_name ), 
+            cls=NPEncoder)
+
+    def to_dict(self, exclude_data_values=False, typed_values_property_name=True):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -588,6 +640,9 @@ class Brick:
             else:
                 value_key = attr.scalar_type + '_value'
                 value_val = attr.value
+
+            if not typed_values_property_name:
+                value_key = 'value'
 
             data['array_context'].append({
                 'value_type':{
@@ -657,7 +712,11 @@ class Brick:
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
-    
+
+                if not typed_values_property_name:
+                    value_key = 'values'
+
+
                 var_data = {
                     'value_type': {
                         'oterm_ref': var.type_term.term_id,
@@ -688,6 +747,9 @@ class Brick:
                         value_key = attr.scalar_type + '_value'
                         value_val = attr.value
 
+                    if not typed_values_property_name:
+                        value_key = 'value'
+
                     var_data['value_context'].append({
                         'value_type':{
                             'oterm_ref': attr.type_term.term_id,
@@ -712,17 +774,21 @@ class Brick:
                 value_key = vard.scalar_type + '_values'
                 value_vals = list(vard.values)
 
+            if not typed_values_property_name:
+                value_key = 'values'
+
             values_data = {
                 'value_type': {
                     'oterm_ref': vard.type_term.term_id,
                     'oterm_name': vard.type_term.term_name
-                },
-                'values': {
-                    'scalar_type': vard.scalar_type,
-                    value_key: value_vals
-                },
+                },                
                 'value_context': []
             }
+            if not exclude_data_values:
+                values_data['values'] = {
+                    'scalar_type': vard.scalar_type,
+                    value_key: value_vals
+                }
 
             # Do units
             if vard.units_term is not None:
@@ -741,6 +807,9 @@ class Brick:
                 else:
                     value_key = attr.scalar_type + '_value'
                     value_val = attr.value
+
+                if not typed_values_property_name:
+                    value_key = 'value'
 
                 values_data['value_context'].append({
                     'value_type':{
@@ -878,6 +947,7 @@ class Brick:
 
         self.__data_vars.append(var)
         self.__inflate_data_vars()
+        return var
 
     def mean(self, dim):
         dim_index = dim.dim_index
@@ -976,7 +1046,7 @@ class Brick:
 
         brick_data_holder = BrickDataHolder(self)
         services.workspace.save_data(brick_data_holder)
-        self.set_id(brick_data_holder.id)
+        self._set_id(brick_data_holder.id)
 
         process_data = {
             'person': str(person_term),
@@ -1071,6 +1141,7 @@ class BrickDimension:
 
         self.__vars.append(var)
         self.__inflate_vars()
+        return var
 
     def add_brick_data_var(self, match_src_var, match_dst_var, data_var):
         # index dst values
@@ -1269,7 +1340,10 @@ class BrickVariable:
         
     def __get_attr(self, name):
         return self.__xds[self.__var_prefix].attrs[name]
-            
+
+    def __set_attr(self, name, value):
+        self.__xds[self.__var_prefix].attrs[name] = value
+
     @property    
     def name(self):
         return self.__get_attr('__name')
@@ -1345,6 +1419,14 @@ class BrickVariable:
 
     def has_attrs(self):
         return self.__get_attr('__attr_count') > 0
+
+    def add_attr(self, type_term=None, units_term=None, scalar_type=None, value=None):        
+        pv = PropertyValue(type_term=type_term, units_term=units_term, scalar_type=scalar_type, value=value)
+
+        attr_count =  self.__get_attr('__attr_count')
+        attr_count += 1
+        self.__set_attr('__attr%s' % attr_count, pv)
+        self.__set_attr('__attr_count', attr_count)
 
     # def data_df(self):
     #     return pd.DataFrame(self.data, columns=[self.name])
@@ -1545,4 +1627,294 @@ class DimensionFilter:
     def __or__(self, data_filter):
         return self.__logical_trasnform(data_filter, '__or__', np.logical_or)
 
+
+class BrickTemplateTemplateLogger:
+    def __init__(self):
+        self.init()
     
+    def init(self):
+        self.__errors = []
+        self.__current_brick_type = None
+        self.__current_template_name = None
+        self.__current_brick_part = None
+
+    @property
+    def errors(self):
+        return self.__errors
+
+    def set_current_brick_type(self, value):
+        self.__current_brick_type = value
+
+    def set_current_template_name(self, value):
+        self.__current_template_name = value
+
+    def set_current_brick_part(self, value):
+        self.__current_brick_part = value
+
+    def log_error(self, e):
+        self.__errors.append({
+            'brick_type': self.__current_brick_type,
+            'template_name': self.__current_template_name,
+            'brick_part': self.__current_brick_part,
+            'error': str(e)
+        })
+
+class BrickTemplateProvider:
+    def __init__(self, file_name, logger=None):
+        self.__templates = json.loads(open(file_name).read())    
+        self.__logger = BrickTemplateTemplateLogger() if not logger else logger
+        self.__upgraded = False
+
+    @property
+    def logger(self):
+        return self.__logger
+
+    @property
+    def templates(self):
+        if not self.__upgraded:
+            self.upgrade_templates()
+            print('Templates are ready!')
+
+        return self.__templates
+    
+    def validate(self):
+        self.logger.init()
+        for btype in self.__templates['types']:
+
+            self.logger.set_current_brick_type(btype['text'])
+
+            # Validate brick type
+            self.logger.set_current_template_name(None)
+            self.logger.set_current_brick_part('brick:type')
+            self._validate_term( id=btype['data_type'], name=btype['text'])
+
+            # Validate all templates for a given btype
+            for template in btype['children']:
+                self.logger.set_current_template_name(template['text'])
+
+                # validate and update properties 
+                if 'properties' in template:
+
+                    for prop in template['properties']:
+
+                        # Validate property type
+                        self.logger.set_current_brick_part('property:type')
+                        term = self._validate_term(term_desc=prop['property'])
+
+                        # Validate property value                            
+                        if 'value' in prop:
+                            self.logger.set_current_brick_part('property:value')
+                            self._validate_value(term, prop['value'])
+
+                        # Validate property units
+                        if 'units' in prop:
+                            self.logger.set_current_brick_part('property:units')
+                            self._validate_units(term, prop['units'])
+                
+                #validate dimensions
+                for dim in template['dims']:
+
+                    # Validate dimension type
+                    self.logger.set_current_brick_part('dimension:type')
+                    self._validate_term(term_desc=dim['type'])
+
+                    for dim_var in dim['dim_vars']:
+                        # Validate dimension variable type
+                        self.logger.set_current_brick_part('dimension:variable:type')
+                        term = self._validate_term(term_desc=dim_var['type'])
+
+                        # Validate dimension variable units
+                        self.logger.set_current_brick_part('dimension:variable:units')
+                        self._validate_units(term, dim_var['units'])
+                
+                #validate data vars
+                for data_var in template['data_vars']:
+                    # Validate data variable type
+                    self.logger.set_current_brick_part('data:variable:type')
+                    term = self._validate_term(term_desc=data_var['type'])
+
+                    # Validate data variable units
+                    self.logger.set_current_brick_part('data:variable:units')
+                    self._validate_units(term, data_var['units'])
+                
+                #validate process
+                self.logger.set_current_brick_part('process:type')
+                self._validate_term(term_desc=template['process'])
+
+
+    def upgrade_templates(self):
+        custom_template_id = 1
+        for btype in self.__templates['types']:
+            data_type_term_id = btype['data_type']
+            data_type_term = services.term_provider.get_term(data_type_term_id)
+            # process all templates for a given btype
+            for template in btype['children']:
+
+                template['data_type'] = {
+                    'id': data_type_term.term_id,
+                    'text': data_type_term.term_name
+                }
+
+                # update property types
+                if 'properties' in template:
+                    for prop in template['properties']:
+                        self._update_type(prop['property'])                        
+                    
+                # update dimension variable types
+                for dim in template['dims']:
+                    for dim_var in dim['dim_vars']:
+                        self._update_type(dim_var['type'])                        
+                
+                # data_vars = []
+                # update data variable types
+                for data_var in template['data_vars']:
+                    self._update_type(data_var['type'])  
+            
+            # Add custom template
+            custom_template_id += 1
+            btype['children'].insert(0, {
+                'id' : 'CT%s' % custom_template_id,
+                'text' : 'Custom %s' % btype['text'],
+                'data_type':{
+                    'id': data_type_term.term_id,
+                    'text': data_type_term.term_name                    
+                },
+                'properties' : [],
+                'dims' :[],
+                'data_vars': []
+            })
+
+        self.__upgraded = True                                          
+
+    def _update_type(self, ptype):
+        term = services.term_provider.get_term(ptype['id'])
+        ptype.clear()
+        ptype.update(term.to_descriptor())
+
+
+    def _validate_term_id(self, id=None, term_desc=None):
+        if term_desc is not None:
+            id = term_desc['id']
+
+        term = None
+        try:
+            term = services.term_provider.get_term(id)            
+        except Exception as e:
+            self.logger.log_error(e)
+        return term
+
+    def _validate_term_name(self, term, name=None, term_desc=None):
+        validated = True        
+
+        if term_desc is not None:
+            name = term_desc['text']
+
+        if term.term_name != name:
+            err_msg = 'Wrong term (%s) name: expected %s, observed %s' % (term.term_id, 
+                name, term.term_name)
+            self.logger.log_error(err_msg)
+            validated = False
+
+        return validated
+
+
+    def _validate_term(self, id=None, name=None, term_desc=None):
+        if term_desc is not None:
+            id = term_desc['id']
+            name = term_desc['text']
+
+        # Validate term id
+        term = self._validate_term_id(id=id)
+
+        # Validate term name (if term id is found)
+        if term is not None:
+            self._validate_term_name(term, name=name)
+
+        return term
+
+    def _validate_value(self, term, value):
+        # We can not valdiate value term without type term
+        if term is None:
+            return False
+
+        validated = True
+        value_term_id = value['id']    
+        value_term_name = value['text']
+
+        if term.microtype_value_scalar_type == 'oterm_ref':
+            # Find and validate value term_id
+            vterm = self._validate_term(id=value_term_id, name=value_term_name)
+            if vterm is None:
+                validated = False
+
+            else:
+            # Validate parents
+                if term.microtype_valid_values_parent:
+                    if term.microtype_valid_values_parent not in vterm.parent_path_ids:
+                        err_msg = 'The value term "%s" is not a child of any terms defined as valid parents in the term "%s"' % (
+                                vterm.term_id + ':' + vterm.term_name,
+                                term.term_id + ':' + term.term_name
+                            )
+                        self.logger.log_error(err_msg)
+                        validated = False
+
+        elif term.microtype_value_scalar_type == 'int':
+            if not isinstance(value['text'], int):
+                err_msg = 'The value %s is not int as defined in the type term "%s"' % (
+                        value['text'],
+                        term.term_id + ':' + term.term_name
+                    )
+                self.logger.log_error(err_msg)
+                validated = False
+
+        elif term.microtype_value_scalar_type == 'float':
+            if not isinstance(value['text'], float):
+                err_msg = 'The value %s is not float as defined in the type term "%s"' % (
+                        value['text'],
+                        term.term_id + ':' + term.term_name
+                    )
+                self.logger.log_error(err_msg)
+                validated = False
+
+        return validated
+
+
+    def _validate_units(self, term, units):
+        validated = True
+        units_term_id = units['id']    
+        units_term_name = units['text']
+
+        if units_term_id:
+            # Validate untis term
+            uterm = self._validate_term(id=units_term_id, name=units_term_name)
+
+            if term is None:
+                validated = False
+            elif not term.has_units:
+                err_msg = 'The units term "%s" is defined but the type term "%s" defined as "has no units"' % (
+                        uterm.term_id + ':' + uterm.term_name,
+                        term.term_id + ':' + term.term_name)
+                self.logger.log_error(err_msg)
+                validated = False
+            else:
+                if uterm is not None:
+                    parent_found = False
+                    if term.microtype_valid_units:
+                        if units_term_id in term.microtype_valid_units:
+                            parent_found = True
+                    if term.microtype_valid_units_parents:
+                        parent_ids = uterm.parent_path_ids
+                        for parent_id in term.microtype_valid_units_parents:
+                            if parent_id in parent_ids:
+                                parent_found = True
+                                break
+
+                    if not parent_found:
+                        err_msg = 'The units term "%s" is not a child (or representative) of any terms defined as valid parents in the term "%s"' % (
+                                uterm.term_id + ':' + uterm.term_name,
+                                term.term_id + ':' + term.term_name)
+                        self.logger.log_error(err_msg)
+                        validated = False
+
+        return validated                    
+ 
