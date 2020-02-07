@@ -62,7 +62,7 @@ class ArangoService:
     def find_all(self, type_name, category):
         aql = 'FOR x IN @@collection RETURN x'        
         aql_bind = {'@collection': category + type_name}
-        print('aql_bind:', aql_bind )
+        # print('aql_bind:', aql_bind )
 
         return self.find(aql, aql_bind, 1000)
 
@@ -88,6 +88,30 @@ class ArangoService:
         aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
 
+
+    def get_up_process_docs(self, index_type_def, obj_id, size = 100):
+        aql = '''
+            for spo in SYS_ProcessOutput filter spo._to == @id
+            for pr in SYS_Process filter pr._id == spo._from
+            for pi in SYS_ProcessInput filter pi._to == pr._id
+            collect process = pr into docs =  document(pi._from)
+            return { "process" : process,  "docs" :  docs}
+        '''
+        aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+
+
+    def get_dn_process_docs(self, index_type_def, obj_id, size = 100):
+        aql = '''
+            for pi in SYS_ProcessInput filter pi._from == @id
+            for pr in SYS_Process filter pr._id == pi._to
+            for po in SYS_ProcessOutput filter po._from == pr._id
+            collect process = pr into docs =  document(po._to)
+            return { "process" : process,  "docs" :  docs}
+        '''
+        aql_bind = {'id':  index_type_def.collection_name + '/' + obj_id}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+
     def get_process_inputs(self, process_id, size = 100):
         process_itd = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
         aql = '''
@@ -106,10 +130,31 @@ class ArangoService:
         '''
         aql_bind = {'id': process_itd.collection_name  + '/' + process_id}
 
-        print('aql', aql)
-        print('aql_bind', aql_bind)
+        # print('aql', aql)
+        # print('aql_bind', aql_bind)
         rs = self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
         return self.__to_type2objects(rs)
+
+
+    def get_brick_type_counts(self, person_term_ids, campaign_term_ids, size = 1000):
+        # TODO
+        # for pr in SYS_Process filter 1==1 and pr.person_term_id in ['ENIGMA:0000032'] and pr.campaign_term_id in ["ENIGMA:0000013"]
+        # for po in SYS_ProcessOutput filter po._from == pr._id
+        # for b in  DDT_Brick filter po._to == b._id
+        aql = '''
+            for b in  DDT_Brick
+            collect b_type = b.data_type_term_name with count into b_count
+            return {b_type, b_count}
+        '''
+        aql_bind = {}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+
+    def get_core_type_count(self, core_type,  size = 1000):
+        aql = '''
+            return length(%s)
+        ''' % core_type
+        aql_bind = {}
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]    
 
     
     def __to_type2objects(self, aql_rs):
