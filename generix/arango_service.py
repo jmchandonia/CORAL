@@ -68,7 +68,7 @@ class ArangoService:
 
 
     def find(self, aql, aql_bind, size=100):
-        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)        
+        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size).result
 
     def get_up_processes(self, index_type_def, obj_id, size = 100):
         aql = '''
