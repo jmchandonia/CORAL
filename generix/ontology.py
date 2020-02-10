@@ -960,7 +960,7 @@ class Term:
                     self.__parent_terms.append(term)
                 else:
                     raise ValueError('Can not find parent "%s" for term "%s"' % 
-                        (term.term_id, self.term_id))
+                        (pid, self.term_id))
 
 
 class CashedTermProvider:
