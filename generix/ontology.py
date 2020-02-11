@@ -963,7 +963,7 @@ class Term:
                         (pid, self.term_id))
 
 
-class CashedTermProvider:
+class CachedTermProvider:
     def __init__(self):
         self.__id_2_term = {}
 

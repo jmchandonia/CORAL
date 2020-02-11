@@ -82,7 +82,7 @@ class PropertyFloatValidator(PropertyValidator):
         if self.validatable:
             if property_value < self.__min_value or property_value > self.__max_value:
                 raise ValueError(
-                    'The value (%s) of the "%s" property is not in the rage [%s, %s]'
+                    'The value (%s) of the "%s" property is not in the range [%s, %s]'
                     % (property_value, property_name, self.__min_value, self.__max_value))
 
 
