@@ -11,7 +11,7 @@ from pyArango.connection import Connection
 # from . import report as report_module
 
 
-from .ontology import OntologyService, CashedTermProvider
+from .ontology import OntologyService, CachedTermProvider
 from .validator import ValueValidationService
 from .workspace import Workspace
 from .typedef import TypeDefService
@@ -75,7 +75,7 @@ def _init_services():
     value_validator = ValueValidationService()
 
     global term_provider
-    term_provider = CashedTermProvider()
+    term_provider = CachedTermProvider()
 
     global workspace
     workspace = Workspace(arango_service)
