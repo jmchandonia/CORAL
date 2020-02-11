@@ -68,9 +68,10 @@ class PropertyValue:
         if value_type == 'oterm_ref':
             # value = Term(json_data['value'][value_type])
             value = services.term_provider.get_term(json_data['value'][value_type])
-
+        elif value_type == 'object_ref':
+            value = json_data['value']['object_ref']
         else:
-            value = json_data['value'][value_type + '_value']     
+            value = json_data['value'][value_type + '_value']
             
         # TODO: units    
         return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
@@ -128,14 +129,15 @@ class Brick:
         # ds.attrs['__attr2'] = PropertyValue( type_term=Term('AA:145', 'Genome'), value='E.coli'  )
 
         ds.attrs['__attr_count'] = 0
-        for prop_data in json_data['array_context']:
-            try:
-                pv = PropertyValue.read_json(prop_data)        
-                ds.attrs['__attr_count'] += 1
-                attr_name = '__attr%s' % ds.attrs['__attr_count'] 
-                ds.attrs[attr_name] = pv
-            except Exception as e:
-                print('Error: can not read property', e, prop_data)
+        if 'array_context' in json_data:
+            for prop_data in json_data['array_context']:
+                try:
+                    pv = PropertyValue.read_json(prop_data)        
+                    ds.attrs['__attr_count'] += 1
+                    attr_name = '__attr%s' % ds.attrs['__attr_count'] 
+                    ds.attrs[attr_name] = pv
+                except Exception as e:
+                    print('Error: can not read property', e, prop_data)
         
         # do dimensions
         # ds.attrs['__dim_count'] = dim_count    
