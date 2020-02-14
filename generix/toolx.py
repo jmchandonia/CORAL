@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import traceback
+import dumper
 import pandas as pd
 from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
@@ -125,6 +126,7 @@ def upload_core(argv=None):
                         print(i)
 
                     data = row.to_dict()
+                    # dumper.dump(data)
                     data_holder = EntityDataHolder(type_name, data)
                     ws.save_data_if_not_exists(data_holder)
                 except Exception as e:

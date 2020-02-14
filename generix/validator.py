@@ -252,4 +252,3 @@ class ValueValidationService:
             'index': index[0] if len(index) == 1 else index,
             'error_msg': 'Can not cast "%s" to type %s. %s' % (value, cast_type, err_msg)
         })
-    
