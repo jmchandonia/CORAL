@@ -230,7 +230,6 @@ class Workspace:
 
     def _load_object(self, data_holder):
         pk_id = data_holder.id
-        print('trying to load %s' % pk_id)
         aql = 'RETURN DOCUMENT(@@collection/@pk_id)'
         aql_bind = {
             '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_OBJECT_TYPE_ID,
@@ -247,7 +246,7 @@ class Workspace:
                 objs = []
                 type2objects[type_name] = objs
             objs.append(row)
-        dumper.dump(type2objects)
+        # dumper.dump(type2objects)
 
     def _get_pk_id(self, type_name, upk_id):
 
