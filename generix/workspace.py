@@ -256,7 +256,7 @@ class Workspace:
             'type_name': type_name,
             'upk_id': upk_id
         }
-        print(str(aql_bind))
+        # print(str(aql_bind))
 
         res = self.__arango_service.find(aql,aql_bind)
         if len(res) == 0:
