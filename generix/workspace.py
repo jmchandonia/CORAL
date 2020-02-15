@@ -217,7 +217,7 @@ class Workspace:
             # self.__enigma_db.get_collection(
             #     data_holder.type_name).insert_one(data_holder.data)
         elif type(data_holder) is BrickDataHolder:
-            upk_id = data_holder.brick.id
+            upk_id = data_holder.brick.name
             brick_id = data_holder.brick.id
             data_json = data_holder.brick.to_json()
             data = json.loads(data_json)
@@ -256,6 +256,7 @@ class Workspace:
             'type_name': type_name,
             'upk_id': upk_id
         }
+        print(str(aql_bind))
 
         res = self.__arango_service.find(aql,aql_bind)
         if len(res) == 0:
