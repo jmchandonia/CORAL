@@ -4,6 +4,7 @@ import pandas as pd
 import xarray as xr
 import re
 import datetime
+import sys
 from time import gmtime, strftime
 from .ontology import Term
 from .workspace import BrickDataHolder, ProcessDataHolder
@@ -188,9 +189,7 @@ class Brick:
                     var_values = []
                     for term_id in var_json['values']['oterm_refs']:
                         # var_values.append(Term(term_id))
-                        var_values.append(services.term_provider.get_term(term_id))                        
-                elif var_scalar_type == 'object_ref':
-                    var_values = var_json['values']['object_refs']
+                        var_values.append(services.term_provider.get_term(term_id))
                 else:
                     var_values = var_json['values'][var_scalar_type + '_values']
 
