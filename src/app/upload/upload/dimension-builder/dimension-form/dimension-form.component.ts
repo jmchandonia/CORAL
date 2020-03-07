@@ -20,7 +20,7 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
     containerCssClass: 'select2-custom-container',
     query: (options: Select2QueryOptions) => {
       const term = options.term;
-      if (!term || term.length < 3) {
+      if (!term) {
         options.callback({results: []});
       } else {
         this.uploadService.searchDimensionMicroTypes(term)
