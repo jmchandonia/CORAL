@@ -7,9 +7,9 @@
               <ul class="nav flex-column">
                   <li class="nav-item pt-4 pb-4" class="category-li" *ngFor="let category of filterCategories; let i = index;">
                     <span class="category-label">{{category.categoryName}}</span>
-                    <div style="margin-bottom: -8px;" *ngFor="let item of category.items; let j = index;">
+                    <div style="display: flex; flex-direction: row; align-items: center;" *ngFor="let item of category.items; let j = index;">
                       <input [id]="i + ' ' + j" type="checkbox" (change)="onValueChecked($event)" />
-                      <label style="font-size: 0.7em;" [for]="i + ' ' + j">{{item.name}}</label>
+		      <label style="font-size: 0.7em; margin-bottom: 0;" [for]="i + ' ' + j">{{item.name}}</label>
                     </div>
                   </li>
                 </ul>
