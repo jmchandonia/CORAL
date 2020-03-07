@@ -13,6 +13,7 @@ import datetime
 import uuid 
 import os
 import cgi
+import sys
 
 
 
@@ -639,8 +640,9 @@ def login():
             new_jwt = jwt.encode(payload, 'test', algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
-            return json.dumps({'success': False, 
-            'message': 'Something went wrong'
+            return json.dumps({'success': False,
+                               'message': 'Something went wrong: '
+                               # 'message': 'Something went wrong: '+str(e)
             })  
 
 
@@ -1173,7 +1175,14 @@ def generix_type_stat():
     # Dynamic types
     dyn_type_items = []
     rows = arango_service.get_brick_type_counts([],[])
-    for row in rows:
+    # sys.stderr.write('rows: '+str(rows)+'\n')
+    # sys.stderr.write('len: '+str(len(rows))+'\n')
+    # sys.stderr.write('type: '+str(type(rows))+'\n')
+    # Note: awkward code below works around https://github.com/ArangoDB-Community/pyArango/issues/160
+    # can't do 'for row in rows:' because query returns infinite empty lists
+    for i in range(len(rows)):
+        row = rows[i]
+        # sys.stderr.write('row: '+str(row)+'\n')
         dyn_type_items.append(
             {
                 'name': row['b_type'],
@@ -1186,7 +1195,7 @@ def generix_type_stat():
                 }
             }            
         )    
-
+        
     # bp = dp._get_type_provider('Brick')
     # for dt_name in bp.type_names():
 
@@ -1265,7 +1274,10 @@ def _to_process_docs(rows):
     typedef = svs['typedef']
     indexdef = svs['indexdef']
     process_docs = []
-    for row in rows:
+    # Note: awkward code below works around https://github.com/ArangoDB-Community/pyArango/issues/160
+    # can't do 'for row in rows:' because query returns infinite empty lists
+    for i in range(len(rows)):
+        row = rows[i]
         process = row['process']
 
         # build docs
