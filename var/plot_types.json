@@ -1,0 +1,215 @@
+{
+    "plot_types":[
+        {
+            "name":"Vertical Barchart",
+            "description": "1D Vertical Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">insert_chart</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "type": "bar"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ]
+        },
+        {
+            "name":"Vertical Barchart",
+            "description": "2D Vertical Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">insert_chart</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "type": "bar"
+            },
+            "plotly_layout": {
+                "barmode": "group"
+            },
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Series"
+                }                
+            ]
+        },  
+        {
+            "name":"Horizontal Barchart",
+            "description": "1D Horizontal Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon rotated\">insert_chart</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "type": "bar",
+                "orientation": "h"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ]
+        },
+        {
+            "name":"Horizontal Barchart",
+            "description": "2D Horizontal Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon rotated\">insert_chart</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "type": "bar",
+                "orientation": "h"
+            },
+            "plotly_layout": {
+                "barmode": "group"
+            },
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Series"
+                }                
+            ]
+        },                 
+        {
+            "name":"Stacked Barchart",
+            "description": "2D Stacked Barchart",
+            "image_tag": "'<i class=\"material-icons dropdown-icon\">clear_all</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "type": "bar"
+            },
+            "plotly_layout": {
+                "barmode": "stack"
+            },
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Series"
+                }                
+            ]
+        },        
+        {
+            "name":"Line Plot",
+            "description": "1D Line Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">timeline</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "mode": "lines"
+            },
+            "plotly_layout": {},
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ]
+        },
+        {
+            "name":"Line Plot",
+            "description": "2D Line Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">timeline</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "mode": "lines"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Series"
+                }                
+            ]
+        },
+        {
+            "name":"Scatter Plot",
+            "description": "1D Scatter Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">scatter_plot</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "mode": "markers"
+            },
+            "plotly_layout": {},
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ]
+        },
+        {
+            "name":"Scatter Plot",
+            "description": "2D Scatter Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">scatter_plot</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "mode": "markers"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Series"
+                }                
+            ]
+        },
+        {
+            "name":"Heatmap",
+            "description": "2D Heatmap",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">gradient</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "type": "heatmap"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Z axis"
+                }                
+            ]
+        }
+    ]
+}
