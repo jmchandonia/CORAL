@@ -280,15 +280,51 @@ cd modules
 git clone git@github.com:jmchandonia/generix_prototype.git
 ```
 
-### Initial data load
+### Initial data, microtypes, and ontologies loading
 
 _load in the data from a jupyter notebook:_
 
 _rsync data_import, notebooks, images from server with data_
 
-_run "reload_data" notebook to load and set up._
+_define your process type and all other static types in var/typedef.json_
 
-_sample "reload data" notebook contents (/home/clearinghouse/prod/notebooks/reload_data.ipynb:_
+_set up var/upload_config.json with all the filenames of all ontologies, bricks, entities, and processes that you want to load._
+
+_set up any predefined brick type templates in var/brick_type_templates.json_
+
+_make var/config.json based on the following template:_
+
+```
+{
+  "Import":{
+    "ontology_dir": "/home/clearinghouse/prod/data_import/ontologies/",
+    "entity_dir": "/home/clearinghouse/prod/data_import/data/",
+    "process_dir": "/home/clearinghouse/prod/data_import/data/",
+    "brick_dir": "/home/clearinghouse/prod/data_import/data/"
+  },
+  "Workspace":{
+    "data_dir": "/home/clearinghouse/prod/data_store/"
+  }, 
+ "ArangoDB": {
+    "url": "http://127.0.0.1:8529",
+    "user": "YOUR_USER_NAME",
+    "password": "YOUR_PASSWORD",
+    "db": "YOUR_PRODUCTION_DATABASE_NAME"
+  }, 
+  "WebService": {
+    "port": 8082,
+    "https": true,
+    "cert_pem": "PATH_TO_FULLCHAIN.PEM file",
+    "key_pem": "PATH_TO_PRIVKEY.PEM file",
+    "plot_types_file": "plot_types.json"
+  }
+}
+
+```
+
+_make a "reload_data" notebook to load and set everything up, then run it._
+
+_sample "reload data" notebook contents (e.g., in /home/clearinghouse/prod/notebooks/reload_data.ipynb):_
 
 ```
 from generix.dataprovider import DataProvider
