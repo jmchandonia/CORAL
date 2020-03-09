@@ -10,17 +10,22 @@ have a prerequisite step installed, you can skip it.
 
 _install package managers pip3 and npm:_
 
+```
 apt-get install python3-pip
-
 apt-get install npm nodejs
+```
 
 _upgrade pip:_
 
+```
 pip3 install --upgrade pip
+```
 
 ### Other Python prerequisites
 
+```
 pip3 install pandas pyArango dumper xarray
+```
 
 ### Jupyterhub installation
 
@@ -28,15 +33,17 @@ _(based on https://jupyterhub.readthedocs.io/en/stable/quickstart.html)_
 
 _install jupyter:_
 
+```
 pip3 install jupyter
+````
 
 _install jupyterhub and dependencies:_
 
+```
 pip3 install jupyterhub
-
 npm install -g configurable-http-proxy
-
 pip3 install notebook
+```
 
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
 
@@ -47,13 +54,16 @@ _ssl certs need to be readable by jupyterhub user_
 
 ### Sudo spawner for Jupyterhub
 
+```
 useradd jupyterhub
+```
 
 _remember to set shell to nologin, add to shadow group_
 
+```
 pip3 install sudospawner
-
 apt-get install sudo
+```
 
 _note: was getting "OSError: [Errno 99] Cannot assign requested address" on spawning jupyterhub_
 
@@ -70,11 +80,10 @@ _In /etc/sudoers:_
 
 ```
 Cmnd_Alias JUPYTER_CMD = /usr/local/bin/sudospawner
-```
 
-_actually give the Hub user permission to run the above command on behalf of the clearinghouse users without prompting for a password_
+# actually give the Hub user permission to run the above command on behalf 
+# of the clearinghouse users without prompting for a password:
 
-```
 %jupyterhub ALL=(jupyterhub) /bin/sudo
 jupyterhub ALL=(%clearinghouse) NOPASSWD:JUPYTER_CMD
 ```
@@ -109,7 +118,7 @@ apt-get update
 apt-get install arangodb3=3.6.1-1
 ```
 
-### Make SystemD start up Jupyterhub automatically
+### Make Systemd start up Jupyterhub automatically
 
 _in /etc/systemd/system, make jupyterhub.service:_
 
@@ -134,15 +143,19 @@ systemctl enable jupyterhub
 service jupyterhub start
 ```
 
-_to test:_
+_to view output when testing:_
 
+```
 service jupyterhub status
+```
 
 ### Get Jupyterhub and ArangoDB working behind Apache
 
 _enable all options needed by apache:_
 
+```
 a2enmod ssl rewrite proxy proxy_http proxy_wstunnel
+```
 
 _in apache conf (/etc/apache2/sites-enabled/000-default.conf):_
 
@@ -160,7 +173,7 @@ _in apache conf (/etc/apache2/sites-enabled/000-default.conf):_
         <Location /jupyterhub>
             ProxyPass https://localhost:8000/jupyterhub
             ProxyPassReverse https://localhost:8000/jupyterhub
-            ProxyPassReverseCookieDomain localhost brass.lbl.gov
+            ProxyPassReverseCookieDomain localhost YOUR_FULL_DOMAIN_NAME_HERE
         </Location>
 
         <LocationMatch "/jupyterhub/(user/[^/]*)/(api/kernels/[^/]+/channels|terminals/websocket)(.*)">
@@ -275,13 +288,23 @@ _rsync data_import, notebooks, images from server with data_
 
 _run "reload_data" notebook to load and set up._
 
+_sample "reload data" notebook contents (/home/clearinghouse/prod/notebooks/reload_data.ipynb:_
+
+```
+from generix.dataprovider import DataProvider
+from generix import toolx
+toolx.init_system()
+```
+
 _this will set up tables required for web services to start.  It may need to be done semi simultaneously with the following step, though:_
 
 ### Start Web Services
 
 _to start web services_
 
+```
 service generix-web-services start
+```
 
 _debug by looking in /var/log/daemon.log_
 
