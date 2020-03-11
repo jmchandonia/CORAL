@@ -72,31 +72,65 @@ def generix_refs_to_core_objects(data_id):
 
 @app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
+    if value is None:
+        value = '*'
     return _search_microtypes(svs['ontology'].dimension_microtypes, value)
 
 @app.route("/generix/search_dimension_variable_microtypes/<value>", methods=['GET'])
 def search_dimension_variable_microtypes(value):
+    if value is None:
+        value = '*'
     return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
 
 @app.route("/generix/search_data_variable_microtypes/<value>", methods=['GET'])
 def search_data_variable_microtypes(value):
-    # TODO: do we need a special OTerm porperty to select data variable - specific terms
+    # TODO: do we need a special OTerm property to select data variable - specific terms
+    if value is None:
+        value = '*'
     return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
-
 
 @app.route("/generix/search_property_microtypes/<value>", methods=['GET'])
 def search_property_microtypes(value):
     return _search_microtypes(svs['ontology'].property_microtypes, value)
 
+def rreplace(s, old, new, occurrence):
+    li = s.rsplit(old, occurrence)
+    return new.join(li)
+
 def _search_microtypes(ontology, value):
     try:
-        if value is None:
-            value = '*'
         res = []
+        if value is None:
+            return _ok_response(res)
 
-        term_collection = ontology.find_name_prefix(value)
+        # look for exact matches first
+        exact_val_pattern = '+'+value.replace(' ',',+')
+        # sys.stderr.write('pattern1 '+exact_val_pattern+'\n')
+        term_collection = ontology.find_name_pattern(exact_val_pattern)
         for term in term_collection.terms:
-            res.append(term.to_descriptor())
+            if not term.is_hidden:
+                td = term.to_descriptor()
+                # sys.stderr.write('exact '+str(td)+'\n')
+                res.append(td)
+
+        # if too many exact matches, don't look for prefix matches
+        if (len(res) > 50):
+            # sys.stderr.write('returning '+str(res)+'\n')
+            return _ok_response(res)
+        
+        # look for prefix matches next, only if value has enough characters
+        if (len(value) > 2):
+            last_prefix_pattern = rreplace(' '+value,' ',',prefix:',1).replace(' ',',+')
+            if last_prefix_pattern.startswith(','):
+                last_prefix_pattern = last_prefix_pattern[1:]
+                # sys.stderr.write('pattern2 '+last_prefix_pattern+'\n')
+                term_collection = ontology.find_name_pattern(last_prefix_pattern)
+                for term in term_collection.terms:
+                    if not term.is_hidden:
+                        td = term.to_descriptor()
+                        # sys.stderr.write('prefix '+str(td)+'\n')
+                        if (td not in res):
+                            res.append(td)
 
         return _ok_response(res)
     except Exception as e:
@@ -116,15 +150,40 @@ def search_property_value_objrefs():
         term = _get_term({ 'id':query['term_id']})
         value = query['value']
         res = []
+        fk = term.microtype_fk
+        if (fk is None):
+            return _err_response('no fk found for '+str(term))
+            
+        # sys.stderr.write('searching for '+str(fk)+'\n')
 
-        res.append({
-            'id' : 0,
-            'text': value + ' - 00'
-        })
-        res.append({
-            'id' : 1,
-            'text': value + ' - 01'
-        })
+        obj_search = re.search('.*\.(.+)\.', fk)
+        if obj_search is None:
+            return _err_response('bad fk pattern '+fk)
+        obj_type = obj_search.group(1)
+        # sys.stderr.write('obj is '+obj_type+'\n')
+
+        upk = svs['typedef'].get_type_def(obj_type).upk_property_def.name
+        itdef = svs['indexdef'].get_type_def(obj_type)
+
+        # sys.stderr.write('collection is '+itdef.collection_name+'\n')
+        # sys.stderr.write('upk is '+upk+'\n')
+        # sys.stderr.write('value is '+value+'\n')
+
+        aql = """
+           FOR x in @@collection
+               FILTER x.@upk like concat(@value,"%")
+               RETURN {id: x._key, text: x.@upk}
+        """
+        aql_bind = {
+            '@collection' : itdef.collection_name,
+            'upk': upk,
+            'value': value
+        }
+
+        rows = svs['arango_service'].find(aql,aql_bind)
+        for row in rows:
+            res.append(row)
+
         return _ok_response(res)
     except Exception as e:
         return _err_response(e)
@@ -139,6 +198,7 @@ def _search_oterms(ontology, value, parent_term_id=None):
         parent_term_id = None
     term_collection = ontology.find_name_prefix(value, parent_term_id=parent_term_id)
     for term in term_collection.terms:
+        # sys.stderr.write('id '+term.term_id+' text '+term.term_name+'\n')
         res.append({
             'id' : term.term_id,
             'text': term.term_name
@@ -335,7 +395,7 @@ def create_brick():
         brick_ds = json.loads(request.form['brick'])       
         data_id = brick_ds['data_id']
 
-        # Save birck data structure (update)
+        # Save brick data structure (update)
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
@@ -458,7 +518,7 @@ def upload_file():
 
         brick_ds = json.loads(request.form['brick'])
 
-        # Save birck data structure
+        # Save brick data structure
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
@@ -1158,6 +1218,7 @@ def generix_type_stat():
     for td in type_defs:
         if td.name == 'ENIGMA':
             continue
+        # sys.stderr.write('name '+td.name+'\n')
         stat_type_items.append(
             {
                 'name': td.name,
@@ -1359,7 +1420,7 @@ def generate_brick_template():
 
         brick_ds = json.loads(request.form['brick'])
 
-        # Save birck data structure
+        # Save brick data structure
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
