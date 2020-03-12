@@ -73,6 +73,14 @@ export class Term {
     has_units: boolean;
 }
 
+export class ORef {
+    constructor(id?, text?) {
+        this.id = id;
+        this.text = text;
+    }
+    id: string;
+    text: string;
+}
 
 export class DataValue {
 
@@ -219,7 +227,7 @@ export class TypedProperty {
     index: number;
     // type: Term;
     microType: any;
-    value: Term | string;
+    value: Term | ORef | string;
     invalidValue = false;
     units: Term;
     context: Context[] = [];
