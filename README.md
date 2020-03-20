@@ -8,11 +8,10 @@ have a prerequisite step installed, you can skip it.
 
 ### Build environment
 
-_install package managers pip3 and npm:_
+_install package managers pip3 and npm, and setuptools:_
 
 ```
-apt-get install python3-pip
-apt-get install npm nodejs
+apt-get install python3-pip npm nodejs python3-setuptools
 ```
 
 _upgrade pip:_
@@ -25,6 +24,26 @@ pip3 install --upgrade pip
 
 ```
 pip3 install pandas pyArango dumper xarray
+```
+
+### Apache installation
+
+```
+apt-get install apache2
+```
+
+This installation guide assumes you use SSL.  If on a public
+server, you can get a SSL certificate from letsencrypt.org.  If on
+a private development server, you can generate your own certificate
+(in /etc/ssl/certs) using these directions from letsencrypt.org:
+
+```
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=localhost' -extensions EXT -config <( \
+   printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+mv localhost.key ../private
 ```
 
 ### Jupyterhub installation
@@ -45,6 +64,12 @@ npm install -g configurable-http-proxy
 pip3 install notebook
 ```
 
+```
+useradd jupyterhub
+```
+
+_remember to set shell to nologin, add to shadow group_
+
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
 
 _make these files owned by jupyterhub, delete old sqlite and jupyterhub_cookie_secret_
@@ -53,12 +78,6 @@ _ssl certs need to be readable by jupyterhub user_
 
 
 ### Sudo spawner for Jupyterhub
-
-```
-useradd jupyterhub
-```
-
-_remember to set shell to nologin, add to shadow group_
 
 ```
 pip3 install sudospawner
@@ -111,7 +130,7 @@ _Follow directions from ArangoDB website; something like this:_
 ```
 cd /tmp
 curl -OL https://download.arangodb.com/arangodb36/DEBIAN/Release.key
-sudo apt-key add - < Release.key
+apt-key add - < Release.key
 echo 'deb https://download.arangodb.com/arangodb36/DEBIAN/ /' | tee /etc/apt/sources.list.d/arangodb.list
 apt-get install apt-transport-https
 apt-get update
@@ -228,38 +247,6 @@ create databases.  You need at least a "production" database,
 but you could have "test" or other versions for development.
 They can be called whatever you want.
 
-### Generix Web Services
-
-_These run in a virtualenv, so install there_
-
-```
-pip3 install virtualenv 
-python3 -m virtualenv /home/clearinghouse/env/
-source /home/clearinghouse/env/bin/activate
-pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl
-```
-
-_note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
-
-_setup /etc/systemd/system/generix-web-services.service:_
-
-```
-[Unit]
-Description=Generix Web Services
-After=network.target
-
-[Service]
-User=root
-EnvironmentFile=/etc/sysconfig/generix-web-services
-ExecStart=/home/clearinghouse/env/bin/python -m generix.web_services
-WorkingDirectory=/home/clearinghouse/prod/modules/generix_prototype
-Restart=always
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-```
-
 ### More setup of directory structure
 
 Here I'm going to assume you have only a "prod" environment for
@@ -332,9 +319,48 @@ from generix import toolx
 toolx.init_system()
 ```
 
-_this will set up tables required for web services to start.  It may need to be done semi simultaneously with the following step, though:_
+_this will set up tables required for web services to start._
 
-### Start Web Services
+### Generix Web Services
+
+_These run in a virtualenv, so install this first:_
+
+```
+pip3 install virtualenv 
+python3 -m virtualenv /home/clearinghouse/env/
+source /home/clearinghouse/env/bin/activate
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl
+```
+
+_note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
+
+_create /etc/systemd/system/generix-web-services.service:_
+
+```
+[Unit]
+Description=Generix Web Services
+After=network.target
+
+[Service]
+User=root
+EnvironmentFile=/etc/sysconfig/generix-web-services
+ExecStart=/home/clearinghouse/env/bin/python -m generix.web_services
+WorkingDirectory=/home/clearinghouse/prod/modules/generix_prototype
+Restart=always
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+_create /etc/sysconfig/generix-web-services:_
+
+```
+PATH=/home/clearinghouse/env/bin:/usr/local/bin:/usr/bin:/bin
+PYTHONIOENCODING=utf-8
+PYTHONPATH=/home/clearinghouse/env/
+VIRTUAL_ENV=/home/clearinghouse/env/
+```
 
 _to start web services_
 
