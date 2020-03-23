@@ -14,6 +14,8 @@ Fork and clone a repo and then install all the necessary dependencies in package
 
 `npm install`
 
+If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular versions 7.2.5 and 7.2.15.
+
 To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200
 
 ## Deployment
