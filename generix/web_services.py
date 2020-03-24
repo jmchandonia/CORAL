@@ -14,8 +14,7 @@ import uuid
 import os
 import cgi
 import sys
-
-
+import pprint
 
 # from . import services
 # from .brick import Brick
@@ -38,7 +37,7 @@ _PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
 _CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
 _PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
 
-_UPLOAD_TEMPLAT_PREFIX = 'utp_'
+_UPLOAD_TEMPLATE_PREFIX = 'utp_'
 _UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
 _UPLOAD_DATA_FILE_PREFIX = 'udf_'
 _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
@@ -55,6 +54,10 @@ def generix_refs_to_core_objects(data_id):
     try:
         uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
         vdata = json.loads(open(uvd_file_name).read())
+
+        s = pprint.pformat(vdata)
+        sys.stderr.write(s)
+        
         res = vdata['obj_refs']
 
         # res = [{
@@ -171,7 +174,7 @@ def search_property_value_objrefs():
 
         aql = """
            FOR x in @@collection
-               FILTER x.@upk like concat(@value,"%")
+               FILTER lower(x.@upk) like concat(lower(@value),"%")
                RETURN {id: x._key, text: x.@upk}
         """
         aql_bind = {
@@ -1425,7 +1428,7 @@ def generate_brick_template():
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
 
-        utp_file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLAT_PREFIX + data_id)
+        utp_file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLATE_PREFIX + data_id)
 
         dim_count = len(brick_ds['dimensions'])
         data_var_count = len(brick_ds['dataValues'])

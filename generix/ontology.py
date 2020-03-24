@@ -45,7 +45,7 @@ class OntologyService:
         # build indices
         print('Ensure ontology indices')
         collection = services.arango_service.db[OTERM_COLLECTION_NAME]
-        collection.ensureFulltextIndex(['term_name'],minLength=3)
+        collection.ensureFulltextIndex(['term_name'],minLength=1)
         collection.ensureHashIndex(['term_id'], unique=True)
         collection.ensureHashIndex(['ontology'])
 
