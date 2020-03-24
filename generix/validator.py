@@ -131,16 +131,16 @@ class ValueValidationService:
         errors = []
         with np.nditer(values, op_flags=['readwrite'], flags=['multi_index', 'refs_ok']) as it:
             while not it.finished:                 
-                casted_value = None
+                cast_value = None
                 
                 value = it[0].item()
                 if value is not None:
                     try: 
-                        casted_value = cast_function(value)
+                        cast_value = cast_function(value)
                     except: 
                         self.__add_error(errors, it.multi_index, value, cast_type)
 
-                it[0] = casted_value
+                it[0] = cast_value
                 it.iternext()
 
         return errors 
@@ -175,22 +175,22 @@ class ValueValidationService:
         errors = []
         with np.nditer(values, op_flags=['readwrite'], flags=['multi_index', 'refs_ok']) as it:
             while not it.finished:                 
-                casted_value = None
+                cast_value = None
                 
                 value = it[0].item()
                 if value:
                     term_record = terms[value]
-                    casted_value = term_record['term']
+                    cast_value = term_record['term']
                     error = term_record['error']
-                    if casted_value is None and error is not None:
+                    if cast_value is None and error is not None:
                         self.__add_error(errors, it.multi_index, value, 'Term', error)
 
-                if casted_value is not None:
-                    casted_value = {
-                        'id': casted_value.term_id,
-                        'text': casted_value.term_name
+                if cast_value is not None:
+                    cast_value = {
+                        'id': cast_value.term_id,
+                        'text': cast_value.term_name
                     }
-                it[0] = casted_value
+                it[0] = cast_value
                 it.iternext()
         return errors 
 
@@ -206,7 +206,7 @@ class ValueValidationService:
             val = val.item()
             if val is not None:
                 values_set.add(val)
-                sys.stderr.write('mapping '+str(val)+'\n')
+                # sys.stderr.write('mapping '+str(val)+'\n')
 
         # Get mapped values
         index_type_def = services.indexdef.get_type_def(var_term.microtype_fk_core_type)
@@ -217,32 +217,32 @@ class ValueValidationService:
             pk_upks = query._find_upks(list(values_set))
             for pk_upk in pk_upks:
                 values_mapped.add(pk_upk['upk'])
-                sys.stderr.write('mapped upk '+str(pk_upk['upk'])+'\n')
+                # sys.stderr.write('mapped upk '+str(pk_upk['upk'])+'\n')
         elif var_term.is_fk:
             pks = query._find_pks(list(values_set))
             for pk in pks:
                 values_mapped.add(pk)
-                sys.stderr.write('mapped pk '+str(pk)+'\n')
+                # sys.stderr.write('mapped pk '+str(pk)+'\n')
                 
         # cast values
         errors = []
         mappedCount = 0
         with np.nditer(values, op_flags=['readwrite'], flags=['multi_index', 'refs_ok']) as it:
             while not it.finished:                 
-                casted_value = None
+                cast_value = None
                 
                 value = it[0].item()
                 if value:
                     if value in values_mapped:
-                        casted_value = value    
+                        cast_value = value    
                         mappedCount += 1
-                        sys.stderr.write('cast value '+str(value)+'\n')
+                        # sys.stderr.write('cast value '+str(value)+'\n')
                     else:
                         self.__add_error(errors, it.multi_index, value, 'Object Ref', 
                             'Mapping to core type %s.%s' % (var_term.microtype_fk_core_type, 
                                 var_term.microtype_fk_core_prop_name))
 
-                it[0] = casted_value
+                it[0] = cast_value
                 it.iternext()
         if obj_refs is not None:
             obj_refs.append({
