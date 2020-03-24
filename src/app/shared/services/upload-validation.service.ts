@@ -8,7 +8,7 @@ import { UploadService } from './upload.service';
 })
 export class UploadValidationService {
 
-  // subsject that emits if errors are true
+  // subject that emits if errors are true
   private errorSub: Subject<any> = new Subject();
   private contextErrorSub: Subject<any> = new Subject();
 
