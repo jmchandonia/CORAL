@@ -3,7 +3,7 @@ import numpy as np
 import re
 from .ontology import Term, OntologyService
 from . import services
-
+import sys
 
 class TermValueValidationService:
     def __init__(self):
@@ -19,7 +19,7 @@ class TermValueValidationService:
         return True
 
     def protein_sequence(self, val):
-        print('--- check protine sequence ---', val)
+        print('--- check protein sequence ---', val)
         return True
 
 
@@ -198,7 +198,7 @@ class ValueValidationService:
         self.__validate_values_type(values)
 
         if not var_term.require_mapping:
-            raise ValueError('Type term wiht scalar_type=object_ref does not require mapping')
+            raise ValueError('Type term with scalar_type=object_ref does not require mapping')
 
         # Get a unique set of fks
         values_set = set()
@@ -206,6 +206,7 @@ class ValueValidationService:
             val = val.item()
             if val is not None:
                 values_set.add(val)
+                sys.stderr.write('mapping '+str(val)+'\n')
 
         # Get mapped values
         index_type_def = services.indexdef.get_type_def(var_term.microtype_fk_core_type)
@@ -216,11 +217,13 @@ class ValueValidationService:
             pk_upks = query._find_upks(list(values_set))
             for pk_upk in pk_upks:
                 values_mapped.add(pk_upk['upk'])
+                sys.stderr.write('mapped upk '+str(pk_upk['upk'])+'\n')
         elif var_term.is_fk:
             pks = query._find_pks(list(values_set))
             for pk in pks:
                 values_mapped.add(pk)
-
+                sys.stderr.write('mapped pk '+str(pk)+'\n')
+                
         # cast values
         errors = []
         mappedCount = 0
@@ -233,6 +236,7 @@ class ValueValidationService:
                     if value in values_mapped:
                         casted_value = value    
                         mappedCount += 1
+                        sys.stderr.write('cast value '+str(value)+'\n')
                     else:
                         self.__add_error(errors, it.multi_index, value, 'Object Ref', 
                             'Mapping to core type %s.%s' % (var_term.microtype_fk_core_type, 
