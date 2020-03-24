@@ -11,7 +11,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-12">
-              <label for="brick-name">Brick Name:</label>
+              <label for="brick-name">Brick Name (analagous to a file name; does not need to be unique):</label>
               <input
                 type="text"
                 [class.button-error]="error && !brick.name"
@@ -20,10 +20,20 @@
                 class="form-control"
                 id="brick-name" />
             </div>
+            <div class="col-12">
+              <label for="brick-description">Human-readable description of this dataset:</label>
+              <input
+                type="text"
+                [class.button-error]="error && !brick.description"
+                [(ngModel)]="brick.description"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control"
+                id="brick-description" />
+            </div>
           </div>
           <div class="row mt-2">
             <div class="col-12">
-              <label for="brick-process">Process:</label>
+              <label for="brick-process">Process used to generate the data:</label>
               <select2
                 id="brick-process"
                 [cssImport]="true"
@@ -38,7 +48,7 @@
           </div>
           <div class="row mt-2">
             <div class="col-12">
-              <label for="brick-campaign">Campaign: </label>
+              <label for="brick-campaign">ENIGMA Campaign: </label>
               <select2
                 id="brick-campaign"
                 [cssImport]="true"
@@ -51,7 +61,7 @@
           </div>
           <div class="row mt-2">
             <div class="col-12">
-              <label for="brick-personnel">Personnel: </label>
+              <label for="brick-personnel">Personnel primarily responsible for generating this dataset: </label>
               <select2
                 id="brick-personnel"
                 [cssImport]="true"
@@ -64,7 +74,7 @@
           </div>
           <div class="row mt-2">
             <div class="col-6">
-              <label for="start-date">Start Date: </label>
+              <label for="start-date">Data generation start date: </label>
               <input
                 class="form-control"
                 id="start-date"
@@ -79,7 +89,7 @@
               />
             </div>
             <div class="col-6">
-              <label for="end-date">End Date: </label>
+              <label for="end-date">Data generation end date: </label>
               <input
                 class="form-control"
                 id="start-date"

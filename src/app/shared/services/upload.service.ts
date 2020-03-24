@@ -149,7 +149,9 @@ export class UploadService {
   }
 
   public getRefsToCoreObjects() {
-    return this.http.get(`${environment.baseURL}/refs_to_core_objects/${this.brickBuilder.data_id}`);
+    const formData: FormData = new FormData();
+    formData.append('brick', this.brickBuilder.toJson());
+    return this.http.post<any>(`${environment.baseURL}/refs_to_core_objects`, formData);
   }
 
   mapDimVarToCoreTypes(dimVar) {
