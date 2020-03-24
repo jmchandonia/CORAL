@@ -32,9 +32,13 @@ export class PreviewComponent implements OnInit {
     this.uploadService.getRefsToCoreObjects()
       .subscribe((res: any) => {
         this.coreObjectRefs = res.results;
-        this.totalObjectsMapped = this.coreObjectRefs.length
-          ? this.coreObjectRefs.reduce((a, c) => a.count + c.count) : 0;
-        this.brick.coreObjectRefsError = this.totalObjectsMapped === 0;
+	this.totalObjectsMapped = 0;
+	if ((this.coreObjectRefs) && (this.coreObjectRefs.length > 0)) {
+	   for (var x of this.coreObjectRefs) {
+	      this.totalObjectsMapped += x.count;
+	   }
+	}
+        this.brick.coreObjectRefsError = (this.totalObjectsMapped === 0);
       });
   }
 
