@@ -42,6 +42,7 @@ _UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
 _UPLOAD_DATA_FILE_PREFIX = 'udf_'
 _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
 _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
+_UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
 
@@ -49,16 +50,35 @@ _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 def hello():
     return "Welcome!"
 
-@app.route("/generix/refs_to_core_objects/<data_id>", methods=['GET'])
-def generix_refs_to_core_objects(data_id):
+@app.route("/generix/refs_to_core_objects/", methods=['POST'])
+def generix_refs_to_core_objects():
     try:
-        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
-        vdata = json.loads(open(uvd_file_name).read())
+        brick_ds = json.loads(request.form['brick'])       
+        data_id = brick_ds['data_id']
 
-        s = pprint.pformat(vdata)
-        sys.stderr.write(s)
+        # s = pprint.pformat(brick_ds)
+        # sys.stderr.write(s+'\n')
+
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        validated_data = json.loads(open(uvd_file_name).read())
+
+        # we need to validate / generate refs to core objects
+        # from properties, because those were not previously mapped
+        for prop in brick_ds['properties']:
+            if prop['require_mapping']:
+                vtype_term_id = prop['type']['id']
+                values = np.array([prop['value']['text']], dtype='object')
+                errors = svs['value_validator'].cast_var_values(values, vtype_term_id, validated_data['obj_refs'])
+
+        # s = pprint.pformat(validated_data)
+        # sys.stderr.write(s+'\n')
+
+        # save to include the newly validated data
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
+        with open(uvd_file_name, 'w') as f:
+            json.dump(validated_data, f, sort_keys=True, indent=4)
         
-        res = vdata['obj_refs']
+        res = validated_data['obj_refs']
 
         # res = [{
         #     'var_name': 'qqq',
@@ -403,7 +423,7 @@ def create_brick():
         with open(uds_file_name, 'w') as f:
             json.dump(brick_ds, f, sort_keys=True, indent=4)
 
-        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
         brick_data = json.loads(open(uvd_file_name).read())
 
         br = _create_brick(brick_ds, brick_data)        
@@ -622,12 +642,15 @@ def _create_brick(brick_ds, brick_data):
         
     brick_type_term = _get_term(brick_ds['type'])
     brick_name = brick_ds['name'] 
+    brick_description = brick_ds['description'] 
 
     bp = dp._get_type_provider('Brick')
-    br = bp.create_brick(type_term=brick_type_term, 
-        dim_terms = dim_type_terms, 
-        shape=dim_sizes,
-        name=brick_name)
+    br = bp.create_brick(type_term = brick_type_term, 
+                         dim_terms = dim_type_terms, 
+                         shape = dim_sizes,
+                         name = brick_name,
+                         description = brick_description
+    )
 
     # add dim variables
     for dim_index, dim in enumerate(brick_dims):
@@ -660,9 +683,13 @@ def _create_brick(brick_ds, brick_data):
     for prop in brick_properties:
         var_type_term = _get_term(prop['type'])
         var_units_term = _get_term(prop['units'])
-        scalarType = var_type_term.microtype_value_scalar_type
+        scalar_type = var_type_term.microtype_value_scalar_type
         value = prop['value']
-        br.add_attr(var_type_term, var_units_term, scalarType, value)
+        if (scalar_type == 'oterm_ref'):
+            value = value['id']
+        if (scalar_type == 'object_ref'):
+            value = value['text']
+        br.add_attr(var_type_term, var_units_term, scalar_type, value)
 
     return br
 
