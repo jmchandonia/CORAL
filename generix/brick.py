@@ -572,7 +572,7 @@ class Brick:
                     for fk_id in fk_ids:
                         fk_refs.add('%s:%s' % (core_type, fk_id))
 
-        # TODO: needs to make a decision whether 
+        # TODO: need to make a decision whether 
         #  to collect fk_ids from data_vars
 
         return fk_refs
@@ -972,7 +972,7 @@ class Brick:
             if attr_name == '__dim_count':
                 xds.attrs[attr_name] = self.dim_count - 1
             elif attr_name.startswith('__dim'):
-                # skip the dim data with dim_index amd decrese dim indexes
+                # skip the dim data with dim_index amd decrease dim indexes
                 attr_name_vals = attr_name[len('__dim'):].split('_')
                 di = int(attr_name_vals[0])
                 # print( 'attr_name', attr_name)
