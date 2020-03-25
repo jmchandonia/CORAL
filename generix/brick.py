@@ -40,7 +40,7 @@ def _collect_all_term_values(term_id_2_values, term_id, data_values):
 DATA_EXAMPLE_SIZE = 5
     
 class PropertyValue:
-    def __init__(self, name=None, type_term=None, units_term=None, scalar_type='str', value=None):
+    def __init__(self, name=None, type_term=None, units_term=None, scalar_type='string', value=None):
         if type_term is None:
             raise ValueError('type_term can not be None')
         if type(type_term) is not Term:
@@ -54,7 +54,7 @@ class PropertyValue:
 
         #TODO validate scalar_type and the value
         self.scalar_type = scalar_type
-        
+
         self.value = value
         self.name = name if name is not None else type_term.term_name   
 
@@ -74,7 +74,7 @@ class PropertyValue:
         else:
             value = json_data['value'][value_type + '_value']
             
-        # TODO: units    
+        # TODO: units - JMC: fixme
         return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
 
 
@@ -641,7 +641,12 @@ class Brick:
                 value_key = attr.scalar_type
                 value_val = attr.value.term_id
             else:
-                value_key = attr.scalar_type + '_value'
+                if (attr.scalar_type == 'object_ref'):
+                    value_key = 'object_ref'
+                elif (attr.scalar_type == 'oterm_ref'):
+                    value_key = 'oterm_ref'
+                else:
+                    value_key = attr.scalar_type + '_value'
                 value_val = attr.value
 
             if not typed_values_property_name:
