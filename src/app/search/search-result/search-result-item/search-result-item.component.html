@@ -119,12 +119,14 @@
               <tr>
                 <th>Property</th>
                 <th>Value</th>
+                <th>Units</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor ="let item of searchResult?.array_context">
                 <td>{{item.value_type.oterm_name}}</td>
                 <td>{{item.value.value}}</td>
+                <td>{{item.value_units ? item.value_units.oterm_name : 'N/A'}}</td>
               </tr>
             </tbody>
           </table>

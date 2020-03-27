@@ -80,9 +80,9 @@
             <thead class="table-header">
               <tr>
                 <td>#</td>
-                <td>Type</td>
-                <td>Units</td>
+                <td>Variable Type</td>
                 <td>Values</td>
+                <td>Units</td>
               </tr>
             </thead>
             <tbody>
@@ -95,8 +95,8 @@
                     <span *ngIf="item.units"> {{item.units.text}}</span>
                   </span>
                 </td>
-                <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
                 <td>{{dataValue.valuesSample}}</td>
+                <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
               </tr>
             </tbody>
           </table>
@@ -122,6 +122,7 @@
                       <th>#</th>
                       <th>Variable Type</th>
                       <th>Values</th>
+                      <th>Units</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -135,6 +136,7 @@
                         </span>
                       </td>
                       <td>{{dv.valuesSample}}</td>
+                      <td>{{dv.units ? dv.units.text : 'N/A'}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -154,12 +156,14 @@
               <tr>
                 <th>Property</th>
                 <th>Value</th>
+                <th>Units</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor ="let item of brick?.properties">
                 <td>{{ item.type.text }}</td>
                 <td>{{ getPropValueDisplay(item) }}</td>
+                <td>{{item.units ? item.units.text : 'N/A'}}</td>
               </tr>
             </tbody>
           </table>
