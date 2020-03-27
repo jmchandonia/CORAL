@@ -74,8 +74,10 @@ class PropertyValue:
         else:
             value = json_data['value'][value_type + '_value']
             
-        # TODO: units - JMC: fixme
-        return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
+        term = json_data['value_units']
+        units_term = services.term_provider.get_term(term['oterm_ref'])
+        
+        return PropertyValue( type_term=type_term, units_term=units_term, scalar_type=value_type, value=value )
 
 
 
@@ -592,7 +594,7 @@ class Brick:
     def to_json(self, exclude_data_values=False, typed_values_property_name=True):
         return json.dumps(
             self.to_dict(exclude_data_values=exclude_data_values,
-                typed_values_property_name=typed_values_property_name ), 
+                typed_values_property_name=typed_values_property_name ),
             cls=NPEncoder)
 
     def to_dict(self, exclude_data_values=False, typed_values_property_name=True):
@@ -632,7 +634,6 @@ class Brick:
         # return PropertyValue( type_term=type_term, scalar_type=value_type, value=value )
 
 
-        # TODO: units
         data['array_context'] = []
         for attr in self.attrs:
             value_key = ''
@@ -652,7 +653,7 @@ class Brick:
             if not typed_values_property_name:
                 value_key = 'value'
 
-            data['array_context'].append({
+            context = {
                 'value_type':{
                     'oterm_ref': attr.type_term.term_id,
                     'oterm_name': attr.type_term.term_name
@@ -661,8 +662,16 @@ class Brick:
                     'scalar_type': attr.scalar_type,
                     value_key : value_val
                 }
-            })
+            }
 
+            if attr.units_term is not None:
+                # sys.stderr.write('units = '+str(attr.units_term)+'\n')
+                context['value_units'] = {
+                    'oterm_ref': attr.units_term.term_id,
+                    'oterm_name': attr.units_term.term_name
+                }
+
+            data['array_context'].append(context)
 
         # do dimensions
         data['dim_context'] = []
