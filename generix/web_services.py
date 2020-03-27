@@ -46,9 +46,17 @@ _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
 
-@app.route("/")
+@app.route("/generix/")
 def hello():
-    return "Welcome!"
+    # uds_file_name = '/home/clearinghouse/prod/data_store/tmp/uds_dcbc1f9d603d473faeb5186ccba6c81b'
+#     uvd_file_name = '/home/clearinghouse/prod/data_store/tmp/uvd2_dcbc1f9d603d473faeb5186ccba6c81b'
+#     brick_ds = json.loads(open(uds_file_name).read())
+#     brick_data = json.loads(open(uvd_file_name).read())
+# 
+#     br = _create_brick(brick_ds, brick_data)        
+#     s = br.to_json()
+#     s = pprint.pformat(json.loads(s))
+    return ('Welcome!')
 
 @app.route("/generix/refs_to_core_objects/", methods=['POST'])
 def generix_refs_to_core_objects():
