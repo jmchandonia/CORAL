@@ -63,7 +63,7 @@ class PropertyValue:
         term = json_data['value_type']
         type_term = services.term_provider.get_term(term['oterm_ref'])
         # type_term = Term(term['oterm_ref'], term_name=term['oterm_name'])
-
+            
         value_type = json_data['value']['scalar_type']
 
         if value_type == 'oterm_ref':
@@ -73,12 +73,14 @@ class PropertyValue:
             value = json_data['value']['object_ref']
         else:
             value = json_data['value'][value_type + '_value']
-            
-        term = json_data['value_units']
-        units_term = services.term_provider.get_term(term['oterm_ref'])
-        
-        return PropertyValue( type_term=type_term, units_term=units_term, scalar_type=value_type, value=value )
 
+        if 'value_units' in json_data:
+            term = json_data['value_units']
+            units_term = services.term_provider.get_term(term['oterm_ref'])
+        else:
+            units_term = None
+
+        return PropertyValue( type_term=type_term, units_term=units_term, scalar_type=value_type, value=value )
 
 
 
@@ -640,7 +642,10 @@ class Brick:
             value_val = ''
             if attr.value is not None and type(attr.value) is Term:
                 value_key = attr.scalar_type
-                value_val = attr.value.term_id
+                if typed_values_property_name:
+                    value_val = attr.value.term_id
+                else:
+                    value_val = attr.value.term_name
             else:
                 if (attr.scalar_type == 'object_ref'):
                     value_key = 'object_ref'
@@ -652,6 +657,8 @@ class Brick:
 
             if not typed_values_property_name:
                 value_key = 'value'
+
+            sys.stderr.write('type = '+str(attr.type_term)+'\n')
 
             context = {
                 'value_type':{
@@ -723,16 +730,19 @@ class Brick:
                 # Do type and values
                 value_key = ''
                 value_vals = []
+
                 if var.scalar_type == 'oterm_ref':
                     value_key = 'oterm_refs'
-                    value_vals = [t.term_id for t in var.values]
+                    if not typed_values_property_name:
+                        value_vals = [t.term_id for t in var.values]
+                    else:
+                        value_vals = [t.term_name for t in var.values]
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
 
                 if not typed_values_property_name:
                     value_key = 'values'
-
 
                 var_data = {
                     'value_type': {
@@ -759,7 +769,10 @@ class Brick:
                     value_val = ''
                     if attr.value is not None and type(attr.value) is Term:
                         value_key = attr.scalar_type
-                        value_val = attr.value.term_id
+                        if typed_values_property_name:
+                            value_val = attr.value.term_id
+                        else:
+                            value_val = attr.value.term_name
                     else:
                         value_key = attr.scalar_type + '_value'
                         value_val = attr.value
@@ -786,7 +799,10 @@ class Brick:
             value_vals = []
             if vard.scalar_type == 'oterm_ref':
                 value_key = 'oterm_refs'
-                value_vals = [t.term_id for t in vard.values]
+                if typed_values_property_name:
+                    value_vals = [t.term_id for t in vard.values]
+                else:
+                    value_vals = [t.term_name for t in vard.values]
             else:
                 value_key = vard.scalar_type + '_values'
                 value_vals = list(vard.values)
@@ -820,7 +836,10 @@ class Brick:
                 value_val = ''
                 if attr.value is not None and type(attr.value) is Term:
                     value_key = attr.scalar_type
-                    value_val = attr.value.term_id
+                    if typed_values_property_name:
+                        value_val = attr.value.term_id
+                    else:
+                        value_val = attr.value.term_name
                 else:
                     value_key = attr.scalar_type + '_value'
                     value_val = attr.value
