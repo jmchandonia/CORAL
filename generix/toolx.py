@@ -11,6 +11,7 @@ from .brick import Brick
 
 
 def init_system(argv=None):
+    services._init_db_connection()    
     print('Init system collections')
     init_system_collections()
     print('Deleting old data')
@@ -24,7 +25,6 @@ def init_system(argv=None):
     upload_processes()
 
 def init_system_collections(argv=None):
-    services._init_db_connection()    
     _try_truncate_collection('SYS_ID')
     _try_init_collection('SYS_ID',[
         {   
@@ -97,12 +97,45 @@ def upload_bricks(argv=None):
             print('Error: ', e)
             traceback.print_exc()
 
+def update_core(file_name, type_name):
+    try:
+        if file_name is None:
+            print('Error: must specify file name')
+            return None
+
+        if type_name is None:
+            print('Error: must specify type name')
+            return None
+
+        print('Doing %s: %s' % (type_name, file_name))
+        
+        services._init_services()
+        ws = services.workspace
+        index_type_def = services.indexdef.get_type_def(type_name)
+        index_type_def._ensure_init_index()
+
+        df = pd.read_csv(os.path.join(services._IMPORT_DIR_ENTITY, file_name), sep='\t')
+        i = 0
+        print('size=%s' % df.shape[0])
+        for _, row in df.iterrows():
+            try:
+                i = i + 1
+                if i % 50 == 0:
+                    print('.', end='', flush=True)
+                    if i % 500 == 0:
+                        print(i)
+                        
+                data = row.to_dict()
+                # dumper.dump(data)
+                data_holder = EntityDataHolder(type_name, data)
+                ws.save_data_if_not_exists(data_holder)
+            except Exception as e:
+                print('Error in loading:', data, e)
+    except Exception as e:
+        print('Error:', e)
 
 def upload_core(argv=None):
-    services._init_services()
-    ws = services.workspace
     doc = _get_upload_config_doc()
-
     for file_def in doc['entities']:
         if 'ignore' in file_def:
             print('Skipping %s due to ignore directive' % file_def['file'])
@@ -110,33 +143,12 @@ def upload_core(argv=None):
         try:
             file_name = os.path.join(services._IMPORT_DIR_ENTITY, file_def['file'])
             type_name = file_def['dtype']
-            index_type_def = services.indexdef.get_type_def(type_name)
-            index_type_def._ensure_init_index()
-
-            print('Doing %s: %s' % (type_name, file_name))
-            df = pd.read_csv(file_name, sep='\t')
-            i = 0
-            print('size=%s' % df.shape[0])
-            for _, row in df.iterrows():
-                try:
-                    i = i + 1
-                    if i % 50 == 0:
-                        print('.', end='', flush=True)
-                    if i % 500 == 0:
-                        print(i)
-
-                    data = row.to_dict()
-                    # dumper.dump(data)
-                    data_holder = EntityDataHolder(type_name, data)
-                    ws.save_data_if_not_exists(data_holder)
-                except Exception as e:
-                    print('Error in loading:', data, e)
+            update_core(file_name, type_name)
         except Exception as e:
             print('Error:', e)
 
         print('Done!')
         print()
-
 
 def upload_processes(argv=None):
     services._init_services()
@@ -212,4 +224,5 @@ if __name__ == '__main__':
     # print ('Hi')
     method = sys.argv[1]
     print('method = ', method)
+    services._init_db_connection()    
     globals()[method](sys.argv[2:])
