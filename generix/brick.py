@@ -194,8 +194,8 @@ class Brick:
                     for term_id in var_json['values']['oterm_refs']:
                         # var_values.append(Term(term_id))
                         var_values.append(services.term_provider.get_term(term_id))
-                # elif var_scalar_type == 'object_ref':
-                #    var_values = var_json['values']['object_refs']
+                elif var_scalar_type == 'object_ref':
+                    var_values = var_json['values']['object_refs']
                 else:
                     var_values = var_json['values'][var_scalar_type + '_values']
 
@@ -254,12 +254,12 @@ class Brick:
 
             value_scalar_type = values_json['values']['scalar_type']
             if value_scalar_type == 'oterm_ref':
-                value_scalar_type = 'oterm_refs'
+                value_scalar_key = 'oterm_refs'
             elif value_scalar_type == 'object_ref':
-                value_scalar_type = 'object_refs'
+                value_scalar_key = 'object_refs'
             else:
-                value_scalar_type += '_values'
-            data = np.array(values_json['values'][value_scalar_type])
+                value_scalar_key = value_scalar_type+'_values'
+            data = np.array(values_json['values'][value_scalar_key])
             data = data.reshape(dim_sizes)    
             
             # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
@@ -658,7 +658,7 @@ class Brick:
             if not typed_values_property_name:
                 value_key = 'value'
 
-            sys.stderr.write('type = '+str(attr.type_term)+'\n')
+            # sys.stderr.write('type = '+str(attr.type_term)+'\n')
 
             context = {
                 'value_type':{
@@ -737,6 +737,9 @@ class Brick:
                         value_vals = [t.term_id for t in var.values]
                     else:
                         value_vals = [t.term_name for t in var.values]
+                elif var.scalar_type == 'object_ref':
+                    value_key = 'object_refs'
+                    value_vals = list(var.values)
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
@@ -803,6 +806,9 @@ class Brick:
                     value_vals = [t.term_id for t in vard.values]
                 else:
                     value_vals = [t.term_name for t in vard.values]
+            elif vard.scalar_type == 'object_ref':
+                value_key = 'object_refs'
+                value_vals = list(vard.values)
             else:
                 value_key = vard.scalar_type + '_values'
                 value_vals = list(vard.values)
