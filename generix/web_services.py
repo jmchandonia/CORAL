@@ -48,14 +48,16 @@ _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
 @app.route("/generix/")
 def hello():
-    # uds_file_name = '/home/clearinghouse/prod/data_store/tmp/uds_dcbc1f9d603d473faeb5186ccba6c81b'
-#     uvd_file_name = '/home/clearinghouse/prod/data_store/tmp/uvd2_dcbc1f9d603d473faeb5186ccba6c81b'
-#     brick_ds = json.loads(open(uds_file_name).read())
-#     brick_data = json.loads(open(uvd_file_name).read())
-# 
-#     br = _create_brick(brick_ds, brick_data)        
-#     s = br.to_json()
-#     s = pprint.pformat(json.loads(s))
+    # data_id = '25c713541f1b4d7ea6710380c751c5dd'
+    # uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+    # uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
+    # brick_ds = json.loads(open(uds_file_name).read())
+    # brick_data = json.loads(open(uvd_file_name).read())
+ 
+    # br = _create_brick(brick_ds, brick_data)        
+    # s = br.to_json()
+    # s = pprint.pformat(json.loads(s))
+    # return s
     return ('Welcome!')
 
 @app.route("/generix/refs_to_core_objects/", methods=['POST'])
@@ -683,8 +685,8 @@ def _create_brick(brick_ds, brick_data):
         v = br.add_data_var(data_type_term, data_units_term, 
             brick_data['data_vars'][data_var_index]['values'],
             scalar_type=data_type_term.microtype_value_scalar_type)
-        if 'context' in dim_var: 
-            _add_var_context(v, dim_var['context'])
+        if 'context' in data_var: 
+            _add_var_context(v, data_var['context'])
 
 
     # add brick properties
@@ -709,7 +711,7 @@ def _add_var_context(brick_var, context_elems):
         scalar_type = type_term.microtype_value_scalar_type        
         value = _get_term(ce.get('value')) if  scalar_type == 'oterm_ref' else ce.get('value')['text']
         brick_var.add_attr(type_term=type_term, units_term=units_term, 
-            scalar_type=scalar_type, values=value)
+            scalar_type=scalar_type, value=value)
 
 def _get_term(term_data):
     return svs['term_provider'].get_term( term_data['id'] ) if term_data and term_data['id'] != '' else None
