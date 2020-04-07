@@ -733,7 +733,7 @@ class Brick:
 
                 if var.scalar_type == 'oterm_ref':
                     value_key = 'oterm_refs'
-                    if not typed_values_property_name:
+                    if typed_values_property_name:
                         value_vals = [t.term_id for t in var.values]
                     else:
                         value_vals = [t.term_name for t in var.values]
