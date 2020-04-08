@@ -230,12 +230,14 @@ def _search_oterms(ontology, value, parent_term_id=None):
     if parent_term_id == '':
         parent_term_id = None
     term_collection = ontology.find_name_prefix(value, parent_term_id=parent_term_id)
+
     for term in term_collection.terms:
         # sys.stderr.write('id '+term.term_id+' text '+term.term_name+'\n')
-        res.append({
-            'id' : term.term_id,
-            'text': term.term_name
-        })
+        if not term.is_hidden:
+            res.append({
+                'id' : term.term_id,
+                'text': term.term_name
+            })
     return  json.dumps({
         'results': res
     })
@@ -272,10 +274,11 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
     if parent_term_ids is not None:
         for parent_term_id in parent_term_ids:
             for term in ontology.find_parent_path_id(parent_term_id).terms:
-                res[term.term_id] = {
-                    'id' : term.term_id,
-                    'text': term.term_name
-                }
+                if not term.is_hidden:
+                    res[term.term_id] = {
+                        'id' : term.term_id,
+                        'text': term.term_name
+                    }
     res = list(res.values())
     res.sort(key=lambda x: x['text'])
     return  json.dumps({
