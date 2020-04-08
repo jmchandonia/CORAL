@@ -59,11 +59,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let dataVar of searchResult?.typed_values">
-                <td>{{dataVar.value_type.oterm_name}}
-                  <span *ngIf="dataVar.value_context.length">
-                    {{dataVar.value_context[0].value_type.oterm_name}}={{dataVar.value_context[0].value.value}}
-                  </span>
-                </td>
+                <td>{{dataVar.value_no_units}}</td>
                 <td>
                   <span *ngIf="dataVar.value_units">
                       {{dataVar.value_units.oterm_name}}
@@ -97,8 +93,8 @@
                 <td>{{dim.size}}</td>
                 <td>
                   <span *ngFor="let v of dim.typed_values; let last = last">
-                    {{v.value_type.oterm_name}}
-                    <span *ngIf="!last">, </span>
+                    {{v.value_with_units}}
+                    <span *ngIf="!last">; </span>
                   </span>
                 </td>
                 <td>
