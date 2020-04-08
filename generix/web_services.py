@@ -816,21 +816,7 @@ def generix_brick_dimension(brick_id, dim_index):
             'dim_vars':[]
         }
         for dim_var in dim.vars:
-            context = []
-            for attr in dim_var.attrs:
-                context.append({
-                    'type':{
-                        'id': attr.type_term.term_id,
-                        'text': attr.type_term.term_name
-                    },
-                    'units':{
-                        'id': attr.units_term.term_id if attr.units_term else '',
-                        'text': attr.units_term.term_name if attr.units_term else ''
-                    },
-                    'value': str(attr.value)
-                })            
-
-            res['dim_vars'].append({
+            var_data = {
                 'type':{
                     'id': dim_var.type_term.term_id,
                     'text': dim_var.type_term.term_name
@@ -840,8 +826,29 @@ def generix_brick_dimension(brick_id, dim_index):
                     'text': dim_var.units_term.term_name if dim_var.units_term else ''
                 },
                 'values': list([ str(val) for val in dim_var.values][:MAX_ROW_COUNT]),
-                'context': context
-            })
+                'context': []
+            }
+            var_data['type_with_units'] = dim_var.type_term.term_name
+            for attr in dim_var.attrs:
+                var_data['context'].append({
+                    'type':{
+                        'id': attr.type_term.term_id,
+                        'text': attr.type_term.term_name
+                    },
+                    'units':{
+                        'id': attr.units_term.term_id if attr.units_term else '',
+                        'text': attr.units_term.term_name if attr.units_term else ''
+                    },
+                    'value': str(attr.value)
+                })
+                var_data['type_with_units'] += ', '+attr.type_term.term_name+'='+str(attr.value)
+                if attr.units_term:
+                    var_data['type_with_units'] += ', '+attr.units_term.term_name
+            if dim_var.units_term:
+                var_data['type_with_units'] += ' ('+dim_var.units_term.term_name+')'
+
+            res['dim_vars'].append(var_data)
+            
     except Exception as e:
         return _err_response(e)
 

@@ -677,6 +677,9 @@ class Brick:
                     'oterm_ref': attr.units_term.term_id,
                     'oterm_name': attr.units_term.term_name
                 }
+                if not typed_values_property_name:
+                    context['value_with_units'] = str(value_val)+' ('+attr.units_term.term_name+')'
+                
 
             data['array_context'].append(context)
 
@@ -759,12 +762,9 @@ class Brick:
                     'value_context': []
                 }
 
-                # Do units
-                if var.units_term is not None:
-                    var_data['value_units'] = {
-                        'oterm_ref': var.units_term.term_id,
-                        'oterm_name': var.units_term.term_name
-                    }
+                if not typed_values_property_name:
+                    var_data['value_with_units'] = var.type_term.term_name
+                    var_data['value_no_units'] = var.type_term.term_name
 
                 # Do attributes
                 for attr in var.attrs:
@@ -793,6 +793,21 @@ class Brick:
                             value_key : value_val
                         }
                     })
+
+                    if not typed_values_property_name:
+                        var_data['value_with_units'] += ', '+attr.type_term.term_name+'='+value_val
+                        var_data['value_no_units'] += ', '+attr.type_term.term_name+'='+value_val
+                    
+                    
+                # Do units
+                if var.units_term is not None:
+                    var_data['value_units'] = {
+                        'oterm_ref': var.units_term.term_id,
+                        'oterm_name': var.units_term.term_name
+                    }
+                    if not typed_values_property_name:
+                        var_data['value_with_units'] += ' ('+var.units_term.term_name+')'
+
                 dim_data['typed_values'].append(var_data)
             
         # do data
@@ -829,12 +844,9 @@ class Brick:
                     value_key: value_vals
                 }
 
-            # Do units
-            if vard.units_term is not None:
-                values_data['value_units'] = {
-                    'oterm_ref': vard.units_term.term_id,
-                    'oterm_name': vard.units_term.term_name
-                }
+            if not typed_values_property_name:
+                values_data['value_with_units'] = vard.type_term.term_name
+                values_data['value_no_units'] = vard.type_term.term_name
 
             # Do attributes
             for attr in vard.attrs:
@@ -863,6 +875,19 @@ class Brick:
                         value_key : value_val
                     }
                 })
+
+                if not typed_values_property_name:
+                    values_data['value_with_units'] += ', '+attr.type_term.term_name+'='+value_val
+                    values_data['value_no_units'] += ', '+attr.type_term.term_name+'='+value_val
+                
+            # Do units
+            if vard.units_term is not None:
+                values_data['value_units'] = {
+                    'oterm_ref': vard.units_term.term_id,
+                    'oterm_name': vard.units_term.term_name
+                }
+                if not typed_values_property_name:
+                    values_data['value_with_units'] += ' ('+vard.units_term.term_name+')'
 
             data['typed_values'].append(values_data)
         return data
