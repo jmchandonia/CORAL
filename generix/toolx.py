@@ -212,6 +212,11 @@ def delete_bricks(argv=None):
 
 def delete_processes(argv=None):
     services._init_services()
+    # edge collection names currently hardcoded:
+    print('Removing process edges')
+    _try_truncate_collection('SYS_ProcessInput')
+    _try_truncate_collection('SYS_ProcessOutput')
+    
     type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
     print('Removing %s ' % type_def.collection_name)
     try:
@@ -219,7 +224,7 @@ def delete_processes(argv=None):
     except:
         pass
 
-
+    
 if __name__ == '__main__':
     # print ('Hi')
     method = sys.argv[1]
