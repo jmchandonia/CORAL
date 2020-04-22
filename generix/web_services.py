@@ -48,17 +48,34 @@ _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
 @app.route("/generix/")
 def hello():
-    # data_id = '25c713541f1b4d7ea6710380c751c5dd'
-    # uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
-    # uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
-    # brick_ds = json.loads(open(uds_file_name).read())
-    # brick_data = json.loads(open(uvd_file_name).read())
+    data_id = 'c74928ccf2e14c87a51a03e7d879eaf5'
+    uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+    uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
+    brick_ds = json.loads(open(uds_file_name).read())
+    brick_ds['name'] = 'test4'
+    brick_data = json.loads(open(uvd_file_name).read())
  
-    # br = _create_brick(brick_ds, brick_data)        
+    br = _create_brick(brick_ds, brick_data)        
+
+    process_term = _get_term(brick_ds['process'])
+    person_term = _get_term(brick_ds['personnel'])
+    campaign_term = _get_term(brick_ds['campaign'])
+    input_obj_ids = br.get_fk_refs(process_ufk=True)
+
     # s = br.to_json()
     # s = pprint.pformat(json.loads(s))
+    s = pprint.pformat(input_obj_ids)
     # return s
-    return ('Welcome!')
+    
+    br.save(process_term=process_term,
+            person_term=person_term,
+            campaign_term=campaign_term,
+            input_obj_ids=input_obj_ids)
+
+    return s
+    # return br.id
+    
+    # return ('Welcome!')
 
 @app.route("/generix/refs_to_core_objects/", methods=['POST'])
 def generix_refs_to_core_objects():
@@ -736,7 +753,7 @@ def login():
     else:
         try:
             payload = {
-		        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=10),
+		        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=120),
 		        'iat': datetime.datetime.utcnow(),
 		        'sub': login['username']
 	        }
