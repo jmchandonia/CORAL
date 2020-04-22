@@ -1,6 +1,7 @@
 import numpy as np
 import json
 import dumper
+import sys
 from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM
 
@@ -299,11 +300,13 @@ class Workspace:
 
         process = data_holder.data
         process_db_id = '%s/%s' % (data_holder.type_def.collection_name, data_holder.id) 
-
+        # sys.stderr.write('process_dbid = '+str(process_db_id)+'\n')
+        
         # Do input objects
         for input_object in process['input_objects']:
             type_name, obj_id = input_object.split(':')
             type_def = services.indexdef.get_type_def(type_name)
+            # sys.stderr.write('from = '+str(type_def.collection_name+':'+type_name+'/'+obj_id)+'\n')
 
             self.__arango_service.index_doc(
                 {
@@ -316,6 +319,7 @@ class Workspace:
         for output_object in process['output_objects']:
             type_name, obj_id = output_object.split(':')
             type_def = services.indexdef.get_type_def(type_name)
+            # sys.stderr.write('to = '+str(type_def.collection_name+':'+type_name+'/'+obj_id)+'\n')
 
             self.__arango_service.index_doc(
                 {

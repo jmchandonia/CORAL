@@ -579,7 +579,8 @@ class Brick:
         # TODO: need to make a decision whether 
         #  to collect fk_ids from data_vars
 
-        return fk_refs
+        # must return list, not set
+        return sorted(fk_refs)
 
     def _convert_ufk_to_fk(self, core_type, ufk_values):
         index_type_def = services.indexdef.get_type_def(core_type)        
