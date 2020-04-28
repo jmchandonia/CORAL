@@ -342,7 +342,7 @@ class Ontology:
         #     name = 'ROOT_' + term.property_name
         #     self.__dict__[name] = term
 
-    def __find_terms(self, aql_filter, aql_bind, aql_fulltext=None, size=100):        
+    def __find_terms(self, aql_filter, aql_bind, aql_fulltext=None, size=1000):        
         if aql_filter is None or len(aql_filter) == 0:
             aql_filter = '1==1'
 
@@ -403,7 +403,7 @@ class Ontology:
             terms_hash[term.term_id] = term
         return terms_hash
 
-    def find_root(self, size=100):
+    def find_root(self, size=1000):
         aql_bind = {}
         aql_filter = 'x.parent_term_ids == []'
         return TermCollection(self.__find_terms(aql_filter, aql_bind, size=size))
@@ -411,8 +411,10 @@ class Ontology:
     def find_id(self, term_id):
         aql_bind = {'term_id': term_id}
         aql_filter = 'x.term_id == @term_id'
-        return self.__find_term(aql_filter, aql_bind)        
-
+        try:
+            return self.__find_term(aql_filter, aql_bind)
+        except:
+            raise ValueError('Error finding term id: %s' % term_id)
 
     def find_microtype_dimensions(self, size=1000):    
         aql_bind = {}
@@ -439,7 +441,7 @@ class Ontology:
         aql_filter = 'x.is_microtype == true'
         return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
 
-    def find_ids(self, term_ids, size=100):
+    def find_ids(self, term_ids, size=1000):
         aql_bind = {'term_ids': term_ids}
         aql_filter = 'x.term_id in @term_ids'
 
@@ -450,10 +452,10 @@ class Ontology:
         aql_filter = 'x.term_name == @term_name'
         return self.__find_term(aql_filter, aql_bind)
 
-    def find_name_prefix(self, value, parent_term_id=None, size=100):
+    def find_name_prefix(self, value, parent_term_id=None, size=1000):
         return self.find_name_pattern("prefix:" + value, parent_term_id=parent_term_id, size=size)
 
-    def find_name_pattern(self, value, parent_term_id=None, size=100):
+    def find_name_pattern(self, value, parent_term_id=None, size=1000):
         aql_bind = {
             '@collection': 'OTerm', 
             'property_name': 'term_name', 
@@ -468,13 +470,13 @@ class Ontology:
         return TermCollection(self.__find_terms(aql_filter, aql_bind, 
             aql_fulltext=aql_fulltext, size=size))
 
-    def find_parent_id(self, parent_term_id, size=100):
+    def find_parent_id(self, parent_term_id, size=1000):
         aql_bind = {'parent_term_id': parent_term_id}
         aql_filter = '@parent_term_id in x.parent_term_ids'
 
         return TermCollection(self.__find_terms(aql_filter, aql_bind, size=size))
 
-    def find_parent_path_id(self, parent_term_id, size=100):
+    def find_parent_path_id(self, parent_term_id, size=1000):
         aql_bind = {'parent_term_id': parent_term_id}
         aql_filter = '@parent_term_id in x.parent_path_term_ids'
 
