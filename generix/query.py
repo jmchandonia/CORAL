@@ -280,7 +280,7 @@ class Query:
         self.__output_of_process_filters = {}
 
 
-    def find(self, size = 100):
+    def find(self, size = 1000):
         var_name = 'x'
         aql_source, aql_filter, aql_bind = self.__build_aql_trio(self.__has_filters, self.__index_type_def, var_name)
         
