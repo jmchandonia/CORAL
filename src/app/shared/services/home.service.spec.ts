@@ -1,12 +1,24 @@
 import { TestBed } from '@angular/core/testing';
-
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
 import { HomeService } from './home.service';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 describe('HomeService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+
+  let spectator: SpectatorService<HomeService>;
+  const createService = createServiceFactory({
+    service: HomeService,
+    imports: [
+      HttpClientModule
+    ],
+    providers: [
+      HttpClient
+    ]
+  });
+
+  beforeEach(() => spectator = createService());
 
   it('should be created', () => {
-    const service: HomeService = TestBed.get(HomeService);
-    expect(service).toBeTruthy();
+    expect(spectator.service).toBeTruthy();
   });
 });
