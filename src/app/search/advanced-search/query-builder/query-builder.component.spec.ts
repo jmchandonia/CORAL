@@ -1,25 +1,29 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { QueryBuilderComponent } from './query-builder.component';
+import { Select2Module } from 'ng2-select2';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
+import { PropertyParamsComponent } from './property-params/property-params.component';
 
 describe('QueryBuilderComponent', () => {
-  let component: QueryBuilderComponent;
-  let fixture: ComponentFixture<QueryBuilderComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ QueryBuilderComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(QueryBuilderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<QueryBuilderComponent>;
+  const createComponent = createComponentFactory({
+    component: QueryBuilderComponent,
+    imports: [
+      Select2Module,
+      HttpClientModule,
+      RouterModule.forRoot([])
+    ],
+    entryComponents: [
+      MockComponent(PropertyParamsComponent)
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

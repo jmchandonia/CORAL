@@ -1,25 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { ProcessDataComponent } from './process-data.component';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ProcessDataComponent', () => {
-  let component: ProcessDataComponent;
-  let fixture: ComponentFixture<ProcessDataComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ProcessDataComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ProcessDataComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<ProcessDataComponent>;
+  const createComponent = createComponentFactory({
+    component: ProcessDataComponent,
+    imports: [
+      RouterModule.forRoot([]),
+      HttpClientModule
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

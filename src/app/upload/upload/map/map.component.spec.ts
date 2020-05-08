@@ -1,25 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClientModule } from '@angular/common/http';
 import { MapComponent } from './map.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { UploadService } from 'src/app/shared/services/upload.service';
+import { Brick } from 'src/app/shared/models/brick';
 
 describe('MapComponent', () => {
-  let component: MapComponent;
-  let fixture: ComponentFixture<MapComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MapComponent ]
-    })
-    .compileComponents();
-  }));
+  const MockUploadService = {
+    getBrickBuilder: () => new Brick()
+  };
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MapComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<MapComponent>;
+  const createComponent = createComponentFactory({
+    component: MapComponent,
+    imports: [
+      NgxSpinnerModule,
+      HttpClientModule,
+      ModalModule.forRoot()
+    ],
+    providers: [
+      mockProvider(UploadService, MockUploadService)
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

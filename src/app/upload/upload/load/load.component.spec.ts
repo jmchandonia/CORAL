@@ -1,25 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClientModule } from '@angular/common/http';
 import { LoadComponent } from './load.component';
+import { MockComponent } from 'ng-mocks';
+import { LoadSuccessTableComponent } from './load-success-table/load-success-table.component';
 
 describe('LoadComponent', () => {
-  let component: LoadComponent;
-  let fixture: ComponentFixture<LoadComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ LoadComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(LoadComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<LoadComponent>;
+  const createComponent = createComponentFactory({
+    component: LoadComponent,
+    imports: [
+      NgxSpinnerModule,
+      HttpClientModule
+    ],
+    entryComponents: [
+      MockComponent(LoadSuccessTableComponent)
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });
