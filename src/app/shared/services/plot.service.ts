@@ -1,5 +1,4 @@
 import { Injectable, OnChanges } from '@angular/core';
-import { NetworkService } from './network.service';
 import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
 import { DataQuery } from '../models/data-query';
 import { FormGroup, FormArray } from '@angular/forms';
@@ -77,6 +76,7 @@ export class PlotService {
 
   setLabelBuilder(labelBuilder: DimensionRef, axis: string) {
     this.axisLabelBuilders[axis] = labelBuilder;
+    console.log('WHAT DO WE GOT', this.axisLabelBuilders);
     this.axisLabelSub.next({axis, labelBuilder: this.axisLabelBuilders[axis]});
   }
 

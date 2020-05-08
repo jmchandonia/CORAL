@@ -1,25 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { TypeSelectorComponent } from './type-selector.component';
+import { Select2Module } from 'ng2-select2';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('TypeSelectorComponent', () => {
-  let component: TypeSelectorComponent;
-  let fixture: ComponentFixture<TypeSelectorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TypeSelectorComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TypeSelectorComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<TypeSelectorComponent>;
+  let createComponent = createComponentFactory({
+    component: TypeSelectorComponent,
+    imports: [
+      Select2Module,
+      HttpClientModule
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

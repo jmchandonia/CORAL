@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
+import { HttpClientModule } from '@angular/common/http';
 import { UploadService } from './upload.service';
 
 describe('UploadService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let spectator: SpectatorService<UploadService>;
+  const createService = createServiceFactory({
+    service: UploadService,
+    imports: [
+      HttpClientModule
+    ]
+  });
+
+  beforeEach(() => spectator = createService());
 
   it('should be created', () => {
-    const service: UploadService = TestBed.get(UploadService);
-    expect(service).toBeTruthy();
+    expect(spectator.service).toBeTruthy();
   });
 });

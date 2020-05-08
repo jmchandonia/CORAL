@@ -1,25 +1,38 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Select2Module } from 'ng2-select2';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { PropertyParamsComponent } from './property-params.component';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
+import { RouterModule } from '@angular/router';
+import { QueryParam } from 'src/app/shared/models/QueryBuilder';
+import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 
 describe('PropertyParamsComponent', () => {
-  let component: PropertyParamsComponent;
-  let fixture: ComponentFixture<PropertyParamsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PropertyParamsComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PropertyParamsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<PropertyParamsComponent>;
+  const createComponent = createComponentFactory({
+    component: PropertyParamsComponent,
+    imports: [
+      Select2Module,
+      FormsModule,
+      HttpClientModule,
+      RouterModule.forRoot([])
+    ],
+    providers: [
+      mockProvider(QueryBuilderService, {
+        getAttributes: (dataType: string) => [{id: '0', text: 'NDArray'}]
+      })
+    ]
   });
 
+  beforeEach(() => spectator = createComponent({
+    props: {
+      queryParam: new QueryParam()
+    }
+  }));
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });
