@@ -10,23 +10,6 @@ import { Subject } from 'rxjs';
 
 
 describe('AxisLabelerComponent', () => {
-  // let component: AxisLabelerComponent;
-  // let fixture: ComponentFixture<AxisLabelerComponent>;
-
-  // beforeEach(async(() => {
-  //   TestBed.configureTestingModule({
-  //     declarations: [ AxisLabelerComponent ],
-  //     imports: [FormsModule, HttpClientModule],
-  //     providers: [HttpClient, PlotService],
-  //   })
-  //   .compileComponents();
-  // }));
-
-  // beforeEach(() => {
-  //   fixture = TestBed.createComponent(AxisLabelerComponent);
-  //   component = fixture.componentInstance;
-  //   fixture.detectChanges();
-  // });
 
   const MockPlotService = {
     getLabelBuilder: () => new DimensionRef('test', []),
