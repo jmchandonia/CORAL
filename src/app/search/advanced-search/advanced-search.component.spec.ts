@@ -1,17 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponent } from 'ng-mocks';
 import { AdvancedSearchComponent } from './advanced-search.component';
-import { createHostFactory, Spectator, SpectatorHost } from '@ngneat/spectator';
+import { createComponentFactory, Spectator, mockProvider } from '@ngneat/spectator';
 import { QueryBuilderComponent } from './query-builder/query-builder.component';
+import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
+import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PropertyParamsComponent } from './query-builder/property-params/property-params.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { isEqual } from 'lodash';
 
 describe('AdvancedSearchComponent', () => {
 
-  let spectator: SpectatorHost<AdvancedSearchComponent>;
+  let spectator: Spectator<AdvancedSearchComponent>;
 
-  const createHost = createHostFactory({
+  const MockQueryBuilderService = {
+    getCurrentObject: () => new QueryBuilder(),
+    setQueryBuilderCache: () => null
+  };
+
+  const createComponent = createComponentFactory({
     component: AdvancedSearchComponent,
     declarations: [
       MockComponent(QueryBuilderComponent),
@@ -20,12 +28,28 @@ describe('AdvancedSearchComponent', () => {
     imports: [
       HttpClientModule,
       RouterModule.forRoot([])
+    ],
+    providers: [
+      mockProvider(QueryBuilderService, MockQueryBuilderService)
     ]
   });
 
-  beforeEach(() => spectator = createHost('<app-advanced-search></app-advanced-search>'));
+  beforeEach(() => spectator = createComponent());
 
   it('should create', () => {
     expect(spectator.component).toBeTruthy();
   });
+
+  it('should have access to empty query instance', () => {
+    expect(spectator.component.queryBuilderObject).toEqual(new QueryBuilder());
+  });
+
+  it('should update parent processes', () => {
+    const { component } = spectator;
+    component.addProcessUp();
+    expect(component.queryBuilderObject.processesUp.length).toBe(1);
+    component.removeProcessUp(0);
+    expect(component.queryBuilderObject.processesUp.length).toBe(0);
+  });
+
 });
