@@ -8,8 +8,9 @@ import { MockComponent } from 'ng-mocks';
 import { PropertyParamsComponent } from './property-params/property-params.component';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { Subject } from 'rxjs';
+import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 
-fdescribe('QueryBuilderComponent', () => {
+describe('QueryBuilderComponent', () => {
 
   const MockQueryBuilder = {
     getDataTypes: () => new Subject(),
@@ -32,7 +33,11 @@ fdescribe('QueryBuilderComponent', () => {
     ],
   });
 
-  beforeEach(() => spectator = createComponent());
+  beforeEach(() => spectator = createComponent({
+    props: {
+      queryMatch: new QueryMatch()
+    }
+  }));
 
   it('should create', () => {
     expect(spectator.component).toBeTruthy();
@@ -42,5 +47,19 @@ fdescribe('QueryBuilderComponent', () => {
     const spy = spyOn(spectator.component, 'populateDataTypes').and.callThrough();
     expect(spy);
     expect(spectator.component.dataTypes).toEqual([{test: 'test'}]);
+  });
+
+  it('should disable propertyParams until type is selected', () => {
+    expect('button.btn.btn-link').toBeDisabled();
+
+    spectator.component.selectedDataType = 'test data type';
+    spectator.detectChanges();
+    expect('button.btn.btn-link').not.toBeDisabled();
+  });
+
+  it('should render new property params', () => {
+    spectator.component.addPropertyParam();
+    spectator.detectChanges();
+    expect(spectator.query('app-property-params')).not.toBeNull();
   });
 });

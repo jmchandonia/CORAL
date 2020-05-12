@@ -39,7 +39,7 @@ export class SearchResultComponent implements OnInit {
       .subscribe((res: any) => {
         this.results = res.data;
         this.resultFields = res.schema.fields;
-        this.chRef.detectChanges();
+        // this.chRef.detectChanges();
         const table: any = $('table');
         this.dataTable = table.DataTable();
         this.spinner.hide();
