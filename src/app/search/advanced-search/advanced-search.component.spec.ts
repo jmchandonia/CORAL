@@ -52,4 +52,14 @@ describe('AdvancedSearchComponent', () => {
     expect(component.queryBuilderObject.processesUp.length).toBe(0);
   });
 
+  it('should toggle advanced filters', () => {
+    const [_,  parents, children] = spectator.queryAll('app-query-builder');
+    expect(parents).toBeHidden();
+    expect(children).toBeHidden();
+
+    spectator.click('.data-information-header');
+    expect(parents).not.toBeHidden();
+    expect(children).not.toBeHidden();
+  });
+
 });
