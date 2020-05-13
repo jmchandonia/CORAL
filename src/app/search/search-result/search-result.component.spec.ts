@@ -8,7 +8,7 @@ import { QueryBuilderService } from 'src/app/shared/services/query-builder.servi
 import { Subject } from 'rxjs';
 import { QueryBuilder, QueryParam } from 'src/app/shared/models/QueryBuilder'; 
 
-fdescribe('SearchResultComponent', () => {
+describe('SearchResultComponent', () => {
 
   const mockResultsSub = new Subject();
   const mockQueryBuilder = new QueryBuilder();
