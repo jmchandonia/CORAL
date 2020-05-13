@@ -13,7 +13,7 @@
           </h5>
         </div>
         <div class="card-body">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" id="property-container">
               <thead class="table-header">
                 <tr>
                   <th>Property</th>
@@ -50,7 +50,7 @@
           <h5>Data Variables ({{searchResult?.typed_values.length}})</h5>
         </div>
         <div class="card-body">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" id="data-var-container">
             <thead class="table-header">
               <tr>
                 <th>Value Type</th>
@@ -78,7 +78,7 @@
           <h5>Dimensions  ({{searchResult?.dim_context.length}})</h5>
         </div>
         <div class="card-body">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" id="dimension-container">
             <thead class="table-header">
               <tr>
                 <th>Data Type</th>
@@ -110,7 +110,7 @@
           <h5>Attributes</h5>
         </div>
         <div class="card-body" *ngIf="searchResult?.array_context && searchResult?.array_context.length">
-          <table class="table table-bordered table-striped">
+          <table class="table table-bordered table-striped" id="attributes-container">
             <thead class="table-header">
               <tr>
                 <th>Property</th>
