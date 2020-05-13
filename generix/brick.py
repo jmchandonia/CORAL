@@ -741,9 +741,9 @@ class Brick:
                 if var.scalar_type == 'oterm_ref':
                     value_key = 'oterm_refs'
                     if typed_values_property_name:
-                        value_vals = [t.term_id for t in var.values]
+                        value_vals = [None if t is None else t.term_id for t in var.values]
                     else:
-                        value_vals = [t.term_name for t in var.values]
+                        value_vals = [None if t is None else t.term_name for t in var.values]
                 elif var.scalar_type == 'object_ref':
                     value_key = 'object_refs'
                     value_vals = list(var.values)
