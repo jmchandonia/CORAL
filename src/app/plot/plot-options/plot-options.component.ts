@@ -17,7 +17,7 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public plotTypeDataValue: string; // for select2
   public dimensionData: Array<Select2OptionData> = [];
-  public listPlotTypes: any;
+  public listPlotTypes: any[];
   public selectedPlotType: any;
   public axisBlocks: any[];
   public objectId: string;
@@ -100,7 +100,6 @@ export class PlotOptionsComponent implements OnInit {
             text: dim.data_type.oterm_name
           });
         });
-
         // add dropdown value for data measurements
         this.dimensionData.push({
           // id: this.dimensionData.length.toString(),
