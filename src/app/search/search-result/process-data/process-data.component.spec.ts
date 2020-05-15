@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { ActivatedRoute } from '@angular/router';
 
-fdescribe('ProcessDataComponent', () => {
+describe('ProcessDataComponent', () => {
 
   const setNumberOfDocs = (n: number) => Array(n).fill({
     category: 'category',
