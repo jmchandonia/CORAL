@@ -1,6 +1,8 @@
 
 // tslint:disable:variable-name
 
+import { ObjectMetadata, DimensionContext, TypedValue } from './object-metadata';
+
 export class Config {
     title: string;
     x: Dimension;
@@ -21,10 +23,21 @@ export class PlotBuilder {
 }
 
 export class Dimension {
+
+    constructor(
+        dimensionData: DimensionContext[],
+        dataVars: TypedValue[]
+        ) {
+        this.dimensionMetadata = dimensionData;
+        this.dataValueMetadata = dataVars;
+    }
+
     title = '';
     label_pattern: string;
     show_title = true;
     show_labels = true;
+    dimensionMetadata: DimensionContext[];
+    dataValueMetadata: TypedValue[];
 }
 
 export class DimensionRef {
