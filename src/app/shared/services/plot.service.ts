@@ -5,6 +5,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { DimensionRef } from 'src/app/shared/models/plot-builder';
+import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class PlotService {
   public plotType: string;
   public axisLabelBuilders: any = {};
   private axisLabelSub = new Subject();
+  // can be cached
+  metadata: ObjectMetadata;
 
   constructor(private http: HttpClient) {
     const cachedPlotBuilder = this.getPlotCache();
@@ -54,16 +57,21 @@ export class PlotService {
   }
 
   setConfig(
-    title: string,
-    length: number,
+    // title: string,
+    // length: number,
+    metadata: ObjectMetadata,
     callback: (dims: Dimension[]) => void
     ) {
     const { config } = this.plotBuilder;
-    config.title = title + ` (${this.plotBuilder.objectId})`;
-    config.x = new Dimension();
-    config.y = new Dimension();
+    const length = metadata.dim_context.length;
+    const dim_context: DimensionContext[] = metadata.dim_context;
+    const typed_values: TypedValue[] = metadata.typed_values;
+
+    config.title = metadata.data_type.oterm_name + ` (${this.plotBuilder.objectId})`;
+    config.x = new Dimension(dim_context, typed_values);
+    config.y = new Dimension(dim_context, typed_values);
     if (length > 1) {
-      config.z = new Dimension();
+      config.z = new Dimension(dim_context, typed_values);
       this.plotBuilder.data.z = '' as any;
       callback([config.x, config.y, config.z]); // add 3 dimensions to form
     } else {
