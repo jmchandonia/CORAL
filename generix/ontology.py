@@ -2,6 +2,7 @@ import json
 import os
 import re
 import pandas as pd
+import sys
 from .utils import to_var_name
 from . import services
 
@@ -17,9 +18,10 @@ _TERM_ID_PATTERN = re.compile(r'\w+:\d+')
 
 _TERM_ID = re.compile(r'id:\s+(\w+:\d+)')
 _TERM_NAME = re.compile(r'name:\s+(.+)')
+_TERM_DEF = re.compile(r'def:\s+"(.+)" \[.*?\]')
 _TERM_IS_A = re.compile(r'is_a:\s+(\w+:\d+)')
 _TERM_SYNONYM = re.compile(r'synonym:\s+"(.+)"')
-_TEMR_SCALAR_TYPE = re.compile(r'data_type\s+"(\w+)"')
+_TERM_SCALAR_TYPE = re.compile(r'data_type\s+"(\w+)"')
 _TERM_IS_MICROTYPE = re.compile(r'is_microtype\s+"true"')
 _TERM_IS_DIMENSION = re.compile(r'is_valid_dimension\s+"true"')
 _TERM_IS_DIMENSION_VARIABLE = re.compile(r'is_valid_dimension_variable\s+"true"')
@@ -46,6 +48,7 @@ class OntologyService:
         print('Ensure ontology indices')
         collection = services.arango_service.db[OTERM_COLLECTION_NAME]
         collection.ensureFulltextIndex(['term_name'],minLength=1)
+        collection.ensureFulltextIndex(['term_desc'],minLength=1)
         collection.ensureHashIndex(['term_id'], unique=True)
         collection.ensureHashIndex(['ontology'])
 
@@ -71,10 +74,15 @@ class OntologyService:
         for _, term in terms.items():
             all_parent_ids = {}
             self._collect_all_parent_ids(term, all_parent_ids)             
+            term_desc = term.term_def;
+            if (len(term.synonyms) > 0):
+                term_desc += '['+', '.join(term.synonyms)+']'
             doc = {
                 'ontology_id': ont_id,
                 'term_id': term.term_id,
                 'term_name': term.term_name,
+                'term_def': term.term_def,
+                'term_desc': term_desc,
                 'term_names': [term.term_name] + term.synonyms,
                 'parent_term_ids': term.parent_ids,
                 
@@ -127,6 +135,7 @@ class OntologyService:
                         # init term properties
                         term_id = None
                         term_name = ''
+                        term_def = ''
                         term_synonyms = []
 
                         term_value_scalar_type = ''
@@ -152,6 +161,10 @@ class OntologyService:
                         m = _TERM_NAME.match(line)
                         if m is not None:
                             term_name = m.groups()[0]
+                    elif line.startswith('def:'):
+                        m = _TERM_DEF.match(line)
+                        if m is not None:
+                            term_def = m.groups()[0]
                     elif line.startswith('is_a:'):
                         m = _TERM_IS_A.match(line)
                         if m is not None:
@@ -187,7 +200,7 @@ class OntologyService:
                             term_is_hidden = True
 
                         else:
-                            m = _TEMR_SCALAR_TYPE.match(pv)
+                            m = _TERM_SCALAR_TYPE.match(pv)
                             if m is not None:
                                 term_value_scalar_type = m.groups()[0]
 
@@ -200,7 +213,9 @@ class OntologyService:
                                 term_valid_units_parents = m.groups()[0].split()
 
                     elif line == '':
-                        term = Term(term_id, term_name=term_name,
+                        term = Term(term_id,
+                                    term_name=term_name,
+                                    term_def=term_def,
                                     ontology_id=ont_id,
                                     parent_ids=term_parent_ids,
                                     
@@ -223,7 +238,9 @@ class OntologyService:
                         state = STATE_NONE
 
         if term_id is not None:
-            term = Term(term_id, term_name=term_name,
+            term = Term(term_id,
+                        term_name=term_name,
+                        term_def=term_def,
                         ontology_id=ont_id,
                         parent_ids=term_parent_ids,
                         synonyms=term_synonyms,
@@ -369,7 +386,9 @@ class Ontology:
     def __build_terms(self, aql_result_set):
         terms = []
         for row in aql_result_set:
-            term = Term(row['term_id'], term_name=row['term_name'],
+            term = Term(row['term_id'],
+                        term_name=row['term_name'],
+                        term_def=row['term_def'],
                         ontology_id=row['ontology_id'],
                         parent_ids=row['parent_term_ids'],
                         parent_path_ids=row['parent_path_term_ids'],
@@ -607,6 +626,7 @@ class Term:
 
     def __init__(self, term_id, 
                 term_name=None, 
+                term_def=None, 
                 ontology_id=None,
                 parent_ids=None, 
                 parent_path_ids=None, 
@@ -629,6 +649,7 @@ class Term:
 
         self.__term_id = term_id
         self.__term_name = term_name
+        self.__term_def = term_def
         self.__ontology_id = ontology_id
         self.__parent_ids = parent_ids
         self.__parent_path_ids = parent_path_ids
@@ -662,6 +683,7 @@ class Term:
 
         #self.__term_id = term_id
         self.__term_name = term.term_name
+        self.__term_def = term.term_def
         self.__ontology_id = term.ontology_id
         self.__parent_ids = term.parent_ids
         self.__parent_path_ids = term.parent_path_ids
@@ -796,6 +818,10 @@ class Term:
     def term_name(self):
         return self.__safe_property('_Term__term_name')
 
+    @property
+    def term_def(self):
+        return self.__safe_property('_Term__term_def')
+
     # @property
     # def property_name(self):
     #     return '_'.join(self.term_name.split(' '))
@@ -897,6 +923,7 @@ class Term:
         return {
             'id' : self.term_id,
             'text': self.term_name,
+            'definition': self.term_def,
             'has_units': self.has_units,
             'is_hidden': self.is_hidden,
             'scalar_type': self.microtype_value_scalar_type,

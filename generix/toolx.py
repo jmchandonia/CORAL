@@ -40,6 +40,7 @@ def init_system_collections(argv=None):
             'unique': True
         }])
     _try_init_collection('SYS_UserProfile',[])
+    # _try_truncate_collection('OTerm')
 
 def _try_init_collection(collection_name, indices):
     print('Init system collection: %s' % collection_name)
