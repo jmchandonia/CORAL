@@ -29,7 +29,6 @@ export class SearchResultItemComponent implements OnInit {
         this.objectId = params.id;
         this.qb.getObjectMetadata(this.objectId)
           .subscribe((result: ObjectMetadata) => {
-            console.log('RESULT', result);
             this.searchResult = result;
           });
       }
