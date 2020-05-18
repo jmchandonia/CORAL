@@ -55,8 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   onValueChecked(event) {
-
-    const [i, j] = event.target.id.split(' ').map(o => parseInt(o, 10));
+    const [i, j] = event.target.id.split('_').map(o => parseInt(o, 10));
     const selected = this.filterCategories[i].items[j].queryParam as QueryParam;
 
     if (this.checkBoxArray.includes(event.target.id)) {

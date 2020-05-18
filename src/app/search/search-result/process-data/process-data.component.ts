@@ -52,12 +52,10 @@ export class ProcessDataComponent implements OnInit, AfterViewInit {
     this.queryBuilder.getProcessesUp(this.id)
     .subscribe((data: any) => {
       this.processesUp = data.results;
-      console.log('PROCESSES UP', this.processesUp);
     });
     this.queryBuilder.getProcessesDown(this.id)
     .subscribe((data: any) => {
       this.processesDown = data.results;
-      console.log('PROCESSES DN', this.processesDown);
       this.hideProcessOutputs = [...this.processesDown.map(() => true)];
     });
   }
