@@ -7,10 +7,11 @@ export class ObjectMetadata {
     public data_type: OTerm;
     public description: string;
     public dim_context: DimensionContext[]; // dimension and dimension variable data
-    public typed_values: any[]; // measurement values and data
+    public typed_values: TypedValue[]; // measurement values and data
 }
 
-export interface DimensionContext {
+export class
+    DimensionContext {
     data_type: OTerm;
     size: number;
     typed_values: TypedValue[];
@@ -31,6 +32,7 @@ export interface TypedValue {
     value_no_units: string;
     value_type: OTerm;
     value_with_units: string;
+    selected?: boolean; // for dimension variable checkboxes in plotting
 }
 
 export interface OTerm {

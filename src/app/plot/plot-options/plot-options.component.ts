@@ -82,8 +82,6 @@ export class PlotOptionsComponent implements OnInit {
         if (!plotType) {
           // create new plot config
           this.plotService.setConfig(
-            // result.data_type.oterm_name,
-            // result.dim_context.length,
             result,
             (dims: Dimension[]) => {
               this.dimensions = dims;
@@ -94,25 +92,8 @@ export class PlotOptionsComponent implements OnInit {
           this.plotTypeDataValue = plotType;
           this.dimensions = this.plotService.getConfiguredDimensions();
         }
-
-        // get dropdown values for dimensions
-        result.dim_context.forEach(dim => {
-          this.dimensionData.push({
-            id: this.dimensionData.length.toString(),
-            text: dim.data_type.oterm_name
-          });
-        });
-        // add dropdown value for data measurements
-        this.dimensionData.push({
-          // id: this.dimensionData.length.toString(),
-          id: 'D',
-          text: result.typed_values[0].value_type.oterm_name
-        });
       });
   }
-
-    test() {
-    }
 
     getPlotTypes() {
     this.plotService.getPlotTypes()
@@ -156,7 +137,6 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   onGoBack(id) {
-
     this.plotService.clearPlotBuilder();
     const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
     this.router.navigate([url]);

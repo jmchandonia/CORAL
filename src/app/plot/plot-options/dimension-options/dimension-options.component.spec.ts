@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DimensionOptionsComponent } from './dimension-options.component';
 import { AxisLabelerComponent } from './axis-labeler/axis-labeler.component';
 import { PlotService } from 'src/app/shared/services/plot.service';
-import { Dimension, DimensionRef } from 'src/app/shared/models/plot-builder';
+import { Dimension } from 'src/app/shared/models/plot-builder';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -22,10 +22,6 @@ describe('DimensionOptionsComponent', () => {
       'getUpdatedLabelBuilder'
     ]);
     mockPlotService.getDimDropdownValue.and.returnValue('0');
-    mockPlotService.getLabelBuilder.and.returnValue(
-      new DimensionRef('Sample', [
-        {context: [], selected: true, value: 'sample ID'}
-      ]));
     mockPlotService.getUpdatedLabelBuilder.and.returnValue(
       new Subject().asObservable()
     );

@@ -1,10 +1,6 @@
-import { Injectable, OnChanges } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
-import { DataQuery } from '../models/data-query';
-import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { DimensionRef } from 'src/app/shared/models/plot-builder';
 import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -14,9 +10,6 @@ export class PlotService {
 
   public plotBuilder: PlotBuilder = new PlotBuilder();
   public plotType: string;
-  public axisLabelBuilders: any = {};
-  private axisLabelSub = new Subject();
-  // can be cached
   metadata: ObjectMetadata;
 
   constructor(private http: HttpClient) {
@@ -29,12 +22,10 @@ export class PlotService {
   }
 
   getPlotType() {
-    // return this.plotType;
     return localStorage.getItem('plotType');
   }
 
-  setPlotType(value) {
-    // this.plotType = value;
+  setPlotType(value: string) {
     localStorage.setItem('plotType', value);
   }
 
@@ -52,13 +43,11 @@ export class PlotService {
     return keys.map(v => this.plotBuilder.config[v]).filter(t => typeof t !== 'string');
   }
 
-  getDimDropdownValue(axis) {
+  getDimDropdownValue(axis: string) {
     return this.plotBuilder.data[axis].toString();
   }
 
   setConfig(
-    // title: string,
-    // length: number,
     metadata: ObjectMetadata,
     callback: (dims: Dimension[]) => void
     ) {
@@ -80,31 +69,9 @@ export class PlotService {
     this.setPlotCache();
   }
 
-  /// axis label methods ///
-
-  setLabelBuilder(labelBuilder: DimensionRef, axis: string) {
-    this.axisLabelBuilders[axis] = labelBuilder;
-    console.log('WHAT DO WE GOT', this.axisLabelBuilders);
-    this.axisLabelSub.next({axis, labelBuilder: this.axisLabelBuilders[axis]});
-  }
-
-  getLabelBuilder(axis) {
-    return this.axisLabelBuilders[axis];
-  }
-
-  getUpdatedLabelBuilder() {
-    return this.axisLabelSub.asObservable();
-  }
-
-  updateFormatString(format: string, axis: string) {
-    this.plotBuilder.config[axis].label_pattern = format;
-  }
-
   clearPlotBuilder() {
-    // delete this.plotType;
     localStorage.removeItem('plotType');
     localStorage.removeItem('plotBuilder');
-    this.axisLabelBuilders = {};
     this.plotBuilder = new PlotBuilder();
   }
 
@@ -133,8 +100,5 @@ export class PlotService {
     // method used to get data for dashboard component
     return this.http.get(`${environment.baseURL}/report_plot_data/${id}`);
   }
-
-
-
 
 }
