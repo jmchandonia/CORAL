@@ -13,10 +13,11 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { PlotService } from '../shared/services/plot.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
-  declarations: [PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
+  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,
@@ -24,7 +25,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ReactiveFormsModule,
     FormsModule,
     PlotlyModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [PlotService, QueryBuilderService]
 })
