@@ -1,83 +1,67 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { DimensionRef, Dimension } from 'src/app/shared/models/plot-builder';
-import { Subscription } from 'rxjs';
-import { PlotService } from 'src/app/shared/services/plot.service';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Dimension } from 'src/app/shared/models/plot-builder';
+import { TypedValue } from 'src/app/shared/models/object-metadata';
 
 @Component({
   selector: 'app-axis-labeler',
   templateUrl: './axis-labeler.component.html',
-  styleUrls: ['./axis-labeler.component.css']
+  styleUrls: ['./axis-labeler.component.css'],
 })
-export class AxisLabelerComponent implements OnInit, OnDestroy {
+export class AxisLabelerComponent implements OnInit, OnChanges {
 
-  @Input() axis: string;
+
+  @Input() dimVars: TypedValue[];
   @Input() dimension: Dimension;
-  labelBuilderSub = new Subscription();
-  labelBuilder: DimensionRef;
-  labelArray: string[] = [];
+  @Input() labelPattern: string;
   plotlyFormatString: string;
   displayOptions = false;
 
-  constructor(private plotService: PlotService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.labelBuilder = this.plotService.getLabelBuilder(this.axis);
-    if (this.labelBuilder) {
-      this.updateLabelArray(true);
-    }
-    this.labelBuilderSub = this.plotService.getUpdatedLabelBuilder()
-      .subscribe(({axis, labelBuilder}) => {
-        if (axis === this.axis) {
-          this.labelBuilder = labelBuilder;
-          this.updateLabelArray(true);
-        }
-      });
+    this.dimension.dimVars.forEach((dimVar) => {
+      // set selected value for checkbox
+      if (dimVar.selected === undefined) {
+        dimVar.selected = true;
+      }
+    });
+    this.plotlyFormatString = this.dimension.label_pattern;
   }
 
-  ngOnDestroy() {
-    if (this.labelBuilderSub) {
-      this.labelBuilderSub.unsubscribe();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.labelPattern) {
+      this.plotlyFormatString = changes.labelPattern.currentValue;
     }
   }
 
-  updateLabelArray(fromService: boolean) { // (change)="updateLabelArray(false) in html"
-    if (!fromService) {
-      this.labelBuilder.resetLabels();
-      this.plotService.setLabelBuilder(this.labelBuilder, this.axis);
+  setLabels() {
+    this.dimension.label_pattern = this.plotlyFormatString;
+  }
+
+  updateSelectedLabels(index: number) {
+    const strIdx = (index + 1).toString();
+    if (this.dimension.label_pattern.includes(strIdx)) {
+      // filter out variables
+      this.dimension.label_pattern = this.dimension.label_pattern
+        .split(',')
+        .filter(label => !label.includes(strIdx))
+        .join();
+    } else {
+      // add new variable to label pattern
+      const dimVar = this.dimension.dimVars[index];
+      this.dimension.label_pattern += `, ${dimVar.value_no_units}=#V${strIdx}`;
     }
-    this.updatePlotlyFormatString();
+    this.plotlyFormatString = this.dimension.label_pattern;
   }
 
-  updatePlotlyFormatString() {
-      this.plotlyFormatString = this.labelBuilder.labels.join();
-      this.submitFormatString();
-  }
-
-  submitFormatString() {
-    // TODO: add format validation
-    const split = this.plotlyFormatString.split(',');
-    let idx = 0;
-    this.labelBuilder.labels = [
-      ...this.labelBuilder.dimVars.map((dimVar) => {
-        if (dimVar.selected) {
-          return split[idx++];
-        } else {
-          return '';
-        }
-      })
-    ];
-    this.plotService.updateFormatString(this.plotlyFormatString, this.axis);
-  }
-
-  get labelDisplay() {
-    return this.labelBuilder.labels
-      .map((label, idx) => {
-        return label.replace(
-          /#V[0-9]/gi,
-          // TODO: escape markup so #V(n) badge can show up before or after user input
-          // `<span class="badge badge-pill badge-primary">V${idx + 1}</span>`
-          ''
-          );
+  get labelDisplay(): string[] {
+    return this.dimension.label_pattern.split(',')
+      .map((label) => {
+        const idx = label.indexOf('#V') + 2;
+        const varIdx = label[idx];
+        const htmlString = `<span>${label}</span>`
+          .replace(/#V[0-9]/gi, `<span class="badge badge-pill badge-primary">V${varIdx}</span>`);
+        return htmlString;
       });
   }
 

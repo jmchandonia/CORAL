@@ -5,14 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PlotService } from  'src/app/shared/services/plot.service';
 import { AxisLabelerComponent } from './axis-labeler.component';
-import { DimensionRef, Dimension } from 'src/app/shared/models/plot-builder';
+import { Dimension } from 'src/app/shared/models/plot-builder';
 import { Subject } from 'rxjs';
 
 
 describe('AxisLabelerComponent', () => {
 
   const MockPlotService = {
-    getLabelBuilder: () => new DimensionRef('test', []),
     getUpdatedLabelBuilder: () => new Subject()
   };
 
@@ -24,13 +23,13 @@ describe('AxisLabelerComponent', () => {
       HttpClientModule
     ],
     providers: [
-      mockProvider(PlotService, MockPlotService)
+      // mockProvider(PlotService, MockPlotService)
     ]
   });
 
   beforeEach(() => spectator = createComponent({
     props: {
-      dimension: new Dimension()
+      // dimension: new Dimension()
     }
   }));
 

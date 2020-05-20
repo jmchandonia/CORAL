@@ -1,4 +1,4 @@
-  <div *ngIf="!isEditor" class="row mb-3 mt-3">
+    <div *ngIf="!isEditor" class="row mb-3 mt-3">
     <div class="offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem; position:relative; top: 3px">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
@@ -43,8 +43,6 @@
     <app-dimension-options
       *ngFor="let dimension of dimensions; let i = index;"
       [dimension]="dimension"
-      [metadata]="metadata"
-      [dropdownValues]="dimensionData"
       [dimensionLabel]="axisBlocks[i].title"
       [index]="i"
     ></app-dimension-options>
