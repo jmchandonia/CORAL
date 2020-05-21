@@ -54,7 +54,6 @@ export class DimensionOptionsComponent implements OnInit {
   }
 
   setSelectedDimension(event) {
-
     const idx = parseInt(event.value, 10);
     this.plotService.setPlotlyDataAxis(this.axis, event.value);
 

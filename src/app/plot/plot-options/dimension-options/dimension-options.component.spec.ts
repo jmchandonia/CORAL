@@ -6,49 +6,72 @@ import { DimensionOptionsComponent } from './dimension-options.component';
 import { AxisLabelerComponent } from './axis-labeler/axis-labeler.component';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Dimension } from 'src/app/shared/models/plot-builder';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
+import { MockComponent } from 'ng-mocks';
+const metadata = require('src/app/shared/test/object-metadata.json');
 
 describe('DimensionOptionsComponent', () => {
-  let component: DimensionOptionsComponent;
-  let fixture: ComponentFixture<DimensionOptionsComponent>;
-  let mockPlotService;
 
-  beforeEach(async(() => {
-    mockPlotService = jasmine.createSpyObj([
-      'getDimDropdownValue',
-      'getLabelBuilder',
-      'updateFormatString',
-      'getUpdatedLabelBuilder'
-    ]);
-    mockPlotService.getDimDropdownValue.and.returnValue('0');
-    mockPlotService.getUpdatedLabelBuilder.and.returnValue(
-      new Subject().asObservable()
-    );
-    TestBed.configureTestingModule({
-      declarations: [ DimensionOptionsComponent, AxisLabelerComponent ],
-      providers: [{
-        provide: PlotService,
-        useValue: mockPlotService
-      }],
-      imports: [
-        Select2Module,
-        FormsModule,
-        HttpClientModule
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
-  }));
+  const testDimension = new Dimension(metadata.dim_context, metadata.typed_values);
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(DimensionOptionsComponent);
-    component = fixture.componentInstance;
-    // component.dimension = new Dimension();
-    fixture.detectChanges();
+  const MockPlotService = {
+    getDimDropdownValue: () => '0',
+    setPlotlyDataAxis: (axis, value) => {}
+  };
+
+  let spectator: Spectator<DimensionOptionsComponent>;
+  const createComponent = createComponentFactory({
+    component: DimensionOptionsComponent,
+    imports: [
+      HttpClientModule,
+      Select2Module,
+      FormsModule
+    ],
+    entryComponents: [
+      MockComponent(AxisLabelerComponent)
+    ],
+    providers: [
+      mockProvider(PlotService, MockPlotService)
+    ]
   });
 
+  beforeEach(() => spectator = createComponent({
+    props: {
+      dimension: testDimension,
+      dimensionLabel: 'X axis',
+      index: 0
+    }
+  }));
+
+  afterEach(() => delete testDimension.dimVars);
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
+    expect(spectator.component.dimension).toEqual(testDimension);
+  });
+
+  it('should set axis label and title', () => {
+    expect(spectator.component.axis).toBe('x');
+    expect(spectator.component.dimensionLabel).toBe('X axis')
+  });
+
+  it('should set value from list of dimensions', () => {
+    const mockPlotService = spectator.fixture.debugElement.injector.get(PlotService);
+    spyOn(mockPlotService, 'setPlotlyDataAxis');
+    spectator.component.setSelectedDimension({value: '1'});
+    expect(mockPlotService.setPlotlyDataAxis).toHaveBeenCalledWith('x', '1');
+    expect(spectator.component.dimension.dimVars).toEqual(metadata.dim_context[1].typed_values);
+    expect(spectator.component.dimension.dimVars[0].selected).toBeTruthy();
+    expect(spectator.component.showDisplayValues).toBeTruthy();
+  });
+
+  it('should set label pattern correctly when dimension is selected', () => {
+    spyOn(spectator.component, 'setLabelPattern');
+    spectator.component.setSelectedDimension({value: '1'});
+    spectator.detectChanges();
+    expect(spectator.component.setLabelPattern).toHaveBeenCalled();
+    expect(spectator.query('.axis-labeler-container')).not.toBeHidden();
+    expect(testDimension.label_pattern).toBe('Sequence Type=#V1, Strand=#V2');
   });
 });
