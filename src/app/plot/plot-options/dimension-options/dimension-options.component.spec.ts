@@ -44,7 +44,7 @@ describe('DimensionOptionsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DimensionOptionsComponent);
     component = fixture.componentInstance;
-    component.dimension = new Dimension();
+    // component.dimension = new Dimension();
     fixture.detectChanges();
   });
 
