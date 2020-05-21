@@ -3,7 +3,7 @@
   <div class="display-values-container">
     <div class="form-check ml-5" *ngFor="let d of dimension.dimVars; let i = index;">
       <input
-        class="form-check-input"
+        class="form-check-input dim-var-option"
         type="checkbox"
         [(ngModel)]="d.selected"
         (change)="updateSelectedLabels(i)"
