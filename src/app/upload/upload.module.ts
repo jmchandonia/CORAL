@@ -24,7 +24,6 @@ import { CreateComponent } from './upload/create/create.component';
 import { MapComponent } from './upload/map/map.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { ContextBuilderComponent } from './upload/property-builder/property-form/context-builder/context-builder.component';
 import { ContextFormComponent } from './upload/property-builder/property-form/context-builder/context-form/context-form.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -48,7 +47,6 @@ import { ValidationErrorItemComponent } from './upload/map/validation-error-item
     PreviewComponent,
     CreateComponent,
     MapComponent,
-    SafeHtmlPipe,
     ContextBuilderComponent,
     ContextFormComponent,
     ValidationErrorItemComponent

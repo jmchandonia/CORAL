@@ -5,6 +5,7 @@ import { ObjectMetadata } from '../../shared/models/object-metadata';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { Select2OptionData } from 'ng2-select2';
 import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
+import { PlotlyConfig, AxisBlock } from 'src/app/shared/models/plotly-config';
 
 @Component({
   selector: 'app-plot-options',
@@ -17,9 +18,9 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: Array<Select2OptionData> = [{id: '', text: ''}];
   public plotTypeDataValue: string; // for select2
   public dimensionData: Array<Select2OptionData> = [];
-  public listPlotTypes: any[];
-  public selectedPlotType: any;
-  public axisBlocks: any[];
+  public listPlotTypes: PlotlyConfig[];
+  public selectedPlotType: PlotlyConfig;
+  public axisBlocks: AxisBlock[];
   public objectId: string;
   public plotBuilder: PlotBuilder;
   public dimensions: Dimension[];
@@ -70,7 +71,7 @@ export class PlotOptionsComponent implements OnInit {
 
     // get metadata
     this.queryBuilder.getObjectMetadata(this.objectId)
-      .subscribe((result: any) => {
+      .subscribe((result: ObjectMetadata) => {
         this.metadata = result;
 
         // get list of plot types from server
@@ -81,8 +82,7 @@ export class PlotOptionsComponent implements OnInit {
         if (!plotType) {
           // create new plot config
           this.plotService.setConfig(
-            result.data_type.oterm_name,
-            result.dim_context.length,
+            result,
             (dims: Dimension[]) => {
               this.dimensions = dims;
             }
@@ -92,25 +92,8 @@ export class PlotOptionsComponent implements OnInit {
           this.plotTypeDataValue = plotType;
           this.dimensions = this.plotService.getConfiguredDimensions();
         }
-
-        // get dropdown values for dimensions
-        result.dim_context.forEach(dim => {
-          this.dimensionData.push({
-            id: this.dimensionData.length.toString(),
-            text: dim.data_type.oterm_name
-          });
-        });
-        // add dropdown value for data measurements
-        this.dimensionData.push({
-          // id: this.dimensionData.length.toString(),
-          id: 'D',
-          text: result.typed_values[0].value_type.oterm_name
-        });
       });
   }
-
-    test() {
-    }
 
     getPlotTypes() {
     this.plotService.getPlotTypes()
@@ -154,7 +137,6 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   onGoBack(id) {
-
     this.plotService.clearPlotBuilder();
     const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
     this.router.navigate([url]);
