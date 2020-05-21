@@ -1,18 +1,18 @@
 <div class="row">
   <p class="header ml-3">Display Values From: </p>
   <div class="display-values-container">
-    <div class="form-check ml-5" *ngFor="let d of labelBuilder.dimVars; let i = index;">
+    <div class="form-check ml-5" *ngFor="let d of dimension.dimVars; let i = index;">
       <input
-        class="form-check-input"
+        class="form-check-input dim-var-option"
         type="checkbox"
         [(ngModel)]="d.selected"
-        (change)="updateLabelArray(false)"
+        (change)="updateSelectedLabels(i)"
 
         [ngModelOptions]="{standalone: true}"
       />
-      <label class="form-check-label">{{d.value}}
-        <ng-container *ngIf="d.context.length">
-          <span *ngFor="let ctx of d.context; let last = last">
+      <label class="form-check-label">{{d.value_type.oterm_name}}
+        <ng-container *ngIf="d.value_context.length">
+          <span *ngFor="let ctx of d.value_context; let last = last">
             <span *ngIf="!last">,&nbsp;</span>
             <span>{{ctx.value_type.oterm_name}}={{ctx.value.oterm_name}}</span>
             <span *ngIf="ctx.units">&nbsp;({{ctx.units.oterm_name}})</span>
@@ -21,7 +21,7 @@
       </label>
       <span
         class="badge badge-pill badge-primary ml-1"
-        [ngClass]="d.selected ? '' : 'var-unchecked'" 
+        [class.var-unchecked]="!d.selected" 
         >V{{ i + 1 }}</span>
     </div>
   </div>
@@ -37,7 +37,10 @@
   <span
     class="label-item"
     *ngFor="let label of labelDisplay; let i = index; let last = last"
-  >{{label}}<span class="badge badge-pill badge-primary">V{{i+1}}</span><span *ngIf="!last">,</span> 
+    [innerHTML]="label | safeHtml"
+  >
+  <!-- {{label}}<span class="badge badge-pill badge-primary">V{{i+1}}</span> -->
+  <span *ngIf="!last">,</span> 
   </span>
   <span 
     *ngIf="labelDisplay.length && !displayOptions" 
@@ -48,7 +51,7 @@
     class="update-cancel-buttons"
     *ngIf="displayOptions">
     <span (click)="toggleDisplayOptions()">Cancel |</span>
-    <span (click)="submitFormatString()"> Update</span>
+    <span (click)="setLabels()"> Update</span>
   </span>
   <hr *ngIf=displayOptions />
   <div class="display-options" *ngIf="displayOptions">

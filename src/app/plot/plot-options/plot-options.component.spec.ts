@@ -13,90 +13,25 @@ import { QueryBuilderService } from 'src/app/shared/services/query-builder.servi
 import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select2OptionData } from 'ng2-select2';
+const plotTypes = require('src/app/shared/test/plot-types.json');
+const metadata = require('src/app/shared/test/object-metadata.json');
 
 describe('PlotOptionsComponent', () => {
 
   const MockPlotService = {
     getPlotBuilder: () => new PlotBuilder(),
-    getPlotTypes: () => of({
-      results: [
-        {
-          axis_blocks: [
-            {title: 'X axis'},
-            {titls: 'Y axis'}
-          ],
-          description: '1D Vertical Barchart',
-          image_tag: '<i class="material-icons"></i>',
-          n_dimensions: 2,
-          name: 'Vertical Barchart',
-          plotly_layout: {},
-          plotly_trace: {
-            type: 'bar'
-          }
-        }
-      ]
-    }),
+    getPlotTypes: () => of(plotTypes),
     getPlotType: () => null,
-    setConfig: (name, length, callback) => {
-      callback([new Dimension(), new Dimension()]);
+    setConfig: (name, length, callback: (dims: Dimension[]) => void) => {
+      const dimvars = metadata.dim_context;
+      const datavars = metadata.typed_values;
+      callback([
+        new Dimension(dimvars[0], datavars),
+        new Dimension(dimvars[1], datavars),
+        new Dimension(dimvars[2], datavars)
+      ]);
     }
   };
-
-  const metadata = new ObjectMetadata();
-  metadata.data_type = {
-    oterm_name: 'Microbial Sequence',
-    oterm_ref: 'DA:0000064'
-  };
-  metadata.typed_values = [
-    {
-      value_type: {
-        oterm_ref: 'ME:0000002',
-        oterm_name: 'Test DataVar'
-      }
-    }
-  ];
-  metadata.dim_context = [
-    {
-      data_type: {
-        oterm_ref: 'DA0000064',
-        oterm_name: 'Microbial Sequence'
-      },
-      size: 1083,
-      typed_values: [{
-        value_context: [],
-        value_no_units: 'Strain ID',
-        value_type: {
-          oterm_ref: 'ME:0000044',
-          oterm_name: 'Srain ID'
-        },
-        value_with_units: 'Strain ID',
-        values: {
-          scalar_type: 'object_ref',
-          values: ['FW305-130', '...']
-        }
-      }]
-    },
-    {
-      data_type: {
-        oterm_ref: 'DA0000064',
-        oterm_name: 'Microbial Sequence'
-      },
-      size: 1083,
-      typed_values: [{
-        value_context: [],
-        value_no_units: 'Strain ID',
-        value_type: {
-          oterm_ref: 'ME:0000044',
-          oterm_name: 'Srain ID'
-        },
-        value_with_units: 'Strain ID',
-        values: {
-          scalar_type: 'object_ref',
-          values: ['FW305-130', '...']
-        }
-      }]
-    }
-  ];
 
   const MockQueryBuilder = {
     getPreviousUrl: () => 'plot/test/url',
@@ -152,10 +87,11 @@ describe('PlotOptionsComponent', () => {
 
   it('should get plot types correctly', () => {
     const comp = spectator.component;
+    spyOn(comp, 'ngOnInit').and.callThrough();
     spyOn(comp, 'getPlotTypes').and.callThrough();
     spectator.detectChanges();
     expect(comp.listPlotTypes instanceof Array).toBeTruthy();
-    expect(comp.listPlotTypes).toHaveLength(1);
+    expect(comp.listPlotTypes).toHaveLength(6);
 
     // should be greater than 1 including default empty select2 value
     expect(comp.plotTypeData.length).toBeGreaterThan(1);
@@ -169,9 +105,16 @@ describe('PlotOptionsComponent', () => {
         id: '0'
       }]
     });
+    const dimvars = metadata.dim_context;
+    const datavars = metadata.typed_values;
+    spectator.component.dimensions = [
+       new Dimension(dimvars[0], datavars),
+        new Dimension(dimvars[1], datavars),
+        new Dimension(dimvars[2], datavars)
+      ];
     spectator.detectChanges();
     expect(spectator.component.axisBlocks).not.toBeUndefined();
     expect(spectator.component.selectedPlotType).not.toBeUndefined();
-    expect(spectator.queryAll('app-dimension-options')).toHaveLength(2);
+    expect(spectator.queryAll('app-dimension-options')).toHaveLength(3);
   });
 });

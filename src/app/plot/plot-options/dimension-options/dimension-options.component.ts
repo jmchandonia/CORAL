@@ -1,8 +1,9 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { Dimension, DimensionRef } from '../../../shared/models/plot-builder';
+import { Dimension } from '../../../shared/models/plot-builder';
 import { Select2OptionData } from 'ng2-select2';
 import { PlotService } from '../../../shared/services/plot.service';
-
+import { DimensionContext, ArrayContext, TypedValue } from 'src/app/shared/models/object-metadata';
+// tslint:disable:variable-name
 @Component({
   selector: 'app-dimension-options',
   templateUrl: './dimension-options.component.html',
@@ -13,28 +14,21 @@ import { PlotService } from '../../../shared/services/plot.service';
 })
 export class DimensionOptionsComponent implements OnInit {
 
-  @Input() dimension: Dimension; // reference to dimension in plot service
-  @Input() dimensionLabel: string; // label for form UI e.g. 'X axis'
-  @Input() dropdownValues: Array<Select2OptionData> = [{id: '', text: ''}];
-  @Input() set metadata(data: any) {
-    data.dim_context.forEach(dim => {
-      // add dimension labels and variables
-      this.dimensionData.push(
-        new DimensionRef(
-          dim.data_type.oterm_name,
-          [...dim.typed_values.map(t => ({ value: t.value_type.oterm_name, selected: true, context: t.value_context }))]
-        )
-      );
+  @Input() set  dimension(dim: Dimension) {
+    this._dimension = dim;
+    dim.dimensionMetadata.forEach((dimContext: DimensionContext, index: number) => {
+      const { oterm_name, oterm_ref } = dimContext.data_type;
+      this.dropdownValues.push({id: index.toString(), text: oterm_name}); // context will go here.text
     });
-    // add measurement value, for now we are only working with one data value
-    const measurementVal = data.typed_values[0];
-    this.dimensionData.push(
-      new DimensionRef(
-        measurementVal, [{value: measurementVal.value_type.oterm_name, selected: true, context: measurementVal.value_context }]
-      )
-    );
+    const dataVar = dim.dataValueMetadata[0];
+    this.dropdownValues.push({id: 'D', text: dataVar.value_type.oterm_name});
   }
 
+  get dimension() { return this._dimension; }
+  @Input() dimensionLabel: string; // label for form UI e.g. 'X axis'
+
+  dropdownValues: Array<Select2OptionData> = [{id: '', text: ''}];
+  _dimension: Dimension;
   showDisplayValues = false;
 
   select2Options: Select2Options = {
@@ -50,49 +44,43 @@ export class DimensionOptionsComponent implements OnInit {
   }
 
   axis: string; // reference to plotly data axis in plotbuilder
-  dimensionData: DimensionRef[] = []; // used to display dimension variable value and title
-  selectedDimension: DimensionRef;
   selectedDropdownValue: string;
+  dimVars: TypedValue[];
 
   constructor(private plotService: PlotService, public chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.axis);
-    this.selectedDimension = this.plotService.getLabelBuilder(this.axis);
   }
 
   setSelectedDimension(event) {
     const idx = parseInt(event.value, 10);
     this.plotService.setPlotlyDataAxis(this.axis, event.value);
-    if (event.value === 'D') {
-      this.selectedDimension = this.dimensionData[this.dimensionData.length - 1];
-    } else {
-      this.selectedDimension = this.dimensionData[idx];
-    }
-    this.plotService.setLabelBuilder(this.selectedDimension, this.axis);
-    // this.dimension.title = this.selectedDimension.type;
 
-    if (this.selectedDimension.dimVars.length > 1) {
-      this.dimension.title = this.selectedDimension.type;
+    if (event.value === 'D') { // event value is a data var
+      this.dimension.dimVars = this.dimension.dataValueMetadata;
     } else {
-      const { dimVars } = this.selectedDimension;
-      this.dimension.title = dimVars[0].value;
-      dimVars[0].context.forEach(ctx => {
-        this.dimension.title += `, ${ctx.value_type.oterm_name}=${ctx.value.value}`;
-        if (ctx.units) {
-          this.dimension.title += `(${ctx.units.oterm_name})`;
+      this.dimension.dimVars = this.dimension.dimensionMetadata[idx].typed_values;
+    }
+    this.dimension.dimVars.forEach(dimVar => dimVar.selected = true);
+    this.showDisplayValues = this.dimension.dimVars.length > 1;
+    this.setLabelPattern();
+
+  }
+
+  setLabelPattern() {
+    this.dimension.label_pattern = ''; // reset value
+    if (this.dimension.dimVars.length === 1) {
+      this.dimension.label_pattern = '#V1';
+    } else {
+      this.dimension.dimVars.forEach((dimVar: TypedValue, idx: number) => {
+        this.dimension.label_pattern += `${dimVar.value_no_units}=#V${idx + 1}`;
+        if (idx < this.dimension.dimVars.length - 1) {
+          this.dimension.label_pattern += ', ';
         }
       });
     }
-
-    // hide dimension variable options if theres only one variable;
-    this.showDisplayValues = this.selectedDimension.dimVars.length > 1;
     this.chRef.detectChanges();
-  }
-
-  updateLabelPattern(value) {
-    // updated label pattern from axis labeler component
-    this.dimension.label_pattern = value;
   }
 
 }
