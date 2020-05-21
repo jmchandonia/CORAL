@@ -21,45 +21,8 @@ describe('SearchResultItemComponent', () => {
   mockSearchResult.id = 'brickXXXXXXX';
   mockSearchResult.name = 'test_brick_metadata';
   mockSearchResult.description = 'test_brick_description';
-  mockSearchResult.array_context = [{
-    value_type: {
-      oterm_name: 'ENIGMA Campaign',
-      oterm_ref: 'ENIGMA:XXXXXXX'
-    },
-    value: {
-      scalar_type: 'oterm_ref',
-      value: 'ENIGMA:XXXXXXX'
-    }
-  }];
-  mockSearchResult.data_type = {
-    oterm_name: 'test_data_type',
-    oterm_ref: 'DA:XXXXXXX'
-  },
-  mockSearchResult.dim_context = [{
-    data_type: {
-      oterm_name: 'test_data_type',
-      oterm_ref: 'DA:XXXXXXX'
-    },
-    size: 3,
-    typed_values: [{
-      value_context: [],
-      value_type: {
-        oterm_name: 'test_value',
-        oterm_ref: 'DA:XXXXXXX'
-      },
-      values: {
-        scalar_type: 'string',
-        values: ['A', 'B', 'C']
-      }
-    }]
-  }];
-  mockSearchResult.typed_values = [{
-    value_context: [],
-    value_type: {
-      oterm_name: 'test_value_type',
-      oterm_ref: 'ME:XXXXXXX'
-    }
-  }];
+  mockSearchResult.array_context = [
+];
 
   const MockQueryBuilder = {
     getObjectMetadata: () => of(mockSearchResult)
