@@ -1,7 +1,7 @@
 {
     "id": "Brick0000002",
     "name": "isolate_16S.ndarray",
-    "description": "Chakraborty Lab Isolate 16S Sequences",
+    "description": "Chandonia Lab Isolate 16S Sequences",
     "data_type": {
         "oterm_ref": "DA:0000064",
         "oterm_name": "Microbial Sequence"
@@ -24,7 +24,7 @@
             },
             "value": {
                 "scalar_type": "oterm_ref",
-                "value": "Chakraborty Lab"
+                "value": "Chandonia Lab"
             }
         }
     ],
@@ -34,7 +34,7 @@
                 "oterm_ref": "ME:0000042",
                 "oterm_name": "Strain"
             },
-            "size": 1083,
+            "size": 4,
             "typed_values": [
                 {
                     "value_type": {
@@ -44,10 +44,10 @@
                     "values": {
                         "scalar_type": "object_ref",
                         "values": [
-                            "FW305-130",
-                            "FW305-BF6",
-                            "FW104-L1",
-                            "FW507-19G05"
+                            "GW101-3H11",
+                            "GW460-12-10-14-LB2",
+                            "GW247-C5",
+                            "GW456-L12"
                         ]
                     },
                     "value_context": [],
