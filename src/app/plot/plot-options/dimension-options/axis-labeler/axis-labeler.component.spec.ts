@@ -17,7 +17,7 @@ dimension.dimVars.forEach(dimVar => dimVar.selected = true);
 dimension.label_pattern = 'Sequence Type=#V1, Sequence=#V2';
 const dimVars = metadata.dim_context[1].typed_values;
 
-fdescribe('AxisLabelerComponent', () => {
+describe('AxisLabelerComponent', () => {
 
 
   let spectator: Spectator<AxisLabelerComponent>;
