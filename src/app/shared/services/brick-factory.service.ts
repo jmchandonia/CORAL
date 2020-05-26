@@ -16,7 +16,7 @@ import { isEqual } from 'lodash';
 })
 export class BrickFactoryService {
 
-  createUploadInstance(template: any): Brick {
+  public static createUploadInstance(template: any): Brick {
     const brick = new Brick();
     brick.template_type = template.text;
     brick.type = template.data_type as Term;
@@ -32,7 +32,7 @@ export class BrickFactoryService {
     return brick;
   }
 
-  setTemplateDataValues(brick: Brick, dataVars: any): void {
+  static setTemplateDataValues(brick: Brick, dataVars: any): void {
         // clear brickbuilder datavalues if different template is selected
         // this.brickBuilder.dataValues = [];
 
@@ -58,7 +58,7 @@ export class BrickFactoryService {
         });
   }
 
-  setTemplateDimensions(brick: Brick, dims: any[]) {
+ static setTemplateDimensions(brick: Brick, dims: any[]) {
 
     // clear previous dimensions if new template is selected
     // this.brickBuilder.dimensions = [];
@@ -92,7 +92,7 @@ export class BrickFactoryService {
     });
   }
 
-  setTemplateProperties(brick: Brick, props: any[]) {
+  static setTemplateProperties(brick: Brick, props: any[]) {
         // clear previous properties if new template is selected
         // this.brickBuilder.properties = [];
 
@@ -119,7 +119,7 @@ export class BrickFactoryService {
         });
   }
 
-  setContext(ctx): Context {
+  static setContext(ctx): Context {
         // create new context from template
         const context = new Context();
 
@@ -133,6 +133,6 @@ export class BrickFactoryService {
         return context;
   }
 
-  valuelessUnits(units) { return isEqual(units, {id: '', text: ''}); }
+ static valuelessUnits(units) { return isEqual(units, {id: '', text: ''}); }
 
 }
