@@ -9,7 +9,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { of } from 'rxjs';
 
-fdescribe('PlotResultComponent', () => {
+describe('PlotResultComponent', () => {
   PlotlyModule.plotlyjs = PlotlyJS;
   let spectator: Spectator<PlotResultComponent>;
 
