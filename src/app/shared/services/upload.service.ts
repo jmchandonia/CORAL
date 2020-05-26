@@ -60,7 +60,7 @@ export class UploadService {
 
   setSelectedTemplate(template) {
 
-    this.brickBuilder = this.brickFactory.createUploadInstance(template);
+    this.brickBuilder = BrickFactoryService.createUploadInstance(template);
     this.selectedTemplate = template.id;
   }
 

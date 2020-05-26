@@ -7,7 +7,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { of } from 'rxjs';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
-fdescribe('UploadComponent', () => {
+describe('UploadComponent', () => {
 
   let spectator: Spectator<UploadComponent>;
   const createComponent = createComponentFactory({
