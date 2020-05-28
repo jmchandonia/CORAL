@@ -1,5 +1,5 @@
 <div class="row mt-4">
-  <div class="col-5">
+  <div class="col-5 type-options-container">
     <select2
       [cssImport]="true"
       [value]="typeValuesItem ? typeValuesItem : ''"
@@ -22,7 +22,7 @@
     </i>
   </button>
   </div>
-  <div class="col-5">
+  <div class="col-5 units-container">
     <select2
       *ngIf="dataValue.units !== null && dataValue.type"
       [cssImport]="true"
