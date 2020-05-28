@@ -9,7 +9,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { UploadService } from 'src/app/shared/services/upload.service';
 const templates = require('src/app/shared/test/brick-type-templates.json');
 
-fdescribe('DataValuesComponent', () => {
+describe('DataValuesComponent', () => {
 
   const testBrick = BrickFactoryService.createUploadInstance(templates.results[0].children[1]);
 
