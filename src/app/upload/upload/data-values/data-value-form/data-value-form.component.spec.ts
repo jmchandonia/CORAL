@@ -14,7 +14,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { By } from '@angular/platform-browser';
 
 
-fdescribe('DataValueFormComponent', () => {
+describe('DataValueFormComponent', () => {
 
   const dataValues = BrickFactoryService.createUploadInstance(templates.results[0].children[1]).dataValues;
   let dataValue: DataValue = dataValues[0];
