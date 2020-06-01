@@ -80,7 +80,7 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
       );
   }
 
-  removeDimensionVariable(dimVar) {
+  removeDimensionVariable(dimVar: DimensionVariable) {
     this.dimension.variables = this.dimension.variables.filter(item => item !== dimVar);
     this.dimension.resetDimVarIndices();
     this.validate();
