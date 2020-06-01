@@ -6,8 +6,14 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpClientModule } from '@angular/common/http';
 import { DimensionVariable, BrickDimension, Brick } from 'src/app/shared/models/brick';
+const metadata = require('src/app/shared/test/brick-type-templates.json');
+import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 
 describe('DimensionVariableFormComponent', () => {
+
+  const dimensionVariable = BrickFactoryService
+    .createUploadInstance(metadata.results[0].children[1]).dimensions;
+
   let spectator: Spectator<DimensionVariableFormComponent>;
   const createComponent = createComponentFactory({
     component: DimensionVariableFormComponent,
