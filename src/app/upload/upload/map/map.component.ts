@@ -87,7 +87,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.mapped = true;
       });
   }
-p
+  
   getMappedStatus(valid, total) {
     if (valid === total) {
       return 'status-column-success';
