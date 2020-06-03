@@ -28,7 +28,7 @@
       (valueChanged)="setPropertyType($event)"
     ></app-async-dropdown> -->
   </div>
-  <div class="col-3">
+  <div class="col-3 value-container">
       <select2
         *ngIf="property.type && property.requireSelect2ForVal"
         [cssImport]="true"
@@ -50,7 +50,7 @@
         <span>N/A</span>
       </div>
   </div>
-  <div class="col-2">
+  <div class="col-2 units-container">
       <select2
         *ngIf="property.units !== null && property.type"
         [cssImport]="true"

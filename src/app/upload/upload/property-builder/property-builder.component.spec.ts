@@ -11,7 +11,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 const metadata = require('src/app/shared/test/brick-type-templates.json');
 
-fdescribe('PropertyBuilderComponent', () => {
+describe('PropertyBuilderComponent', () => {
 
   const brick: Brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
 
