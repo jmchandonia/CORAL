@@ -13,7 +13,7 @@ import { MockComponent } from 'ng-mocks';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { ValidationErrorItemComponent } from './validation-error-item/validation-error-item.component';
 
-describe('MapComponent', () => {
+fdescribe('MapComponent', () => {
 
   const brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
 
@@ -21,6 +21,10 @@ describe('MapComponent', () => {
 
   const MockValidator = {
     getValidationErrors: () => errorSub
+  }
+
+  const MockModal = {
+    show: () => {}
   }
 
   const MockUploadService = {
@@ -62,10 +66,11 @@ describe('MapComponent', () => {
     ],
     providers: [
       mockProvider(UploadService, MockUploadService),
-      mockProvider(UploadValidationService, MockValidator)
+      mockProvider(UploadValidationService, MockValidator),
+      mockProvider(BsModalService, MockModal)
     ],
     entryComponents: [
-      ValidationErrorItemComponent
+      MockComponent(ValidationErrorItemComponent)
     ],
   });
 
