@@ -68,6 +68,9 @@ export class BrickFactoryService {
       const dim = new BrickDimension(brick, idx, true);
       // set dimension type
       dim.type = new Term(item.type.id, item.type.text);
+      
+      // set dimension size
+      dim.size = item.dim_vars.length;
 
       // create array of dimension variables from template
       item.dim_vars.forEach((dvItem, dvIdx) => {
