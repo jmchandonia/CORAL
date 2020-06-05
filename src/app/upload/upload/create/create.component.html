@@ -92,7 +92,7 @@
               <label for="end-date">Data generation end date: </label>
               <input
                 class="form-control"
-                id="start-date"
+                id="end-date"
                 type="text"
                 placeholder="mm/dd/yyyy"
                 bsDatepicker
@@ -107,7 +107,7 @@
         </div>
         <div class="row justify-content-center mb-3">
           <div class="col-2">
-            <button class="btn btn-primary" [disabled]="successId" (click)="submitBrick()">
+            <button class="btn btn-primary" id="submit-brick" [disabled]="successId" (click)="submitBrick()">
               Create
             </button>
           </div>
@@ -130,14 +130,14 @@
               </div>
           </div>
         </div>
-        <div class="row mt-3" *ngIf="successId">
+        <div class="row mt-3" *ngIf="successId" id="success-banner">
           <div class="col-12">
             <div class="card">
               <div class="card-header light-blue">
                 <h5>Create Success</h5>
               </div>
               <div class="card-body">
-                <p>Your Brick has been created successfully with brick ID <a href="/search/result/brick/{{successId}}">{{successId}}</a></p>
+                <p>Your Brick has been created successfully with brick ID <a id="success-link" href="/search/result/brick/{{successId}}">{{successId}}</a></p>
               </div>
             </div>
           </div>
