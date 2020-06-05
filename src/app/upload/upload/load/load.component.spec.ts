@@ -11,7 +11,7 @@ import { UploadValidationService } from 'src/app/shared/services/upload-validati
 import { detectChanges } from '@angular/core/src/render3';
 import { Subject } from 'rxjs';
 
-fdescribe('LoadComponent', () => {
+describe('LoadComponent', () => {
 
   const MockUploadService = {
     downloadBrickTemplate: () => Promise.resolve(new Blob()),
