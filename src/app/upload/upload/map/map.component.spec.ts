@@ -13,7 +13,7 @@ import { MockComponent } from 'ng-mocks';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { ValidationErrorItemComponent } from './validation-error-item/validation-error-item.component';
 
-fdescribe('MapComponent', () => {
+describe('MapComponent', () => {
 
   const brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
 
