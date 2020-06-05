@@ -2,7 +2,7 @@
   <div class="row mb-2">
     <div class="col-12">
       <h5 class="mb-0 mt-2" style="float: left">Upload Brick Data</h5>
-      <button class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
+      <button id="download-template" class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
         <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
         Download Template
       </button>
@@ -40,14 +40,14 @@
       <div class="card">
         <div class="card-header light-blue">
           <h5 style="float: left" class=" mt-1 mb-0">File Information</h5>
-          <button (click)="removeFile()" style="float: right" class="btn btn-link">Remove</button>
+          <button (click)="removeFile()" id="remove-file" style="float: right" class="btn btn-link">Remove</button>
         </div>
         <div class="card-body">
           <span style="float: left">
             <strong>{{file?.name}}</strong>
             <span> ({{fileSize}})</span>
           </span>
-          <button style="float: right" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
+          <button style="float: right" id="upload-brick" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
         </div>
       </div>
     </div>
