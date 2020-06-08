@@ -28,7 +28,7 @@
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.js",
-              "./node_modules/select2/dist/js/select2.full.js"
+              "./node_modules/select2/dist/js/select2.full.js",
             ],
             "es5BrowserSupport": true
           },

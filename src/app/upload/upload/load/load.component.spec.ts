@@ -8,7 +8,6 @@ import { LoadSuccessTableComponent } from './load-success-table/load-success-tab
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
-import { detectChanges } from '@angular/core/src/render3';
 import { Subject } from 'rxjs';
 
 describe('LoadComponent', () => {
