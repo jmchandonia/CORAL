@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
-fdescribe('SearchResultItemComponent', () => {
+describe('SearchResultItemComponent', () => {
 
   const mockSearchResultSub = new Subject();
 
