@@ -24,7 +24,7 @@ export class DimensionVariablePreviewComponent implements OnInit, AfterViewInit 
   dataResults: any[] = [];
   dataTable: any;
 
-  @ViewChild('tableModal') el: ElementRef;
+  @ViewChild('tableModal', { static: true }) el: ElementRef;
 
   ngOnInit() {
     this.dataResults = this.data.dim_vars;
