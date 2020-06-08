@@ -14,7 +14,7 @@ export class ValidationErrorItemComponent implements AfterViewInit {
 
   errors: any[];
   dataTable: any;
-  @ViewChild('tableModal') el: ElementRef;
+  @ViewChild('tableModal', { static: false }) el: ElementRef;
 
   constructor(
     private uploadService: UploadService,
