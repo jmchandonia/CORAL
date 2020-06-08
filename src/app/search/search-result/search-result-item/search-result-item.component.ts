@@ -12,7 +12,7 @@ import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
 })
 export class SearchResultItemComponent implements OnInit {
 
-  public searchResult: any;
+  public searchResult: ObjectMetadata;
   public objectId: string;
   modalRef: BsModalRef;
 

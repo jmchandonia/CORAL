@@ -16,7 +16,7 @@ import { UploadValidationService } from 'src/app/shared/services/upload-validati
 import { By } from '@angular/platform-browser';
 const metadata = require('src/app/shared/test/brick-type-templates.json');
 
-fdescribe('CreateComponent', () => {
+describe('CreateComponent', () => {
   let spectator: Spectator<CreateComponent>;
 
   const brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
