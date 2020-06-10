@@ -69,4 +69,10 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
     this.queryMatch.params.push(new QueryParam());
   }
 
+  getImgSource(item: QueryMatchData) {
+    return item.category === 'DDT_'
+      ? './assets/Brick.png'
+      : './assets/Sample.png';
+  }
+
 }
