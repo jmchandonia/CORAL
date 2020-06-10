@@ -14,6 +14,7 @@ import { QueryBuilderService } from '../shared/services/query-builder.service';
 import { PlotService } from '../shared/services/plot.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -26,6 +27,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FormsModule,
     PlotlyModule,
     NgxSpinnerModule,
+    NgSelectModule
   ],
   providers: [PlotService, QueryBuilderService]
 })

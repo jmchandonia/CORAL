@@ -53,26 +53,27 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   error = false;
   errorSub: Subscription;
   modalRef: BsModalRef;
+  loading = false;
 
    unitsOptions: Select2Options = {
     width: '100%',
     containerCssClass: 'select2-custom-container',
    };
 
-   typesOptions: Select2Options = {
-    width: 'calc(100% - 38px)',
-    containerCssClass: 'select2-custom-container select2-custom-properties-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchDataVariableMicroTypes(term).subscribe((data: any) => {
-          options.callback({results: data.results as Select2OptionData});
-        });
-      }
-    }
-   };
+  //  typesOptions: Select2Options = {
+  //   width: 'calc(100% - 38px)',
+  //   containerCssClass: 'select2-custom-container select2-custom-properties-container',
+  //   query: (options: Select2QueryOptions) => {
+  //     const term = options.term;
+  //     if (!term) {
+  //       options.callback({results: []});
+  //     } else {
+  //       this.uploadService.searchDataVariableMicroTypes(term).subscribe((data: any) => {
+  //         options.callback({results: data.results as Select2OptionData});
+  //       });
+  //     }
+  //   }
+  //  };
 
   constructor(
     private uploadService: UploadService,
@@ -95,6 +96,16 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleSearch(event) {
+    if (event.term.length) {
+      this.loading = true;
+      this.uploadService.searchDataVariableMicroTypes(event.term).subscribe((data: any) => {
+        this.typeValues = [...data.results];
+        this.loading = false;
+      });
+    }
+  }
+
   setContextLabel(dataType: Term, context: Context[]) {
     const label: Select2OptionData = Object.assign({}, dataType);
     context.forEach(ctx => {
@@ -113,7 +124,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   updateType(event) {
-    const type = event.data[0];
+    // const type = event.data[0];
+    const type = event;
     this.dataValue.typeTerm = type;
     if (!type.has_units) {
       this.dataValue.units = null;

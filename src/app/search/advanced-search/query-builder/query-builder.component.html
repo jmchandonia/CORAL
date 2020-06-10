@@ -6,22 +6,22 @@
     <form>
       <div class="form-group p-3">
         <label for="data-type">Data Type</label>
-        <select2
-          [cssImport]="true"
-          [options]="options"
-          [data]="dataTypeList"
-          [value]="selectedDataTypeId || ''"
-          name="data-type"
-          (valueChanged)="updateObjectDataModel($event)"
-        >
-        </select2>
+        <ng-select
+          [items]="dataTypes"
+          bindLabel="dataModel"
+          placeholder="Select a data type"
+          (change)="updateQueryMatch($event)"
+          (clear)="handleClear()"
+          [(ngModel)]="selectedDataType"
+          [ngModelOptions]="{standalone: true}"
+          [clearable]="false"
+        ></ng-select>
         <label class="mt-4">Property Parameters</label>
         <app-property-params 
           *ngFor="let param of queryMatch?.params; let idx = index;" 
           [queryParam]="param"
-          [dataType]="selectedDataType"
+          [dataType]="selectedDataType.dataType"
           (removed)="removePropertyParam(param)"
-          (updated)="updatePropertyParam(idx, $event)"
         >
         </app-property-params>
         <hr />

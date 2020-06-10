@@ -16,6 +16,7 @@ import { SearchResultCoreItemComponent } from './search-result/search-result-cor
 import { ProcessDataComponent } from './search-result/process-data/process-data.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DimensionVariablePreviewComponent } from './search-result/dimension-variable-preview/dimension-variable-preview.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { DimensionVariablePreviewComponent } from './search-result/dimension-var
     Select2Module,
     FormsModule,
     HttpClientModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgSelectModule
   ],
   providers: [QueryBuilderService],
   bootstrap: [DimensionVariablePreviewComponent]
