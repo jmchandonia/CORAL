@@ -8,14 +8,19 @@
         <label for="data-type">Data Type</label>
         <ng-select
           [items]="dataTypes"
-          bindLabel="dataModel"
           placeholder="Select a data type"
+          bindLabel="dataType"
           (change)="updateQueryMatch($event)"
           (clear)="handleClear()"
           [(ngModel)]="selectedDataType"
           [ngModelOptions]="{standalone: true}"
           [clearable]="false"
-        ></ng-select>
+        >
+        <ng-template ng-option-tmp let-item="item">
+          <img [src]="getImgSource(item)" width="20px" height="20px" />
+          <span style="margin-left: 10px">{{item.dataType}}</span>
+        </ng-template>
+      </ng-select>
         <label class="mt-4">Property Parameters</label>
         <app-property-params 
           *ngFor="let param of queryMatch?.params; let idx = index;" 
