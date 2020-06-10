@@ -34,7 +34,6 @@ export class AdvancedSearchComponent implements OnInit {
     if (this.advancedFiltersSelected()) {
       this.showAdvancedFilters = true;
     }
-
   }
 
   advancedFiltersSelected() {

@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "@auth0/angular-jwt": "^3.0.0",
+    "@ng-select/ng-select": "^3.7.3",
     "@types/jquery": "^3.3.31",
     "angular-plotly.js": "1.4.0",
     "bootstrap": "4.0.0-beta.2",

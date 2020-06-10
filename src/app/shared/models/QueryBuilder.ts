@@ -27,11 +27,19 @@ export class QueryBuilder {
 
 export class QueryMatch {
     constructor(
-        dType?: string,
-        dModel?: string
+        // dType?: string,
+        // dModel?: string,
+        // category?: string
+        data?: QueryMatchData
     ) {
-        this.dataType = dType;
-        this.dataModel = dModel;
+        // this.dataType = dType;
+        // this.dataModel = dModel;
+        // this.category = category
+        if (data) {
+            this.dataType = data.dataType;
+            this.dataModel = data.dataModel;
+            this.category = data.category;
+        }
         this.params = [];
     }
     public dataModel = '';
@@ -43,6 +51,14 @@ export class QueryMatch {
         return isEqual(this, new QueryMatch());
     }
 
+    get data() {
+        return {
+            dataType: this.dataType,
+            dataModel: this.dataModel,
+            category: this.category
+        }
+    }
+
     isValid() {
         if (this.isEmpty) { return false; }
         for (const param of this.params) {
@@ -50,6 +66,12 @@ export class QueryMatch {
         }
         return true;
     }
+}
+
+export interface QueryMatchData {
+    dataType: string;
+    dataModel: string;
+    category: string;
 }
 
 export class QueryParam {
@@ -81,4 +103,3 @@ export class QueryParam {
         return true;
     }
 }
-

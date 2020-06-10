@@ -27,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContextBuilderComponent } from './upload/property-builder/property-form/context-builder/context-builder.component';
 import { ContextFormComponent } from './upload/property-builder/property-form/context-builder/context-form/context-form.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { ValidationErrorItemComponent } from './upload/map/validation-error-item/validation-error-item.component';
  
 @NgModule({
@@ -59,7 +60,8 @@ import { ValidationErrorItemComponent } from './upload/map/validation-error-item
     Select2Module,
     FormsModule,
     BrowserAnimationsModule,
-    TooltipModule
+    TooltipModule,
+    NgSelectModule
   ],
   providers: [UploadService],
   bootstrap: [
