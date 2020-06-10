@@ -35,6 +35,7 @@ export class GlobalErrorHandler implements ErrorHandler {
             console.error(error);
             throw error;
         } else {
+            console.error(error)
             if(this.errorMessage !== error.message) { // prevents concurrent errors from components to raise more than once
                 this.zone.runOutsideAngular(() => {
                     const config = {

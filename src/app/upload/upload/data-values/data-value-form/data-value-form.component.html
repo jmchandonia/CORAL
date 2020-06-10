@@ -1,6 +1,6 @@
 <div class="row mt-4">
   <div class="col-5 type-options-container">
-    <select2
+    <!-- <select2
       [cssImport]="true"
       [value]="typeValuesItem ? typeValuesItem : ''"
       [options]="typesOptions"
@@ -8,7 +8,18 @@
       (valueChanged)="updateType($event)"
       [disabled]="dataValue.required"
       [ngClass]="error && !dataValue.type ? 'select2-error' : ''"
-    ></select2>
+    ></select2> -->
+    <ng-select
+      [items]="typeValues"
+      bindLabel="text"
+      style="width: calc(100% - 38px); display: inline-block" 
+      bindValue="id"
+      [loading]="loading"
+      (change)="updateType($event)"
+      (search)="handleSearch($event)"
+      [(ngModel)]="typeValuesItem"
+      [readonly]="dataValue.required"
+      ></ng-select>
     <button
       class="btn select2-custom-button"
       (click)="openContextModal()"
