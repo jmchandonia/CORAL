@@ -3,6 +3,7 @@ import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
 import { HttpClient } from '@angular/common/http';
 import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
+import { PlotlyConfig } from 'src/app/shared/models/plotly-config';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,11 +23,11 @@ export class PlotService {
   }
 
   getPlotType() {
-    return localStorage.getItem('plotType');
+    return JSON.parse(localStorage.getItem('plotType'));
   }
 
-  setPlotType(value: string) {
-    localStorage.setItem('plotType', value);
+  setPlotType(value: PlotlyConfig) {
+    localStorage.setItem('plotType', JSON.stringify(value));
   }
 
   setPlotCache() {
