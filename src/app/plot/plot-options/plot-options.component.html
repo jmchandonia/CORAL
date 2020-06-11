@@ -15,16 +15,19 @@
                 <div class="row">
                     <div class="col-4">
                         <label for="plotType">Plot Type</label>
-                        <select2
-                          id="plotType"
-                          [cssImport]="true"
-                          [options]="plotTypeOptions"
-                          [data]="plotTypeData"
-                          ngDefaultControl
-                          [value]="listPlotTypes && plotTypeDataValue ? plotTypeDataValue : ''"
-                          (valueChanged)="updatePlotType($event)"
-                        >
-                        </select2>
+                          <ng-select
+                            [items]="plotTypeData"
+                            bindLabel="name"
+                            (change)="updatePlotType($event)"
+                            [(ngModel)]="selectedPlotType"
+                            [ngModelOptions]="{standalone: true}"
+                            [clearable]="false"
+                          >
+                            <ng-template ng-option-tmp let-item="item">
+                              <span [innerHTML]="item.image_tag | safeHtml"></span>
+                              <span style="margin-left: 10px">{{item.name}}</span>
+                            </ng-template>
+                        </ng-select>
                       </div>
                       <div class="col-8">
                         <label for="graphTitle">Plot Title</label>
