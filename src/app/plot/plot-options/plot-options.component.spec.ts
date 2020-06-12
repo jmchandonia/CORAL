@@ -1,4 +1,3 @@
-import { Select2Module } from 'ng2-select2';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PlotOptionsComponent } from './plot-options.component';
@@ -11,17 +10,19 @@ import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { of } from 'rxjs';
+import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
+import { NgSelectModule } from  '@ng-select/ng-select';
 import { ActivatedRoute, Router } from '@angular/router';
 const plotTypes = require('src/app/shared/test/plot-types.json');
 const metadata = require('src/app/shared/test/object-metadata.json');
 
-describe('PlotOptionsComponent', () => {
+fdescribe('PlotOptionsComponent', () => {
 
   const MockPlotService = {
     getPlotBuilder: () => new PlotBuilder(),
     getPlotTypes: () => of(plotTypes),
     getPlotType: () => null,
-    setConfig: (name, length, callback: (dims: Dimension[]) => void) => {
+    setConfig: (name, length, callback: Function) => {
       const dimvars = metadata.dim_context;
       const datavars = metadata.typed_values;
       callback([
@@ -46,9 +47,10 @@ describe('PlotOptionsComponent', () => {
     imports: [
       FormsModule,
       RouterModule.forRoot([]),
-      Select2Module,
-      HttpClientModule
+      NgSelectModule,
+      HttpClientModule,
     ],
+    declarations: [SafeHtmlPipe],
     providers: [
       mockProvider(PlotService, MockPlotService),
       mockProvider(QueryBuilderService, MockQueryBuilder),
@@ -91,11 +93,11 @@ describe('PlotOptionsComponent', () => {
     spectator.detectChanges();
     expect(comp.plotTypeData instanceof Array).toBeTruthy();
     expect(comp.plotTypeData).toHaveLength(6);
-    expect(comp.plotTypeData[1]).toEqual(plotTypes.results[0]);
+    expect(comp.plotTypeData[0]).toEqual(plotTypes.results[1]);
   });
 
   it('should add correct number of dimensions', () => {
-    spectator.component.updatePlotType(plotTypes.results[0])
+    spectator.component.updatePlotType(plotTypes.results[1])
 
     const dimvars = metadata.dim_context;
     const datavars = metadata.typed_values;
