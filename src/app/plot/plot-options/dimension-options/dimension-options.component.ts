@@ -27,15 +27,9 @@ export class DimensionOptionsComponent implements OnInit {
   get dimension() { return this._dimension; }
   @Input() dimensionLabel: string; // label for form UI e.g. 'X axis'
 
-  dropdownValues: Array<Select2OptionData> = [{id: '', text: ''}];
+  dropdownValues: Array<{id: string, text: string}> = [];
   _dimension: Dimension;
   showDisplayValues = false;
-
-  select2Options: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-    placeholder: 'Select Dimension'
-  };
 
   @Input() set index(i: number) {
     // map index order to key value pairs for server
@@ -54,10 +48,10 @@ export class DimensionOptionsComponent implements OnInit {
   }
 
   setSelectedDimension(event) {
-    const idx = parseInt(event.value, 10);
-    this.plotService.setPlotlyDataAxis(this.axis, event.value);
+    const idx = parseInt(event.id, 10);
+    this.plotService.setPlotlyDataAxis(this.axis, event.id);
 
-    if (event.value === 'D') { // event value is a data var
+    if (event.id === 'D') { // event value is a data var
       this.dimension.dimVars = this.dimension.dataValueMetadata;
     } else {
       this.dimension.dimVars = this.dimension.dimensionMetadata[idx].typed_values;
@@ -65,7 +59,7 @@ export class DimensionOptionsComponent implements OnInit {
     this.dimension.dimVars.forEach(dimVar => dimVar.selected = true);
     this.showDisplayValues = this.dimension.dimVars.length > 1;
     this.setLabelPattern();
-
+    this.setAxisTitle();
   }
 
   setLabelPattern() {
@@ -81,6 +75,16 @@ export class DimensionOptionsComponent implements OnInit {
       });
     }
     this.chRef.detectChanges();
+  }
+
+  setAxisTitle() {
+    this.dimension.title = '';
+    this.dimension.dimVars.forEach((dimVar, idx) => {
+      this.dimension.title += dimVar.value_no_units;
+      if (idx < this.dimension.dimVars.length - 1) {
+        this.dimension.title += ', ';
+      }
+    });
   }
 
 }
