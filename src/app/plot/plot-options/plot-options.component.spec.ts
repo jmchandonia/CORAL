@@ -16,7 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 const plotTypes = require('src/app/shared/test/plot-types.json');
 const metadata = require('src/app/shared/test/object-metadata.json');
 
-fdescribe('PlotOptionsComponent', () => {
+describe('PlotOptionsComponent', () => {
 
   const MockPlotService = {
     getPlotBuilder: () => new PlotBuilder(),
