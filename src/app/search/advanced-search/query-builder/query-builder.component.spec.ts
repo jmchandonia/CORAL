@@ -9,6 +9,8 @@ import { PropertyParamsComponent } from './property-params/property-params.compo
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { Subject } from 'rxjs';
 import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 describe('QueryBuilderComponent', () => {
 
@@ -23,7 +25,9 @@ describe('QueryBuilderComponent', () => {
     imports: [
       Select2Module,
       HttpClientModule,
-      RouterModule.forRoot([])
+      RouterModule.forRoot([]),
+      NgSelectModule,
+      FormsModule
     ],
     entryComponents: [
       MockComponent(PropertyParamsComponent)
@@ -44,20 +48,27 @@ describe('QueryBuilderComponent', () => {
   });
 
   it('should load data types', () => {
-    const spy = spyOn(spectator.component, 'populateDataTypes').and.callThrough();
-    expect(spy);
     expect(spectator.component.dataTypes).toEqual([{test: 'test'}]);
   });
 
   it('should disable propertyParams until type is selected', () => {
     expect('button.btn.btn-link').toBeDisabled();
 
-    spectator.component.selectedDataType = 'test data type';
+    spectator.component.selectedDataType = {
+      dataType: 'test data type',
+      dataModel: 'test data model',
+      category: 'test category'
+    };
     spectator.detectChanges();
     expect('button.btn.btn-link').not.toBeDisabled();
   });
 
   it('should render new property params', () => {
+    spectator.component.selectedDataType = {
+      dataType: 'test data type',
+      dataModel: 'test data model',
+      category: 'test category'
+    };
     spectator.component.addPropertyParam();
     spectator.detectChanges();
     expect(spectator.query('app-property-params')).not.toBeNull();

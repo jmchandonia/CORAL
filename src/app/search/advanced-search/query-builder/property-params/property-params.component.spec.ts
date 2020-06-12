@@ -7,6 +7,7 @@ import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectat
 import { RouterModule } from '@angular/router';
 import { QueryParam } from 'src/app/shared/models/QueryBuilder';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('PropertyParamsComponent', () => {
 
@@ -17,7 +18,8 @@ describe('PropertyParamsComponent', () => {
       Select2Module,
       FormsModule,
       HttpClientModule,
-      RouterModule.forRoot([])
+      RouterModule.forRoot([]),
+      NgSelectModule
     ],
     providers: [
       mockProvider(QueryBuilderService, {

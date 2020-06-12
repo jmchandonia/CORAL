@@ -12,7 +12,6 @@ import { PlotService } from 'src/app/shared/services/plot.service';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Select2OptionData } from 'ng2-select2';
 const plotTypes = require('src/app/shared/test/plot-types.json');
 const metadata = require('src/app/shared/test/object-metadata.json');
 
@@ -90,21 +89,14 @@ describe('PlotOptionsComponent', () => {
     spyOn(comp, 'ngOnInit').and.callThrough();
     spyOn(comp, 'getPlotTypes').and.callThrough();
     spectator.detectChanges();
-    expect(comp.listPlotTypes instanceof Array).toBeTruthy();
-    expect(comp.listPlotTypes).toHaveLength(6);
-
-    // should be greater than 1 including default empty select2 value
-    expect(comp.plotTypeData.length).toBeGreaterThan(1);
-    expect(comp.plotTypeData[1]).toEqual({id: '0', text: 'Vertical Barchart'});
+    expect(comp.plotTypeData instanceof Array).toBeTruthy();
+    expect(comp.plotTypeData).toHaveLength(6);
+    expect(comp.plotTypeData[1]).toEqual(plotTypes.results[0]);
   });
 
   it('should add correct number of dimensions', () => {
-    spectator.component.updatePlotType({
-      value: '0', data: [{
-        text: '1D Vertical Barchart',
-        id: '0'
-      }]
-    });
+    spectator.component.updatePlotType(plotTypes.results[0])
+
     const dimvars = metadata.dim_context;
     const datavars = metadata.typed_values;
     spectator.component.dimensions = [
