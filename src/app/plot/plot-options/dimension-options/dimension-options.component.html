@@ -16,6 +16,7 @@
                     [(ngModel)]="selectedDropdownValue"
                     [ngModelOptions]="{standalone: true}"
                     (change)="setSelectedDimension($event)"
+                    [clearable]="false"
                   ></ng-select>
               </div>
               <div class="col-6">
