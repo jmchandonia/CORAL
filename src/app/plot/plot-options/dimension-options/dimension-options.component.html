@@ -9,15 +9,14 @@
           <div class="row">
               <div class="col-6">
                 <label for="fromDimension">From Dimension</label>
-                <select2
-                  name="fromDimension"
-                  [cssImport]="true"
-                  [options]="select2Options"
-                  [data]="dropdownValues"
-                  [value]="selectedDropdownValue.length ? selectedDropdownValue : ''"
-                  (valueChanged)="setSelectedDimension($event)"
-                  (click)="chRef.detectChanges()"
-                ></select2>
+                  <ng-select
+                    [items]="dropdownValues"
+                    bindLabel="text"
+                    bindValue="id"
+                    [(ngModel)]="selectedDropdownValue"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="setSelectedDimension($event)"
+                  ></ng-select>
               </div>
               <div class="col-6">
                 <div class="form-check offset-1">
