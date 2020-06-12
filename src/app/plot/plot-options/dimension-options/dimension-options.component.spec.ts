@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Select2Module } from 'ng2-select2';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DimensionOptionsComponent } from './dimension-options.component';
@@ -9,9 +8,10 @@ import { Dimension } from 'src/app/shared/models/plot-builder';
 import { Subject } from 'rxjs';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
 import { MockComponent } from 'ng-mocks';
+import { NgSelectModule } from '@ng-select/ng-select';
 const metadata = require('src/app/shared/test/object-metadata.json');
 
-describe('DimensionOptionsComponent', () => {
+fdescribe('DimensionOptionsComponent', () => {
 
   const testDimension = new Dimension(metadata.dim_context, metadata.typed_values);
 
@@ -25,7 +25,7 @@ describe('DimensionOptionsComponent', () => {
     component: DimensionOptionsComponent,
     imports: [
       HttpClientModule,
-      Select2Module,
+      NgSelectModule,
       FormsModule
     ],
     entryComponents: [
@@ -59,7 +59,7 @@ describe('DimensionOptionsComponent', () => {
   it('should set value from list of dimensions', () => {
     const mockPlotService = spectator.fixture.debugElement.injector.get(PlotService);
     spyOn(mockPlotService, 'setPlotlyDataAxis');
-    spectator.component.setSelectedDimension({value: '1'});
+    spectator.component.setSelectedDimension({id: '1'});
     expect(mockPlotService.setPlotlyDataAxis).toHaveBeenCalledWith('x', '1');
     expect(spectator.component.dimension.dimVars).toEqual(metadata.dim_context[1].typed_values);
     expect(spectator.component.dimension.dimVars[0].selected).toBeTruthy();
@@ -68,7 +68,7 @@ describe('DimensionOptionsComponent', () => {
 
   it('should set label pattern correctly when dimension is selected', () => {
     spyOn(spectator.component, 'setLabelPattern');
-    spectator.component.setSelectedDimension({value: '1'});
+    spectator.component.setSelectedDimension({id: '1'});
     spectator.detectChanges();
     expect(spectator.component.setLabelPattern).toHaveBeenCalled();
     expect(spectator.query('.axis-labeler-container')).not.toBeHidden();
