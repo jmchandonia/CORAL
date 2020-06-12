@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Dimension } from '../../../shared/models/plot-builder';
-import { Select2OptionData } from 'ng2-select2';
 import { PlotService } from '../../../shared/services/plot.service';
 import { DimensionContext, ArrayContext, TypedValue } from 'src/app/shared/models/object-metadata';
 // tslint:disable:variable-name
