@@ -19,15 +19,18 @@
     <div class="row">
       <div class="col-12">
         <label>Dimension Type:</label>
-        <select2
-        [cssImport]="true"
-        [options]="select2Options"
-        [value]="selectedType ? selectedType : ''"
-        [data]="data"
-        [disabled]="dimension.required"
-        (valueChanged)="setDimensionType($event)"
-        [ngClass]="error && !dimension.type ? 'select2-error' : ''"
-        ></select2>
+        <!-- [ngClass]="error && !dimension.type ? 'select2-error' : ''" -->
+        <ng-select
+          [items]="data"
+          [(ngModel)]="selectedType"
+          bindLabel="text"
+          bindValue="id"
+          (search)="handleSearch($event)"
+          [loading]="loading"
+          [clearable]="false"
+          [readonly]="dimension.required"
+          (change)="setDimensionType($event)"
+        ></ng-select>
       </div>
     </div>
     <div class="row mt-3 p-1">
