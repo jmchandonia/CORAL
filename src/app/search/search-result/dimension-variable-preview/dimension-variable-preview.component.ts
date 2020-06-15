@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import * as $ from 'jquery';
