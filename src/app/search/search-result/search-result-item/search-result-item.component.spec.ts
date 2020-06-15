@@ -5,7 +5,7 @@ import { ProcessDataComponent } from '../process-data/process-data.component';
 import { MockComponent } from 'ng-mocks';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
