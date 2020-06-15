@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
-import { Select2Module } from 'ng2-select2';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,9 +13,10 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { By } from '@angular/platform-browser';
 import { ContextBuilderComponent } from './context-builder/context-builder.component';
 import { MockComponent } from 'ng-mocks';
+import { NgSelectModule } from '@ng-select/ng-select';
 const metadata = require('src/app/shared/test/brick-type-templates.json');
 
-describe('PropertyFormComponent', () => {
+fdescribe('PropertyFormComponent', () => {
 
   const brick: Brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
   const properties: TypedProperty[] = brick.properties;
@@ -44,9 +44,9 @@ describe('PropertyFormComponent', () => {
   const createComponent = createComponentFactory({
     component: PropertyFormComponent,
     imports: [
-      Select2Module,
       TooltipModule.forRoot(),
       FormsModule,
+      NgSelectModule,
       HttpClientModule,
       ModalModule 
     ],
@@ -73,7 +73,7 @@ describe('PropertyFormComponent', () => {
 
   it('should display required properties', () => {
     spectator.detectChanges();
-    expect(spectator.component.typesSelect2[0].text).toBe('Data Variables Type');
+    expect(spectator.component.typesData[0].text).toBe('Data Variables Type');
     expect(spectator.query('div.units-container > select2')).toBeNull();
     expect(spectator.query('div.units-container > div.no-units')).not.toBeNull();
   });
@@ -105,9 +105,7 @@ describe('PropertyFormComponent', () => {
     spyOn(uploadService, 'searchOntPropertyUnits').and.callThrough();
     spyOn(spectator.component, 'setPropertyType').and.callThrough();
     spyOn(spectator.component, 'getPropertyUnits').and.callThrough();
-    spectator.triggerEventHandler('select2', 'valueChanged', {
-      data: [properties[0].typeTerm]
-    });
+    spectator.triggerEventHandler('ng-select', 'change', properties[0].typeTerm);
     spectator.detectChanges();
     expect(spectator.component.setPropertyType).toHaveBeenCalled();
     spectator.detectChanges();
@@ -115,7 +113,7 @@ describe('PropertyFormComponent', () => {
     expect(uploadService.searchOntPropertyUnits).toHaveBeenCalled();
     tick();
     spectator.detectChanges();
-    expect(spectator.component.unitsSelect2[1].text).toBe('test unit')
+    expect(spectator.component.unitsData[0].text).toBe('test unit')
   }));
 
   it('should trigger scalar validation on value field focus out', async(() => {
@@ -143,7 +141,7 @@ describe('PropertyFormComponent', () => {
     errorSub.next(true);
     spectator.detectChanges();
     expect(spectator.component.errors).toBeTruthy();
-    expect(spectator.query('input')).toHaveClass('button-error');
+    expect(spectator.query('input.form-control')).toHaveClass('button-error');
   });
 });
 
