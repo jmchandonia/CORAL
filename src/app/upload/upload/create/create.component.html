@@ -34,42 +34,46 @@
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-process">Process used to generate the data:</label>
-              <select2
-                id="brick-process"
-                [cssImport]="true"
-                [ngClass]="{'select2-error': error && !brick.process}"
-                [options]="options"
-                [data]="processData"
-                [value]="processValue ? processValue : ''"
-                [disabled]="requiredProcess"
-                (valueChanged)="setBrickProcess($event)"
-                ></select2>
+              <!-- [ngClass]="{'select2-error': error && !brick.process}" -->
+                <ng-select
+                  id="brick-process"
+                  [items]="processData"
+                  [(ngModel)]="processValue"
+                  [ngModelOptions]="{standalone: true}"
+                  [readonly]="requiredProcess"
+                  (change)="setBrickProcess($event)"
+                  [clearable]="false"
+                  bindLabel="text"
+                  bindValue="id"
+                ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-campaign">ENIGMA campaign: </label>
-              <select2
+              <!-- [ngClass]="{'select2-error': error && !brick.campaign}" -->
+              <ng-select
                 id="brick-campaign"
-                [cssImport]="true"
-                [ngClass]="{'select2-error': error && !brick.campaign}"
-                [options]="options"
-                [data]="campaignData"
-                (valueChanged)="setBrickCampaign($event)"
-                ></select2>
+                [items]="campaignData"
+                bindLabel="text"
+                bindValue="id"
+                [clearable]="false"
+                (change)="setBrickCampaign($event)"
+              ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-personnel">Personnel primarily responsible for generating this dataset: </label>
-              <select2
+              <!-- [ngClass]="{'select2-error': error && !brick.personnel}" -->
+              <ng-select
                 id="brick-personnel"
-                [cssImport]="true"
-                [options]="options"
-                [ngClass]="{'select2-error': error && !brick.personnel}"
-                [data]="personnelData"
-                (valueChanged)="setBrickPersonnel($event)"
-                ></select2>
+                [items]="personnelData"
+                bindValue="id"
+                bindLabel="text"
+                [clearable]="false"
+                (change)="setBrickPersonnel($event)"
+              ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
