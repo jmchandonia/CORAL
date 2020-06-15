@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { BrickDimension, DimensionVariable, Term } from 'src/app/shared/models/brick';
-import { Select2OptionData } from 'ng2-select2';
 import { Subscription } from 'rxjs';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
@@ -14,27 +13,11 @@ import { UploadValidationService } from 'src/app/shared/services/upload-validati
 export class DimensionFormComponent implements OnInit, OnDestroy {
 
   private _dimension: BrickDimension;
-
-  select2Options: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchDimensionMicroTypes(term)
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
-      }
-    }
-  };
-
   selectedType: string;
   error = false;
   errorSub: Subscription;
-  data: Array<Select2OptionData> = [];
+  data: Array<{id: string, text: string; has_units: boolean}> = [];
+  loading = false;
 
   @Input() set dimension(d: BrickDimension) {
     this._dimension = d;
@@ -68,9 +51,18 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setDimensionType(event) {
-    const term = event.data[0];
-    this.dimension.type = new Term(term.id, term.text);
+  handleSearch(event) {
+    if (event.term.length) {
+      this.loading = true;
+      this.uploadService.searchDimensionMicroTypes(event.term).subscribe((data: any) => {
+        this.loading = false;
+        this.data = [...data.results];
+      });
+    }
+  }
+
+  setDimensionType(event: Term) {
+    this.dimension.type = event;
     this.validate();
   }
 
