@@ -123,8 +123,8 @@ describe('DataValueFormComponent', () => {
 
   it('should disallow type selection for required data var', () => {
     expect(spectator.component.dataValue.required).toBeTruthy();
-    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
+    const selectEl = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
+    expect(selectEl.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
 
     // switch dataValue to be the next item, Below, Relative=detection limit
     dataValue = dataValues[1];
@@ -150,8 +150,8 @@ describe('DataValueFormComponent', () => {
 
   it('should have empty selectable type field for custom dataVar', () => {
     expect(spectator.component.dataValue.required).toBeFalsy();
-    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('false');
+    const selectEl = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
+    expect(selectEl.nativeElement.getAttribute('ng-reflect-readonly')).toBe('false');
   });
 
   it('should start empty data var with no unit selector', () => {

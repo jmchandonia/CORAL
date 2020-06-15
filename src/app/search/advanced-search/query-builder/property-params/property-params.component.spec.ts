@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Select2Module } from 'ng2-select2';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PropertyParamsComponent } from './property-params.component';
@@ -15,7 +14,6 @@ describe('PropertyParamsComponent', () => {
   const createComponent = createComponentFactory({
     component: PropertyParamsComponent,
     imports: [
-      Select2Module,
       FormsModule,
       HttpClientModule,
       RouterModule.forRoot([]),
