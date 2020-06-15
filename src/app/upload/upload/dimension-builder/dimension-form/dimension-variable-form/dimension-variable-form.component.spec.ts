@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
 import { DimensionVariableFormComponent } from './dimension-variable-form.component';
-import { Select2Module } from 'ng2-select2';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,6 +12,8 @@ import { of, Subject, asyncScheduler, Observable } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 describe('DimensionVariableFormComponent', () => {
 
@@ -50,10 +51,11 @@ describe('DimensionVariableFormComponent', () => {
   const createComponent = createComponentFactory({
     component: DimensionVariableFormComponent,
     imports: [
-      Select2Module,
       TooltipModule.forRoot(),
       HttpClientModule,
-      ModalModule.forRoot()
+      ModalModule.forRoot(),
+      NgSelectModule,
+      FormsModule
     ],
     providers: [
       mockProvider(BsModalService, MockModalService),
@@ -76,12 +78,12 @@ describe('DimensionVariableFormComponent', () => {
   it('should not render units for unitless dimVar', () => {
     expect(spectator.component.dimVar.type.has_units).toBeFalsy();
     expect(spectator.query('div.no-units')).not.toBeNull();
-    expect(spectator.queryAll('select2')).toHaveLength(1);
+    expect(spectator.queryAll('ng-select')).toHaveLength(1);
   });
 
   it('should disallow editing on required dim vars', () => {
-    const select2Form = spectator.debugElement.query(By.css('select2'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-disabled')).toBe('true');
+    const select2Form = spectator.debugElement.query(By.css('ng-select'));
+    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
     expect(spectator.query('button.delete-dim-var')).toBeNull();
   });
 
@@ -108,7 +110,7 @@ describe('DimensionVariableFormComponent', () => {
   });
 
   it('should display units for dim var with units', () => {
-    expect(spectator.query('.units-container > select2')).not.toBeNull();
+    expect(spectator.query('.units-container > ng-select')).not.toBeNull();
     expect(spectator.query('no-units')).toBeNull();
     expect(spectator.component.unitsData[0].text).toBe('microliter');
 
@@ -121,9 +123,7 @@ describe('DimensionVariableFormComponent', () => {
     spectator.detectChanges();
     spyOn(uploadService, 'searchOntPropertyUnits').and.callThrough();
     spyOn(spectator.component, 'setDimVarType').and.callThrough();
-    spectator.triggerEventHandler('select2', 'valueChanged', {
-      data: [variables[1].typeTerm]
-    });
+    spectator.triggerEventHandler('ng-select', 'change', variables[1].typeTerm);
     spectator.detectChanges();
     expect(spectator.component.setDimVarType).toHaveBeenCalled();
     spectator.detectChanges();
@@ -135,6 +135,6 @@ describe('DimensionVariableFormComponent', () => {
     errorSub.next(true);
     expect(spectator.component.error).toBeTruthy();
     spectator.detectChanges();
-    expect(spectator.query('.units-container > select2')).toHaveClass('select2-error');
+    // expect(spectator.query('.units-container > select2')).toHaveClass('select2-error');
   });
 });
