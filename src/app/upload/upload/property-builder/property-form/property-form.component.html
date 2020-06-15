@@ -1,14 +1,16 @@
 <div class="row mt-2">
   <div class="col-6">
-    <select2
-      [cssImport]="true"
-      [data]="typesSelect2"
-      [options]="propertiesOptions"
-      [disabled]="property.required"
-      [value]="propTypeItem ? propTypeItem : ''"
-      (valueChanged)="setPropertyType($event)"
-      [ngClass]="errors && !property.type ? 'select2-error' : ''"
-    ></select2>
+    <!-- [ngClass]="errors && !property.type ? 'select2-error' : ''" -->
+    <ng-select
+      [items]="typesData"
+      bindLabel="text"
+      bindValue="id"
+      [(ngModel)]="propTypeItem"
+      (change)="setPropertyType($event)"
+      (search)="handlePropertySearch($event)"
+      [clearable]="false"
+      style="width: calc(100% - 38px); display: inline-block"
+    ></ng-select>
     <button
       class="btn select2-custom-button"
       (click)="openContextModal()"
@@ -21,25 +23,22 @@
         more_horiz
       </i>
     </button>
-    <!-- <app-async-dropdown
-      [term]="property.type"
-      [required]="property.required"
-      [method]="'searchOntTerms'"
-      (valueChanged)="setPropertyType($event)"
-    ></app-async-dropdown> -->
   </div>
   <div class="col-3 value-container">
-      <select2
-        *ngIf="property.type && property.requireSelect2ForVal"
-        [cssImport]="true"
-        [data]="valuesSelect2"
-        [options]="valuesOptions"
-        [value]="propValueItem ? propValueItem : ''"
-        [ngClass]="{'select2-error' : errors && !property.value}"
-        (valueChanged)="setValue($event)"
-      ></select2>
+      <!-- [ngClass]="{'select2-error' : errors && !property.value}" -->
+      <ng-select
+        *ngIf="property.type && property.requireDropdownForVal"
+        [items]="valuesData"
+        bindValue="id"
+        bindLabel="text"
+        [(ngModel)]="propValueItem"
+        [ngModelOptions]="{standalone: true}"
+        (search)="handleValueSearch($event)"
+        (change)="setValue($event)"
+        [clearable]="false"
+      ></ng-select>
       <input
-        *ngIf="property.type && !property.requireSelect2ForVal"
+        *ngIf="property.type && !property.requireDropdownForVal"
         class="form-control"
         [(ngModel)]="property.value"
         [ngModelOptions]="{standalone: true}" 
@@ -51,20 +50,18 @@
       </div>
   </div>
   <div class="col-2 units-container">
-      <select2
+      <!-- [ngClass]="errors && property.units === undefined ? 'select2-error' : ''" -->
+    <ng-select
         *ngIf="property.units !== null && property.type"
-        [cssImport]="true"
-        [data]="unitsSelect2"
-        [options]="unitsOptions"
-        [value]="unitsItem ? unitsItem : ''"
-        (valueChanged)="setUnits($event)"
-        [ngClass]="errors && property.units === undefined ? 'select2-error' : ''" 
-    ></select2>
-    <!-- <app-async-dropdown
-        [value]="unitsItem"
-        [method]="'searchOntUnits'"
-        [required]="property.required"
-        (valueChanged)="setUnits($event)"></app-async-dropdown> -->
+        [items]="unitsData"
+        bindLabel="text"
+        bindValue="id"
+        [(ngModel)]="unitsItem"
+        [ngModelOptions]="{standalone: true}"
+        (change)="setUnits($event)"
+        [clearable]="false"
+    ></ng-select>
+
       <div class="row justify-content-center no-units" *ngIf="!property.type || property.units === null">
         <span>N/A</span>
       </div>
