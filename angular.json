@@ -28,7 +28,6 @@
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.js",
-              "./node_modules/select2/dist/js/select2.full.js"
             ],
             "es5BrowserSupport": true
           },
@@ -88,7 +87,6 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "./node_modules/select2/dist/js/select2.full.js"
             ],
             "assets": [
               "src/favicon.ico",
