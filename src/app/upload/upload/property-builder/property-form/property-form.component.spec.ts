@@ -16,7 +16,7 @@ import { MockComponent } from 'ng-mocks';
 import { NgSelectModule } from '@ng-select/ng-select';
 const metadata = require('src/app/shared/test/brick-type-templates.json');
 
-fdescribe('PropertyFormComponent', () => {
+describe('PropertyFormComponent', () => {
 
   const brick: Brick = BrickFactoryService.createUploadInstance(metadata.results[0].children[1]);
   const properties: TypedProperty[] = brick.properties;

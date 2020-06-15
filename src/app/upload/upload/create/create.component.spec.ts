@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
 import { FormsModule } from '@angular/forms';
-import { Select2Module } from 'ng2-select2';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CreateComponent } from './create.component';
@@ -14,6 +13,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { of, asyncScheduler } from 'rxjs';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { By } from '@angular/platform-browser';
+import { NgSelectModule } from '@ng-select/ng-select';
 const metadata = require('src/app/shared/test/brick-type-templates.json');
 
 describe('CreateComponent', () => {
@@ -50,7 +50,7 @@ describe('CreateComponent', () => {
     component: CreateComponent,
     imports: [
       FormsModule,
-      Select2Module,
+      NgSelectModule,
       ModalModule.forRoot(),
       BsDatepickerModule.forRoot(),
       NgxSpinnerModule,
@@ -80,7 +80,8 @@ describe('CreateComponent', () => {
     tick();
     expect(spectator.component.getProcessOterms).toHaveBeenCalled();
     expect(uploadService.getProcessOterms).toHaveBeenCalled();
-    expect(spectator.component.processData[1]).toEqual({id: 'process0000', text: 'test process'})
+    expect(spectator.component.processData[0].id).toEqual('process0000');
+    expect(spectator.component.processData[0].text).toEqual('test process')
   }));
 
   it('should call to get campaigns', fakeAsync(() => {
@@ -94,7 +95,8 @@ describe('CreateComponent', () => {
     tick();
     expect(spectator.component.getCampaignOterms).toHaveBeenCalled();
     expect(uploadService.getCampaignOterms).toHaveBeenCalled();
-    expect(spectator.component.campaignData[1]).toEqual({id: 'campaign0000', text: 'test campaign'});
+    expect(spectator.component.campaignData[0].id).toBe('campaign0000');
+    expect(spectator.component.campaignData[0].text).toBe('test campaign');
   }));
 
   it('should call to get personnel', fakeAsync(() => {
@@ -108,14 +110,16 @@ describe('CreateComponent', () => {
     tick();
     expect(spectator.component.getPersonnelOterms).toHaveBeenCalled();
     expect(uploadService.getPersonnelOterms).toHaveBeenCalled();
-    expect(spectator.component.personnelData[1]).toEqual({id: 'personnel0000', text: 'test personnel'});
+    expect(spectator.component.personnelData[0].id).toBe('personnel0000');
+    expect(spectator.component.personnelData[0].text).toBe('test personnel');
   }));
 
   it('should set process item to brick', () => {
     spyOn(spectator.component, 'setBrickProcess').and.callThrough();
-    spectator.triggerEventHandler('select2#brick-process', 'valueChanged', {
-      value: '0',
-      data: [{id: 'process0000', text: 'test process', has_units: false}]
+    spectator.triggerEventHandler('ng-select#brick-process', 'change', {
+      id: 'process0000',
+      text: 'test process',
+      has_units: false
     });
     spectator.detectChanges();
     expect(spectator.component.setBrickProcess).toHaveBeenCalled();
@@ -125,9 +129,10 @@ describe('CreateComponent', () => {
 
   it('should set cammpaign item to brick', () => {
     spyOn(spectator.component, 'setBrickCampaign').and.callThrough();
-    spectator.triggerEventHandler('select2#brick-campaign', 'valueChanged', {
-      value: '0',
-      data: [{id: 'campaign0000', text: 'test campaign', has_units: false}]
+    spectator.triggerEventHandler('ng-select#brick-campaign', 'change', {
+      id: 'campaign0000',
+      text: 'test campaign',
+      has_units: false
     });
     spectator.detectChanges();
     expect(spectator.component.setBrickCampaign).toHaveBeenCalled();
@@ -137,9 +142,10 @@ describe('CreateComponent', () => {
 
   it('should set personnel item to brick', () => {
     spyOn(spectator.component, 'setBrickPersonnel').and.callThrough();
-    spectator.triggerEventHandler('select2#brick-personnel', 'valueChanged', {
-      value: '0',
-      data: [{id: 'personnel0000', text: 'test personnel', has_units: false}]
+    spectator.triggerEventHandler('ng-select#brick-personnel', 'change', {
+      id: 'personnel0000',
+      text: 'test personnel',
+      has_units: false
     });
     spectator.detectChanges();
     expect(spectator.component.setBrickPersonnel).toHaveBeenCalled();
