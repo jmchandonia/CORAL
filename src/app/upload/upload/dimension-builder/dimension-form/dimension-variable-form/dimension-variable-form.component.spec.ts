@@ -9,7 +9,7 @@ const metadata = require('src/app/shared/test/brick-type-templates.json');
 import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 import { By } from '@angular/platform-browser';
 import { of, Subject, asyncScheduler, Observable } from 'rxjs';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { NgSelectModule } from '@ng-select/ng-select';
