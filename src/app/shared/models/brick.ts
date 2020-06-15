@@ -142,7 +142,7 @@ export class Context {
         this.scalarType = t.scalar_type;
     }
 
-    get requireSelect2ForVal() {
+    get requireDropdownForVal() {
         return this.scalarType === 'oterm_ref' ||
         this.scalarType === 'object_ref';
     }
