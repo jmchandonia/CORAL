@@ -1,14 +1,5 @@
 <div class="row mt-4">
   <div class="col-5 type-options-container">
-    <!-- <select2
-      [cssImport]="true"
-      [value]="typeValuesItem ? typeValuesItem : ''"
-      [options]="typesOptions"
-      [data]="typeValues"
-      (valueChanged)="updateType($event)"
-      [disabled]="dataValue.required"
-      [ngClass]="error && !dataValue.type ? 'select2-error' : ''"
-    ></select2> -->
     <ng-select
       [items]="typeValues"
       bindLabel="text"
@@ -19,6 +10,7 @@
       (search)="handleSearch($event)"
       [(ngModel)]="typeValuesItem"
       [readonly]="dataValue.required"
+      [clearable]="false"
       ></ng-select>
     <button
       class="btn select2-custom-button"
@@ -34,15 +26,16 @@
   </button>
   </div>
   <div class="col-5 units-container">
-    <select2
+    <ng-select
       *ngIf="dataValue.units !== null && dataValue.type"
-      [cssImport]="true"
-      [value]="unitsItem ? unitsItem : ''"
-      [options]="unitsOptions"
-      [data]="unitsValues"
-      (valueChanged)="updateUnits($event)"
-      [ngClass]="error && !dataValue.units ? 'select2-error' : ''"
-    ></select2>
+      [items]="unitsValues"
+      bindLabel="text"
+      bindValue="id"
+      [loading]="loadingUnits"
+      [clearable]="false"
+      (change)="updateUnits($event)"
+      [(ngModel)]="unitsItem"
+    ></ng-select>
     <div class="row justify-content-center no-units" *ngIf="dataValue.units === null || !dataValue.type">
       <span>N/A</span>
     </div>

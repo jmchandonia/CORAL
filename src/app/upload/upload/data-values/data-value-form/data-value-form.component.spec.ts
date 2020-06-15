@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync, flushMicrotasks, flush } from '@angular/core/testing';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
-import { Select2Module, Select2OptionData } from 'ng2-select2';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule, BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,9 +11,10 @@ import { of, Subject, asyncScheduler, Observable } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { By } from '@angular/platform-browser';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
-
-describe('DataValueFormComponent', () => {
+fdescribe('DataValueFormComponent', () => {
 
   const dataValues = BrickFactoryService.createUploadInstance(templates.results[0].children[1]).dataValues;
   let dataValue: DataValue = dataValues[0];
@@ -29,10 +29,11 @@ describe('DataValueFormComponent', () => {
   const createComponent = createComponentFactory({
     component: DataValueFormComponent,
     imports: [
-      Select2Module,
       TooltipModule.forRoot(),
       ModalModule.forRoot(),
-      HttpClientModule
+      HttpClientModule,
+      NgSelectModule,
+      FormsModule
     ],
     providers: [
       {
@@ -97,7 +98,7 @@ describe('DataValueFormComponent', () => {
     expect(spectator.component.dataValue.type.has_units).toBeTruthy();
     expect(spectator.component.unitsValues).toEqual([{id: 'UO:XXXXXX8', text: 'milligram per liter'}]);
     expect(spectator.component.dataValue.microType).toBeTruthy();
-    expect(spectator.query('div.col-5.units-container > select2')).not.toBeNull();
+    expect(spectator.query('div.col-5.units-container > ng-select')).not.toBeNull();
     expect(spectator.query('div.row.justify-content-center.no-units')).toBeNull();
   });
 
@@ -109,21 +110,21 @@ describe('DataValueFormComponent', () => {
     spectator.detectChanges();
     expect(uploadService.searchOntPropertyUnits).toHaveBeenCalled();
     expect(uploadService.searchOntPropertyUnits).toHaveBeenCalledWith(spectator.component.dataValue.microType);
-    expect(spectator.component.unitsValues).toHaveLength(2);
+    expect(spectator.component.unitsValues).toHaveLength(1);
   }));
 
   it('should update units', () => {
     spyOn(spectator.component, 'validate');
-    spectator.component.updateUnits({value: '1', data: [{id: 'XXXXX', text: 'test units'}]});
+    spectator.component.updateUnits({id: 'XXXXX', text: 'test units', has_units: false});
     expect(spectator.component.validate).toHaveBeenCalled();
-    expect(spectator.component.dataValue.units)
-      .toEqual(new Term('XXXXX', 'test units'));
+    expect(spectator.component.dataValue.units.text).toBe('test units');
+    expect(spectator.component.dataValue.units.id).toBe('XXXXX');
   });
 
   it('should disallow type selection for required data var', () => {
     expect(spectator.component.dataValue.required).toBeTruthy();
-    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > select2'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-disabled')).toBe('true');
+    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
+    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
 
     // switch dataValue to be the next item, Below, Relative=detection limit
     dataValue = dataValues[1];
@@ -133,7 +134,7 @@ describe('DataValueFormComponent', () => {
     expect(spectator.component.dataValue.type.text).toBe('Below');
     expect(spectator.component.dataValue.microType.has_units).toBeFalsy();
     expect(spectator.query('div.no-units')).toBeTruthy();
-    expect(spectator.query('div.units-container > select2')).toBeNull();
+    expect(spectator.query('div.units-container > ng-select')).toBeNull();
   });
 
   it('should render microtype context in dropdown', () => {
@@ -149,18 +150,18 @@ describe('DataValueFormComponent', () => {
 
   it('should have empty selectable type field for custom dataVar', () => {
     expect(spectator.component.dataValue.required).toBeFalsy();
-    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > select2'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-disabled')).toBe('false');
+    const select2Form = spectator.debugElement.query(By.css('div.col-5.type-options-container > ng-select'));
+    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('false');
   });
 
   it('should start empty data var with no unit selector', () => {
     expect(spectator.query('div.no-units')).toBeTruthy();
-    expect(spectator.query('div.units-container > select2')).toBeNull();
+    expect(spectator.query('div.units-container > ng-select')).toBeNull();
   });
 
   it('should select and update type', () => {
     spyOn(spectator.component, 'getUnits').and.callThrough();
-    spectator.component.updateType({data: [dataValues[0].typeTerm]});
+    spectator.component.updateType(dataValues[0].typeTerm);
     spectator.detectChanges();
     expect(spectator.component.dataValue.type.text).toBe('Concentration');
     expect(spectator.component.dataValue.units).toBeUndefined();  
