@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import * as $ from 'jquery';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { HomeService } from 'src/app/shared/services/home.service';
 
 @Component({
   selector: 'app-reports',
@@ -12,48 +11,26 @@ import { environment } from 'src/environments/environment';
 })
 export class ReportsComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private homeService: HomeService) { }
 
-  select2Data: any = [
-    {id: '', text: ''},
-  ];
-
-  public ajax: Select2AjaxOptions;
-  options: Select2Options = {
-    width: '100%',
-    placeholder: 'Browse By Type',
-    containerCssClass: 'select2-custom-container'
-  };
-  browseItems: any[];
+  reportsData: Array<{id: string, name: string}> = [];
   dataTable: any;
   selectedValue: any;
 
   ngOnInit() {
-    this.ajax = {
-      url: `${environment.baseURL}/reports`,
-      dataType: 'json',
-      delay: 250,
-      cache: false,
-      processResults: (data: any) => {
-        this.browseItems = data.results;
-        return {
-          results: $.map(data.results, obj => {
-            return {id: obj.id, text: obj.name};
-          }),
-        };
-      },
-    };
-    this.options.ajax = this.ajax;
+    this.homeService.getReports().subscribe((data: any) => {
+      this.reportsData = [...data.results];
+    });
+
     const table: any = $('table');
     this.dataTable = table.DataTable();
     }
 
-    updateTable(event) {
-      this.http.get(`${environment.baseURL}/reports/${event.value}`)
-      .subscribe((res: any) => {
-        if (res.status === 'OK') {
-          this.selectedValue = JSON.parse(res.results);
-        }
-      });
-    }
+  updateTable(event) {
+    this.homeService.getReportItem(event.id).subscribe((res: any) => {
+      if (res.status === 'OK') {
+        this.selectedValue = JSON.parse(res.results);
+      }
+    });
+  }
 }
