@@ -11,7 +11,7 @@ import { MockComponent } from 'ng-mocks';
 import { NgSelectModule } from '@ng-select/ng-select';
 const metadata = require('src/app/shared/test/object-metadata.json');
 
-fdescribe('DimensionOptionsComponent', () => {
+describe('DimensionOptionsComponent', () => {
 
   const testDimension = new Dimension(metadata.dim_context, metadata.typed_values);
 
