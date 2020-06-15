@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, ViewEncapsulation,EventEmitter, Output } from '@angular/core';
 import { DataValue, Term, Context } from 'src/app/shared/models/brick';
-import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
@@ -45,8 +44,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:variable-name
   private _dataValue: DataValue;
 
-  typeValues: Array<Select2OptionData> = [{id: '', text: ''}];
-  unitsValues: Array<Select2OptionData> = [{id: '', text: ''}];
+  typeValues: Array<{id: string, text: string}> = [{id: '', text: ''}];
+  unitsValues: Array<{id: string, text: string}> = [{id: '', text: ''}];
 
   typeValuesItem: string;
   unitsItem: string;
@@ -54,26 +53,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   errorSub: Subscription;
   modalRef: BsModalRef;
   loading = false;
-
-   unitsOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-   };
-
-  //  typesOptions: Select2Options = {
-  //   width: 'calc(100% - 38px)',
-  //   containerCssClass: 'select2-custom-container select2-custom-properties-container',
-  //   query: (options: Select2QueryOptions) => {
-  //     const term = options.term;
-  //     if (!term) {
-  //       options.callback({results: []});
-  //     } else {
-  //       this.uploadService.searchDataVariableMicroTypes(term).subscribe((data: any) => {
-  //         options.callback({results: data.results as Select2OptionData});
-  //       });
-  //     }
-  //   }
-  //  };
+  loadingUnits = false;
 
   constructor(
     private uploadService: UploadService,
@@ -107,7 +87,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   setContextLabel(dataType: Term, context: Context[]) {
-    const label: Select2OptionData = Object.assign({}, dataType);
+    const label = Object.assign({}, dataType);
     context.forEach(ctx => {
       const { typeTerm, value, units } = ctx;
       label.text += `, ${typeTerm.text}=${value.text ? value.text : value}`;
@@ -137,18 +117,17 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   }
 
   getUnits() {
+    this.loadingUnits = true;
     this.uploadService.searchOntPropertyUnits(this.dataValue.microType)
       .subscribe(data => {
-        this.unitsValues = [this.unitsValues[0], ...data.results];
+        this.loadingUnits = false;
+        this.unitsValues = [...data.results];
       });
   }
 
-  updateUnits(event) {
-    if (event.value.length) {
-      const units = event.data[0];
-      this.dataValue.units = new Term(units.id, units.text);
-      this.validate();
-    }
+  updateUnits(event: Term) {
+    this.dataValue.units = event;
+    this.validate();
   }
 
   validate() {
