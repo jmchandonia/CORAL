@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { Spectator, createComponentFactory, mockProvider } from '@ngneat/spectator';
 import { TypeSelectorComponent } from './type-selector.component';
-import { Select2Module } from 'ng2-select2';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
@@ -27,8 +28,9 @@ describe('TypeSelectorComponent', () => {
   let createComponent = createComponentFactory({
     component: TypeSelectorComponent,
     imports: [
-      Select2Module,
-      HttpClientModule
+      HttpClientModule,
+      NgSelectModule,
+      FormsModule
     ],
     providers: [
       mockProvider(UploadService, MockUploadService),
@@ -48,19 +50,16 @@ describe('TypeSelectorComponent', () => {
   });
 
   it('should populate template dropdown', () => {
-    const { select2Data } = spectator.component;
-    expect(select2Data).toHaveLength(2);
-    expect(select2Data[1].children).toHaveLength(2);
-    expect(select2Data[1].children[0].text).toBe('Custom Chemical Measurement');
+    const { templateData } = spectator.component;
+    expect(templateData).toHaveLength(1);
+    expect(templateData[0].children).toHaveLength(2);
+    expect(templateData[0].children[0].text).toBe('Custom Chemical Measurement');
   });
 
   it('should set selected template in service', () => {
     const uploadService = spectator.fixture.debugElement.injector.get(UploadService);
     spyOn(spectator.component, 'validate');
-    spectator.component.setBrickType({
-      data: [{test: 'test'}],
-      value: '0'
-    });
+    spectator.component.setBrickType({test: 'test'});
     spectator.detectChanges();
     expect(uploadService.setSelectedTemplate).toHaveBeenCalledWith({test: 'test'});
     expect(spectator.component.validate).toHaveBeenCalled();

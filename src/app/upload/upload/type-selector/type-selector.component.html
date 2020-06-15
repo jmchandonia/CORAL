@@ -10,14 +10,21 @@
       <div class="card">
         <h5 class="card-header light-blue">Data Type</h5>
         <div class="card-body">
-          <select2
-            [cssImport]="true"
-            [data]="select2Data"
-            [options]="select2Options"
-            [value]="selectedTemplate ? selectedTemplate : ''"
-            (valueChanged)="setBrickType($event)"
-            [ngClass]="error ? 'select2-error' : ''" 
-          ></select2>
+          <!-- [ngClass]="error ? 'select2-error' : ''" -->
+          <ng-select
+            [items]="templateData"
+            groupBy="children"
+            bindValue="id"
+            bindLabel="text"
+            (change)="setBrickType($event)"
+            [clearable]="false"
+            [(ngModel)]="selectedTemplate"
+            [ngModelOptions]="{standalone: true}"
+          >
+            <ng-template ng-optgroup-tmp let-item="item">
+              {{item.text}}
+            </ng-template>
+        </ng-select>
         </div>
       </div>
       <div class="row mt-3" *ngIf="error">
