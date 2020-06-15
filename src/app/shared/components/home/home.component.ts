@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { QueryParam, QueryMatch } from '../../models/QueryBuilder';
 import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
@@ -12,10 +11,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  options: Select2Options = {
-    width: '100%'
-  };
 
   checkBoxArray: string[] = [];
   public filterCategories: any[] = [];

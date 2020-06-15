@@ -68,9 +68,9 @@ describe('DimensionFormComponent', () => {
   });
 
   it('should disallow editing required dimensions', () => {
-    const select2Form = spectator.debugElement.query(By.css('ng-select'));
+    const selectEl = spectator.debugElement.query(By.css('ng-select'));
     expect(spectator.component.selectedType).toBe('ME:XXXXXX3');
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
+    expect(selectEl.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
     expect(spectator.query('button#delete-dimension')).toBeNull();
   });
 
@@ -114,8 +114,8 @@ describe('DimensionFormComponent', () => {
   }));
 
   it('should allow type selection for custom dimensions', () => {
-    const select2Form = spectator.debugElement.query(By.css('ng-select'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('false');
+    const selectEl = spectator.debugElement.query(By.css('ng-select'));
+    expect(selectEl.nativeElement.getAttribute('ng-reflect-readonly')).toBe('false');
   });
 
   it('should be able to delete custom dimensions', () => {

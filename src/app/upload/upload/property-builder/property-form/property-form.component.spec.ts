@@ -74,7 +74,7 @@ describe('PropertyFormComponent', () => {
   it('should display required properties', () => {
     spectator.detectChanges();
     expect(spectator.component.typesData[0].text).toBe('Data Variables Type');
-    expect(spectator.query('div.units-container > select2')).toBeNull();
+    expect(spectator.query('div.units-container > ng-select')).toBeNull();
     expect(spectator.query('div.units-container > div.no-units')).not.toBeNull();
   });
 
