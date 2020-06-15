@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { Context, Term } from 'src/app/shared/models/brick';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
-import { Select2OptionData } from 'ng2-select2';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,11 +17,10 @@ export class ContextFormComponent implements OnInit, OnDestroy {
   @Input() set context(c: Context) {
     this._context = c;
 
-    this.typesSelect2 = c.typeTerm ? [c.typeTerm] : [];
-    this.unitsSelect2 = c.units ? [c.units] : [{id: '', text: ''}];
-    this.valuesSelect2 = c.value && c.requireSelect2ForVal
-      ? [c.value] as Select2OptionData[]
-      : [{id: '', text: ''}];
+    this.typesData = c.typeTerm ? [c.typeTerm] : [];
+    this.unitsData = c.units ? [c.units] : [];
+    this.valuesData = c.value && c.requireDropdownForVal
+      ? [c.value] : [];
 
     if (c.typeTerm) {
       this.typeItem = c.typeTerm.id;
@@ -30,7 +28,7 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     if (c.units) {
       this.unitsItem = c.units.id;
     }
-    if (c.value && c.requireSelect2ForVal) {
+    if (c.value && c.requireDropdownForVal) {
       this.valueItem = (c.value as Term).id;
     }
 
@@ -65,53 +63,14 @@ export class ContextFormComponent implements OnInit, OnDestroy {
   @Output() valueError: EventEmitter<any> = new EventEmitter();
   errorSub: Subscription;
 
-  typesOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchPropertyMicroTypes(term).subscribe((data: any) => {
-          options.callback({results: data.results as Select2OptionData});
-        });
-      }
-    }
-   };
+  public typesData: Array<Term>;
+  public unitsData: Array<Term>;
+  public valuesData: Array<Term>;
 
-   valuesOptions: Select2Options = {
-     width: '100%',
-     containerCssClass: 'select2-custom-container',
-     query: (options: Select2QueryOptions) => {
-       const term = options.term;
-       if (!term) {
-         options.callback({results: []});
-       } else {
-          if (this.context.scalarType === 'oterm_ref') {
-            this.uploadService.searchOntPropertyValues(term, this.context.microType)
-            .subscribe((data: any) => {
-              options.callback({results: data.results as Select2OptionData});
-            });
-          } else {
-            // scalar type is object_ref
-            this.uploadService.searchPropertyValueObjectRefs(term, this.context.type.id, this.context.microType)
-              .subscribe((data: any) => {
-                options.callback({results: data.results as Select2OptionData});
-              });
-          }
-       }
-     }
-   };
 
-  unitsOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-   };
-
-  public typesSelect2: Select2OptionData[];
-  public unitsSelect2: Select2OptionData[];
-  public valuesSelect2: Select2OptionData[];
+  typesLoading = false;
+  valuesLoading = false;
+  unitsLoading = false;
 
   typeItem: string;
   unitsItem: string;
@@ -135,7 +94,38 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleTypesSearch(event) {
+    if (event.term.length) {
+      this.typesLoading = true;
+      this.uploadService.searchPropertyMicroTypes(event.term).subscribe((data: any) => {
+        this.typesData = [...data.results];
+        this.typesLoading = false;
+      });
+    }
+  }
+
+  handleValuesSearch(event) {
+    if (event.term.length) {
+      this.valuesLoading = true;
+      if (this.context.scalarType === 'oterm_ref') {
+        this.uploadService.searchOntPropertyValues(event.term, this.context.microType)
+          .subscribe((data: any) => {
+            this.valuesData = [...data.results];
+            this.valuesLoading = false;
+        });
+      } else {
+        // scalar type should be object_ref, search for object_refs
+        this.uploadService.searchPropertyValueObjectRefs(event.term, this.context.type.id, this.context.microType)
+          .subscribe((data: any) => {
+            this.valuesData = [...data.results];
+            this.valuesLoading = false;
+        });
+      }
+    }
+  }
+
   getUnits() {
+    this.unitsLoading = true;
     this.uploadService.searchOntPropertyUnits(this.context.microType)
     .subscribe(data => {
       if (!data.results.length) {
@@ -144,20 +134,20 @@ export class ContextFormComponent implements OnInit, OnDestroy {
         if (this.context.units === null) {
           this.context.units = undefined;
         }
-        this.unitsSelect2 = [...this.unitsSelect2, ...data.results];
+        this.unitsData = [...data.results];
       }
+      this.unitsLoading = false;
   });
   }
 
-  setContextType(event) {
-    const item = event.data[0];
-    this.context.typeTerm = item;
+  setContextType(event: Term) {
+    this.context.typeTerm = event;
 
     // clear reset entire property object to clear other select 2 dropdowns
     if (this.context.value || this.context.units) {
       const resetProperty = new Context(
         this.context.required,
-        item
+        event
       );
       // emit new typed property to replace old one in parent component array reference
       this.resetContext.emit(resetProperty);
@@ -166,16 +156,12 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setValue(event) {
-    const item = event.data[0];
-    this.context.value = new Term(item.id, item.text);
+  setValue(event: Term) {
+    this.context.value = event;
   }
 
-  setUnits(event) {
-    if (event.value.length) {
-      const item = event.data[0];
-      this.context.units = new Term(item.id, item.text);
-    }
+  setUnits(event: Term) {
+    this.context.units = event;
   }
 
   validateValue() {
