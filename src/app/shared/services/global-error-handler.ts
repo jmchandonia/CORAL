@@ -1,6 +1,6 @@
 import { Injector, ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ErrorComponent } from 'src/app/shared/components/error/error.component';
 import { TemplateParseError } from '@angular/compiler';
 import { Router, NavigationEnd } from '@angular/router';

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { DimensionVariablePreviewComponent } from './dimension-variable-preview.component';
-import { BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 describe('DimensionVariablePreviewComponent', () => {
 

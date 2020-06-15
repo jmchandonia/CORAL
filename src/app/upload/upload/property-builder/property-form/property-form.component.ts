@@ -3,7 +3,7 @@ import { TypedProperty, Term, Context } from 'src/app/shared/models/brick';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ContextBuilderComponent } from './context-builder/context-builder.component';
 // tslint:disable:variable-name
 
