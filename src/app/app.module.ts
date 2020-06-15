@@ -3,7 +3,6 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { SearchModule } from './search/search.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Select2Module } from 'ng2-select2';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlotModule } from './plot/plot.module';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
@@ -42,7 +41,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AppRoutingModule,
     SearchModule,
     HttpClientModule,
-    Select2Module,
     PlotModule,
     NgxSpinnerModule,
     PlotlyModule,
