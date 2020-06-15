@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Select2OptionData } from 'ng2-select2';
 import { Brick } from 'src/app/shared/models/brick';
-import { environment } from 'src/environments/environment';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
 
@@ -20,15 +18,8 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
     private validator: UploadValidationService
   ) { }
 
-  select2Options: Select2Options = {
-    width: '100%',
-    placeholder: 'Select a Data Type',
-    containerCssClass: 'select2-custom-container'
-  };
-
-  select2Data: Array<Select2OptionData> = [{id: '', text: ''}];
+  templateData = [];
   errorSub: Subscription;
-  ajaxOptions: Select2AjaxOptions;
   brick: Brick;
   dataTypes: any;
   selectedTemplate: string;
@@ -44,11 +35,11 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
     this.brick = this.uploadService.getBrickBuilder();
     const templates = this.uploadService.brickTypeTemplates;
     if (templates) {
-      this.select2Data = [...this.select2Data, ...templates];
+      this.templateData = [...templates];
     } else {
       this.uploadService.getTemplateSub()
       .subscribe((data: any) => {
-        this.select2Data = [...this.select2Data, ...data];
+        this.templateData = [...data];
       });
     }
   }
@@ -60,11 +51,8 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
   }
 
   setBrickType(event) {
-    if (event.value.length) {
-      const template = event.data[0];
-      this.uploadService.setSelectedTemplate(template);
-      this.validate();
-    }
+    this.uploadService.setSelectedTemplate(event);
+    this.validate();
   }
 
   validate() {
