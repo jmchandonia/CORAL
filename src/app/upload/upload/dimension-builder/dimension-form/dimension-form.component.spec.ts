@@ -14,7 +14,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 
-fdescribe('DimensionFormComponent', () => {
+describe('DimensionFormComponent', () => {
 
   const errorSub = new Subject();
 

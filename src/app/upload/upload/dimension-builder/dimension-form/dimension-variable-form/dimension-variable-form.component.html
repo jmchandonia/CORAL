@@ -2,15 +2,20 @@
   <div class="col-12">
     <div class="row">
       <div class="col-6 type-container">
-        <select2
-          [cssImport]="true"
-          [options]="typeOptions"
-          [data]="typeData"
-          [value]="selectedType ? selectedType : ''"
-          (valueChanged)="setDimVarType($event)"
-          [disabled]="dimVar.required"
-          [ngClass]="error && !dimVar.type ? 'select2-error' : ''"
-          ></select2>
+        <!--[ngClass]="error && !dimVar.type ? 'select2-error' : ''" -->
+          <ng-select
+            [items]="typeData"
+            bindLabel="text"
+            bindValue="id"
+            [(ngModel)]="selectedType"
+            [ngModelOptions]="{standalone: true}"
+            [readonly]="dimVar.required"
+            (search)="handleSearch($event)"
+            style="width: calc(100% - 38px); display: inline-block" 
+            (change)="setDimVarType($event)"
+            [loading]="typeLoading"
+            [clearable]="false"
+          ></ng-select>
         <button
           class="btn select2-custom-button"
           (click)="openModal()"
@@ -24,14 +29,17 @@
         </button>
       </div>
       <div class="col-5 units-container" *ngIf="dimVar.units !== null && dimVar.type">
-        <select2
-          [cssImport]="true"
-          [options]="unitsOptions"
-          [data]="unitsData"
-          [value]="selectedUnits ? selectedUnits : ''"
-          (valueChanged)="setDimVarUnits($event)"
-          [ngClass]="error && !dimVar.units ? 'select2-error' : ''"
-        ></select2>
+        <!-- [ngClass]="error && !dimVar.units ? 'select2-error' : ''" -->
+        <ng-select
+          [items]="unitsData"
+          [(ngModel)]="selectedUnits"
+          [ngModelOptions]="{standalone: true}"
+          bindLabel="text"
+          bindValue="id"
+          [loading]="unitsLoading"
+          (change)="setDimVarUnits($event)"
+          [clearable]="false"
+        ></ng-select>
       </div>
       <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
         <div class="row justify-content-center no-units">
