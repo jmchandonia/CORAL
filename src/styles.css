@@ -139,23 +139,47 @@ body {
     border-right: 0px!important;
 }
 
-.select2-custom-button {
+.select-custom-button {
     height: 38px;
     width: 38px;
     margin: 0!important;
     background-color: #EEEEFF;
     color: #888;
-    border-top-left-radius: 0px!important;
-    border-bottom-left-radius: 0px!important;
     border: 1px solid #CED4DA;
-    border-left: none;
     padding: 0px!important;
     padding-top: 5px;
 }
 
-.select2-custom-button-icon {
+.select-custom-button-icon {
     margin: 0px auto;
     margin-top: 6px;
+}
+
+.ng-select.custom > .ng-select-container {
+    height: 38px;
+}
+
+/* for parent container of ng-selects with buttons (upload module) */
+.select-button-group {
+    display: flex;
+    align-items: flex-start;
+}
+
+.ng-select.custom.select-error > .ng-select-container {
+    border: 1px solid red;
+}
+
+.ng-select.custom .ng-arrow-wrapper {
+    background: #EEEEFF;
+    padding: 0;
+    padding-top: 5px;
+    border-left: 1px solid #CCC;
+    height: 100%;
+    width: 38px;
+}
+
+.ng-select.custom.select-error .ng-arrow-wrapper {
+    border-left: 1px solid red;
 }
 
 

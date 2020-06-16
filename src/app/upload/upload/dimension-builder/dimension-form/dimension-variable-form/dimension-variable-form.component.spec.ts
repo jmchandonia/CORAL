@@ -82,8 +82,8 @@ describe('DimensionVariableFormComponent', () => {
   });
 
   it('should disallow editing on required dim vars', () => {
-    const select2Form = spectator.debugElement.query(By.css('ng-select'));
-    expect(select2Form.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
+    const selectEl = spectator.debugElement.query(By.css('ng-select'));
+    expect(selectEl.nativeElement.getAttribute('ng-reflect-readonly')).toBe('true');
     expect(spectator.query('button.delete-dim-var')).toBeNull();
   });
 
