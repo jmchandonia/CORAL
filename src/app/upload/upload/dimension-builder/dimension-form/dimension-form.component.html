@@ -1,9 +1,5 @@
 <div class="card mt-4">
   <div class="card-header light-blue">
-    <!-- <div class="row">
-      <h6 class="col-10">Dimension {{dimension.index + 1}}</h6>
-      <button class="btn btn-link" *ngIf="!dimension.required" (click)="delete()">Remove</button>
-    </div> -->
     <h5 class="mt-2 mb-0" style="float: left">
       Dimension {{dimension.index + 1}}
     </h5>
@@ -19,8 +15,9 @@
     <div class="row">
       <div class="col-12">
         <label>Dimension Type:</label>
-        <!-- [ngClass]="error && !dimension.type ? 'select2-error' : ''" -->
         <ng-select
+          class="custom"
+          [class.select-error]="error && !dimension.type"
           [items]="data"
           [(ngModel)]="selectedType"
           bindLabel="text"

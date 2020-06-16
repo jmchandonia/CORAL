@@ -1,7 +1,8 @@
 <div class="row mt-2">
-  <div class="col-6">
-    <!-- [ngClass]="errors && !property.type ? 'select2-error' : ''" -->
+  <div class="col-6 select-button-group">
     <ng-select
+      class="custom"
+      [class.select-error]="errors && !property.type"
       [items]="typesData"
       bindLabel="text"
       bindValue="id"
@@ -12,22 +13,23 @@
       style="width: calc(100% - 38px); display: inline-block"
     ></ng-select>
     <button
-      class="btn select2-custom-button"
+      class="btn select-custom-button"
       (click)="openContextModal()"
       [tooltip]="'View Property context (' + property.context.length + ' items)'"
       [delay]="750"
       [disabled]="!property.type"
       [class.button-error]="errors && !property.type"
       >
-      <i class="material-icons select2-custom-button-icon">
+      <i class="material-icons select-custom-button-icon">
         more_horiz
       </i>
     </button>
   </div>
   <div class="col-3 value-container">
-      <!-- [ngClass]="{'select2-error' : errors && !property.value}" -->
       <ng-select
         *ngIf="property.type && property.requireDropdownForVal"
+        class="custom"
+        [class.select-error]="errors && !property.value"
         [items]="valuesData"
         bindValue="id"
         bindLabel="text"
@@ -50,9 +52,10 @@
       </div>
   </div>
   <div class="col-2 units-container">
-      <!-- [ngClass]="errors && property.units === undefined ? 'select2-error' : ''" -->
     <ng-select
         *ngIf="property.units !== null && property.type"
+        class="custom"
+        [class.select-error]="errors && property.units === undefined"
         [items]="unitsData"
         bindLabel="text"
         bindValue="id"
