@@ -85,7 +85,7 @@ describe('PropertyFormComponent', () => {
     spyOn(modal.onHidden, 'subscribe').and.callThrough();
     spyOn(spectator.component, 'openContextModal').and.callThrough();
     spyOn(modal, 'show').and.callThrough();
-    spectator.click('button.btn.select2-custom-button');
+    spectator.click('button.btn.select-custom-button');
     spectator.detectChanges();
     expect(spectator.component.openContextModal).toHaveBeenCalled();
     expect(modal.show).toHaveBeenCalled();

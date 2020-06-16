@@ -93,7 +93,7 @@ describe('DimensionVariableFormComponent', () => {
     spyOn(modal, 'show').and.callThrough();
     spyOn(modal.onHidden, 'subscribe').and.callThrough();
     spyOn(spectator.component, 'openModal').and.callThrough();
-    spectator.click('button.select2-custom-button');
+    spectator.click('button.select-custom-button');
     expect(spectator.component.openModal).toHaveBeenCalled();
     tick();
     spectator.detectChanges();
@@ -135,6 +135,6 @@ describe('DimensionVariableFormComponent', () => {
     errorSub.next(true);
     expect(spectator.component.error).toBeTruthy();
     spectator.detectChanges();
-    // expect(spectator.query('.units-container > select2')).toHaveClass('select2-error');
+    expect(spectator.query('.units-container > ng-select')).toHaveClass('select-error');
   });
 });

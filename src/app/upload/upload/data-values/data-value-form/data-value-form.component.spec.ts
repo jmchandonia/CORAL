@@ -76,7 +76,7 @@ describe('DataValueFormComponent', () => {
 
   it('should open context', () => {
     spyOn(spectator.component, 'openContextModal');
-    spectator.click('button.btn.select2-custom-button');
+    spectator.click('button.btn.select-custom-button');
     expect(spectator.component.openContextModal).toHaveBeenCalled();
   });
 

@@ -129,6 +129,6 @@ describe('DimensionFormComponent', () => {
   it('should validate dimension with subscription', () => {
     errorSub.next(true);
     spectator.detectChanges();
-    // expect(spectator.query('ng-select')).toHaveClass('select2-error');
+    expect(spectator.query('ng-select')).toHaveClass('select-error');
   });
 });
