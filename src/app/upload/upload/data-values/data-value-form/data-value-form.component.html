@@ -1,6 +1,7 @@
 <div class="row mt-4">
-  <div class="col-5 type-options-container">
+  <div class="col-5 type-options-container select-button-group">
     <ng-select
+      class="custom"
       [items]="typeValues"
       bindLabel="text"
       style="width: calc(100% - 38px); display: inline-block" 
@@ -13,20 +14,21 @@
       [clearable]="false"
       ></ng-select>
     <button
-      class="btn select2-custom-button"
+      class="btn select-custom-button"
       (click)="openContextModal()"
       [class.button-error]="error && !dataValue.type"
       [tooltip]="'Click to view data value context (' + dataValue.context.length + ' items)'"
       [delay]="750"
       [disabled]="!dataValue.type"
     >
-    <i class="material-icons select2-custom-button-icon">
+    <i class="material-icons select-custom-button-icon">
       more_horiz
     </i>
   </button>
   </div>
   <div class="col-5 units-container">
     <ng-select
+      class="custom"
       *ngIf="dataValue.units !== null && dataValue.type"
       [items]="unitsValues"
       bindLabel="text"
