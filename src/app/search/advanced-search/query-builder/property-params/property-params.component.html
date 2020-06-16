@@ -2,6 +2,7 @@
   <div class="col-3">
     <div>
       <ng-select
+          class="custom"
           bindLabel="name"
           [items]="propertyTypes"
           [(ngModel)]="selectedAttribute"
@@ -14,6 +15,7 @@
   <div class="col-3">
     <div>
       <ng-select
+          class="custom"
           [items]="matchTypes"
           [(ngModel)]="selectedMatchType"
           (change)="setMatchType($event)"
