@@ -1,7 +1,8 @@
 <div class="row mt-2" *ngIf="context">
     <div class="col-4">
-      <!-- [ngClass]="{'select2-error': error && !context.type}"> -->
       <ng-select
+        class="custom"
+        [class.select-error]="error && !context.type"
         [items]="typesData"
         [readonly]="context.required"
         bindLabel="text"
@@ -15,9 +16,10 @@
       ></ng-select>
     </div>
     <div class="col-3">
-        <!-- [ngClass]="{'select2-error' : error && !context.value}" -->
         <ng-select
           *ngIf="context.type && context.requireDropdownForVal"
+          class="custom"
+          [class.select-error]="error && !context.value"
           [items]="valuesData"
           bindLabel="text"
           bindValue="id"
@@ -41,9 +43,10 @@
         </div>
     </div>
     <div class="col-3">
-        <!-- [ngClass]="error && context.units === undefined ? 'select2-error' : ''" -->
       <ng-select
           *ngIf="context.units !== null && context.type"
+          class="custom"
+          [class.select-error]="error && context.units === undefined"
           [items]="unitsData"
           bindLabel="text"
           bindValue="id"

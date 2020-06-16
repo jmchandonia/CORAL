@@ -1,9 +1,10 @@
 <div class="row mt-3">
   <div class="col-12">
     <div class="row">
-      <div class="col-6 type-container">
-        <!--[ngClass]="error && !dimVar.type ? 'select2-error' : ''" -->
+      <div class="col-6 type-container select-button-group">
           <ng-select
+            class="custom"
+            [class.select-error]="error && !dimVar.type"
             [items]="typeData"
             bindLabel="text"
             bindValue="id"
@@ -17,20 +18,21 @@
             [clearable]="false"
           ></ng-select>
         <button
-          class="btn select2-custom-button"
+          class="btn select-custom-button"
           (click)="openModal()"
           [class.button-error]="error && !dimVar.type"
           [disabled]="!dimVar.type"
           [tooltip]="'Click to view Dimension Variable context (' + dimVar.context.length + ' items)'"
           [delay]="750">
-          <i class="material-icons select2-custom-button-icon">
+          <i class="material-icons select-custom-button-icon">
             more_horiz
           </i>
         </button>
       </div>
       <div class="col-5 units-container" *ngIf="dimVar.units !== null && dimVar.type">
-        <!-- [ngClass]="error && !dimVar.units ? 'select2-error' : ''" -->
         <ng-select
+          class="custom"
+          [class.select-error]="error && !dimVar.units"
           [items]="unitsData"
           [(ngModel)]="selectedUnits"
           [ngModelOptions]="{standalone: true}"
