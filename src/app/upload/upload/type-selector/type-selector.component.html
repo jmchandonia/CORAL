@@ -10,8 +10,9 @@
       <div class="card">
         <h5 class="card-header light-blue">Data Type</h5>
         <div class="card-body">
-          <!-- [ngClass]="error ? 'select2-error' : ''" -->
           <ng-select
+            class="custom"
+            [class.select-error]="error"
             [items]="templateData"
             groupBy="children"
             bindValue="id"
