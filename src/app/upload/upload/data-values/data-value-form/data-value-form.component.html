@@ -2,6 +2,7 @@
   <div class="col-5 type-options-container select-button-group">
     <ng-select
       class="custom"
+      [class.select-error]="error && !dataValue.type"
       [items]="typeValues"
       bindLabel="text"
       style="width: calc(100% - 38px); display: inline-block" 
@@ -29,6 +30,7 @@
   <div class="col-5 units-container">
     <ng-select
       class="custom"
+      [class.select-error]="error && !dataValue.units"
       *ngIf="dataValue.units !== null && dataValue.type"
       [items]="unitsValues"
       bindLabel="text"

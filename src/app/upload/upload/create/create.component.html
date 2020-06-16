@@ -34,8 +34,9 @@
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-process">Process used to generate the data:</label>
-              <!-- [ngClass]="{'select2-error': error && !brick.process}" -->
                 <ng-select
+                  class="custom"
+                  [class.select-error]="error && !brick.process"
                   id="brick-process"
                   [items]="processData"
                   [(ngModel)]="processValue"
@@ -51,8 +52,9 @@
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-campaign">ENIGMA campaign: </label>
-              <!-- [ngClass]="{'select2-error': error && !brick.campaign}" -->
               <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.campaign"
                 id="brick-campaign"
                 [items]="campaignData"
                 bindLabel="text"
@@ -65,8 +67,9 @@
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-personnel">Personnel primarily responsible for generating this dataset: </label>
-              <!-- [ngClass]="{'select2-error': error && !brick.personnel}" -->
               <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.personnel"
                 id="brick-personnel"
                 [items]="personnelData"
                 bindValue="id"
