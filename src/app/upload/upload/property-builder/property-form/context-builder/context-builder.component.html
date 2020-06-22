@@ -12,6 +12,7 @@
                         {{title}}
                       </h5>
                       <button
+                        id="add-context"
                         type="button"
                         (click)="addContext()"
                         style="float: right"
@@ -53,7 +54,7 @@
   </div>
   <div class="row mt-3 mb-3">
     <div class="col-12">
-        <button style="float:right" class="btn btn-primary" (click)="onClose()">
+        <button style="float:right" id="close-context-modal" class="btn btn-primary" (click)="onClose()">
             Done
           </button>
     </div>
