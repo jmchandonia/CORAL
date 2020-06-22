@@ -23,6 +23,7 @@ export class UploadValidationService {
 
   constructor(private uploadService: UploadService) {
     // this.brick = this.uploadService.getBrickBuilder();
+    this.brick = this.uploadService.getBrickBuilder();
    }
 
    validationErrors(step: string) {
