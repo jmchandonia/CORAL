@@ -138,4 +138,90 @@ export class BrickFactoryService {
 
  static valuelessUnits(units) { return isEqual(units, {id: '', text: ''}); }
 
+ public static createUploadInstanceFromLS(localStorageItem): Brick {
+   const brick = new Brick();
+   Object.entries(localStorageItem).forEach(([key, value]) => {
+    //  brick[key] = value;
+    switch(key) {
+      case 'dataValues':
+        brick[key] = this.createDataValuesFromLS(value);
+        break;
+      case 'dimensions':
+        brick[key] = this.createDimensionsFromLS(value, brick);
+        break;
+      case 'properties':
+        brick[key] = this.createPropertiesFromLS(value);
+      default:
+        brick[key] = value;
+    }
+   });
+   return brick;
+ }
+
+static createDataValuesFromLS(LSDataValues): DataValue[] {
+  return LSDataValues.map((LSDataValue, idx) => {
+    const dataValue = new DataValue(idx, LSDataValue.required);
+    Object.entries(LSDataValue).forEach(([key, value]) => {
+      if (key === 'context') {
+        dataValue.context = this.createContextFromLS(value);
+      } else {
+        dataValue[key] = value;
+      }
+    });
+    return dataValue;
+  });
+}
+
+static createDimensionsFromLS(LSDimensions, brick: Brick): BrickDimension[] {
+  return LSDimensions.map((LSDimension, index) => {
+    const dimension = new BrickDimension(brick, index, LSDimension.required);
+    Object.entries(LSDimension).forEach(([key, value]) => {
+      if (key === 'variables') {
+        dimension.variables = this.createDimVarsFromLS(value, dimension);
+      } else {
+        dimension[key] = value;
+      }
+    });
+    return dimension;
+  });
+}
+
+static createDimVarsFromLS(LSDimVars, dimension: BrickDimension): DimensionVariable[] {
+  return LSDimVars.map((LSDimVar, idx) => {
+    const dimVar = new DimensionVariable(dimension, idx, LSDimVar.required);
+    Object.entries(LSDimVar).forEach(([key, value]) => {
+      if (key === 'context') {
+        dimVar.context = this.createContextFromLS(value);
+      } else {
+        dimVar[key] = value;
+      }
+    });
+    return dimVar;
+  });
+}
+
+static createContextFromLS(LSContext): Context[] {
+  return LSContext.map(LSContexton => {
+    const context = new Context();
+    Object.entries(LSContexton).forEach(([key, value]) => {
+      context[key] = value;
+    });
+    return context;
+  });
+}
+
+static createPropertiesFromLS(LSProperties): TypedProperty[] {
+  return LSProperties.map((LSProperty, idx) => {
+    const property: TypedProperty = new TypedProperty(idx, LSProperty.required, LSProperty.type, LSProperty.microType);
+    Object.entries(LSProperty).forEach(([key, value]) => {
+      if (key === 'context') {
+        property.context = this.createContextFromLS(value);
+      } else {
+        property[key] = value;
+      }
+    });
+    return property;
+  });
+}
+
 }

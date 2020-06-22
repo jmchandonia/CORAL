@@ -32,14 +32,25 @@ export class UploadService {
 
   constructor(
     private http: HttpClient,
-    private brickFactory: BrickFactoryService
   ) {
     // get brick type templates once the user is in /upload
     this.getBrickTypeTemplates();
    }
 
   getBrickBuilder() {
-    return this.brickBuilder;
+    if (this.brickBuilder) {
+      return this.brickBuilder;
+    } else {
+      const localStorageBrick = JSON.parse(localStorage.getItem('brickBuilder'));
+      if (localStorageBrick !== null) {
+        this.brickBuilder = BrickFactoryService.createUploadInstanceFromLS(localStorageBrick);
+        return this.brickBuilder;
+      }
+    }
+  }
+
+  saveBrickBuilder() {
+    localStorage.setItem('brickBuilder', this.brickBuilder.toJson());
   }
 
   getBrickTypeTemplates() {
@@ -59,13 +70,25 @@ export class UploadService {
   }
 
   setSelectedTemplate(template) {
-
+    delete this.brickBuilder;
     this.brickBuilder = BrickFactoryService.createUploadInstance(template);
     this.selectedTemplate = template.id;
+    localStorage.setItem('selectedTemplate', this.selectedTemplate);
+  }
+
+  getSelectedTemplate() {
+    if (!this.selectedTemplate) {
+      return localStorage.getItem('selectedTemplate');
+    } else {
+      return this.selectedTemplate;
+    }
   }
 
   clearCache() {
-    this.brickBuilder = new Brick();
+    // this.brickBuilder = new Brick();
+    delete this.brickBuilder;
+    localStorage.removeItem('brickBuilder');
+    localStorage.removeItem('selectedTemplate');
     this.uploadFile = null;
     this.uploadSuccessData = null;
     delete this.selectedTemplate;
