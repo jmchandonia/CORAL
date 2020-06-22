@@ -6,14 +6,21 @@
             <h5 class="mb-0 mt-2" style="float: left">
                 Add Dimensions to your Brick
             </h5>
-            <button class="btn btn-link add-dimension" style="float: right" (click)="addDimension()">
+            <!-- <button class="btn btn-link add-dimension" style="float: right" (click)="addDimension()">
+              + Add a Dimension
+            </button> -->
+          </div>
+        </div>
+        <!-- <hr /> -->
+        <div class="p-3">
+          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </span>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button style="float: left;" class="btn btn-link add-dimension" (click)="addDimension()">
               + Add a Dimension
             </button>
           </div>
-        </div>
-        <hr />
-        <div class="p-3 mb-3">
-          <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </span>
         </div>
         <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
     </div>
