@@ -1,12 +1,9 @@
-import { Injectable, OnChanges } from '@angular/core';
-import { NetworkService } from './network.service';
+import { Injectable } from '@angular/core';
 import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
-import { DataQuery } from '../models/data-query';
-import { FormGroup, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
-import { DimensionRef } from 'src/app/shared/models/plot-builder';
+import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
+import { PlotlyConfig } from 'src/app/shared/models/plotly-config';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,8 +11,7 @@ export class PlotService {
 
   public plotBuilder: PlotBuilder = new PlotBuilder();
   public plotType: string;
-  public axisLabelBuilders: any = {};
-  private axisLabelSub = new Subject();
+  metadata: ObjectMetadata;
 
   constructor(private http: HttpClient) {
     const cachedPlotBuilder = this.getPlotCache();
@@ -27,13 +23,11 @@ export class PlotService {
   }
 
   getPlotType() {
-    // return this.plotType;
-    return localStorage.getItem('plotType');
+    return JSON.parse(localStorage.getItem('plotType'));
   }
 
-  setPlotType(value) {
-    // this.plotType = value;
-    localStorage.setItem('plotType', value);
+  setPlotType(value: PlotlyConfig) {
+    localStorage.setItem('plotType', JSON.stringify(value));
   }
 
   setPlotCache() {
@@ -50,21 +44,24 @@ export class PlotService {
     return keys.map(v => this.plotBuilder.config[v]).filter(t => typeof t !== 'string');
   }
 
-  getDimDropdownValue(axis) {
+  getDimDropdownValue(axis: string) {
     return this.plotBuilder.data[axis].toString();
   }
 
   setConfig(
-    title: string,
-    length: number,
+    metadata: ObjectMetadata,
     callback: (dims: Dimension[]) => void
     ) {
     const { config } = this.plotBuilder;
-    config.title = title + ` (${this.plotBuilder.objectId})`;
-    config.x = new Dimension();
-    config.y = new Dimension();
+    const length = metadata.dim_context.length;
+    const dim_context: DimensionContext[] = metadata.dim_context;
+    const typed_values: TypedValue[] = metadata.typed_values;
+
+    config.title = metadata.data_type.oterm_name + ` (${this.plotBuilder.objectId})`;
+    config.x = new Dimension(dim_context, typed_values);
+    config.y = new Dimension(dim_context, typed_values);
     if (length > 1) {
-      config.z = new Dimension();
+      config.z = new Dimension(dim_context, typed_values);
       this.plotBuilder.data.z = '' as any;
       callback([config.x, config.y, config.z]); // add 3 dimensions to form
     } else {
@@ -73,30 +70,9 @@ export class PlotService {
     this.setPlotCache();
   }
 
-  /// axis label methods ///
-
-  setLabelBuilder(labelBuilder: DimensionRef, axis: string) {
-    this.axisLabelBuilders[axis] = labelBuilder;
-    this.axisLabelSub.next({axis, labelBuilder: this.axisLabelBuilders[axis]});
-  }
-
-  getLabelBuilder(axis) {
-    return this.axisLabelBuilders[axis];
-  }
-
-  getUpdatedLabelBuilder() {
-    return this.axisLabelSub.asObservable();
-  }
-
-  updateFormatString(format: string, axis: string) {
-    this.plotBuilder.config[axis].label_pattern = format;
-  }
-
   clearPlotBuilder() {
-    // delete this.plotType;
     localStorage.removeItem('plotType');
     localStorage.removeItem('plotBuilder');
-    this.axisLabelBuilders = {};
     this.plotBuilder = new PlotBuilder();
   }
 
@@ -125,8 +101,5 @@ export class PlotService {
     // method used to get data for dashboard component
     return this.http.get(`${environment.baseURL}/report_plot_data/${id}`);
   }
-
-
-
 
 }

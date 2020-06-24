@@ -60,7 +60,7 @@ export class UploadService {
 
   setSelectedTemplate(template) {
 
-    this.brickBuilder = this.brickFactory.createUploadInstance(template);
+    this.brickBuilder = BrickFactoryService.createUploadInstance(template);
     this.selectedTemplate = template.id;
   }
 
@@ -215,8 +215,9 @@ export class UploadService {
     return new Promise((resolve) => {
       this.http.post<any>(`${environment.baseURL}/generate_brick_template`, formData, config)
         .subscribe(res => {
-          if (res.tiype === 'text/html') {
+          if (res.type === 'text/html') {
             // TODO: figure out a way to have a responseType of both JSON and blob in order to read errors sent from server
+            res.text().then(console.error);
             throw new Error('We\'re sorry, but something went wrong with the file type that you have currently uploaded');
           } else {
             resolve(res);

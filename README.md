@@ -111,7 +111,7 @@ import 'datatables.net';
 import 'datatables.net-bs4'; // for bootstrap 4 styles
 ...
 export class SomeComponent implements afterViewInit {
-    @ViewChild('table') private el: ElementRef;
+    @ViewChild('table', { static: false }) private el: ElementRef;
     dataTable: any;
 
     ngAfterViewInit() {

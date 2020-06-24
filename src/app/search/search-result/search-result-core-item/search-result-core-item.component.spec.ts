@@ -1,25 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { SearchResultCoreItemComponent } from './search-result-core-item.component';
+import { ProcessDataComponent } from '../process-data/process-data.component';
+import { MockComponent } from 'ng-mocks';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SearchResultCoreItemComponent', () => {
-  let component: SearchResultCoreItemComponent;
-  let fixture: ComponentFixture<SearchResultCoreItemComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SearchResultCoreItemComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SearchResultCoreItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<SearchResultCoreItemComponent>;
+  const createComponent = createComponentFactory({
+    component: SearchResultCoreItemComponent,
+    entryComponents: [
+      MockComponent(ProcessDataComponent)
+    ],
+    imports: [
+      RouterModule.forRoot([]),
+      HttpClientModule
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

@@ -1,6 +1,6 @@
 <div class="row mt-4">
   <div class="col-12">
-    <div class="card mt-2">
+    <div class="card mt-2" id="dim-var-info">
       <div class="card-header light-blue">
         <h6>Dimension Metadata</h6>
       </div>
@@ -14,7 +14,7 @@
             </div>
             <div class="row">
               <div class="col-12">
-                <table class="table table-bordered">
+                <table class="table table-bordered dim-var-info-table">
                   <thead class="table-header">
                     <tr>
                       <td><strong>#</strong></td>
@@ -48,12 +48,12 @@
 </div>
 <div class="row mt-4">
   <div class="col-12">
-    <div class="card mt-2 mb-2">
+    <div class="card mt-2 mb-2" id="data-var-info">
       <div class="card-header light-blue">
         <h6>Data Variables</h6>
       </div>
       <div class="card-body">
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="data-var-info-table">
           <thead class="table-header">
             <tr>
               <td><strong>#</strong></td>
@@ -73,7 +73,6 @@
                 </span>
               </td>
               <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
-              <!-- <td [innerHTML]="dataValue.valuesSample | safeHtml"></td> -->
               <td>{{dataValue.valuesSample}}</td>
             </tr>
           </tbody>

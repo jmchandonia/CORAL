@@ -1,12 +1,20 @@
 import { TestBed } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
 import { PlotService } from './plot.service';
 
 describe('PlotService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let spectator: SpectatorService<PlotService>;
+  const createService = createServiceFactory({
+    service: PlotService,
+    imports: [
+      HttpClientModule
+    ]
+  });
+
+  beforeEach(() => spectator = createService());
 
   it('should be created', () => {
-    const service: PlotService = TestBed.get(PlotService);
-    expect(service).toBeTruthy();
+    expect(spectator.service).toBeTruthy();
   });
 });

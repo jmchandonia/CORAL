@@ -4,7 +4,7 @@ import { Brick, BrickDimension, DimensionVariable, TypedProperty, Term, DataValu
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ValidationErrorItemComponent } from './validation-error-item/validation-error-item.component';
 
 @Component({
@@ -87,7 +87,7 @@ export class MapComponent implements OnInit, OnDestroy {
         this.mapped = true;
       });
   }
-p
+  
   getMappedStatus(valid, total) {
     if (valid === total) {
       return 'status-column-success';

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { Select2OptionData, } from 'ng2-select2';
-import { QueryMatch, QueryParam } from '../../../shared/models/QueryBuilder';
+import { QueryMatch, QueryParam, QueryMatchData } from '../../../shared/models/QueryBuilder';
 import { QueryBuilderService } from '../../../shared/services/query-builder.service';
 import { Subscription } from 'rxjs';
 
@@ -19,28 +18,8 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   dataModels: any;
   dataTypes: any;
   operators: string[] = [];
-  selectedDataType: string;
-  selectedDataTypeId: string;
+  selectedDataType: QueryMatchData;
   dataTypeSub = new Subscription();
-
-  options: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-    placeholder: 'Select A Data Type',
-    templateResult: state => {
-      if (!state.id) { return state; }
-      const obj = this.dataTypes[parseInt(state.id, 10)];
-      return `<span><img class="icon" src="./assets/${obj.category === 'DDT_' ? 'Brick' : 'Sample'}.png" />${state.text}</span>`;
-    },
-    escapeMarkup: m => m
-  };
-
-  dataTypeList: Array<Select2OptionData> = [
-    {
-      id: '',
-      text: ''
-    },
-  ];
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -49,26 +28,17 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const loadedDataTypes = this.queryBuilder.getLoadedDataTypes();
     if (loadedDataTypes) {
-      this.populateDataTypes(loadedDataTypes);
-      if (this.queryMatch && this.queryMatch.dataType) {
-        const {id, text} = this.dataTypeList.find(item => item.text === this.queryMatch.dataType);
-        this.selectedDataTypeId = id;
-        this.selectedDataType = text;
+      this.dataTypes = loadedDataTypes;
+      if (this.queryMatch && !this.queryMatch.isEmpty) {
+        this.selectedDataType = this.queryMatch.data;
       }
     } else {
       this.dataTypeSub = this.queryBuilder.getDataTypes()
       .subscribe(dataTypes => {
-        this.populateDataTypes(dataTypes);
+        this.dataTypes = dataTypes;
       });
     }
 }
-
-  populateDataTypes(dataTypes) {
-    this.dataTypes = dataTypes;
-    this.dataTypeList = [{id: '', text: ''}, ...this.dataTypes.map((type, idx) => {
-      return {id: idx.toString(), text: type.dataType};
-    })];
-  }
 
   ngOnDestroy() {
     if (this.dataTypeSub) {
@@ -76,22 +46,19 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateObjectDataModel(event) {
-    if (this.dataTypes && event.value.length) {
-      if (!this.queryMatch) {
-        this.queryMatch = new QueryMatch();
-        this.create.emit(this.queryMatch);
-      }
-      const selected = this.dataTypes[parseInt(event.value, 10)];
-      Object.keys(selected).forEach(key => {
-      this.queryMatch[key] = selected[key];
-      });
-      this.selectedDataType = event.data[0].text;
+  updateQueryMatch(event: QueryMatchData) {
+    this.selectedDataType = event;
+    if (!this.queryMatch) { 
+      this.queryMatch = new QueryMatch(event);
+      this.create.emit(this.queryMatch);
     }
+    Object.keys(event).forEach(key => {
+      this.queryMatch[key] = event[key];
+    })
   }
 
-  updatePropertyParam(index, event) {
-    this.queryMatch.params[index][event.key] = event.value.data[0].text;
+  handleClear() {
+    delete this.queryMatch;
   }
 
   removePropertyParam(param) {
@@ -100,6 +67,12 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
 
   addPropertyParam() {
     this.queryMatch.params.push(new QueryParam());
+  }
+
+  getImgSource(item: QueryMatchData) {
+    return item.category === 'DDT_'
+      ? './assets/Brick.png'
+      : './assets/Sample.png';
   }
 
 }

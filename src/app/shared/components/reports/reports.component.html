@@ -12,7 +12,13 @@
             Display Summary of Uploaded Datasets, sorted by:
           </h5>
           <div class="card-body">
-            <select2 [data]="select2Data" [cssImport]="true" [options]="options" (valueChanged)="updateTable($event)"></select2>
+            <ng-select
+              class="custom"
+              [items]="reportsData"
+              bindLabel="name"
+              (change)="updateTable($event)"
+              [clearable]="false"
+            ></ng-select>
           </div>
         </div>
       </div>
