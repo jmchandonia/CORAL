@@ -18,4 +18,12 @@ export class HomeService {
    return this.http.post<any>(`${environment.baseURL}/types_stat`, filterQuery);
   }
 
+  getReports() {
+    return this.http.get(`${environment.baseURL}/reports`);
+  }
+
+  getReportItem(id: string) {
+    return this.http.get(`${environment.baseURL}/reports/${id}`);
+  }
+
 }

@@ -1,10 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { BrickDimension, DimensionVariable, Term, Context } from 'src/app/shared/models/brick';
-import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subscription } from 'rxjs';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ContextBuilderComponent } from 'src/app/upload/upload/property-builder/property-form/context-builder/context-builder.component';
 
 @Component({
@@ -36,39 +35,20 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     return this._dimVar;
   }
 
-  typeData: Array<Select2OptionData> = [];
-  unitsData: Array<Select2OptionData> = [{id: '', text: ''}];
+  typeData: Array<Term> = [];
+  unitsData: Array<Term> = [];
   selectedType: string;
   selectedUnits: string;
   error = false;
   modalRef: BsModalRef;
   errorSub: Subscription;
+  typeLoading = false;
+  unitsLoading = false;
 
   private _dimVar: DimensionVariable;
 
   @Output() deleted: EventEmitter<DimensionVariable> = new EventEmitter();
   @Output() reset: EventEmitter<DimensionVariable> = new EventEmitter();
-
-  typeOptions: Select2Options = {
-    width: 'calc(100% - 38px)',
-    containerCssClass: 'select2-custom-container select2-custom-properties-container',
-    query: (options: Select2QueryOptions) => {
-      const term = options.term;
-      if (!term) {
-        options.callback({results: []});
-      } else {
-        this.uploadService.searchDimensionVariableMicroTypes(term)
-          .subscribe((data: any) => {
-            options.callback({results: data.results as Select2OptionData});
-          });
-      }
-    }
-  };
-
-  unitsOptions: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-  };
 
   constructor(
     private uploadService: UploadService,
@@ -91,8 +71,18 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  setContextLabel(dimVarType: Term, context: Context[]): Select2OptionData {
-    const label: Select2OptionData = Object.assign({}, dimVarType);
+  handleSearch(event) {
+    if (event.term.length) {
+      this.typeLoading = true;
+      this.uploadService.searchDimensionMicroTypes(event.term).subscribe((data: any) => {
+        this.typeData = [...data.results];
+        this.typeLoading = false;
+      });
+    }
+  } 
+
+  setContextLabel(dimVarType: Term, context: Context[]): Term {
+    const label: Term = Object.assign({}, dimVarType);
     context.forEach(ctx => {
       const { typeTerm, value, units } = ctx;
       label.text += `, ${typeTerm.text}=${value.text ? value.text : value}`;
@@ -108,23 +98,24 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   }
 
   setDimVarType(event) {
-    const term = event.data[0];
+    const term = event;
     this.dimVar.typeTerm = term;
     if (!term.has_units) {
       this.dimVar.units = null;
     } else {
       this.dimVar.units = undefined;
+      this.unitsLoading = true;
       this.uploadService.searchOntPropertyUnits(this.dimVar.microType)
         .subscribe(data => {
-          this.unitsData = data.results;
+          this.unitsData = [...data.results];
+          this.unitsLoading = false;
         });
     }
     this.validate();
   }
 
-  setDimVarUnits(event) {
-    const term = event.data[0];
-    this.dimVar.units = new Term(term.id, term.text);
+  setDimVarUnits(event: Term) {
+    this.dimVar.units = event;
     this.validate();
   }
 

@@ -1,13 +1,13 @@
 
 <div class="simple-search-container">
   <label for="data-type-selector">Data Type</label>
-  <select2 
+  <!-- <select2 
     [options]="select2Options" 
     [data]="dataTypeList" 
     [cssImport]="true"
     [value]="selectedDataType ? '0' : ''"
     (valueChanged)="updateDataModel($event)"
-    name="data-type-selector"></select2>
+    name="data-type-selector"></select2> -->
   <label for="keyword-selector" style="margin-top: 10px;">Keywords</label>
   <input type="text" class="form-control" [(ngModel)]="keywords" />
     <div class="row">

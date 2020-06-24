@@ -3,7 +3,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DimensionVariablePreviewComponent as DimVarPreview } from '../dimension-variable-preview/dimension-variable-preview.component';
-
+import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
 
 @Component({
   selector: 'app-search-result-item',
@@ -12,7 +12,7 @@ import { DimensionVariablePreviewComponent as DimVarPreview } from '../dimension
 })
 export class SearchResultItemComponent implements OnInit {
 
-  public searchResult: any;
+  public searchResult: ObjectMetadata;
   public objectId: string;
   modalRef: BsModalRef;
 
@@ -28,7 +28,7 @@ export class SearchResultItemComponent implements OnInit {
       if (params.id) {
         this.objectId = params.id;
         this.qb.getObjectMetadata(this.objectId)
-          .subscribe(result => {
+          .subscribe((result: ObjectMetadata) => {
             this.searchResult = result;
           });
       }

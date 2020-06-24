@@ -1,26 +1,26 @@
 <div class="row mt-1 mb-2">
   <div class="col-3">
     <div>
-        <select2
-        name="attributes"
-        [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Attributes', containerCssClass: 'select2-custom-container' }"
-        [data]="propertyTypes"
-        (valueChanged)="setAttribute($event)"
-        [value]="selectedAttribute ? selectedAttribute : ''"
-      ></select2>
+      <ng-select
+          class="custom"
+          bindLabel="name"
+          [items]="propertyTypes"
+          [(ngModel)]="selectedAttribute"
+          [ngModelOptions]="{standalone: true}"
+          (change)="setAttribute($event)"
+          [clearable]="false"
+      ></ng-select>
     </div>
   </div>
   <div class="col-3">
     <div>
-        <select2
-        name="matchType"
-        [cssImport]="true"
-        [options]="{ width: '100%', placeholder: 'Match Type', containerCssClass: 'select2-custom-container' }"
-        [data]="matchTypes"
-        [value]="selectedMatchType ? selectedMatchType : ''"
-        (valueChanged)="setMatchType($event)"
-      ></select2>
+      <ng-select
+          class="custom"
+          [items]="matchTypes"
+          [(ngModel)]="selectedMatchType"
+          (change)="setMatchType($event)"
+          [clearable]="false"
+      ></ng-select>
     </div>
   </div>
   <div class="col-4">

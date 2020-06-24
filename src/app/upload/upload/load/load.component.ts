@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UploadDragDropDirective } from 'src/app/shared/directives/upload-drag-drop.directive';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { Brick, BrickDimension, TypedProperty, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
@@ -23,7 +22,6 @@ export class LoadComponent implements OnInit, OnDestroy {
 
   file: File = null;
   fileSize: string;
-  brick: Brick;
   successData: any;
   error = false;
   errorMessage: string;
@@ -32,7 +30,6 @@ export class LoadComponent implements OnInit, OnDestroy {
   validationErrorSub: Subscription;
 
   ngOnInit() {
-    this.brick = this.uploadService.getBrickBuilder();
     this.getUploadData();
     this.validationErrorSub = this.validator.getValidationErrors()
      .subscribe(error => this.validationError = error);
@@ -88,15 +85,19 @@ export class LoadComponent implements OnInit, OnDestroy {
    downloadTemplate() {
      this.uploadService.downloadBrickTemplate()
       .then((data: Blob) => {
-        const url = window.URL.createObjectURL(data);
-        const a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display: none');
-        a.href = url;
-        a.click();
-        window.URL.revokeObjectURL(url);
-        a.remove();
+        this.addUrlToPageAndClick(data);
       });
+   }
+
+   addUrlToPageAndClick(data: Blob) {
+    const url = window.URL.createObjectURL(data);
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.setAttribute('style', 'display: none');
+    a.href = url;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
    }
 
    upload() {

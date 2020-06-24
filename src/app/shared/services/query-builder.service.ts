@@ -124,9 +124,10 @@ export class QueryBuilderService {
 
   getOperators() {
     // return this.http.get(`${environment.baseURL}/search_operations`);
-    return [{id: '', text: ''},...this.operators.map((op, idx) => {
-      return {id: idx.toString(), text: op };
-    })];
+    // return [{id: '', text: ''},...this.operators.map((op, idx) => {
+    //   return {id: idx.toString(), text: op };
+    // })];
+    return this.operators;
   }
 
   getOperatorValue(item) {

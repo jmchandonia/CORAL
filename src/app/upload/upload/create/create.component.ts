@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Select2OptionData } from 'ng2-select2';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -24,21 +23,15 @@ export class CreateComponent implements OnInit {
 
   datepickerConfig: Partial<BsDatepickerConfig> = { containerClass: 'theme-dark-blue' };
 
-  processData: Array<Select2OptionData> = [{id: '', text: ''}];
-  campaignData: Array<Select2OptionData> = [{id: '', text: ''}];
-  personnelData: Array<Select2OptionData> = [{id: '', text: ''}];
+  processData: Array<Term> = [];
+  campaignData: Array<Term> = [];
+  personnelData: Array<Term> = [];
   processValue: string;
   requiredProcess = false;
   errorMessages: string[] = [];
   error = false;
   startDateError = false;
   endDateError = false;
-
-  options: Select2Options = {
-    width: '100%',
-    containerCssClass: 'select2-custom-container',
-  };
-
   brick: Brick;
 
   ngOnInit() {
@@ -58,41 +51,32 @@ export class CreateComponent implements OnInit {
 
   getProcessOterms() {
     this.uploadService.getProcessOterms().subscribe((data: any) => {
-      this.processData = [this.processData[0], ...data.results];
+      this.processData = [...data.results];
     });
   }
 
   getCampaignOterms() {
     this.uploadService.getCampaignOterms().subscribe((data: any) => {
-      this.campaignData = [this.campaignData[0], ...data.results];
+      this.campaignData = [...data.results];
     });
   }
 
   getPersonnelOterms() {
     this.uploadService.getPersonnelOterms().subscribe((data: any) => {
-      this.personnelData = [this.personnelData[0], ...data.results];
+      this.personnelData = [...data.results];
     });
   }
 
-  setBrickProcess(event) {
-    if (event.value.length) {
-      const process = event.data[0];
-      this.brick.process = new Term(process.id, process.text);
-    }
+  setBrickProcess(event: Term) {
+    this.brick.process = event;
   }
 
-  setBrickCampaign(event) {
-    if (event.value.length) {
-      const campaign = event.data[0];
-      this.brick.campaign = new Term(campaign.id, campaign.text);
-    }
+  setBrickCampaign(event: Term) {
+    this.brick.campaign = event;
   }
 
-  setBrickPersonnel(event) {
-    if (event.value.length) {
-      const person = event.data[0];
-      this.brick.personnel = new Term(person.id, person.text);
-    }
+  setBrickPersonnel(event: Term) {
+    this.brick.personnel = event;
   }
 
   submitBrick() {

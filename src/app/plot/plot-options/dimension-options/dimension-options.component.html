@@ -9,15 +9,16 @@
           <div class="row">
               <div class="col-6">
                 <label for="fromDimension">From Dimension</label>
-                <select2
-                  name="fromDimension"
-                  [cssImport]="true"
-                  [options]="select2Options"
-                  [data]="dropdownValues"
-                  [value]="selectedDropdownValue.length ? selectedDropdownValue : ''"
-                  (valueChanged)="setSelectedDimension($event)"
-                  (click)="chRef.detectChanges()"
-                ></select2>
+                  <ng-select
+                    class="custom"
+                    [items]="dropdownValues"
+                    bindLabel="text"
+                    bindValue="id"
+                    [(ngModel)]="selectedDropdownValue"
+                    [ngModelOptions]="{standalone: true}"
+                    (change)="setSelectedDimension($event)"
+                    [clearable]="false"
+                  ></ng-select>
               </div>
               <div class="col-6">
                 <div class="form-check offset-1">
@@ -30,15 +31,15 @@
             <div class="row mt-3">
               <div class="col-12">
                 <button
-                  *ngIf="selectedDimension"
+                  *ngIf="dimension.dimVars"
                   class="btn btn-sm btn-link pl-0"
                   (click)="showDisplayValues = !showDisplayValues"  
                 >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button>
               </div>
             </div>
-              <div class="row" [hidden]="!showDisplayValues">
-                <div class="col-12" *ngIf="selectedDimension">
-                  <app-axis-labeler [dimension]="dimension" [axis]="axis"></app-axis-labeler>
+              <div class="row axis-labeler-container" [hidden]="!showDisplayValues">
+                <div class="col-12" *ngIf="dimension.dimVars">
+                  <app-axis-labeler [dimension]="dimension" [labelPattern]="dimension.label_pattern" [dimVars]="dimVars"></app-axis-labeler>
                 </div>
               </div>
         </div>

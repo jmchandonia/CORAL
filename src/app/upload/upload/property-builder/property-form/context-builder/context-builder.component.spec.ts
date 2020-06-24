@@ -1,25 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { ContextBuilderComponent } from './context-builder.component';
+import { MockComponent } from 'ng-mocks';
+import { ContextFormComponent } from './context-form/context-form.component';
+import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ContextBuilderComponent', () => {
-  let component: ContextBuilderComponent;
-  let fixture: ComponentFixture<ContextBuilderComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ContextBuilderComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ContextBuilderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<ContextBuilderComponent>;
+  const createComponent = createComponentFactory({
+    component: ContextBuilderComponent,
+    entryComponents: [
+      MockComponent(ContextFormComponent)
+    ],
+    imports: [
+      ModalModule.forRoot(),
+      HttpClientModule
+    ],
+    providers: [
+      BsModalRef
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

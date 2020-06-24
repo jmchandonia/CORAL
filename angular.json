@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "/var/www/html/generix-ui/",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,7 +29,6 @@
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.js",
-              "./node_modules/select2/dist/js/select2.full.js"
             ],
             "es5BrowserSupport": true
           },
@@ -54,6 +54,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -86,7 +90,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

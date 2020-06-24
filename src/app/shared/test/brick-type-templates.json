@@ -1,0 +1,334 @@
+{
+    "error": "",
+    "results": [
+        {
+
+            "children": [
+                {
+                    "data_type": {
+                        "id": "DA:XXXXXX2",
+                        "text": "Chemical Measurement"
+                    },
+                    "data_vars": [],
+                    "dims": [],
+                    "id": "CT2",
+                    "properties": [],
+                    "text": "Custom Chemical Measurement"
+                },
+                {
+                    "data_type": {
+                        "id": "DA:XXXXXX1",
+                        "text": "Chemical Measurement"
+                    },
+                    "data_vars": [
+                        {
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "has_units": true,
+                                "id": "ME:XXXXX15",
+                                "is_hidden": false,
+                                "microtype": {
+                                    "fk": "",
+                                    "valid_units": [
+                                        "UO:XXXXX13"
+                                    ],
+                                    "valid_units_parents": [
+                                        "UO:XXXXX12",
+                                        "UO:XXXXX11",
+                                        "UO:XXXXX10",
+                                        "UO:XXXXXX9"
+                                    ],
+                                    "valid_values_parent": "",
+                                    "value_scalar_type": "float"
+                                },
+                                "require_mapping": false,
+                                "scalar_type": "float",
+                                "text": "Concentration"
+                            },
+                            "units": {
+                                "id": "UO:XXXXXX8",
+                                "text": "milligram per liter"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:XXXXX14",
+                                        "text": "Relative"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "ME:XXXXX13",
+                                        "text": "detection limit"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "boolean",
+                                "text": "boolean"
+                            },
+                            "type": {
+                                "has_units": false,
+                                "id": "ME:XXXXX12",
+                                "is_hidden": false,
+                                "microtype": {
+                                    "fk": "",
+                                    "valid_units": [],
+                                    "valid_units_parents": [],
+                                    "valid_values_parent": "",
+                                    "value_scalar_type": "boolean"
+                                },
+                                "require_mapping": false,
+                                "scalar_type": "boolean",
+                                "text": "Below"
+                            },
+                            "units": {
+                                "id": "",
+                                "text": ""
+                            }
+                        }
+                    ],
+                    "dims": [
+                        {
+                            "dim_vars": [
+                                {
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "object_ref",
+                                        "text": "object_ref"
+                                    },
+                                    "type": {
+                                        "has_units": false,
+                                        "id": "ME:XXXXX11",
+                                        "is_hidden": false,
+                                        "microtype": {
+                                            "fk": "DA:XXXXXXX.Sample.name",
+                                            "valid_units": [],
+                                            "valid_units_parents": [],
+                                            "valid_values_parent": "",
+                                            "value_scalar_type": "object_ref"
+                                        },
+                                        "require_mapping": true,
+                                        "scalar_type": "object_ref",
+                                        "text": "Environmental Sample ID"
+                                    },
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    }
+                                },
+                                {
+                                    "context": [
+                                        {
+                                            "property": {
+                                                "id": "ME:XXXXX10",
+                                                "text": "State"
+                                            },
+                                            "required": true,
+                                            "units": {
+                                                "id": "",
+                                                "text": ""
+                                            },
+                                            "value": {
+                                                "id": null,
+                                                "text": "extracted from sediment"
+                                            }
+                                        }
+                                    ],
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "float",
+                                        "text": "float"
+                                    },
+                                    "type": {
+                                        "has_units": true,
+                                        "id": "ME:XXXXXX9",
+                                        "is_hidden": false,
+                                        "microtype": {
+                                            "fk": "",
+                                            "valid_units": [],
+                                            "valid_units_parents": [
+                                                "UO:XXXXXX7"
+                                            ],
+                                            "valid_values_parent": "",
+                                            "value_scalar_type": "float"
+                                        },
+                                        "require_mapping": false,
+                                        "scalar_type": "float",
+                                        "text": "Volume"
+                                    },
+                                    "units": {
+                                        "id": "UO:XXXXXX6",
+                                        "text": "microliter"
+                                    }
+                                },
+                                {
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "float",
+                                        "text": "float"
+                                    },
+                                    "type": {
+                                        "has_units": true,
+                                        "id": "ME:XXXXXX8",
+                                        "is_hidden": false,
+                                        "microtype": {
+                                            "fk": "",
+                                            "valid_units": [],
+                                            "valid_units_parents": [
+                                                "UO:XXXXXX5"
+                                            ],
+                                            "valid_values_parent": "",
+                                            "value_scalar_type": "float"
+                                        },
+                                        "require_mapping": false,
+                                        "scalar_type": "float",
+                                        "text": "Depth"
+                                    },
+                                    "units": {
+                                        "id": "UO:XXXXXX4",
+                                        "text": "centimeter"
+                                    }
+                                },
+                                {
+                                    "context": [
+                                        {
+                                            "property": {
+                                                "id": "ME:XXXXXX7",
+                                                "text": "Category"
+                                            },
+                                            "required": true,
+                                            "units": {
+                                                "id": "",
+                                                "text": ""
+                                            },
+                                            "value": {
+                                                "id": "ME:XXXXXX6",
+                                                "text": "cell"
+                                            }
+                                        }
+                                    ],
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "float",
+                                        "text": "float"
+                                    },
+                                    "type": {
+                                        "has_units": true,
+                                        "id": "ME:XXXXXX5",
+                                        "is_hidden": false,
+                                        "microtype": {
+                                            "fk": "",
+                                            "valid_units": [
+                                                "UO:XXXXXX3",
+                                                "UO:XXXXXX2"
+                                            ],
+                                            "valid_units_parents": [
+                                                "UO:XXXXXX1",
+                                                "UO:XXXXXXX"
+                                            ],
+                                            "valid_values_parent": "",
+                                            "value_scalar_type": "int"
+                                        },
+                                        "require_mapping": false,
+                                        "scalar_type": "int",
+                                        "text": "Count"
+                                    },
+                                    "units": {
+                                        "id": "ME:XXXXXX4",
+                                        "text": "cells per gram"
+                                    }
+                                }
+                            ],
+                            "type": {
+                                "id": "ME:XXXXXX3",
+                                "text": "Environmental Sample"
+                            }
+                        },
+                        {
+                            "dim_vars": [
+                                {
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "oterm_ref",
+                                        "text": "oterm_ref"
+                                    },
+                                    "type": {
+                                        "has_units": false,
+                                        "id": "ME:XXXXXX2",
+                                        "is_hidden": false,
+                                        "microtype": {
+                                            "fk": "",
+                                            "valid_units": [],
+                                            "valid_units_parents": [],
+                                            "valid_values_parent": "CHEBI:XXXXX",
+                                            "value_scalar_type": "oterm_ref"
+                                        },
+                                        "require_mapping": false,
+                                        "scalar_type": "oterm_ref",
+                                        "text": "ChEBI Molecule"
+                                    },
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    }
+                                }
+                            ],
+                            "type": {
+                                "id": "ME:XXXXXX1",
+                                "text": "Molecule"
+                            }
+                        }
+                    ],
+                    "id": "T1",
+                    "process": {
+                        "id": "PROCESS:XXXXXXXX",
+                        "text": "Assay Geochemistry"
+                    },
+                    "properties": [
+                        {
+                            "hidden": true,
+                            "property": {
+                                "has_units": false,
+                                "id": "ME:XXXXXX0",
+                                "is_hidden": false,
+                                "microtype": {
+                                    "fk": "",
+                                    "valid_units": [],
+                                    "valid_units_parents": [],
+                                    "valid_values_parent": "",
+                                    "value_scalar_type": "string"
+                                },
+                                "require_mapping": false,
+                                "scalar_type": "string",
+                                "text": "Data Variables Type"
+                            },
+                            "required": true,
+                            "units": {
+                                "id": "",
+                                "text": ""
+                            },
+                            "value": {
+                                "id": "ME:XXXXXXXX",
+                                "text": "Measurement"
+                            }
+                        }
+                    ],
+                    "text": "Test Chemical Measurement"
+                }
+            ],
+            "data_type": "XX:XXXXXXX",
+            "text": "Test Chemical Measurement"
+        }
+    ]
+}
