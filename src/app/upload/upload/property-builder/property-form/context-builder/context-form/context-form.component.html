@@ -1,7 +1,7 @@
 <div class="row mt-2" *ngIf="context">
     <div class="col-4">
       <ng-select
-        class="custom"
+        class="custom type-selector"
         [class.select-error]="error && !context.type"
         [items]="typesData"
         [readonly]="context.required"
@@ -18,7 +18,7 @@
     <div class="col-3">
         <ng-select
           *ngIf="context.type && context.requireDropdownForVal"
-          class="custom"
+          class="custom value-selector"
           [class.select-error]="error && !context.value"
           [items]="valuesData"
           bindLabel="text"
@@ -45,7 +45,7 @@
     <div class="col-3">
       <ng-select
           *ngIf="context.units !== null && context.type"
-          class="custom"
+          class="custom units-selector"
           [class.select-error]="error && context.units === undefined"
           [items]="unitsData"
           bindLabel="text"
