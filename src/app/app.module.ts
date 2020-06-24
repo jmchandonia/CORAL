@@ -3,7 +3,6 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { SearchModule } from './search/search.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Select2Module } from 'ng2-select2';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlotModule } from './plot/plot.module';
 import * as PlotlyJS from 'plotly.js/dist/plotly.js';
@@ -23,6 +22,7 @@ import { ServerErrorInterceptor } from 'src/app/shared/services/server-error-int
 import { ErrorComponent } from './shared/components/error/error.component';
 import { MicrotypeBrowserComponent } from './shared/components/microtype-browser/microtype-browser.component';
 import { DashboardPlotComponent } from './shared/components/dashboard/dashboard-plot/dashboard-plot.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -41,14 +41,14 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AppRoutingModule,
     SearchModule,
     HttpClientModule,
-    Select2Module,
     PlotModule,
     NgxSpinnerModule,
     PlotlyModule,
     FormsModule,
     UploadModule,
     ModalModule.forRoot(),
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    NgSelectModule
   ],
   providers: [
     {

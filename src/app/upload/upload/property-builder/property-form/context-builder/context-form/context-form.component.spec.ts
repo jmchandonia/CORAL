@@ -1,25 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { ContextFormComponent } from './context-form.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 describe('ContextFormComponent', () => {
-  let component: ContextFormComponent;
-  let fixture: ComponentFixture<ContextFormComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ContextFormComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ContextFormComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  let spectator: Spectator<ContextFormComponent>;
+  const createComponent = createComponentFactory({
+    component: ContextFormComponent,
+    imports: [
+      FormsModule,
+      HttpClientModule,
+      NgSelectModule
+    ]
   });
 
+  beforeEach(() => spectator = createComponent());
+
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(spectator.component).toBeTruthy();
   });
 });

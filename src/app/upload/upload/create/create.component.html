@@ -34,42 +34,49 @@
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-process">Process used to generate the data:</label>
-              <select2
-                id="brick-process"
-                [cssImport]="true"
-                [ngClass]="{'select2-error': error && !brick.process}"
-                [options]="options"
-                [data]="processData"
-                [value]="processValue ? processValue : ''"
-                [disabled]="requiredProcess"
-                (valueChanged)="setBrickProcess($event)"
-                ></select2>
+                <ng-select
+                  class="custom"
+                  [class.select-error]="error && !brick.process"
+                  id="brick-process"
+                  [items]="processData"
+                  [(ngModel)]="processValue"
+                  [ngModelOptions]="{standalone: true}"
+                  [readonly]="requiredProcess"
+                  (change)="setBrickProcess($event)"
+                  [clearable]="false"
+                  bindLabel="text"
+                  bindValue="id"
+                ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-campaign">ENIGMA campaign: </label>
-              <select2
+              <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.campaign"
                 id="brick-campaign"
-                [cssImport]="true"
-                [ngClass]="{'select2-error': error && !brick.campaign}"
-                [options]="options"
-                [data]="campaignData"
-                (valueChanged)="setBrickCampaign($event)"
-                ></select2>
+                [items]="campaignData"
+                bindLabel="text"
+                bindValue="id"
+                [clearable]="false"
+                (change)="setBrickCampaign($event)"
+              ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
             <div class="col-12">
               <label for="brick-personnel">Personnel primarily responsible for generating this dataset: </label>
-              <select2
+              <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.personnel"
                 id="brick-personnel"
-                [cssImport]="true"
-                [options]="options"
-                [ngClass]="{'select2-error': error && !brick.personnel}"
-                [data]="personnelData"
-                (valueChanged)="setBrickPersonnel($event)"
-                ></select2>
+                [items]="personnelData"
+                bindValue="id"
+                bindLabel="text"
+                [clearable]="false"
+                (change)="setBrickPersonnel($event)"
+              ></ng-select>
             </div>
           </div>
           <div class="row mt-2">
@@ -92,7 +99,7 @@
               <label for="end-date">Data generation end date: </label>
               <input
                 class="form-control"
-                id="start-date"
+                id="end-date"
                 type="text"
                 placeholder="mm/dd/yyyy"
                 bsDatepicker
@@ -107,7 +114,7 @@
         </div>
         <div class="row justify-content-center mb-3">
           <div class="col-2">
-            <button class="btn btn-primary" [disabled]="successId" (click)="submitBrick()">
+            <button class="btn btn-primary" id="submit-brick" [disabled]="successId" (click)="submitBrick()">
               Create
             </button>
           </div>
@@ -130,14 +137,14 @@
               </div>
           </div>
         </div>
-        <div class="row mt-3" *ngIf="successId">
+        <div class="row mt-3" *ngIf="successId" id="success-banner">
           <div class="col-12">
             <div class="card">
               <div class="card-header light-blue">
                 <h5>Create Success</h5>
               </div>
               <div class="card-body">
-                <p>Your Brick has been created successfully with brick ID <a href="/search/result/brick/{{successId}}">{{successId}}</a></p>
+                <p>Your Brick has been created successfully with brick ID <a id="success-link" href="/search/result/brick/{{successId}}">{{successId}}</a></p>
               </div>
             </div>
           </div>

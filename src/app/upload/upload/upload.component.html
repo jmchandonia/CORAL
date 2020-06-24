@@ -21,7 +21,7 @@
   <div class="row mt-4 mb-4">
     <div class="col-1 offset-1">
       <button
-        class="btn btn-light"
+        class="btn btn-light previous-step"
         *ngIf="progressIndex > 0 && !currentUrl.includes('create')"
         (click)="previousStep()"
       >
@@ -33,7 +33,7 @@
     </div>
     <div class="col-1 offset-7">
       <button
-        class="btn btn-light"
+        class="btn btn-light next-step"
         *ngIf="progressIndex < uploadSteps.length - 1"
         (click)="nextStep()"
       >

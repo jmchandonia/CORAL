@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Select2OptionData } from 'ng2-select2';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -34,7 +33,6 @@ export class AdvancedSearchComponent implements OnInit {
     if (this.advancedFiltersSelected()) {
       this.showAdvancedFilters = true;
     }
-
   }
 
   advancedFiltersSelected() {

@@ -1,4 +1,4 @@
-  <div *ngIf="!isEditor" class="row mb-3 mt-3">
+    <div *ngIf="!isEditor" class="row mb-3 mt-3">
     <div class="offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem; position:relative; top: 3px">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
@@ -15,16 +15,20 @@
                 <div class="row">
                     <div class="col-4">
                         <label for="plotType">Plot Type</label>
-                        <select2
-                          id="plotType"
-                          [cssImport]="true"
-                          [options]="plotTypeOptions"
-                          [data]="plotTypeData"
-                          ngDefaultControl
-                          [value]="listPlotTypes && plotTypeDataValue ? plotTypeDataValue : ''"
-                          (valueChanged)="updatePlotType($event)"
-                        >
-                        </select2>
+                          <ng-select
+                            class="custom"
+                            [items]="plotTypeData"
+                            bindLabel="name"
+                            (change)="updatePlotType($event)"
+                            [(ngModel)]="selectedPlotType"
+                            [ngModelOptions]="{standalone: true}"
+                            [clearable]="false"
+                          >
+                            <ng-template ng-option-tmp let-item="item">
+                              <span [innerHTML]="item.image_tag | safeHtml"></span>
+                              <span style="margin-left: 10px">{{item.name}}</span>
+                            </ng-template>
+                        </ng-select>
                       </div>
                       <div class="col-8">
                         <label for="graphTitle">Plot Title</label>
@@ -43,8 +47,6 @@
     <app-dimension-options
       *ngFor="let dimension of dimensions; let i = index;"
       [dimension]="dimension"
-      [metadata]="metadata"
-      [dropdownValues]="dimensionData"
       [dimensionLabel]="axisBlocks[i].title"
       [index]="i"
     ></app-dimension-options>
@@ -56,4 +58,3 @@
     </button>
     <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
-  <!-- *ngFor="let form of formDimensions?.controls; let i = index;" -->
