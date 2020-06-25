@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router, NavigationEnd } from '@angular/router';
 import { of } from 'rxjs';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { UploadService } from 'src/app/shared/services/upload.service';
 
 describe('UploadComponent', () => {
 
@@ -28,6 +29,13 @@ describe('UploadComponent', () => {
         provide: UploadValidationService,
         useValue: {
           validationErrors: url => false
+        }
+      },
+      {
+        provide: UploadService,
+        useValue: {
+          saveBrickBuilder: () => {},
+          clearCache: () => {}
         }
       }
     ]
@@ -62,19 +70,37 @@ describe('UploadComponent', () => {
   it('should navigate forwards', () => {
     const mockRouter = spectator.fixture.debugElement.injector.get(Router);
     const mockValidator = spectator.fixture.debugElement.injector.get(UploadValidationService);
+    const uploadService = spectator.debugElement.injector.get(UploadService);
+    
     spyOn(mockValidator, 'validationErrors');
+    spyOn(uploadService, 'saveBrickBuilder');
     spyOn(mockRouter, 'navigate');
     spectator.click('button.next-step');
+    
     expect(mockValidator.validationErrors).toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/upload/dimensions'])
+    expect(uploadService.saveBrickBuilder).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/upload/dimensions']);
     expect(spectator.component.progressIndex).toEqual(2);
   });
 
   it('should navigate backwards', () => {
     const mockRouter = spectator.fixture.debugElement.injector.get(Router);
+    const uploadService = spectator.debugElement.injector.get(UploadService);
+    
+    spyOn(uploadService, 'saveBrickBuilder');
     spyOn(mockRouter, 'navigate');
     spectator.click('button.previous-step');
+    
     expect(spectator.component.progressIndex).toEqual(0);
+    expect(uploadService.saveBrickBuilder).toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/upload/type']);
+  });
+
+  it('should clear cache on destroy', () => {
+    const uploadService = spectator.debugElement.injector.get(UploadService);
+    spyOn(uploadService, 'clearCache');
+
+    spectator.component.ngOnDestroy();
+    expect(uploadService.clearCache).toHaveBeenCalled();
   });
 });
