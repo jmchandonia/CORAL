@@ -10,7 +10,7 @@ import { of, Subject } from 'rxjs';
 import { Term, MicroType } from '../../../../../../shared/models/brick';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
-fdescribe('ContextFormComponent', () => {
+describe('ContextFormComponent', () => {
   let spectator: Spectator<ContextFormComponent>;
 
   const MockUploadService = {
