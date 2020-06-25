@@ -74,6 +74,7 @@ export class UploadService {
     this.brickBuilder = BrickFactoryService.createUploadInstance(template);
     this.selectedTemplate = template.id;
     localStorage.setItem('selectedTemplate', this.selectedTemplate);
+    this.saveBrickBuilder();
   }
 
   getSelectedTemplate() {
