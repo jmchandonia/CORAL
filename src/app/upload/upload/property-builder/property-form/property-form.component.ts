@@ -25,13 +25,13 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
     this._property = prop;
 
-    if (prop.typeTerm) {
-      const typeWithContext = Object.assign({}, prop.typeTerm);
+    if (prop.type) {
+      const typeWithContext = Object.assign({}, prop.type);
       prop.context.forEach(ctx => {
-        typeWithContext.text += `, ${ctx.typeTerm.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
+        typeWithContext.text += `, ${ctx.type.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
       });
       this.typesData = [typeWithContext];
-      this.propTypeItem = prop.typeTerm.id;
+      this.propTypeItem = prop.type.id;
     }
     if (prop.units) {
       this.unitsItem = prop.units.id;
@@ -140,7 +140,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     const config = {
       initialState: {
         context: this.property.context,
-        title: this.property.typeTerm.text
+        title: this.property.type.text
       },
       class: 'modal-lg',
       ignoreBackdropClick: true
@@ -150,9 +150,9 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     .subscribe(() => {
       // emit new instance of value
       // originally was for select2 bug, can be refactored
-      const { typeTerm, index, required }  = this.property;
+      const { type, index, required }  = this.property;
       const newProperty = Object.assign(
-        new TypedProperty(index, required, typeTerm), this.property
+        new TypedProperty(index, required, type), this.property
         ) as TypedProperty;
       this.typeReselected.emit(newProperty);
       this.modalHiddenSub.unsubscribe();

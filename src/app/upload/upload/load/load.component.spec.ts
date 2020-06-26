@@ -10,7 +10,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subject } from 'rxjs';
 
-describe('LoadComponent', () => {
+fdescribe('LoadComponent', () => {
 
   const MockUploadService = {
     downloadBrickTemplate: () => Promise.resolve(new Blob()),
@@ -131,6 +131,7 @@ describe('LoadComponent', () => {
     expect(spectator.component.upload).toHaveBeenCalled();
     expect(uploadService.uploadBrick).toHaveBeenCalled();
     flushMicrotasks();
+    tick();
     spectator.detectChanges();
     expect(uploadService.setSuccessData).toHaveBeenCalledWith({testData: 'test'});
     expect(spectator.component.successData).toEqual({testData: 'test'});
