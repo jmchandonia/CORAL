@@ -30,8 +30,8 @@ export class TypeSelectorComponent implements OnInit, OnDestroy {
       .subscribe(error => {
         this.error = error;
       });
-
-    this.selectedTemplate = this.uploadService.selectedTemplate;
+      
+    this.selectedTemplate = this.uploadService.getSelectedTemplate();
     this.brick = this.uploadService.getBrickBuilder();
     const templates = this.uploadService.brickTypeTemplates;
     if (templates) {

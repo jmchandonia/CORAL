@@ -1,7 +1,7 @@
 <div class="row mt-4">
   <div class="col-5 type-options-container select-button-group">
     <ng-select
-      class="custom"
+      class="custom type-selector"
       [class.select-error]="error && !dataValue.type"
       [items]="typeValues"
       bindLabel="text"
@@ -29,7 +29,7 @@
   </div>
   <div class="col-5 units-container">
     <ng-select
-      class="custom"
+      class="custom units-selector"
       [class.select-error]="error && !dataValue.units"
       *ngIf="dataValue.units !== null && dataValue.type"
       [items]="unitsValues"

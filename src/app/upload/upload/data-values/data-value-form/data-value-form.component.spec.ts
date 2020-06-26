@@ -13,6 +13,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { By } from '@angular/platform-browser';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 
 describe('DataValueFormComponent', () => {
 
@@ -24,6 +25,11 @@ describe('DataValueFormComponent', () => {
       results: [{id: '55555', text: 'test unit'}]
     }, asyncScheduler)
   }
+
+  const errorSub = new Subject();
+  const MockValidator = {
+    getValidationErrors: () => errorSub
+  };
 
   let spectator: Spectator<DataValueFormComponent>;
   const createComponent = createComponentFactory({
@@ -53,6 +59,10 @@ describe('DataValueFormComponent', () => {
       {
         provide: UploadService,
         useValue: MockUploadService
+      },
+      {
+        provide: UploadValidationService,
+        useValue: MockValidator
       }
     ]
   });
@@ -168,5 +178,13 @@ describe('DataValueFormComponent', () => {
     expect(spectator.component.getUnits).toHaveBeenCalled(); 
   });
 
-  
+  it('should subscribe to errors', () => {
+    errorSub.next(true);
+    spectator.detectChanges();
+
+    expect(spectator.component.error).toBeTruthy();
+    expect(spectator.query('ng-select.units-selector')).toHaveClass('select-error');
+  });
+
+
 });

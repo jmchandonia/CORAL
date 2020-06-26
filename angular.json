@@ -28,7 +28,7 @@
               "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ],
             "scripts": [
-              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/jquery/dist/jquery.js"
             ],
             "es5BrowserSupport": true
           },
@@ -91,7 +91,7 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery/dist/jquery.min.js"
             ],
             "assets": [
               "src/favicon.ico",
