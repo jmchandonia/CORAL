@@ -22,7 +22,7 @@ export class UploadValidationService {
   brick: Brick;
 
   constructor(private uploadService: UploadService) {
-    // this.brick = this.uploadService.getBrickBuilder();
+    this.brick = this.uploadService.getBrickBuilder();
    }
 
    validationErrors(step: string) {

@@ -14,10 +14,6 @@ export class GlobalErrorHandler implements ErrorHandler {
     private router: Router;
 
     constructor(private injector: Injector, private zone: NgZone) {
-        setTimeout(() => {
-            this.modalService = this.injector.get(BsModalService);
-            this.router = this.injector.get(Router);
-        });
     }
 
     errorMessage = '';
@@ -37,6 +33,8 @@ export class GlobalErrorHandler implements ErrorHandler {
         } else {
             console.error(error)
             if(this.errorMessage !== error.message) { // prevents concurrent errors from components to raise more than once
+                this.modalService = this.injector.get(BsModalService);
+                this.router = this.injector.get(Router);
                 this.zone.runOutsideAngular(() => {
                     const config = {
                         class: 'modal-lg',

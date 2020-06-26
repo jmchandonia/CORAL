@@ -1,14 +1,17 @@
 <div class="container">
   <div class="row mb-2">
     <div class="col-12">
-      <h5 class="mb-0 mt-2" style="float: left">Upload Brick Data</h5>
+      <h5 class="mb-0 mt-3" style="float: left">Upload Brick Data</h5>
       <button id="download-template" class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
         <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
         Download Template
       </button>
     </div>
   </div>
-  <hr />
+  <!-- <hr /> -->
+  <div class="p-3 mb-3">
+    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </span>
+  </div>
   <div class="row justify-content-center">
     <div class="col-12">
       <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">

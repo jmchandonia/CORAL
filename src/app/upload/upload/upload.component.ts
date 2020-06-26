@@ -72,18 +72,21 @@ export class UploadComponent implements OnInit, OnDestroy {
       if (this.progressIndex > this.maxStep) {
         this.maxStep = this.progressIndex;
         }
+      this.uploadService.saveBrickBuilder();
       this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
     }
   }
 
   previousStep() {
     this.progressIndex--;
+    this.uploadService.saveBrickBuilder();
     this.router.navigate([`/upload/${this.uploadSteps[this.progressIndex]}`]);
   }
 
   navigateBreadcrumb(step: string, index: number) {
     // prod environment check is used to facilitate dev debugging (developer won't need to navigate throubgh steps)
     if (index <= this.maxStep || !environment.production) {
+      this.uploadService.saveBrickBuilder();
       this.router.navigate([`/upload/${step}`]);
     }
   }

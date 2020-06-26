@@ -6,7 +6,7 @@ on our system that can be challenging for data producers and data consumers alik
 ## Installation
 
 to get started, make sure you have npm and Angular installed. This app is built with Angular version
-7.2.5.
+9.1.11.
 
 `npm install -g @angular/cli`
 
@@ -14,7 +14,7 @@ Fork and clone a repo and then install all the necessary dependencies in package
 
 `npm install`
 
-If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular versions 7.2.5 and 7.2.15.
+If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular version 9.1.11.
 
 To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200
 
@@ -47,6 +47,14 @@ the following code below in a new .htaccess file at `/var/www/html/generix-ui/`:
   RewriteRule ^ index.html
 </IfModule>
 ```
+
+## Testing
+
+To manually run a test, you can activate the test script using `ng test`. In your terminal, the app will display building information and then show a timestamp of when it was connected to the server. If you are running on your local machine, the default launcher will be with Chrome. You can configure this option in `karma.conf.js`.
+
+On your local machine, the browser will open a GUI that will display the test results. you can refer to the [karma docs](https://karma-runner.github.io/latest/index.html) for more information.
+
+**Important Note**: If you run into an issue where the test server disconnects, you can troubleshoot by inspecting the karma page and viewing the javascript console. There are occassionally errors that will not display in the command line that will log to the browser console.
 
 ## Overview
 
@@ -95,7 +103,7 @@ app.module
 
  **jQuery**
  
-[jQuery](https://jquery.com/) is installed in order to support custom UI element plugins, namely DataTables and Select2
+[jQuery](https://jquery.com/) is installed in order to support custom UI element plugins, namely DataTables.
 
 **DataTables**
 
@@ -123,68 +131,49 @@ export class SomeComponent implements afterViewInit {
     }
 }
 ```
-**Select2**
 
-[Select2](https://select2.org/) is used to create comboboxes that populate with data from our system. It
-is configured to work with angular using [ng2-select2](https://github.com/NejcZdovc/ng2-select2). Select2
-elements can be rendered using a `<select2>` tag and take an input of `options` and `data`, where data is
-the data with will populate the dropdown and options take the congiguration for the dropdown. The `cssImport` input is necessary for select2 to add styles. User selection can be handled using the `(valueChanged)` event handler.
+**NgSelect**
+[NgSelect](https://ng-select.github.io/ng-select#/data-sources) is used to create comboboxes that populate with data from our system. NgSelect elements can be rendered using a `<ng-select>` tag and take an input of `items`, where items is the data with will populate the dropdown and options take the congiguration for the dropdown. 
 
-```html
+The text value that the user will see can be configured via the `bindLabel` property, which can be any of the values of the object that you're feeding the data to. 
 
-<select2
-    [data]="data"
-    [options]="options"
-    [cssImport]="true"
-    [value]="selectedValue"
-    (valueChanged)="setValue($event)"
-</select2>
->
+You can also specify which property you want to model the data with via the `bindValue` property. The default value is the object selected in the `[items]` array. You can access user input selection via the `(change)` event. You can select a default value for an item with the `[(ngModel)]` directive.
 
-```
+component.ts file:
 ```javascript
-
-import { Select2OptionData } from 'ng2-select2';
-
-@Component({...})
-
-export class ComponentWithSelect2 implements OnInit {
-
-    selectedValue = '0';
-
-    // typical select 2 options config
-    public options: Select2Options = {
-        width: '100%' // width is calculated here
-        containerCssClass: 'select2-custom-container'
-        // ^ class defined in styles.css, ensures consistent UI with the rest of app
-        placeholder: 'placeholders can be put here'
-        // placeholders only work if there is an empty data element in the data file
-        query: (options: Select2QueryOptions) => {
-            // this is the option used to get data asynchronously based on user search term
-            const text = options.term;
-            this.someService.getSomeData().subscribe((res: any) => {
-                options.callback(res.results);
-            })
+    data = [
+        {
+            firstName: 'Elton',
+            lastName: 'John'
+        },
+        {
+            firstName: 'Bob',
+            lastName: 'Marley'
         }
-    }
+    ]
 
-    public data: Select2OptionData[] = [
-        {id: '', text: ''}, // necessary to create placeholders and non default selections
-        {id: '0', text: 'value that the user sees'}
-    ];
-}
+    handleChange(event) {
+        console.log(event);
+    }
 ```
 
-**Important things to note about Select2:**
+component.html file:
+```html
+    <!-- example without bindValue (logs {firstName: '...', lastName: '...'}) -->
+    <ng-select
+        [items]="data"
+        bindLabel="firstName"
+        (change)="handleChange($event)"
+    ></ng-select>
 
-- if a default placeholder value is specified, the `valueChanged` event is fired initially. In order to prevent unexpected behavior, it is best to check for an id of `''` in your event handler.
-
-- Select 2 option data is in the format of `{id: string, text: string}`. When `valueChanged` is fired, 
-the `$event` released has a property of `value` containing the ID of the item. The data itself can be found in `$event.data`.
-
-- In order to populate a select2 dropdown with a predefined element, the `[value]` input must be the `id`
-of the desired data item. 
-
+    <!-- example with bindValue (logs lastName) -->
+    <ng-select
+        [items]="data"
+        bindLabel="firstName"
+        bindValue="lastName"
+        (change)="handleChange($event)"
+    ></ng-select>
+```
 **Bootstrap 4 and Ngx-Bootstrap**
 
 for CSS UI, [Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/) is used along 
