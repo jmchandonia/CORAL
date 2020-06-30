@@ -54,6 +54,16 @@ To manually run a test, you can activate the test script using `ng test`. In you
 
 On your local machine, the browser will open a GUI that will display the test results. you can refer to the [karma docs](https://karma-runner.github.io/latest/index.html) for more information.
 
+To test in a command-line only environment, e.g. a CI server, you can run the test with the same command while adding the following flags:
+
+`ng test --browsers=ChromeHeadless --watch=false`
+
+Specifying 'ChromeHeadless' will launch a headless instance of a chromium browser with which to run the tests. Make sure you have chromium installed the server. If you get an error from Karma saying that there is no binary for ChromeHeadless browser, you will need to configure an environment variable pointing to the location of your installed chromium:
+
+`export CHROME_BIN=/usr/bin/chromium-browser`
+
+the `--watch=false` flag is not necessary for single runs, but is important for running automated testing as it will terminate once the tests have been run, rather than wait for changes as is the default behavior.
+
 **Important Note**: If you run into an issue where the test server disconnects, you can troubleshoot by inspecting the karma page and viewing the javascript console. There are occassionally errors that will not display in the command line that will log to the browser console.
 
 ## Overview
