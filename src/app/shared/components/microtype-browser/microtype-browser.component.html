@@ -22,64 +22,16 @@
         type="ball-spin-fade-rotating"></ngx-spinner>
     </div>
   </div>
-  <div class="row justify-content-center mb-3" *ngIf="microtypes">
-    <div class="col-12">
-      <table class="table table-bordered table-striped">
-        <thead class="table-header">
-          <tr>
-            <th>
-              Name
-            </th>
-            <th>
-              Value Type
-            </th>
-            <th>
-              Valid Values
-            </th>
-            <th>
-              Valid Units
-            </th>
-            <th class="checkbox">
-              Dimension
-            </th>
-            <th>
-              Dim Variable
-            </th>
-            <th>Data Variable</th>
-            <th>
-              Property
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let microtype of microtypes">
-            <td>{{microtype.term_name}}</td>
-            <td>{{microtype.mt_value_scalar_type}}</td>
-            <td>{{microtype.mt_valid_values}}</td>
-            <td>{{microtype.mt_valid_units}}</td>
-            <td class="checkbox-container">
-              <i *ngIf="microtype.mt_dimension" class="material-icons blue">
-                check_circle
-              </i>
-            </td>
-            <td class="checkbox-container">
-              <i *ngIf="microtype.mt_dim_var" class="material-icons blue">
-                check_circle
-              </i>
-            </td>
-            <td class="checkbox-container">
-              <i *ngIf="microtype.mt_data_var" class="material-icons">
-                check_circle
-              </i>
-            </td>
-            <td class="checkbox-container">
-              <i *ngIf="microtype.mt_property" class="material-icons blue">
-                check_circle
-              </i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="row mb-3 ml-3" *ngIf="microtypes">
+    <tree-root *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions" (toggleExpanded)="getMicrotypeMetadata($event)">
+      <ng-template #treeNodeTemplate let-node let-index="index">
+        <!-- <ng-container *ngIf="node.data.mt_microtype || node.data.children.length"> -->
+          <h5 [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}</h5>
+          <span *ngIf="node.isExpanded || !node.children.length">{{node.data.term_desc}}</span>
+        <!-- </ng-container> -->
+        <!-- <ng-container *ngIf="!node.data.mt_microtype && !node.data.children.length" style="display: none!important;">
+        </ng-container> -->
+      </ng-template>
+    </tree-root>
   </div>
 </div>

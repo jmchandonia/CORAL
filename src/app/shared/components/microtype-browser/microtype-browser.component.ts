@@ -4,6 +4,9 @@ import * as $ from 'jquery';
 import 'datatables.net-bs4';
 import 'datatables.net';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MicrotypeTreeService } from 'src/app/shared/services/microtype-tree.service';
+import { MicroTypeTreeNode } from 'src/app/shared/models/microtype-tree';
+import { ITreeOptions } from 'angular-tree-component'
 
 @Component({
   selector: 'app-microtype-browser',
@@ -12,25 +15,28 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class MicrotypeBrowserComponent implements OnInit {
 
-  public microtypes: any[];
+  public microtypes: MicroTypeTreeNode[];
   dataTables: any;
+  public treeOptions: ITreeOptions = { displayField: 'term_def' }
 
   constructor(
     private uploadService: UploadService,
     private chRef: ChangeDetectorRef,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private treeService: MicrotypeTreeService
   ) { }
 
   ngOnInit() {
-    this.spinner.show('spinner');
-    this.uploadService.getMicroTypes()
-      .subscribe((res: any) => {
-        this.spinner.hide('spinner');
-        this.microtypes = res.results;
+    this.treeService.getMicrotypes()
+      .then((microtypes: MicroTypeTreeNode[]) => {
+        this.microtypes = microtypes;
         this.chRef.detectChanges();
-        const table: any = $('table');
-        this.dataTables = table.DataTable();
+        console.log('MICROTYPES', this.microtypes);
       });
+  }
+
+  getMicrotypeMetadata(event) {
+    console.log('getting microtype metadata', event.node.data);
   }
 
 }
