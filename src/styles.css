@@ -1,6 +1,7 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
 @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~angular-tree-component/dist/angular-tree-component.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500&display=swap');
 body {
