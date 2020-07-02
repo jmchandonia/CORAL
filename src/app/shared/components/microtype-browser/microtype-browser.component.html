@@ -45,7 +45,7 @@
             </div>
             <div class="row mt-3">
               <div class="col-12">
-                <input type="text" class="form-control" placeholder="Filter by keyword" />
+                <input type="text" class="form-control" (input)="setKeywordSearchFilter($event)" placeholder="Filter by keyword" />
               </div>
             </div>
           </div>
@@ -64,7 +64,7 @@
     </div>
   </div>
   <div class="row mb-3 ml-3" *ngIf="microtypes">
-    <tree-root *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions" (toggleExpanded)="getMicrotypeMetadata($event)">
+    <tree-root #tree *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions">
       <ng-template #treeNodeTemplate let-node let-index="index">
         <ng-container>
           <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}</h5>
