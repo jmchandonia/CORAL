@@ -8,6 +8,47 @@
             by which parts of our brick data type. Click below in the arrows to sort by microtypes supported by 
             specific members of a brick.
           </p>
+          <div class="card p-3">
+            <h4>Key</h4>
+            <p>
+              Select the items below to filter microtype objects by where they are valid. You can also use the search bar to match microtypes by text.
+            </p>
+            <div class="row">
+              <div class="col-3">
+                <span class="badge badge-pill badge-primary">
+                  Data
+                </span>
+                <span> = Data Variable</span>
+                <input id="mt_dimension" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+              </div>
+              <div class="col-3 p-0">
+                <span class="badge badge-pill badge-success">
+                  Dim
+                </span>
+                <span> = Dimension</span>
+                <input id="mt_dim_var" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+              </div>
+              <div class="col-3">
+                <span class="badge badge-pill badge-warning">
+                  DimV
+                </span>
+                <span> = Dimension Variable</span>
+                <input id="mt_data_var" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+              </div>
+              <div class="col-3">
+                <span class="badge badge-pill badge-danger">
+                  Prop
+                </span>
+                <span> = Property</span>
+                <input id="mt_property" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <input type="text" class="form-control" placeholder="Filter by keyword" />
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>
