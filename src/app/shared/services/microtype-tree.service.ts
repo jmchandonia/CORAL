@@ -15,7 +15,7 @@ export class MicrotypeTreeService {
 
   getMicrotypes(): Promise<MicroTypeTreeNode[]> {
     return new Promise((resolve, reject) => {
-      resolve(MicrotypeTreeFactory.createMicrotypeTree(mockMicrotypes))
+      resolve(mockMicrotypes);
     });
   }
 }

@@ -4,7 +4,7 @@
       <div class="card p-3" style="border: 0px;">
           <h3>Browse Microtypes</h3>
           <p class="card-text">
-            This is where you can browse for microtype ontologies in our system t o see which types are supported
+            This is where you can browse for microtype ontologies in our system to see which types are supported
             by which parts of our brick data type. Click below in the arrows to sort by microtypes supported by 
             specific members of a brick.
           </p>
@@ -25,12 +25,34 @@
   <div class="row mb-3 ml-3" *ngIf="microtypes">
     <tree-root *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions" (toggleExpanded)="getMicrotypeMetadata($event)">
       <ng-template #treeNodeTemplate let-node let-index="index">
-        <!-- <ng-container *ngIf="node.data.mt_microtype || node.data.children.length"> -->
-          <h5 [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}</h5>
+        <ng-container>
+          <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}</h5>
+          <div class="row">
+            <div class="col-12" *ngIf="node.isExpanded || !node.children.length">
+              <span
+                class="badge badge-pill badge-primary mr-1"
+                *ngIf="node.data.mt_data_var"
+                >Data</span>
+              <span
+                class="badge badge-pill badge-success mr-1"
+                *ngIf="node.data.mt_dimension">
+                Dim
+              </span>
+              <span
+                class="badge badge-pill badge-warning mr-1"
+                *ngIf="node.data.mt_dim_var">
+                DimV
+              </span>
+              <span
+                class="badge badge-pill badge-danger"
+                *ngIf="node.data.mt_property"
+              >
+                Prop
+              </span>
+            </div>
+          </div>
           <span *ngIf="node.isExpanded || !node.children.length">{{node.data.term_desc}}</span>
-        <!-- </ng-container> -->
-        <!-- <ng-container *ngIf="!node.data.mt_microtype && !node.data.children.length" style="display: none!important;">
-        </ng-container> -->
+        </ng-container>
       </ng-template>
     </tree-root>
   </div>
