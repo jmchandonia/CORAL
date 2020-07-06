@@ -121,7 +121,7 @@
               </span>
             <!-- </div> -->
           </h5>
-          <span *ngIf="node.isExpanded || !node.children.length">{{node.data.term_desc}}</span>
+          <span *ngIf="descriptionVisible(node)">{{node.data.term_desc}}</span>
         </ng-container>
       </ng-template>
     </tree-root>
