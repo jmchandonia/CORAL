@@ -1443,14 +1443,21 @@ def generix_microtypes():
     try:
         res = []
         for term in svs['ontology'].all.find_microtypes().terms:
+            term_desc = term.term_def;
+            if (len(term.synonyms) > 0):
+                term_desc += ' ['+', '.join(term.synonyms)+']'
             res.append({
                 'term_id': term.term_id,
                 'term_name': term.term_name,
+                'term_def': term.term_def,
+                'term_desc': term_desc,
+                'mt_microtype': term.is_microtype,
                 'mt_dimension': term.is_dimension,
                 'mt_dim_var': term.is_dimension_variable,
                 'mt_data_var': term.is_dimension_variable,
                 'mt_property': term.is_property,
                 'mt_value_scalar_type': term.microtype_value_scalar_type,
+                'mt_parent_term_ids': term.parent_ids,
                 'mt_valid_values': ' valid values',
                 'mt_valid_units': ' valid units'                
             })
