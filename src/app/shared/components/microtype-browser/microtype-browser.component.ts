@@ -18,7 +18,15 @@ export class MicrotypeBrowserComponent implements OnInit {
   public microtypes: MicroTypeTreeNode[];
   dataTables: any;
   public treeOptions: ITreeOptions = { displayField: 'term_def' }
+
   @ViewChild('tree', {static: false}) tree: TreeComponent;
+
+  filters = {
+    mt_dim_var: true,
+    mt_dimension: true,
+    mt_data_var: true,
+    mt_property: true
+  }
 
   constructor(
     private uploadService: UploadService,
@@ -41,6 +49,16 @@ export class MicrotypeBrowserComponent implements OnInit {
 
   setKeywordSearchFilter(event) {
     this.tree.treeModel.filterNodes(event.target.value);
+  }
+
+  setCategoryFilter(event) {
+    const checkedKeys = Object.keys(this.filters).filter(key => this.filters[key]);
+    this.tree.treeModel.filterNodes((node) => {
+      for (const key of checkedKeys) {
+        if (node.data[key]) { return true; }
+      }
+      return false;
+    });
   }
 
 }
