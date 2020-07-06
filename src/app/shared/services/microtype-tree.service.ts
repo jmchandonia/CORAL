@@ -9,13 +9,16 @@ const mockMicrotypes = require('src/app/shared/test/mock_microtypes.json');
 })
 export class MicrotypeTreeService {
 
+  microtypes: MicroTypeTreeNode[];
+
   constructor(private http: HttpClient) {
     // this.getMicrotypes();
   }
 
   getMicrotypes(): Promise<MicroTypeTreeNode[]> {
     return new Promise((resolve, reject) => {
-      resolve(mockMicrotypes);
+      this.microtypes = mockMicrotypes;
+      resolve(this.microtypes);
     });
   }
 }

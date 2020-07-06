@@ -19,33 +19,61 @@
                   Data
                 </span>
                 <span> = Data Variable</span>
-                <input id="mt_dimension" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+                <input
+                  id="mt_data_var"
+                  type="checkbox"
+                  (change)="setCategoryFilter($event)"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_data_var"
+                  [ngModelOptions]="{standalone: true}"
+                />
               </div>
               <div class="col-3 p-0">
                 <span class="badge badge-pill badge-success">
                   Dim
                 </span>
                 <span> = Dimension</span>
-                <input id="mt_dim_var" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+                <input
+                  id="mt_dimension"
+                  type="checkbox"
+                  (change)="setCategoryFilter($event)"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_dimension"
+                  [ngModelOptions]="{standalone: true}"
+                />
               </div>
               <div class="col-3">
                 <span class="badge badge-pill badge-warning">
                   DimV
                 </span>
                 <span> = Dimension Variable</span>
-                <input id="mt_data_var" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+                <input
+                  id="mt_dim_var"
+                  type="checkbox"
+                  (change)="setCategoryFilter($event)"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_dim_var"
+                  [ngModelOptions]="{standalone: true}"
+                />
               </div>
               <div class="col-3">
                 <span class="badge badge-pill badge-danger">
                   Prop
                 </span>
                 <span> = Property</span>
-                <input id="mt_property" type="checkbox" onChange="updateCategories($event)" class="ml-2" />
+                <input
+                  id="mt_property"
+                  type="checkbox"
+                  (change)="setCategoryFilter($event)"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_property"
+                  [ngModelOptions]="{standalone: true}"
+                />
               </div>
             </div>
             <div class="row mt-3">
               <div class="col-12">
-                <input type="text" class="form-control" (input)="setKeywordSearchFilter($event)" placeholder="Filter by keyword" />
+                <input type="text" class="form-control" (keyup)="setKeywordSearchFilter($event)" placeholder="Filter by keyword" />
               </div>
             </div>
           </div>
@@ -67,31 +95,32 @@
     <tree-root #tree *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions">
       <ng-template #treeNodeTemplate let-node let-index="index">
         <ng-container>
-          <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}</h5>
-          <div class="row">
-            <div class="col-12" *ngIf="node.isExpanded || !node.children.length">
-              <span
-                class="badge badge-pill badge-primary mr-1"
-                *ngIf="node.data.mt_data_var"
-                >Data</span>
-              <span
-                class="badge badge-pill badge-success mr-1"
-                *ngIf="node.data.mt_dimension">
-                Dim
+          <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}
+            <!-- <div class="row"> -->
+              <span style="font-size: 1rem;" *ngIf="node.isExpanded || !node.children.length">
+                <span
+                  class="badge badge-pill badge-primary mr-1"
+                  *ngIf="node.data.mt_data_var"
+                  >Data</span>
+                <span
+                  class="badge badge-pill badge-success mr-1"
+                  *ngIf="node.data.mt_dimension">
+                  Dim
+                </span>
+                <span
+                  class="badge badge-pill badge-warning mr-1"
+                  *ngIf="node.data.mt_dim_var">
+                  DimV
+                </span>
+                <span
+                  class="badge badge-pill badge-danger"
+                  *ngIf="node.data.mt_property"
+                >
+                  Prop
+                </span>
               </span>
-              <span
-                class="badge badge-pill badge-warning mr-1"
-                *ngIf="node.data.mt_dim_var">
-                DimV
-              </span>
-              <span
-                class="badge badge-pill badge-danger"
-                *ngIf="node.data.mt_property"
-              >
-                Prop
-              </span>
-            </div>
-          </div>
+            <!-- </div> -->
+          </h5>
           <span *ngIf="node.isExpanded || !node.children.length">{{node.data.term_desc}}</span>
         </ng-container>
       </ng-template>
