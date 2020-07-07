@@ -9,29 +9,20 @@ export class MicrotypeTreeFactoryService {
   constructor() { }
 
   public static createMicrotypeTree(microtypes): MicroTypeTreeNode[] {
-    let hashTable = Object.create(null);
-    microtypes.results.forEach(microtype => {
-        hashTable[microtype.term_id] = {...microtype, children: []}
-    });
-    let microtypeTree: Array<MicroTypeTreeNode> = [];
-    microtypes.results.forEach((microtype: MicroTypeTreeNode) => {
-        if(microtype.mt_parent_term_ids.length) {
-            microtype.mt_parent_term_ids
-              .forEach((id: string) => {
-                // there are some items with parents that are not in the results
-                if(hashTable[id] !== undefined) {
-                    hashTable[id].children.push({...hashTable[microtype.term_id]});
-                }
-            });
+    const result = [];
+    const map = {};
+
+    microtypes.forEach((microtype, idx) => {
+      map[microtype.term_id] = idx;
+      microtypes[idx].children = [];
+      microtype.mt_parent_term_ids.forEach(id => {
+        if (map[id]) {
+          microtypes[map[id]].children.push(microtype);
         } else {
-            microtypeTree.push(hashTable[microtype.term_id]);
+          result.push(microtype);
         }
+      });
     });
-    return microtypeTree;
-  }
-
-  filterNonMicrotypes(microtypes: MicroTypeTreeNode[]) {
-    // filter out non-microtypes that don't have children
-
+    return result;
   }
 }
