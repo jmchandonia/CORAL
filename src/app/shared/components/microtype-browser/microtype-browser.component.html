@@ -97,6 +97,8 @@
         <ng-container>
           <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#666'} : ''">{{node.data.term_name}}
             <!-- <div class="row"> -->
+              <span *ngIf="node.data.mt_value_scalar_type.length" style="font-weight: normal"> ({{node.data.mt_value_scalar_type}})</span>
+              &nbsp;
               <span style="font-size: 1rem;" *ngIf="node.isExpanded || !node.children.length">
                 <span
                   class="badge badge-pill badge-primary mr-1"
