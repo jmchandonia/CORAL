@@ -10,7 +10,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { Subject } from 'rxjs';
 
-fdescribe('LoadComponent', () => {
+describe('LoadComponent', () => {
 
   const MockUploadService = {
     downloadBrickTemplate: () => Promise.resolve(new Blob()),
