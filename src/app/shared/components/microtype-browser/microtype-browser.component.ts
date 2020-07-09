@@ -1,8 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
 import { UploadService } from '../../services/upload.service';
-import * as $ from 'jquery';
-import 'datatables.net-bs4';
-import 'datatables.net';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MicrotypeTreeService } from 'src/app/shared/services/microtype-tree.service';
 import { MicroTypeTreeNode } from 'src/app/shared/models/microtype-tree';
