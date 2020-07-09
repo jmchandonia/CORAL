@@ -62,7 +62,6 @@ export class MicrotypeBrowserComponent implements OnInit {
   }
 
   descriptionVisible(node) {
-    // node.isExpanded || !node.children.length
     if (`${node.data.term_name}.` === node.data.term_desc) {
       return false;
     }

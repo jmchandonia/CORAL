@@ -95,8 +95,7 @@
     <tree-root #tree *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions">
       <ng-template #treeNodeTemplate let-node let-index="index">
         <ng-container>
-          <h5 class="mb-0" [ngStyle]="!node.data.mt_microtype ? {'color': '#999'} : ''">{{node.data.term_name}}
-            <!-- <div class="row"> -->
+          <h5 class="mb-0" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_name}}
               <span *ngIf="node.data.mt_value_scalar_type.length" style="font-weight: normal"> ({{node.data.mt_value_scalar_type}})</span>
               &nbsp;
               <span style="font-size: 1rem;" *ngIf="node.isExpanded || !node.children.length">
@@ -123,7 +122,7 @@
               </span>
             <!-- </div> -->
           </h5>
-          <span *ngIf="descriptionVisible(node)">{{node.data.term_desc}}</span>
+          <span *ngIf="descriptionVisible(node)" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_desc}}</span>
         </ng-container>
       </ng-template>
     </tree-root>
