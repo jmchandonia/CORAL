@@ -6,6 +6,7 @@ import 'datatables.net';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MicrotypeTreeService } from 'src/app/shared/services/microtype-tree.service';
 import { MicroTypeTreeNode } from 'src/app/shared/models/microtype-tree';
+import { ActivatedRoute } from '@angular/router';
 import { ITreeOptions, TreeComponent, TreeModel } from 'angular-tree-component'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subscription, Subject } from 'rxjs';
@@ -21,6 +22,7 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
   dataTables: any;
   public treeOptions: ITreeOptions = { displayField: 'term_def' }
   textInputChanged: Subject<string> = new Subject();
+  queryParamFilter: string;
 
   @ViewChild('tree', {static: false}) tree: TreeComponent;
 
@@ -35,8 +37,22 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
     private uploadService: UploadService,
     private chRef: ChangeDetectorRef,
     private spinner: NgxSpinnerService,
-    private treeService: MicrotypeTreeService
+    private treeService: MicrotypeTreeService,
+    private route: ActivatedRoute
   ) {
+
+    // get queryParams if user is coming from /upload
+    this.route.queryParams.subscribe(params => {
+      if (params['filter']) {
+        this.queryParamFilter = params['filter'];
+        Object.keys(this.filters).forEach((key) => {
+          if (key !== this.queryParamFilter) {
+            this.filters[key] = false;
+          }
+        });
+      }
+    });
+
     // subscription for debouncing input search
     this.textInputChanged.pipe(
       debounceTime(300),
@@ -49,6 +65,9 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
     this.treeService.getMicrotypes()
       .then((microtypes: MicroTypeTreeNode[]) => {
         this.microtypes = microtypes;
+        if (this.queryParamFilter) {
+          this.setCategoryFilter();
+        }
         this.chRef.detectChanges();
       });
   }
@@ -62,14 +81,16 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
     this.textInputChanged.next(event.target.value);
   }
 
-  setCategoryFilter(event) {
-    const checkedKeys = Object.keys(this.filters).filter(key => this.filters[key]);
-    this.tree.treeModel.filterNodes((node) => {
-      for (const key of checkedKeys) {
-        if (node.data[key]) { return true; }
-      }
-      return false;
-    });
+  setCategoryFilter() {
+    setTimeout(() => {
+      const checkedKeys = Object.keys(this.filters).filter(key => this.filters[key]);
+      this.tree.treeModel.filterNodes((node) => {
+        for (const key of checkedKeys) {
+          if (node.data[key]) { return true; }
+        }
+        return false;
+      });
+    })
   }
 
   descriptionVisible(node) {
