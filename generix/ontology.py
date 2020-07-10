@@ -457,8 +457,24 @@ class Ontology:
 
     def find_microtypes(self, size=1000):    
         aql_bind = {}
-        aql_filter = 'x.is_microtype == true'
-        return MicrotypeCollection(self.__find_terms(aql_filter, aql_bind, size=size))
+        # aql_filter = 'x.is_microtype == true'
+        # we want parents also, so hack for now:
+        aql_filter = 'x.ontology_id == "enigma" || x.ontology_id == "context_measurement"'
+        mtc = self.__find_terms(aql_filter, aql_bind, size=size)
+
+        # filter to include only microtypes and parents of microtypes.
+        parents_of_mt = set()
+        for term in mtc:
+            if not term.is_hidden:
+                if term.is_microtype:
+                    parents_of_mt.update(term.parent_path_ids)
+
+        new_mtc = list()
+        for term in mtc:
+            if ((term.is_microtype) or (term.term_id in parents_of_mt)):
+                new_mtc.append(term)
+        return MicrotypeCollection(new_mtc)
+    
 
     def find_ids(self, term_ids, size=1000):
         aql_bind = {'term_ids': term_ids}
