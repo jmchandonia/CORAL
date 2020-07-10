@@ -3,7 +3,7 @@ import { MicrotypeTreeFactoryService as MicrotypeTreeFactory } from './microtype
 import { HttpClient } from '@angular/common/http';
 import { MicroTypeTreeNode } from '../models/microtype-tree';
 // const mockMicrotypes = require('src/app/shared/test/mock_microtypes.json');
-const mockMicrotypes = require('../../../../../py/mock_microtypes_3.json');
+const mockMicrotypes = require('src/app/shared/test/mock_microtypes_3.json');
 
 @Injectable({
   providedIn: 'root'
