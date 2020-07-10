@@ -1442,30 +1442,73 @@ def _to_process_docs(rows):
 def generix_microtypes():
     try:
         res = []
-        for term in svs['ontology'].all.find_microtypes().terms:
-            term_desc = term.term_def;
-            if (len(term.synonyms) > 0):
-                term_desc += ' ['+', '.join(term.synonyms)+']'
-            res.append({
-                'term_id': term.term_id,
-                'term_name': term.term_name,
-                'term_def': term.term_def,
-                'term_desc': term_desc,
-                'mt_microtype': term.is_microtype,
-                'mt_dimension': term.is_dimension,
-                'mt_dim_var': term.is_dimension_variable,
-                'mt_data_var': term.is_dimension_variable,
-                'mt_property': term.is_property,
-                'mt_value_scalar_type': term.microtype_value_scalar_type,
-                'mt_parent_term_ids': term.parent_ids,
-                'mt_valid_values': ' valid values',
-                'mt_valid_units': ' valid units'                
-            })
-        return  _ok_response(res)       
+        term_collection = svs['ontology'].all.find_microtypes()
+
+        # we want these sorted into tree
+        term_dict = dict()
+        for term in term_collection:
+            # sys.stderr.write(term.term_id+"\n")
+            term_dict[term.term_id] = term
+        
+        # store children for each term in a dict
+        children = dict()
+        for term in term_collection:
+            children[term.term_id] = []
+
+        # populate children elements
+        for term in term_collection:
+            for parent in term.parent_ids:
+                try:
+                    children[parent].append(term.term_id)
+                except KeyError: # requrired because some parents don't exist
+                    pass
+
+        # next, print any "root" terms:
+        for term in term_collection:
+            if (len(term.parent_ids)==0):
+                append_with_children(res,children,term_dict,term.term_id)
+                
+        return _ok_response(res)       
     except Exception as e:
         return _err_response(e)
 
-
+def append_with_children(res,children,term_dict,term_id):
+    try:
+        term = term_dict.pop(term_id)
+    except KeyError:
+        sys.stderr.write("already printed: "+term_id+"\n")
+        return
+    if term.is_hidden:
+        sys.stderr.write("hidden term: "+term.term_id+"\n")
+    # don't print hidden and root terms:
+    if ((not term.is_hidden) and (len(term.parent_ids)>0)):
+        sys.stderr.write("printing term: "+term.term_id+"\n")
+        term_desc = term.term_def;
+        if (len(term.synonyms) > 0):
+            term_desc += ' ['+', '.join(term.synonyms)+']'
+        scalar_type = term.microtype_value_scalar_type
+        if (term.microtype_value_scalar_type == 'object_ref'):
+            scalar_type = 'link to static object'
+        elif (term.microtype_value_scalar_type == 'oterm_ref'):
+            scalar_type = 'list of choices'
+        res.append({
+            'term_id': term.term_id,
+            'term_name': term.term_name,
+            'term_def': term.term_def,
+            'term_desc': term_desc,
+            'mt_microtype': term.is_microtype,
+            'mt_dimension': term.is_dimension,
+            'mt_dim_var': term.is_dimension_variable,
+            'mt_data_var': term.is_dimension_variable,
+            'mt_property': term.is_property,
+            'mt_value_scalar_type': scalar_type,
+            'mt_parent_term_ids': term.parent_ids
+        })
+    for child in children[term_id]:
+        sys.stderr.write("process child: "+child+"\n")
+        append_with_children(res,children,term_dict,child)
+    return
+               
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET'])
 def generix_core_type_metadata(obj_id):
     obj_type = ''
