@@ -4,7 +4,7 @@ import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { MicrotypeBrowserComponent } from './microtype-browser.component';
 import { HttpClientModule } from '@angular/common/http';
 // TODO: give permanent URL for mock_microtypes, this link is not in repository
-const mock_microtypes = require('../../../../../../py/mock_microtypes_3.json');
+const mock_microtypes = require('src/app/shared/test/mock_microtypes_3.json');
 import { MicrotypeTreeService } from 'src/app/shared/services/microtype-tree.service';
 import { MicrotypeTreeFactoryService as MicrotypeTreeFactory } from 'src/app/shared/services/microtype-tree-factory.service';
 
