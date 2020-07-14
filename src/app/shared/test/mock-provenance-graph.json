@@ -1,0 +1,260 @@
+{
+    "result": {
+        "nodes": [
+            {
+                "index": 0,
+                "type": "static",
+                "name": "wells",
+                "count": 459
+            },
+            {
+                "index": 1,
+                "type": "dynamic",
+                "name": "Physical Measurements",
+                "count": 1
+            },
+            {
+                "index": 2,
+                "type": "dynamic",
+                "name": "Datasets",
+                "count": 15
+            },
+            {
+                "index": 3,
+                "type": "static",
+                "name": "Samples",
+                "count": 728
+            },
+            {
+                "index": 4,
+                "type": "static",
+                "name": "Communities",
+                "count": 1581
+            },
+            {
+                "index": 5,
+                "type": "dynamic",
+                "name": "Chemical Measurements",
+                "count": 5
+            },
+            {
+                "index": 6,
+                "type": "static",
+                "name": "Conditions",
+                "count": 344
+            },
+            {
+                "index": 7,
+                "type": "dynamic",
+                "name": "Microbial Abundances",
+                "count": 4
+            },
+            {
+                "index": 8,
+                "type": "static",
+                "name": "Strains",
+                "count": 1121
+            },
+            {
+                "index": 9,
+                "type": "dynamic",
+                "name": "Microbial Sequences",
+                "count": 1
+            },
+            {
+                "index": 10,
+                "type": "static",
+                "name": "Reads",
+                "count": 950
+            },
+            {
+                "index": 11,
+                "type": "dynamic",
+                "name": "Microbial Community Assays",
+                "count": 6
+            },
+            {
+                "index": 12,
+                "type": "static",
+                "name": "Assemblies",
+                "count": 278
+            },
+            {
+                "index": 13,
+                "type": "static",
+                "name": "Bins",
+                "count": 623
+            },
+            {
+                "index": 14,
+                "type": "static",
+                "name": "Genomites",
+                "count": 269
+            },
+            {
+                "index": 15,
+                "type": "static",
+                "name": "TnSeq Libraries",
+                "count": 1
+            },
+            {
+                "index": 16,
+                "type": "dynamic",
+                "name": "Gene KO Fitnesses",
+                "count": 1
+            },
+            {
+                "index": 17,
+                "type": "null",
+                "name": "samples communities connector",
+                "count": 0
+            },
+            {
+                "index": 18,
+                "type": "null",
+                "name": "samples conditions connector",
+                "count": 0
+            }
+        ],
+        "links": [
+            {
+                "source": 0,
+                "target": 1,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 0,
+                "target": 2,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 0,
+                "target": 17,
+                "type": "connector",
+                "hoverText": ""
+            },
+            {
+                "source": 17,
+                "target": 3,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 17,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 3,
+                "target": 5,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 3,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 4,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 4,
+                "target": 7,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 6,
+                "target": 18,
+                "type": "connector",
+                "hoverText": ""
+            },
+            {
+                "source": 3,
+                "target": 18,
+                "type": "connector",
+                "hoverText": ""
+            },
+            {
+                "source": 18,
+                "target": 9,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 8,
+                "target": 9,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 8,
+                "target": 11,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 10,
+                "target": 10,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 10,
+                "target": 11,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 10,
+                "target": 12,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 12,
+                "target": 13,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 13,
+                "target": 12,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 12,
+                "target": 14,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 14,
+                "target": 15,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 15,
+                "target": 16,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 6,
+                "target": 16,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            }
+        ]
+    }
+}
