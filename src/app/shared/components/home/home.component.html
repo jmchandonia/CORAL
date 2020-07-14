@@ -41,7 +41,7 @@
             </div>
           </div>
           <div class="row mt-2" *ngIf="!loading">
-            <div class="col-6 pl-0 pr-1">
+            <!-- <div class="col-6 pl-0 pr-1">
               <div class="card core-objects-container" *ngIf="coreTypes && coreTypes.items?.length">
                 <div class="card-header" style="background-color: #00489B; color: white;">
                   Core Objects
@@ -74,6 +74,10 @@
                     </li>
                   </ul>
                 </div>
+              </div> -->
+              <div class="col-12 svg-container">
+                <!-- <svg height="900" width="100%"></svg> -->
+                <app-provenance-graph></app-provenance-graph>
               </div>
           </div>
       </div>

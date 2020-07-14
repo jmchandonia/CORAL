@@ -1,0 +1,12 @@
+line { 
+    stroke: #ccc;
+}
+
+circle {
+    fill: blue;
+}
+
+text {
+    text-anchor: middle;
+    fill: black;
+}
