@@ -40,6 +40,8 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+/src/app/shared/test/mock_microtypes.json
+/src/app/shared/test/mock_microtypes_3.json
 
 # System Files
 .DS_Store
