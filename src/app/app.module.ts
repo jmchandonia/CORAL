@@ -23,6 +23,7 @@ import { ErrorComponent } from './shared/components/error/error.component';
 import { MicrotypeBrowserComponent } from './shared/components/microtype-browser/microtype-browser.component';
 import { DashboardPlotComponent } from './shared/components/dashboard/dashboard-plot/dashboard-plot.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TreeModule } from 'angular-tree-component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -48,7 +49,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     UploadModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
-    NgSelectModule
+    NgSelectModule,
+    TreeModule.forRoot()
   ],
   providers: [
     {
