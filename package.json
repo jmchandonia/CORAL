@@ -38,6 +38,7 @@
     "rxjs": "~6.5.5",
     "terser-webpack-plugin": "^2.3.7",
     "tslib": "^1.10.0",
+    "vis": "^4.21.0-EOL",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
