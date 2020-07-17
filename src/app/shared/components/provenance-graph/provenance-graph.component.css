@@ -9,4 +9,18 @@ circle {
 text {
     text-anchor: middle;
     fill: black;
+    font-size: 0.2em;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+#pgraph-container {
+    /* height: 1vh; */
+    height: 600px;
+    background: #eee;
+    border-radius: 10px;
 }
