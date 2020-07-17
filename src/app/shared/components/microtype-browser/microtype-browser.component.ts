@@ -20,6 +20,7 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
   public treeOptions: ITreeOptions = { displayField: 'term_def' }
   textInputChanged: Subject<string> = new Subject();
   queryParamFilter: string;
+  loading = false;
 
   @ViewChild('tree', {static: false}) tree: TreeComponent;
 
@@ -59,6 +60,11 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getMicrotypes();
+  }
+
+  getMicrotypes() {
+    this.spinner.show('spinner');
     this.treeService.getMicrotypes()
       .then((microtypes: MicroTypeTreeNode[]) => {
         this.microtypes = microtypes;
@@ -66,6 +72,7 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
           this.setCategoryFilter();
         }
         this.chRef.detectChanges();
+        this.spinner.hide('spinner')
       });
   }
 
