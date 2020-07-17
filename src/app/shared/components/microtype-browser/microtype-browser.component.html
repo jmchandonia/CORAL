@@ -80,7 +80,7 @@
       </div>
     </div>
   </div>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center" *ngIf="!microtypes">
     <div class="col-12">
       <ngx-spinner
         [fullScreen]="false"
@@ -120,7 +120,6 @@
                   Prop
                 </span>
               </span>
-            <!-- </div> -->
           </h5>
           <span *ngIf="descriptionVisible(node)" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_desc}}</span>
         </ng-container>
