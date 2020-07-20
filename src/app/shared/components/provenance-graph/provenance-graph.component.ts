@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angula
 // import * as d3 from 'd3';
 // import * as vis from 'vis-network';
 import { Network, DataSet } from 'vis';
+import { ValueTransformer } from '@angular/compiler/src/util';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 
 @Component({
@@ -16,7 +17,34 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
-  options = { physics: false };
+  options = {
+    physics: {
+      // enabled: false,
+      hierarchicalRepulsion: {
+        // avoidOverlap: 1
+        // nodeDistance: 200
+      }
+    },
+    layout: {
+      hierarchical: {
+        direction: 'UD',
+        sortMethod: 'hubsize',
+        nodeSpacing: 200,
+        levelSeparation: 75
+        // shakeTowards: 'leaves'
+      }
+    },
+    edges: {
+      arrows: {
+        to: {
+          enabled: true,
+        }
+      },
+      font: {
+        size: 0,
+      }
+    }
+  };
 
   network: any; // TODO: see if there is @types/vis-network
 
@@ -28,25 +56,12 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.nodes = new DataSet(
-      mockData.result.nodes.map(node => {
-        // {id: node.index, label: `${node.count} ${node.name}`}
-        return {
-          id: node.index,
-          label: `${node.count} ${node.name}`,
-          // color: node.type === 'dynamic' ? 'blue' : 'red',
-          color: {
-            background: 'white',
-            border: node.type === 'dynamic' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
-            hover: { background: '#ddd' }
-          },
-          // opacity: node.type === 'null' ? 0 : 1 
-          shape: 'box'
-        }
-      })
+      mockData.result.nodes.map(this.createNode)
     );
 
     this.edges = new DataSet(
-      mockData.result.links.map(edge => ({from: edge.source, to: edge.target}))
+      // mockData.result.links.map(edge => ({from: edge.source, to: edge.target}))
+      mockData.result.links.map(this.createEdge)
     );
 
     this.network = new Network(
@@ -57,6 +72,38 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       },
       this.options
     );
+ }
+
+ createNode(dataItem: any) {
+  const node: any = {
+    id: dataItem.index,
+    label: dataItem.type !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
+    // color: node.type === 'dynamic' ? 'blue' : 'red',
+    color: {
+      background: dataItem.type !== 'null' ? 'white' : 'rgba(0,0,0,0)',
+      border: dataItem.type === 'dynamic' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
+      hover: { background: '#ddd' }
+    },
+    borderWidth: dataItem.type === 'null' ? 0 : 1,
+    // opacity: dataItem.type === 'null' ? 0 : 1,
+    // physics: 'false',
+    physics: false,
+    shape: 'box',
+  }
+  return node;
+ }
+
+ createEdge(edgeItem: any) {
+   return {
+     from: edgeItem.source,
+     to: edgeItem.target,
+     label: 'label',
+     chosen: {
+        edge: (values) => {
+          values.size = 14;
+        } 
+     }
+   }
  }
 
 }
