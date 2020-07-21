@@ -105,6 +105,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatOptionLabel(item) {
+    // format for displaying microtype dropdown options
+    return `${item.definition !== `${item.text}.` ? ` - ${item.definition}` : ''} (${item.scalar_type})`;
+  }
+
   handleValueSearch(event) {
     if(event.term.length) {
       if(this.property.scalarType === 'oterm_ref') {

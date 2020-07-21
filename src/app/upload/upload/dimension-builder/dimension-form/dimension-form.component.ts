@@ -61,6 +61,11 @@ export class DimensionFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatOptionLabel(item) {
+    // format for displaying microtype dropdown options
+    return `${item.definition !== `${item.text}.` ? ` - ${item.definition}` : ''} (${item.scalar_type})`;
+  }
+
   setDimensionType(event: Term) {
     this.dimension.type = event;
     this.validate();
