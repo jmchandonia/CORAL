@@ -1,8 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-// import * as d3 from 'd3';
-// import * as vis from 'vis-network';
 import { Network, DataSet } from 'vis';
-import { ValueTransformer } from '@angular/compiler/src/util';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 
 @Component({
@@ -30,8 +27,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
         direction: 'UD',
         sortMethod: 'hubsize',
         nodeSpacing: 200,
-        levelSeparation: 75
-        // shakeTowards: 'leaves'
+        levelSeparation: 75,
       }
     },
     edges: {
@@ -41,7 +37,21 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
         }
       },
       font: {
-        size: 0,
+        size: 5,
+        // set all labels to be transparent initially
+        color: 'rgba(0,0,0,0)',
+        strokeColor: 'rgba(0,0,0,0)'
+      },
+      chosen: {
+        edge: (values, id, selected, hovering) => {
+          values.width = 2;
+        },
+        label: (values, id, selected, hovering) => {
+          // make label visible on edge click
+          values.size = 14;
+          values.color = 'black';
+          values.strokeColor = 'white';
+        },
       }
     }
   };
@@ -60,7 +70,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     );
 
     this.edges = new DataSet(
-      // mockData.result.links.map(edge => ({from: edge.source, to: edge.target}))
       mockData.result.links.map(this.createEdge)
     );
 
@@ -78,15 +87,12 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   const node: any = {
     id: dataItem.index,
     label: dataItem.type !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
-    // color: node.type === 'dynamic' ? 'blue' : 'red',
     color: {
       background: dataItem.type !== 'null' ? 'white' : 'rgba(0,0,0,0)',
       border: dataItem.type === 'dynamic' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
       hover: { background: '#ddd' }
     },
     borderWidth: dataItem.type === 'null' ? 0 : 1,
-    // opacity: dataItem.type === 'null' ? 0 : 1,
-    // physics: 'false',
     physics: false,
     shape: 'box',
   }
@@ -98,11 +104,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
      from: edgeItem.source,
      to: edgeItem.target,
      label: 'label',
-     chosen: {
-        edge: (values) => {
-          values.size = 14;
-        } 
-     }
    }
  }
 
