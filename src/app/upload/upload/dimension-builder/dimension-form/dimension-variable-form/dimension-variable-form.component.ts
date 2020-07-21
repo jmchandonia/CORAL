@@ -81,6 +81,11 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     }
   } 
 
+  formatOptionLabel(item) {
+    // format for displaying microtype dropdown options
+    return `${item.definition !== `${item.text}.` ? ` - ${item.definition}` : ''} (${item.scalar_type})`;
+  }
+
   setContextLabel(dimVarType: Term, context: Context[]): Term {
     const label: Term = Object.assign({}, dimVarType);
     context.forEach(ctx => {
