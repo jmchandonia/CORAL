@@ -149,6 +149,11 @@ body {
     border-left: 1px solid red;
 }
 
+.ng-select.type-selector > .ng-dropdown-panel {
+    width: auto!important;
+    max-width: 1000px;
+    min-width: 100%;
+}
 
 
 
