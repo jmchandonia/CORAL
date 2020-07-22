@@ -19,8 +19,8 @@ text {
 }
 
 #pgraph-container {
-    /* height: 1vh; */
-    height: 600px;
+    height: 800px;
+    margin-bottom: 20px;
     background: #eee;
     border-radius: 10px;
 }
