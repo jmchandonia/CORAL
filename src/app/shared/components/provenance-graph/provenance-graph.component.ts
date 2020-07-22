@@ -81,6 +81,12 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       },
       this.options
     );
+    
+    // set zoom level to contain all nodes
+    this.network.fit({
+      nodes: this.nodes.map(node => node.id),
+      animation: true
+    })
  }
 
  createNode(dataItem: any) {
