@@ -98,7 +98,7 @@
           <h5 class="mb-0" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_name}}
               <span *ngIf="node.data.mt_value_scalar_type.length" style="font-weight: normal"> ({{node.data.mt_value_scalar_type}})</span>
               &nbsp;
-              <span style="font-size: 1rem;" *ngIf="node.isExpanded || node.isRoot || !node.children.length">
+              <span style="font-size: 1rem;">
                 <span
                   class="badge badge-pill badge-primary mr-1"
                   *ngIf="node.data.mt_data_var"
