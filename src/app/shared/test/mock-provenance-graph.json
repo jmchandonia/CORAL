@@ -3,115 +3,145 @@
         "nodes": [
             {
                 "index": 0,
-                "type": "static",
-                "name": "wells",
+                "category": "SDT_",
+                "name": "Wells",
+                "dataModel": "Well",
+                "dataType": "Well",
                 "count": 459
             },
             {
                 "index": 1,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Physical Measurements",
+                "dataModel": "Brick",
+                "dataType": "Phyisical Measurement",
                 "count": 1
             },
             {
                 "index": 2,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Datasets",
+                "dataModel": "Brick",
+                "dataType": "Dataset",
                 "count": 15
             },
             {
                 "index": 3,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Samples",
+                "dataModel": "Sample",
+                "dataType": "Sample",
                 "count": 728
             },
             {
                 "index": 4,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Communities",
+                "dataModel": "Community",
+                "dataType": "Community",
                 "count": 1581
             },
             {
                 "index": 5,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Chemical Measurements",
+                "dataModel": "Brick",
+                "dataType": "Chemical Measurement",
                 "count": 5
             },
             {
                 "index": 6,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Conditions",
+                "dataModel": "Condition",
+                "dataType": "Condition",
                 "count": 344
             },
             {
                 "index": 7,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Microbial Abundances",
+                "dataModel": "Brick",
+                "dataType": "Microbial Abundance",
                 "count": 4
             },
             {
                 "index": 8,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Strains",
+                "dataModel": "Strain",
+                "dataType": "Strain",
                 "count": 1121
             },
             {
                 "index": 9,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Microbial Sequences",
                 "count": 1
             },
             {
                 "index": 10,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Reads",
                 "count": 950
             },
             {
                 "index": 11,
-                "type": "dynamic",
+                "category": "DDT_",
                 "name": "Microbial Community Assays",
+                "dataModel": "Brick",
+                "dataType": "Microbial Community Assay",
                 "count": 6
             },
             {
                 "index": 12,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Assemblies",
+                "dataModel": "Assembly",
+                "dataType": "Assembly",
                 "count": 278
             },
             {
                 "index": 13,
-                "type": "static",
+                "category": "SDT_",
                 "name": "Bins",
+                "dataModel": "Bin",
+                "dataType": "Bin",
                 "count": 623
             },
             {
                 "index": 14,
-                "type": "static",
-                "name": "Genomites",
+                "category": "SDT_",
+                "name": "Genome",
+                "dataModel": "Genome",
+                "dataType": "Genome",
                 "count": 269
             },
             {
                 "index": 15,
-                "type": "static",
+                "category": "SDT_",
                 "name": "TnSeq Libraries",
+                "dataModel": "TnSeq_Library",
+                "dataType": "TnSeq_library",
                 "count": 1
             },
             {
                 "index": 16,
-                "type": "dynamic",
-                "name": "Gene KO Fitnesses",
+                "category": "DDT_",
+                "name": "Gene Knockout Fitnesses",
+                "dataModel": "Brick",
+                "dataType": "Gene Knockout Fitness",
                 "count": 1
             },
             {
                 "index": 17,
-                "type": "null",
+                "category": "null",
                 "name": "samples communities connector",
                 "count": 0
             },
             {
                 "index": 18,
-                "type": "null",
+                "category": "null",
                 "name": "samples conditions connector",
                 "count": 0
             }
