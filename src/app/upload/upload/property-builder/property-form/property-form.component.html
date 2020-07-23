@@ -1,7 +1,7 @@
 <div class="row mt-2">
   <div class="col-6 select-button-group">
     <ng-select
-      class="custom"
+      class="custom type-selector"
       [class.select-error]="errors && !property.type"
       [items]="typesData"
       bindLabel="text"
@@ -11,7 +11,11 @@
       (search)="handlePropertySearch($event)"
       [clearable]="false"
       style="width: calc(100% - 38px); display: inline-block"
-    ></ng-select>
+    >
+      <ng-template ng-option-tmp let-item="item">
+        {{item.text}} {{formatOptionLabel(item)}}
+      </ng-template>
+    </ng-select>
     <button
       class="btn select-custom-button"
       (click)="openContextModal()"
