@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-6 type-container select-button-group">
           <ng-select
-            class="custom"
+            class="custom type-selector"
             [class.select-error]="error && !dimVar.type"
             [items]="typeData"
             bindLabel="text"
@@ -16,7 +16,11 @@
             (change)="setDimVarType($event)"
             [loading]="typeLoading"
             [clearable]="false"
-          ></ng-select>
+          >
+          <ng-template ng-option-tmp let-item="item">
+            {{item.text}} {{formatOptionLabel(item)}}
+          </ng-template>
+        </ng-select>
         <button
           class="btn select-custom-button"
           (click)="openModal()"

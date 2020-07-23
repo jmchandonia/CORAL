@@ -16,7 +16,7 @@
       <div class="col-12">
         <label>Dimension Type:</label>
         <ng-select
-          class="custom"
+          class="custom type-selector"
           [class.select-error]="error && !dimension.type"
           [items]="data"
           [(ngModel)]="selectedType"
@@ -27,7 +27,11 @@
           [clearable]="false"
           [readonly]="dimension.required"
           (change)="setDimensionType($event)"
-        ></ng-select>
+        >
+        <ng-template ng-option-tmp let-item="item">
+          {{item.text}} {{formatOptionLabel(item)}}
+        </ng-template>
+      </ng-select>
       </div>
     </div>
     <div class="row mt-3 p-1">

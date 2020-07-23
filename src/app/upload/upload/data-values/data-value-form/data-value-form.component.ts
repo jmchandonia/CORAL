@@ -44,8 +44,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:variable-name
   private _dataValue: DataValue;
 
-  typeValues: Array<{id: string, text: string}> = [{id: '', text: ''}];
-  unitsValues: Array<{id: string, text: string}> = [{id: '', text: ''}];
+  typeValues: Array<{id: string, text: string}> = [];
+  unitsValues: Array<{id: string, text: string}> = [];
 
   typeValuesItem: string;
   unitsItem: string;
@@ -84,6 +84,11 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
         this.loading = false;
       });
     }
+  }
+
+  formatOptionLabel(item) {
+    // format for displaying microtype dropdown options
+    return `${item.definition !== `${item.text}.` ? ` - ${item.definition}` : ''} (${item.scalar_type})`;
   }
 
   setContextLabel(dataType: Term, context: Context[]) {

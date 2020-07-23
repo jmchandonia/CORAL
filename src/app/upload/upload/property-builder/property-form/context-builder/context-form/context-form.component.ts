@@ -104,6 +104,11 @@ export class ContextFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  formatOptionLabel(item) {
+    // format for displaying microtype dropdown options
+    return `${item.definition !== `${item.text}.` ? ` - ${item.definition}` : ''} (${item.scalar_type})`;
+  }
+
   handleValuesSearch(event) {
     if (event.term.length) {
       this.valuesLoading = true;
