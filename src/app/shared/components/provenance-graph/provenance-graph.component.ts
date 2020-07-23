@@ -15,6 +15,11 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   @ViewChild('pGraph') pGraph: ElementRef;
 
   options = {
+    interaction: {
+      zoomView: false,
+      dragView: false,
+      hover: true
+    },
     physics: {
       // enabled: false,
       hierarchicalRepulsion: {
@@ -36,23 +41,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
           enabled: true,
         }
       },
-      font: {
-        size: 5,
-        // set all labels to be transparent initially
-        color: 'rgba(0,0,0,0)',
-        strokeColor: 'rgba(0,0,0,0)'
-      },
-      chosen: {
-        edge: (values, id, selected, hovering) => {
-          values.width = 2;
-        },
-        label: (values, id, selected, hovering) => {
-          // make label visible on edge click
-          values.size = 14;
-          values.color = 'black';
-          values.strokeColor = 'white';
-        },
-      }
     }
   };
 
@@ -86,13 +74,16 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     this.network.fit({
       nodes: this.nodes.map(node => node.id),
       animation: true
-    })
+    });
  }
 
  createNode(dataItem: any) {
   const node: any = {
     id: dataItem.index,
     label: dataItem.type !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
+    font: {
+      size: 16
+    },
     color: {
       background: dataItem.type !== 'null' ? 'white' : 'rgba(0,0,0,0)',
       border: dataItem.type === 'dynamic' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
@@ -110,6 +101,21 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
      from: edgeItem.source,
      to: edgeItem.target,
      label: 'label',
+     font: {
+       size: 16,
+       color: 'rgba(0,0,0,0)',
+       strokeColor: 'rgba(0,0,0,0)'
+     },
+     chosen: {
+      edge: (values, id, selected, hovering) => {
+        values.width = 2;
+      },
+      label: (values, id, selected, hovering) => {
+        // make label visible on edge click
+        values.color = 'black';
+        values.strokeColor = 'white';
+      },
+    }
    }
  }
 
