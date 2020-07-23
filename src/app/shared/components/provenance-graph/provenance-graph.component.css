@@ -21,6 +21,6 @@ text {
 #pgraph-container {
     height: 800px;
     margin-bottom: 20px;
-    background: #eee;
+    border: 2px solid #ccc;
     border-radius: 10px;
 }
