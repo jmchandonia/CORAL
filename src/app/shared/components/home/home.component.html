@@ -77,7 +77,7 @@
               </div> -->
               <div class="col-12 svg-container">
                 <!-- <svg height="900" width="100%"></svg> -->
-                <app-provenance-graph></app-provenance-graph>
+                <app-provenance-graph (querySelected)="navigateToSearch($event)"></app-provenance-graph>
               </div>
           </div>
       </div>

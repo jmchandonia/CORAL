@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { Network, DataSet } from 'vis';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
+import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 
 @Component({
   selector: 'app-provenance-graph',
@@ -9,8 +10,9 @@ const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 })
 export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
-  nodes: { id: number, label: string, data: any }[];
+  nodes:  DataSet;
   edges: { from: number, to: number }[];
+  @Output() querySelected: EventEmitter<QueryMatch> = new EventEmitter();
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -75,23 +77,31 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       nodes: this.nodes.map(node => node.id),
       animation: true
     });
+
+    // add double click event listener to submit search query on nodes
+    this.network.on('doubleClick', (({nodes}) => {
+      const { category, dataType, dataModel } = this.nodes.get(nodes)[0].data;
+      const query = new QueryMatch({category, dataType, dataModel});
+      this.querySelected.emit(query);
+    }));
  }
 
  createNode(dataItem: any) {
   const node: any = {
     id: dataItem.index,
-    label: dataItem.type !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
+    label: dataItem.category !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
     font: {
       size: 16
     },
     color: {
-      background: dataItem.type !== 'null' ? 'white' : 'rgba(0,0,0,0)',
-      border: dataItem.type === 'dynamic' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
+      background: dataItem.category !== 'null' ? 'white' : 'rgba(0,0,0,0)',
+      border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
       hover: { background: '#ddd' }
     },
-    borderWidth: dataItem.type === 'null' ? 0 : 1,
+    borderWidth: dataItem.category === 'null' ? 0 : 1,
     physics: false,
     shape: 'box',
+    data: {...dataItem}
   }
   return node;
  }
