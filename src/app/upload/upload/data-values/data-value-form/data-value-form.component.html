@@ -13,7 +13,11 @@
       [(ngModel)]="typeValuesItem"
       [readonly]="dataValue.required"
       [clearable]="false"
-      ></ng-select>
+    >
+      <ng-template ng-option-tmp let-item="item">
+        {{item.text}} {{formatOptionLabel(item)}}
+      </ng-template>
+    </ng-select>
     <button
       class="btn select-custom-button"
       (click)="openContextModal()"
