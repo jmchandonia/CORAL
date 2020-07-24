@@ -21,6 +21,7 @@ export class SearchResultComponent implements OnInit {
   showQuery = false;
   searchType: string;
   error: any;
+  previousUrl = ['../advanced'];
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -45,6 +46,12 @@ export class SearchResultComponent implements OnInit {
         this.spinner.hide();
       },
     );
+
+    this.route.queryParams.subscribe(queryParam => {
+        if (queryParam['redirect'] === 'home') {
+          this.previousUrl = ['/home']
+        }
+    });
   }
 
   viewData(id) {
