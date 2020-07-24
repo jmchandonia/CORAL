@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
   navigateToSearch(queryMatch: QueryMatch) {
     queryMatch.params = this.filterQueryBuilder;
     this.searchService.submitSearchResultsFromHome(queryMatch);
-    this.router.navigate(['/search/result']);
+    this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
 
 }
