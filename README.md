@@ -48,6 +48,10 @@ the following code below in a new .htaccess file at `/var/www/html/generix-ui/`:
 </IfModule>
 ```
 
+You also need to be sure .htaccess files are enabled in your
+web server setup; in Apache, be sure "AllowOverride All" is configured
+for the build target directory.
+
 ## Testing
 
 To manually run a test, you can activate the test script using `ng test`. In your terminal, the app will display building information and then show a timestamp of when it was connected to the server. If you are running on your local machine, the default launcher will be with Chrome. You can configure this option in `karma.conf.js`.
