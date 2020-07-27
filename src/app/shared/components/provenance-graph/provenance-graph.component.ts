@@ -36,13 +36,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
         nodeSpacing: 200,
         levelSeparation: 75,
       }
-    },
-    edges: {
-      arrows: {
-        to: {
-          enabled: true,
-        }
-      },
     }
   };
 
@@ -60,7 +53,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     );
 
     this.edges = new DataSet(
-      mockData.result.links.map(this.createEdge)
+      mockData.result.links.map(edge => this.createEdge(edge))
     );
 
     this.network = new Network(
@@ -107,6 +100,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
  }
 
  createEdge(edgeItem: any) {
+   const target = this.nodes.get(edgeItem.target);
    return {
      from: edgeItem.source,
      to: edgeItem.target,
@@ -115,6 +109,11 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
        size: 16,
        color: 'rgba(0,0,0,0)',
        strokeColor: 'rgba(0,0,0,0)'
+     },
+     arrows: {
+       to: {
+         enabled: target.data.category !== 'null'
+       }
      },
      chosen: {
       edge: (values, id, selected, hovering) => {
