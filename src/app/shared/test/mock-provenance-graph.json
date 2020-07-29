@@ -23,7 +23,41 @@
                 "name": "Datasets",
                 "dataModel": "Brick",
                 "dataType": "Dataset",
-                "count": 15
+                "count": 15,
+                "children": [
+                    {
+                        "index": 19,
+                        "category": "SDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20
+                    },
+                    {
+                        "index": 20,
+                        "category": "SDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20
+                    },
+                    {
+                        "index": 21,
+                        "category": "SDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20
+                    },
+                    {
+                        "index": 22,
+                        "category": "SDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20
+                    }
+                ]
             },
             {
                 "index": 3,
