@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
-import { Network, DataSet } from 'vis';
+import { Network, DataSet, Node, Edge } from 'vis';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 
@@ -32,12 +32,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     }
   };
 
-  // clusters parent nodes together with expandable children
-  clusterOptions = {
-    joinCondition: (nodeOptions) => nodeOptions.cid == 2
-  }
-
-  network: any; // TODO: see if there is @types/vis-network
+  network: Network;
 
   constructor(
   ) { }
@@ -51,7 +46,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     );
 
     this.edges = new DataSet(
-      mockData.result.links.map(edge => this.createEdge(edge))
+      mockData.result.links.map(edge => this.createEdge(edge.source, edge.target))
     );
 
     this.network = new Network(
@@ -72,9 +67,8 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     // add double click event listener to submit search query on nodes
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
-    this.network.on('click', ({nodes}) => this.expandNodes(nodes));
-
-    // this.network.clustering.cluster(this.clusterOptions);
+    // click will toggle expand child nodes
+    this.network.on('click', ({nodes}) => this.toggleExpandNodes(nodes));
  }
 
   createNode(dataItem: any) {
@@ -102,19 +96,22 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     return node;
   }
 
-  createEdge(edgeItem: any) {
-    const target = this.nodes.get(edgeItem.target);
+  createEdge(fromId?: number | string, toId?: number | string): Edge {
+    // const target = this.nodes.get(edgeItem.target);
+    const target = this.nodes.get(toId);
     return {
-      from: edgeItem.source,
-      to: edgeItem.target,
+      from: fromId,
+      to: toId,
       label: 'label',
       font: {
+        // hide labels initially
         size: 16,
         color: 'rgba(0,0,0,0)',
         strokeColor: 'rgba(0,0,0,0)'
       },
       arrows: {
         to: {
+          // hide arrows for 'connector' nodes
           enabled: target.data.category !== 'null'
         }
       },
@@ -139,47 +136,25 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     }
   }
 
-  expandNodes(nodes) {
+  toggleExpandNodes(nodes) {
+    // only run if a node is clicked
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
+      // only run if node has children
       if (node.data.children) {
         if (!node.data.childrenExpanded) {
+          // expand hidden nodes
           node.data.children.forEach(child => {
             this.nodes.update(this.createNode(child));
-            // TODO: update createEdge method to handle both cases so there arent repeated methods
-            this.edges.update({
-              from: node.id,
-              to: child.index,
-              label: 'label',
-              font: {
-                size: 16,
-                color: 'rgba(0,0,0,0)',
-                strokeColor: 'rgba(0,0,0,0)'
-              },
-              arrows: {
-                to: {
-                  enabled: child.category !== 'null'
-                }
-              },
-              chosen: {
-                edge: (values, id, selected, hovering) => {
-                  values.width = 2;
-                },
-                label: (values, id, selected, hovering) => {
-                  // make label visible on edge click
-                  values.color = 'black';
-                  values.strokeColor = 'white';
-                },
-              }
-            });
+            this.edges.update(this.createEdge(node.id, child.index))
           });
           node.data.childrenExpanded = true;
-          this.network.fit({animation: true})
         } else {
+          // hide expanded nodes
           this.nodes.remove(node.data.children.map(child => child.index));
           node.data.childrenExpanded = false;
-          this.network.fit({animation: true});
         }
+        this.network.fit();
       }
     }
   }
