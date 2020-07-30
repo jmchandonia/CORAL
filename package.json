@@ -38,7 +38,10 @@
     "rxjs": "~6.5.5",
     "terser-webpack-plugin": "^2.3.7",
     "tslib": "^1.10.0",
-    "vis": "^4.21.0-EOL",
+    "vis-data": "^6.6.1",
+    "vis-network": "^7.10.2",
+    "vis-util": "^4.3.3",
+    "visjs-network": "^4.24.11",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {

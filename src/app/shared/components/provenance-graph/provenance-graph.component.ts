@@ -1,7 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
-import { Network, DataSet, Node, Edge } from 'vis';
+import { Network, DataSet, Node, Edge } from 'vis-network/standalone';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
+import { partition } from 'lodash';
 
 @Component({
   selector: 'app-provenance-graph',
@@ -10,8 +11,8 @@ import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 })
 export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
-  nodes:  DataSet;
-  edges: DataSet;
+  nodes:  DataSet<any>;
+  edges: DataSet<any>;
   @Output() querySelected: EventEmitter<QueryMatch> = new EventEmitter();
 
   @ViewChild('pGraph') pGraph: ElementRef;
@@ -23,14 +24,22 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       hover: true
     },
     layout: {
+      improvedLayout: true,
       hierarchical: {
         direction: 'UD',
         sortMethod: 'hubsize',
         nodeSpacing: 200,
         levelSeparation: 75,
+        // blockShifting: true,
+        // edgeMinimization: true
+        // parentCentralization: true,
+        // shakeTowards: 'leaves'
       }
     }
   };
+
+  coreTypeNodes: any[];
+  dynamicTypeNodes: any[];
 
   network: Network;
 
@@ -41,9 +50,17 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
+    const [coreTypes, dynamicTypes] = partition(mockData.result.nodes, node => node.category !== 'DDT_')
+
+    console.log('tyoe', coreTypes.length, dynamicTypes.length);
+
     this.nodes = new DataSet(
-      mockData.result.nodes.map(this.createNode)
+      // mockData.result.nodes.map(this.createNode)
+      coreTypes.map(this.createNode)
     );
+
+    dynamicTypes.forEach(dynamicType => this.nodes.update(this.createNode(dynamicType)));
 
     this.edges = new DataSet(
       mockData.result.links.map(edge => this.createEdge(edge.source, edge.target))
@@ -71,7 +88,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     this.network.on('click', ({nodes}) => this.toggleExpandNodes(nodes));
  }
 
-  createNode(dataItem: any) {
+  createNode(dataItem: any): Node {
     const node: any = {
       id: dataItem.index,
       label: dataItem.category !== 'null' ? `${dataItem.count} ${dataItem.name}` : '',
@@ -86,17 +103,19 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       borderWidth: dataItem.category === 'null' ? 0 : 1,
       physics: false,
       shape: 'box',
-      data: {...dataItem}
+      data: {...dataItem},
+      chosen: {},
     }
 
     if (dataItem.children) {
       node.data.childrenExpanded = false;
+      node.label += ' [+]';
     }
 
     return node;
   }
 
-  createEdge(fromId?: number | string, toId?: number | string): Edge {
+  createEdge(fromId?: number | string, toId?: number | string): any {
     // const target = this.nodes.get(edgeItem.target);
     const target = this.nodes.get(toId);
     return {
@@ -112,7 +131,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       arrows: {
         to: {
           // hide arrows for 'connector' nodes
-          enabled: target.data.category !== 'null'
+          enabled: target && target.data.category !== 'null'
         }
       },
       chosen: {
@@ -154,7 +173,9 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
           this.nodes.remove(node.data.children.map(child => child.index));
           node.data.childrenExpanded = false;
         }
-        this.network.fit();
+        this.network.fit(
+          {animation: true}
+        );
       }
     }
   }
