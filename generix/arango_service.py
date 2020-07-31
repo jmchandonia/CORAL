@@ -156,6 +156,57 @@ class ArangoService:
         aql_bind = {}
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]    
 
+    def get_core_core_process_type_count(self, core_type_from, core_type_to):
+        aql = '''
+            for pi in SYS_ProcessInput 
+            filter IS_SAME_COLLECTION('%s',pi._from)                 
+            for pr in SYS_Process
+            filter pr._id == pi._to                       
+            for po in SYS_ProcessOutput
+            filter po._from == pr._id      
+            filter IS_SAME_COLLECTION('%s',po._to)
+            collect process = pr.process_term_name with count into num
+            return { "process" : process,  "count" :  num }
+        ''' % (core_type_from, core_type_to)
+        aql_bind = {}
+        return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True)[0]
+
+    def get_core_brick_process_type_count(self, core_type_from):
+        aql = '''
+            for pi in SYS_ProcessInput
+            filter IS_SAME_COLLECTION('%s',pi._from)
+            for pr in SYS_Process
+            filter pr._id == pi._to
+            for po in SYS_ProcessOutput
+            filter po._from == pr._id
+            filter IS_SAME_COLLECTION('DDT_Brick',po._to)
+            for br in DDT_Brick
+            filter po._to == br._id
+            collect process = pr.process_term_name, bricktype = br.data_type_term_name with count into num          
+            return { "process" : process,  "bricktype": bricktype, "count" :  num }      
+        ''' % (core_type_from)
+        aql_bind = {}
+        return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True)
+
+    def get_brick_brick_process_type_count(self):
+        aql = '''
+            for pi in SYS_ProcessInput
+            filter IS_SAME_COLLECTION('DDT_Brick',pi._from)
+            for pr in SYS_Process
+            filter pr._id == pi._to
+            for po in SYS_ProcessOutput
+            filter po._from == pr._id
+            filter IS_SAME_COLLECTION('DDT_Brick',po._to)
+            for br1 in DDT_Brick
+            filter pi._from == br1._id
+            for br2 in DDT_Brick
+            filter po._to == br2._id
+            collect process = pr.process_term_name, frombricktype=br1.data_type_term_name, tobricktype = br2.data_type_term_name with count into num          
+            return { "process" : process,  "frombricktype": frombricktype, "tobricktype": tobricktype, "count" :  num }      
+        ''' % (core_type_from)
+        aql_bind = {}
+        return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True)
+    
     
     def __to_type2objects(self, aql_rs):
         type2objects = {}

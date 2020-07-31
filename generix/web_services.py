@@ -54,7 +54,7 @@ def hello():
     brick_ds = json.loads(open(uds_file_name).read())
     brick_ds['name'] = 'test4'
     brick_data = json.loads(open(uvd_file_name).read())
- 
+
     br = _create_brick(brick_ds, brick_data)        
 
     process_term = _get_term(brick_ds['process'])
@@ -1354,6 +1354,105 @@ def generix_type_stat():
     }
 
     return  _ok_response(res)
+
+# for graph
+@app.route('/generix/types_graph', methods=['GET','POST'])
+def generix_type_graph():
+    arango_service = svs['arango_service']
+
+    # Core types
+    stat_type_items = []
+    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+    index=0
+    for td in type_defs:
+        if not td.for_provenance:
+            continue
+        stat_type_items.append(
+            {
+                'index': index,
+                'category': TYPE_CATEGORY_STATIC,
+                'name': td.name,
+                'dataModel': td.name,
+                'dataType': td.name,
+                'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
+            }
+        )
+        index+=1
+
+    # Dynamic types
+    dyn_type_items = []
+    rows = arango_service.get_brick_type_counts([],[])
+    dyn_map = {}
+    #sys.stderr.write('rows: '+str(rows)+'\n')
+    #sys.stderr.write('len: '+str(len(rows))+'\n')
+    #sys.stderr.write('type: '+str(type(rows))+'\n')
+    # Note: awkward code below works around https://github.com/ArangoDB-Community/pyArango/issues/160
+    # can't do 'for row in rows:' because query returns infinite empty lists
+    for i in range(len(rows)):
+        row = rows[i]
+        # sys.stderr.write('row: '+str(row)+'\n')
+        dyn_type_items.append(
+            {
+                'index': index,
+                'category': TYPE_CATEGORY_DYNAMIC,
+                'name': row['b_type'],
+                'dataModel': 'Brick',
+                'dataType': row['b_type'],
+                'count': row['b_count']
+            }            
+        )
+        dyn_map[row['b_type']] = index
+        index+=1
+
+    # count edges between core types
+    edges = []
+    for core_type_from in stat_type_items:
+        for core_type_to in stat_type_items:
+            p = arango_service.get_core_core_process_type_count('%s%s' %(TYPE_CATEGORY_STATIC, core_type_from['dataType']),
+                                                                             '%s%s' %(TYPE_CATEGORY_STATIC, core_type_to['dataType']))
+            l = len(p)
+            if (l > 0):
+                # sys.stderr.write(core_type_from['dataType']+' -> '+core_type_to['dataType']+'\n')
+                linkText = str(p['count']) + ' ' + p['process']
+                edges.append(
+                    {
+                        'source': core_type_from['index'],
+                        'target': core_type_to['index'],
+                        'type': 'wasGeneratedBy',
+                        'hoverText': linkText
+                    }
+                )
+
+    # count edges between core types and bricks
+    for core_type_from in stat_type_items:
+        process_counts = arango_service.get_core_brick_process_type_count('%s%s' %(TYPE_CATEGORY_STATIC, core_type_from['dataType']))
+        l = len(process_counts)
+        if (l > 0):
+            for i in range(l):
+                p = process_counts[i]
+                brickType =  p['bricktype']
+                linkText = str(p['count']) + ' ' + p['process']
+                edges.append(
+                    {
+                        'source': core_type_from['index'],
+                        'target': dyn_map[brickType],
+                        'type': 'wasGeneratedBy',
+                        'hoverText': linkText
+                    }
+                )
+
+    nodes = []
+    nodes.append(stat_type_items)
+    nodes.append(dyn_type_items)
+    
+    res = {
+        'nodes' : nodes,
+        'links' : edges
+    }
+
+    s = pprint.pformat(res)
+    return s
+    # return  _ok_response(res)
 
 
 @app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
