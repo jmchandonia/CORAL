@@ -6,9 +6,10 @@ from . import services
 
 
 class IndexTypeDef:
-    def __init__(self, type_name, type_category, index_prop_defs):
+    def __init__(self, type_name, type_category, for_provenance, index_prop_defs):
         self.__name = type_name
         self.__category = type_category
+        self.__for_provenance = for_provenance
         self.__prop_defs = index_prop_defs
         self.__data_provider = None
     
@@ -38,6 +39,10 @@ class IndexTypeDef:
     @property 
     def data_provider(self):
         return self.__data_provider
+
+    @property
+    def for_provenance(self):
+        return self.__for_provenance
 
     def _ensure_init_index(self):
         try:
@@ -97,14 +102,14 @@ class IndexTypeDefService:
             index_prop_defs = []
             for prop_def in  type_def.property_defs:
                 index_prop_defs.append( IndexPropertyDef(prop_def.name, prop_def.type) )
-            index_type_def = IndexTypeDef(type_def.name, type_def.category, index_prop_defs)
+            index_type_def = IndexTypeDef(type_def.name, type_def.category, type_def.for_provenance, index_prop_defs)
             self.__type_defs.append(index_type_def)
 
         # do dynamic types: Brick
         index_prop_defs = []
         for prop_name, prop_scalar_type in BrickIndexDocumnet.properties().items():
             index_prop_defs.append( IndexPropertyDef(prop_name, prop_scalar_type) )
-        index_type_def = IndexTypeDef(TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, index_prop_defs)
+        index_type_def = IndexTypeDef(TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, True, index_prop_defs)
         self.__type_defs.append(index_type_def)
 
 
