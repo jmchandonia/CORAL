@@ -223,115 +223,134 @@
                 "source": 0,
                 "target": 1,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1
             },
             {
                 "source": 0,
                 "target": 2,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 3
             },
             {
                 "source": 0,
                 "target": 17,
                 "type": "connector",
-                "hoverText": ""
+                "hoverText": "",
+                "width": 4
             },
             {
                 "source": 17,
                 "target": 3,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 5
             },
             {
                 "source": 17,
                 "target": 4,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 2
             },
             {
                 "source": 3,
                 "target": 5,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 4
             },
             {
                 "source": 3,
                 "target": 4,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 3.3
             },
             {
                 "source": 4,
                 "target": 4,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 2.1
             },
             {
                 "source": 4,
                 "target": 7,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 2
             },
             {
                 "source": 6,
                 "target": 18,
                 "type": "connector",
-                "hoverText": ""
+                "hoverText": "",
+                "width": 1.7
             },
             {
                 "source": 3,
                 "target": 18,
                 "type": "connector",
-                "hoverText": ""
+                "hoverText": "",
+                "width": 2.8
             },
             {
                 "source": 18,
                 "target": 8,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 3
             },
             {
                 "source": 8,
                 "target": 10,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1.6
             },
             {
                 "source": 8,
                 "target": 9,
                 "type": "wasGeneratedBy",
-                "hoverText": "1083 16S Sequencing"
+                "hoverText": "1083 16S Sequencing",
+                "width": 4.4
             },
             {
                 "source": 4,
                 "target": 10,
                 "type": "wasGeneratedBy",
-                "hoverText":"hover text"
+                "hoverText":"hover text",
+                "width": 3.1
             },
             {
                 "source": 10,
                 "target": 10,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1.1
             },
             {
                 "source": 10,
                 "target": 11,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 2.9
             },
             {
                 "source": 10,
                 "target": 12,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1.5
             },
             {
                 "source": 12,
                 "target": 13,
                 "type": "wasGeneratedBy",
                 "hoverText": "hover text",
+                "width": 2,
                 "double": true
             },
             {
@@ -339,55 +358,64 @@
                 "target": 12,
                 "type": "wasGeneratedBy",
                 "hoverText": "hover text",
+                "width": 2,
                 "double": true
             },
             {
                 "source": 12,
                 "target": 14,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1
             },
             {
                 "source": 14,
                 "target": 15,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1.4
             },
             {
                 "source": 15,
                 "target": 16,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 2.2
             },
             {
                 "source": 6,
                 "target": 16,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1
             },
             {
                 "source": 2,
                 "target": 19,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1.6
             },
             {
                 "source": 2,
                 "target": 20,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 3.14
             },
             {
                 "source": 2,
                 "target": 21,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 1
             },
                         {
                 "source": 2,
                 "target": 22,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "width": 3
             }
         ]
     }
