@@ -1363,13 +1363,13 @@ def generix_type_graph():
     node_map = {}
 
     # Core types
-    sdtNodes = []
+    nodes = []
     type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     index=0
     for td in type_defs:
         if not td.for_provenance:
             continue
-        sdtNodes.append(
+        nodes.append(
             {
                 'index': index,
                 'category': TYPE_CATEGORY_STATIC,
@@ -1488,8 +1488,6 @@ def generix_type_graph():
             edgeTuples[key]['proc'] = procs
 
     # process edges from keys, adding new DDT_ nodes
-    ddtNodes = []
-    intermedNodes = []
     edges = []
     for key in edgeTuples.keys():
         newEdges = []
@@ -1503,7 +1501,7 @@ def generix_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
-            intermedNodes.append(
+            nodes.append(
                 {
                     'index': intermed,
                     'category': False,
@@ -1550,7 +1548,7 @@ def generix_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                ddtNodes.append(
+                nodes.append(
                     {
                         'index': node_to,
                         'category': TYPE_CATEGORY_DYNAMIC,
@@ -1586,11 +1584,44 @@ def generix_type_graph():
             e['hoverText'] = linkText
             edges.append(e)
 
-    nodes = []
-    nodes.extend(sdtNodes)
-    nodes.extend(intermedNodes)
-    nodes.extend(ddtNodes)
-    
+    # find static categories not actually used in provenance
+    unused = set(range(index))
+    for e in edges:
+         if e['source'] in unused:
+             unused.remove(e['source'])
+         if e['target'] in unused:
+             unused.remove(e['target'])
+    for i in unused:
+        nodes[i]['unused'] = True
+
+    # provide approximate locations.  first, find roots:
+    roots = set(range(index))
+    for e in edges:
+         if e['source'] in roots:
+             roots.remove(e['source'])
+    for i in roots:
+        if i in nodes:
+            nodes[i]['index'] = 0
+
+    # every link should go to an index one higher, or same level if ddt
+    remainingEdges = edges.copy()
+    while len(remainingEdges) > 0:
+        for e in remainingEdges:
+            if 'index' not in nodes[e['source']]:
+                continue
+            if 'index' in nodes[e['target']]:
+                remainingEdges.remove(e)
+            if nodes[e['target']]['category'] == 'DDT_':
+                nodes[e['target']]['index'] = nodes[e['source']]['index']
+            else:
+                nodes[e['target']]['index'] = nodes[e['source']]['index']+1
+
+    # remove unused nodes
+    for n in nodes:
+        if 'unused' in n:
+            nodes.remove(n)
+
+    # combine everything and return graph
     res = {
         'nodes' : nodes,
         'links' : edges
