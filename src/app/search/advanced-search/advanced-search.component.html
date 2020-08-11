@@ -30,6 +30,7 @@
             *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
             (removed)="removeProcessUp(idx)"
             [queryParam]="queryParam"
+            [dataType]="queryBuilderObject.queryMatch.dataModel"
             ></app-property-params>
         </div>
         <hr >
