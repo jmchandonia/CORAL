@@ -75,7 +75,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     });
 
     this.edges = new DataSet(
-      mockData.result.links.map(edge => this.createEdge(edge.source, edge.target))
+      mockData.result.links.map(edge => this.createEdge(edge))
     );
 
     this.network = new Network(
@@ -187,11 +187,14 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     return node;
   }
 
-  createEdge(fromId?: number | string, toId?: number | string): any {
+  createEdge(edge): any {
+    const toId = edge.target;
+    const fromId = edge.source;
     const target = this.nodes.get(toId);
     return {
       from: fromId,
       to: toId,
+      width: edge.width,
       label: '1083 16S Sequencing',
       color: '#777',
       physics: true,
