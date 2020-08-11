@@ -26,4 +26,8 @@ export class HomeService {
     return this.http.get(`${environment.baseURL}/reports/${id}`);
   }
 
+  getProvenanceGraphData() {
+    return this.http.get(`${environment.baseURL}/types_graph`);
+  }
+
 }

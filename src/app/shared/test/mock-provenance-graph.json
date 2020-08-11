@@ -7,12 +7,14 @@
                 "name": "Wells",
                 "dataModel": "Well",
                 "dataType": "Well",
-                "count": 459
+                "count": 459,
+                "x": -300,
+                "y": -300
             },
             {
                 "index": 1,
                 "category": "DDT_",
-                "name": "Physical Measurements",
+                "name": "Physical Measurements \n Datasets",
                 "dataModel": "Brick",
                 "dataType": "Phyisical Measurement",
                 "count": 1
@@ -24,38 +26,52 @@
                 "dataModel": "Brick",
                 "dataType": "Dataset",
                 "count": 15,
+                "x": -350,
+                "y": -350,
                 "children": [
                     {
                         "index": 19,
-                        "category": "SDT_",
+                        "category": "DDT_",
                         "name": "Expanded wells 1",
                         "dataModel": "Well",
                         "dataType": "Well",
-                        "count": 20
+                        "count": 20,
+                        "cid": 2,
+                        "x": -450,
+                        "y": -400
                     },
                     {
                         "index": 20,
-                        "category": "SDT_",
+                        "category": "DDT_",
                         "name": "Expanded wells 1",
                         "dataModel": "Well",
                         "dataType": "Well",
-                        "count": 20
+                        "count": 20,
+                        "cid": 2,
+                        "x": -250,
+                        "y": -400
                     },
                     {
                         "index": 21,
-                        "category": "SDT_",
+                        "category": "DDT_",
                         "name": "Expanded wells 1",
                         "dataModel": "Well",
                         "dataType": "Well",
-                        "count": 20
+                        "count": 20,
+                        "cid": 2,
+                        "x": -50,
+                        "y": -400
                     },
                     {
                         "index": 22,
-                        "category": "SDT_",
+                        "category": "DDT_",
                         "name": "Expanded wells 1",
                         "dataModel": "Well",
                         "dataType": "Well",
-                        "count": 20
+                        "count": 20,
+                        "cid": 2,
+                        "x": 150,
+                        "y": -400
                     }
                 ]
             },
@@ -65,7 +81,9 @@
                 "name": "Samples",
                 "dataModel": "Sample",
                 "dataType": "Sample",
-                "count": 728
+                "count": 728,
+                "x": -200,
+                "y": -200
             },
             {
                 "index": 4,
@@ -73,12 +91,14 @@
                 "name": "Communities",
                 "dataModel": "Community",
                 "dataType": "Community",
-                "count": 1581
+                "count": 1581,
+                "x": 0,
+                "y": -200
             },
             {
                 "index": 5,
                 "category": "DDT_",
-                "name": "Chemical Measurements",
+                "name": "Chemical Measurements \n Datasets",
                 "dataModel": "Brick",
                 "dataType": "Chemical Measurement",
                 "count": 5
@@ -89,12 +109,14 @@
                 "name": "Conditions",
                 "dataModel": "Condition",
                 "dataType": "Condition",
-                "count": 344
+                "count": 344,
+                "x": -400,
+                "y": -200
             },
             {
                 "index": 7,
                 "category": "DDT_",
-                "name": "Microbial Abundances",
+                "name": "Microbial Abundances \n Datasets",
                 "dataModel": "Brick",
                 "dataType": "Microbial Abundance",
                 "count": 4
@@ -105,24 +127,28 @@
                 "name": "Strains",
                 "dataModel": "Strain",
                 "dataType": "Strain",
-                "count": 1121
+                "count": 1121,
+                "x": -250,
+                "y": -100
             },
             {
                 "index": 9,
                 "category": "DDT_",
-                "name": "Microbial Sequences",
+                "name": "Microbial Sequences \n Datasets",
                 "count": 1
             },
             {
                 "index": 10,
                 "category": "SDT_",
                 "name": "Reads",
-                "count": 950
+                "count": 950,
+                "x": -100,
+                "y": -100
             },
             {
                 "index": 11,
                 "category": "DDT_",
-                "name": "Microbial Community Assays",
+                "name": "Microbial Community Assays \n Datasets",
                 "dataModel": "Brick",
                 "dataType": "Microbial Community Assay",
                 "count": 6
@@ -133,7 +159,9 @@
                 "name": "Assemblies",
                 "dataModel": "Assembly",
                 "dataType": "Assembly",
-                "count": 278
+                "count": 278,
+                "x": -150,
+                "y": 0
             },
             {
                 "index": 13,
@@ -141,7 +169,9 @@
                 "name": "Bins",
                 "dataModel": "Bin",
                 "dataType": "Bin",
-                "count": 623
+                "count": 623,
+                "x": -100,
+                "y": 100
             },
             {
                 "index": 14,
@@ -149,7 +179,9 @@
                 "name": "Genome",
                 "dataModel": "Genome",
                 "dataType": "Genome",
-                "count": 269
+                "count": 269,
+                "x": -200,
+                "y": 100
             },
             {
                 "index": 15,
@@ -157,12 +189,14 @@
                 "name": "TnSeq Libraries",
                 "dataModel": "TnSeq_Library",
                 "dataType": "TnSeq_library",
-                "count": 1
+                "count": 1,
+                "x": -200,
+                "y": 200
             },
             {
                 "index": 16,
                 "category": "DDT_",
-                "name": "Gene Knockout Fitnesses",
+                "name": "Gene Knockout Fitnesses \n Datasets",
                 "dataModel": "Brick",
                 "dataType": "Gene Knockout Fitness",
                 "count": 1
@@ -171,13 +205,17 @@
                 "index": 17,
                 "category": "null",
                 "name": "samples communities connector",
-                "count": 0
+                "count": 0,
+                "x": -300,
+                "y": -275
             },
             {
                 "index": 18,
                 "category": "null",
                 "name": "samples conditions connector",
-                "count": 0
+                "count": 0,
+                "x": -250,
+                "y": -150
             }
         ],
         "links": [
@@ -249,7 +287,13 @@
             },
             {
                 "source": 18,
-                "target": 9,
+                "target": 8,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 8,
+                "target": 10,
                 "type": "wasGeneratedBy",
                 "hoverText": "hover text"
             },
@@ -257,13 +301,13 @@
                 "source": 8,
                 "target": 9,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "1083 16S Sequencing"
             },
             {
-                "source": 8,
-                "target": 11,
+                "source": 4,
+                "target": 10,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText":"hover text"
             },
             {
                 "source": 10,
@@ -287,13 +331,15 @@
                 "source": 12,
                 "target": 13,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "double": true
             },
             {
                 "source": 13,
                 "target": 12,
                 "type": "wasGeneratedBy",
-                "hoverText": "hover text"
+                "hoverText": "hover text",
+                "double": true
             },
             {
                 "source": 12,
@@ -316,6 +362,30 @@
             {
                 "source": 6,
                 "target": 16,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 2,
+                "target": 19,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 2,
+                "target": 20,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+            {
+                "source": 2,
+                "target": 21,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text"
+            },
+                        {
+                "source": 2,
+                "target": 22,
                 "type": "wasGeneratedBy",
                 "hoverText": "hover text"
             }

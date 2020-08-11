@@ -20,6 +20,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     handleError(error: Error | HttpErrorResponse) {
         if (error instanceof HttpErrorResponse) {
+            console.error(error);
             const {status, message} = error;
             this.zone.run(() => {
                 const config = {
@@ -28,7 +29,6 @@ export class GlobalErrorHandler implements ErrorHandler {
                 };
                 this.modalRef = this.modalService.show(ErrorComponent, config);
             });
-            console.error(error);
             throw error;
         } else {
             console.error(error)
