@@ -1012,7 +1012,6 @@ def _build_dim_labels(dim, pattern):
     return labels
 
 
-
 @app.route('/generix/plot_data_test', methods=['POST'])
 def generix_plot_data_test():
     query = request.json
@@ -1360,14 +1359,17 @@ def generix_type_stat():
 def generix_type_graph():
     arango_service = svs['arango_service']
 
+    # map names back to nodes
+    node_map = {}
+
     # Core types
-    stat_type_items = []
+    sdtNodes = []
     type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     index=0
     for td in type_defs:
         if not td.for_provenance:
             continue
-        stat_type_items.append(
+        sdtNodes.append(
             {
                 'index': index,
                 'category': TYPE_CATEGORY_STATIC,
@@ -1377,80 +1379,224 @@ def generix_type_graph():
                 'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
             }
         )
+        node_map[td.name] = index
         index+=1
 
-    # Dynamic types
-    dyn_type_items = []
-    rows = arango_service.get_brick_type_counts([],[])
-    dyn_map = {}
-    #sys.stderr.write('rows: '+str(rows)+'\n')
-    #sys.stderr.write('len: '+str(len(rows))+'\n')
-    #sys.stderr.write('type: '+str(type(rows))+'\n')
+    # Dynamic types and processes
+    rows = arango_service.get_process_type_count()
+    edgeTuples = dict()
     # Note: awkward code below works around https://github.com/ArangoDB-Community/pyArango/issues/160
     # can't do 'for row in rows:' because query returns infinite empty lists
     for i in range(len(rows)):
         row = rows[i]
         # sys.stderr.write('row: '+str(row)+'\n')
-        dyn_type_items.append(
-            {
-                'index': index,
-                'category': TYPE_CATEGORY_DYNAMIC,
-                'name': row['b_type'],
-                'dataModel': 'Brick',
-                'dataType': row['b_type'],
-                'count': row['b_count']
-            }            
-        )
-        dyn_map[row['b_type']] = index
-        index+=1
+        key = ''
+        newFromTypes = set()
+        newFromIds = set()
+        froms = row['from'].split(',')
+        for fr in froms:
+            elements = fr.split('/')
+            if elements[0] not in newFromTypes:
+                newFromTypes.add(elements[0])
+                key += elements[0]+'+'
+            newFromIds.add(fr)
+        key = key[:-1]+ '>' # strip trailing +
+        newToTypes = set()
+        newToIds = set()
+        tos = row['to'].split(',')
+        for to in tos:
+            elements = to.split('/')
+            if elements[0] not in newToTypes:
+                newToTypes.add(elements[0])
+                if (elements[0].startswith("DDT_")):
+                    key += "DDT_"+elements[2]+'+'
+                    newToIds.add("DDT_"+elements[2]+'/'+elements[1])
+                else:
+                    key += elements[0]+'+'
+                    newToIds.add(to)
+        key = key[:-1] # strip trailing +
+        if key in edgeTuples:
+            edgeTuples[key]['num'] += 1
+            fromIds = edgeTuples[key]['from']
+            toIds = edgeTuples[key]['to']
+            procs = edgeTuples[key]['proc']
+            fromIds.update(newFromIds)
+            toIds.update(newToIds)
+            procs.add(row['pname'])
+        else:
+            edgeTuples[key] = dict()
+            edgeTuples[key]['num'] = 1
+            edgeTuples[key]['from'] = newFromIds
+            edgeTuples[key]['to'] = newToIds
+            edgeTuples[key]['proc'] = set()
+            edgeTuples[key]['proc'].add(row['pname'])
 
-    # count edges between core types
+    # combine similar elements:
+    # must have one process, input, and output in common
+    keys = list(edgeTuples.keys())
+    for key1 in keys:
+        (fromAll1, toAll1) = key1.split('>')
+        # if all TOs are DDT_, not eligible for merging
+        if not "SDT_" in toAll1:
+            continue;
+        froms1 = set(fromAll1.split('+'))
+        tos1 = set(toAll1.split('+'))
+        for key2 in keys:
+            if key1 == key2:
+                continue
+            # check that we didn't already merge them:
+            if not key1 in edgeTuples:
+                continue
+            if not key2 in edgeTuples:
+                continue
+
+            # common process?
+            if edgeTuples[key1]['proc'].isdisjoint(edgeTuples[key2]['proc']):
+                continue
+
+            # parse froms, tos
+            (fromAll2, toAll2) = key2.split('>')
+            # if all TOs are DDT_, not eligible for merging
+            if not "SDT_" in toAll2:
+                continue;
+            froms2 = set(fromAll2.split('+'))
+            if froms2.isdisjoint(froms1):
+                continue
+            tos2 = set(toAll2.split('+'))
+            if tos2.isdisjoint(tos1):
+                continue
+            
+            # all match; merge them
+            sys.stderr.write('merging key: '+key1+' into '+key2+'\n')
+            num = edgeTuples[key1]['num'] + edgeTuples[key2]['num']
+            froms = edgeTuples[key1]['from']
+            froms.update(edgeTuples[key2]['from'])
+            tos = edgeTuples[key1]['to']
+            tos.update(edgeTuples[key2]['to'])
+            procs = edgeTuples[key1]['proc']
+            procs.update(edgeTuples[key2]['proc'])
+            del edgeTuples[key1]
+            del edgeTuples[key2]
+            # add new key
+            froms1.update(froms2)
+            tos1.update(tos2)
+            key = '+'.join(froms1)+'>'+'+'.join(tos1)
+            edgeTuples[key] = dict()
+            edgeTuples[key]['num'] = num
+            edgeTuples[key]['from'] = froms
+            edgeTuples[key]['to'] = tos
+            edgeTuples[key]['proc'] = procs
+
+    # process edges from keys, adding new DDT_ nodes
+    ddtNodes = []
+    intermedNodes = []
     edges = []
-    for core_type_from in stat_type_items:
-        for core_type_to in stat_type_items:
-            p = arango_service.get_core_core_process_type_count('%s%s' %(TYPE_CATEGORY_STATIC, core_type_from['dataType']),
-                                                                             '%s%s' %(TYPE_CATEGORY_STATIC, core_type_to['dataType']))
-            l = len(p)
-            if (l > 0):
-                # sys.stderr.write(core_type_from['dataType']+' -> '+core_type_to['dataType']+'\n')
-                linkText = str(p['count']) + ' ' + p['process']
-                edges.append(
+    for key in edgeTuples.keys():
+        newEdges = []
+        sys.stderr.write('key: '+key+'\n')
+        (fromAll, toAll) = key.split('>')
+        if "DDT_" in fromAll:
+            continue
+        froms = fromAll.split('+')
+        tos = toAll.split('+')
+        intermed = 0
+        if len(froms)>1 or len(tos)>1:
+            # make intermediate node
+            intermed = index
+            intermedNodes.append(
+                {
+                    'index': intermed,
+                    'category': False,
+                    'name': False,
+                    'count': 0
+                })
+            index += 1
+        linkText = str(edgeTuples[key]['num'])+' '+', '.join(edgeTuples[key]['proc'])
+        for i in range(len(froms)):
+            fr = froms[i]
+            num = len(edgeTuples[key]['from'])
+            if (len(froms)>1):
+                searchKey = fr+'/'
+                num = 0
+                for k in edgeTuples[key]['from']:
+                    if k.startswith(searchKey):
+                        num+=1
+            fr = fr[4:]
+            if (i==0):
+                linkText += '<br>'
+            else:
+                linkText += ', '
+            linkText += str(num)+' '+fr
+            
+            if (intermed > 0):
+                newEdges.append(
                     {
-                        'source': core_type_from['index'],
-                        'target': core_type_to['index'],
-                        'type': 'wasGeneratedBy',
-                        'hoverText': linkText
+                        'source': node_map[fr],
+                        'target': intermed,
                     }
                 )
 
-    # count edges between core types and bricks
-    for core_type_from in stat_type_items:
-        process_counts = arango_service.get_core_brick_process_type_count('%s%s' %(TYPE_CATEGORY_STATIC, core_type_from['dataType']))
-        l = len(process_counts)
-        if (l > 0):
-            for i in range(l):
-                p = process_counts[i]
-                brickType =  p['bricktype']
-                linkText = str(p['count']) + ' ' + p['process']
-                edges.append(
+        for i in range(len(tos)):
+            to = tos[i]
+            num = len(edgeTuples[key]['to'])
+            if (len(tos)>1):
+                searchKey = to+'/'
+                num = 0
+                for k in edgeTuples[key]['to']:
+                    if k.startswith(searchKey):
+                        num+=1
+
+            # if to is DDT, need to add new node for it
+            if 'DDT_' in to:
+                to = to[4:]
+                node_to = index
+                ddtNodes.append(
                     {
-                        'source': core_type_from['index'],
-                        'target': dyn_map[brickType],
-                        'type': 'wasGeneratedBy',
-                        'hoverText': linkText
+                        'index': node_to,
+                        'category': TYPE_CATEGORY_DYNAMIC,
+                        'name': to,
+                        'dataModel': 'Brick',
+                        'dataType': to,
+                        'count': num
                     }
                 )
+                index += 1
+            else:
+                to = to[4:]
+                node_to = node_map[to]
+                        
+            if (i==0):
+                linkText += ' &rarr; '
+            else:
+                linkText += ', '
+            linkText += str(num)+' '+to
+
+            if (intermed == 0):
+                intermed = node_map[fr]
+                
+            newEdges.append(
+                {
+                    'source': intermed,
+                    'target': node_to,
+                }
+            )
+
+        # make all new edges have same linkText
+        for e in newEdges:
+            e['hoverText'] = linkText
+            edges.append(e)
 
     nodes = []
-    nodes.append(stat_type_items)
-    nodes.append(dyn_type_items)
+    nodes.extend(sdtNodes)
+    nodes.extend(intermedNodes)
+    nodes.extend(ddtNodes)
     
     res = {
         'nodes' : nodes,
         'links' : edges
     }
 
-    s = pprint.pformat(res)
+    s = pprint.pformat(res,width=999)
     return s
     # return  _ok_response(res)
 
