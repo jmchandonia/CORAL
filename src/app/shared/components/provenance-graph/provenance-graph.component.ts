@@ -5,6 +5,7 @@ const mockData_v2 = require('src/app/shared/test/mock-provenance-graph_v2.json')
 import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-provenance-graph',
@@ -43,12 +44,16 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   network: Network;
 
   constructor(
-    private homeService: HomeService
+    private homeService: HomeService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
+    this.spinner.show('pgraph-loading');
     this.homeService.getProvenanceGraphData()
       .subscribe(data => {
+        // response data is returned as a python dictionary, parse to valid JSON
+        this.spinner.hide('pgraph-loading');
         let temporaryResponseFix = data
           .replace(/\'/g, '"')
           .replace(/\n/g, ' ')
@@ -182,7 +187,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
         borderRadius: dataItem.category === 'DDT_' ? 0 : 20
       },
       data: {...dataItem},
-      fixed: dataItem.category !== 'DDT_',
+      fixed: dataItem.category === 'SDT_',
     }
 
     // if(typeof dataItem.x === 'number' && typeof dataItem.y === 'number') {
@@ -226,7 +231,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       arrows: {
         to: {
           // hide arrows for 'connector' nodes
-          enabled: target && target.data.category !== 'null'
+          enabled: target && target.data.category !== false
         }
       },
       smooth: {

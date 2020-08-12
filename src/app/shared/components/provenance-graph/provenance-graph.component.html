@@ -1,8 +1,22 @@
 <!-- <svg #provenanceGraph height="900" width="100%"></svg> -->
 <div #pGraph id="pgraph-container">
-    <!-- <svg width="600" height="900">
-        <g class="links"></g>
-        <g #provenanceGraph class="nodes"></g>
-    </svg> -->
+    <ngx-spinner
+    bdColor="rgba(0,0,0,0)"
+    color="#aaa"
+    size="large"
+    name="pgraph-loading"
+    style="position: relative;"
+    type="ball-spin-fade-rotating"
+    [fullScreen]="false"></ngx-spinner>
 </div>
-
+<!-- <div id="pgraph-container">
+    <div #pGraph id="pgraph"></div>
+    <ngx-spinner
+    bdColor="rgba(0,0,0,0)"
+    color="#aaa"
+    size="small"
+    name="pgraph-loading"
+    style="position: absolute;"
+    type="ball-spin-fade-rotating"
+    [fullScreen]="false"></ngx-spinner>
+</div> -->
