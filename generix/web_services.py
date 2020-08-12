@@ -15,6 +15,7 @@ import os
 import cgi
 import sys
 import pprint
+import math
 
 # from . import services
 # from .brick import Brick
@@ -1354,6 +1355,10 @@ def generix_type_stat():
 
     return  _ok_response(res)
 
+# for (relative) line thickness in graphs
+def line_thickness(n):
+    return int(round(math.log10(n)))+1
+
 # for graph
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
@@ -1510,15 +1515,25 @@ def generix_type_graph():
                 })
             index += 1
         linkText = str(edgeTuples[key]['num'])+' '+', '.join(edgeTuples[key]['proc'])
+        totalThickness = line_thickness(edgeTuples[key]['num'])
         for i in range(len(froms)):
             fr = froms[i]
             num = len(edgeTuples[key]['from'])
+            totalNum = num
             if (len(froms)>1):
                 searchKey = fr+'/'
                 num = 0
                 for k in edgeTuples[key]['from']:
                     if k.startswith(searchKey):
                         num+=1
+                thickness = int(round(num/totalNum*totalThickness))
+                if (thickness==totalThickness):
+                    thickness = totalThickness-1
+                if (thickness==0):
+                    thickness = 1
+            else:
+                thickness = totalThickness
+                        
             fr = fr[4:]
             if (i==0):
                 linkText += '<br>'
@@ -1531,18 +1546,27 @@ def generix_type_graph():
                     {
                         'source': node_map[fr],
                         'target': intermed,
+                        'thickness': thickness
                     }
                 )
 
         for i in range(len(tos)):
             to = tos[i]
             num = len(edgeTuples[key]['to'])
+            totalNum = num
             if (len(tos)>1):
                 searchKey = to+'/'
                 num = 0
                 for k in edgeTuples[key]['to']:
                     if k.startswith(searchKey):
                         num+=1
+                thickness = int(round(num/totalNum*totalThickness))
+                if (thickness==totalThickness):
+                    thickness = totalThickness-1
+                if (thickness==0):
+                    thickness = 1
+            else:
+                thickness = totalThickness
 
             # if to is DDT, need to add new node for it
             if 'DDT_' in to:
@@ -1576,6 +1600,7 @@ def generix_type_graph():
                 {
                     'source': intermed,
                     'target': node_to,
+                    'thickness': thickness
                 }
             )
 
@@ -1594,27 +1619,44 @@ def generix_type_graph():
     for i in unused:
         nodes[i]['unused'] = True
 
-    # provide approximate locations.  first, find roots:
+    # provide approximate locations.  first, find roots,
+    # start assigning them yRank and xRank
+    xRank = 0
     roots = set(range(index))
     for e in edges:
-         if e['source'] in roots:
-             roots.remove(e['source'])
+         if e['target'] in roots:
+             roots.remove(e['target'])
     for i in roots:
-        if i in nodes:
-            nodes[i]['index'] = 0
+        nodes[i]['y_rank'] = 0
+        nodes[i]['x_rank'] = xRank
 
-    # every link should go to an index one higher, or same level if ddt
+    # every link should go to an y_rank one higher, or same level if ddt
     remainingEdges = edges.copy()
+    usedRanks = {}
+    maxYRank = 0
     while len(remainingEdges) > 0:
         for e in remainingEdges:
-            if 'index' not in nodes[e['source']]:
+            if 'y_rank' not in nodes[e['source']]:
                 continue
-            if 'index' in nodes[e['target']]:
+            if 'y_rank' in nodes[e['target']]:
                 remainingEdges.remove(e)
+                continue
             if nodes[e['target']]['category'] == 'DDT_':
-                nodes[e['target']]['index'] = nodes[e['source']]['index']
+                nodes[e['target']]['y_rank'] = nodes[e['source']]['y_rank']
             else:
-                nodes[e['target']]['index'] = nodes[e['source']]['index']+1
+                yRank = nodes[e['source']]['y_rank']+1
+                nodes[e['target']]['y_rank'] = yRank
+                if (yRank > maxYRank):
+                    maxYRank = yRank
+                xRank = nodes[e['source']]['x_rank']
+                ranks = str(xRank)+','+str(yRank)
+                while (ranks in usedRanks):
+                    # sys.stderr.write('rank '+ranks+'\n')
+                    xRank += 1
+                    ranks = str(xRank)+','+str(yRank)
+                usedRanks[ranks] = True
+                nodes[e['target']]['x_rank'] = xRank
+            remainingEdges.remove(e)
 
     # remove unused nodes
     for n in nodes:
