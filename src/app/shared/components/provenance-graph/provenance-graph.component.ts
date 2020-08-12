@@ -1,7 +1,5 @@
-import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
-const mockData = require('src/app/shared/test/mock-provenance-graph.json');
-const mockData_v2 = require('src/app/shared/test/mock-provenance-graph_v2.json');
 import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
@@ -12,7 +10,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './provenance-graph.component.html',
   styleUrls: ['./provenance-graph.component.css']
 })
-export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
+export class ProvenanceGraphComponent implements OnInit {
 
   nodes:  DataSet<any>;
   edges: DataSet<any>;
@@ -51,15 +49,9 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.spinner.show('pgraph-loading');
     this.homeService.getProvenanceGraphData()
-      .subscribe(data => {
-        // response data is returned as a python dictionary, parse to valid JSON
+      .subscribe((data: any) => {
         this.spinner.hide('pgraph-loading');
-        let temporaryResponseFix = data
-          .replace(/\'/g, '"')
-          .replace(/\n/g, ' ')
-          .replace(/True/g, 'true')
-          .replace(/False/g, 'false');
-        this.initNetworkGraph(JSON.parse(temporaryResponseFix));
+        this.initNetworkGraph(data.results);
       });
   }
 
@@ -122,9 +114,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
     this.network.on('stabilizationIterationsDone', () => this.network.setOptions({physics: false}));
   }
 
-  ngAfterViewInit(): void {
- }
-
  addCluster(data) {
    // configuration for nodes that hold clusters together
    this.network.cluster({
@@ -169,7 +158,6 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   createNode(dataItem: any): Node {
     const node: any = {
       id: dataItem.index,
-      label: dataItem.category !== false && !dataItem.children ? `${dataItem.count} ${dataItem.name}` : '',
       font: {
         size: 16,
         face: 'Red Hat Text, sans-serif'
@@ -190,10 +178,9 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       fixed: dataItem.category === 'SDT_',
     }
 
-    // if(typeof dataItem.x === 'number' && typeof dataItem.y === 'number') {
-    //   node.x = dataItem.x;
-    //   node.y = dataItem.y;
-    // }
+    if (dataItem.category) {
+      node.label = `${dataItem.count} ${dataItem.name.replace(/<br>/g, '\n')}`;
+    }
 
     if(typeof dataItem.x_rank === 'number') {
       node.x = dataItem.x_rank * 150;
