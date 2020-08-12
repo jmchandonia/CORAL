@@ -222,7 +222,8 @@ export class ProvenanceGraphComponent implements OnInit {
         }
       },
       smooth: {
-        enabled: (fromId === 13 || toId === 13),
+        // has to explicitly === true because any other properties in object without being defined will enable behavior
+        enabled: edge.reversible === true,
         roundness: 0.2,
         forceDirection: 'vertical',
         type: 'curvedCW'
