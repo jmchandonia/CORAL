@@ -167,7 +167,6 @@ export class ProvenanceGraphComponent implements OnInit {
         border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
         hover: { background: '#ddd' }
       },
-      borderWidth: dataItem.category === false ? 0 : 1,
       physics: true,
       cid: dataItem.cid,
       shape: 'box',
@@ -176,6 +175,12 @@ export class ProvenanceGraphComponent implements OnInit {
       },
       data: {...dataItem},
       fixed: dataItem.category === 'SDT_',
+    }
+
+    if (dataItem.root) {
+      node.borderWidth = 2;
+    } else if (!dataItem.category) {
+      node.borderWidth = 0;
     }
 
     if (dataItem.category) {
