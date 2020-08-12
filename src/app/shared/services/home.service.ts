@@ -27,7 +27,7 @@ export class HomeService {
   }
 
   getProvenanceGraphData() {
-    return this.http.get(`${environment.baseURL}/types_graph`);
+    return this.http.get(`${environment.baseURL}/types_graph`, {responseType : 'text'});
   }
 
 }

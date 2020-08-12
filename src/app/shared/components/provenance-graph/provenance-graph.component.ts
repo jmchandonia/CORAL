@@ -15,7 +15,7 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
   nodes:  DataSet<any>;
   edges: DataSet<any>;
-  clusterIds: any[] = []; // TODO: make models for response JSON
+  clusterNodes: any[] = []; // TODO: make models for response JSON
   @Output() querySelected: EventEmitter<QueryMatch> = new EventEmitter();
 
   @ViewChild('pGraph') pGraph: ElementRef;
@@ -48,36 +48,42 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.homeService.getProvenanceGraphData()
-      .subscribe(data => console.log('DATA', data));
+      .subscribe(data => {
+        let temporaryResponseFix = data
+          .replace(/\'/g, '"')
+          .replace(/\n/g, ' ')
+          .replace(/True/g, 'true')
+          .replace(/False/g, 'false');
+        this.initNetworkGraph(JSON.parse(temporaryResponseFix));
+      });
   }
 
-  ngAfterViewInit(): void {
+  initNetworkGraph(data) {
+    console.log('DATA', data);
+    const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
-    const [coreTypes, dynamicTypes] = partition(mockData.result.nodes, node => node.category !== 'DDT_')
-    // const [coreTypes, dynamicTypes] = mockData_v2.nodes;
+    // initialize core type nodes with x y coordinates
+    this.nodes = new DataSet(coreTypes.map(this.createNode));
 
-
-    this.nodes = new DataSet(
-      coreTypes.map(this.createNode)
-    );
-
+    // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
       if (dynamicType.children?.length) {
+        // add node children to nodeList
         dynamicType.children.forEach(child => {
           this.nodes.update(this.createNode(child));
         });
         // add node to list of nodes that need to be clustered
-        this.clusterIds.push({...dynamicType, expanded: false});
-        this.nodes.update(this.createNode(dynamicType));
-      } else {
-        this.nodes.update(this.createNode(dynamicType));
+        this.clusterNodes.push({...dynamicType, expanded: true});
       }
+      this.nodes.update(this.createNode(dynamicType));
     });
 
+    // initialize edges
     this.edges = new DataSet(
-      mockData.result.links.map(edge => this.createEdge(edge))
+      data.links.map(edge => this.createEdge(edge))
     );
 
+    // render network
     this.network = new Network(
       this.pGraph.nativeElement,
       {
@@ -87,29 +93,31 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       this.options
     );
 
-    // cluster nodes from clusterIds
-    this.clusterIds.forEach(clusterNode => this.addCluster(clusterNode));
-    
+    // cluster nodes from clusterNodes array
+    this.clusterNodes.forEach(clusterNode => this.addCluster(clusterNode));
+
     // set zoom level to contain all nodes
     this.network.fit({
       nodes: this.nodes.map(node => node.id),
-      animation: false,
+      animation: false
     });
-
 
     // add double click event listener to submit search query on nodes
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
-    // click will toggle expand child nodes
+    // add click event to expand cluster nodes
     this.network.on('click', ({nodes}) => {
-      const clusteredNode = this.clusterIds.find(node => node.index === nodes[0]);
-      if (clusteredNode && clusteredNode.expanded) {
+      const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
+      if(clusteredNode && clusteredNode.expanded) {
         this.reclusterNode(nodes[0]);
       }
     });
 
     // disable physics after nodes without coordinates have been pushed apart
     this.network.on('stabilizationIterationsDone', () => this.network.setOptions({physics: false}));
+  }
+
+  ngAfterViewInit(): void {
  }
 
  addCluster(data) {
@@ -149,24 +157,24 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
  }
 
  reclusterNode(nodeID) {
-   const cluster = this.clusterIds.find(item => item.index === nodeID);
+   const cluster = this.clusterNodes.find(item => item.index === nodeID);
    this.addCluster(cluster);
  }
 
   createNode(dataItem: any): Node {
     const node: any = {
       id: dataItem.index,
-      label: dataItem.category !== 'null' && !dataItem.children ? `${dataItem.count} ${dataItem.name}` : '',
+      label: dataItem.category !== false && !dataItem.children ? `${dataItem.count} ${dataItem.name}` : '',
       font: {
         size: 16,
         face: 'Red Hat Text, sans-serif'
       },
       color: {
-        background: dataItem.category !== 'null' ? 'white' : 'rgba(0,0,0,0)',
+        background: dataItem.category !== false ? 'white' : 'rgba(0,0,0,0)',
         border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
         hover: { background: '#ddd' }
       },
-      borderWidth: dataItem.category === 'null' ? 0 : 1,
+      borderWidth: dataItem.category === false ? 0 : 1,
       physics: true,
       cid: dataItem.cid,
       shape: 'box',
@@ -177,9 +185,17 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
       fixed: dataItem.category !== 'DDT_',
     }
 
-    if(typeof dataItem.x === 'number' && typeof dataItem.y === 'number') {
-      node.x = dataItem.x;
-      node.y = dataItem.y;
+    // if(typeof dataItem.x === 'number' && typeof dataItem.y === 'number') {
+    //   node.x = dataItem.x;
+    //   node.y = dataItem.y;
+    // }
+
+    if(typeof dataItem.x_rank === 'number') {
+      node.x = dataItem.x_rank * 150;
+    }
+
+    if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
+      node.y = dataItem.y_rank * 100;
     }
 
     if(dataItem.category === 'SDT_') { node.mass = 10; }
@@ -190,12 +206,12 @@ export class ProvenanceGraphComponent implements OnInit, AfterViewInit {
   createEdge(edge): any {
     const toId = edge.target;
     const fromId = edge.source;
-    const target = this.nodes.get(toId);
+    const target: any = this.nodes.get(toId);
     return {
       from: fromId,
       to: toId,
-      width: edge.width,
-      label: '1083 16S Sequencing',
+      width: edge.thickness,
+      label: edge.hoverText.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
       color: '#777',
       physics: true,
       selfReference: {
