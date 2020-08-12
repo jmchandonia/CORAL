@@ -20,7 +20,6 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     handleError(error: Error | HttpErrorResponse) {
         if (error instanceof HttpErrorResponse) {
-            console.error(error);
             const {status, message} = error;
             this.zone.run(() => {
                 const config = {
@@ -31,7 +30,6 @@ export class GlobalErrorHandler implements ErrorHandler {
             });
             throw error;
         } else {
-            console.error(error)
             if(this.errorMessage !== error.message) { // prevents concurrent errors from components to raise more than once
                 this.modalService = this.injector.get(BsModalService);
                 this.router = this.injector.get(Router);
