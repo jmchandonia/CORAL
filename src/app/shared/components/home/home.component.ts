@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.getUpdatedValues();
+    this.homeService.getProvenanceGraphData();
 
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
@@ -36,17 +36,7 @@ export class HomeComponent implements OnInit {
   }
 
   getUpdatedValues() {
-    this.loading = true;
-    this.spinner.show();
-    this.homeService.getUpdatedValues(this.filterQueryBuilder)
-    .subscribe((res: any) => {
-      this.loading = false;
-      this.spinner.hide();
-      if (res.status === 'OK') {
-        this.coreTypes = res.results.core_types;
-        this.dynamicTypes = res.results.dynamic_types;
-      }
-    });
+    this.homeService.getProvenanceGraphData(this.filterQueryBuilder);
   }
 
   onValueChecked(event) {
@@ -62,7 +52,6 @@ export class HomeComponent implements OnInit {
       this.checkBoxArray.push(event.target.id);
       this.filterQueryBuilder.push(selected);
     }
-    // this.getUpdatedValues();
   }
 
   navigateToSearch(queryMatch: QueryMatch) {

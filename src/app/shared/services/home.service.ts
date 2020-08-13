@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { QueryParam } from '../models/QueryBuilder';
 import { environment } from 'src/environments/environment';
-
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class HomeService {
 
   constructor(private http: HttpClient) { }
+
+  provenanceGraphSub: Subject<any> = new Subject();
 
   getFilterValues() {
     return this.http.get(`${environment.baseURL}/filters`);
@@ -26,8 +28,18 @@ export class HomeService {
     return this.http.get(`${environment.baseURL}/reports/${id}`);
   }
 
-  getProvenanceGraphData() {
-    return this.http.get(`${environment.baseURL}/types_graph`);
+  getProvenanceGraphData(filterQuery?: QueryParam[]) {
+    if (filterQuery) {
+      this.http.post(`${environment.baseURL}/types_graph`, filterQuery)
+        .subscribe(data => this.provenanceGraphSub.next(data));
+    } else {
+      this.http.get(`${environment.baseURL}/types_graph`)
+        .subscribe(data => this.provenanceGraphSub.next(data));
+    }
+  }
+
+  getProvenanceGraphSub() {
+    return this.provenanceGraphSub.asObservable();
   }
 
 }
