@@ -1359,9 +1359,14 @@ def generix_type_stat():
 def line_thickness(n):
     return int(round(math.log10(n)))+1
 
-# for graph
+# for types graph
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
+    # load filters
+    query = request.json
+    s = pprint.pformat(query)
+    sys.stderr.write('query = '+s+'\n')
+
     arango_service = svs['arango_service']
 
     # map names back to nodes
@@ -1576,7 +1581,7 @@ def generix_type_graph():
                     {
                         'index': node_to,
                         'category': TYPE_CATEGORY_DYNAMIC,
-                        'name': to,
+                        'name': to+'<br>Dataset'+('','s')[num>1],
                         'dataModel': 'Brick',
                         'dataType': to,
                         'count': num
@@ -1621,14 +1626,23 @@ def generix_type_graph():
 
     # provide approximate locations.  first, find roots,
     # start assigning them yRank and xRank
+    # find reversible direct edges
     xRank = 0
     roots = set(range(index))
+    directEdges = {}
     for e in edges:
          if e['target'] in roots:
              roots.remove(e['target'])
+         # check for reversible direct edges
+         if e['source'] != e['target']:
+             directEdges[str(e['source'])+'-'+str(e['target'])] = e
+             if str(e['target'])+'-'+str(e['source']) in directEdges:
+                 e['reversible'] = True
+                 directEdges[str(e['target'])+'-'+str(e['source'])]['reversible'] = True
     for i in roots:
         nodes[i]['y_rank'] = 0
         nodes[i]['x_rank'] = xRank
+        nodes[i]['root'] = True
 
     # every link should go to an y_rank one higher, or same level if ddt
     remainingEdges = edges.copy()
@@ -1669,9 +1683,9 @@ def generix_type_graph():
         'links' : edges
     }
 
-    s = pprint.pformat(res,width=999)
-    return s
-    # return  _ok_response(res)
+    # s = pprint.pformat(res,width=999)
+    # return s
+    return  _ok_response(res)
 
 
 @app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
