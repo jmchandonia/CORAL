@@ -48,7 +48,7 @@ export class ProvenanceGraphComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show('pgraph-loading');
-    this.homeService.getProvenanceGraphData()
+    this.homeService.getProvenanceGraphSub()
       .subscribe((data: any) => {
         this.spinner.hide('pgraph-loading');
         this.initNetworkGraph(data.results);
@@ -56,7 +56,6 @@ export class ProvenanceGraphComponent implements OnInit {
   }
 
   initNetworkGraph(data) {
-    console.log('DATA', data);
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
     // initialize core type nodes with x y coordinates
@@ -178,7 +177,9 @@ export class ProvenanceGraphComponent implements OnInit {
     }
 
     if (dataItem.root) {
-      node.borderWidth = 2;
+      node.borderWidth = 4;
+      node.margin = 10;
+      node.color.border = 'darkgreen';
     } else if (!dataItem.category) {
       node.borderWidth = 0;
     }
@@ -191,7 +192,7 @@ export class ProvenanceGraphComponent implements OnInit {
       node.x = dataItem.x_rank * 150;
     }
 
-    if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
+    if (typeof dataItem.y_rank === 'number') {
       node.y = dataItem.y_rank * 100;
     }
 
