@@ -192,7 +192,7 @@ export class ProvenanceGraphComponent implements OnInit {
       node.x = dataItem.x_rank * 150;
     }
 
-    if (typeof dataItem.y_rank === 'number') {
+    if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
       node.y = dataItem.y_rank * 100;
     }
 
