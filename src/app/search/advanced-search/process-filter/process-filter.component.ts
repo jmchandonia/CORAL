@@ -35,35 +35,14 @@ export class ProcessFilterComponent implements OnInit {
 
   addFilter(event, attribute) {
     if (event) {
-      this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
+      if (event.text) {
+        this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
+      } else {
+        this.queryParams.push(new QueryParam(attribute, '=', event, 'string'));
+      }
     } else {
       const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === attribute));
       this.queryParams.splice(idxToRemove, 1);
     }
   }
-
-  // addDateFilter(event, attri) {
-  //   console.log('EVENT', event);
-  //   this.queryParams.push(new QueryParam('date_start', '=', event));
-  // }
-  // addProcessFilter(event) {
-  //   if (event) {
-  //     this.queryParams.push(new QueryParam('process', '=', event.text));
-  //   } else {
-  //     const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === 'process'));
-  //     this.queryParams.splice(idxToRemove, 1);
-  //   }
-  // }
-
-  // addCampaignFilter(event) {
-  //   if (event) {
-  //     this.queryParams.push(new QueryParam('campaign', '=', event.text));
-  //   } else {
-  //     const idxToRemove = this.queryParams.indexOf(this.queryParams.find())
-  //   }
-  // }
-
-  // addPersonnelFilter(event) {
-  //   this.queryParams.push(new QueryParam('person', '=', event.text));
-  // }
 }
