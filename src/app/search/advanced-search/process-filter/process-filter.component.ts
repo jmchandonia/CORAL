@@ -38,7 +38,9 @@ export class ProcessFilterComponent implements OnInit {
       if (event.text) {
         this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
       } else {
-        this.queryParams.push(new QueryParam(attribute, '=', event, 'string'));
+        // input is a date, convert to yyyy-mm-dd
+        const dateFormat = event.toISOString().split('T')[0];
+        this.queryParams.push(new QueryParam(attribute, '=', dateFormat, 'string'));
       }
     } else {
       const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === attribute));
