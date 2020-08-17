@@ -26,21 +26,22 @@
             Processes That Generated the Data
         </div>
         <div class="form-group p-3">
-            <app-property-params
-            *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
-            (removed)="removeProcessUp(idx)"
-            [queryParam]="queryParam"
-            [dataType]="queryBuilderObject.queryMatch.dataModel"
-            ></app-property-params>
+            <!-- <app-process-filter
+                *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
+                [queryParam]="queryParam"
+                (removed)="removeProcessUp(idx)"
+            ></app-process-filter> -->
+            <app-process-filter
+                [queryParams]=queryBuilderObject.processesUp></app-process-filter>
         </div>
-        <hr >
-        <div class="row">
+        <!-- <hr > -->
+        <!-- <div class="row">
             <div class="col-2 offset-10">
                 <button class="btn btn-link mb-2" [disabled]="!queryBuilderObject.queryMatch.dataType" (click)="addProcessUp()">
                     Add
                 </button>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 <div class="search-button-footer">

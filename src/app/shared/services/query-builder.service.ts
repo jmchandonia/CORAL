@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Term } from 'src/app/shared/models/brick';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +20,6 @@ export class QueryBuilderService {
   operators: any[];
   dataTypeHash: any = {};
   previousUrl: string;
-  // currentUrl: string;
 
   constructor(
     private http: HttpClient,
@@ -100,17 +101,10 @@ export class QueryBuilderService {
   }
 
   getDataTypes() {
-    // return this.http.get(`${environment.baseURL}/data_types`);
-    // return [...this.dataTypes.map((type, idx) => {
-    //   return { id: idx.toString(), text: type.dataType }
-    // })];
     return this.dataTypeSub.asObservable();
   }
 
   getAttributes(dataType) {
-    // return [{id: '', text: ''}, ...this.dataTypeHash[dataType].map((att, idx) => {
-    //   return {id: idx.toString(), text: att.name}
-    // })]
     return this.dataTypeHash[dataType];
   }
 
@@ -123,10 +117,6 @@ export class QueryBuilderService {
   }
 
   getOperators() {
-    // return this.http.get(`${environment.baseURL}/search_operations`);
-    // return [{id: '', text: ''},...this.operators.map((op, idx) => {
-    //   return {id: idx.toString(), text: op };
-    // })];
     return this.operators;
   }
 
@@ -151,6 +141,18 @@ export class QueryBuilderService {
 
   setSearchType(searchType: string) {
     this.searchType = searchType;
+  }
+
+  getProcessOterms() {
+    return this.http.get(`${environment.baseURL}/get_process_oterms`);
+  }
+
+  getCampaignOterms(): Observable<any> {
+    return this.http.get<any>(`${environment.baseURL}/get_campaign_oterms`);
+  }
+
+  getPersonnelOterms() {
+    return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
   }
 
 
