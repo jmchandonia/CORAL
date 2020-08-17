@@ -27,7 +27,7 @@ export class ProvenanceGraphComponent implements OnInit {
     },
     physics: {
       barnesHut: {
-        springConstant: 0.1,
+        springConstant: 0.3,
         avoidOverlap: 10
       },
     },
@@ -193,6 +193,7 @@ export class ProvenanceGraphComponent implements OnInit {
     }
 
     if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
+      // if (typeof dataItem.y_rank === 'number') {
       node.y = dataItem.y_rank * 100;
     }
 
