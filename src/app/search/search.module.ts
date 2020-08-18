@@ -16,6 +16,8 @@ import { ProcessDataComponent } from './search-result/process-data/process-data.
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { DimensionVariablePreviewComponent } from './search-result/dimension-variable-preview/dimension-variable-preview.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ProcessFilterComponent } from './advanced-search/process-filter/process-filter.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SearchResultItemComponent,
     SearchResultCoreItemComponent,
     ProcessDataComponent,
-    DimensionVariablePreviewComponent
+    DimensionVariablePreviewComponent,
+    ProcessFilterComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +39,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     HttpClientModule,
     NgxSpinnerModule,
-    NgSelectModule
+    NgSelectModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [QueryBuilderService],
   bootstrap: [DimensionVariablePreviewComponent]

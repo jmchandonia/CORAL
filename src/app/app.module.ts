@@ -24,6 +24,7 @@ import { MicrotypeBrowserComponent } from './shared/components/microtype-browser
 import { DashboardPlotComponent } from './shared/components/dashboard/dashboard-plot/dashboard-plot.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TreeModule } from 'angular-tree-component';
+import { ProvenanceGraphComponent } from './shared/components/provenance-graph/provenance-graph.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -36,6 +37,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ErrorComponent,
     MicrotypeBrowserComponent,
     DashboardPlotComponent,
+    ProvenanceGraphComponent,
   ],
   imports: [
     BrowserModule,
