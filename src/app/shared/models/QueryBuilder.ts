@@ -6,8 +6,10 @@ export class QueryBuilder {
     public queryMatch: QueryMatch = new QueryMatch();
     public connectsUpTo: QueryMatch;
     public connectsDownTo: QueryMatch;
-    public processesUp: QueryParam[] = [];
-    public processesDown: QueryParam[] = [];
+    public processesUp: ProcessQueryParam[] = [];
+    public processesDown: ProcessQueryParam[] = [];
+    public searchAllProcessesUp = false;
+    public searchAllProcessesDown = false;
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
@@ -27,14 +29,8 @@ export class QueryBuilder {
 
 export class QueryMatch {
     constructor(
-        // dType?: string,
-        // dModel?: string,
-        // category?: string
         data?: QueryMatchData
     ) {
-        // this.dataType = dType;
-        // this.dataModel = dModel;
-        // this.category = category
         if (data) {
             this.dataType = data.dataType;
             this.dataModel = data.dataModel;
@@ -102,4 +98,12 @@ export class QueryParam {
          }
         return true;
     }
+ 
+}
+
+export class ProcessQueryParam extends QueryParam {
+    constructor(...args) { super(...args); }
+
+    processInputs: string[] = [];
+    processOutputs: string[] = [];
 }
