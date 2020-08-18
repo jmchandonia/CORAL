@@ -109,6 +109,16 @@ export class ProvenanceGraphComponent implements OnInit {
       }
     });
 
+    // show edge labels on hover
+    this.network.on('hoverEdge', ({edge}) => {
+      this.network.updateEdge(edge, {font: {color: 'black', strokeColor: 'white'}});
+    });
+
+    // hide edge labels on hover leave 
+    this.network.on('blurEdge', ({edge}) => {
+      this.network.updateEdge(edge, {font: {color: 'rgba(0,0,0,0)', strokeColor: 'rgba(0,0,0,0)'}});
+    })
+
     // disable physics after nodes without coordinates have been pushed apart
     this.network.on('stabilizationIterationsDone', () => this.network.setOptions({physics: false}));
   }
@@ -235,16 +245,6 @@ export class ProvenanceGraphComponent implements OnInit {
         forceDirection: 'vertical',
         type: 'curvedCW'
       },
-      chosen: {
-        edge: (values, id, selected, hovering) => {
-          values.width = 2;
-        },
-        label: (values, id, selected, hovering) => {
-          // make label visible on edge click
-          values.color = 'black';
-          values.strokeColor = 'white';
-        },
-      }
     }
  }
 
