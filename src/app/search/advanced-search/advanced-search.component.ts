@@ -43,15 +43,6 @@ export class AdvancedSearchComponent implements OnInit {
     return (connectsUpTo || connectsDownTo);
   }
 
-  removeProcessUp(index) {
-    const { processesUp } = this.queryBuilderObject;
-    this.queryBuilderObject.processesUp = processesUp.filter((_, i) => i !== index);
-  }
-
-  addProcessUp() {
-    this.queryBuilderObject.processesUp.push(new QueryParam());
-  }
-
   setConnectsUpTo(event) {
     this.queryBuilderObject.connectsUpTo = event;
   }
