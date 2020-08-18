@@ -6,8 +6,15 @@ export class QueryBuilder {
     public queryMatch: QueryMatch = new QueryMatch();
     public connectsUpTo: QueryMatch;
     public connectsDownTo: QueryMatch;
+    // public processesUp: ProcessQueryParam[] = [];
     public processesUp: QueryParam[] = [];
+    // public processesDown: ProcessQueryParam[] = [];
     public processesDown: QueryParam[] = [];
+    public searchAllProcessesUp = false;
+    public searchAllProcessesDown = false;
+    // public processInputs: string[] = [];
+    // public processOutputs: string[] = [];
+    parentProcesses: Process[];
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
@@ -27,14 +34,8 @@ export class QueryBuilder {
 
 export class QueryMatch {
     constructor(
-        // dType?: string,
-        // dModel?: string,
-        // category?: string
         data?: QueryMatchData
     ) {
-        // this.dataType = dType;
-        // this.dataModel = dModel;
-        // this.category = category
         if (data) {
             this.dataType = data.dataType;
             this.dataModel = data.dataModel;
@@ -102,4 +103,16 @@ export class QueryParam {
          }
         return true;
     }
+ 
+}
+
+export class Process {
+    // interface for defining process inputs and outputs for queries from provenance graph
+    constructor(processInputs: string[], processOutputs: string[]) {
+        this.processInputs = processInputs;
+        this.processOutputs = processOutputs;
+    }
+
+    processInputs: string[];
+    processOutputs: string[];
 }

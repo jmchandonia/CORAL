@@ -20,6 +20,26 @@ To run a development server, use the `ng serve` command and open your preferred 
 
 ## Deployment
 
+Note: these directions assume building the site in an Apache2 environment.
+
+Once you are logged into the server, you can find a clone of the repository at `/home/clearinghouse/env/generix-ui/generix-ui`. If you are building Generix UI on a new server, you will need to make sure that mod_rewrite is enabled and add the following to your httpd.conf file: 
+
+```
+<Directory "/var/www/html/generix-ui">
+    RewriteEngine On
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.html
+</Directory>
+```
+Since Generix UI is a single page application, these rules are important because they tell the server to redirect any requests that should be handled on the front end back to the index.html page which they reside. Without these rules, the app can have strange behavior such as giving a 404 on refreshing or page navigation.
+
+It is also possible to add these conditions in a .htaccess file at the same level as the app target directory, although the prior method is recommended. If you prefer using .htaccess, you will need to configure a new .htaccess file with the same contents for every new build.
+
+You also need to be sure .htaccess files are enabled in your web server setup; in Apache, be sure "AllowOverride All" is configured for the build target directory.
+
 Once you are logged into the server, you can find a clone of the repository at `/home/clearinghouse/env/generix-ui/generix-ui`.
 Pull your changes and run the following build command:
 
@@ -33,24 +53,6 @@ Note that everything in the build target directory will be deleted!
 
 The --prod directive above configures the UI with the "prod"
 environment, which is configured via src/environments/environment.prod.ts
-
-If there is not an .htaccess file in the build target directory, a new one will need to be generated for the page to load. paste 
-the following code below in a new .htaccess file at `/var/www/html/generix-ui/`:
-
-```
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
-  RewriteRule ^ - [L]
-
-  RewriteRule ^ index.html
-</IfModule>
-```
-
-You also need to be sure .htaccess files are enabled in your
-web server setup; in Apache, be sure "AllowOverride All" is configured
-for the build target directory.
 
 ## Testing
 

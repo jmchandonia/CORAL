@@ -42,6 +42,7 @@ testem.log
 /typings
 /src/app/shared/test/mock_microtypes.json
 /src/app/shared/test/mock_microtypes_3.json
+/src/app/shared/test/mock-provenance-graph_v2.json
 
 # System Files
 .DS_Store
