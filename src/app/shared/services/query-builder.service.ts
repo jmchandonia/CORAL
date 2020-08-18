@@ -72,11 +72,6 @@ export class QueryBuilderService {
     this.queryBuilderObject = new QueryBuilder();
   }
 
-  submitSearchResultsFromHome(queryMatch: QueryMatch) {
-    this.queryBuilderObject = new QueryBuilder();
-    this.queryBuilderObject.queryMatch = queryMatch;
-  }
-
   validSearchQuery() {
     return this.queryBuilderObject.isValid;
   }
