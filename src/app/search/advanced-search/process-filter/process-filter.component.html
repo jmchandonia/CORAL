@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-4">
+        <label for="processType">
+            Process Type
+        </label>
+        <ng-select
+            class="custom"
+            name="processType"
+            [items]="processes | async"
+            bindLabel="text"
+            placeholder="Select a Process"
+            (change)="addFilter($event, 'process')"
+            ></ng-select>
+    </div>
+    <div class="col-4">
+        <label for="campaignType">
+            Campaign Type
+        </label>
+        <ng-select
+            class="custom"
+            name="campaignType"
+            [items]="campaigns | async"
+            bindLabel="text"
+            placeholder="Select a Campaign"
+            (change)="addFilter($event, 'campaign')"
+        ></ng-select>
+    </div>
+    <div class="col-4">
+        <label for="personnel">Personnel</label>
+        <ng-select
+            class="custom"
+            name="personnel"
+            [items]="personnel | async"
+            bindLabel="text"
+            placeholder="Select Personnel"
+            (change)="addFilter($event, 'person')"
+            ></ng-select>
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+</div>
+<div class="row mt-2">
+    <div class="col-6">
+        <label for="start-date">Start Date</label>
+        <input
+            placeholder="mm/dd/yyyy"
+            class="form-control"
+            id="start-date"
+            bsDatepicker
+            placement="bottom"
+            [bsConfig]="datePickerConfig"
+            (bsValueChange)="addFilter($event, 'date_start')"
+        />
+    </div>
+    <div class="col-6">
+        <label for="end-date">End Date</label>
+        <input
+            placeholder="mm/dd/yyyy"
+            class="form-control"
+            id="end-date"
+            bsDatepicker
+            placement="bottom"
+            [bsConfig]="datePickerConfig"
+            (bsValueChange)="addFilter($event, 'date_end')"
+            />
+    </div>
+</div>

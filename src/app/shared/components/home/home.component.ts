@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { QueryParam, QueryMatch } from '../../models/QueryBuilder';
+import { QueryParam, QueryMatch, QueryBuilder, Process } from '../../models/QueryBuilder';
 import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
@@ -14,10 +14,11 @@ export class HomeComponent implements OnInit {
 
   checkBoxArray: string[] = [];
   public filterCategories: any[] = [];
-  public filterQueryBuilder: QueryParam[] = [];
   public coreTypes: any;
   public dynamicTypes: any;
   public loading = false;
+
+  query: QueryBuilder;
 
   constructor(
     private homeService: HomeService,
@@ -27,7 +28,8 @@ export class HomeComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.getUpdatedValues();
+    this.query = this.searchService.getCurrentObject();
+    this.homeService.getProvenanceGraphData();
 
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
@@ -36,17 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   getUpdatedValues() {
-    this.loading = true;
-    this.spinner.show();
-    this.homeService.getUpdatedValues(this.filterQueryBuilder)
-    .subscribe((res: any) => {
-      this.loading = false;
-      this.spinner.hide();
-      if (res.status === 'OK') {
-        this.coreTypes = res.results.core_types;
-        this.dynamicTypes = res.results.dynamic_types;
-      }
-    });
+    this.homeService.getProvenanceGraphData(this.query.processesUp);
   }
 
   onValueChecked(event) {
@@ -54,21 +46,20 @@ export class HomeComponent implements OnInit {
     const selected = this.filterCategories[i].items[j].queryParam as QueryParam;
 
     if (this.checkBoxArray.includes(event.target.id)) {
-      this.filterQueryBuilder = this.filterQueryBuilder.filter(item => {
+      this.query.processesUp = this.query.processesUp.filter(item => {
         return !(isEqual(item, selected));
       });
       this.checkBoxArray = this.checkBoxArray.filter(item => item !== event.target.id);
     } else {
       this.checkBoxArray.push(event.target.id);
-      this.filterQueryBuilder.push(selected);
+      this.query.processesUp.push(selected);
     }
-    // this.getUpdatedValues();
   }
 
-  navigateToSearch(queryMatch: QueryMatch) {
-    queryMatch.params = this.filterQueryBuilder;
-    this.searchService.submitSearchResultsFromHome(queryMatch);
-    this.router.navigate(['/search/result']);
+  navigateToSearch({query, processes}: {query: QueryMatch, processes: Process[]}) {
+    this.query.queryMatch = query;
+    this.query.parentProcesses = processes;
+    this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
 
 }
