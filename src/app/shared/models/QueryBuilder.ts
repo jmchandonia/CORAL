@@ -12,8 +12,9 @@ export class QueryBuilder {
     public processesDown: QueryParam[] = [];
     public searchAllProcessesUp = false;
     public searchAllProcessesDown = false;
-    public processInputs: string[] = [];
-    public processOutputs: string[] = [];
+    // public processInputs: string[] = [];
+    // public processOutputs: string[] = [];
+    parentProcesses: Process[];
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
@@ -103,4 +104,15 @@ export class QueryParam {
         return true;
     }
  
+}
+
+export class Process {
+    // interface for defining process inputs and outputs for queries from provenance graph
+    constructor(processInputs: string[], processOutputs: string[]) {
+        this.processInputs = processInputs;
+        this.processOutputs = processOutputs;
+    }
+
+    processInputs: string[];
+    processOutputs: string[];
 }
