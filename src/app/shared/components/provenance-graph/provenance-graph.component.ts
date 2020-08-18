@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
-import { QueryMatch } from 'src/app/shared/models/QueryBuilder';
+import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,7 +15,7 @@ export class ProvenanceGraphComponent implements OnInit {
   nodes:  DataSet<any>;
   edges: DataSet<any>;
   clusterNodes: any[] = []; // TODO: make models for response JSON
-  @Output() querySelected: EventEmitter<QueryMatch> = new EventEmitter();
+  @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process[]}> = new EventEmitter();
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -250,10 +250,47 @@ export class ProvenanceGraphComponent implements OnInit {
 
   submitSearchQuery(nodes) {
     if (nodes.length) {
-      const { category, dataType, dataModel } = this.nodes.get(nodes)[0].data;
+      const node = this.nodes.get(nodes)[0]
+      const { category, dataType, dataModel } = node.data;
+      const edgeIds = this.network.getConnectedEdges(node.id);
+      const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
       const query = new QueryMatch({category, dataType, dataModel});
-      this.querySelected.emit(query);
+      this.querySelected.emit({query, processes});
     }
+  }
+
+  getInputProcesses(edgeIds, targetId): Process[] {
+    return edgeIds
+      .map(id => this.edges.get(id)) // get edge data from array of ids
+      .filter(edge => edge.to === targetId) // we only want parent edges and not children
+      .map(edge => {
+        // TODO: interface NodeWithData extends Node so you don't have to keep explicitly typing nodes as 'any'
+        const sourceNode: any = this.nodes.get(edge.from);
+        if (!sourceNode.data.category) {
+          // get source and multiple targets if source is a 'connector' node
+          const [sourceEdges, targetEdges] = partition(
+            this.network.getConnectedEdges(sourceNode.id).map(id => this.edges.get(id)),
+            edge => edge.to === sourceNode.id
+          );
+          return new Process(
+            sourceEdges.map(edge => {
+              const sourceNodeData = (this.nodes.get(edge.from) as any).data;
+              return `${sourceNodeData.category}${sourceNodeData.dataType}`
+            }),
+            targetEdges.map(edge => {
+              const targetNodeData = (this.nodes.get(edge.to) as any).data;
+              return `${targetNodeData.category}${targetNodeData.dataType}`;
+            })
+          );
+        } else {
+          const { dataType, category } = sourceNode.data;
+          const targetNodeData = (this.nodes.get(targetId) as any).data;
+          return new Process(
+            category + dataType,
+            targetNodeData.category + targetNodeData.dataType
+          );
+        }
+      });
   }
 
 }

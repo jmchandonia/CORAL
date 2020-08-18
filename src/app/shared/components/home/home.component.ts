@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { QueryParam, QueryMatch, QueryBuilder } from '../../models/QueryBuilder';
+import { QueryParam, QueryMatch, QueryBuilder, Process } from '../../models/QueryBuilder';
 import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
@@ -56,8 +56,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  navigateToSearch(queryMatch: QueryMatch) {
-    this.query.queryMatch = queryMatch;
+  navigateToSearch({query, processes}: {query: QueryMatch, processes: Process[]}) {
+    this.query.queryMatch = query;
+    this.query.parentProcesses = processes;
     this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
 
