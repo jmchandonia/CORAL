@@ -6,10 +6,14 @@ export class QueryBuilder {
     public queryMatch: QueryMatch = new QueryMatch();
     public connectsUpTo: QueryMatch;
     public connectsDownTo: QueryMatch;
-    public processesUp: ProcessQueryParam[] = [];
-    public processesDown: ProcessQueryParam[] = [];
+    // public processesUp: ProcessQueryParam[] = [];
+    public processesUp: QueryParam[] = [];
+    // public processesDown: ProcessQueryParam[] = [];
+    public processesDown: QueryParam[] = [];
     public searchAllProcessesUp = false;
     public searchAllProcessesDown = false;
+    public processInputs: string[] = [];
+    public processOutputs: string[] = [];
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
@@ -99,11 +103,4 @@ export class QueryParam {
         return true;
     }
  
-}
-
-export class ProcessQueryParam extends QueryParam {
-    constructor(...args) { super(...args); }
-
-    processInputs: string[] = [];
-    processOutputs: string[] = [];
 }

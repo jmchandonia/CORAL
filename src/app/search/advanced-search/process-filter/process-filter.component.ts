@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { ProcessQueryParam } from 'src/app/shared/models/QueryBuilder';
+import { QueryParam } from 'src/app/shared/models/QueryBuilder';
 import { Term } from 'src/app/shared/models/brick';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { Observable } from 'rxjs';
@@ -13,7 +13,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class ProcessFilterComponent implements OnInit {
 
-  @Input() queryParams: ProcessQueryParam[];
+  @Input() queryParams: QueryParam[];
 
   datePickerConfig: Partial<BsDatepickerConfig> = { containerClass: 'theme-dark-blue' };
 
@@ -34,11 +34,11 @@ export class ProcessFilterComponent implements OnInit {
   addFilter(event, attribute) {
     if (event) {
       if (event.text) {
-        this.queryParams.push(new ProcessQueryParam(attribute, '=', event.text, 'string'));
+        this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
       } else {
         // input is a date, convert to yyyy-mm-dd
         const dateFormat = event.toISOString().split('T')[0];
-        this.queryParams.push(new ProcessQueryParam(attribute, '=', dateFormat, 'string'));
+        this.queryParams.push(new QueryParam(attribute, '=', dateFormat, 'string'));
       }
     } else {
       const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === attribute));

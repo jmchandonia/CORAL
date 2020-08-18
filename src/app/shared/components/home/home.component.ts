@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { QueryParam, QueryMatch } from '../../models/QueryBuilder';
+import { QueryParam, QueryMatch, QueryBuilder } from '../../models/QueryBuilder';
 import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
@@ -14,10 +14,11 @@ export class HomeComponent implements OnInit {
 
   checkBoxArray: string[] = [];
   public filterCategories: any[] = [];
-  public filterQueryBuilder: QueryParam[] = [];
   public coreTypes: any;
   public dynamicTypes: any;
   public loading = false;
+
+  query: QueryBuilder;
 
   constructor(
     private homeService: HomeService,
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
     ) { }
 
   ngOnInit() {
+    this.query = this.searchService.getCurrentObject();
     this.homeService.getProvenanceGraphData();
 
     this.homeService.getFilterValues()
@@ -36,7 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   getUpdatedValues() {
-    this.homeService.getProvenanceGraphData(this.filterQueryBuilder);
+    this.homeService.getProvenanceGraphData(this.query.processesUp);
   }
 
   onValueChecked(event) {
@@ -44,19 +46,18 @@ export class HomeComponent implements OnInit {
     const selected = this.filterCategories[i].items[j].queryParam as QueryParam;
 
     if (this.checkBoxArray.includes(event.target.id)) {
-      this.filterQueryBuilder = this.filterQueryBuilder.filter(item => {
+      this.query.processesUp = this.query.processesUp.filter(item => {
         return !(isEqual(item, selected));
       });
       this.checkBoxArray = this.checkBoxArray.filter(item => item !== event.target.id);
     } else {
       this.checkBoxArray.push(event.target.id);
-      this.filterQueryBuilder.push(selected);
+      this.query.processesUp.push(selected);
     }
   }
 
   navigateToSearch(queryMatch: QueryMatch) {
-    queryMatch.params = this.filterQueryBuilder;
-    this.searchService.submitSearchResultsFromHome(queryMatch);
+    this.query.queryMatch = queryMatch;
     this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
 
