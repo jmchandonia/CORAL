@@ -28,10 +28,8 @@ export class GlobalErrorHandler implements ErrorHandler {
                 };
                 this.modalRef = this.modalService.show(ErrorComponent, config);
             });
-            console.error(error);
             throw error;
         } else {
-            console.error(error)
             if(this.errorMessage !== error.message) { // prevents concurrent errors from components to raise more than once
                 this.modalService = this.injector.get(BsModalService);
                 this.router = this.injector.get(Router);

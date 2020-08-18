@@ -1,0 +1,26 @@
+line { 
+    stroke: #ccc;
+}
+
+circle {
+    fill: blue;
+}
+
+text {
+    text-anchor: middle;
+    fill: black;
+    font-size: 0.2em;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+#pgraph-container {
+    height: 800px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
