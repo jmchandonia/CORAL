@@ -4,7 +4,6 @@ import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
 import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -24,7 +23,6 @@ export class HomeComponent implements OnInit {
     private homeService: HomeService,
     private searchService: QueryBuilderService,
     private router: Router,
-    private spinner: NgxSpinnerService
     ) { }
 
   ngOnInit() {

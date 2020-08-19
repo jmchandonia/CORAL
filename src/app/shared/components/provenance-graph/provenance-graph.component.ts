@@ -1,21 +1,25 @@
-import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
   styleUrls: ['./provenance-graph.component.css']
 })
-export class ProvenanceGraphComponent implements OnInit {
+export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   nodes:  DataSet<any>;
   edges: DataSet<any>;
   clusterNodes: any[] = []; // TODO: make models for response JSON
   @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process[]}> = new EventEmitter();
+
+  provenanceLoadingSub: Subscription;
+  provenanceGraphSub: Subscription;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -48,11 +52,25 @@ export class ProvenanceGraphComponent implements OnInit {
 
   ngOnInit(): void {
     this.spinner.show('pgraph-loading');
-    this.homeService.getProvenanceGraphSub()
+    this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
+    .subscribe(() => {
+      this.network.destroy();
+      this.spinner.show('pgraph-loading');
+    });
+    this.provenanceGraphSub = this.homeService.getProvenanceGraphSub()
       .subscribe((data: any) => {
         this.spinner.hide('pgraph-loading');
         this.initNetworkGraph(data.results);
       });
+  }
+
+  ngOnDestroy() {
+    if (this.provenanceLoadingSub) {
+      this.provenanceLoadingSub.unsubscribe();
+    }
+    if (this.provenanceGraphSub) {
+      this.provenanceGraphSub.unsubscribe();
+    }
   }
 
   initNetworkGraph(data) {
@@ -221,7 +239,8 @@ export class ProvenanceGraphComponent implements OnInit {
       to: toId,
       width: edge.thickness,
       label: edge.hoverText.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
-      color: '#777',
+      // color: '#777',
+      color: edge.in_filter ? 'blue' : '#777',
       physics: true,
       selfReference: {
         angle: 0.22
