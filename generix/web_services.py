@@ -1362,38 +1362,57 @@ def line_thickness(n):
 # for types graph
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
-    # load filters
-    query = request.json
-    s = pprint.pformat(query)
-    sys.stderr.write('query = '+s+'\n')
-
     arango_service = svs['arango_service']
 
+    # load filters
+    query = request.json
+    # s = pprint.pformat(query)
+    # sys.stderr.write('query = '+s+'\n')
+    filterCampaigns = set()
+    filterPersonnel = set()
+    filtering = False
+    if query is not None:
+        for q in query:
+            if q['attribute'] == 'campaign':
+                filterCampaigns.add(q['keyword'])
+                filtering = True
+            elif q['attribute'] == 'person':
+                filterPersonnel.add(q['keyword'])
+                filtering = True
+            else:
+                return _err_response('unparseable query '+s)
+    s = pprint.pformat(filterCampaigns)
+    sys.stderr.write('campaigns = '+s+'\n')
+    s = pprint.pformat(filterPersonnel)
+    sys.stderr.write('personnel = '+s+'\n')
+    sys.stderr.write('filtering = '+str(filtering)+'\n')
+
     # map names back to nodes
-    node_map = {}
+    nodeMap = {}
 
     # Core types
     nodes = []
-    type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     index=0
-    for td in type_defs:
-        if not td.for_provenance:
-            continue
-        nodes.append(
-            {
-                'index': index,
-                'category': TYPE_CATEGORY_STATIC,
-                'name': td.name,
-                'dataModel': td.name,
-                'dataType': td.name,
-                'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
-            }
-        )
-        node_map[td.name] = index
-        index+=1
+    if not filtering:
+        type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
+        for td in type_defs:
+            if not td.for_provenance:
+                continue
+            nodes.append(
+                {
+                    'index': index,
+                    'category': TYPE_CATEGORY_STATIC,
+                    'name': td.name,
+                    'dataModel': td.name,
+                    'dataType': td.name,
+                    'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
+                }
+            )
+            nodeMap[td.name] = index
+            index+=1
 
     # Dynamic types and processes
-    rows = arango_service.get_process_type_count()
+    rows = arango_service.get_process_type_count(filterCampaigns=filterCampaigns, filterPersonnel=filterPersonnel)
     edgeTuples = dict()
     # Note: awkward code below works around https://github.com/ArangoDB-Community/pyArango/issues/160
     # can't do 'for row in rows:' because query returns infinite empty lists
@@ -1497,12 +1516,35 @@ def generix_type_graph():
             edgeTuples[key]['to'] = tos
             edgeTuples[key]['proc'] = procs
 
-    # process edges from keys, adding new DDT_ nodes
+    # process edges from keys, adding new DDT_ nodes, and SDT_ nodes if filtering
     edges = []
     for key in edgeTuples.keys():
         newEdges = []
         sys.stderr.write('key: '+key+'\n')
         (fromAll, toAll) = key.split('>')
+        if filtering:
+            # add SDT nodes if not present
+            nn = fromAll.split('+') + toAll.split('+')
+            for n in nn:
+                if n.startswith('SDT_'):
+                    n = n[4:]
+                    if n not in nodeMap:
+                        sys.stderr.write('adding static node '+n+'\n')
+                        nodes.append(
+                            {
+                                'index': index,
+                                'category': TYPE_CATEGORY_STATIC,
+                                'name': n,
+                                'dataModel': n,
+                                'dataType': n,
+                                'count': 0,
+                                'ids': set()
+                            }
+                        )
+                        nodeMap[n] = index
+                        index+=1
+
+        # don't show ddt outbound (e.g., computational results) in graph
         if "DDT_" in fromAll:
             continue
         froms = fromAll.split('+')
@@ -1511,6 +1553,7 @@ def generix_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
+            sys.stderr.write('adding intermediate node\n')
             nodes.append(
                 {
                     'index': intermed,
@@ -1531,6 +1574,8 @@ def generix_type_graph():
                 for k in edgeTuples[key]['from']:
                     if k.startswith(searchKey):
                         num+=1
+                        if filtering:
+                            nodes[nodeMap[fr[4:]]]['ids'].add(k)
                 thickness = int(round(num/totalNum*totalThickness))
                 if (thickness==totalThickness):
                     thickness = totalThickness-1
@@ -1538,6 +1583,8 @@ def generix_type_graph():
                     thickness = 1
             else:
                 thickness = totalThickness
+                if filtering:
+                    nodes[nodeMap[fr[4:]]]['ids'].update(edgeTuples[key]['from'])
                         
             fr = fr[4:]
             if (i==0):
@@ -1549,7 +1596,7 @@ def generix_type_graph():
             if (intermed > 0):
                 newEdges.append(
                     {
-                        'source': node_map[fr],
+                        'source': nodeMap[fr],
                         'target': intermed,
                         'thickness': thickness
                     }
@@ -1565,6 +1612,8 @@ def generix_type_graph():
                 for k in edgeTuples[key]['to']:
                     if k.startswith(searchKey):
                         num+=1
+                        if filtering and to.startswith('SDT_'):
+                            nodes[nodeMap[to[4:]]]['ids'].add(k)
                 thickness = int(round(num/totalNum*totalThickness))
                 if (thickness==totalThickness):
                     thickness = totalThickness-1
@@ -1572,11 +1621,14 @@ def generix_type_graph():
                     thickness = 1
             else:
                 thickness = totalThickness
+                if filtering and to.startswith('SDT_'):
+                    nodes[nodeMap[to[4:]]]['ids'].update(edgeTuples[key]['to'])
 
             # if to is DDT, need to add new node for it
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
+                sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -1590,7 +1642,7 @@ def generix_type_graph():
                 index += 1
             else:
                 to = to[4:]
-                node_to = node_map[to]
+                node_to = nodeMap[to]
                         
             if (i==0):
                 linkText += ' &rarr; '
@@ -1599,7 +1651,7 @@ def generix_type_graph():
             linkText += str(num)+' '+to
 
             if (intermed == 0):
-                intermed = node_map[fr]
+                intermed = nodeMap[fr]
                 
             newEdges.append(
                 {
@@ -1609,20 +1661,31 @@ def generix_type_graph():
                 }
             )
 
-        # make all new edges have same linkText
+        # make all new edges have same linkText and color
         for e in newEdges:
             e['hoverText'] = linkText
+            if filtering and e['source'] > 10:
+                e['in_filter'] = True
             edges.append(e)
 
-    # find static categories not actually used in provenance
-    unused = set(range(index))
-    for e in edges:
-         if e['source'] in unused:
-             unused.remove(e['source'])
-         if e['target'] in unused:
-             unused.remove(e['target'])
-    for i in unused:
-        nodes[i]['unused'] = True
+    # count static nodes if filtering
+    if filtering:
+        for n in nodes:
+            if 'ids' in n:
+                n['count'] = len(n['ids'])
+                del n['ids']
+
+    # if not filtering, find static categories not actually used in provenance
+    else:
+        unused = set(range(index))
+        for e in edges:
+            if e['source'] in unused:
+                unused.remove(e['source'])
+            if e['target'] in unused:
+                unused.remove(e['target'])
+        for i in unused:
+            nodes[i]['unused'] = True
+            sys.stderr.write('unused node '+nodes[i]['name']+'\n')
 
     # provide approximate locations.  first, find roots,
     # start assigning them yRank and xRank
@@ -1643,6 +1706,7 @@ def generix_type_graph():
         nodes[i]['y_rank'] = 0
         nodes[i]['x_rank'] = xRank
         nodes[i]['root'] = True
+        sys.stderr.write('root node '+nodes[i]['name']+'\n')
 
     # every link should go to an y_rank one higher, or same level if ddt
     remainingEdges = edges.copy()
@@ -1673,9 +1737,10 @@ def generix_type_graph():
             remainingEdges.remove(e)
 
     # remove unused nodes
-    for n in nodes:
-        if 'unused' in n:
-            nodes.remove(n)
+    if not filtering:
+        for n in nodes:
+            if 'unused' in n:
+                nodes.remove(n)
 
     # combine everything and return graph
     res = {

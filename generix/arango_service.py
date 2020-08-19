@@ -157,9 +157,56 @@ class ArangoService:
         return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]    
 
     # ignores ddt->ddt for now
-    def get_process_type_count(self, size=100000):
-        aql = '''
-            for p in SYS_Process
+    def get_process_type_count(self, filterCampaigns=False, filterPersonnel=False, size=100000):
+        if filterCampaigns is not False:
+            if len(filterCampaigns)==0:
+                filterCampaigns = False
+        if filterPersonnel is not False:
+            if len(filterPersonnel)==0:
+                filterPersonnel = False
+        if filterCampaigns is not False or filterPersonnel is not False:
+            filters = 'filter ('
+            if filterCampaigns is not False:
+                for f in filterCampaigns:
+                    filters += 'p1.campaign_term_name=="'+f+'" or '
+                filters = filters[0:-4]+') and ('
+            if filterPersonnel is not False:
+                for f in filterPersonnel:
+                    filters += 'p1.person_term_name=="'+f+'" or '
+                filters = filters[0:-4]+')'
+            aql = '''
+               let filtered_procs = (
+                 for p1 in SYS_Process
+                 %s
+                 return p1
+               )
+               let up_procs=(
+                 for p1 in filtered_procs
+                 for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                 OPTIONS {
+                   bfs: true,
+                   uniqueVertices: 'global'
+                 }
+                 filter is_same_collection("SYS_Process",p)
+                 return p
+               )
+               let dn_procs=(
+                  for p1 in filtered_procs
+                  for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                  OPTIONS {
+                    bfs: true,
+                    uniqueVertices: 'global'
+                  }
+                  filter is_same_collection("SYS_Process",p)
+                  return p
+               )
+               for p in unique(append(up_procs,dn_procs))
+            ''' % filters
+        else:
+            aql = '''
+               for p in SYS_Process
+              '''
+        aql += '''
             let pis = (
               for pi in SYS_ProcessInput
               filter pi._to == p._id
@@ -177,11 +224,17 @@ class ArangoService:
               )
             )
             let t=concat_separator(",",flatten(pos))
-            return {"from":f, "to":t, "pname":p.process_term_name}
         '''
+        if filterCampaigns is not False or filterPersonnel is not False:
+            aql += '''
+              return {"from":f, "to":t, "pname":p.process_term_name, "in_filter":p in filtered_procs}
+            '''
+        else:
+            aql += '''
+              return {"from":f, "to":t, "pname":p.process_term_name}
+            '''
         aql_bind = {}
         return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True, batchSize=size)
-    
     
     def __to_type2objects(self, aql_rs):
         type2objects = {}
