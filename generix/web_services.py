@@ -1459,6 +1459,10 @@ def generix_type_graph():
             edgeTuples[key]['to'] = newToIds
             edgeTuples[key]['proc'] = set()
             edgeTuples[key]['proc'].add(row['pname'])
+            edgeTuples[key]['in_filter'] = False
+        if filtering:
+            if row['in_filter']:
+                edgeTuples[key]['in_filter'] = True
 
     # combine similar elements:
     # must have one process, input, and output in common
@@ -1496,7 +1500,7 @@ def generix_type_graph():
                 continue
             
             # all match; merge them
-            sys.stderr.write('merging key: '+key1+' into '+key2+'\n')
+            # sys.stderr.write('merging key: '+key1+' into '+key2+'\n')
             num = edgeTuples[key1]['num'] + edgeTuples[key2]['num']
             froms = edgeTuples[key1]['from']
             froms.update(edgeTuples[key2]['from'])
@@ -1504,6 +1508,7 @@ def generix_type_graph():
             tos.update(edgeTuples[key2]['to'])
             procs = edgeTuples[key1]['proc']
             procs.update(edgeTuples[key2]['proc'])
+            inFilter = edgeTuples[key1]['in_filter'] | edgeTuples[key2]['in_filter']
             del edgeTuples[key1]
             del edgeTuples[key2]
             # add new key
@@ -1515,12 +1520,13 @@ def generix_type_graph():
             edgeTuples[key]['from'] = froms
             edgeTuples[key]['to'] = tos
             edgeTuples[key]['proc'] = procs
+            edgeTuples[key]['in_filter'] = inFilter
 
     # process edges from keys, adding new DDT_ nodes, and SDT_ nodes if filtering
     edges = []
     for key in edgeTuples.keys():
         newEdges = []
-        sys.stderr.write('key: '+key+'\n')
+        # sys.stderr.write('key: '+key+'\n')
         (fromAll, toAll) = key.split('>')
         if filtering:
             # add SDT nodes if not present
@@ -1529,7 +1535,7 @@ def generix_type_graph():
                 if n.startswith('SDT_'):
                     n = n[4:]
                     if n not in nodeMap:
-                        sys.stderr.write('adding static node '+n+'\n')
+                        # sys.stderr.write('adding static node '+n+'\n')
                         nodes.append(
                             {
                                 'index': index,
@@ -1553,7 +1559,7 @@ def generix_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
-            sys.stderr.write('adding intermediate node\n')
+            # sys.stderr.write('adding intermediate node\n')
             nodes.append(
                 {
                     'index': intermed,
@@ -1598,7 +1604,8 @@ def generix_type_graph():
                     {
                         'source': nodeMap[fr],
                         'target': intermed,
-                        'thickness': thickness
+                        'thickness': thickness,
+                        'in_filter': edgeTuples[key]['in_filter']
                     }
                 )
 
@@ -1628,7 +1635,7 @@ def generix_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                sys.stderr.write('adding dynamic node '+to+'\n')
+                # sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -1657,15 +1664,14 @@ def generix_type_graph():
                 {
                     'source': intermed,
                     'target': node_to,
-                    'thickness': thickness
+                    'thickness': thickness,
+                    'in_filter': edgeTuples[key]['in_filter']
                 }
             )
 
         # make all new edges have same linkText and color
         for e in newEdges:
             e['hoverText'] = linkText
-            if filtering and e['source'] > 10:
-                e['in_filter'] = True
             edges.append(e)
 
     # count static nodes if filtering
@@ -1685,7 +1691,7 @@ def generix_type_graph():
                 unused.remove(e['target'])
         for i in unused:
             nodes[i]['unused'] = True
-            sys.stderr.write('unused node '+nodes[i]['name']+'\n')
+            # sys.stderr.write('unused node '+nodes[i]['name']+'\n')
 
     # provide approximate locations.  first, find roots,
     # start assigning them yRank and xRank
@@ -1706,7 +1712,7 @@ def generix_type_graph():
         nodes[i]['y_rank'] = 0
         nodes[i]['x_rank'] = xRank
         nodes[i]['root'] = True
-        sys.stderr.write('root node '+nodes[i]['name']+'\n')
+        # sys.stderr.write('root node '+nodes[i]['name']+'\n')
 
     # every link should go to an y_rank one higher, or same level if ddt
     remainingEdges = edges.copy()
