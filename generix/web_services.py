@@ -1244,6 +1244,8 @@ def generix_filters():
             'items': _get_category_items(df_persons, 'person')
         },
     ]
+    # s = pprint.pformat(res)
+    # return s
     return _ok_response(res)
 
 def _get_category_items(process_stat_df, attr):
@@ -1256,6 +1258,7 @@ def _get_category_items(process_stat_df, attr):
                     'attribute': attr,
                     'matchType':  '=' ,
                     'keyword': row['Term Name'],
+                    'term': row['Term ID'],
                     'scalarType': 'term'
                 }
             }
