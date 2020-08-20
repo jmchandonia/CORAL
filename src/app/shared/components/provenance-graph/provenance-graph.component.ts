@@ -21,6 +21,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
+  xyMap: any = {};
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -55,6 +56,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.spinner.show('pgraph-loading');
     this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
     .subscribe(() => {
+      this.noResults = false;
       this.network.destroy();
       this.spinner.show('pgraph-loading');
     });
@@ -75,7 +77,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
-    this.noResults = false;
+    // this.noResults = false;
 
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
@@ -84,7 +86,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       return;
     }
     // initialize core type nodes with x y coordinates
-    this.nodes = new DataSet(coreTypes.map(this.createNode));
+    this.nodes = new DataSet(coreTypes.map(node => this.createNode(node)));
 
     // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
@@ -209,6 +211,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       },
       data: {...dataItem},
       fixed: dataItem.category === 'SDT_',
+      mass: dataItem.category === 'SDT_' ? 100 : 1
     }
 
     if (dataItem.root) {
@@ -223,13 +226,22 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       node.label = `${dataItem.count} ${dataItem.name.replace(/<br>/g, '\n')}`;
     }
 
-    if(typeof dataItem.x_rank === 'number') {
-      node.x = dataItem.x_rank * 150;
+    const { x_rank, y_rank } = dataItem
+
+    // if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
+      if (typeof y_rank === 'number') {
+      node.y = y_rank * 100;
+      if (!this.xyMap.hasOwnProperty(dataItem.y_rank)) {
+        this.xyMap[y_rank * 100] = [];
+      }
     }
 
-    if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
-      // if (typeof dataItem.y_rank === 'number') {
-      node.y = dataItem.y_rank * 100;
+    if(typeof x_rank === 'number') {
+      node.x = x_rank * 150;
+      if (typeof y_rank === 'number') {
+        this.xyMap[y_rank * 100].push(x_rank * 150);
+      } else {
+      }
     }
 
     if(dataItem.category === 'SDT_') { node.mass = 10; }
@@ -256,7 +268,8 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         // hide labels initially
         size: 16,
         color: 'rgba(0,0,0,0)',
-        strokeColor: 'rgba(0,0,0,0)'
+        strokeColor: 'rgba(0,0,0,0)',
+        multi: 'html'
       },
       arrows: {
         to: {
