@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder, QueryParam, QueryMatch } from '../../shared/models/QueryBuilder';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-advanced-search',
@@ -22,8 +21,6 @@ export class AdvancedSearchComponent implements OnInit {
     private queryBuilder: QueryBuilderService,
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private chRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -55,10 +52,6 @@ export class AdvancedSearchComponent implements OnInit {
     this.router.navigate(['../result'], {relativeTo: this.route});
     this.queryBuilder.setSearchType('advanced');
     this.queryBuilder.setQueryBuilderCache();
-  }
-
-  clear() {
-    this.queryBuilder.resetObject();
   }
 
 }
