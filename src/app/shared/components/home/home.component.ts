@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   public filterCategories: any[] = [];
   public coreTypes: any;
   public dynamicTypes: any;
-  public loading = false;
   navigateToResults = false;
 
   query: QueryBuilder;
