@@ -24,3 +24,17 @@ text {
     border: 2px solid #ccc;
     border-radius: 10px;
 }
+
+#no-results-container {
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+#no-results-container > span {
+    font-size: 2em;
+    color: #aaa;
+}
