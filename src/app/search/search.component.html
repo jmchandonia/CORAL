@@ -1,15 +1,3 @@
-<!-- 
-<div class="search-options-container" *ngIf="!currentUrl.includes('result')">
-  <span 
-  [ngClass]="currentUrl.includes('advanced') ? 'search-option' : 'search-option-selected'"
-  (click)="redirectTo('simple')"
-  >Simple Search</span>
-  <span class="search-option"> | </span>
-  <span 
-    [ngClass]="currentUrl.includes('advanced') ? 'search-option-selected' : 'search-option'"
-    (click)="redirectTo('advanced')"
-  >Advanced Search</span>
-</div> -->
 <div class="row mb-3 mt-3" *ngIf="currentUrl.includes('core') || currentUrl.includes('brick')">
   <div class="col-6 offset-1">
     <span class="search-option" style="cursor: pointer" (click)="navigateToSearchResult()">
