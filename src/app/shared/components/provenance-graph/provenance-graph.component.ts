@@ -20,6 +20,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
+  noResults = false;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -74,8 +75,14 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
+    this.noResults = false;
+
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
+    if (!coreTypes.length && !dynamicTypes.length) {
+      this.noResults = true;
+      return;
+    }
     // initialize core type nodes with x y coordinates
     this.nodes = new DataSet(coreTypes.map(this.createNode));
 
