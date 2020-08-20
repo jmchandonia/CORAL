@@ -77,8 +77,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
-    // this.noResults = false;
-
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
     if (!coreTypes.length && !dynamicTypes.length) {
