@@ -21,7 +21,7 @@
 </div>
 <hr />
 <div class="row justify-content-center">
-  <div class="loading-container" *ngIf="!results.length">
+  <div class="loading-container" *ngIf="loading">
       <ngx-spinner
       bdColor="rgba(0,0,0,0)"
       color="#aaa"
@@ -29,6 +29,11 @@
       type="ball-spin-fade-rotating"
       [fullScreen]="false"
     ></ngx-spinner>
+  </div>
+  <div class="no-results-container" *ngIf="!loading && !results.length">
+    <span>
+      No results match these queries. <a [routerLink]="previousUrl">Click here</a> to return to search.
+    </span>
   </div>
   <div class="table-container col-11" *ngIf="results.length">
     <table style="font-size: 0.8em;" class="table table-hover" cellspacing="1">
