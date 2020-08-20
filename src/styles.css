@@ -155,6 +155,9 @@ body {
     min-width: 100%;
 }
 
+modal-container.modal {
+    z-index: 100000;
+}
 
 
 

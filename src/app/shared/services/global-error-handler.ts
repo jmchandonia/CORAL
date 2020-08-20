@@ -12,13 +12,15 @@ export class GlobalErrorHandler implements ErrorHandler {
     private modalRef: BsModalRef;
     private modalService: BsModalService;
     private router: Router;
-
+    
     constructor(private injector: Injector, private zone: NgZone) {
     }
-
+    
     errorMessage = '';
 
     handleError(error: Error | HttpErrorResponse) {
+        let modalRef: BsModalRef;
+        this.modalService = this.injector.get(BsModalService);
         if (error instanceof HttpErrorResponse) {
             const {status, message} = error;
             this.zone.run(() => {
@@ -26,12 +28,12 @@ export class GlobalErrorHandler implements ErrorHandler {
                     class: 'modal-lg',
                     initialState: {status, message}
                 };
-                this.modalRef = this.modalService.show(ErrorComponent, config);
+                modalRef = this.modalService.show(ErrorComponent, config);
+                // this.modalRef = this.modalService.show(ErrorComponent, config);
             });
             throw error;
         } else {
             if(this.errorMessage !== error.message) { // prevents concurrent errors from components to raise more than once
-                this.modalService = this.injector.get(BsModalService);
                 this.router = this.injector.get(Router);
                 this.zone.runOutsideAngular(() => {
                     const config = {
@@ -40,7 +42,7 @@ export class GlobalErrorHandler implements ErrorHandler {
                     };
                     this.modalRef = this.modalService.show(ErrorComponent, config);
                     this.errorMessage = error.message;
-                    console.error(error);
+                    console.error(error.message);
                     this.router.events.subscribe(event => {
                         if (event instanceof NavigationEnd) {
                             this.errorMessage = '';
