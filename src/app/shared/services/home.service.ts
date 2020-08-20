@@ -11,6 +11,7 @@ export class HomeService {
   constructor(private http: HttpClient) { }
 
   provenanceGraphSub: Subject<any> = new Subject();
+  provenanceLoadingSub: Subject<any> = new Subject();
 
   getFilterValues() {
     return this.http.get(`${environment.baseURL}/filters`);
@@ -29,6 +30,7 @@ export class HomeService {
   }
 
   getProvenanceGraphData(filterQuery?: QueryParam[]) {
+    this.provenanceLoadingSub.next(true); // tell component to display loading animation
     if (filterQuery) {
       this.http.post(`${environment.baseURL}/types_graph`, filterQuery)
         .subscribe(data => this.provenanceGraphSub.next(data));
@@ -40,6 +42,10 @@ export class HomeService {
 
   getProvenanceGraphSub() {
     return this.provenanceGraphSub.asObservable();
+  }
+
+  getProvenanceLoadingSub() {
+    return this.provenanceLoadingSub.asObservable();
   }
 
 }
