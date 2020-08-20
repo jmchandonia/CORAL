@@ -21,6 +21,7 @@ export class SearchResultComponent implements OnInit {
   showQuery = false;
   searchType: string;
   error: any;
+  loading = false;
   previousUrl = ['../advanced'];
 
   constructor(
@@ -32,7 +33,7 @@ export class SearchResultComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.loading = true;
     this.searchType = this.queryBuilder.getSearchType();
     this.searchQuery = this.queryBuilder.getCurrentObject();
     this.spinner.show();
@@ -45,11 +46,12 @@ export class SearchResultComponent implements OnInit {
 
     this.queryBuilder.getSearchResults()
       .subscribe((res: any) => {
+        this.loading = false;
+        this.spinner.hide();
         this.results = res.data;
         this.resultFields = res.schema.fields;
         const table: any = $('table');
         this.dataTable = table.DataTable();
-        this.spinner.hide();
       }
     );
   }
