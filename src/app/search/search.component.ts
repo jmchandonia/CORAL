@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { QueryBuilderService } from '../shared/services/query-builder.service';
 
@@ -7,7 +7,7 @@ import { QueryBuilderService } from '../shared/services/query-builder.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
   currentUrl = '';
   previousUrl = '';
@@ -26,6 +26,10 @@ export class SearchComponent implements OnInit {
         this.currentUrl = event.url;
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.queryBuilder.resetObject();
   }
 
   redirectTo(url) {
