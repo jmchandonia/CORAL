@@ -36,22 +36,22 @@ export class SearchResultComponent implements OnInit {
     this.searchType = this.queryBuilder.getSearchType();
     this.searchQuery = this.queryBuilder.getCurrentObject();
     this.spinner.show();
+    
+    this.route.queryParams.subscribe(queryParam => {
+      if (queryParam['redirect'] === 'home') {
+        this.previousUrl = ['/home']
+      }
+    });
+
     this.queryBuilder.getSearchResults()
       .subscribe((res: any) => {
         this.results = res.data;
         this.resultFields = res.schema.fields;
-        // this.chRef.detectChanges();
         const table: any = $('table');
         this.dataTable = table.DataTable();
         this.spinner.hide();
-      },
+      }
     );
-
-    this.route.queryParams.subscribe(queryParam => {
-        if (queryParam['redirect'] === 'home') {
-          this.previousUrl = ['/home']
-        }
-    });
   }
 
   viewData(id) {

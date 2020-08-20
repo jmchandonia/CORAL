@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { QueryParam, QueryMatch, QueryBuilder, Process } from '../../models/QueryBuilder';
 import { isEqual } from 'lodash';
 import { HomeService } from '../../services/home.service';
@@ -9,13 +9,14 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   checkBoxArray: string[] = [];
   public filterCategories: any[] = [];
   public coreTypes: any;
   public dynamicTypes: any;
   public loading = false;
+  navigateToResults = false;
 
   query: QueryBuilder;
 
@@ -33,6 +34,13 @@ export class HomeComponent implements OnInit {
       .subscribe((res: any) => {
         this.filterCategories = res.results;
       });
+  }
+
+  ngOnDestroy() {
+    if (!this.navigateToResults) {
+      // only clear search if user is navigating to /search but not /search/results
+      this.searchService.resetObject();
+    }
   }
 
   getUpdatedValues() {
@@ -57,6 +65,7 @@ export class HomeComponent implements OnInit {
   navigateToSearch({query, processes}: {query: QueryMatch, processes: Process[]}) {
     this.query.queryMatch = query;
     this.query.parentProcesses = processes;
+    this.navigateToResults = true;
     this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
 
