@@ -1072,6 +1072,9 @@ def generix_search():
         provider = dp._get_type_provider(query_match['dataModel'])
         q = provider.query()
 
+        s = pprint.pformat(search_data)
+        sys.stderr.write('search_data = '+s+'\n')
+
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
 
@@ -1097,7 +1100,7 @@ def generix_search():
             params = {}
             for criterion in connects_up_to['params']:
                 (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-                params['prop_name'] = {operation: prop_value}
+                params[prop_name] = {operation: prop_value}
 
             q.linked_up_to(connects_up_to['dataModel'],  params )
 
@@ -1107,7 +1110,7 @@ def generix_search():
             params = {}
             for criterion in connects_down_to['params']:
                 (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
-                params['prop_name'] = {operation: prop_value}
+                params[prop_name] = {operation: prop_value}
 
             q.linked_down_to(connects_down_to['dataModel'],  params )
 
@@ -1384,11 +1387,11 @@ def generix_type_graph():
                 filtering = True
             else:
                 return _err_response('unparseable query '+s)
-    s = pprint.pformat(filterCampaigns)
-    sys.stderr.write('campaigns = '+s+'\n')
-    s = pprint.pformat(filterPersonnel)
-    sys.stderr.write('personnel = '+s+'\n')
-    sys.stderr.write('filtering = '+str(filtering)+'\n')
+    # s = pprint.pformat(filterCampaigns)
+    # sys.stderr.write('campaigns = '+s+'\n')
+    # s = pprint.pformat(filterPersonnel)
+    # sys.stderr.write('personnel = '+s+'\n')
+    # sys.stderr.write('filtering = '+str(filtering)+'\n')
 
     # map names back to nodes
     nodeMap = {}

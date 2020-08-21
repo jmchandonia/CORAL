@@ -354,7 +354,7 @@ class Query:
 
                 uaql = '''
                     FOR %s IN %s FILTER %s 
-                    FOR %s in 1..10 OUTBOUND s SYS_ProcessInput, SYS_ProcessOutput
+                    FOR %s in 1..100 OUTBOUND s SYS_ProcessInput, SYS_ProcessOutput
                     FILTER %s
                     %s
                     return distinct %s 
@@ -391,7 +391,7 @@ class Query:
 
                 daql = '''
                     FOR %s IN %s FILTER %s 
-                    FOR %s in 1..10 INBOUND s SYS_ProcessInput, SYS_ProcessOutput
+                    FOR %s in 1..100 INBOUND s SYS_ProcessInput, SYS_ProcessOutput
                     FILTER %s
                     %s
                     return distinct %s
