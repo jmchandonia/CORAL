@@ -46,9 +46,9 @@ describe('AdvancedSearchComponent', () => {
 
   it('should update parent processes', () => {
     const { component } = spectator;
-    component.addProcessUp();
+    // component.addProcessUp();  
     expect(component.queryBuilderObject.processesUp.length).toBe(1);
-    component.removeProcessUp(0);
+    // component.removeProcessUp(0);
     expect(component.queryBuilderObject.processesUp.length).toBe(0);
   });
 
