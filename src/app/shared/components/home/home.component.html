@@ -3,13 +3,12 @@
         <div class="col-3 mb-4">
           <div class="form-container-column filter-box">
               <h5>Narrow Results</h5>
-              <!-- <button class="btn btn-sm btn-block mt-2 mb-2 btn-primary" (click)="getUpdatedValues()">Update Filter</button> -->
               <ul class="nav flex-column">
                   <li class="nav-item pt-4 pb-4" class="category-li" *ngFor="let category of filterCategories; let i = index;">
                     <span class="category-label">{{category.categoryName}}</span>
                     <div class="checkbox-container" style="display: flex; flex-direction: row; align-items: center;" *ngFor="let item of category.items; let j = index;">
                       <input [id]="i + '_' + j" type="checkbox" (change)="onValueChecked($event)" />
-		      <label style="font-size: 0.7em; margin-bottom: 0;" [for]="i + ' ' + j">{{item.name}}</label>
+		                  <label style="font-size: 0.7em; margin-bottom: 0;" [for]="i + ' ' + j">{{item.name}}</label>
                     </div>
                   </li>
                 </ul>
@@ -29,54 +28,8 @@
               </div>
             </div>
           </div>
-          <div class="row mt-2" *ngIf="loading">
-            <div class="col-12" style="height: 500px;">
-              <ngx-spinner
-              bdColor="rgba(0,0,0,0)"
-              color="#aaa"
-              size="medium"
-              type="ball-spin-fade-rotating"
-              [fullScreen]="false"
-            ></ngx-spinner>
-            </div>
-          </div>
-          <div class="row mt-2" *ngIf="!loading">
-            <!-- <div class="col-6 pl-0 pr-1">
-              <div class="card core-objects-container" *ngIf="coreTypes && coreTypes.items?.length">
-                <div class="card-header" style="background-color: #00489B; color: white;">
-                  Core Objects
-                </div>
-                <ul class="list-group">
-                  <li 
-                    *ngFor="let c of coreTypes.items"
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                    (click)="navigateToSearch(c.queryMatch)"
-                  >
-                  <span style="cursor: pointer;">{{c.name}}</span>
-                    <span style="cursor: pointer;" class="badge badge-primary badge-pill">{{c.count}}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="col-6 pl-1 pr-0">
-                <div class="card data-sets-container" *ngIf="dynamicTypes && dynamicTypes.items?.length">
-                  <div class="card-header" style="background-color: #00489B; color: white;">
-                    Data Sets
-                  </div>
-                  <ul class="list-group">
-                    <li 
-                      *ngFor="let d of dynamicTypes.items"
-                      class="list-group-item d-flex justify-content-between align-items-center"
-                      (click)="navigateToSearch(d.queryMatch)"
-                    >
-                    <span style="cursor: pointer;">{{d.name}}</span>
-                      <span style="cursor: pointer;"  class="badge badge-primary badge-pill">{{d.count}}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div> -->
-              <div class="col-12 svg-container">
-                <!-- <svg height="900" width="100%"></svg> -->
+          <div class="row mt-2">
+              <div class="col-12">
                 <app-provenance-graph (querySelected)="navigateToSearch($event)"></app-provenance-graph>
               </div>
           </div>
