@@ -35,6 +35,19 @@
     position: relative;
 }
 
+.no-results-container {
+    height: 500px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-results-container > span {
+    color: #aaa;
+    font-size: 2em;
+}
+
 .table-header {
     background-color: #00489B;
     color: white;
