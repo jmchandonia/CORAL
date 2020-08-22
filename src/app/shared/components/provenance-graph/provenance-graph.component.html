@@ -1,5 +1,10 @@
 <div id="canvas-container" style="height: 600px; position: relative">
-    <div #pGraph id="pgraph-container" [hidden]="!network"></div>
+    <div #pGraph id="pgraph-container" [hidden]="!network || noResults"></div>
+    <div id="no-results-container" [hidden]="!noResults">
+        <span class="no-results" *ngIf="noResults">
+            No results match these categories.
+        </span>
+    </div>
     <ngx-spinner
         bdColor="rgba(0,0,0,0)"
         color="#aaa"
