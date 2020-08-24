@@ -53,7 +53,7 @@ const MockHomeService = {
   })
 };
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let spectator: Spectator<HomeComponent>;
   const createComponent = createComponentFactory({
     component: HomeComponent,
