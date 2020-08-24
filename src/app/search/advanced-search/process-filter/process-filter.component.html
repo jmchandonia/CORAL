@@ -4,6 +4,7 @@
             Process Type
         </label>
         <ng-select
+            id="processes"
             class="custom"
             name="processType"
             [items]="processes | async"
@@ -19,6 +20,7 @@
             Campaign Type
         </label>
         <ng-select
+            id="campaigns"
             class="custom"
             name="campaignType"
             [ngModel]="campaign?.keyword"
@@ -32,6 +34,7 @@
     <div class="col-4">
         <label for="personnel">Personnel</label>
         <ng-select
+            id="personnel"
             class="custom"
             name="personnel"
             [ngModel]="person?.keyword"

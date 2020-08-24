@@ -44,14 +44,6 @@ describe('AdvancedSearchComponent', () => {
     expect(spectator.component.queryBuilderObject).toEqual(new QueryBuilder());
   });
 
-  it('should update parent processes', () => {
-    const { component } = spectator;
-    // component.addProcessUp();  
-    expect(component.queryBuilderObject.processesUp.length).toBe(1);
-    // component.removeProcessUp(0);
-    expect(component.queryBuilderObject.processesUp.length).toBe(0);
-  });
-
   it('should toggle advanced filters', () => {
     const [_,  parents, children] = spectator.queryAll('app-query-builder');
     expect(parents).toBeHidden();
