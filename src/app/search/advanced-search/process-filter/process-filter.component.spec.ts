@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { QueryParam } from 'src/app/shared/models/QueryBuilder';
 
-fdescribe('ProcessFilterComponent', () => {
+describe('ProcessFilterComponent', () => {
 
   let spectator: Spectator<ProcessFilterComponent>;
 
