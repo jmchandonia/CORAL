@@ -16,7 +16,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   nodes:  DataSet<any>;
   edges: DataSet<any>;
   clusterNodes: any[] = []; // TODO: make models for response JSON
-  @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process[]}> = new EventEmitter();
+  @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process}> = new EventEmitter();
 
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
@@ -292,7 +292,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       const edgeIds = this.network.getConnectedEdges(node.id);
       const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
       const query = new QueryMatch({category, dataType, dataModel});
-      this.querySelected.emit({query, processes});
+      this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
     }
   }
 
@@ -323,8 +323,8 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
           const { dataType, category } = sourceNode.data;
           const targetNodeData = (this.nodes.get(targetId) as any).data;
           return new Process(
-            category + dataType,
-            targetNodeData.category + targetNodeData.dataType
+            [category + dataType],
+            [targetNodeData.category + targetNodeData.dataType]
           );
         }
       });
