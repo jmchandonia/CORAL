@@ -14,7 +14,7 @@ export class QueryBuilder {
     public searchAllProcessesDown = false;
     // public processInputs: string[] = [];
     // public processOutputs: string[] = [];
-    parentProcesses: Process[];
+    parentProcesses: Process;
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());
