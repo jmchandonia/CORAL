@@ -4,6 +4,7 @@ from .indexdef import IndexPropertyDef
 from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .descriptor import DataDescriptorCollection, EntityDescriptor, BrickDescriptor, ProcessDescriptor
 from . import services
+import sys
 
 FILTER_FULLTEXT = 'FULLTEXT'
 FILTER_EQ = '=='
@@ -40,6 +41,7 @@ class Query:
         self.__has_filters = {}
         self.__linked_up_filters = []
         self.__linked_dn_filters = []
+        self.__immediate_parent_filters = []
         self.__input_of_process_filters = {}
         self.__output_of_process_filters = {}
         self.__tmp_index = 0
@@ -164,6 +166,23 @@ class Query:
         })
         return self
 
+    def immediate_parent(self, criterion):
+        # check criterion is valid; add list wrapper if necessary
+        if not 'processInputs' in criterion:
+            raise ValueError('Need processInputs in %s' % criterion)
+        if not 'processOutputs' in criterion:
+            raise ValueError('Need processOutputs in %s' % criterion)
+        if type(criterion['processInputs']) is not list:
+            criterion['processInputs'] = [criterion['processInputs']]
+        if type(criterion['processOutputs']) is not list:
+            criterion['processOutputs'] = [criterion['processOutputs']]
+        if len(criterion['processInputs']) < 1:
+            raise ValueError('Need at least one processInputs in %s' % criterion)
+        if len(criterion['processOutputs']) < 1:
+            raise ValueError('Need at least one processOutputs in %s' % criterion)
+        self.__immediate_parent_filters.append(criterion)
+        return self
+    
     def _find_upks(self, upks):        
         cname = self.__index_type_def.collection_name
         typedef = services.typedef.get_type_def(self.__index_type_def.name)
@@ -276,6 +295,7 @@ class Query:
         self.__has_filters = {}
         self.__linked_up_filters = []
         self.__linked_dn_filters = []
+        self.__immediate_parent_filters = []
         self.__input_of_process_filters = {}
         self.__output_of_process_filters = {}
 
@@ -326,7 +346,7 @@ class Query:
             pr_aqls.append(po_aql)
 
 
-        if len(self.__linked_up_filters) == 0 and len(self.__linked_dn_filters) == 0:
+        if len(self.__linked_up_filters) == 0 and len(self.__linked_dn_filters) == 0 and len(self.__immediate_parent_filters) == 0:
 
             aql = 'FOR %s IN %s FILTER %s %s RETURN distinct %s' % (
                 var_name, 
@@ -411,9 +431,110 @@ class Query:
                 })
 
                 aql_bind.update(d_aql_bind)
-            
-            # build final aql
 
+            # Do immediate parent filters
+            for ip_filters in self.__immediate_parent_filters:
+                daql = ''
+                d_var_names = []
+                # calculate expected number of distinct inputs
+                # and outputs:
+                nInputs = 0
+                nOutputs = 0
+                hasDDT = False
+                for pi in ip_filters['processInputs']:
+                    if pi.startswith('DDT_'):
+                        if not hasDDT:
+                            hasDDT = True
+                            nInputs+=1
+                    else:
+                        nInputs+=1
+                hasDDT = False
+                for pi in ip_filters['processOutputs']:
+                    if pi.startswith('DDT_'):
+                        if not hasDDT:
+                            hasDDT = True
+                            nOutputs+=1
+                    else:
+                        nOutputs+=1
+                    
+                for pi in ip_filters['processInputs']:
+                    d_var_name = self.__param_name('pr')
+                    d_var_names.append(d_var_name)
+                    d_aql_bind = {}
+                    f = ''
+                    if pi.startswith('DDT_'):
+                        f = 'FILTER s.data_type_term_name=="%s"' % pi[4:]
+                        pi = 'DDT_Brick'
+                    d_aql_bind[d_var_name] = pi
+                    daql += '''
+                      let %s = (
+                         for s in %s
+                         %s
+                         for x in 1..1 OUTBOUND s SYS_ProcessInput
+                         let io=(
+                           for i in x.input_objects
+                           return distinct split(i,":",1)
+                         )
+                         let oo=(
+                           for o in x.output_objects
+                           return distinct split(o,":",1)
+                         )
+                         filter length(io)==%d
+                         filter length(oo)==%d
+                         return x
+                       )
+                    ''' % (d_var_name, pi, f, nInputs, nOutputs)
+                for po in ip_filters['processOutputs']:
+                    d_var_name = self.__param_name('pr')
+                    d_var_names.append(d_var_name)
+                    d_aql_bind = {}
+                    f = ''
+                    if po.startswith('DDT_'):
+                        f = 'FILTER s.data_type_term_name=="%s"' % po[4:]
+                        po = 'DDT_Brick'
+                    d_aql_bind[d_var_name] = po
+                    daql += '''
+                      let %s = (
+                         for s in %s
+                         %s
+                         for x in 1..1 INBOUND s SYS_ProcessOutput
+                         let io=(
+                           for i in x.input_objects
+                           return distinct split(i,":",1)
+                         )
+                         let oo=(
+                           for o in x.output_objects
+                           return distinct split(o,":",1)
+                         )
+                         filter length(io)==%d
+                         filter length(oo)==%d
+                         return x
+                       )
+                    ''' % (d_var_name, po, f, nInputs, nOutputs)
+                name = self.__index_type_def.name
+                f = ''
+                if name.startswith('DDT_'):
+                   f = 'FILTER s.data_type_term_name=="%s"' % name[4:]
+                   name = 'DDT_Brick'
+                daql+='''
+                      for p in intersection(%s)
+                      for %s in 1..1 OUTBOUND p SYS_ProcessOutput
+                      FILTER IS_SAME_COLLECTION(%s, x._id)
+                      FILTER %s %s
+                      return distinct %s
+                   ''' % (','.join(d_var_names),
+                       var_name,
+                       aql_source,
+                       ' and '.join(aql_filter),
+                       ' '.join(pr_aqls),
+                       var_name)
+                aql_var = self.__param_name('a')
+                var_aqls.append({
+                    'var_name': aql_var,
+                    'aql': 'let %s = (%s) ' % (aql_var, daql) 
+                })
+
+            # build final aql
             if len(var_aqls) == 1:
                 aql_return = var_aqls[0]['var_name']
             else:
@@ -425,8 +546,8 @@ class Query:
             )
 
         
-        # print('aql = ', aql)
-        # print('aql_bind = ', aql_bind)
+        sys.stderr.write('aql = '+aql+'\n')
+        sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
 
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind, size)

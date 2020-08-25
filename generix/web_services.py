@@ -1114,6 +1114,10 @@ def generix_search():
 
             q.linked_down_to(connects_down_to['dataModel'],  params )
 
+        # do immediate parent
+        if 'parentProcesses' in search_data:
+            q.immediate_parent(search_data['parentProcesses'][0])
+
         res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
         # return  json.dumps( {'res': res} )
         return res
@@ -1431,24 +1435,24 @@ def generix_type_graph():
         froms = row['from'].split(',')
         for fr in froms:
             elements = fr.split('/')
+            newFromIds.add(fr)
             if elements[0] not in newFromTypes:
                 newFromTypes.add(elements[0])
                 key += elements[0]+'+'
-            newFromIds.add(fr)
         key = key[:-1]+ '>' # strip trailing +
         newToTypes = set()
         newToIds = set()
         tos = row['to'].split(',')
         for to in tos:
             elements = to.split('/')
-            if elements[0] not in newToTypes:
-                newToTypes.add(elements[0])
-                if (elements[0].startswith("DDT_")):
-                    key += "DDT_"+elements[2]+'+'
-                    newToIds.add("DDT_"+elements[2]+'/'+elements[1])
-                else:
-                    key += elements[0]+'+'
-                    newToIds.add(to)
+            if (elements[0].startswith("DDT_")):
+                newKey = "DDT_"+elements[2]
+            else:
+                newKey = elements[0]
+            newToIds.add(newKey+"/"+elements[1])
+            if newKey not in newToTypes:
+                newToTypes.add(newKey)
+                key += newKey+"+"
         key = key[:-1] # strip trailing +
         if key in edgeTuples:
             edgeTuples[key]['num'] += 1
