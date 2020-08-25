@@ -1116,7 +1116,7 @@ def generix_search():
 
         # do immediate parent
         if 'parentProcesses' in search_data:
-            q.immediate_parent(search_data['parentProcesses'][0])
+            q.immediate_parent(search_data['parentProcesses'])
 
         res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
         # return  json.dumps( {'res': res} )
