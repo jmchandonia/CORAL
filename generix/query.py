@@ -58,18 +58,18 @@ class Query:
         if type(criterion) is not dict:
             print('Error: Criterion should be a dict')
 
-        for prop, operaion_value_pairs in criterion.items():
+        for prop, operation_value_pairs in criterion.items():
             prop_name = prop
             if type(prop) is IndexPropertyDef:
                 prop_name = prop.name
 
             self.__check_property(prop_name, index_type_def)
-            if type(operaion_value_pairs) is not dict:
-                operaion_value_pairs = {
-                    '==': operaion_value_pairs
+            if type(operation_value_pairs) is not dict:
+                operation_value_pairs = {
+                    '==': operation_value_pairs
                 }
 
-            for operation, value in operaion_value_pairs.items():
+            for operation, value in operation_value_pairs.items():
 
                 # check and polish operation
                 operation = operation.lower()
