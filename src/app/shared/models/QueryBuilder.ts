@@ -6,15 +6,11 @@ export class QueryBuilder {
     public queryMatch: QueryMatch = new QueryMatch();
     public connectsUpTo: QueryMatch;
     public connectsDownTo: QueryMatch;
-    // public processesUp: ProcessQueryParam[] = [];
     public processesUp: QueryParam[] = [];
-    // public processesDown: ProcessQueryParam[] = [];
     public processesDown: QueryParam[] = [];
     public searchAllProcessesUp = false;
     public searchAllProcessesDown = false;
-    // public processInputs: string[] = [];
-    // public processOutputs: string[] = [];
-    parentProcesses: Process[];
+    parentProcesses: Process;
 
     get isEmpty() {
         return isEqual(this, new QueryBuilder());

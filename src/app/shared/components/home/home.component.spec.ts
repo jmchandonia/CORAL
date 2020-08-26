@@ -6,31 +6,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { of } from 'rxjs';
-import { QueryMatch, QueryParam } from 'src/app/shared/models/QueryBuilder';
+import { QueryMatch, QueryParam, QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { Router } from '@angular/router';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 
 const MockQueryBuilder = {
-  submitSearchResultsFromHome: (queryMatch: QueryMatch) => {}
+  getCurrentObject() { return new QueryBuilder(); }
 };
 
 const MockHomeService = {
-  getUpdatedValues: () => of({
-    results: {
-      core_types: {
-        items: [
-          {count: 300, name: 'test core type 1', queryMatch: new QueryMatch()},
-          {count: 275, name: 'test core type 2', queryMatch: new QueryMatch()}
-        ]
-      },
-      dynamic_types: {
-        items: [
-          {count: 3, name: 'test dynamic type 1', queryMatch: new QueryMatch()}
-        ]
-      }
-    },
-    status: 'OK'
-  }),
+  getProvenanceGraphData: () => {},
   getFilterValues: () => of({
     results: [
       {
@@ -107,20 +92,22 @@ describe('HomeComponent', () => {
     spyOn(MockHomeService, 'getFilterValues').and.callThrough();
 
     spectator.click('input[id="0_0"]');
-    expect(spectator.component.filterQueryBuilder).toHaveLength(1);
+    expect(spectator.component.query.processesUp).toHaveLength(1);
     expect(spectator.component.checkBoxArray).toHaveLength(1);
-    expect(spectator.component.filterQueryBuilder[0].attribute).toBe('test attribute');
+    expect(spectator.component.query.processesUp[0].attribute).toBe('test attribute');
 
     spectator.click('input[id="0_0"]');
-    expect(spectator.component.filterQueryBuilder).toHaveLength(0);
+    expect(spectator.component.query.processesUp).toHaveLength(0);
     expect(spectator.component.checkBoxArray).toHaveLength(0);
   });
 
-  it('should render core objects and dynamic type list', () => {
-    spyOn(MockHomeService, 'getUpdatedValues').and.callThrough();
-    expect(spectator.queryAll('.core-objects-container > ul > li')).toHaveLength(2);
-    expect(spectator.queryAll('.data-sets-container > ul > li')).toHaveLength(1);
-    expect(spectator.query('.core-objects-container > ul > li > span')).toHaveText('test core type 1');
-    expect(spectator.query('.core-objects-container > ul > li > span:nth-child(2)')).toHaveText('300');
+  it('should submit filters to homeService on update filter click', () => {
+    const homeService = spectator.get(HomeService);
+    spyOn(spectator.component, 'getUpdatedValues').and.callThrough();
+    spyOn(homeService, 'getProvenanceGraphData');
+    spectator.click('button#get-updated-values');
+    expect(spectator.component.getUpdatedValues).toHaveBeenCalled();
+    expect(homeService.getProvenanceGraphData)
+      .toHaveBeenCalledWith(spectator.component.query.processesUp);
   });
 });

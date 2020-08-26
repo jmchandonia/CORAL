@@ -13,13 +13,28 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 })
 export class ProcessFilterComponent implements OnInit {
 
-  @Input() queryParams: QueryParam[];
+  private _queryParams: QueryParam[];
+
+  @Input() set queryParams(_queryParams: QueryParam[]) {
+    this._queryParams = _queryParams;
+    _queryParams.forEach(queryParam => {
+      this[queryParam.attribute] = queryParam;
+    });
+  }
+
+  get queryParams() { return this._queryParams }
 
   datePickerConfig: Partial<BsDatepickerConfig> = { containerClass: 'theme-dark-blue' };
 
   processes: Observable<Term[]>;
   campaigns: Observable<Term[]>;
   personnel: Observable<Term[]>;
+
+  process: QueryParam;
+  campaign: QueryParam;
+  person: QueryParam;
+  date_start: QueryParam;
+  date_end: QueryParam;
 
   constructor(
     private queryBuilder: QueryBuilderService
@@ -44,5 +59,11 @@ export class ProcessFilterComponent implements OnInit {
       const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === attribute));
       this.queryParams.splice(idxToRemove, 1);
     }
+  }
+
+  reformat(date) {
+    // reformat date for user input (if search object is coming from cache)
+    const [year, month, day] = date.split('-');
+    return `{${month}/${day}/${year}}`;
   }
 }
