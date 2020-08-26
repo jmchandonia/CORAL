@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.query = this.searchService.getCurrentObject();
+    this.query.searchAllProcessesDown = true;
+    this.query.searchAllProcessesUp = true;
     this.homeService.getProvenanceGraphData();
 
     this.homeService.getFilterValues()
