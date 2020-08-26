@@ -27,6 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.query = this.searchService.getCurrentObject();
+    this.query.searchAllProcessesDown = true;
+    this.query.searchAllProcessesUp = true;
     this.homeService.getProvenanceGraphData();
 
     this.homeService.getFilterValues()
@@ -61,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigateToSearch({query, processes}: {query: QueryMatch, processes: Process[]}) {
+  navigateToSearch({query, processes}: {query: QueryMatch, processes: Process}) {
     this.query.queryMatch = query;
     this.query.parentProcesses = processes;
     this.navigateToResults = true;
