@@ -44,6 +44,8 @@ class Query:
         self.__immediate_parent_filters = []
         self.__input_of_process_filters = {}
         self.__output_of_process_filters = {}
+        self.__search_all_down = False
+        self.__search_all_up = False
         self.__tmp_index = 0
 
         for index_prop_def in index_type_def.property_defs:
@@ -298,6 +300,8 @@ class Query:
         self.__immediate_parent_filters = []
         self.__input_of_process_filters = {}
         self.__output_of_process_filters = {}
+        self.__search_all_down = False
+        self.__search_all_up = False
 
 
     def find(self, size = 1000):
@@ -325,30 +329,87 @@ class Query:
             aql_bind.update(pi_aql_bind)
             pr_aqls.append(pi_aql)
 
-
+        link_aql = ''
+        self.__search_all_up=True
+        self.__search_all_down=True
         if self.__output_of_process_filters:
-            po_var_name = 'po'
-            po_aql_source, po_aql_filter, po_aql_bind = self.__build_aql_trio(
+            if self.__search_all_up==False and self.__search_all_down==False:
+                po_var_name = 'po'
+                po_aql_source, po_aql_filter, po_aql_bind = self.__build_aql_trio(
                     self.__output_of_process_filters, 
                     process_itd, 
                     po_var_name)
-            po_aql = '''
-                FOR spo IN SYS_ProcessOutput FILTER %s._id == spo._to
-                FOR %s IN %s FILTER spo._from == %s._id and %s               
-            ''' % (
-                var_name, 
-                po_var_name, 
-                po_aql_source,
-                po_var_name, 
-                ' and '.join(po_aql_filter),
+                po_aql = '''
+                  FOR spo IN SYS_ProcessOutput FILTER %s._id == spo._to
+                  FOR %s IN %s FILTER spo._from == %s._id and %s               
+                ''' % (
+                    var_name, 
+                    po_var_name, 
+                    po_aql_source,
+                    po_var_name, 
+                    ' and '.join(po_aql_filter),
                 )
-            aql_bind.update(po_aql_bind)
-            pr_aqls.append(po_aql)
+                aql_bind.update(po_aql_bind)
+                pr_aqls.append(po_aql)
 
-
+            else:
+                po_var_name = 'po'
+                po_aql_source, po_aql_filter, po_aql_bind = self.__build_aql_trio(
+                    self.__output_of_process_filters, 
+                    process_itd, 
+                    po_var_name)
+                link_aql = '''
+                  let filtered_procs = (
+                    for po in SYS_Process
+                    filter %s
+                    return po
+                  )
+                  let upprocs=(
+                    for p1 in filtered_procs
+                    for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                    OPTIONS {
+                      bfs: true,
+                      uniqueVertices: 'global'
+                    }
+                    filter is_same_collection("SYS_Process",p)
+                    return p
+                  )
+                  let dnprocs=(
+                    for p1 in filtered_procs
+                    for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                    OPTIONS {
+                      bfs: true,
+                      uniqueVertices: 'global'
+                    }
+                    filter is_same_collection("SYS_Process",p)
+                    return p
+                  )
+                  let linked_ids = unique(flatten(
+                    FOR p IN unique(append(upprocs,dnprocs))
+                    let oo=(
+                      for spo in SYS_ProcessOutput
+                      filter spo._from == p._id
+                      filter IS_SAME_COLLECTION(%s, spo._to)
+                      return spo._to
+                    )
+                    let io=(
+                      for spi in SYS_ProcessInput
+                      filter spi._to == p._id
+                      filter IS_SAME_COLLECTION(%s, spi._from)
+                      return spi._from
+                    )
+                    return append(io,oo)
+                  ))
+                ''' % (' and '.join(po_aql_filter),
+                       self.__index_type_def.collection_name,
+                       self.__index_type_def.collection_name)
+                
+                aql_bind.update(po_aql_bind)
+                aql_filter.append('%s._id in linked_ids' % var_name)
+            
         if len(self.__linked_up_filters) == 0 and len(self.__linked_dn_filters) == 0 and len(self.__immediate_parent_filters) == 0:
 
-            aql = 'FOR %s IN %s FILTER %s %s RETURN distinct %s' % (
+            aql = link_aql+'FOR %s IN %s FILTER %s %s RETURN distinct %s' % (
                 var_name, 
                 aql_source, 
                 ' and '.join(aql_filter),
@@ -540,7 +601,7 @@ class Query:
             else:
                 aql_return = 'intersection(%s)' % (','.join( a['var_name']  for a in var_aqls ))
 
-            aql =  '%s FOR x IN %s RETURN x' %  (
+            aql =  link_aql+'%s FOR x IN %s RETURN x' %  (
                 ' '.join( a['aql'] for a in var_aqls ),
                 aql_return
             )
