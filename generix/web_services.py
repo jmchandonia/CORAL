@@ -1087,6 +1087,12 @@ def generix_search():
             for criterion in search_data['processesUp']:
                 (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
                 q.is_output_of_process({prop_name: {operation: prop_value}})
+            if 'searchAllProcessesUp' in search_data:
+                if search_data['searchAllProcessesUp'] == True:
+                    q.__search_all_up = True
+            if 'searchAllProcessesDown' in search_data:
+                if search_data['searchAllProcessesDown'] == True:
+                    q.__search_all_down = True
 
         # Do processesDown
         if 'processesDown' in search_data:
