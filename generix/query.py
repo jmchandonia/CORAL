@@ -245,10 +245,20 @@ class Query:
 
         for filter_type, filters in filters.items():
             if filter_type in [FILTER_EQ, FILTER_LT, FILTER_LTE, FILTER_GT, FILTER_GTE]:
-                for ft in filters:
+                curFilterName = ''
+                curFilter = False
+                for ft in sorted(filters, key=lambda x: x['name']):
                     pname = self.__param_name()
-                    aql_filter.append( '%s.%s %s @%s' %(var_name, ft['name'], filter_type, pname) )
+                    if ft['name'] != curFilterName:
+                        curFilterName = ft['name']
+                        if curFilter:
+                            aql_filter.append(curFilter+')')
+                        curFilter = '('
+                    else:
+                        curFilter += ' or '
+                    curFilter += ( '%s.%s %s @%s' %(var_name, ft['name'], filter_type, pname) )
                     aql_bind[ pname ] = ft['value']
+                aql_filter.append(curFilter+')')
             elif filter_type == FILTER_IN:
                 for ft in filters:
                     pname = self.__param_name()
@@ -607,8 +617,8 @@ class Query:
             )
 
         
-        sys.stderr.write('aql = '+aql+'\n')
-        sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
+        # sys.stderr.write('aql = '+aql+'\n')
+        # sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
 
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind, size)
