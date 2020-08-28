@@ -46,14 +46,14 @@ export class ProcessFilterComponent implements OnInit {
     this.personnel = this.queryBuilder.getPersonnelOterms().pipe(map((data: any) => data.results));
   }
 
-  addFilter(event, attribute) {
+  addFilter(event, attribute, operator) {
     if (event) {
       if (event.text) {
-        this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
+        // this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
       } else {
         // input is a date, convert to yyyy-mm-dd
         const dateFormat = event.toISOString().split('T')[0];
-        this.queryParams.push(new QueryParam(attribute, '=', dateFormat, 'string'));
+        this.queryParams.push(new QueryParam(attribute, operator, dateFormat, 'string'));
       }
     } else {
       const idxToRemove = this.queryParams.indexOf(this.queryParams.find(x => x.attribute === attribute));

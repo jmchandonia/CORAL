@@ -12,7 +12,7 @@
             [ngModel]="process?.keyword"
             [ngModelOptions]="{standalone: true}"
             placeholder="Select a Process"
-            (change)="addFilter($event, 'process')"
+            (change)="addFilter($event, 'process', '=')"
             ></ng-select>
     </div>
     <div class="col-4">
@@ -28,7 +28,7 @@
             [items]="campaigns | async"
             bindLabel="text"
             placeholder="Select a Campaign"
-            (change)="addFilter($event, 'campaign')"
+            (change)="addFilter($event, 'campaign', '=')"
         ></ng-select>
     </div>
     <div class="col-4">
@@ -42,7 +42,7 @@
             [items]="personnel | async"
             bindLabel="text"
             placeholder="Select Personnel"
-            (change)="addFilter($event, 'person')"
+            (change)="addFilter($event, 'person', '=')"
             ></ng-select>
     </div>
     <div class="col-4"></div>
@@ -59,7 +59,7 @@
             bsDatepicker
             placement="bottom"
             [bsConfig]="datePickerConfig"
-            (bsValueChange)="addFilter($event, 'date_start')"
+            (bsValueChange)="addFilter($event, 'date_start', '>=')"
         />
     </div>
     <div class="col-6">
@@ -72,7 +72,7 @@
             bsDatepicker
             placement="bottom"
             [bsConfig]="datePickerConfig"
-            (bsValueChange)="addFilter($event, 'date_end')"
+            (bsValueChange)="addFilter($event, 'date_end', '<=')"
             />
     </div>
 </div>
