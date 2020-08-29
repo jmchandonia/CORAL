@@ -1087,12 +1087,18 @@ def generix_search():
             for criterion in search_data['processesUp']:
                 (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
                 q.is_output_of_process({prop_name: {operation: prop_value}})
+                # hack to search all people in labs
+                if operation == '=' and prop_name == 'person' and 'term' in criterion:
+                    children = svs['ontology'].enigma.find_id(criterion['term']).children
+                    for x in children:
+                        q.is_output_of_process({prop_name: {operation: x.term_name}})
+                    
             if 'searchAllProcessesUp' in search_data:
                 if search_data['searchAllProcessesUp'] == True:
-                    q.__search_all_up = True
+                    q.search_all_up(True)
             if 'searchAllProcessesDown' in search_data:
                 if search_data['searchAllProcessesDown'] == True:
-                    q.__search_all_down = True
+                    q.search_all_down(True)
 
         # Do processesDown
         if 'processesDown' in search_data:
@@ -1253,7 +1259,7 @@ def generix_filters():
             'items': _get_category_items(df_campaign, 'campaign' )
         },
         {
-            'categoryName': 'ENIGMA Personnel',
+            'categoryName': 'ENIGMA Labs/People',
             'items': _get_category_items(df_persons, 'person')
         },
     ]
@@ -1262,23 +1268,27 @@ def generix_filters():
     return _ok_response(res)
 
 def _get_category_items(process_stat_df, attr):
-    res = []
+    term_ids = []
     for _, row in process_stat_df.sort_values('Term Name').iterrows():
+        term_ids.append(row['Term ID'])
+    term_ids_hash = svs['ontology'].enigma.find_ids_hash(term_ids)
+    res = []
+    # hack to sort labs before people:
+    for term_id in sorted(term_ids,
+                          key=lambda x:'000'+term_ids_hash[x].term_name if term_ids_hash[x].term_name.endswith(' Lab') else term_ids_hash[x].term_name):
         res.append(
             {
-                'name': row['Term Name'],
+                'name': term_ids_hash[term_id].term_name,
                 'queryParam': {
                     'attribute': attr,
                     'matchType':  '=' ,
-                    'keyword': row['Term Name'],
-                    'term': row['Term ID'],
+                    'keyword': term_ids_hash[term_id].term_name,
+                    'term': term_ids_hash[term_id].term_id,
                     'scalarType': 'term'
                 }
             }
         )
     return res
-
-
 
 # Test version
 @app.route('/generix/types_stat', methods=['GET','POST'])
@@ -1375,7 +1385,7 @@ def generix_type_stat():
 def line_thickness(n):
     return int(round(math.log10(n)))+1
 
-# for types graph
+# for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
     arango_service = svs['arango_service']
@@ -1390,13 +1400,18 @@ def generix_type_graph():
     if query is not None:
         for q in query:
             if q['attribute'] == 'campaign':
-                filterCampaigns.add(q['keyword'])
+                filterCampaigns.add(q['term'])
                 filtering = True
             elif q['attribute'] == 'person':
-                filterPersonnel.add(q['keyword'])
+                filterPersonnel.add(q['term'])                
                 filtering = True
+                # expand labs to all people in the lab
+                children = svs['ontology'].enigma.find_id(q['term']).children
+                for x in children:
+                    filterPersonnel.add(x.term_id)
             else:
                 return _err_response('unparseable query '+s)
+
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
     # s = pprint.pformat(filterPersonnel)
