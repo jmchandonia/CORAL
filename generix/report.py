@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 from . import services
 from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS
 
@@ -105,9 +106,43 @@ class ReportBuilderService:
         itype_def = services.indexdef.get_type_def(TYPE_NAME_BRICK)
         return self.__term_stat_report(report_name, itype_def, term_prop_name, 'Bricks count')
 
+    def __rollup_labs(self, term_counts):
+        new_term_counts = []
+        
+        # make hash of counts credited to parents
+        extraCounts = {}
+        for term_count in term_counts:
+            term = term_count[0]
+            parent_ids = term.parent_ids
+            for parent in parent_ids:
+                if parent != 'ENIGMA:0000029':
+                    if parent in extraCounts:
+                        extraCounts[parent] += term_count[1]
+                    else:
+                        extraCounts[parent] = term_count[1]
+        # add them in
+        for term_count in term_counts:
+            term_id = term_count[0].term_id
+            if term_id in extraCounts:
+                new_term_counts.append([term_count[0],
+                                        term_count[1]+extraCounts[term_id]])
+                del extraCounts[term_id]
+            else:
+                new_term_counts.append(term_count)
+        # add in extra parent terms that weren't in original list
+        term_ids_hash = services.ontology.all.find_ids_hash(list(extraCounts.keys()))
+        for term_id in extraCounts.keys():
+            new_term_counts.append([term_ids_hash.get(term_id), extraCounts[term_id]])
+        return sorted(new_term_counts, key=lambda x: x[1], reverse=True)
+
     def __term_stat_report(self, report_name, index_type_def, term_prop_name, count_name):        
         term_counts = services.ontology.term_stat( index_type_def, term_prop_name)
         report_items = []
+
+        # hack - roll up term counts to parent terms, for labs
+        if term_prop_name=='person':
+            term_counts = self.__rollup_labs(term_counts)
+
         for term_count in term_counts:
             term = term_count[0]
             report_items.append(ReportItem( [term.term_name, term.term_id], term_count[1] ))
@@ -138,8 +173,6 @@ class PlainReport:
         for item in self.__report_items:
             vals.append(item.value(index))
         return vals
-    
-
 
     def _repr_html_(self):
         rows = []

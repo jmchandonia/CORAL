@@ -138,6 +138,14 @@ class Query:
         self.__add_filters(criterion, self.__has_filters, self.__index_type_def)
         return self
 
+    def search_all_up(self, b):
+        self.__search_all_up = b
+        return self
+
+    def search_all_down(self, b):
+        self.__search_all_down = b
+        return self
+    
     def is_input_of_process(self, criterion):
         index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
         self.__add_filters(criterion, self.__input_of_process_filters, index_type_def)
@@ -340,8 +348,7 @@ class Query:
             pr_aqls.append(pi_aql)
 
         link_aql = ''
-        self.__search_all_up=True
-        self.__search_all_down=True
+
         if self.__output_of_process_filters:
             if self.__search_all_up==False and self.__search_all_down==False:
                 po_var_name = 'po'
@@ -374,26 +381,42 @@ class Query:
                     filter %s
                     return po
                   )
-                  let upprocs=(
-                    for p1 in filtered_procs
-                    for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
-                    OPTIONS {
-                      bfs: true,
-                      uniqueVertices: 'global'
-                    }
-                    filter is_same_collection("SYS_Process",p)
-                    return p
-                  )
-                  let dnprocs=(
-                    for p1 in filtered_procs
-                    for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
-                    OPTIONS {
-                      bfs: true,
-                      uniqueVertices: 'global'
-                    }
-                    filter is_same_collection("SYS_Process",p)
-                    return p
-                  )
+                ''' % (' and '.join(po_aql_filter))
+                if self.__search_all_up:
+                    link_aql += '''
+                      let upprocs=(
+                        for p1 in filtered_procs
+                        for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                        OPTIONS {
+                          bfs: true,
+                          uniqueVertices: 'global'
+                        }
+                        filter is_same_collection("SYS_Process",p)
+                        return p
+                     )
+                    '''
+                else:
+                    link_aql += '''
+                      let upprocs=[]
+                    '''
+                if self.__search_all_down:
+                    link_aql += '''
+                      let dnprocs=(
+                        for p1 in filtered_procs
+                        for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
+                        OPTIONS {
+                          bfs: true,
+                          uniqueVertices: 'global'
+                        }
+                        filter is_same_collection("SYS_Process",p)
+                        return p
+                      )
+                    '''
+                else:
+                    link_aql += '''
+                      let dnprocs=[]
+                    '''
+                link_aql += '''
                   let linked_ids = unique(flatten(
                     FOR p IN unique(append(upprocs,dnprocs))
                     let oo=(
@@ -410,8 +433,7 @@ class Query:
                     )
                     return append(io,oo)
                   ))
-                ''' % (' and '.join(po_aql_filter),
-                       self.__index_type_def.collection_name,
+                ''' % (self.__index_type_def.collection_name,
                        self.__index_type_def.collection_name)
                 
                 aql_bind.update(po_aql_bind)
@@ -617,8 +639,8 @@ class Query:
             )
 
         
-        # sys.stderr.write('aql = '+aql+'\n')
-        # sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
+        sys.stderr.write('aql = '+aql+'\n')
+        sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
 
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind, size)

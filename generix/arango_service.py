@@ -168,13 +168,13 @@ class ArangoService:
             filters = 'filter ('
             if filterCampaigns is not False:
                 for f in filterCampaigns:
-                    filters += 'p1.campaign_term_name=="'+f+'" or '
+                    filters += 'p1.campaign_term_id=="'+f+'" or '
                 filters = filters[0:-4]+')'
                 if filterPersonnel is not False:
                     filters += ' and ('
             if filterPersonnel is not False:
                 for f in filterPersonnel:
-                    filters += 'p1.person_term_name=="'+f+'" or '
+                    filters += 'p1.person_term_id=="'+f+'" or '
                 filters = filters[0:-4]+')'
             aql = '''
                let filtered_procs = (
