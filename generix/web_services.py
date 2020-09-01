@@ -1418,7 +1418,7 @@ def generix_type_graph():
     # sys.stderr.write('personnel = '+s+'\n')
     # sys.stderr.write('filtering = '+str(filtering)+'\n')
 
-    # map names back to nodes
+    # map names and indices back to nodes
     nodeMap = {}
 
     # Core types
@@ -1439,7 +1439,8 @@ def generix_type_graph():
                     'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
                 }
             )
-            nodeMap[td.name] = index
+            nodeMap[td.name] = nodes[index]
+            nodeMap[index] = nodes[index]
             index+=1
 
     # Dynamic types and processes
@@ -1578,7 +1579,8 @@ def generix_type_graph():
                                 'ids': set()
                             }
                         )
-                        nodeMap[n] = index
+                        nodeMap[n] = nodes[index]
+                        nodeMap[index] = nodes[index]
                         index+=1
 
         # don't show ddt outbound (e.g., computational results) in graph
@@ -1612,7 +1614,7 @@ def generix_type_graph():
                     if k.startswith(searchKey):
                         num+=1
                         if filtering:
-                            nodes[nodeMap[fr[4:]]]['ids'].add(k)
+                            nodes[nodeMap[fr[4:]]['index']]['ids'].add(k)
                 thickness = int(round(num/totalNum*totalThickness))
                 if (thickness==totalThickness):
                     thickness = totalThickness-1
@@ -1621,7 +1623,7 @@ def generix_type_graph():
             else:
                 thickness = totalThickness
                 if filtering:
-                    nodes[nodeMap[fr[4:]]]['ids'].update(edgeTuples[key]['from'])
+                    nodes[nodeMap[fr[4:]]['index']]['ids'].update(edgeTuples[key]['from'])
                         
             fr = fr[4:]
             if (i==0):
@@ -1633,7 +1635,7 @@ def generix_type_graph():
             if (intermed > 0):
                 newEdges.append(
                     {
-                        'source': nodeMap[fr],
+                        'source': nodeMap[fr]['index'],
                         'target': intermed,
                         'thickness': thickness,
                         'in_filter': edgeTuples[key]['in_filter']
@@ -1651,7 +1653,7 @@ def generix_type_graph():
                     if k.startswith(searchKey):
                         num+=1
                         if filtering and to.startswith('SDT_'):
-                            nodes[nodeMap[to[4:]]]['ids'].add(k)
+                            nodes[nodeMap[to[4:]]['index']]['ids'].add(k)
                 thickness = int(round(num/totalNum*totalThickness))
                 if (thickness==totalThickness):
                     thickness = totalThickness-1
@@ -1660,13 +1662,13 @@ def generix_type_graph():
             else:
                 thickness = totalThickness
                 if filtering and to.startswith('SDT_'):
-                    nodes[nodeMap[to[4:]]]['ids'].update(edgeTuples[key]['to'])
+                    nodes[nodeMap[to[4:]]['index']]['ids'].update(edgeTuples[key]['to'])
 
             # if to is DDT, need to add new node for it
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                # sys.stderr.write('adding dynamic node '+to+'\n')
+                sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -1680,7 +1682,7 @@ def generix_type_graph():
                 index += 1
             else:
                 to = to[4:]
-                node_to = nodeMap[to]
+                node_to = nodeMap[to]['index']
                         
             if (i==0):
                 linkText += ' &rarr; '
@@ -1689,7 +1691,7 @@ def generix_type_graph():
             linkText += str(num)+' '+to
 
             if (intermed == 0):
-                intermed = nodeMap[fr]
+                intermed = nodeMap[fr]['index']
                 
             newEdges.append(
                 {
@@ -1699,13 +1701,13 @@ def generix_type_graph():
                     'in_filter': edgeTuples[key]['in_filter']
                 }
             )
-
+            
         # make all new edges have same linkText and color
         for e in newEdges:
             e['hoverText'] = linkText
             edges.append(e)
 
-    # count static nodes if filtering
+    # count objects in static nodes, if filtering
     if filtering:
         for n in nodes:
             if 'ids' in n:
@@ -1721,8 +1723,9 @@ def generix_type_graph():
             if e['target'] in unused:
                 unused.remove(e['target'])
         for i in unused:
-            nodes[i]['unused'] = True
-            # sys.stderr.write('unused node '+nodes[i]['name']+'\n')
+            if not 'collapsed' in nodes[i]:
+                nodes[i]['unused'] = True
+                # sys.stderr.write('unused node '+nodes[i]['name']+'\n')
 
     # provide approximate locations.  first, find roots,
     # start assigning them yRank and xRank
@@ -1743,7 +1746,7 @@ def generix_type_graph():
         nodes[i]['y_rank'] = 0
         nodes[i]['x_rank'] = xRank
         nodes[i]['root'] = True
-        # sys.stderr.write('root node '+nodes[i]['name']+'\n')
+        # sys.stderr.write('root node '+nodes[i]['name']+'\n')        
 
     # every link should go to an y_rank one higher, or same level if ddt
     remainingEdges = edges.copy()
@@ -1773,11 +1776,67 @@ def generix_type_graph():
                 nodes[e['target']]['x_rank'] = xRank
             remainingEdges.remove(e)
 
+    # cluster ddt nodes from same sdt
+    clusterNodes = []
+    clusterEdges = []
+    for n in nodes:
+        if n['category'] != TYPE_CATEGORY_STATIC:
+            continue
+        linkedDDTNodes = []
+        inFilter = False
+        for e in edges:
+            if e['source'] != n['index']:
+                continue
+            if nodes[e['target']]['category'] == TYPE_CATEGORY_STATIC:
+                continue
+            linkedDDTNodes.append(e['target'])
+            inFilter |= e['in_filter']
+            
+        # cluster nodes if there are more than MAX_DYNAMIC_NODES
+        MAX_DYNAMIC_NODES = 2
+        if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
+            num = 0
+            sys.stderr.write('adding cluster node\n')
+            newDDTNodes = []
+            for i in linkedDDTNodes:
+                num += nodes[i]['count']
+                nodes[i]['parent'] = index
+                newDDTNodes.append(nodes[i])
+            # add 'clustered' node
+            clusterNodes.append(
+                {
+                    'index': index,
+                    'category': TYPE_CATEGORY_DYNAMIC,
+                    'collapsed': True,
+                    'name': 'Datasets',
+                    'dataModel': 'Brick',
+                    'dataType': 'Dataset',
+		    'count': num,
+                    'children': newDDTNodes
+                }
+            )
+            # add edges to cluster node
+            clusterEdges.append(
+                {
+                    'source': n['index'],
+                    'target': index,
+                    'thickness': line_thickness(num),
+                    'in_filter': inFilter,
+                    'hoverText': 'test'
+                }
+            )
+
+            index += 1
+
     # remove unused nodes
     if not filtering:
         for n in nodes:
             if 'unused' in n:
                 nodes.remove(n)
+
+    # add new cluster nodes and edges
+    nodes.extend(clusterNodes)
+    edges.extend(clusterEdges)
 
     # combine everything and return graph
     res = {
