@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
@@ -21,7 +22,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
-  xyMap: any = {};
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -32,13 +32,18 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       hover: true
     },
     physics: {
+      enabled: false,
       barnesHut: {
-        springConstant: 0.3,
-        avoidOverlap: 10
+          springConstant: 0.1,
+          gravitationalConstant: -1e4,
+          avoidOverlap: 1,
+          springLength: 100,
+          centralGravity: -10,
+          damping: 0,
+        },
       },
-    },
-    layout: {
-      randomSeed: '0:0',
+      layout: {
+        randomSeed: '0:0',
     },
   };
 
@@ -46,10 +51,15 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   dynamicTypeNodes: any[];
 
   network: Network;
+  xScale: number;
+  yScale: number;
+
+  height: number;
+  width: number;
 
   constructor(
     private homeService: HomeService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
   ) { }
 
   ngOnInit(): void {
@@ -67,6 +77,20 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       });
   }
 
+  calculateScale(nodes) {
+    const {scrollHeight, scrollWidth} = this.pGraph.nativeElement.parentElement;
+    const xSort = nodes.map(d => d.x).sort((a, b) => a - b).filter(d => d !== undefined),
+    ySort = nodes.map(d => d.y).sort((a, b) => a - b).filter(d => d !== undefined);
+
+    const xRange = xSort.pop() - xSort[0];
+    const yRange = ySort.pop() - ySort[0];
+
+    const scale = Math.max(xRange, yRange);
+
+    this.xScale = scrollWidth / scale;
+    this.yScale = scrollHeight / scale;
+  }
+
   ngOnDestroy() {
     if (this.provenanceLoadingSub) {
       this.provenanceLoadingSub.unsubscribe();
@@ -77,6 +101,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
+    this.calculateScale(data.nodes);
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
     if (!coreTypes.length && !dynamicTypes.length) {
@@ -89,12 +114,17 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
       if (dynamicType.children?.length) {
-        // add node children to nodeList
-        dynamicType.children.forEach(child => {
+        dynamicType.children.forEach((child) => {
           this.nodes.update(this.createNode(child));
         });
         // add node to list of nodes that need to be clustered
-        this.clusterNodes.push({...dynamicType, expanded: true});
+        this.clusterNodes.push({
+          ...dynamicType,
+          expanded: true,
+          // ternary is needed because if the coordinates are undefined it will return NaN
+          x: typeof data.x === 'number' ? data.x * this.xScale : undefined,
+          y: typeof data.y === 'number' ? data.y * this.yScale : undefined
+        });
       }
       this.nodes.update(this.createNode(dynamicType));
     });
@@ -136,16 +166,16 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
     // show edge labels on hover
     this.network.on('hoverEdge', ({edge}) => {
-      this.network.updateEdge(edge, {font: {color: 'black', strokeColor: 'white'}});
+      this.network.updateEdge(edge, {font: {color: 'black', strokeColor: 'white'}}); // vadjust
     });
 
     // hide edge labels on hover leave 
     this.network.on('blurEdge', ({edge}) => {
       this.network.updateEdge(edge, {font: {color: 'rgba(0,0,0,0)', strokeColor: 'rgba(0,0,0,0)'}});
-    })
+    });
 
     // disable physics after nodes without coordinates have been pushed apart
-    this.network.on('stabilizationIterationsDone', () => this.network.setOptions({physics: false}));
+    this.network.stabilize();
   }
 
  addCluster(data) {
@@ -159,6 +189,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         border: data.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
         background: 'white'
       },
+      borderWidth: 3,
       shape: 'box',
       x: data.x,
       y: data.y,
@@ -173,7 +204,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
             this.network.openCluster(id, {
               // function to move child nodes to their specified position
               releaseFunction: (_, positions) => positions 
-            })
+            });
           }
         },
         label: (values, id, selected) => {
@@ -201,7 +232,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
         hover: { background: '#ddd' }
       },
-      physics: true,
+      physics: dataItem.category === 'DDT_',
       cid: dataItem.cid,
       shape: 'box',
       shapeProperties: {
@@ -209,7 +240,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       },
       data: {...dataItem},
       fixed: dataItem.category === 'SDT_',
-      mass: dataItem.category === 'SDT_' ? 100 : 1
+      mass: dataItem.category === 'SDT_' ? 500 : 1
     }
 
     if (dataItem.root) {
@@ -224,22 +255,22 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       node.label = `${dataItem.count} ${dataItem.name.replace(/<br>/g, '\n')}`;
     }
 
-    const { x_rank, y_rank } = dataItem
+    const { x, y } = dataItem
 
-    // if (typeof dataItem.y_rank === 'number' && dataItem.category === 'SDT_') {
-      if (typeof y_rank === 'number') {
-      node.y = y_rank * 100;
-      if (!this.xyMap.hasOwnProperty(dataItem.y_rank)) {
-        this.xyMap[y_rank * 100] = [];
-      }
+    if (typeof y === 'number') {
+      node.y = y * this.yScale;
     }
 
-    if(typeof x_rank === 'number') {
-      node.x = x_rank * 150;
-      if (typeof y_rank === 'number') {
-        this.xyMap[y_rank * 100].push(x_rank * 150);
-      } else {
-      }
+    if(typeof x === 'number') {
+      node.x = x * this.xScale;
+    }
+
+    if(dataItem.parent) {
+      node.cid = dataItem.parent;
+    }
+
+    if (dataItem.children?.length) {
+      node.label = '[-]';
     }
 
     if(dataItem.category === 'SDT_') { node.mass = 10; }
@@ -252,11 +283,10 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const fromId = edge.source;
     const target: any = this.nodes.get(toId);
     return {
-      from: fromId,
+      from: target.cid ? target.cid : fromId,
       to: toId,
       width: edge.thickness,
-      label: edge.hoverText.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
-      // color: '#777',
+      label: edge.text.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
       color: edge.in_filter ? 'blue' : '#777',
       physics: true,
       selfReference: {
@@ -267,7 +297,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         size: 16,
         color: 'rgba(0,0,0,0)',
         strokeColor: 'rgba(0,0,0,0)',
-        multi: 'html'
       },
       arrows: {
         to: {
@@ -276,7 +305,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         }
       },
       smooth: {
-        // has to explicitly === true because any other properties in object without being defined will enable behavior
         enabled: edge.reversible === true,
         roundness: 0.2,
         forceDirection: 'vertical',
@@ -299,7 +327,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   getInputProcesses(edgeIds, targetId): Process[] {
     return edgeIds
       .map(id => this.edges.get(id)) // get edge data from array of ids
-      .filter(edge => edge.to === targetId) // we only want parent edges and not children
+      .filter(edge => edge && edge.to === targetId) // we only want parent edges and not children
       .map(edge => {
         // TODO: interface NodeWithData extends Node so you don't have to keep explicitly typing nodes as 'any'
         const sourceNode: any = this.nodes.get(edge.from);
@@ -311,8 +339,17 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
           );
           return new Process(
             sourceEdges.map(edge => {
-              const sourceNodeData = (this.nodes.get(edge.from) as any).data;
-              return `${sourceNodeData.category}${sourceNodeData.dataType}`
+              const sourceNode = (this.nodes.get(edge.from) as any);
+              if (sourceNode.data.children) {
+                // if there is children then we need to grab the next parent node, the current node is only for UI
+                const nextSourceEdge = this.network
+                  .getConnectedEdges(sourceNode.id)
+                  .map(id => this.edges.get(id))
+                  .filter(edge => edge.to === sourceNode.id)[0];
+                const nextSourceNode = this.nodes.get(nextSourceEdge.from) as any;
+                return `${nextSourceNode.data.category}${nextSourceNode.data.dataType}`;
+              }
+              return `${sourceNode.data.category}${sourceNode.data.dataType}`;
             }),
             targetEdges.map(edge => {
               const targetNodeData = (this.nodes.get(edge.to) as any).data;
