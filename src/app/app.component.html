@@ -5,6 +5,7 @@
             <ul class="nav nav-tabs offset-3 white">
                 <li class="nav-item">
                     <a
+                      id="home-nav-link"
                       class="nav-link" 
                       href="Javascript:void:(0)"
                       [routerLink]="['home']"
@@ -17,6 +18,7 @@
                 <li class="nav-item">
                     <a
                     class="nav-link"
+                    id="upload-nav-link"
                     href="JavaScript:void(0)"
                     [routerLink]="['upload']"
                     [ngClass]="currentUrl?.includes('upload') ? 'active' : ''"
@@ -27,6 +29,7 @@
                 <li class="nav-item">
                     <a 
                       class="nav-link"
+                      id="search-nav-link"
                       href="JavaScript:void(0)"
                       [routerLink]="['search']"
                       [ngClass]="currentUrl?.includes('search') ? 'active' : ''"
@@ -48,6 +51,7 @@
                 <li class="nav-item">
                         <a
                           class="nav-link"
+                          id="reports-nav-link"
                           href="Javascript:void(0)"
                           [routerLink]="['reports']"
                           [ngClass]="currentUrl?.includes('reports') ? 'active' : ''"
@@ -58,6 +62,7 @@
                 <li class="nav-item">
                     <a
                         class="nav-link"
+                        id="dashboard-nav-link"
                         href="JavaScript:void(0)"
                         [routerLink]="['dashboard']"
                         [ngClass]="currentUrl?.includes('dashboard') ? 'active' : ''"
@@ -67,6 +72,7 @@
                 <li class="nav-item">
                     <a
                       class="nav-link"
+                      id="signout-nav-link"
                       href="JavaScript:void(0)"
                       (click)="logout()"
                     >
