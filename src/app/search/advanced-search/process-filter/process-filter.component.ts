@@ -49,7 +49,7 @@ export class ProcessFilterComponent implements OnInit {
   addFilter(event, attribute, operator) {
     if (event) {
       if (event.text) {
-        // this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
+        this.queryParams.push(new QueryParam(attribute, '=', event.text, 'string'));
       } else {
         // input is a date, convert to yyyy-mm-dd
         const dateFormat = event.toISOString().split('T')[0];
