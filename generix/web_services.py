@@ -5,6 +5,7 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import traceback as tb
+import networkx as nx
 import re
 import random 
 from simplepam import authenticate
@@ -1385,6 +1386,116 @@ def generix_type_stat():
 def line_thickness(n):
     return int(round(math.log10(n)))+1
 
+# assign x, y to all static and intermediate nodes.
+# just assign y to dynamic nodes, and don't process any of their children
+def assign_xy_static(nodes, usedPos, i, x, y):
+    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    # skip if already done
+    if 'y' in nodes[i]:
+        # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
+        return
+    # assign positions
+    nodes[i]['y'] = y
+    if 'dynamic' in nodes[i]:
+        return
+    else:
+        nodes[i]['x'] = x
+    if not 'children' in nodes[i]:
+        # sys.stderr.write('no children for node '+str(nodes[i]['name'])+'\n')
+        return
+    # do children of static/intermediate nodes
+    for c in nodes[i]['children']:
+        if 'y' in nodes[c]:
+            continue
+        if nodes[i]['category'] is False or nodes[c]['category'] is False:
+            # intermediate node
+            dX = 100
+            dY = 50
+        else:
+            # static/dynamic node
+            dX = 100
+            dY = 100
+        if 'dynamic' in nodes[c]:
+            assign_xy_static(nodes, usedPos, c, x, y+dY)
+            continue
+        else:
+            # sys.stderr.write('new static '+str(nodes[c]['name'])+'\n')
+            proposedY = y+dY
+            proposedX = x
+            pos = str(proposedX)+','+str(proposedY)
+            # sys.stderr.write('pos '+pos+'\n')
+            firstPass = True
+            while (pos in usedPos):
+                if firstPass:
+                    proposedX -= dX
+                else:
+                    proposedX += dX
+                firstPass = False
+                pos = str(proposedX)+','+str(proposedY)
+                # sys.stderr.write('pos '+pos+'\n')
+            usedPos[pos] = True
+            assign_xy_static(nodes, usedPos, c, proposedX, proposedY)
+
+def reposition_intermediate_nodes(nodes):
+    for n in nodes:
+        if n['category'] is False and 'unused' not in n and 'parents' in n and 'children' in n:
+            x = 0
+            y = 0
+            nX = 0
+            nY = 0
+            for i in n['parents'] | n['children']:
+                if 'x' in nodes[i]:
+                    x += nodes[i]['x']
+                    nX += 1
+                if 'y' in nodes[i]:                    
+                    y += nodes[i]['y']
+                    nY += 1
+            if nX > 0:
+                n['x'] = x / nX
+            if nY > 0:
+                n['y'] = y / nX
+
+def assign_xy_dynamic(nodes, usedPos):
+    # first, calculate average x and y
+    avgX = 0
+    avgY = 0
+    nX = 0
+    nY = 0
+    for n in nodes:
+        if n['category'] is False and 'unused' not in n:
+            if 'x' in n:
+                avgX += n['x']
+                nX += 1
+            if 'y' in n:                    
+                avgY += n['y']
+                nY += 1
+                
+    if nX > 0:
+        avgX /= nX
+    if nY > 0:
+        avgY /= nY
+
+    # put dynamic nodes on left or right side, depending on where their
+    # parents are relative to the average
+    dX = 100
+    for repeat in range(2): # do it twice to catch intermediate nodes
+        for n in nodes:
+            if 'dynamic' in n and 'y' in n:
+                y = n['y']
+                for i in n['parents']:
+                    if 'x' in nodes[i]:
+                        if nodes[i]['x'] > avgX:
+                            direction = 1
+                        else:
+                            direction = -1
+                        x = nodes[i]['x'] + direction * dX
+                        pos = str(x)+','+str(y)
+                        while pos in usedPos:
+                            x += direction * dX
+                            pos = str(x)+','+str(y)
+                        usedPos[pos] = True
+                        n['x'] = x
+
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
@@ -1556,6 +1667,7 @@ def generix_type_graph():
 
     # process edges from keys, adding new DDT_ nodes, and SDT_ nodes if filtering
     edges = []
+    staticEdges = []
     for key in edgeTuples.keys():
         newEdges = []
         # sys.stderr.write('key: '+key+'\n')
@@ -1668,7 +1780,7 @@ def generix_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                sys.stderr.write('adding dynamic node '+to+'\n')
+                # sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -1692,19 +1804,21 @@ def generix_type_graph():
 
             if (intermed == 0):
                 intermed = nodeMap[fr]['index']
-                
-            newEdges.append(
-                {
+
+            e = {
                     'source': intermed,
                     'target': node_to,
                     'thickness': thickness,
                     'in_filter': edgeTuples[key]['in_filter']
                 }
-            )
+
+            newEdges.append(e)
+            if TYPE_CATEGORY_STATIC in to:
+                staticEdges.append(e)
             
-        # make all new edges have same linkText and color
+        # make all new edges have same linkText
         for e in newEdges:
-            e['hoverText'] = linkText
+            e['text'] = linkText
             edges.append(e)
 
     # count objects in static nodes, if filtering
@@ -1723,14 +1837,77 @@ def generix_type_graph():
             if e['target'] in unused:
                 unused.remove(e['target'])
         for i in unused:
-            if not 'collapsed' in nodes[i]:
+            if not 'isParent' in nodes[i]:
                 nodes[i]['unused'] = True
                 # sys.stderr.write('unused node '+nodes[i]['name']+'\n')
 
-    # provide approximate locations.  first, find roots,
-    # start assigning them yRank and xRank
-    # find reversible direct edges
-    xRank = 0
+    # cluster ddt nodes from same sdt
+    clusterNodes = []
+    clusterEdges = []
+    for n in nodes:
+        if n['category'] != TYPE_CATEGORY_STATIC:
+            continue
+        linkedDDTNodes = []
+        inFilter = False
+        linkedEdges = []
+        for e in edges:
+            if e['source'] != n['index']:
+                continue
+            if nodes[e['target']]['category'] != TYPE_CATEGORY_DYNAMIC:
+                continue
+            linkedDDTNodes.append(e['target'])
+            inFilter |= e['in_filter']
+            linkedEdges.append(e)
+            
+        # cluster nodes if there are more than MAX_DYNAMIC_NODES
+        MAX_DYNAMIC_NODES = 2
+        if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
+            num = 0
+            # sys.stderr.write('adding cluster node\n')
+            newDDTNodes = []
+            for i in linkedDDTNodes:
+                num += nodes[i]['count']
+                nodes[i]['parent'] = index
+                newDDTNodes.append(nodes[i])
+            # add 'clustered' node
+            clusterNodes.append(
+                {
+                    'index': index,
+                    'category': TYPE_CATEGORY_DYNAMIC,
+                    'name': 'Datasets',
+                    'dataModel': 'Brick',
+                    'dataType': 'Dataset',
+		    'count': num,
+                    'isParent': True
+                }
+            )
+            # move other edges, and collect processes
+            procs = []
+            for e in linkedEdges:
+                e['source'] = index
+                pos = e['text'].index('<br>')
+                # sys.stderr.write('match: '+e['text'][0:pos]+'\n')
+                procs.append(e['text'][0:pos])
+                
+            # add edge to cluster node
+            clusterEdges.append(
+                {
+                    'source': n['index'],
+                    'target': index,
+                    'thickness': line_thickness(num),
+                    'inFilter': inFilter,
+                    'text': ',<br>'.join(procs)
+                }
+            )
+
+            index += 1
+
+    # add new cluster nodes and edges
+    nodes.extend(clusterNodes)
+    edges.extend(clusterEdges)
+
+    # provide approximate locations.
+    # first, find roots, and reversible direct edges
     roots = set(range(index))
     directEdges = {}
     for e in edges:
@@ -1743,100 +1920,69 @@ def generix_type_graph():
                  e['reversible'] = True
                  directEdges[str(e['target'])+'-'+str(e['source'])]['reversible'] = True
     for i in roots:
-        nodes[i]['y_rank'] = 0
-        nodes[i]['x_rank'] = xRank
         nodes[i]['root'] = True
-        # sys.stderr.write('root node '+nodes[i]['name']+'\n')        
+        # sys.stderr.write('root node '+nodes[i]['name']+'\n')
 
-    # every link should go to an y_rank one higher, or same level if ddt
-    remainingEdges = edges.copy()
-    usedRanks = {}
-    maxYRank = 0
-    while len(remainingEdges) > 0:
-        for e in remainingEdges:
-            if 'y_rank' not in nodes[e['source']]:
-                continue
-            if 'y_rank' in nodes[e['target']]:
-                remainingEdges.remove(e)
-                continue
-            if nodes[e['target']]['category'] == 'DDT_':
-                nodes[e['target']]['y_rank'] = nodes[e['source']]['y_rank']
-            else:
-                yRank = nodes[e['source']]['y_rank']+1
-                nodes[e['target']]['y_rank'] = yRank
-                if (yRank > maxYRank):
-                    maxYRank = yRank
-                xRank = nodes[e['source']]['x_rank']
-                ranks = str(xRank)+','+str(yRank)
-                while (ranks in usedRanks):
-                    # sys.stderr.write('rank '+ranks+'\n')
-                    xRank += 1
-                    ranks = str(xRank)+','+str(yRank)
-                usedRanks[ranks] = True
-                nodes[e['target']]['x_rank'] = xRank
-            remainingEdges.remove(e)
-
-    # cluster ddt nodes from same sdt
-    clusterNodes = []
-    clusterEdges = []
+    # make sets of parents/children for all nodes
     for n in nodes:
-        if n['category'] != TYPE_CATEGORY_STATIC:
-            continue
-        linkedDDTNodes = []
-        inFilter = False
-        for e in edges:
-            if e['source'] != n['index']:
-                continue
-            if nodes[e['target']]['category'] == TYPE_CATEGORY_STATIC:
-                continue
-            linkedDDTNodes.append(e['target'])
-            inFilter |= e['in_filter']
-            
-        # cluster nodes if there are more than MAX_DYNAMIC_NODES
-        MAX_DYNAMIC_NODES = 2
-        if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
-            num = 0
-            sys.stderr.write('adding cluster node\n')
-            newDDTNodes = []
-            for i in linkedDDTNodes:
-                num += nodes[i]['count']
-                nodes[i]['parent'] = index
-                newDDTNodes.append(nodes[i])
-            # add 'clustered' node
-            clusterNodes.append(
-                {
-                    'index': index,
-                    'category': TYPE_CATEGORY_DYNAMIC,
-                    'collapsed': True,
-                    'name': 'Datasets',
-                    'dataModel': 'Brick',
-                    'dataType': 'Dataset',
-		    'count': num,
-                    'children': newDDTNodes
-                }
-            )
-            # add edges to cluster node
-            clusterEdges.append(
-                {
-                    'source': n['index'],
-                    'target': index,
-                    'thickness': line_thickness(num),
-                    'in_filter': inFilter,
-                    'hoverText': 'test'
-                }
-            )
+        if 'unused' not in n:
+            n['children'] = set()
+            n['parents'] = set()
+            # track intermediat nodes that only
+            # lead to dynamic nodes
+            if n['category'] != TYPE_CATEGORY_STATIC:
+                n['dynamic'] = True 
+    for e in edges:
+        nodes[e['source']]['children'].add(e['target'])
+        nodes[e['target']]['parents'].add(e['source'])
+        if nodes[e['target']]['category'] == TYPE_CATEGORY_STATIC:
+            if 'dynamic' in nodes[e['source']]:
+                del nodes[e['source']]['dynamic']
 
-            index += 1
+    # do DFS of each root, assigning x and y to static, just y to dynamic:
+    usedPos = {}
+    x = 0
+    for i in roots:
+        assign_xy_static(nodes, usedPos, i, x, 0)
+        x += 100
 
+    reposition_intermediate_nodes(nodes)
+    assign_xy_dynamic(nodes, usedPos)
+
+    # use NetworkX to lay out the rest
+    G = nx.Graph()
+    for e in edges:
+        G.add_edge(e['source'], e['target'], weight=e['thickness'])
+    G_fixed = []
+    G_pos = {}
+    for n in nodes:
+        if not 'unused' in n:
+            G.add_node(n['index'])
+            if 'x' in n and 'y' in n:
+                G_pos[n['index']] = (n['x'], n['y'])
+                if n['category'] == TYPE_CATEGORY_STATIC:
+                    G_fixed.append(n['index'])
+    pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed)
+    for index, xy in pos.items():
+        nodes[index]['x'] = xy[0]
+        nodes[index]['y'] = xy[1]
+
+    reposition_intermediate_nodes(nodes)
+
+    # remove unused properties
+    for n in nodes:
+        if 'children' in n:
+            del n['children']
+        if 'parents' in n:
+            del n['parents']
+        if 'dynamic' in n:
+            del n['dynamic']
+    
     # remove unused nodes
     if not filtering:
         for n in nodes:
             if 'unused' in n:
                 nodes.remove(n)
-
-    # add new cluster nodes and edges
-    nodes.extend(clusterNodes)
-    edges.extend(clusterEdges)
 
     # combine everything and return graph
     res = {
