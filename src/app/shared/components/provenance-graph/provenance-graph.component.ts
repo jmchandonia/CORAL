@@ -31,20 +31,10 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       dragView: false,
       hover: true
     },
-    physics: {
-      enabled: false,
-      barnesHut: {
-          springConstant: 0.1,
-          gravitationalConstant: -1e4,
-          avoidOverlap: 1,
-          springLength: 100,
-          centralGravity: -10,
-          damping: 0,
-        },
-      },
-      layout: {
-        randomSeed: '0:0',
-    },
+    physics: false,
+    layout: {
+      randomSeed: '0:0'
+    }
   };
 
   coreTypeNodes: any[];
@@ -79,16 +69,14 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   calculateScale(nodes) {
     const {scrollHeight, scrollWidth} = this.pGraph.nativeElement.parentElement;
-    const xSort = nodes.map(d => d.x).sort((a, b) => a - b).filter(d => d !== undefined),
-    ySort = nodes.map(d => d.y).sort((a, b) => a - b).filter(d => d !== undefined);
+    const xSort = nodes.map(d => d.x).sort((a, b) => a - b),
+    ySort = nodes.map(d => d.y).sort((a, b) => a - b);
 
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    const scale = Math.max(xRange, yRange);
-
-    this.xScale = scrollWidth / scale;
-    this.yScale = scrollHeight / scale;
+    this.xScale = scrollWidth / xRange
+    this.yScale = scrollHeight / yRange;
   }
 
   ngOnDestroy() {
@@ -113,17 +101,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
     // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
-      if (dynamicType.children?.length) {
-        dynamicType.children.forEach((child) => {
-          this.nodes.update(this.createNode(child));
-        });
-        // add node to list of nodes that need to be clustered
+      if (dynamicType.isParent) {
         this.clusterNodes.push({
-          ...dynamicType,
-          expanded: true,
-          // ternary is needed because if the coordinates are undefined it will return NaN
-          x: typeof data.x === 'number' ? data.x * this.xScale : undefined,
-          y: typeof data.y === 'number' ? data.y * this.yScale : undefined
+          ...dynamicType, extended: true,
         });
       }
       this.nodes.update(this.createNode(dynamicType));
@@ -176,11 +156,19 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
     // disable physics after nodes without coordinates have been pushed apart
     this.network.stabilize();
+
+    this.network.on('stabilizationIterationsDone', () => {
+      this.nodes.forEach(node => {
+        this.nodes.update({id: node.id, fixed: false});
+      });
+    });
+
   }
 
  addCluster(data) {
    // configuration for nodes that hold clusters together
    this.network.cluster({
+    // joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     clusterNodeProperties: {
       label: `${data.count} ${data.name} [+]`,
@@ -232,16 +220,17 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
         hover: { background: '#ddd' }
       },
-      physics: dataItem.category === 'DDT_',
       cid: dataItem.cid,
       shape: 'box',
       shapeProperties: {
         borderRadius: dataItem.category === 'DDT_' ? 0 : 20
       },
       data: {...dataItem},
-      fixed: dataItem.category === 'SDT_',
-      mass: dataItem.category === 'SDT_' ? 500 : 1
-    }
+      fixed: true,
+
+      x: dataItem.x,
+      y: dataItem.y
+    } 
 
     if (dataItem.root) {
       node.borderWidth = 4;
@@ -253,16 +242,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
     if (dataItem.category) {
       node.label = `${dataItem.count} ${dataItem.name.replace(/<br>/g, '\n')}`;
-    }
-
-    const { x, y } = dataItem
-
-    if (typeof y === 'number') {
-      node.y = y * this.yScale;
-    }
-
-    if(typeof x === 'number') {
-      node.x = x * this.xScale;
     }
 
     if(dataItem.parent) {
