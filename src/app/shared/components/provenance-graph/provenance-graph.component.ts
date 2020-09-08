@@ -75,8 +75,19 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = scrollWidth / xRange
-    this.yScale = scrollHeight / yRange;
+    this.xScale = scrollWidth / xRange * 2
+    this.yScale = scrollHeight / yRange * 2;
+
+    // we only want to apply the scaling if there is a wide range between nodes
+    // this prevents small graps from looking sparse and taking up the whole space
+
+    if (xRange < 750) {
+      this.xScale = 1;
+    }
+
+    if (yRange < 900) {
+      this.yScale = 1;
+    }
   }
 
   ngOnDestroy() {
@@ -168,7 +179,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
  addCluster(data) {
    // configuration for nodes that hold clusters together
    this.network.cluster({
-    // joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     clusterNodeProperties: {
       label: `${data.count} ${data.name} [+]`,
@@ -179,7 +189,10 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       },
       borderWidth: 3,
       shape: 'box',
-      x: data.x,
+      shapeProperties: {
+        borderRadius: 0
+      },
+      x: data.x > 300 ? data.x - 150 : data.x,
       y: data.y,
       font: {
         size: 16,
@@ -228,9 +241,13 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       data: {...dataItem},
       fixed: true,
 
-      x: dataItem.x,
-      y: dataItem.y
-    } 
+      x: dataItem.x * this.xScale,
+      y: dataItem.y * this.yScale
+    }
+
+    if (dataItem.x > 300) {
+      node.x = dataItem.x - 150;
+    }
 
     if (dataItem.root) {
       node.borderWidth = 4;
@@ -248,7 +265,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       node.cid = dataItem.parent;
     }
 
-    if (dataItem.children?.length) {
+    if (dataItem.isParent) {
       node.label = '[-]';
     }
 
