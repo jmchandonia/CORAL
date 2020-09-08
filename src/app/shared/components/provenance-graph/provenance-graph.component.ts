@@ -75,8 +75,8 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = scrollWidth / xRange * 2
-    this.yScale = scrollHeight / yRange * 2;
+    this.xScale = scrollWidth / xRange * 2;
+    this.yScale = scrollHeight / yRange * 1.5;
 
     // we only want to apply the scaling if there is a wide range between nodes
     // this prevents small graps from looking sparse and taking up the whole space
@@ -152,7 +152,22 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
       if(clusteredNode && clusteredNode.expanded) {
         this.reclusterNode(nodes[0]);
+        // refit network to include everything exept hidden nodes
+        this.network.fit({
+          nodes: this.nodes.getIds({
+            // this filter method returns items that DO get filtered out, the opposite of Array.prototype.filter :(
+            filter: node => node.cid === clusteredNode.id
+          }) as string[],
+          animation: true
+        })
+      // if node is null then we have a cluster, expand to fit newly drawn cluster nodes
+      } else if (this.nodes.get(nodes[0]) === null) {
+        this.network.fit({
+          nodes: this.nodes.map(node => node.id),
+          animation: true
+        })
       }
+
     });
 
     // show edge labels on hover
