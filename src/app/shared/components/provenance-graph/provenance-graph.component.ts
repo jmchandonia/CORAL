@@ -22,6 +22,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
+  isDragging = false;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -148,27 +149,39 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
     // add click event to expand cluster nodes
-    this.network.on('click', ({nodes}) => {
-      const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
-      if(clusteredNode && clusteredNode.expanded) {
-        this.reclusterNode(nodes[0]);
-        // refit network to include everything exept hidden nodes
-        this.network.fit({
-          nodes: this.nodes.getIds({
-            // this filter method returns items that DO get filtered out, the opposite of Array.prototype.filter :(
-            filter: node => node.cid === clusteredNode.id
-          }) as string[],
-          animation: true
-        })
-      // if node is null then we have a cluster, expand to fit newly drawn cluster nodes
-      } else if (this.nodes.get(nodes[0]) === null) {
-        this.network.fit({
-          nodes: this.nodes.map(node => node.id),
-          animation: true
-        })
+    this.network.on('release', ({nodes}) => {
+      if (!this.isDragging) {
+        // if the id in nodes is a string and starts with cluster, open network cluster from id
+        if (typeof nodes[0] === 'string' && nodes[0].includes('cluster')) {
+          this.network.openCluster(nodes[0], {
+            releaseFunction: (_ ,positions) => positions
+          });
+        }
+        // logic to handle closing clusters
+        const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
+        if(clusteredNode && clusteredNode.expanded) {
+          this.reclusterNode(nodes[0]);
+          // refit network to include everything exept hidden nodes
+          this.network.fit({
+            nodes: this.nodes.getIds({
+              // this filter method returns items that DO get filtered out, the opposite of Array.prototype.filter :(
+              filter: node => node.cid === clusteredNode.id
+            }) as string[],
+            animation: true
+          })
+        // if node is null then we have a cluster, expand to fit newly drawn cluster nodes
+        } else if (this.nodes.get(nodes[0]) === null) {
+          this.network.fit({
+            nodes: this.nodes.map(node => node.id),
+            animation: true
+          })
+        }
       }
-
     });
+
+    // opening and closing of nodes will not fire is isDragging is true
+    this.network.on('dragStart', () => this.isDragging = true);
+    this.network.on('dragEnd', () => setTimeout(() => this.isDragging = false, 500));
 
     // show edge labels on hover
     this.network.on('hoverEdge', ({edge}) => {
@@ -217,14 +230,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         node: (values, id, selected, hovering) => {
           if (selected) {
             data.expanded = true;
-            this.network.openCluster(id, {
-              // function to move child nodes to their specified position
-              releaseFunction: (_, positions) => positions 
-            });
           }
-        },
-        label: (values, id, selected) => {
-          if(selected) { values.size = 0; }
         }
       } as NodeChosen
     },
