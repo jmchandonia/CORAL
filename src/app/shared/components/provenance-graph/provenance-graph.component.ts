@@ -114,9 +114,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
       if (dynamicType.isParent) {
-        this.clusterNodes.push({
-          ...dynamicType, extended: true,
-        });
+        this.clusterNodes.push(dynamicType);
       }
       this.nodes.update(this.createNode(dynamicType));
     });
@@ -159,7 +157,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         }
         // logic to handle closing clusters
         const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
-        if(clusteredNode && clusteredNode.expanded) {
+        if (clusteredNode) {
           this.reclusterNode(nodes[0]);
           // refit network to include everything exept hidden nodes
           this.network.fit({
@@ -226,13 +224,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         size: 16,
         face: 'Red Hat Text, sans-serif'
       },
-      chosen: {
-        node: (values, id, selected, hovering) => {
-          if (selected) {
-            data.expanded = true;
-          }
-        }
-      } as NodeChosen
     },
    });
  }
