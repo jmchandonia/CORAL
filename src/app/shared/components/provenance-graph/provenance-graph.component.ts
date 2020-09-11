@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
@@ -175,6 +174,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
           })
         }
       }
+      this.recalculateClusterPositions(nodes[0]);
     });
 
     // opening and closing of nodes will not fire is isDragging is true
@@ -199,10 +199,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         this.nodes.update({id: node.id, fixed: false});
       });
     });
+}
 
-  }
-
- addCluster(data) {
+addCluster(data) {
    // configuration for nodes that hold clusters together
    this.network.cluster({
     joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
@@ -218,22 +217,48 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       shapeProperties: {
         borderRadius: 0
       },
-      x: data.x > 300 ? data.x - 150 : data.x,
-      y: data.y,
+      x: data.x * this.xScale,
+      y: data.y * this.yScale,
       font: {
         size: 16,
         face: 'Red Hat Text, sans-serif'
       },
     },
    });
- }
+}
 
- reclusterNode(nodeID) {
-   const cluster = this.clusterNodes.find(item => item.index === nodeID);
-   this.addCluster(cluster);
- }
+reclusterNode(nodeID) {
+  const cluster = this.clusterNodes.find(item => item.index === nodeID);
+  this.addCluster(cluster);
+}
 
-  createNode(dataItem: any): Node {
+recalculateClusterPositions(nodeId: string | number) {
+  // whenever we move the root cluster node we want the children to move with it
+  if (this.network.isCluster(nodeId)) {
+    // get new X Y coordinates
+    const {x, y} = this.network.getPositions(nodeId)[nodeId];
+    // get child nodes from cluster ID
+    const childNodes = this.network
+      .getNodesInCluster(nodeId)
+      .map(childNodeId => this.nodes.get(childNodeId));
+    // 'root' node is different from cluster node, we can use it to determine the original X Y coordinates before node was moved
+    const rootNode = childNodes.find(node => node.data.isParent);
+
+    const dx = x - rootNode.x;
+    const dy = y - rootNode.y;
+    // update positions for each node
+    childNodes.forEach(({id, x, y}) => {
+      this.nodes.update({id, x: x + dx, y: y + dy});
+    });
+    // also have to update coordinate deltas for stored cluster items when node collapses again
+    const clustered = this.clusterNodes.find(node => node.index === rootNode.id);
+    // divide by scale because item is added before network is rendered and scaling is multiplied
+    clustered.x += (dx / this.xScale);
+    clustered.y += (dy / this.yScale);
+  }
+}
+
+createNode(dataItem: any): Node {
     const node: any = {
       id: dataItem.index,
       font: {
@@ -254,12 +279,12 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       fixed: true,
 
       x: dataItem.x * this.xScale,
-      y: dataItem.y * this.yScale
+      y: dataItem.y * this.yScale,
     }
 
-    if (dataItem.x > 300) {
-      node.x = dataItem.x - 150;
-    }
+    // if (dataItem.x > 300) {
+    //   node.x = dataItem.x - 150;
+    // }
 
     if (dataItem.root) {
       node.borderWidth = 4;
@@ -281,8 +306,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       node.label = '[-]';
     }
 
-    if(dataItem.category === 'SDT_') { node.mass = 10; }
-
     return node;
   }
 
@@ -294,9 +317,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       from: target.cid ? target.cid : fromId,
       to: toId,
       width: edge.thickness,
+      physics: false,
       label: edge.text.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
       color: edge.in_filter ? 'blue' : '#777',
-      physics: true,
       selfReference: {
         angle: 0.22
       },
