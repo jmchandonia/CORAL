@@ -347,11 +347,13 @@ createNode(dataItem: any): Node {
   submitSearchQuery(nodes) {
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
-      const { category, dataType, dataModel } = node.data;
-      const edgeIds = this.network.getConnectedEdges(node.id);
-      const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
-      const query = new QueryMatch({category, dataType, dataModel});
-      this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+      if (!node.data.isParent) { // dont submit search for root cluster nodes
+        const { category, dataType, dataModel } = node.data;
+        const edgeIds = this.network.getConnectedEdges(node.id);
+        const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
+        const query = new QueryMatch({category, dataType, dataModel});
+        this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+      }
     }
   }
 
