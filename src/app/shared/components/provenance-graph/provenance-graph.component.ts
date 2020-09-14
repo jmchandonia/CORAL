@@ -5,7 +5,7 @@ import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-
+import { ResizeEvent } from 'angular-resizable-element';
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
@@ -22,14 +22,16 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   provenanceGraphSub: Subscription;
   noResults = false;
   isDragging = false;
+  resizeWidth = 0;
+
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
   options = {
     interaction: {
       zoomView: false,
-      dragView: false,
-      hover: true
+      dragView: true,
+      hover: true,
     },
     physics: false,
     layout: {
@@ -82,7 +84,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // this prevents small graps from looking sparse and taking up the whole space
 
     if (xRange < 750) {
-      this.xScale = 1;
+      this.xScale = 1.5;
     }
 
     if (yRange < 900) {
@@ -347,7 +349,7 @@ createNode(dataItem: any): Node {
   submitSearchQuery(nodes) {
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
-      if (!node.data.isParent) { // dont submit search for root cluster nodes
+      if (!node.data.isParent) { // dont submit search for root cluster
         const { category, dataType, dataModel } = node.data;
         const edgeIds = this.network.getConnectedEdges(node.id);
         const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
@@ -399,5 +401,7 @@ createNode(dataItem: any): Node {
         }
       });
   }
-
+  onResizeEnd(event) {
+    this.resizeWidth += event.edges.right;
+  }
 }
