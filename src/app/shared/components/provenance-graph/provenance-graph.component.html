@@ -1,4 +1,12 @@
-<div id="canvas-container" style="height: 600px; position: relative">
+<div
+    id="canvas-container"
+    style="height: 600px; position: relative; display: inline-block; box-sizing: border-box;"
+    [ngStyle]="{'width' : 'calc(100% + ' + resizeWidth + 'px)'}"
+    mwlResizable
+    [enableGhostResize]="true"
+    [resizeEdges]="{right: true}"
+    (resizeEnd)="onResizeEnd($event)"
+>
     <div #pGraph id="pgraph-container" [hidden]="!network || noResults"></div>
     <div id="no-results-container" [hidden]="!noResults">
         <span class="no-results" *ngIf="noResults">

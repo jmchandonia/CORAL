@@ -24,6 +24,7 @@
     "@types/d3": "^5.7.2",
     "@types/jquery": "^3.3.38",
     "angular-plotly.js": "1.4.0",
+    "angular-resizable-element": "^3.3.3",
     "angular-tree-component": "^8.5.6",
     "bootstrap": "4.0.0-beta.2",
     "class-transformer": "^0.2.3",
