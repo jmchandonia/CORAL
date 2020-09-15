@@ -1131,7 +1131,7 @@ def generix_search():
         if 'parentProcesses' in search_data:
             q.immediate_parent(search_data['parentProcesses'])
 
-        res = q.find().to_df().head(n=100).to_json(orient="table", index=False)
+        res = q.find().to_df().to_json(orient="table", index=False)
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
@@ -1389,50 +1389,41 @@ def line_thickness(n):
 # assign x, y to all static and intermediate nodes.
 # just assign y to dynamic nodes, and don't process any of their children
 def assign_xy_static(nodes, usedPos, i, x, y):
-    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
     # skip if already done
     if 'y' in nodes[i]:
-        # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
+        sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
         return
     # assign positions
     nodes[i]['y'] = y
-    if 'dynamic' in nodes[i]:
+    if nodes[i]['category'] == TYPE_CATEGORY_DYNAMIC and 'isParent' not in nodes[i]:
         return
-    else:
+    elif 'isParent' not in nodes[i]:
         nodes[i]['x'] = x
     if not 'children' in nodes[i]:
-        # sys.stderr.write('no children for node '+str(nodes[i]['name'])+'\n')
+        sys.stderr.write('no children for node '+str(nodes[i]['name'])+'\n')
         return
     # do children of static/intermediate nodes
     for c in nodes[i]['children']:
         if 'y' in nodes[c]:
             continue
-        if nodes[i]['category'] is False or nodes[c]['category'] is False:
-            # intermediate node
-            dX = 100
-            dY = 50
-        else:
-            # static/dynamic node
-            dX = 100
-            dY = 100
+        dX = 100
+        dY = 100
         if 'dynamic' in nodes[c]:
-            assign_xy_static(nodes, usedPos, c, x, y+dY)
+            assign_xy_static(nodes, usedPos, c, x, y)
             continue
         else:
-            # sys.stderr.write('new static '+str(nodes[c]['name'])+'\n')
+            sys.stderr.write('new static '+str(nodes[c]['name'])+'\n')
             proposedY = y+dY
             proposedX = x
-            pos = str(proposedX)+','+str(proposedY)
-            # sys.stderr.write('pos '+pos+'\n')
-            firstPass = True
+            pos = str(int(proposedX))+','+str(int(proposedY))
+            sys.stderr.write('pos '+pos+'\n')
+            direction = 1
             while (pos in usedPos):
-                if firstPass:
-                    proposedX -= dX
-                else:
-                    proposedX += dX
-                firstPass = False
-                pos = str(proposedX)+','+str(proposedY)
-                # sys.stderr.write('pos '+pos+'\n')
+                proposedX += direction * dX
+                pos = str(int(proposedX))+','+str(int(proposedY))
+                sys.stderr.write('pos '+pos+'\n')
+                direction = (abs(direction)+1) * int(np.sign(direction)) * -1
             usedPos[pos] = True
             assign_xy_static(nodes, usedPos, c, proposedX, proposedY)
 
@@ -1456,45 +1447,113 @@ def reposition_intermediate_nodes(nodes):
                 n['y'] = y / nX
 
 def assign_xy_dynamic(nodes, usedPos):
-    # first, calculate average x and y
-    avgX = 0
-    avgY = 0
-    nX = 0
-    nY = 0
-    for n in nodes:
-        if n['category'] is False and 'unused' not in n:
-            if 'x' in n:
-                avgX += n['x']
-                nX += 1
-            if 'y' in n:                    
-                avgY += n['y']
-                nY += 1
-                
-    if nX > 0:
-        avgX /= nX
-    if nY > 0:
-        avgY /= nY
-
     # put dynamic nodes on left or right side, depending on where their
-    # parents are relative to the average
+    # parents are relative to the average at that Y level
     dX = 100
     for repeat in range(2): # do it twice to catch intermediate nodes
         for n in nodes:
-            if 'dynamic' in n and 'y' in n:
+            sys.stderr.write('axyd '+str(n['index'])+' '+str(n['name'])+' '+str(n['category'])+'\n')
+            if 'dynamic' in n and 'y' in n and 'x' not in n:
                 y = n['y']
+
+                # calculate average static x near this y
+                avgX = 0
+                nX = 0
+                for n2 in nodes:
+                    if n2['category'] == TYPE_CATEGORY_STATIC and 'unused' not in n2 and 'y' in n2 and 'x' in n2:
+                        if n2['y'] >= y-150 and n2['y'] <= y+150:
+                            avgX += n2['x']
+                            nX += 1
+                
+                            if nX > 0:
+                                avgX /= nX
+
+                # arrange x based on which side of x is average
+                direction = 0
                 for i in n['parents']:
                     if 'x' in nodes[i]:
-                        if nodes[i]['x'] > avgX:
+                        parentX = nodes[i]['x']
+                        if parentX > avgX:
                             direction = 1
                         else:
                             direction = -1
-                        x = nodes[i]['x'] + direction * dX
-                        pos = str(x)+','+str(y)
-                        while pos in usedPos:
-                            x += direction * dX
-                            pos = str(x)+','+str(y)
-                        usedPos[pos] = True
-                        n['x'] = x
+                if direction != 0:
+                    x = parentX + direction * dX
+                    pos = str(int(x))+','+str(int(y))
+                    sys.stderr.write('pos '+pos+'\n')
+                    while pos in usedPos:
+                        x += direction * dX
+                        pos = str(int(x))+','+str(int(y))
+                        sys.stderr.write('pos '+pos+'\n')
+                    usedPos[pos] = True
+                    n['x'] = x
+            elif 'dynamic' in n and 'y' not in n:
+                sys.stderr.write('error - dynamic but no y\n')
+                sys.stderr.write('parents are '+', '.join(str(x) for x in n['parents'])+'\n')
+
+# use NetworkX to lay out nodes, spring layout
+def reposition_spring(nodes, edges, k):
+    G = nx.Graph()
+    G_fixed = []
+    G_pos = {}
+    for n in nodes:
+        if not 'unused' in n:
+            G.add_node(n['index'])
+            if 'x' in n and 'y' in n:
+                G_pos[n['index']] = (n['x'], n['y'])
+                if n['category'] == TYPE_CATEGORY_STATIC:
+                    G_fixed.append(n['index'])
+    for e in edges:
+        G.add_edge(e['source'], e['target'], weight=e['thickness'])
+    sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
+    pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed, k=k, seed=1)
+    pos = nx.rescale_layout_dict(pos)
+    for index, xy in pos.items():
+        sys.stderr.write('nx '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
+        if 'x' not in nodes[index]:
+            nodes[index]['x'] = -1
+        if 'y' not in nodes[index]:
+            nodes[index]['y'] = -1
+        pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(xy[0])+','+str(xy[1])
+        sys.stderr.write('pos '+pos+'\n')
+        nodes[index]['x'] = xy[0]
+        nodes[index]['y'] = xy[1]
+
+# use NetworkX to lay out nodes, using graphviz neato
+def reposition_graphviz(nodes, edges):
+    G = nx.Graph()
+    for n in nodes:
+        if not 'unused' in n:
+            if 'x' in n and 'y' in n:
+                if n['category'] == TYPE_CATEGORY_STATIC:
+                    G.add_node(n['index'], label='testing', pos=str(n['x'])+','+str(n['y'])) # +'!')
+                else:
+                    G.add_node(n['index'], label='testing', pos=str(n['x'])+','+str(n['y']))
+            else:
+                G.add_node(n['index'], label='testing')
+    for e in edges:
+        G.add_edge(e['source'], e['target'])
+    sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')
+    pos = nx.nx_agraph.graphviz_layout(G, prog='neato', args='-Goverlap=scalexy')
+    for index, xy in pos.items():
+        sys.stderr.write('gv '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
+        # if nodes[index]['category'] != TYPE_CATEGORY_STATIC:
+        if 'x' not in nodes[index]:
+            nodes[index]['x'] = -1
+        if 'y' not in nodes[index]:
+            nodes[index]['y'] = -1
+        pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(xy[0])+','+str(xy[1])
+        sys.stderr.write('pos '+pos+'\n')
+        nodes[index]['x'] = xy[0]
+        nodes[index]['y'] = xy[1]
+
+# rescale from small (0-1) scale to large (0-500)
+def rescale_xy(nodes):
+    for n in nodes:
+        if not 'unused' in n:
+            if 'x' in n and 'y' in n:
+                n['x'] *= 500
+                n['y'] *= 500
 
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
@@ -1948,26 +2007,11 @@ def generix_type_graph():
 
     reposition_intermediate_nodes(nodes)
     assign_xy_dynamic(nodes, usedPos)
-
-    # use NetworkX to lay out the rest
-    G = nx.Graph()
-    for e in edges:
-        G.add_edge(e['source'], e['target'], weight=e['thickness'])
-    G_fixed = []
-    G_pos = {}
-    for n in nodes:
-        if not 'unused' in n:
-            G.add_node(n['index'])
-            if 'x' in n and 'y' in n:
-                G_pos[n['index']] = (n['x'], n['y'])
-                if n['category'] == TYPE_CATEGORY_STATIC:
-                    G_fixed.append(n['index'])
-    pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed)
-    for index, xy in pos.items():
-        nodes[index]['x'] = xy[0]
-        nodes[index]['y'] = xy[1]
-
     reposition_intermediate_nodes(nodes)
+    reposition_spring(nodes, edges, 150)
+    reposition_graphviz(nodes, edges)
+    # rescale_xy(nodes)
+    # reposition_intermediate_nodes(nodes)
 
     # remove unused properties
     for n in nodes:
