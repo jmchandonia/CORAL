@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
+import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
@@ -23,7 +23,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   noResults = false;
   isDragging = false;
   resizeWidth = 0;
-
+  canvasWidth = 0;
+  canvasHeight = 0;
+  fitAllNodesOnScreen = true;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -33,10 +35,11 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       dragView: true,
       hover: true,
     },
+    autoResize: false,
     physics: false,
     layout: {
       randomSeed: '0:0'
-    }
+    },
   };
 
   coreTypeNodes: any[];
@@ -70,25 +73,29 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   calculateScale(nodes) {
-    const {scrollHeight, scrollWidth} = this.pGraph.nativeElement.parentElement;
+    const el = this.pGraph.nativeElement.parentElement;
+    this.canvasWidth = el.scrollWidth;
+    this.canvasHeight = el.scrollHeight;
+
     const xSort = nodes.map(d => d.x).sort((a, b) => a - b),
     ySort = nodes.map(d => d.y).sort((a, b) => a - b);
 
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = scrollWidth / xRange * 2;
-    this.yScale = scrollHeight / yRange * 1.5;
+    this.xScale = this.canvasWidth / xRange;
+    this.yScale = this.canvasHeight / yRange;
 
+    
     // we only want to apply the scaling if there is a wide range between nodes
     // this prevents small graps from looking sparse and taking up the whole space
-
+    
     if (xRange < 750) {
       this.xScale = 1.5;
     }
-
+    
     if (yRange < 900) {
-      this.yScale = 1;
+      this.yScale = 1.5;
     }
   }
 
@@ -137,12 +144,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
     // cluster nodes from clusterNodes array
     this.clusterNodes.forEach(clusterNode => this.addCluster(clusterNode));
-
-    // set zoom level to contain all nodes
-    this.network.fit({
-      nodes: this.nodes.map(node => node.id),
-      animation: false
-    });
 
     // add double click event listener to submit search query on nodes
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
@@ -200,7 +201,24 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       this.nodes.forEach(node => {
         this.nodes.update({id: node.id, fixed: false});
       });
+      if (!this.fitAllNodesOnScreen) {
+        const rootBoundingBox = this.network.getBoundingBox((data.nodes.find(node => node.root)).index);
+        this.network.fit({
+          nodes: this.nodes.map(node => node.id).filter(id => {
+            const boundingBox = this.network.getBoundingBox(id);
+            if (
+              boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
+              boundingBox.left > rootBoundingBox.left + this.canvasWidth
+            ){
+              return false
+            }
+            return true;
+          }),
+          animation: false
+        });
+      }
     });
+
 }
 
 addCluster(data) {
@@ -279,14 +297,9 @@ createNode(dataItem: any): Node {
       },
       data: {...dataItem},
       fixed: true,
-
       x: dataItem.x * this.xScale,
       y: dataItem.y * this.yScale,
-    }
-
-    // if (dataItem.x > 300) {
-    //   node.x = dataItem.x - 150;
-    // }
+    };
 
     if (dataItem.root) {
       node.borderWidth = 4;
@@ -349,7 +362,7 @@ createNode(dataItem: any): Node {
   submitSearchQuery(nodes) {
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
-      if (!node.data.isParent) { // dont submit search for root cluster
+      if (!node.data.isParent) { // dont submit search for root cluster nodes
         const { category, dataType, dataModel } = node.data;
         const edgeIds = this.network.getConnectedEdges(node.id);
         const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
@@ -403,5 +416,11 @@ createNode(dataItem: any): Node {
   }
   onResizeEnd(event) {
     this.resizeWidth += event.edges.right;
+    // this.network.fit({
+    //   nodes: this.nodes.map(node => node.id),
+    //   animation: false
+    // });
+    this.network.setOptions({width: 800 + this.resizeWidth + 'px'});
+    // this.network.redraw();
   }
 }
