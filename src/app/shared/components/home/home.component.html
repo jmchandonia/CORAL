@@ -7,7 +7,7 @@
                   <li class="nav-item pt-4 pb-4" class="category-li" *ngFor="let category of filterCategories; let i = index;">
                     <span class="category-label">{{category.categoryName}}</span>
                     <div class="checkbox-container" style="display: flex; flex-direction: row; align-items: center;" *ngFor="let item of category.items; let j = index;">
-                      <input [id]="i + '_' + j" type="checkbox" (change)="onValueChecked($event)" />
+                      <input [id]="i + '_' + j" type="checkbox" [checked]="shouldBeChecked(i + '_' + j)" (change)="onValueChecked($event)" />
 		                  <label style="font-size: 0.7em; margin-bottom: 0;" [for]="i + ' ' + j">{{item.name}}</label>
                     </div>
                   </li>
