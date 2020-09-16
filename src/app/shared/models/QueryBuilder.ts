@@ -87,6 +87,7 @@ export class QueryParam {
     public matchType: string;
     public scalarType: string;
     public keyword = '';
+    public term?: string;
 
     get isValid() {
         if (

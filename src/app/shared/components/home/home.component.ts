@@ -34,6 +34,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
         this.filterCategories = res.results;
+        this.query.processesUp.forEach(process => {
+          if (process.attribute === 'campaign') {
+            this.checkBoxArray.push('0_' + this.filterCategories[0].items.findIndex(d => d.queryParam.term === process.term));
+          } else if (process.attribute === 'person') {
+            this.checkBoxArray.push('1_' + this.filterCategories[1].items.findIndex(d => d.queryParam.term === process.term));
+          }
+        });
       });
   }
 
@@ -46,6 +53,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getUpdatedValues() {
     this.homeService.getProvenanceGraphData(this.query.processesUp);
+  }
+
+  shouldBeChecked(id) {
+    return this.checkBoxArray.includes(id);
   }
 
   onValueChecked(event) {

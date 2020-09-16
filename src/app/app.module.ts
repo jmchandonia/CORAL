@@ -25,6 +25,7 @@ import { DashboardPlotComponent } from './shared/components/dashboard/dashboard-
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TreeModule } from 'angular-tree-component';
 import { ProvenanceGraphComponent } from './shared/components/provenance-graph/provenance-graph.component';
+import { ResizableModule } from 'angular-resizable-element'
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -52,7 +53,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     NgSelectModule,
-    TreeModule.forRoot()
+    TreeModule.forRoot(),
+    ResizableModule
   ],
   providers: [
     {

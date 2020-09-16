@@ -1,12 +1,11 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Network, DataSet, Node, Edge, NodeChosen } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-
+import { ResizeEvent } from 'angular-resizable-element';
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
@@ -22,14 +21,17 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
+  isDragging = false;
+  resizeWidth = 0;
+
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
   options = {
     interaction: {
       zoomView: false,
-      dragView: false,
-      hover: true
+      dragView: true,
+      hover: true,
     },
     physics: false,
     layout: {
@@ -75,8 +77,19 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = scrollWidth / xRange
-    this.yScale = scrollHeight / yRange;
+    this.xScale = scrollWidth / xRange * 2;
+    this.yScale = scrollHeight / yRange * 1.5;
+
+    // we only want to apply the scaling if there is a wide range between nodes
+    // this prevents small graps from looking sparse and taking up the whole space
+
+    if (xRange < 750) {
+      this.xScale = 1.5;
+    }
+
+    if (yRange < 900) {
+      this.yScale = 1;
+    }
   }
 
   ngOnDestroy() {
@@ -102,9 +115,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // layout dynamic types with visJS physics engine
     dynamicTypes.forEach(dynamicType => {
       if (dynamicType.isParent) {
-        this.clusterNodes.push({
-          ...dynamicType, extended: true,
-        });
+        this.clusterNodes.push(dynamicType);
       }
       this.nodes.update(this.createNode(dynamicType));
     });
@@ -137,12 +148,40 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
     // add click event to expand cluster nodes
-    this.network.on('click', ({nodes}) => {
-      const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
-      if(clusteredNode && clusteredNode.expanded) {
-        this.reclusterNode(nodes[0]);
+    this.network.on('release', ({nodes}) => {
+      if (!this.isDragging) {
+        // if the id in nodes is a string and starts with cluster, open network cluster from id
+        if (typeof nodes[0] === 'string' && nodes[0].includes('cluster')) {
+          this.network.openCluster(nodes[0], {
+            releaseFunction: (_ ,positions) => positions
+          });
+        }
+        // logic to handle closing clusters
+        const clusteredNode = this.clusterNodes.find(node => node.index === nodes[0]);
+        if (clusteredNode) {
+          this.reclusterNode(nodes[0]);
+          // refit network to include everything exept hidden nodes
+          this.network.fit({
+            nodes: this.nodes.getIds({
+              // this filter method returns items that DO get filtered out, the opposite of Array.prototype.filter :(
+              filter: node => node.cid === clusteredNode.id
+            }) as string[],
+            animation: true
+          })
+        // if node is null then we have a cluster, expand to fit newly drawn cluster nodes
+        } else if (this.nodes.get(nodes[0]) === null) {
+          this.network.fit({
+            nodes: this.nodes.map(node => node.id),
+            animation: true
+          })
+        }
       }
+      this.recalculateClusterPositions(nodes[0]);
     });
+
+    // opening and closing of nodes will not fire is isDragging is true
+    this.network.on('dragStart', () => this.isDragging = true);
+    this.network.on('dragEnd', () => setTimeout(() => this.isDragging = false, 500));
 
     // show edge labels on hover
     this.network.on('hoverEdge', ({edge}) => {
@@ -162,13 +201,11 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         this.nodes.update({id: node.id, fixed: false});
       });
     });
+}
 
-  }
-
- addCluster(data) {
+addCluster(data) {
    // configuration for nodes that hold clusters together
    this.network.cluster({
-    // joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
     clusterNodeProperties: {
       label: `${data.count} ${data.name} [+]`,
@@ -179,36 +216,51 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       },
       borderWidth: 3,
       shape: 'box',
-      x: data.x,
-      y: data.y,
+      shapeProperties: {
+        borderRadius: 0
+      },
+      x: data.x * this.xScale,
+      y: data.y * this.yScale,
       font: {
         size: 16,
         face: 'Red Hat Text, sans-serif'
       },
-      chosen: {
-        node: (values, id, selected, hovering) => {
-          if (selected) {
-            data.expanded = true;
-            this.network.openCluster(id, {
-              // function to move child nodes to their specified position
-              releaseFunction: (_, positions) => positions 
-            });
-          }
-        },
-        label: (values, id, selected) => {
-          if(selected) { values.size = 0; }
-        }
-      } as NodeChosen
     },
    });
- }
+}
 
- reclusterNode(nodeID) {
-   const cluster = this.clusterNodes.find(item => item.index === nodeID);
-   this.addCluster(cluster);
- }
+reclusterNode(nodeID) {
+  const cluster = this.clusterNodes.find(item => item.index === nodeID);
+  this.addCluster(cluster);
+}
 
-  createNode(dataItem: any): Node {
+recalculateClusterPositions(nodeId: string | number) {
+  // whenever we move the root cluster node we want the children to move with it
+  if (this.network.isCluster(nodeId)) {
+    // get new X Y coordinates
+    const {x, y} = this.network.getPositions(nodeId)[nodeId];
+    // get child nodes from cluster ID
+    const childNodes = this.network
+      .getNodesInCluster(nodeId)
+      .map(childNodeId => this.nodes.get(childNodeId));
+    // 'root' node is different from cluster node, we can use it to determine the original X Y coordinates before node was moved
+    const rootNode = childNodes.find(node => node.data.isParent);
+
+    const dx = x - rootNode.x;
+    const dy = y - rootNode.y;
+    // update positions for each node
+    childNodes.forEach(({id, x, y}) => {
+      this.nodes.update({id, x: x + dx, y: y + dy});
+    });
+    // also have to update coordinate deltas for stored cluster items when node collapses again
+    const clustered = this.clusterNodes.find(node => node.index === rootNode.id);
+    // divide by scale because item is added before network is rendered and scaling is multiplied
+    clustered.x += (dx / this.xScale);
+    clustered.y += (dy / this.yScale);
+  }
+}
+
+createNode(dataItem: any): Node {
     const node: any = {
       id: dataItem.index,
       font: {
@@ -228,9 +280,13 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       data: {...dataItem},
       fixed: true,
 
-      x: dataItem.x,
-      y: dataItem.y
-    } 
+      x: dataItem.x * this.xScale,
+      y: dataItem.y * this.yScale,
+    }
+
+    // if (dataItem.x > 300) {
+    //   node.x = dataItem.x - 150;
+    // }
 
     if (dataItem.root) {
       node.borderWidth = 4;
@@ -248,11 +304,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       node.cid = dataItem.parent;
     }
 
-    if (dataItem.children?.length) {
+    if (dataItem.isParent) {
       node.label = '[-]';
     }
-
-    if(dataItem.category === 'SDT_') { node.mass = 10; }
 
     return node;
   }
@@ -265,9 +319,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       from: target.cid ? target.cid : fromId,
       to: toId,
       width: edge.thickness,
+      physics: false,
       label: edge.text.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
       color: edge.in_filter ? 'blue' : '#777',
-      physics: true,
       selfReference: {
         angle: 0.22
       },
@@ -295,11 +349,13 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   submitSearchQuery(nodes) {
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
-      const { category, dataType, dataModel } = node.data;
-      const edgeIds = this.network.getConnectedEdges(node.id);
-      const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
-      const query = new QueryMatch({category, dataType, dataModel});
-      this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+      if (!node.data.isParent) { // dont submit search for root cluster
+        const { category, dataType, dataModel } = node.data;
+        const edgeIds = this.network.getConnectedEdges(node.id);
+        const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
+        const query = new QueryMatch({category, dataType, dataModel});
+        this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+      }
     }
   }
 
@@ -345,5 +401,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+  onResizeEnd(event) {
+    this.resizeWidth += event.edges.right;
+  }
 }
