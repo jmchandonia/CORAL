@@ -18,6 +18,13 @@ text {
     stroke-width: 2px;
 }
 
+#canvas-container {
+    height: 800px;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
 #pgraph-container {
     height: 800px;
     margin-bottom: 20px;
