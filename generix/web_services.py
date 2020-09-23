@@ -1389,10 +1389,10 @@ def line_thickness(n):
 # assign x, y to all static and intermediate nodes.
 # just assign y to dynamic nodes, and don't process any of their children
 def assign_xy_static(nodes, usedPos, i, x, y):
-    sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
     # skip if already done
     if 'y' in nodes[i]:
-        sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
+        # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
         return
     # assign positions
     nodes[i]['y'] = y
@@ -1401,7 +1401,7 @@ def assign_xy_static(nodes, usedPos, i, x, y):
     elif 'isParent' not in nodes[i]:
         nodes[i]['x'] = x
     if not 'children' in nodes[i]:
-        sys.stderr.write('no children for node '+str(nodes[i]['name'])+'\n')
+        # sys.stderr.write('no children for node '+str(nodes[i]['name'])+'\n')
         return
     # do children of static/intermediate nodes
     for c in nodes[i]['children']:
@@ -1413,16 +1413,16 @@ def assign_xy_static(nodes, usedPos, i, x, y):
             assign_xy_static(nodes, usedPos, c, x, y)
             continue
         else:
-            sys.stderr.write('new static '+str(nodes[c]['name'])+'\n')
+            # sys.stderr.write('new static '+str(nodes[c]['name'])+'\n')
             proposedY = y+dY
             proposedX = x
             pos = str(int(proposedX))+','+str(int(proposedY))
-            sys.stderr.write('pos '+pos+'\n')
+            # sys.stderr.write('pos '+pos+'\n')
             direction = 1
             while (pos in usedPos):
                 proposedX += direction * dX
                 pos = str(int(proposedX))+','+str(int(proposedY))
-                sys.stderr.write('pos '+pos+'\n')
+                # sys.stderr.write('pos '+pos+'\n')
                 direction = (abs(direction)+1) * int(np.sign(direction)) * -1
             usedPos[pos] = True
             assign_xy_static(nodes, usedPos, c, proposedX, proposedY)
@@ -1430,21 +1430,37 @@ def assign_xy_static(nodes, usedPos, i, x, y):
 def reposition_intermediate_nodes(nodes):
     for n in nodes:
         if n['category'] is False and 'unused' not in n and 'parents' in n and 'children' in n:
-            x = 0
-            y = 0
+            minX = False
+            minY = False
+            maxX = False
+            maxY = False
             nX = 0
             nY = 0
+            totalX = 0
+            totalY = 0
             for i in n['parents'] | n['children']:
                 if 'x' in nodes[i]:
-                    x += nodes[i]['x']
+                    totalX += nodes[i]['x']
                     nX += 1
+                    if minX is False or nodes[i]['x'] < minX:
+                        minX = nodes[i]['x']
+                    if minX is False or nodes[i]['x'] > maxX:
+                        maxX = nodes[i]['x']
                 if 'y' in nodes[i]:                    
-                    y += nodes[i]['y']
+                    totalY += nodes[i]['y']
                     nY += 1
-            if nX > 0:
-                n['x'] = x / nX
-            if nY > 0:
-                n['y'] = y / nX
+                    if minY is False or nodes[i]['y'] > maxY:
+                        maxY = nodes[i]['y']
+                    if minY is False or nodes[i]['y'] < minY:
+                        minY = nodes[i]['y']
+
+            if minX is not False:
+                # n['x'] = (minX + maxX) / 2
+                n['x'] = int(totalX / nX)
+            if minY is not False:
+                # n['y'] = (minY + maxY) / 2
+                n['y'] = int(totalY / nY)
+                
 
 def assign_xy_dynamic(nodes, usedPos):
     # put dynamic nodes on left or right side, depending on where their
@@ -1452,7 +1468,7 @@ def assign_xy_dynamic(nodes, usedPos):
     dX = 100
     for repeat in range(2): # do it twice to catch intermediate nodes
         for n in nodes:
-            sys.stderr.write('axyd '+str(n['index'])+' '+str(n['name'])+' '+str(n['category'])+'\n')
+            # sys.stderr.write('axyd '+str(n['index'])+' '+str(n['name'])+' '+str(n['category'])+'\n')
             if 'dynamic' in n and 'y' in n and 'x' not in n:
                 y = n['y']
 
@@ -1480,11 +1496,11 @@ def assign_xy_dynamic(nodes, usedPos):
                 if direction != 0:
                     x = parentX + direction * dX
                     pos = str(int(x))+','+str(int(y))
-                    sys.stderr.write('pos '+pos+'\n')
+                    # sys.stderr.write('pos '+pos+'\n')
                     while pos in usedPos:
                         x += direction * dX
                         pos = str(int(x))+','+str(int(y))
-                        sys.stderr.write('pos '+pos+'\n')
+                        # sys.stderr.write('pos '+pos+'\n')
                     usedPos[pos] = True
                     n['x'] = x
             elif 'dynamic' in n and 'y' not in n:
@@ -1505,56 +1521,163 @@ def reposition_spring(nodes, edges, k):
                     G_fixed.append(n['index'])
     for e in edges:
         G.add_edge(e['source'], e['target'], weight=e['thickness'])
-    sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
+    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
     pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed, k=k, seed=1)
-    pos = nx.rescale_layout_dict(pos)
     for index, xy in pos.items():
-        sys.stderr.write('nx '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
+        # sys.stderr.write('nx '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
         if 'x' not in nodes[index]:
             nodes[index]['x'] = -1
         if 'y' not in nodes[index]:
             nodes[index]['y'] = -1
-        pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(xy[0])+','+str(xy[1])
-        sys.stderr.write('pos '+pos+'\n')
-        nodes[index]['x'] = xy[0]
-        nodes[index]['y'] = xy[1]
+        pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(int(xy[0]))+','+str(int(xy[1]))
+        # sys.stderr.write('pos '+pos+'\n')
+        nodes[index]['x'] = int(xy[0])
+        nodes[index]['y'] = int(xy[1])
 
 # use NetworkX to lay out nodes, using graphviz neato
-def reposition_graphviz(nodes, edges):
+def reposition_graphviz(nodes, edges, args):
     G = nx.Graph()
     for n in nodes:
         if not 'unused' in n:
+            label = str(n['name'])
+            if '<br>' in label:
+                label = label[0:label.index('<br>')]
             if 'x' in n and 'y' in n:
                 if n['category'] == TYPE_CATEGORY_STATIC:
-                    G.add_node(n['index'], label='testing', pos=str(n['x'])+','+str(n['y'])) # +'!')
+                    static = '!'
                 else:
-                    G.add_node(n['index'], label='testing', pos=str(n['x'])+','+str(n['y']))
+                    static = ''
+                G.add_node(n['index'], label=label, pos=str(n['x'])+','+str(n['y'])+static)
             else:
-                G.add_node(n['index'], label='testing')
+                G.add_node(n['index'], label=label)
     for e in edges:
         G.add_edge(e['source'], e['target'])
-    sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')
-    pos = nx.nx_agraph.graphviz_layout(G, prog='neato', args='-Goverlap=scalexy')
+    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')
+    # nx.nx_agraph.write_dot(G, "/tmp/graph3.dot")
+    pos = nx.nx_agraph.graphviz_layout(G, prog='neato', args=args)
+    # re-scale static nodes back to where they started out
+    minX = False
+    minY = False
+    dX = False
+    dY = False
+    scaleX = False
+    scaleY = False
     for index, xy in pos.items():
-        sys.stderr.write('gv '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
-        # if nodes[index]['category'] != TYPE_CATEGORY_STATIC:
-        if 'x' not in nodes[index]:
-            nodes[index]['x'] = -1
-        if 'y' not in nodes[index]:
-            nodes[index]['y'] = -1
-        pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(xy[0])+','+str(xy[1])
-        sys.stderr.write('pos '+pos+'\n')
-        nodes[index]['x'] = xy[0]
-        nodes[index]['y'] = xy[1]
+        if nodes[index]['category'] == TYPE_CATEGORY_STATIC and 'x' in nodes[index] and 'y' in nodes[index]:
+            if dX is False:
+                dX = nodes[index]['x'] - xy[0]
+                x1 = nodes[index]['x']
+            elif (abs(nodes[index]['x'] - x1) > 10) and scaleX is False:
+                x2 = nodes[index]['x']
+                scaleX = (xy[0] - x1 + dX) / (x2 - x1)
+                # sys.stderr.write('x1 '+str(x1)+' x2 '+str(x2)+' dx '+str(dX)+' '+str(xy[0])+'\n')
+            if minX is False or nodes[index]['x'] < minX:
+                minX = nodes[index]['x']
+                dX = nodes[index]['x'] - xy[0]
+            if dY is False:
+                dY = nodes[index]['y'] - xy[1]
+                y1 = nodes[index]['y']
+            elif (abs(nodes[index]['y'] - y1) > 10) and scaleY is False:
+                y2 = nodes[index]['y']
+                scaleY = (xy[1] - y1 + dY) / (y2 - y1)
+            if minY is False or nodes[index]['y'] < minY:
+                minY = nodes[index]['y']
+                dY = nodes[index]['y'] - xy[1]
+    if scaleY is False:
+        scaleY = 1
+    if scaleX is False:
+        scaleX = scaleY
+    if dX is False:
+        dX = 0
+        minX = 0
+    if dY is False:
+        dY = 0
+        minY = 0
+    # sys.stderr.write('minX '+str(minX)+' scaleX '+str(scaleX)+' dx '+str(dX)+'\n')
+    # rescale all nodes as the static nodes were scaled
+    for index, xy in pos.items():
+        if nodes[index]['category'] != TYPE_CATEGORY_STATIC:
+            # sys.stderr.write('gv '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
+            if 'x' not in nodes[index]:
+                nodes[index]['x'] = -1
+            if 'y' not in nodes[index]:
+                nodes[index]['y'] = -1
+            # pos = str(nodes[index]['x'])+','+str(nodes[index]['y'])+' -> '+str(int((xy[0] + dX - minX) / scaleX + minX + 0.5))+','+str(int((xy[1] + dY - minY) / scaleY + minY))
+            # sys.stderr.write('pos '+pos+'\n')
+            nodes[index]['x'] = int((xy[0] + dX - minX) / scaleX + minX)
+            nodes[index]['y'] = int((xy[1] + dY - minY) / scaleY + minY)
 
-# rescale from small (0-1) scale to large (0-500)
-def rescale_xy(nodes):
+# rescale both axes so left/top position is 0
+# considered changing longest/shortest edge
+def rescale_xy(nodes, edges):
+    minX = False
+    minY = False
+    # maxDX = False
+    # maxDY = False
+    # minDX = False
+    # minDY = False
     for n in nodes:
-        if not 'unused' in n:
-            if 'x' in n and 'y' in n:
-                n['x'] *= 500
-                n['y'] *= 500
+        if 'x' in n and 'y' in n and not 'unused' in n:
+            if minX is False or n['x'] < minX:
+                minX = n['x']
+            if minY is False or n['y'] < minY:
+                minY = n['y']
+    # for e in edges:
+    # dX = abs(nodes[e['source']]['x'] - nodes[e['target']]['x'])
+    # dY = abs(nodes[e['source']]['y'] - nodes[e['target']]['y'])
+    # if maxDX is False or dX > maxDX:
+    # maxDX = dX
+    # if maxDY is False or dY > maxDY:
+    # maxDY = dY
+    # if minDX is False or dX < minDX:
+    # minDX = dX
+    # if minDY is False or dY < minDY:
+    # minDY = dY
+    for n in nodes:
+        if 'x' in n and 'y' in n and not 'unused' in n:
+            n['x'] = int(n['x'] - minX)
+            n['y'] = int(n['y'] - minY)
 
+# if nodes are too close, stretch edges to avoid collisions
+def stretch_avoid_collisions(nodes, edges):
+    # how much overlap is needed to move?
+    olapX = 120
+    olapY = 60
+    for repeat in range(3): # multiple cycles to avoid secondary effects
+        for n1 in nodes:
+            if 'unused' in n1 or not 'x' in n1 or not 'y' in n1 or n1['category'] != TYPE_CATEGORY_DYNAMIC:
+                continue
+            # figure out closest intersection with other nodes
+            hasOverlap = True
+            while (hasOverlap):
+                hasOverlap = False
+                for n2 in nodes:
+                    if 'unused' in n2 or not 'x' in n2 or not 'y' in n2 or n1['index']==n2['index']:
+                        continue
+                    dX = abs(n1['x']-n2['x'])
+                    dY = abs(n1['y']-n2['y'])
+                    # dist = math.sqrt(dX**2 + dY**2)
+                    # sys.stderr.write('dist '+str(n1['name'])+' '+str(n2['name'])+' '+str(dist)+' '+str(dX)+' '+str(dY)+'\n')
+                    if (dY < olapY) and (dX < olapX):
+                        hasOverlap = True
+                        break
+                if hasOverlap:
+                    # push n1 further out along edge from parent
+                    # sys.stderr.write('OVERLAP '+str(n1['name'])+' '+str(n2['name'])+' '+str(dX)+' '+str(dY)+'\n')
+                    for e in edges:
+                        if e['target'] != n1['index'] or e['source'] == n1['index']:
+                            continue
+                        n3 = nodes[e['source']]
+                        # calculate distance from source
+                        dX2 = n1['x']-n3['x']
+                        dY2 = n1['y']-n3['y']
+                        # sys.stderr.write('SOURCE '+str(n3['name'])+' '+str(dX2)+' '+str(dY2)+'\n')
+                        # move further along that direction, at least 10 units
+                        moves = 10
+                        n1['x'] += int(moves * (dX2 / (abs(dX2) + abs(dY2))))
+                        n1['y'] += int(moves * (dY2 / (abs(dX2) + abs(dY2))))
+                        break
+                
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
 def generix_type_graph():
@@ -1987,7 +2110,7 @@ def generix_type_graph():
         if 'unused' not in n:
             n['children'] = set()
             n['parents'] = set()
-            # track intermediat nodes that only
+            # track intermediate nodes that only
             # lead to dynamic nodes
             if n['category'] != TYPE_CATEGORY_STATIC:
                 n['dynamic'] = True 
@@ -2008,11 +2131,16 @@ def generix_type_graph():
     reposition_intermediate_nodes(nodes)
     assign_xy_dynamic(nodes, usedPos)
     reposition_intermediate_nodes(nodes)
-    reposition_spring(nodes, edges, 150)
-    reposition_graphviz(nodes, edges)
-    # rescale_xy(nodes)
-    # reposition_intermediate_nodes(nodes)
-
+    for repeat in range(1): # multiple cycles to smooth things out
+        reposition_spring(nodes, edges, 100)
+        reposition_intermediate_nodes(nodes)
+        reposition_graphviz(nodes, edges, '-Ginputscale=120 -Goverlap=false')
+        reposition_intermediate_nodes(nodes)
+        reposition_graphviz(nodes, edges, '-Gmode=KK -Ginputscale=100 -Goverlap=false')
+        reposition_intermediate_nodes(nodes)
+        stretch_avoid_collisions(nodes, edges)
+    rescale_xy(nodes, edges)
+    
     # remove unused properties
     for n in nodes:
         if 'children' in n:
