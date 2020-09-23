@@ -89,9 +89,6 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = this.canvasWidth / xRange;
-    this.yScale = this.canvasHeight / yRange;
-
     if (xRange < this.canvasWidth && yRange < this.canvasHeight) {
       let maxDistanceX = 0;
       let maxDistanceY = 0;
@@ -120,6 +117,16 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         this.yScale = maxDistanceY === 0 ? 1 : this.canvasWidth / yRange;
       }
 
+    } else {
+
+      const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
+      if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
+        this.xScale = 1;
+        this.yScale = 1;
+      } else {
+        this.xScale = this.canvasWidth / xRange;
+        this.yScale = this.canvasHeight / yRange;
+      }
     }
   }
 
@@ -234,7 +241,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
             const boundingBox = this.network.getBoundingBox(id);
             if (
               boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
-              boundingBox.left > rootBoundingBox.left + this.canvasWidth
+              boundingBox.left > rootBoundingBox.left + this.canvasWidth ||
+              boundingBox.top < rootBoundingBox.top ||
+              boundingBox.left < rootBoundingBox.left
             ){
               return false
             }
