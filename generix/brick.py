@@ -881,8 +881,8 @@ class Brick:
                 })
 
                 if not typed_values_property_name:
-                    values_data['value_with_units'] += ', '+attr.type_term.term_name+'='+value_val
-                    values_data['value_no_units'] += ', '+attr.type_term.term_name+'='+value_val
+                    values_data['value_with_units'] += ', '+attr.type_term.term_name+'='+str(value_val)
+                    values_data['value_no_units'] += ', '+attr.type_term.term_name+'='+str(value_val)
                 
             # Do units
             if vard.units_term is not None:
