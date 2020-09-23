@@ -51,6 +51,12 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   height: number;
   width: number;
+  /* 
+    VisJS zoom scales from 0 to 1, 0 being infinitely zoomed out, 1 being infinitely zoomed in.
+    MIN_ZOOM_LIMIT is the most a graph can be zoomed out before the text in the nodes become 
+    hard to read. This is to handle the possibility of very large graphs
+  */
+  readonly MIN_ZOOM_LIMIT = 0.6;
 
   constructor(
     private homeService: HomeService,
@@ -72,30 +78,55 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       });
   }
 
-  calculateScale(nodes) {
+  calculateScale(nodes, edges) {
     const el = this.pGraph.nativeElement.parentElement;
-    this.canvasWidth = el.scrollWidth;
+    this.canvasWidth = el.scrollWidth + this.resizeWidth;
     this.canvasHeight = el.scrollHeight;
 
-    const xSort = nodes.map(d => d.x).sort((a, b) => a - b),
-    ySort = nodes.map(d => d.y).sort((a, b) => a - b);
+    const xSort = nodes.filter(d => !d.parent).map(d => d.x).sort((a, b) => a - b);
+    const ySort = nodes.filter(d => !d.parent).map(d => d.y).sort((a, b) => a - b);
 
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    this.xScale = this.canvasWidth / xRange;
-    this.yScale = this.canvasHeight / yRange;
+    if (xRange < this.canvasWidth && yRange < this.canvasHeight) {
+      let maxDistanceX = 0;
+      let maxDistanceY = 0;
+      edges.forEach(edge => {
+        const sourceNode = nodes.find(node => node.index === edge.source);
+        const targetNode = nodes.find(node => node.index === edge.target);
+        const xDistance = Math.abs(targetNode.x - sourceNode.x);
+        const yDistance = Math.abs(targetNode.y - sourceNode.y);
+        if (xDistance > maxDistanceX) {
+          maxDistanceX = xDistance;
+        }
+        if (yDistance > maxDistanceY) {
+          maxDistanceY = yDistance;
+        }
+      });
 
-    
-    // we only want to apply the scaling if there is a wide range between nodes
-    // this prevents small graps from looking sparse and taking up the whole space
-    
-    if (xRange < 750) {
-      this.xScale = 1.5;
-    }
-    
-    if (yRange < 900) {
-      this.yScale = 1.5;
+      if (maxDistanceX !== 0 && (200 / maxDistanceX) * xRange < this.canvasWidth + 100) {
+        this.xScale = 200 / maxDistanceX;
+      } else {
+        this.xScale = maxDistanceX === 0 ? 1 : this.canvasWidth / xRange;
+      }
+
+      if (maxDistanceY !== 0 && (100 / maxDistanceY) * yRange < this.canvasHeight + 100) {
+        this.yScale = 100 / maxDistanceY;
+      } else {
+        this.yScale = maxDistanceY === 0 ? 1 : this.canvasWidth / yRange;
+      }
+
+    } else {
+
+      const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
+      if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
+        this.xScale = 1;
+        this.yScale = 1;
+      } else {
+        this.xScale = this.canvasWidth / xRange;
+        this.yScale = this.canvasHeight / yRange;
+      }
     }
   }
 
@@ -109,7 +140,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
-    this.calculateScale(data.nodes);
+    this.calculateScale(data.nodes, data.links);
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
     if (!coreTypes.length && !dynamicTypes.length) {
@@ -201,14 +232,18 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       this.nodes.forEach(node => {
         this.nodes.update({id: node.id, fixed: false});
       });
-      if (!this.fitAllNodesOnScreen) {
+      const zoom = this.network.getScale();
+
+      if (zoom < this.MIN_ZOOM_LIMIT) {
         const rootBoundingBox = this.network.getBoundingBox((data.nodes.find(node => node.root)).index);
         this.network.fit({
           nodes: this.nodes.map(node => node.id).filter(id => {
             const boundingBox = this.network.getBoundingBox(id);
             if (
               boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
-              boundingBox.left > rootBoundingBox.left + this.canvasWidth
+              boundingBox.left > rootBoundingBox.left + this.canvasWidth ||
+              boundingBox.top < rootBoundingBox.top ||
+              boundingBox.left < rootBoundingBox.left
             ){
               return false
             }
@@ -416,11 +451,6 @@ createNode(dataItem: any): Node {
   }
   onResizeEnd(event) {
     this.resizeWidth += event.edges.right;
-    // this.network.fit({
-    //   nodes: this.nodes.map(node => node.id),
-    //   animation: false
-    // });
-    this.network.setOptions({width: 800 + this.resizeWidth + 'px'});
-    // this.network.redraw();
+    // this.calculateScale(this.nodes.map(node => node.data))
   }
 }
