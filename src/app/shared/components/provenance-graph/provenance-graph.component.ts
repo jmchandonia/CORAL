@@ -84,45 +84,21 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    if (xRange < this.canvasWidth && yRange < this.canvasHeight) {
-      let maxDistanceX = 0;
-      let maxDistanceY = 0;
-      edges.forEach(edge => {
-        const sourceNode = nodes.find(node => node.index === edge.source);
-        const targetNode = nodes.find(node => node.index === edge.target);
-        const xDistance = Math.abs(targetNode.x - sourceNode.x);
-        const yDistance = Math.abs(targetNode.y - sourceNode.y);
-        if (xDistance > maxDistanceX) {
-          maxDistanceX = xDistance;
-        }
-        if (yDistance > maxDistanceY) {
-          maxDistanceY = yDistance;
-        }
-      });
-
-      if (maxDistanceX !== 0 && (200 / maxDistanceX) * xRange < this.canvasWidth + 100) {
-        this.xScale = 200 / maxDistanceX;
-      } else {
-        this.xScale = maxDistanceX === 0 ? 1 : this.canvasWidth / xRange;
-      }
-
-      if (maxDistanceY !== 0 && (100 / maxDistanceY) * yRange < this.canvasHeight + 100) {
-        this.yScale = 100 / maxDistanceY;
-      } else {
-        this.yScale = maxDistanceY === 0 ? 1 : this.canvasWidth / yRange;
-      }
-
-    } else {
-
       const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
       if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
         this.xScale = 1;
         this.yScale = 1;
       } else {
-        this.xScale = this.canvasWidth / xRange;
-        this.yScale = this.canvasHeight / yRange;
+        const newXScale = this.canvasWidth / xRange;
+        const newYScale = this.canvasHeight / yRange;
+
+        /* for graphs that fit within the viewport, keep y scale at 1 and xScale at 2.
+        It prevents small graphs from needlessly spreading out all the way. xScale is
+        2 to account for nodes being longer in the x direction due to text */
+
+        this.xScale = xRange === 0 || newXScale > 2 ? 2 : this.canvasWidth / xRange;
+        this.yScale = yRange === 0 || newYScale > 1 ? 1 : this.canvasHeight / yRange;
       }
-    }
   }
 
   ngOnDestroy() {
