@@ -1,11 +1,12 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox } from 'vis-network/standalone';
+import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox, IdType } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-import { ResizeEvent } from 'angular-resizable-element';
+import { INodeData, HomepageNode, HomepageNodeFactory as NodeFactory } from 'src/app/shared/models/provenance-graph/homepage-node';
+import { IEdgeData, HomepageEdgeFactory as EdgeFactory } from 'src/app/shared/models/provenance-graph/homepage-edge';
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
@@ -13,10 +14,10 @@ import { ResizeEvent } from 'angular-resizable-element';
 })
 export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
-  nodes:  DataSet<any>;
-  edges: DataSet<any>;
-  clusterNodes: any[] = []; // TODO: make models for response JSON
-  @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process}> = new EventEmitter();
+  nodes:  DataSet<HomepageNode>;
+  edges: DataSet<Edge>;
+  clusterNodes: INodeData[] = [];
+  @Output() querySelected: EventEmitter<{query: QueryMatch, process?: Process}> = new EventEmitter();
 
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
@@ -25,7 +26,8 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   resizeWidth = 0;
   canvasWidth = 0;
   canvasHeight = 0;
-  fitAllNodesOnScreen = true;
+  xScale = 1;
+  yScale = 1;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -42,15 +44,8 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     },
   };
 
-  coreTypeNodes: any[];
-  dynamicTypeNodes: any[];
-
   network: Network;
-  xScale: number;
-  yScale: number;
 
-  height: number;
-  width: number;
   /* 
     VisJS zoom scales from 0 to 1, 0 being infinitely zoomed out, 1 being infinitely zoomed in.
     MIN_ZOOM_LIMIT is the most a graph can be zoomed out before the text in the nodes become 
@@ -89,45 +84,21 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-    if (xRange < this.canvasWidth && yRange < this.canvasHeight) {
-      let maxDistanceX = 0;
-      let maxDistanceY = 0;
-      edges.forEach(edge => {
-        const sourceNode = nodes.find(node => node.index === edge.source);
-        const targetNode = nodes.find(node => node.index === edge.target);
-        const xDistance = Math.abs(targetNode.x - sourceNode.x);
-        const yDistance = Math.abs(targetNode.y - sourceNode.y);
-        if (xDistance > maxDistanceX) {
-          maxDistanceX = xDistance;
-        }
-        if (yDistance > maxDistanceY) {
-          maxDistanceY = yDistance;
-        }
-      });
-
-      if (maxDistanceX !== 0 && (200 / maxDistanceX) * xRange < this.canvasWidth + 100) {
-        this.xScale = 200 / maxDistanceX;
-      } else {
-        this.xScale = maxDistanceX === 0 ? 1 : this.canvasWidth / xRange;
-      }
-
-      if (maxDistanceY !== 0 && (100 / maxDistanceY) * yRange < this.canvasHeight + 100) {
-        this.yScale = 100 / maxDistanceY;
-      } else {
-        this.yScale = maxDistanceY === 0 ? 1 : this.canvasWidth / yRange;
-      }
-
-    } else {
-
       const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
       if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
         this.xScale = 1;
         this.yScale = 1;
       } else {
-        this.xScale = this.canvasWidth / xRange;
-        this.yScale = this.canvasHeight / yRange;
+        const newXScale = this.canvasWidth / xRange;
+        const newYScale = this.canvasHeight / yRange;
+
+        /* for graphs that fit within the viewport, keep y scale at 1 and xScale at 2.
+        It prevents small graphs from needlessly spreading out all the way. xScale is
+        2 to account for nodes being longer in the x direction due to text */
+
+        this.xScale = xRange === 0 || newXScale > 2 ? 2 : this.canvasWidth / xRange;
+        this.yScale = yRange === 0 || newYScale > 1 ? 1 : this.canvasHeight / yRange;
       }
-    }
   }
 
   ngOnDestroy() {
@@ -196,14 +167,14 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
           this.network.fit({
             nodes: this.nodes.getIds({
               // this filter method returns items that DO get filtered out, the opposite of Array.prototype.filter :(
-              filter: node => node.cid === clusteredNode.id
+              filter: node => node.cid !== clusteredNode.index
             }) as string[],
             animation: true
           })
         // if node is null then we have a cluster, expand to fit newly drawn cluster nodes
         } else if (this.nodes.get(nodes[0]) === null) {
           this.network.fit({
-            nodes: this.nodes.map(node => node.id),
+            nodes: this.nodes.map(node => node.id) as string[],
             animation: true
           })
         }
@@ -237,7 +208,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       if (zoom < this.MIN_ZOOM_LIMIT) {
         const rootBoundingBox = this.network.getBoundingBox((data.nodes.find(node => node.root)).index);
         this.network.fit({
-          nodes: this.nodes.map(node => node.id).filter(id => {
+          nodes: <string[]>this.nodes.map(node => node.id).filter(id => {
             const boundingBox = this.network.getBoundingBox(id);
             if (
               boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
@@ -245,7 +216,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
               boundingBox.top < rootBoundingBox.top ||
               boundingBox.left < rootBoundingBox.left
             ){
-              return false
+              return false;
             }
             return true;
           }),
@@ -253,36 +224,24 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         });
       }
     });
-
 }
 
-addCluster(data) {
+createNode(dataItem: any): HomepageNode {
+  return NodeFactory.createNode(dataItem, this.xScale, this.yScale);
+  }
+
+createEdge(edge): Edge {
+  const target: any = this.nodes.get(edge.target);
+  return EdgeFactory.createEdge(edge, target);
+}
+
+addCluster(data): void {
    // configuration for nodes that hold clusters together
-   this.network.cluster({
-    joinCondition: node => (node.cid && node.cid === data.index) || node.id === data.index,
-    clusterNodeProperties: {
-      label: `${data.count} ${data.name} [+]`,
-      physics: false,
-      color: {
-        border: data.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
-        background: 'white'
-      },
-      borderWidth: 3,
-      shape: 'box',
-      shapeProperties: {
-        borderRadius: 0
-      },
-      x: data.x * this.xScale,
-      y: data.y * this.yScale,
-      font: {
-        size: 16,
-        face: 'Red Hat Text, sans-serif'
-      },
-    },
-   });
+   const clusterData = NodeFactory.createNodeCluster(data, this.xScale, this.yScale);
+   this.network.cluster(clusterData);
 }
 
-reclusterNode(nodeID) {
+reclusterNode(nodeID): void {
   const cluster = this.clusterNodes.find(item => item.index === nodeID);
   this.addCluster(cluster);
 }
@@ -313,144 +272,58 @@ recalculateClusterPositions(nodeId: string | number) {
   }
 }
 
-createNode(dataItem: any): Node {
-    const node: any = {
-      id: dataItem.index,
-      font: {
-        size: 16,
-        face: 'Red Hat Text, sans-serif'
-      },
-      color: {
-        background: dataItem.category !== false ? 'white' : 'rgba(0,0,0,0)',
-        border: dataItem.category === 'DDT_' ? 'rgb(246, 139, 98)' : 'rgb(78, 111, 182)',
-        hover: { background: '#ddd' }
-      },
-      cid: dataItem.cid,
-      shape: 'box',
-      shapeProperties: {
-        borderRadius: dataItem.category === 'DDT_' ? 0 : 20
-      },
-      data: {...dataItem},
-      fixed: true,
-      x: dataItem.x * this.xScale,
-      y: dataItem.y * this.yScale,
-    };
-
-    if (dataItem.root) {
-      node.borderWidth = 4;
-      node.margin = 10;
-      node.color.border = 'darkgreen';
-    } else if (!dataItem.category) {
-      node.borderWidth = 0;
-    }
-
-    if (dataItem.category) {
-      node.label = `${dataItem.count} ${dataItem.name.replace(/<br>/g, '\n')}`;
-    }
-
-    if(dataItem.parent) {
-      node.cid = dataItem.parent;
-    }
-
-    if (dataItem.isParent) {
-      node.label = '[-]';
-    }
-
-    return node;
-  }
-
-  createEdge(edge): any {
-    const toId = edge.target;
-    const fromId = edge.source;
-    const target: any = this.nodes.get(toId);
-    return {
-      from: target.cid ? target.cid : fromId,
-      to: toId,
-      width: edge.thickness,
-      physics: false,
-      label: edge.text.replace(/<br>/g, '\n').replace(/&rarr;/g, ' → '), // TODO: implement safeHtmlParser
-      color: edge.in_filter ? 'blue' : '#777',
-      selfReference: {
-        angle: 0.22
-      },
-      font: {
-        // hide labels initially
-        size: 16,
-        color: 'rgba(0,0,0,0)',
-        strokeColor: 'rgba(0,0,0,0)',
-      },
-      arrows: {
-        to: {
-          // hide arrows for 'connector' nodes
-          enabled: target && target.data.category !== false
-        }
-      },
-      smooth: {
-        enabled: edge.reversible === true,
-        roundness: 0.2,
-        forceDirection: 'vertical',
-        type: 'curvedCW'
-      },
-    }
- }
-
   submitSearchQuery(nodes) {
     if (nodes.length) {
       const node = this.nodes.get(nodes)[0]
-      if (!node.data.isParent) { // dont submit search for root cluster nodes
+      if (node && !node.data.isParent && node.data.category) { // dont submit search for root cluster nodes
         const { category, dataType, dataModel } = node.data;
-        const edgeIds = this.network.getConnectedEdges(node.id);
-        const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
-        const query = new QueryMatch({category, dataType, dataModel});
-        this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+        const process: Process = this.getInputProcesses(node.id);
+        if (category === 'DDT_') {
+          const query = new QueryMatch({category, dataType, dataModel});
+          this.querySelected.emit({query, process});
+        } else {
+          const query = new QueryMatch({category, dataType, dataModel});
+        this.querySelected.emit({query});
+        }
       }
     }
   }
 
-  getInputProcesses(edgeIds, targetId): Process[] {
-    return edgeIds
-      .map(id => this.edges.get(id)) // get edge data from array of ids
-      .filter(edge => edge && edge.to === targetId) // we only want parent edges and not children
-      .map(edge => {
-        // TODO: interface NodeWithData extends Node so you don't have to keep explicitly typing nodes as 'any'
-        const sourceNode: any = this.nodes.get(edge.from);
-        if (!sourceNode.data.category) {
-          // get source and multiple targets if source is a 'connector' node
-          const [sourceEdges, targetEdges] = partition(
-            this.network.getConnectedEdges(sourceNode.id).map(id => this.edges.get(id)),
-            edge => edge.to === sourceNode.id
-          );
-          return new Process(
-            sourceEdges.map(edge => {
-              const sourceNode = (this.nodes.get(edge.from) as any);
-              if (sourceNode.data.children) {
-                // if there is children then we need to grab the next parent node, the current node is only for UI
-                const nextSourceEdge = this.network
-                  .getConnectedEdges(sourceNode.id)
-                  .map(id => this.edges.get(id))
-                  .filter(edge => edge.to === sourceNode.id)[0];
-                const nextSourceNode = this.nodes.get(nextSourceEdge.from) as any;
-                return `${nextSourceNode.data.category}${nextSourceNode.data.dataType}`;
-              }
-              return `${sourceNode.data.category}${sourceNode.data.dataType}`;
-            }),
-            targetEdges.map(edge => {
-              const targetNodeData = (this.nodes.get(edge.to) as any).data;
-              return `${targetNodeData.category}${targetNodeData.dataType}`;
-            })
-          );
-        } else {
-          const { dataType, category } = sourceNode.data;
-          const targetNodeData = (this.nodes.get(targetId) as any).data;
-          return new Process(
-            [category + dataType],
-            [targetNodeData.category + targetNodeData.dataType]
-          );
-        }
-      });
+  getInputProcesses(nodeId): Process {
+    const targetNode = this.nodes.get(nodeId) as any;
+    const [sourceNodeId] = this.network.getConnectedNodes(nodeId, 'from') as IdType[];
+    const sourceNode = this.nodes.get(sourceNodeId);
+
+    if (!sourceNode.data.category || sourceNode.data.isParent) {
+      // if node is a cluster or a connecter then we get the next parent node
+      const [nextSourceId] = this.network.getConnectedNodes(sourceNode.id, 'from') as IdType[];
+      const {category, dataType} = (this.nodes.get(nextSourceId)).data;
+      if (sourceNode.data.isParent) {
+        return new Process(
+          [category + dataType],
+          [targetNode.data.category + targetNode.data.dataType]
+        );
+      } else {
+        // node is a connector and we need all of the children
+        const childNodeIds = this.network.getConnectedNodes(sourceNode.id, 'to') as IdType[];
+        return new Process(
+          [category + dataType],
+          childNodeIds.map(childNodeId => {
+            const childNode = this.nodes.get(childNodeId);
+            return childNode.data.category + childNode.data.dataType;
+          })
+        );
+      }
+    } else {
+      // case simple node to node case
+      return new Process(
+        [sourceNode.data.category + sourceNode.data.dataType],
+        [targetNode.data.category + targetNode.data.dataType]
+      );
+    }
   }
+
   onResizeEnd(event) {
     this.resizeWidth += event.edges.right;
-    // this.calculateScale(this.nodes.map(node => node.data))
   }
 }
