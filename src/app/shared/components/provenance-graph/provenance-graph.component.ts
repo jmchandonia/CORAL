@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox } from 'vis-network/standalone';
+import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox, IdType } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 import { partition } from 'lodash';
 import { HomeService } from 'src/app/shared/services/home.service';
@@ -16,7 +16,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   nodes:  DataSet<any>;
   edges: DataSet<any>;
   clusterNodes: any[] = []; // TODO: make models for response JSON
-  @Output() querySelected: EventEmitter<{query: QueryMatch, processes: Process}> = new EventEmitter();
+  @Output() querySelected: EventEmitter<{query: QueryMatch, process?: Process}> = new EventEmitter();
 
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
@@ -399,58 +399,52 @@ createNode(dataItem: any): Node {
       const node = this.nodes.get(nodes)[0]
       if (!node.data.isParent) { // dont submit search for root cluster nodes
         const { category, dataType, dataModel } = node.data;
-        const edgeIds = this.network.getConnectedEdges(node.id);
-        const processes: Process[] = category === 'DDT_' ? this.getInputProcesses(edgeIds, node.id) : [];
+        const process: Process = this.getInputProcesses(node.id);
         const query = new QueryMatch({category, dataType, dataModel});
-        this.querySelected.emit({query, processes: processes[0]}); // TODO: reduce to 1 item
+        if (category === 'DDT_') {
+          this.querySelected.emit({query, process});
+        } else {
+        this.querySelected.emit({query});
+        }
       }
     }
   }
 
-  getInputProcesses(edgeIds, targetId): Process[] {
-    return edgeIds
-      .map(id => this.edges.get(id)) // get edge data from array of ids
-      .filter(edge => edge && edge.to === targetId) // we only want parent edges and not children
-      .map(edge => {
-        // TODO: interface NodeWithData extends Node so you don't have to keep explicitly typing nodes as 'any'
-        const sourceNode: any = this.nodes.get(edge.from);
-        if (!sourceNode.data.category) {
-          // get source and multiple targets if source is a 'connector' node
-          const [sourceEdges, targetEdges] = partition(
-            this.network.getConnectedEdges(sourceNode.id).map(id => this.edges.get(id)),
-            edge => edge.to === sourceNode.id
-          );
-          return new Process(
-            sourceEdges.map(edge => {
-              const sourceNode = (this.nodes.get(edge.from) as any);
-              if (sourceNode.data.children) {
-                // if there is children then we need to grab the next parent node, the current node is only for UI
-                const nextSourceEdge = this.network
-                  .getConnectedEdges(sourceNode.id)
-                  .map(id => this.edges.get(id))
-                  .filter(edge => edge.to === sourceNode.id)[0];
-                const nextSourceNode = this.nodes.get(nextSourceEdge.from) as any;
-                return `${nextSourceNode.data.category}${nextSourceNode.data.dataType}`;
-              }
-              return `${sourceNode.data.category}${sourceNode.data.dataType}`;
-            }),
-            targetEdges.map(edge => {
-              const targetNodeData = (this.nodes.get(edge.to) as any).data;
-              return `${targetNodeData.category}${targetNodeData.dataType}`;
-            })
-          );
-        } else {
-          const { dataType, category } = sourceNode.data;
-          const targetNodeData = (this.nodes.get(targetId) as any).data;
-          return new Process(
-            [category + dataType],
-            [targetNodeData.category + targetNodeData.dataType]
-          );
-        }
-      });
+  getInputProcesses(nodeId): Process {
+    const targetNode = this.nodes.get(nodeId) as any;
+    const [sourceNodeId] = this.network.getConnectedNodes(nodeId, 'from') as IdType[];
+    const sourceNode = this.nodes.get(sourceNodeId) as any;
+
+    if (!sourceNode.data.category || sourceNode.data.isParent) {
+      // if node is a cluster or a connecter then we get the next parent node
+      const [nextSourceId] = this.network.getConnectedNodes(sourceNode.id, 'from') as IdType[];
+      const {category, dataType} = (this.nodes.get(nextSourceId) as any).data;
+      if (sourceNode.data.isParent) {
+        return new Process(
+          [category + dataType],
+          [targetNode.data.category + targetNode.data.dataType]
+        );
+      } else {
+        // node is a connector and we need all of the children
+        const childNodeIds = this.network.getConnectedNodes(sourceNode.id, 'to') as IdType[];
+        return new Process(
+          [category + dataType],
+          childNodeIds.map(childNodeId => {
+            const childNode = this.nodes.get(childNodeId) as any;
+            return childNode.data.category + childNode.data.dataType;
+          })
+        );
+      }
+    } else {
+      // case simple node to node case
+      return new Process(
+        [sourceNode.data.category + sourceNode.data.dataType],
+        [targetNode.data.category + targetNode.data.dataType]
+      );
+    }
   }
+
   onResizeEnd(event) {
     this.resizeWidth += event.edges.right;
-    // this.calculateScale(this.nodes.map(node => node.data))
   }
 }
