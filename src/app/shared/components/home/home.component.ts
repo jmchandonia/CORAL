@@ -74,9 +74,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  navigateToSearch({query, processes}: {query: QueryMatch, processes: Process}) {
+  navigateToSearch({query, process}: {query: QueryMatch, process?: Process}) {
     this.query.queryMatch = query;
-    this.query.parentProcesses = processes;
+    this.query.parentProcesses = process;
     this.navigateToResults = true;
     this.router.navigate(['/search/result'], {queryParams: {redirect: 'home'}});
   }
