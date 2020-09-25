@@ -51,7 +51,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     MIN_ZOOM_LIMIT is the most a graph can be zoomed out before the text in the nodes become 
     hard to read. This is to handle the possibility of very large graphs
   */
-  readonly MIN_ZOOM_LIMIT = 0.6;
+  readonly MIN_ZOOM_LIMIT = 0.5;
 
   constructor(
     private homeService: HomeService,
@@ -63,7 +63,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
     .subscribe(() => {
       this.noResults = false;
-      this.network.destroy();
+      if (this.network !== undefined) { this.network.destroy(); }
       this.spinner.show('pgraph-loading');
     });
     this.provenanceGraphSub = this.homeService.getProvenanceGraphSub()
@@ -75,8 +75,10 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   calculateScale(nodes, edges) {
     const el = this.pGraph.nativeElement.parentElement;
-    this.canvasWidth = el.scrollWidth + this.resizeWidth;
-    this.canvasHeight = el.scrollHeight;
+    if (!this.canvasHeight || !this.canvasWidth) {
+      this.canvasWidth = el.scrollWidth + this.resizeWidth;
+      this.canvasHeight = el.scrollHeight;
+    }
 
     const xSort = nodes.filter(d => !d.parent).map(d => d.x).sort((a, b) => a - b);
     const ySort = nodes.filter(d => !d.parent).map(d => d.y).sort((a, b) => a - b);
