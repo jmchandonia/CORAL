@@ -1427,6 +1427,37 @@ def assign_xy_static(nodes, usedPos, i, x, y):
             usedPos[pos] = True
             assign_xy_static(nodes, usedPos, c, proposedX, proposedY)
 
+# fix cases where A->B->C and A->C, where all have the same x
+# ignore x requirement for now, bc children tend to be approximately vertical
+def reposition_static(nodes, edges, usedPos):
+    for a in nodes:
+        if 'unused' in a or 'children' not in a or 'x' not in a or 'dynamic' in a:
+            continue
+        for i in a['children']:
+            b = nodes[i]
+            if 'x' not in b or 'y' not in b or 'dynamic' in b or b['index'] == a['index']:
+                continue
+            for j in b['children']:
+                c = nodes[j]
+                if 'x' not in c or b['index'] == c['index']:
+                    continue
+                sys.stderr.write('checking '+str(a['name'])+' '+str(b['name'])+' '+str(c['name'])+'\n')
+                for e in edges:
+                    # look for A->C edge
+                    if e['source']==a['index'] and e['target']==c['index']:
+                        sys.stderr.write('abc '+str(a['name'])+' '+str(b['name'])+' '+str(c['name'])+'\n')
+                        # move B
+                        dX = 100
+                        x = b['x'] + dX
+                        y = b['y']
+                        pos = str(int(x))+','+str(int(y))
+                        while pos in usedPos:
+                            x += dX
+                            pos = str(int(x))+','+str(int(y))
+                        usedPos[pos] = True
+                        b['x'] = x
+                        break
+
 def reposition_intermediate_nodes(nodes):
     for n in nodes:
         if n['category'] is False and 'unused' not in n and 'parents' in n and 'children' in n:
@@ -1438,7 +1469,7 @@ def reposition_intermediate_nodes(nodes):
             nY = 0
             totalX = 0
             totalY = 0
-            for i in n['parents'] | n['children']:
+            for i in n['parents']:
                 if 'x' in nodes[i]:
                     totalX += nodes[i]['x']
                     nX += 1
@@ -1454,13 +1485,43 @@ def reposition_intermediate_nodes(nodes):
                     if minY is False or nodes[i]['y'] < minY:
                         minY = nodes[i]['y']
 
+            # average position of parents
+            if minX is not False:
+                n['x'] = totalX / nX
+            if minY is not False:
+                n['y'] = totalY / nY
+
+            minX = False
+            minY = False
+            maxX = False
+            maxY = False
+            nX = 0
+            nY = 0
+            totalX = 0
+            totalY = 0
+            for i in n['children']:
+                if 'x' in nodes[i]:
+                    totalX += nodes[i]['x']
+                    nX += 1
+                    if minX is False or nodes[i]['x'] < minX:
+                        minX = nodes[i]['x']
+                    if minX is False or nodes[i]['x'] > maxX:
+                        maxX = nodes[i]['x']
+                if 'y' in nodes[i]:                    
+                    totalY += nodes[i]['y']
+                    nY += 1
+                    if minY is False or nodes[i]['y'] > maxY:
+                        maxY = nodes[i]['y']
+                    if minY is False or nodes[i]['y'] < minY:
+                        minY = nodes[i]['y']
+                        
+            # average with average position of children
             if minX is not False:
                 # n['x'] = (minX + maxX) / 2
-                n['x'] = int(totalX / nX)
+                n['x'] = int((totalX / nX + n['x'])/2.0)
             if minY is not False:
                 # n['y'] = (minY + maxY) / 2
-                n['y'] = int(totalY / nY)
-                
+                n['y'] = int((totalY / nY + n['y'])/2.0)
 
 def assign_xy_dynamic(nodes, usedPos):
     # put dynamic nodes on left or right side, depending on where their
@@ -1641,7 +1702,7 @@ def rescale_xy(nodes, edges):
 # if nodes are too close, stretch edges to avoid collisions
 def stretch_avoid_collisions(nodes, edges):
     # how much overlap is needed to move?
-    olapX = 120
+    olapX = 140
     olapY = 60
     for repeat in range(3): # multiple cycles to avoid secondary effects
         for n1 in nodes:
@@ -1674,8 +1735,17 @@ def stretch_avoid_collisions(nodes, edges):
                         # sys.stderr.write('SOURCE '+str(n3['name'])+' '+str(dX2)+' '+str(dY2)+'\n')
                         # move further along that direction, at least 10 units
                         moves = 10
-                        n1['x'] += int(moves * (dX2 / (abs(dX2) + abs(dY2))))
-                        n1['y'] += int(moves * (dY2 / (abs(dX2) + abs(dY2))))
+                        dX3 = int(moves * (dX2 / (abs(dX2) + abs(dY2))))
+                        dY3 = int(moves * (dY2 / (abs(dX2) + abs(dY2))))
+                        n1['x'] += dX3
+                        n1['y'] += dY3
+                        # if cluster node, move kids as well
+                        if 'inParent' in n1:
+                            for i in n1['children']:
+                                n4 = nodes[i]
+                                if 'x' in n4 and 'y' in n4:
+                                    n4['x'] += dX3
+                                    n4['y'] += dY3
                         break
                 
 # for types graph on front page
@@ -2128,6 +2198,7 @@ def generix_type_graph():
         assign_xy_static(nodes, usedPos, i, x, 0)
         x += 100
 
+    reposition_static(nodes, edges, usedPos)
     reposition_intermediate_nodes(nodes)
     assign_xy_dynamic(nodes, usedPos)
     reposition_intermediate_nodes(nodes)
