@@ -7,10 +7,12 @@ import { HomeService } from 'src/app/shared/services/home.service';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 const denseGraphData = require('src/app/shared/test/dense-graph-test.json');
 const regularGraphData = require('src/app/shared/test/types_graph.json');
 const smallGraphData = require('src/app/shared/test/small-graph-test.json');
+const multiParentGraphData = require('src/app/shared/test/multi-parent-node-graph.json');
 
 fdescribe('ProvenanceGraphComponent', () => {
   let spectator: Spectator<ProvenanceGraphComponent>;
@@ -71,8 +73,8 @@ fdescribe('ProvenanceGraphComponent', () => {
   it('should scale medium sized graphs to be smaller', () => {
     const { nodes, edges } = regularGraphData.results;
     spectator.component.calculateScale(nodes, edges);
-    expect(spectator.component.xScale).toBeLessThan(1);
-    expect(spectator.component.yScale).toBeLessThan(1);
+    expect(spectator.component.xScale).toBeLessThan(2);
+    expect(spectator.component.yScale).toBeLessThan(2);
   });
 
   it('should have 1:2 ratio for graphs smaller than viewport', () => {
@@ -80,5 +82,52 @@ fdescribe('ProvenanceGraphComponent', () => {
     spectator.component.calculateScale(nodes, edges);
     expect(spectator.component.xScale).toBe(2);
     expect(spectator.component.yScale).toBe(1);
+  });
+
+  it('should emit 1 parent and 1 child for simple search queries', () => {
+    spyOn(spectator.component, 'getInputProcesses').and.callThrough();
+    spyOn(spectator.component.querySelected, 'emit');
+    
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    spectator.component.submitSearchQuery([15]);
+
+    expect(spectator.component.getInputProcesses).toHaveBeenCalled();
+    expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
+      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Sequence', dataModel: 'Brick'}),
+      process: new Process(['SDT_Strain'], ['DDT_Microbial Sequence'])
+    });
+  });
+
+  it('should not try to get process inputs from static types when searching', () => {
+    spyOn(spectator.component, 'getInputProcesses');
+    spyOn(spectator.component.querySelected, 'emit');
+
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    spectator.component.submitSearchQuery([3]);
+
+    expect(spectator.component.getInputProcesses).not.toHaveBeenCalled();
+    expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
+      query: new QueryMatch({category: 'SDT_', dataType: 'Strain', dataModel: 'Strain'})
+    });
+  });
+
+  it('should should call getConnectorParents to handle parent processes of connector nodes', () => {
+    spyOn(spectator.component, 'getConnectorParents').and.callThrough();
+    spyOn(spectator.component.querySelected, 'emit');
+
+    spectator.component.initNetworkGraph(multiParentGraphData.results);
+    spectator.detectChanges();
+    spectator.component.submitSearchQuery([6]);
+
+    expect(spectator.component.getConnectorParents).toHaveBeenCalled();
+    expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
+      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Abundance', dataModel: "Brick"}),
+      process: new Process(
+        ['SDT_Well', 'SDT_Image'],
+        ['DDT_Chemical Measurement', 'DDT_Microbial Abundance']
+      )
+    });
   });
 });
