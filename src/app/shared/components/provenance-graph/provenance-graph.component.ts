@@ -306,7 +306,7 @@ recalculateClusterPositions(nodeId: string | number) {
       const nextSource = (this.nodes.get(nextSourceId)).data;
       if (sourceNode.data.isParent) {
         return new Process(
-          [nextSource.category + nextSource.dataType],
+          this.getConnectorParents(nextSource),
           [targetNode.data.category + targetNode.data.dataType]
         );
       } else {
