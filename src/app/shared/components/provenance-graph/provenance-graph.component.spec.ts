@@ -13,6 +13,7 @@ const denseGraphData = require('src/app/shared/test/dense-graph-test.json');
 const regularGraphData = require('src/app/shared/test/types_graph.json');
 const smallGraphData = require('src/app/shared/test/small-graph-test.json');
 const multiParentGraphData = require('src/app/shared/test/multi-parent-node-graph.json');
+const multiParentClusterData = require('src/app/shared/test/multi-parent-cluster-graph.json');
 
 fdescribe('ProvenanceGraphComponent', () => {
   let spectator: Spectator<ProvenanceGraphComponent>;
@@ -127,6 +128,24 @@ fdescribe('ProvenanceGraphComponent', () => {
       process: new Process(
         ['SDT_Well', 'SDT_Image'],
         ['DDT_Chemical Measurement', 'DDT_Microbial Abundance']
+      )
+    });
+  });
+
+  it('should search by grandparent node or cluster for clustered nodes', () => {
+    spyOn(spectator.component, 'getConnectorParents').and.callThrough();
+    spyOn(spectator.component.querySelected, 'emit');
+
+    spectator.component.initNetworkGraph(multiParentClusterData.results);
+    spectator.detectChanges();
+    spectator.component.submitSearchQuery([6]);
+
+    expect(spectator.component.getConnectorParents).toHaveBeenCalled();
+    expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
+      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Abundance', dataModel: "Brick"}),
+      process: new Process(
+        ['SDT_Well', 'SDT_Image'],
+        ['DDT_Microbial Abundance']
       )
     });
   });
