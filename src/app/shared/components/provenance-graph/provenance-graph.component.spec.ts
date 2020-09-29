@@ -7,6 +7,7 @@ import { HomeService } from 'src/app/shared/services/home.service';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { HomepageNode } from 'src/app/shared/models/provenance-graph/homepage-node';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
 const denseGraphData = require('src/app/shared/test/dense-graph-test.json');
 const regularGraphData = require('src/app/shared/test/types_graph.json');
@@ -151,4 +152,59 @@ fdescribe('ProvenanceGraphComponent', () => {
       )
     });
   });
+
+  it('should render root nodes properly', () => {
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    const rootData = regularGraphData.results.nodes.find(node => node.root);
+    const root = spectator.component.nodes.get(rootData.index) as any;
+
+    expect(root.color).toEqual({
+      border: 'darkgreen',
+      hover: { background: '#ddd' },
+      background: 'white'
+    });
+
+    expect(root.margin).toEqual({
+      top: 10,
+      left: 10,
+      bottom: 10,
+      right: 10
+    });
+  });
+
+  it('should render static nodes properly', () => {
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    const staticData = regularGraphData.results.nodes.find(node => node.category === 'SDT_' && !node.root);
+    const staticNode = spectator.component.nodes.get(staticData.index) as any;
+
+    expect(staticNode.color.background).toBe('white');
+    expect(staticNode.color.border).toBe('rgb(78, 111, 182)');
+    expect(staticNode.shapeProperties.borderRadius).toBe(20);
+    expect(staticNode.label).not.toBeUndefined();
+  });
+
+  it('should render dynamic nodes properly', () => {
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    const dynamicData = regularGraphData.results.nodes.find(node => node.category === 'DDT_');
+    const dynamicNode = spectator.component.nodes.get(dynamicData.index) as any;
+
+    expect(dynamicNode.color.background).toBe('white');
+    expect(dynamicNode.color.border).toBe('rgb(246, 139, 98)');
+    expect(dynamicNode.shapeProperties.borderRadius).toBe(0);
+    expect(dynamicNode.label).not.toBeUndefined();
+  });
+
+  it('should render connector nodes without any shapes or text', () => {
+    spectator.component.initNetworkGraph(regularGraphData.results);
+    spectator.detectChanges();
+    const connectorData = regularGraphData.results.nodes.find(node => node.category === false);
+    const connectorNode = spectator.component.nodes.get(connectorData.index) as any;
+
+    expect(connectorNode.color.background).toBe('rgba(0,0,0,0)');
+    expect(connectorNode.label).toBeUndefined();
+  });
+
 });
