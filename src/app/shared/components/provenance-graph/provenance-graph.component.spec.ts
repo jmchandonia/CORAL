@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
-const mockData = require('src/app/shared/test/mock-provenance-graph.json');
 const denseGraphData = require('src/app/shared/test/dense-graph-test.json');
 const regularGraphData = require('src/app/shared/test/types_graph.json');
 const smallGraphData = require('src/app/shared/test/small-graph-test.json');
@@ -95,8 +94,8 @@ fdescribe('ProvenanceGraphComponent', () => {
 
     expect(spectator.component.getInputProcesses).toHaveBeenCalled();
     expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
-      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Sequence', dataModel: 'Brick'}),
-      process: new Process(['SDT_Strain'], ['DDT_Microbial Sequence'])
+      query: new QueryMatch({category: 'DDT_', dataType: 'dynamicCaseDataType', dataModel: 'dynamicCaseDataModel'}),
+      process: new Process(['SDT_staticCaseDataType'], ['DDT_dynamicCaseDataType'])
     });
   });
 
@@ -110,7 +109,7 @@ fdescribe('ProvenanceGraphComponent', () => {
 
     expect(spectator.component.getInputProcesses).not.toHaveBeenCalled();
     expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
-      query: new QueryMatch({category: 'SDT_', dataType: 'Strain', dataModel: 'Strain'})
+      query: new QueryMatch({category: 'SDT_', dataType: 'staticCaseDataType', dataModel: 'staticCaseDataModel'})
     });
   });
 
@@ -124,15 +123,18 @@ fdescribe('ProvenanceGraphComponent', () => {
 
     expect(spectator.component.getConnectorParents).toHaveBeenCalled();
     expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
-      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Abundance', dataModel: "Brick"}),
+      query: new QueryMatch({category: 'DDT_', dataType: 'Output2', dataModel: "Output2"}),
       process: new Process(
-        ['SDT_Well', 'SDT_Image'],
-        ['DDT_Chemical Measurement', 'DDT_Microbial Abundance']
+        ['SDT_Input1', 'SDT_Input2'],
+        ['DDT_Output1', 'DDT_Output2']
       )
     });
   });
 
   it('should search by grandparent node or cluster for clustered nodes', () => {
+    /* nodes that are clustered together have an artifical node that is only
+    valid in UI. Therefore, we need to get the nodes grandparent. Node Grandparent
+    can either be a single node or another connector node */
     spyOn(spectator.component, 'getConnectorParents').and.callThrough();
     spyOn(spectator.component.querySelected, 'emit');
 
@@ -142,10 +144,10 @@ fdescribe('ProvenanceGraphComponent', () => {
 
     expect(spectator.component.getConnectorParents).toHaveBeenCalled();
     expect(spectator.component.querySelected.emit).toHaveBeenCalledWith({
-      query: new QueryMatch({category: 'DDT_', dataType: 'Microbial Abundance', dataModel: "Brick"}),
+      query: new QueryMatch({category: 'DDT_', dataType: 'Output2', dataModel: "Output2"}),
       process: new Process(
-        ['SDT_Well', 'SDT_Image'],
-        ['DDT_Microbial Abundance']
+        ['SDT_Input1', 'SDT_Input2'],
+        ['DDT_Output2']
       )
     });
   });
