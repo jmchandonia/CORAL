@@ -51,7 +51,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     MIN_ZOOM_LIMIT is the most a graph can be zoomed out before the text in the nodes become 
     hard to read. This is to handle the possibility of very large graphs
   */
-  readonly MIN_ZOOM_LIMIT = 0.5;
+  readonly MIN_ZOOM_LIMIT = 0.6;
 
   constructor(
     private homeService: HomeService,
@@ -86,21 +86,20 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-      const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
-      if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
-        this.xScale = 1;
-        this.yScale = 1;
-      } else {
-        const newXScale = this.canvasWidth / xRange;
-        const newYScale = this.canvasHeight / yRange;
+    const newXScale = this.canvasWidth / xRange;
+    const newYScale = this.canvasHeight / yRange;
 
-        /* for graphs that fit within the viewport, keep y scale at 1 and xScale at 2.
-        It prevents small graphs from needlessly spreading out all the way. xScale is
-        2 to account for nodes being longer in the x direction due to text */
+    if (newXScale > 0.9 && newXScale < 1.5) {
+      this.xScale = xRange === 0 ? 1.5 : newXScale;
+    } else {
+      this.xScale = newXScale < 0.9 ? 1 : 1.5
+    }
 
-        this.xScale = xRange === 0 || newXScale > 2 ? 2 : this.canvasWidth / xRange;
-        this.yScale = yRange === 0 || newYScale > 1 ? 1 : this.canvasHeight / yRange;
-      }
+    if (newYScale > 0.5 && newYScale < 1) {
+      this.xScale = yRange === 0 ? 1 : newYScale;
+    } else {
+      this.yScale = newYScale < 0.5 ? 0.5 : 1;
+    }
   }
 
   ngOnDestroy() {
