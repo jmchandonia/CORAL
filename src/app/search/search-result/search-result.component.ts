@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
 import * as $ from 'jquery';
@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './search-result.component.html',
   styleUrls: ['./search-result.component.css']
 })
-export class SearchResultComponent implements OnInit {
+export class SearchResultComponent implements OnInit, AfterViewInit {
 
   results = [];
   resultFields = [];
@@ -22,6 +22,7 @@ export class SearchResultComponent implements OnInit {
   searchType: string;
   error: any;
   loading = false;
+  staticResults = false;
   previousUrl = ['../advanced'];
 
   constructor(
@@ -42,16 +43,25 @@ export class SearchResultComponent implements OnInit {
       if (queryParam['redirect'] === 'home') {
         this.previousUrl = ['/home']
       }
-    });
 
+      if (queryParam['category'] === 'SDT_') {
+        this.staticResults = true;
+      }
+    });
+  }
+
+  ngAfterViewInit() {
     this.queryBuilder.getSearchResults()
       .subscribe((res: any) => {
         this.loading = false;
         this.spinner.hide();
         this.results = res.data;
         this.resultFields = res.schema.fields;
-        const table: any = $('table');
-        this.dataTable = table.DataTable();
+        this.chRef.detectChanges();
+        const table: any = $('#search-results');
+        this.dataTable = table.DataTable({
+          autoWidth: false,
+        });
       }
     );
   }
