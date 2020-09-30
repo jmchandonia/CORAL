@@ -13,6 +13,16 @@
     (click)="showQuery = false"
     *ngIf="showQuery"
     >| &nbsp;&nbsp;Hide Query</span>
+  <div *ngIf="staticResults" class="offset-5">
+    <button class="btn btn-light mr-1" style="display: inline-flex; justify-content: center;">
+      <i class="material-icons mr-1">bar_chart</i>
+       Plot All Results
+    </button>
+    <button class="btn btn-light" style="display: inline-flex; justify-content: center;">
+      <i class="material-icons mr-1">cloud_download</i>
+       Download All Results
+    </button>
+  </div>
 </div>
 <div class="row justify-content-center" *ngIf="showQuery">
   <div class="query-container col-10">
@@ -36,11 +46,11 @@
     </span>
   </div>
   <div class="table-container col-11" *ngIf="results.length">
-    <table style="font-size: 0.8em;" class="table table-hover" cellspacing="1">
+    <table id="search-results" style="font-size: 0.8em;" class="table" cellspacing="1">
       <thead class="table-header">
         <tr>
           <th *ngFor="let field of resultFields">{{field.name}}</th>
-          <th></th>
+          <th>options</th>
         </tr>
       </thead>
       <tbody>
