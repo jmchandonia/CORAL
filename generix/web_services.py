@@ -1781,8 +1781,10 @@ def generix_type_graph():
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
     if cacheKey in cache:
+        sys.stderr.write('cache hit '+cacheKey+'\n')
         return  _ok_response(cache[cacheKey])
-        
+    else:
+        sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
