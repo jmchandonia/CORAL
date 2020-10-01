@@ -56,6 +56,7 @@
       <tbody>
         <tr *ngFor="let result of results">
           <td *ngFor="let field of resultFields">
+            <!-- {{result[field.name]}} -->
             <span *ngIf="!isLink(result[field.name])">{{result[field.name]}}</span>
             <a *ngIf="isLink(result[field.name])" [href]="result[field.name]" target="_blank">
               {{result[field.name]}}
