@@ -2,6 +2,7 @@ from flask import Flask, request, json, send_file
 from flask import Response
 from flask import request
 from flask_cors import CORS
+from diskcache import Cache
 import pandas as pd
 import numpy as np
 import traceback as tb
@@ -33,6 +34,9 @@ DEBUG_MODE = False
 dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
+
+CACHE_DIR =  os.path.join(cns['_DATA_DIR'], 'cache')  
+cache = Cache(CACHE_DIR)
 
 TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')  
 _PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
@@ -1775,6 +1779,11 @@ def generix_type_graph():
             else:
                 return _err_response('unparseable query '+s)
 
+    cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
+    if cacheKey in cache:
+        return  _ok_response(cache[cacheKey])
+        
+
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
     # s = pprint.pformat(filterPersonnel)
@@ -2235,6 +2244,7 @@ def generix_type_graph():
 
     # s = pprint.pformat(res,width=999)
     # return s
+    cache[cacheKey] = res
     return  _ok_response(res)
 
 
