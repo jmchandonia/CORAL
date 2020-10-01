@@ -55,7 +55,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let result of results">
-          <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
+          <td *ngFor="let field of resultFields">
+            <span *ngIf="!isLink(result[field.name])">{{result[field.name]}}</span>
+            <a *ngIf="isLink(result[field.name])" [href]="result[field.name]">
+              {{result[field.name]}}
+            </a>
+          </td>
           <td style="width: 150px;">
             <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="viewData(result.brick_id)">description</i>
             <i *ngIf="result.id" class="material-icons options-icon" (click)="viewCoreData(result.id)">description</i>
