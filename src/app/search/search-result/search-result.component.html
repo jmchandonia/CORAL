@@ -1,9 +1,8 @@
-<div class="row mb-3 mt-3">
-  <div class="offset-1" [routerLink]="previousUrl">
+<div class="row mb-3 mt-3 search-nav-bar">
+  <div class="ml-4" [routerLink]="previousUrl">
     <i class="material-icons back-icon">keyboard_arrow_left</i>
     <span class="menu-option">Go Back</span>
-  </div>
-  <span 
+    <span 
     class="menu-option col-2" 
   (click)="showQuery = true"
     *ngIf="!showQuery"
@@ -13,7 +12,8 @@
     (click)="showQuery = false"
     *ngIf="showQuery"
     >| &nbsp;&nbsp;Hide Query</span>
-  <div *ngIf="staticResults" class="offset-5">
+  </div>
+  <div *ngIf="staticResults" style="align-self: flex-end; position:absolute" class="mr-6">
     <button class="btn btn-light mr-1" style="display: inline-flex; justify-content: center;">
       <i class="material-icons mr-1">bar_chart</i>
        Plot All Results
