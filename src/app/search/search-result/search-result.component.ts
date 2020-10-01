@@ -56,7 +56,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         this.loading = false;
         this.spinner.hide();
         this.results = res.data;
-        this.resultFields = res.schema.fields;
+        this.resultFields = res.schema.fields.filter(field => !field.name.includes('_id'));
         this.chRef.detectChanges();
         const table: any = $('#search-results');
         this.dataTable = table.DataTable({
@@ -81,6 +81,30 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   useData(id) {
     this.queryBuilder.setPreviousUrl('/search/result');
     this.router.navigate([`../../plot/options/${id}`], {relativeTo: this.route});
+  }
+
+  handleCoreTypeDownload() {
+    if (this.results) {
+      const replacer = (key, value) => value === null ? '' : value;
+      const tsv = this.results.map(row => {
+        return this.resultFields
+          .map(field => JSON.stringify(row[field.name], replacer))
+          .join('\t');
+      });
+      tsv.unshift(this.resultFields.map(field => field.name).join('\t'));
+      const tsvArray = tsv.join('\n');
+
+      const a = document.createElement('a');
+      const blob = new Blob([tsvArray], { type: 'text/tsv' });
+      const url = window.URL.createObjectURL(blob);
+
+      a.href = url;
+      a.download = `download-${new Date().toISOString()}.tsv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }
+
   }
 
 }
