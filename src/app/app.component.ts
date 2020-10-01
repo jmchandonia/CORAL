@@ -22,7 +22,8 @@ export class AppComponent implements OnInit {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.currentUrl = event.url;
+        // remove '?redirect=home' from url to prevent home tab from staying selected
+        this.currentUrl = event.url.split('?')[0];
       }
     });
 
