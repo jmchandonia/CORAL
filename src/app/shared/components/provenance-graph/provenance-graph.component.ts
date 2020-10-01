@@ -100,6 +100,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     } else {
       this.yScale = newYScale < 0.5 ? 0.5 : 1;
     }
+
   }
 
   ngOnDestroy() {
