@@ -1744,7 +1744,7 @@ def stretch_avoid_collisions(nodes, edges):
                         n1['x'] += dX3
                         n1['y'] += dY3
                         # if cluster node, move kids as well
-                        if 'inParent' in n1:
+                        if 'isParent' in n1:
                             for i in n1['children']:
                                 n4 = nodes[i]
                                 if 'x' in n4 and 'y' in n4:
