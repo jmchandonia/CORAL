@@ -56,11 +56,13 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         this.loading = false;
         this.spinner.hide();
         this.results = res.data;
-        this.resultFields = res.schema.fields.filter(field => !field.name.includes('_id'));
+        this.resultFields = res.schema.fields;
         this.chRef.detectChanges();
         const table: any = $('#search-results');
         this.dataTable = table.DataTable({
           autoWidth: false,
+          scrollX: true,
+          // deferRender: true
         });
       }
     );
