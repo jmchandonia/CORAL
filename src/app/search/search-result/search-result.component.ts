@@ -66,6 +66,10 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     );
   }
 
+  isLink(td: string) {
+    return /https?:\/\/.*/.test(td);
+  }
+
   viewData(id) {
     this.router.navigate([`search/result/brick/${id}`]);
   }
