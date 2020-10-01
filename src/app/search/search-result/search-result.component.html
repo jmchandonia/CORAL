@@ -18,7 +18,7 @@
       <i class="material-icons mr-1">bar_chart</i>
        Plot All Results
     </button>
-    <button class="btn btn-light" style="display: inline-flex; justify-content: center;">
+    <button (click)="handleCoreTypeDownload()" class="btn btn-light" style="display: inline-flex; justify-content: center;">
       <i class="material-icons mr-1">cloud_download</i>
        Download All Results
     </button>
@@ -57,7 +57,7 @@
         <tr *ngFor="let result of results">
           <td *ngFor="let field of resultFields">
             <span *ngIf="!isLink(result[field.name])">{{result[field.name]}}</span>
-            <a *ngIf="isLink(result[field.name])" [href]="result[field.name]">
+            <a *ngIf="isLink(result[field.name])" [href]="result[field.name]" target="_blank">
               {{result[field.name]}}
             </a>
           </td>
