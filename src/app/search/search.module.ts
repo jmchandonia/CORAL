@@ -18,6 +18,7 @@ import { DimensionVariablePreviewComponent } from './search-result/dimension-var
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ProcessFilterComponent } from './advanced-search/process-filter/process-filter.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     HttpClientModule,
     NgxSpinnerModule,
     NgSelectModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxDatatableModule
   ],
   providers: [QueryBuilderService],
   bootstrap: [DimensionVariablePreviewComponent]
