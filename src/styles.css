@@ -4,6 +4,10 @@
 @import "~angular-tree-component/dist/angular-tree-component.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500&display=swap');
+@import '~@swimlane/ngx-datatable/index.css';
+@import '~@swimlane/ngx-datatable/themes/bootstrap.css';
+/* @import '~@swimlane/ngx-datatable/themes/material.scss'; */
+@import '~@swimlane/ngx-datatable/assets/icons.css';
 body {
     font-family: 'Red Hat Text', sans-serif;
 }
@@ -159,6 +163,9 @@ modal-container.modal {
     z-index: 100000;
 }
 
+.datatable-footer-inner {
+    overflow-y: hidden!important;
+}
 
 
 

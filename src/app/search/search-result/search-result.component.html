@@ -40,13 +40,41 @@
       [fullScreen]="false"
     ></ngx-spinner>
   </div>
-  <div class="no-results-container" *ngIf="!loading && !results.length">
+  <div class="no-results-container" *ngIf="!loading && !temp.length">
     <span>
       No results match these queries. <a [routerLink]="previousUrl">Click here</a> to return to search.
     </span>
   </div>
-  <div class="table-container col-11" *ngIf="results.length">
-    <table id="search-results" style="font-size: 0.8em;" class="table" cellspacing="1">
+  <div #parent class="table-container col-11" *ngIf="temp.length">
+    <input class="form-control" placeholder="narrow search results" type="text" (keyup)="updateFilter($event)" />
+    <ngx-datatable
+      #table
+      style="width: 100%"
+      class="ngx-datatable bootstrap"
+      [rows]="results"
+      [columns]="resultFields"
+      [columnMode]="columnMode.force"
+      [summaryRow]="true"
+      rowHeight="auto"
+      [scrollbarH]="true"
+      [footerHeight]="40"
+      [summaryPosition]="top"
+      [limit]="10"
+    >
+      <ngx-datatable-column *ngFor="let field of resultFields" [name]="field.name" [flexGrow]="1">
+        <ng-template let-column="column" ngx-datatable-header-template>{{column.name}}</ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>{{row[field.name]}}</ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="options" [flexGrow]="1">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="viewData(row.brick_id)">description</i>
+          <i *ngIf="row.id" class="material-icons options-icon" (click)="viewCoreData(row.id)">description</i>
+          <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="useData(row.brick_id)">bar_chart</i>
+          <i class="material-icons options-icon">cloud_download</i>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+    <!-- <table id="search-results" style="font-size: 0.8em;" class="table" cellspacing="1">
       <thead class="table-header">
         <tr>
           <th *ngFor="let field of resultFields">{{field.name}}</th>
@@ -56,7 +84,6 @@
       <tbody>
         <tr *ngFor="let result of results">
           <td *ngFor="let field of resultFields">
-            <!-- {{result[field.name]}} -->
             <span *ngIf="!isLink(result[field.name])">{{result[field.name]}}</span>
             <a *ngIf="isLink(result[field.name])" [href]="result[field.name]" target="_blank">
               {{result[field.name]}}
@@ -70,6 +97,6 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </div>
