@@ -25,6 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TreeModule } from 'angular-tree-component';
 import { ProvenanceGraphComponent } from './shared/components/provenance-graph/provenance-graph.component';
 import { ResizableModule } from 'angular-resizable-element'
+import { AuthInterceptor } from 'src/app/shared/services/auth-interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +67,11 @@ import { ResizableModule } from 'angular-resizable-element'
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ServerErrorInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],
