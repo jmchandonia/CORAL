@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
 import * as $ from 'jquery';
@@ -6,6 +6,10 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-search-result',
@@ -24,6 +28,13 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   loading = false;
   staticResults = false;
   previousUrl = ['../advanced'];
+  temp = [];
+  searchHandler = new Subject();
+  @ViewChild(DatatableComponent) table: DatatableComponent;
+  @ViewChild('parent') parent: ElementRef;
+  columnMode = ColumnMode;
+  tableWidth: number;
+  cellWidth: number;B
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -48,6 +59,10 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         this.staticResults = true;
       }
     });
+
+    this.searchHandler.pipe(
+      debounceTime(500)
+    ).subscribe(event => this.handleSearch(event));
   }
 
   ngAfterViewInit() {
@@ -55,17 +70,37 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
       .subscribe((res: any) => {
         this.loading = false;
         this.spinner.hide();
-        this.results = res.data;
-        this.resultFields = res.schema.fields;
+        this.results = [...res.data];
+        this.temp = res.data;
+        this.resultFields = [...res.schema.fields
+        .map((field) => ({
+          prop: field.name,
+          name: field.name,
+          width: this.tableWidth / res.schema.fields.length + 1
+        }))];
         this.chRef.detectChanges();
-        const table: any = $('#search-results');
-        this.dataTable = table.DataTable({
-          autoWidth: false,
-          scrollX: true,
-          // deferRender: true
-        });
       }
     );
+  }
+
+  updateFilter(event) {
+    this.searchHandler.next(event);
+  }
+  
+  handleSearch(event) {
+    const val = event.target.value.toLowerCase();
+    const temp = this.temp.filter(row => {
+      const fields = Object.keys(row);
+      for (const field of fields) {
+        if (row[field] && row[field].toString().toLowerCase().includes(val)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    this.results = temp;
+    this.table.offset = 0;
   }
 
   isLink(td: string) {

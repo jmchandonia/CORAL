@@ -21,6 +21,7 @@
     "@angular/router": "~9.1.11",
     "@auth0/angular-jwt": "^3.0.1",
     "@ng-select/ng-select": "^4.0.0",
+    "@swimlane/ngx-datatable": "^18.0.0",
     "@types/d3": "^5.7.2",
     "@types/jquery": "^3.3.38",
     "angular-plotly.js": "1.4.0",
