@@ -10,6 +10,7 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-search-result',
@@ -105,6 +106,15 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
 
   isLink(td: string) {
     return /https?:\/\/.*/.test(td);
+  }
+
+  isImage(td: string, field: string) {
+    return field === 'link' && /\.(gif|jpe?g|tiff?|png|webp|)$/i.test(td);
+  }
+
+  getImgSrc(url: string) {
+    // return `${environment.baseURL}${url}`;
+    return 'https://picsum.photos/200/200'
   }
 
   viewData(id) {
