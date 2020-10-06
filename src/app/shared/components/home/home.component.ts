@@ -84,6 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         category: query.category
       }
     });
+    this.searchService.setQueryBuilderCache();
   }
 
 }
