@@ -63,7 +63,10 @@
     >
       <ngx-datatable-column *ngFor="let field of resultFields" [name]="field.name" [flexGrow]="1">
         <ng-template let-column="column" ngx-datatable-header-template>{{column.name}}</ng-template>
-        <ng-template let-row="row" ngx-datatable-cell-template>{{row[field.name]}}</ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span *ngIf="!isLink(row[field.name])">{{row[field.name]}}</span>
+          <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
+        </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="options" [flexGrow]="1">
         <ng-template let-row="row" ngx-datatable-cell-template>
