@@ -114,7 +114,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
 
   getImgSrc(url: string) {
     // return `${environment.baseURL}${url}`;
-    return 'https://picsum.photos/200/200'
+    return 'https://picsum.photos/200/200' // placeholder url
   }
 
   viewData(id) {
