@@ -1,9 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
-import * as $ from 'jquery';
-import 'datatables.net';
-import 'datatables.net-bs4';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
@@ -32,10 +29,8 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   temp = [];
   searchHandler = new Subject();
   @ViewChild(DatatableComponent) table: DatatableComponent;
-  @ViewChild('parent') parent: ElementRef;
   columnMode = ColumnMode;
   tableWidth: number;
-  cellWidth: number;B
 
   constructor(
     private queryBuilder: QueryBuilderService,
