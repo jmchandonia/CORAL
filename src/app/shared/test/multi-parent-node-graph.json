@@ -1,0 +1,92 @@
+{
+    "results": {
+        "nodes": [
+            {
+                "index": 0,
+                "category": "SDT_",
+                "name": "Input1",
+                "dataType": "Input1",
+                "count": 0,
+                "x": -200,
+                "y": -200
+            },
+            {
+                "index": 1,
+                "category": "SDT_",
+                "name": "Input2",
+                "dataType": "Input2",
+                "count": 1,
+                "x": 200,
+                "y": -200
+            },
+            {
+                "index": 3,
+                "category": false,
+                "name": false,
+                "count": 0,
+                "x": 0,
+                "y": -100
+            },
+            {
+                "index": 4,
+                "category": false,
+                "name": false,
+                "count": 0,
+                "x": 0,
+                "y": 0
+            },
+            {
+                "index": 5,
+                "category": "DDT_",
+                "name": "Child0",
+                "dataType": "Output1",
+                "dataModel": "Output1",
+                "count": 0,
+                "x": -200,
+                "y": 100
+            },
+            {
+                "index": 6,
+                "category": "DDT_",
+                "name": "child1",
+                "dataType": "Output2",
+                "dataModel": "Output2",
+                "count": 0,
+                "x": 200,
+                "y": 100
+            }
+        ],
+        "links": [
+            {
+                "source": 0,
+                "target": 3,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "source": 1,
+                "target": 3,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "source": 3,
+                "target": 4,
+                "text": "Test",
+                "thickness": 1
+            },
+            {
+                "source": 4,
+                "target": 5,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "source": 4,
+                "target": 6,
+                "text": "text",
+                "thickness": 1
+            }
+        ]
+    }
+}

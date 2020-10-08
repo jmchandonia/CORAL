@@ -5,8 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PlotModule } from './plot/plot.module';
-import * as PlotlyJS from 'plotly.js/dist/plotly.js';
-import { PlotlyModule } from 'angular-plotly.js';
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { LoginComponent } from './shared/components/login/login.component';
 import { HomeComponent } from './shared/components/home/home.component';
 import { ReportsComponent } from './shared/components/reports/reports.component';
@@ -26,8 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TreeModule } from 'angular-tree-component';
 import { ProvenanceGraphComponent } from './shared/components/provenance-graph/provenance-graph.component';
 import { ResizableModule } from 'angular-resizable-element'
-
-PlotlyModule.plotlyjs = PlotlyJS;
+import { AuthInterceptor } from 'src/app/shared/services/auth-interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,14 +45,14 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HttpClientModule,
     PlotModule,
     NgxSpinnerModule,
-    PlotlyModule,
     FormsModule,
     UploadModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
     NgSelectModule,
     TreeModule.forRoot(),
-    ResizableModule
+    ResizableModule,
+    PlotlyViaWindowModule,
   ],
   providers: [
     {
@@ -69,6 +67,11 @@ PlotlyModule.plotlyjs = PlotlyJS;
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ServerErrorInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true
     }
   ],

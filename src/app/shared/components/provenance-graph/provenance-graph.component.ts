@@ -63,7 +63,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
     .subscribe(() => {
       this.noResults = false;
-      this.network.destroy();
+      if (this.network !== undefined) { this.network.destroy(); }
       this.spinner.show('pgraph-loading');
     });
     this.provenanceGraphSub = this.homeService.getProvenanceGraphSub()
@@ -75,8 +75,10 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 
   calculateScale(nodes, edges) {
     const el = this.pGraph.nativeElement.parentElement;
-    this.canvasWidth = el.scrollWidth + this.resizeWidth;
-    this.canvasHeight = el.scrollHeight;
+    if (!this.canvasHeight || !this.canvasWidth) {
+      this.canvasWidth = el.scrollWidth + this.resizeWidth;
+      this.canvasHeight = el.scrollHeight;
+    }
 
     const xSort = nodes.filter(d => !d.parent).map(d => d.x).sort((a, b) => a - b);
     const ySort = nodes.filter(d => !d.parent).map(d => d.y).sort((a, b) => a - b);
@@ -84,21 +86,21 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     const xRange = xSort.pop() - xSort[0];
     const yRange = ySort.pop() - ySort[0];
 
-      const zoomLevelWithPadding = Math.min(this.canvasWidth / (xRange * 1.1), this.canvasHeight / (yRange * 1.1));
-      if (zoomLevelWithPadding < this.MIN_ZOOM_LIMIT) {
-        this.xScale = 1;
-        this.yScale = 1;
-      } else {
-        const newXScale = this.canvasWidth / xRange;
-        const newYScale = this.canvasHeight / yRange;
+    const newXScale = this.canvasWidth / xRange;
+    const newYScale = this.canvasHeight / yRange;
 
-        /* for graphs that fit within the viewport, keep y scale at 1 and xScale at 2.
-        It prevents small graphs from needlessly spreading out all the way. xScale is
-        2 to account for nodes being longer in the x direction due to text */
+    if (newXScale > 0.9 && newXScale < 1.5) {
+      this.xScale = xRange === 0 ? 1.5 : newXScale;
+    } else {
+      this.xScale = newXScale < 0.9 ? 1 : 1.5
+    }
 
-        this.xScale = xRange === 0 || newXScale > 2 ? 2 : this.canvasWidth / xRange;
-        this.yScale = yRange === 0 || newYScale > 1 ? 1 : this.canvasHeight / yRange;
-      }
+    if (newYScale > 0.5 && newYScale < 1) {
+      this.xScale = yRange === 0 ? 1 : newYScale;
+    } else {
+      this.yScale = newYScale < 0.5 ? 0.5 : 1;
+    }
+
   }
 
   ngOnDestroy() {
@@ -206,24 +208,28 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
       const zoom = this.network.getScale();
 
       if (zoom < this.MIN_ZOOM_LIMIT) {
-        const rootBoundingBox = this.network.getBoundingBox((data.nodes.find(node => node.root)).index);
-        this.network.fit({
-          nodes: <string[]>this.nodes.map(node => node.id).filter(id => {
-            const boundingBox = this.network.getBoundingBox(id);
-            if (
-              boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
-              boundingBox.left > rootBoundingBox.left + this.canvasWidth ||
-              boundingBox.top < rootBoundingBox.top ||
-              boundingBox.left < rootBoundingBox.left
-            ){
-              return false;
-            }
-            return true;
-          }),
-          animation: false
-        });
+        this.handleZoomForLargeGraphs(data.nodes);
       }
     });
+}
+
+handleZoomForLargeGraphs(nodes: INodeData[]) {
+  const rootBoundingBox = this.network.getBoundingBox(nodes.find(node => node.root).index);
+  this.network.fit({
+    nodes: <string[]> this.nodes.map(node => node.id).filter(id => {
+      const boundingBox = this.network.getBoundingBox(id);
+      if (
+        boundingBox.top > rootBoundingBox.top + this.canvasHeight ||
+        boundingBox.left > rootBoundingBox.left + this.canvasWidth ||
+        boundingBox.top < rootBoundingBox.top ||
+        boundingBox.left < rootBoundingBox.left
+      ) {
+        return false;
+      }
+      return true;
+    }),
+    animation: false
+  })
 }
 
 createNode(dataItem: any): HomepageNode {
@@ -277,8 +283,8 @@ recalculateClusterPositions(nodeId: string | number) {
       const node = this.nodes.get(nodes)[0]
       if (node && !node.data.isParent && node.data.category) { // dont submit search for root cluster nodes
         const { category, dataType, dataModel } = node.data;
-        const process: Process = this.getInputProcesses(node.id);
-        if (category === 'DDT_') {
+        if (category === 'DDT_' && !node.data.root) {
+          const process: Process = this.getInputProcesses(node.id);
           const query = new QueryMatch({category, dataType, dataModel});
           this.querySelected.emit({query, process});
         } else {
@@ -297,17 +303,17 @@ recalculateClusterPositions(nodeId: string | number) {
     if (!sourceNode.data.category || sourceNode.data.isParent) {
       // if node is a cluster or a connecter then we get the next parent node
       const [nextSourceId] = this.network.getConnectedNodes(sourceNode.id, 'from') as IdType[];
-      const {category, dataType} = (this.nodes.get(nextSourceId)).data;
+      const nextSource = (this.nodes.get(nextSourceId)).data;
       if (sourceNode.data.isParent) {
         return new Process(
-          [category + dataType],
+          this.getConnectorParents(nextSource),
           [targetNode.data.category + targetNode.data.dataType]
         );
       } else {
         // node is a connector and we need all of the children
         const childNodeIds = this.network.getConnectedNodes(sourceNode.id, 'to') as IdType[];
         return new Process(
-          [category + dataType],
+          this.getConnectorParents(nextSource),
           childNodeIds.map(childNodeId => {
             const childNode = this.nodes.get(childNodeId);
             return childNode.data.category + childNode.data.dataType;
@@ -321,6 +327,19 @@ recalculateClusterPositions(nodeId: string | number) {
         [targetNode.data.category + targetNode.data.dataType]
       );
     }
+  }
+
+  getConnectorParents(source) {
+    // function to get parent nodes from connectors
+    if (source.category !== false) {
+      return [source.category + source.dataType];
+    }
+    // case where connector node parent is another connector node
+    const parentIds = this.network.getConnectedNodes(source.index, 'from') as IdType[];
+    return parentIds.map(id => {
+      const {category, dataType} = this.nodes.get(id).data;
+      return category + dataType;
+    });
   }
 
   onResizeEnd(event) {
