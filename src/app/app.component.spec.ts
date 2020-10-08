@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
 
   let spectator: Spectator<AppComponent>;
 

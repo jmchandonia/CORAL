@@ -1,9 +1,8 @@
-<div class="row mb-3 mt-3">
-  <div class="offset-1" [routerLink]="previousUrl">
+<div class="row mb-3 mt-3 search-nav-bar">
+  <div class="ml-4" [routerLink]="previousUrl">
     <i class="material-icons back-icon">keyboard_arrow_left</i>
     <span class="menu-option">Go Back</span>
-  </div>
-  <span 
+    <span 
     class="menu-option col-2" 
   (click)="showQuery = true"
     *ngIf="!showQuery"
@@ -13,6 +12,7 @@
     (click)="showQuery = false"
     *ngIf="showQuery"
     >| &nbsp;&nbsp;Hide Query</span>
+  </div>
 </div>
 <div class="row justify-content-center" *ngIf="showQuery">
   <div class="query-container col-10">
@@ -30,30 +30,68 @@
       [fullScreen]="false"
     ></ngx-spinner>
   </div>
-  <div class="no-results-container" *ngIf="!loading && !results.length">
+  <div class="no-results-container" *ngIf="!loading && !temp.length">
     <span>
       No results match these queries. <a [routerLink]="previousUrl">Click here</a> to return to search.
     </span>
   </div>
-  <div class="table-container col-11" *ngIf="results.length">
-    <table style="font-size: 0.8em;" class="table table-hover" cellspacing="1">
-      <thead class="table-header">
-        <tr>
-          <th *ngFor="let field of resultFields">{{field.name}}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let result of results">
-          <td *ngFor="let field of resultFields">{{result[field.name]}}</td>
-          <td style="width: 150px;">
-            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="viewData(result.brick_id)">description</i>
-            <i *ngIf="result.id" class="material-icons options-icon" (click)="viewCoreData(result.id)">description</i>
-            <i *ngIf="result.brick_id" class="material-icons options-icon" (click)="useData(result.brick_id)">bar_chart</i>
-            <i class="material-icons options-icon">cloud_download</i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="table-container col-11" *ngIf="temp.length">
+    <div class="row">
+        <div *ngIf="staticResults" class="col-4 core-type-button-group">
+          <div class="row">
+            <div class="col-6 pl-1 pr-1">
+              <button class="btn btn-light btn-block" style="display: inline-flex; justify-content: center;">
+                <i class="material-icons mr-1">bar_chart</i>
+                 Plot All Results
+              </button>
+            </div>
+            <div class="col-6 pl-1 pr-1">
+              <button (click)="handleCoreTypeDownload()" class="btn btn-light btn-block" style="display: inline-flex; justify-content: center;">
+                <i class="material-icons mr-1">cloud_download</i>
+                 Download All Results
+              </button>
+            </div>
+          </div>
+        </div>
+        <div [ngClass]="staticResults ? 'col-8' : 'col-12'">
+          <input class="form-control" placeholder="narrow search results" type="text" (keyup)="updateFilter($event)" />
+        </div>
+    </div>
+    <ngx-datatable
+      #table
+      style="width: 100%"
+      class="ngx-datatable bootstrap mb-4"
+      [rows]="results"
+      [columns]="resultFields"
+      [columnMode]="columnMode.force"
+      [summaryRow]="true"
+      rowHeight="auto"
+      [scrollbarH]="true"
+      [footerHeight]="40"
+      [summaryPosition]="top"
+      [limit]="10"
+    >
+    <ngx-datatable-column name="options" [flexGrow]="1">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <i *ngIf="row.brick_id" class="material-icons options-icon ml-4" (click)="viewData(row.brick_id)">description</i>
+        <i *ngIf="row.id" class="material-icons options-icon ml-4" (click)="viewCoreData(row.id)">description</i>
+        <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="useData(row.brick_id)">bar_chart</i>
+        <i class="material-icons options-icon">cloud_download</i>
+      </ng-template>
+    </ngx-datatable-column>
+      <ngx-datatable-column *ngFor="let field of resultFields" [name]="field.name" [flexGrow]="1">
+        <ng-template let-column="column" ngx-datatable-header-template>{{column.name}}</ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span *ngIf="!isLink(row[field.name]) && !isImage(row[field.name], field.name)">{{row[field.name]}}</span>
+          <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
+          <img
+            *ngIf="isImage(row[field.name], field.name)"
+            [src]="getImgSrc(row[field.name])"
+            class="search-result-icon" 
+            [alt]="row[field.name]"
+          />
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
   </div>
 </div>

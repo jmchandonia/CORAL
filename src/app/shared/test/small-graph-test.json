@@ -1,0 +1,66 @@
+{
+    "results": {
+        "nodes": [
+            {
+                "category": "SDT_",
+                "index": 2,
+                "name": "Node 2",
+                "x": 0,
+                "y": -100
+            },
+            {
+                "category": "SDT_",
+                "index": 3,
+                "name": "Node 3",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "category": "SDT_",
+                "index": 4,
+                "name": "Node 4",
+                "x": 0,
+                "y": 100
+            },
+            {
+                "category": "SDT_",
+                "index": 6,
+                "name": "Node 6",
+                "x": -100,
+                "y": 0
+            },            {
+                "category": "SDT_",
+                "index": 7,
+                "name": "Node 7",
+                "x": 100,
+                "y": 0
+            }
+        ],
+        "links": [
+            {
+                "source": 2,
+                "target": 3,
+                "thickness": 1,
+                "text": "text"
+            },
+            {
+                "source": 3,
+                "target": 4,
+                "thickness": 1,
+                "text": "text"
+            },
+            {
+                "source": 6,
+                "target": 2,
+                "thickness": 1,
+                "text": "text"
+            },
+            {
+                "source": 2,
+                "target": 7,
+                "thickness": 1,
+                "text": "text"
+            }
+        ]
+    }
+}
