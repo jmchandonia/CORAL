@@ -2438,10 +2438,13 @@ def get_image():
         else:
             wantThumb = False;
 
-        if not url.startswith('images/'):
+        if not url.startswith('images/') and not url.startswith('/images/'):
             return _err_response('not a local image: '+str(url))
 
-        fileName = url[7:]
+        if url.startswith('images/'):
+            fileName = url[7:]
+        else:
+            fileName = url[8:]
 
         width = False
         height = False
