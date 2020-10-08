@@ -1,0 +1,581 @@
+{
+    "error": "",
+    "results": {
+        "links": [
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 12,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 3,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 6,
+                "target": 7,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 6,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 6,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 11,
+                "target": 13,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 14,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 15,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 5,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 5,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 5,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "reversible": true,
+                "source": 6,
+                "target": 8,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "reversible": true,
+                "source": 8,
+                "target": 6,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 7,
+                "target": 11,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 4,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 4,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 16,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 17,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 18,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 18,
+                "target": 19,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 18,
+                "target": 20,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 21,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 22,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 23,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 24,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 24,
+                "target": 25,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 24,
+                "target": 10,
+                "text": "test",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 26,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 27,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 28,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 29,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 29,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 29,
+                "target": 30,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 31,
+                "text": "test",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 31,
+                "target": 4,
+                "text": "test",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 31,
+                "target": 1,
+                "text": "test",
+                "thickness": 3
+            },
+            {
+                "inFilter": false,
+                "source": 1,
+                "target": 32,
+                "text": "test",
+                "thickness": 2
+            }
+        ],
+        "nodes": [
+            {
+                "category": "SDT_",
+                "count": 469,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 0,
+                "name": "Item0",
+                "root": true,
+                "x": 700.34,
+                "y": 175.01
+            },
+            {
+                "category": "SDT_",
+                "count": 1487,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 1,
+                "name": "Item1",
+                "x": 435.86,
+                "y": 454.09
+            },
+            {
+                "category": "SDT_",
+                "count": 1120,
+                "dataModel": "staticCaseDataModel",
+                "dataType": "staticCaseDataType",
+                "index": 3,
+                "name": "Item2",
+                "x": 541.47,
+                "y": 652.98
+            },
+            {
+                "category": "SDT_",
+                "count": 1550,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 4,
+                "name": "Item3",
+                "x": 635.04,
+                "y": 495.34
+            },
+            {
+                "category": "SDT_",
+                "count": 950,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 5,
+                "name": "Item4",
+                "x": 737.31,
+                "y": 695.78
+            },
+            {
+                "category": "SDT_",
+                "count": 278,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 6,
+                "name": "Item5",
+                "x": 612.79,
+                "y": 838.5
+            },
+            {
+                "category": "SDT_",
+                "count": 258,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 7,
+                "name": "Item6",
+                "x": 658.29,
+                "y": 1036.8
+            },
+            {
+                "category": "SDT_",
+                "count": 623,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 8,
+                "name": "Bin",
+                "x": 486.3,
+                "y": 985
+            },
+            {
+                "category": "SDT_",
+                "count": 123,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 10,
+                "name": "Item7",
+                "x": 150.2,
+                "y": 757.34
+            },
+            {
+                "category": "SDT_",
+                "count": 1,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 11,
+                "name": "Item8",
+                "x": 650.84,
+                "y": 1226.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 12,
+                "name": "Item9",
+                "x": 690.7,
+                "y": 599.17
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 13,
+                "name": "Item10",
+                "x": 637.62,
+                "y": 1405.5
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 14,
+                "name": "Item11",
+                "x": 849.19,
+                "y": 827.7
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "dynamicCaseDataModel",
+                "dataType": "dynamicCaseDataType",
+                "index": 15,
+                "name": "Item12",
+                "x": 417.86,
+                "y": 781.87
+            },
+            {
+                "category": "DDT_",
+                "count": 4,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 16,
+                "name": "Item13",
+                "x": 816.54,
+                "y": 395.41
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 17,
+                "name": "Item14",
+                "parent": 32,
+                "x": 311.45,
+                "y": 145.12
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 18,
+                "name": false,
+                "x": 957.2,
+                "y": 689.06
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 19,
+                "name": "Item15",
+                "x": 1139.4,
+                "y": 616.5
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 20,
+                "name": "Item16",
+                "x": 1109.3,
+                "y": 815.93
+            },
+            {
+                "category": "DDT_",
+                "count": 20,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 21,
+                "name": "Item17",
+                "x": 821.53,
+                "y": 18
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 22,
+                "name": "Item18",
+                "parent": 32,
+                "x": 216.35,
+                "y": 120.56
+            },
+            {
+                "category": "DDT_",
+                "count": 11,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 23,
+                "name": "Item19",
+                "parent": 32,
+                "x": 110.35,
+                "y": 442.74
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 24,
+                "name": false,
+                "x": 272.91,
+                "y": 586.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 25,
+                "name": "Item20",
+                "x": 67.22,
+                "y": 645.37
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 26,
+                "name": "Item21",
+                "parent": 32,
+                "x": 125.72,
+                "y": 176.73
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 27,
+                "name": "Item22",
+                "parent": 32,
+                "x": 43.546,
+                "y": 369.48
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 28,
+                "name": "Item23",
+                "parent": 32,
+                "x": 65.42,
+                "y": 264.38
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 29,
+                "name": false,
+                "x": 522.61,
+                "y": 250.64
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 30,
+                "name": "Item24",
+                "x": 533.01,
+                "y": 45.128
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 31,
+                "name": false,
+                "x": 592.86,
+                "y": 353.22
+            },
+            {
+                "category": "DDT_",
+                "count": 21,
+                "dataModel": "testDataModel",
+                "dataType": "testDataType",
+                "index": 32,
+                "isParent": true,
+                "name": "Item25",
+                "x": 254.02,
+                "y": 327.11
+            }
+        ]
+    },
+    "status": "OK"
+}
