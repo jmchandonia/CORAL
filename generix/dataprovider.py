@@ -48,7 +48,8 @@ class DataProvider:
             '_BRICK_TYPE_TEMPLATES_FILE' : services._BRICK_TYPE_TEMPLATES_FILE,
             '_WEB_SERVICE': services._WEB_SERVICE,
             '_PLOT_TYPES_FILE': services._PLOT_TYPES_FILE,
-            '_DATA_DIR': services._DATA_DIR
+            '_DATA_DIR': services._DATA_DIR,
+            '_CACHE_DIR': services._CACHE_DIR
         }
 
 class GenericsProvider:

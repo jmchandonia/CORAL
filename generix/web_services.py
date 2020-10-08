@@ -18,6 +18,7 @@ import cgi
 import sys
 import pprint
 import math
+import base64
 
 # from . import services
 # from .brick import Brick
@@ -35,10 +36,13 @@ dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
 
-CACHE_DIR =  os.path.join(cns['_DATA_DIR'], 'cache')  
+CACHE_DIR =  cns['_CACHE_DIR']
 cache = Cache(CACHE_DIR)
 
 TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')  
+IMAGE_DIR =  os.path.join(cns['_DATA_DIR'], 'images')
+THUMBS_DIR =  os.path.join(IMAGE_DIR, 'thumbs')
+
 _PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
 _CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
 _PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
@@ -71,7 +75,7 @@ def hello():
     # s = br.to_json()
     # s = pprint.pformat(json.loads(s))
     s = pprint.pformat(input_obj_ids)
-    # return s
+    return s
     
     br.save(process_term=process_term,
             person_term=person_term,
@@ -472,7 +476,9 @@ def create_brick():
         br.save(process_term=process_term, 
             person_term=person_term, 
             campaign_term=campaign_term,
-            input_obj_ids=input_obj_ids)            
+            input_obj_ids=input_obj_ids)
+
+        cache.clear()
 
         return _ok_response(br.id)
 
@@ -2422,6 +2428,59 @@ def generix_core_type_metadata(obj_id):
        
     except:
         return _err_response('Wrong object ID format')
+
+@app.route('/generix/image', methods=['POST'])
+def get_image():
+    try:
+        url = request.json['url']
+        if 'thumb' in request.json:
+            wantThumb = True;
+        else:
+            wantThumb = False;
+
+        if not url.startswith('images/'):
+            return _err_response('not a local image: '+str(url))
+
+        fileName = url[7:]
+
+        width = False
+        height = False
+        imagePath = False
+        
+        if wantThumb:
+            files = os.listdir(THUMBS_DIR)
+            thumbPattern = '(\d+)x(\d+)-(.*)'
+            for f in files:
+                if not f.endswith(fileName):
+                    continue
+       	        match = re.search(thumbPattern, f)
+                if match:
+                    width = int(match.group(1))
+                    height = int(match.group(2))
+                    f2 = match.group(3)
+                    if f2 != fileName:
+                        continue
+                    imagePath = os.path.join(THUMBS_DIR, f)
+                    break
+        else:
+            imagePath = os.path.join(IMAGE_DIR, fileName)
+            if not os.path.isfile(imagePath):
+                imagePath = False
+
+        if imagePath is False:
+            return _err_response('image not found:'+str(url))
+
+        with open(imagePath, "rb") as imageFile:
+            imageData = base64.b64encode(imageFile.read()).decode('utf-8')
+
+        if width is False or height is False:
+            return  _ok_response({'image':imageData})
+        else:
+            return  _ok_response({'image':imageData,
+                                  'width':width,
+                                  'height':height })
+    except Exception as e:
+        return _err_response(e)
 
     
 @app.route('/generix/generate_brick_template', methods=['POST'])

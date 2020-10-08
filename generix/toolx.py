@@ -4,6 +4,7 @@ import json
 import traceback
 import dumper
 import pandas as pd
+from diskcache import Cache
 from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_STATIC
@@ -23,6 +24,8 @@ def init_system(argv=None):
     upload_core()
     upload_bricks()
     upload_processes()
+    cache = Cache(services._CACHE_DIR)
+    cache.clear()
 
 def init_system_collections(argv=None):
     _try_truncate_collection('SYS_ID')

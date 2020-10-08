@@ -28,6 +28,7 @@ __CONFIG_FILE = os.path.join(__PACKAGE_DIR, 'var/config.json')
 __CONFIG = json.loads(open(__CONFIG_FILE).read())
 
 _DATA_DIR = __CONFIG['Workspace']['data_dir']
+_CACHE_DIR =  os.path.join(_DATA_DIR, 'cache')  
 _IMPORT_DIR_ONTOLOGY = __CONFIG['Import']['ontology_dir']
 _IMPORT_DIR_ENTITY = __CONFIG['Import']['entity_dir']
 _IMPORT_DIR_PROCESS = __CONFIG['Import']['process_dir']
