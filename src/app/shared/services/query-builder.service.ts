@@ -4,8 +4,10 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Term } from 'src/app/shared/models/brick';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +25,8 @@ export class QueryBuilderService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private santitizer: DomSanitizer
   ) {
     http.get(`${environment.baseURL}/data_models`)
       .subscribe((models: any) => {
@@ -149,6 +152,42 @@ export class QueryBuilderService {
   getPersonnelOterms() {
     return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
   }
+
+  getImageSrc(url): Promise<SafeUrl> {
+    return new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/image`, {url})
+        .subscribe((response: any) => {
+          // resolve('data:image/jpeg;base64' + response.results.image);
+          resolve(this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image))
+        });
+    });
+  }
+
+  // getImageSrc(url): Observable<SafeUrl> {
+  //   if (url.includes('EB106-02-01')) { console.log('whats happening', url) }
+  //   // return this.http.post('/image',{url}, {responseType: 'blob'});
+  //   return new Observable((observer: Subscriber<SafeUrl>) => {
+  //     let objectUrl: SafeUrl = null;
+  //     this.http.post(`${environment.baseURL}/image`, {url}, {responseType: 'json'})
+  //       .pipe(take(1))
+  //       .subscribe((response: any) => {
+  //         console.log('RESPONSE => ', response);
+  //         // objectUrl = URL.createObjectURL('data:image/png;base64,' + response.results.image);
+  //         // if (url.includes('EB106-02-01')) { console.log('whats happening', objectUrl) }
+  //         // observer.next(objectUrl);
+  //         observer.next(
+  //           this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image)
+  //             // .changingThisBreaksApplicationSecurity
+  //         );
+  //       });
+  //     return () => {
+  //       if (objectUrl) {
+  //         // URL.revokeObjectURL(objectUrl)
+  //         objectUrl = null;
+  //       }
+  //     }
+  //   });
+  // }
 
 
 }

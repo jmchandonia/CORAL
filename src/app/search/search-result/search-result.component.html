@@ -70,6 +70,7 @@
       [footerHeight]="40"
       [summaryPosition]="top"
       [limit]="10"
+      (page)="handlePaging($event)"
     >
     <ngx-datatable-column name="options" [flexGrow]="1">
       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -85,10 +86,11 @@
           <span *ngIf="!isLink(row[field.name]) && !isImage(row[field.name], field.name)">{{row[field.name]}}</span>
           <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
           <img
-            *ngIf="isImage(row[field.name], field.name)"
-            [src]="getImgSrc(row[field.name])"
+            *ngIf="row._imgSrc && isImage(row[field.name], field.name)"
+            style="width: 100px; height: 100px"
+            [src]="row._imgSrc"
             class="search-result-icon" 
-            [alt]="row[field.name]"
+            alt='test'
           />
         </ng-template>
       </ngx-datatable-column>
