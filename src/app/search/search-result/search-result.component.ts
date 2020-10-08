@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -8,11 +8,13 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { environment } from 'src/environments/environment';
+import { DomSanitizer } from '@angular/platform-browser'
 
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
+  styleUrls: ['./search-result.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchResultComponent implements OnInit, AfterViewInit {
 
@@ -37,7 +39,8 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     private chRef: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -75,8 +78,18 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
           width: this.tableWidth / res.schema.fields.length + 1
         }))];
         this.chRef.detectChanges();
+        this.getImageUrls();
       }
     );
+  }
+
+  getImageUrls() {
+    this.table.bodyComponent.temp.forEach(async (row) => {
+      if (row.link && this.isImage(row.link, 'link') && !row._imgSrc) {
+        row._imgSrc = await this.queryBuilder.getImageSrc(row.link.substring(1));
+        this.chRef.detectChanges();
+      }
+    });
   }
 
   updateFilter(event) {
@@ -107,9 +120,9 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     return field === 'link' && /\.(gif|jpe?g|tiff?|png|webp|)$/i.test(td);
   }
 
-  getImgSrc(url: string) {
-    // return `${environment.baseURL}${url}`;
-    return 'https://picsum.photos/200/200' // placeholder url
+  handlePaging(event) {
+    this.chRef.detectChanges();
+    this.getImageUrls();
   }
 
   viewData(id) {
