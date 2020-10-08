@@ -257,9 +257,12 @@ for testing and development.
 cd /home/clearinghouse
 mkdir prod
 cd prod
-mkdir images
+mkdir bin
 mkdir data_import
 mkdir data_store
+mkdir data_store/cache
+mkdir data_store/images
+mkdir data_store/images/thumbs
 mkdir data_store/tmp
 mkdir notebooks
 mkdir modules
@@ -369,6 +372,8 @@ service generix-web-services start
 ```
 
 _debug by looking in /var/log/daemon.log_
+
+### TODO: add thumbnail generation script, run it in cron
 
 ### Install UI
 
