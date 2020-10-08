@@ -1,7 +1,8 @@
-from flask import Flask, request, json, send_file
+from flask import Flask, Blueprint, request, json, jsonify, send_file
 from flask import Response
 from flask import request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
+from functools import wraps
 from diskcache import Cache
 import pandas as pd
 import numpy as np
@@ -29,6 +30,11 @@ from .utils import to_object_type
 from . import template 
 
 app = Flask(__name__)
+
+auth_blueprint = Blueprint('auth', __name__)
+app.register_blueprint(auth_blueprint)
+
+app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 
 DEBUG_MODE = False
@@ -55,6 +61,30 @@ _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
+def auth_required(func):
+    """
+    View decorator - require valid JWT
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if valid_jwt():
+            return func(*args, **kwargs)
+        else:
+            return jsonify({"message": "UNAUTHORIZED USER"}), 401
+    return wrapper
+
+def valid_jwt():
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        return False
+    auth_token = auth_header.split(' ')[1] # remove bearer from the front
+    try:
+        # if token decoding failed then we know we didnt have a token that was encrypted with the same key
+        # we can also check for valid user information or anything else we add to the token here
+        payload = jwt.decode(auth_token, cns['_AUTH_SECRET'])
+        return True
+    except Exception as e:
+        return False
 
 @app.route("/generix/")
 def hello():
@@ -753,6 +783,7 @@ def _get_term(term_data):
 ## NEW VERSION
 ##########################################################################################
 
+@cross_origin
 @app.route("/generix/user_login", methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -769,7 +800,7 @@ def login():
 		        'iat': datetime.datetime.utcnow(),
 		        'sub': login['username']
 	        }
-            new_jwt = jwt.encode(payload, 'test', algorithm='HS256')
+            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
             return json.dumps({'success': False,
@@ -779,6 +810,7 @@ def login():
 
 
 @app.route("/generix/data_types", methods=['GET'])
+@auth_required
 def generix_data_types():
     res = []
     
@@ -811,6 +843,7 @@ def generix_data_types():
     return  json.dumps({'results': res})
 
 @app.route("/generix/data_models", methods=['GET'])
+@auth_required
 def generix_data_models():
     res = {}
 
@@ -830,6 +863,7 @@ def generix_data_models():
     return  json.dumps({'results': res})
 
 @app.route('/generix/brick_dimension/<brick_id>/<dim_index>', methods=['GET'])
+@auth_required
 def generix_brick_dimension(brick_id, dim_index):
     MAX_ROW_COUNT = 100
     res = {}
@@ -887,6 +921,7 @@ def generix_brick_dimension(brick_id, dim_index):
     return _ok_response(res)
 
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
+@auth_required
 def generix_brick_metadata(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
@@ -944,6 +979,7 @@ def _get_plot_data(query):
     return res
 
 @app.route('/generix/plotly_data', methods=['POST'])
+@auth_required
 def generix_plotly_data():
     query = request.json
     try:
@@ -1006,6 +1042,7 @@ def generix_plotly_data():
         return _err_response(e)
 
 @app.route('/generix/plot_data', methods=['POST'])
+@auth_required
 def generix_plot_data():
     try:
         res = _get_plot_data(request.json)
@@ -1025,6 +1062,7 @@ def _build_dim_labels(dim, pattern):
 
 
 @app.route('/generix/plot_data_test', methods=['POST'])
+@auth_required
 def generix_plot_data_test():
     query = request.json
     bp = dp._get_type_provider('Brick')
@@ -1074,6 +1112,7 @@ def _extract_criterion_props(criterion):
 
 
 @app.route('/generix/search', methods=['POST'])
+@auth_required
 def generix_search():
     try:
         search_data = request.json
@@ -1151,6 +1190,7 @@ def generix_search():
 
 
 @app.route("/generix/search_operations", methods=['GET'])
+@auth_required
 def generix_search_operations():
     # '=':  FILTER_EQ,
     # '==': FILTER_EQ,
@@ -1172,6 +1212,7 @@ def generix_search_operations():
     return  json.dumps({'results': res})
 
 @app.route("/generix/plot_types", methods=['GET'])
+@auth_required
 def generix_plot_types():
     fname = cns['_PLOT_TYPES_FILE']
     try:
@@ -1182,6 +1223,7 @@ def generix_plot_types():
     return _ok_response(plot_types)
 
 @app.route("/generix/report_plot_data/<report_id>", methods=['GET'])
+@auth_required
 def generix_report_plot_data(report_id):
     reports_map = {
         'report1': 'brick_types',
@@ -1216,6 +1258,7 @@ def generix_report_plot_data(report_id):
 
 
 @app.route("/generix/reports", methods=['GET'])
+@auth_required
 def generix_reports():
 
     reports = [
@@ -1247,6 +1290,7 @@ def generix_reports():
     return _ok_response(reports)
 
 @app.route("/generix/reports/<id>", methods=['GET'])
+@auth_required
 def generix_report(id):
     try:
         report = getattr(svs['reports'], id)
@@ -1259,6 +1303,7 @@ def generix_report(id):
     return  _ok_response(res)
 
 @app.route("/generix/filters", methods=['GET'])
+@auth_required
 def generix_filters():
     reports = svs['reports']
 
@@ -1303,6 +1348,7 @@ def _get_category_items(process_stat_df, attr):
 
 # Test version
 @app.route('/generix/types_stat', methods=['GET','POST'])
+@auth_required
 def generix_type_stat():
     arango_service = svs['arango_service']
 
@@ -1760,6 +1806,7 @@ def stretch_avoid_collisions(nodes, edges):
                 
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
+@auth_required
 def generix_type_graph():
     arango_service = svs['arango_service']
 
@@ -2257,6 +2304,7 @@ def generix_type_graph():
 
 
 @app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
+@auth_required
 def generix_dn_process_docs(obj_id):
     try:
         arango_service = svs['arango_service']
@@ -2278,6 +2326,7 @@ def generix_dn_process_docs(obj_id):
 
 
 @app.route('/generix/up_process_docs/<obj_id>', methods=['GET'])
+@auth_required
 def generix_up_process_docs(obj_id):
     try:
         arango_service = svs['arango_service']
@@ -2339,6 +2388,7 @@ def _to_process_docs(rows):
 
 
 @app.route('/generix/microtypes', methods=['GET'])
+@auth_required
 def generix_microtypes():
     try:
         res = []
@@ -2410,6 +2460,7 @@ def append_with_children(res,children,term_dict,term_id):
     return
                
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET'])
+@auth_required
 def generix_core_type_metadata(obj_id):
     obj_type = ''
     try:
@@ -2430,6 +2481,7 @@ def generix_core_type_metadata(obj_id):
         return _err_response('Wrong object ID format')
 
 @app.route('/generix/image', methods=['POST'])
+@auth_required
 def get_image():
     try:
         url = request.json['url']
@@ -2487,6 +2539,7 @@ def get_image():
 
     
 @app.route('/generix/generate_brick_template', methods=['POST'])
+@auth_required
 def generate_brick_template():
     try:
         data_id = uuid.uuid4().hex
