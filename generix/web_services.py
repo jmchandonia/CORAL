@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request, json, jsonify, send_file
+from flask import Flask, request, json, jsonify, send_file
 from flask import Response
 from flask import request
 from flask_cors import CORS, cross_origin
@@ -30,10 +30,6 @@ from .utils import to_object_type
 from . import template 
 
 app = Flask(__name__)
-
-auth_blueprint = Blueprint('auth', __name__)
-app.register_blueprint(auth_blueprint)
-
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
 
