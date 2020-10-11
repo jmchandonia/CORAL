@@ -1,16 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import 'datatables.net';
-import 'datatables.net-bs4';
-import * as $ from 'jquery';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 @Component({
   selector: 'app-dimension-variable-preview',
   templateUrl: './dimension-variable-preview.component.html',
   styleUrls: ['./dimension-variable-preview.component.css']
 })
-export class DimensionVariablePreviewComponent implements OnInit, AfterViewInit {
+export class DimensionVariablePreviewComponent implements OnInit {
 
   constructor(
     public modalRef: BsModalRef
@@ -23,21 +19,23 @@ export class DimensionVariablePreviewComponent implements OnInit, AfterViewInit 
   data: any;
   dataResults: any[] = [];
   dataTable: any;
+  rows: any[];
+  columnMode = ColumnMode
 
   @ViewChild('tableModal', { static: true }) el: ElementRef;
 
   ngOnInit() {
-    this.dataResults = this.data.dim_vars;
+    this.dataResults = [...this.data.dim_vars];
+    this.rows = this.dataResults[0].values.map((val, idx) => {
+      const keys = {};
+      this.dataResults.forEach(field => {
+        keys[field.type_with_units] = field.values[idx]; 
+      });
+      return keys;
+    });
     this.numberOfRows = this.data.size > this.data.max_row_count
       ? this.data.max_row_count
       : this.data.size;
-  }
-
-  ngAfterViewInit() {
-    if (this.el) {
-            const table: any = $(this.el.nativeElement);
-            this.dataTable = table.DataTable();
-          }
   }
 
 }

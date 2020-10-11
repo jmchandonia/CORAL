@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import 'datatables.net';
-import 'datatables.net-bs4';
-import * as $ from 'jquery';
 import { HomeService } from 'src/app/shared/services/home.service';
 
 @Component({
@@ -21,9 +18,6 @@ export class ReportsComponent implements OnInit {
     this.homeService.getReports().subscribe((data: any) => {
       this.reportsData = [...data.results];
     });
-
-    const table: any = $('table');
-    this.dataTable = table.DataTable();
     }
 
   updateTable(event) {

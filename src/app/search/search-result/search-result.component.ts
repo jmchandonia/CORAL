@@ -7,7 +7,6 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser'
 
 @Component({

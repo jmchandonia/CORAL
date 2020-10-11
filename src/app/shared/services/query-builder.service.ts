@@ -157,37 +157,10 @@ export class QueryBuilderService {
     return new Promise((resolve, reject) => {
       this.http.post(`${environment.baseURL}/image`, {url})
         .subscribe((response: any) => {
-          // resolve('data:image/jpeg;base64' + response.results.image);
           resolve(this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image))
         });
     });
   }
-
-  // getImageSrc(url): Observable<SafeUrl> {
-  //   if (url.includes('EB106-02-01')) { console.log('whats happening', url) }
-  //   // return this.http.post('/image',{url}, {responseType: 'blob'});
-  //   return new Observable((observer: Subscriber<SafeUrl>) => {
-  //     let objectUrl: SafeUrl = null;
-  //     this.http.post(`${environment.baseURL}/image`, {url}, {responseType: 'json'})
-  //       .pipe(take(1))
-  //       .subscribe((response: any) => {
-  //         console.log('RESPONSE => ', response);
-  //         // objectUrl = URL.createObjectURL('data:image/png;base64,' + response.results.image);
-  //         // if (url.includes('EB106-02-01')) { console.log('whats happening', objectUrl) }
-  //         // observer.next(objectUrl);
-  //         observer.next(
-  //           this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image)
-  //             // .changingThisBreaksApplicationSecurity
-  //         );
-  //       });
-  //     return () => {
-  //       if (objectUrl) {
-  //         // URL.revokeObjectURL(objectUrl)
-  //         objectUrl = null;
-  //       }
-  //     }
-  //   });
-  // }
 
 
 }
