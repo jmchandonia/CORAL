@@ -4,27 +4,22 @@
       </div>
     <div class="row">
       <div class="col-12">
-        <table class="table table-bordered table-modal" #tableModal>
-          <thead class="table-header">
-            <tr>
-              <th style="width: 30px;">#</th> 
-              <th cellspacing="1" *ngFor="let d of dataResults">
-                {{d.type_with_units}}
-                <!-- <span *ngIf="d.context.length">
-                  ,&nbsp;{{d?.context[0].type.text}}={{d?.context[0].value}}
-                </span> -->
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of [].constructor(numberOfRows); let i = index;">
-              <td style="width: 30px">{{i + 1}}</td>
-              <td *ngFor="let dv of dataResults">
-                {{dv.values[i]}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ngx-datatable
+          style="width: 100%"
+          class="ngx-datatable bootstrap"
+          [columns]="dataResults"
+          [columnMode]="columnMode.force"
+          [rows]="rows"
+          [limit]="10"
+          [footerHeight]="40"
+          rowHeight="auto"
+        >
+        <ngx-datatable-column *ngFor="let dimVar of dataResults" [name]="dimVar.type_with_units">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row[dimVar.type_with_units]}}
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
       </div>
     </div>
     <div class="row mt-3 mb-3">
