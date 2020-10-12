@@ -56,7 +56,15 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged()
     )
-    .subscribe(value => this.tree.treeModel.filterNodes(value))
+    .subscribe(value => {
+      this.tree.treeModel.filterNodes(node => {
+        return node.data.term_name.toLowerCase().includes(value.toLowerCase())
+        || node.data.term_desc.toLowerCase().includes(value.toLowerCase());
+      });
+      if (!value.length) {
+        this.tree.treeModel.collapseAll();
+      }
+    })
   }
 
   ngOnInit() {
@@ -101,7 +109,7 @@ export class MicrotypeBrowserComponent implements OnInit, OnDestroy {
     if (`${node.data.term_name}.` === node.data.term_desc) {
       return false;
     }
-    return node.isExpanded || node.children.length;
+    return node.isExpanded || !node.children.length;
   }
 
 }
