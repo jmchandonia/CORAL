@@ -27,21 +27,23 @@ export class QueryBuilderService {
     private http: HttpClient,
     private router: Router,
     private santitizer: DomSanitizer
-  ) {
-    http.get(`${environment.baseURL}/data_models`)
-      .subscribe((models: any) => {
-        this.dataModels = models.results;
-        http.get(`${environment.baseURL}/data_types`)
-        .subscribe((types: any) => {
-          this.dataTypes = types.results;
-          this.dataTypeSub.next(this.dataTypes);
-          this.dataTypes.forEach((dataType: any) => {
-            const dataModel = this.dataModels[dataType.dataModel];
-            this.dataTypeHash[dataType.dataType] = dataModel.properties;
-          });
+  ) { }
+
+  getDataTypesandModels() {
+    this.http.get(`${environment.baseURL}/data_models`)
+    .subscribe((models: any) => {
+      this.dataModels = models.results;
+      this.http.get(`${environment.baseURL}/data_types`)
+      .subscribe((types: any) => {
+        this.dataTypes = types.results;
+        this.dataTypeSub.next(this.dataTypes);
+        this.dataTypes.forEach((dataType: any) => {
+          const dataModel = this.dataModels[dataType.dataModel];
+          this.dataTypeHash[dataType.dataType] = dataModel.properties;
         });
       });
-    http.get(`${environment.baseURL}/search_operations`)
+    });
+    this.http.get(`${environment.baseURL}/search_operations`)
       .subscribe((operations: any) => {
         this.operators = operations.results;
       });
