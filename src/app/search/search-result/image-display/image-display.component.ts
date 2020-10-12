@@ -1,6 +1,7 @@
 import { SafeUrl } from '@angular/platform-browser';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-display',
@@ -12,13 +13,24 @@ export class ImageDisplayComponent implements OnInit {
   title: string;
   imgSrc: SafeUrl;
 
-  constructor(private modalRef: BsModalRef) { }
+  constructor(
+    private modalRef: BsModalRef,
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
   }
 
   closeModal() {
     this.modalRef.hide();
+  }
+
+  handleDownload() {
+    const a = document.createElement('a');
+    a.href = this.sanitizer.sanitize(SecurityContext.URL, this.imgSrc);
+    a.download = this.title;
+    a.click();
+    a.remove();
   }
 
 }
