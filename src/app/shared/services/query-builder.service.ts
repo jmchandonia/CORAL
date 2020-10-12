@@ -4,8 +4,10 @@ import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { Term } from 'src/app/shared/models/brick';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,22 +25,25 @@ export class QueryBuilderService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) {
-    http.get(`${environment.baseURL}/data_models`)
-      .subscribe((models: any) => {
-        this.dataModels = models.results;
-        http.get(`${environment.baseURL}/data_types`)
-        .subscribe((types: any) => {
-          this.dataTypes = types.results;
-          this.dataTypeSub.next(this.dataTypes);
-          this.dataTypes.forEach((dataType: any) => {
-            const dataModel = this.dataModels[dataType.dataModel];
-            this.dataTypeHash[dataType.dataType] = dataModel.properties;
-          });
+    private router: Router,
+    private santitizer: DomSanitizer
+  ) { }
+
+  getDataTypesandModels() {
+    this.http.get(`${environment.baseURL}/data_models`)
+    .subscribe((models: any) => {
+      this.dataModels = models.results;
+      this.http.get(`${environment.baseURL}/data_types`)
+      .subscribe((types: any) => {
+        this.dataTypes = types.results;
+        this.dataTypeSub.next(this.dataTypes);
+        this.dataTypes.forEach((dataType: any) => {
+          const dataModel = this.dataModels[dataType.dataModel];
+          this.dataTypeHash[dataType.dataType] = dataModel.properties;
         });
       });
-    http.get(`${environment.baseURL}/search_operations`)
+    });
+    this.http.get(`${environment.baseURL}/search_operations`)
       .subscribe((operations: any) => {
         this.operators = operations.results;
       });
@@ -148,6 +153,15 @@ export class QueryBuilderService {
 
   getPersonnelOterms() {
     return this.http.get(`${environment.baseURL}/get_personnel_oterms`);
+  }
+
+  getImageSrc(url): Promise<SafeUrl> {
+    return new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/image`, {url})
+        .subscribe((response: any) => {
+          resolve(this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image))
+        });
+    });
   }
 
 

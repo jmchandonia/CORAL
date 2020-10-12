@@ -58,7 +58,27 @@
     </div>
     <div class="row ml-2 mr-2">
       <div class="col-12" [hidden]="hideProcessInputs">
-          <table class="table table-bordered" [ngClass]="processesUp && processesUp[0].docs.length > 10 ? 'data-table' : ''">
+        <ngx-datatable
+        *ngIf="processesUp && processesUp[0].docs.length > 10"
+        style="width: 100%"
+        class="ngx-datatable bootstrap"
+        [rows]="processesUp[0].docs"
+        rowHeight="auto"
+        [footerHeight]="40"
+        [limit]="10"
+        [columnMode]="columnMode.force"
+      >
+        <ngx-datatable-column name="ID">
+          <ng-template let-row="row" ngx-datatable-cell-template>{{row.id}}</ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Data Type">
+          <ng-template let-row="row" ngx-datatable-cell-template>{{row.type}}</ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Description">
+          <ng-template let-row="row" ngx-datatable-cell-template>{{row.description}}</ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+          <table class="table table-bordered" *ngIf="processesUp && processesUp[0].docs.length < 10">
               <thead class="table-header">
                 <tr>
                   <th>ID</th>
@@ -141,7 +161,27 @@
             </div>
         <div class="row">
           <div class="col-12"[hidden]="hideProcessOutputs[i]">
-            <table class="table table-bordered" [ngClass]="p.docs.length > 2 ? 'data-table' : ''">
+            <ngx-datatable
+              *ngIf="p.docs.length > 10"
+              style="width: 100%"
+              class="ngx-datatable bootstrap"
+              [rows]="p.docs"
+              rowHeight="auto"
+              [footerHeight]="40"
+              [limit]="10"
+              [columnMode]="columnMode.force"
+            >
+            <ngx-datatable-column name="ID">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.id}}</ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Data Type">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.type}}</ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Description">
+              <ng-template let-row="row" ngx-datatable-cell-template>{{row.description}}</ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+            <table class="table table-bordered" *ngIf="p.docs.length < 10">
               <thead class="table-header">
                 <tr>
                   <th>ID</th>
