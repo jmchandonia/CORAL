@@ -25,6 +25,8 @@ export class AdvancedSearchComponent implements OnInit {
 
   ngOnInit() {
 
+    this.queryBuilder.getDataTypesandModels();
+
     this.queryBuilderObject = this.queryBuilder.getCurrentObject();
 
     if (this.advancedFiltersSelected()) {
