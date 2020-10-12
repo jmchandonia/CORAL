@@ -1,10 +1,10 @@
 <div class="row mb-3 mt-3 search-nav-bar">
-  <div class="ml-4" [routerLink]="previousUrl">
+  <div class="ml-4">
     <i class="material-icons back-icon">keyboard_arrow_left</i>
-    <span class="menu-option">Go Back</span>
+    <span class="menu-option" [routerLink]="previousUrl">Go Back</span>
     <span 
     class="menu-option col-2" 
-  (click)="showQuery = true"
+    (click)="showQuery = true"
     *ngIf="!showQuery"
     >| &nbsp;&nbsp;Show Query</span>
   <span
@@ -87,10 +87,11 @@
           <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
           <img
             *ngIf="row._imgSrc && isImage(row[field.name], field.name)"
-            style="width: 100px; height: 100px"
+            style="width: 100px; height: 100px; cursor: pointer;"
             [src]="row._imgSrc"
             class="search-result-icon" 
-            alt='test'
+            [alt]="row.name"
+            (click)="displayImage(row._imgSrc, row.name)"
           />
         </ng-template>
       </ngx-datatable-column>
