@@ -57,6 +57,7 @@ _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
+# for methods that only a logged in user can use
 def auth_required(func):
     """
     View decorator - require valid JWT
@@ -67,6 +68,19 @@ def auth_required(func):
             return func(*args, **kwargs)
         else:
             return jsonify({"message": "UNAUTHORIZED USER"}), 401
+    return wrapper
+
+# for methods that either a logged in user, or a read only app, can use
+def auth_ro_required(func):
+    """
+    View decorator - require valid JWT
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # if valid_jwt():
+        return func(*args, **kwargs)
+        # else:
+        # return jsonify({"message": "UNAUTHORIZED USER"}), 401
     return wrapper
 
 def valid_jwt():
@@ -380,12 +394,15 @@ def core_types():
     except Exception as e:
         return _err_response(e)
 
+# this API seems unused - see /search instead!
 @app.route('/generix/do_search', methods=['GET', 'POST'])
 def do_search():
     try:
         if request.method == 'POST':
             search_data = json.loads(request.form['searchBuilder'])
 
+            s = pprint.pformat(search_data)
+            sys.stderr.write('do_search search_data = '+s+'\n')
             print('Searching data')
             print(search_data)
 
@@ -1121,6 +1138,11 @@ def generix_search():
         s = pprint.pformat(search_data)
         sys.stderr.write('search_data = '+s+'\n')
 
+        (JSON, TSV) = range(2)
+        return_format = JSON
+        if 'format' in search_data and search_data['format'] == 'TSV':
+            return_format = TSV
+
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
 
@@ -1176,7 +1198,34 @@ def generix_search():
         if 'parentProcesses' in search_data:
             q.immediate_parent(search_data['parentProcesses'])
 
-        res = q.find().to_df().to_json(orient="table", index=False)
+        # do the search
+        res_df = q.find().to_df()
+        if return_format==JSON:
+            # remove term ids from result
+            term_cols = []
+            for column in res_df.columns:
+                if column.endswith('_term_id'):
+                    col = column[:-8]
+                    if (col+'_term_name') in res_df.columns:
+                        term_cols.append(column)
+            if len(term_cols) > 0:
+                res_df.drop(columns=term_cols, inplace=True)
+                col_map = {}
+                for column in term_cols:
+                    col = column[:-8]
+                    col_map[col+'_term_name'] = col
+                res_df.rename(columns=col_map, inplace=True)
+            # remove empty columns from search results
+            empty_cols = []
+            for column in res_df.columns:
+                if len(res_df[column].value_counts())==0:
+                    empty_cols.append(column)
+            if len(empty_cols) > 0:
+                res_df.drop(columns=empty_cols, inplace=True)
+            # return result as json table
+            res = res_df.to_json(orient="table", index=False)
+        else: # TSV
+            res = res_df.to_csv(sep='\t')
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
@@ -2455,26 +2504,43 @@ def append_with_children(res,children,term_dict,term_id):
         append_with_children(res,children,term_dict,child)
     return
                
-@app.route('/generix/core_type_metadata/<obj_id>', methods=['GET'])
-@auth_required
+@app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
+@auth_ro_required
 def generix_core_type_metadata(obj_id):
     obj_type = ''
     try:
+        (JSON, TSV) = range(2)
+        return_format = JSON
+        if request.method == 'POST':
+            query = request.json
+            if query is not None and 'format' in query and query['format'] == 'TSV':
+                return_format = TSV
+        
+        sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)
         doc = dp.core_types[obj_type].find_one({'id':obj_id})
-        res = []
-        for prop in doc.properties:
-            if prop.startswith('_'): continue
-            res.append(
-                {
-                    'property': prop,
-                    'value': doc[prop]
-                }
-            )
+        if return_format == JSON:
+            res = []
+            for prop in doc.properties:
+                if prop.startswith('_'): continue
+                res.append(
+                    {
+                        'property': prop,
+                        'value': doc[prop]
+                    }
+                )
+        else: # TSV
+            props = []
+            values = []
+            for prop in doc.properties:
+                if prop.startswith('_'): continue
+                props.append(str(prop))
+                values.append(str(doc[prop]))
+            res = '\t'.join(props)+'\n'+'\t'.join(values)
         return  _ok_response({ "items": res, "type": obj_type  })
        
-    except:
-        return _err_response('Wrong object ID format')
+    except Exception as e:
+        return _err_response(e)
 
 @app.route('/generix/image', methods=['POST'])
 @auth_required
