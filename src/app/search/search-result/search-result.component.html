@@ -77,7 +77,7 @@
         <i *ngIf="row.brick_id" class="material-icons options-icon ml-4" (click)="viewData(row.brick_id)">description</i>
         <i *ngIf="row.id" class="material-icons options-icon ml-4" (click)="viewCoreData(row.id)">description</i>
         <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="useData(row.brick_id)">bar_chart</i>
-        <i class="material-icons options-icon">cloud_download</i>
+        <i class="material-icons options-icon" (click)="handleDownload(row)">cloud_download</i>
       </ng-template>
     </ngx-datatable-column>
       <ngx-datatable-column *ngFor="let field of resultFields" [name]="field.name" [flexGrow]="1">
