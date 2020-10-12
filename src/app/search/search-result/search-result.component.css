@@ -68,3 +68,19 @@ app-search-result {
     border-radius: 10px;
 }
 
+::ng-deep .ngx-datatable.scroll-horz .datatable-body {
+    transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
+::ng-deep .ngx-datatable .datatable-body .datatable-scroll {
+    transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body .empty-row {
+    transform: rotateX(180deg);
+}
+

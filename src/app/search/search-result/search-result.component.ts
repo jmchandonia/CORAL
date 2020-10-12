@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,12 +7,15 @@ import { DatatableComponent } from '@swimlane/ngx-datatable';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { environment } from 'src/environments/environment';
+import { DomSanitizer } from '@angular/platform-browser'
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ImageDisplayComponent } from './image-display/image-display.component';
 
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
+  styleUrls: ['./search-result.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchResultComponent implements OnInit, AfterViewInit {
 
@@ -31,13 +34,15 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   columnMode = ColumnMode;
   tableWidth: number;
+  modalRef: BsModalRef;
 
   constructor(
     private queryBuilder: QueryBuilderService,
     private chRef: ChangeDetectorRef,
     private router: Router,
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -75,8 +80,26 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
           width: this.tableWidth / res.schema.fields.length + 1
         }))];
         this.chRef.detectChanges();
+        if (this.temp.length) { this.getImageUrls(); }
       }
     );
+  }
+
+  getImageUrls() {
+    this.table.bodyComponent.temp.forEach(async (row) => {
+      if (row.link && this.isImage(row.link, 'link') && !row._imgSrc) {
+        row._imgSrc = await this.queryBuilder.getImageSrc(row.link.substring(1));
+        this.chRef.detectChanges();
+      }
+    });
+  }
+
+  displayImage(imgSrc, name) {
+    const initialState = {
+      title: name,
+      imgSrc
+    }
+    this.modalRef = this.modalService.show(ImageDisplayComponent, {initialState, class: 'modal-lg'})
   }
 
   updateFilter(event) {
@@ -107,17 +130,19 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     return field === 'link' && /\.(gif|jpe?g|tiff?|png|webp|)$/i.test(td);
   }
 
-  getImgSrc(url: string) {
-    // return `${environment.baseURL}${url}`;
-    return 'https://picsum.photos/200/200' // placeholder url
+  handlePaging(event) {
+    this.chRef.detectChanges();
+    this.getImageUrls();
   }
 
   viewData(id) {
-    this.router.navigate([`search/result/brick/${id}`]);
+    const queryParams = this.previousUrl[0] === '/home' ? { redirect: 'home' } : {};
+    this.router.navigate([`search/result/brick/${id}`], {queryParams});
   }
 
   viewCoreData(id) {
-    this.router.navigate([`search/result/core/${id}`]);
+    const queryParams = this.previousUrl[0] === '/home' ? { redirect: 'home' } : {};
+    this.router.navigate([`search/result/core/${id}`], {queryParams});
   }
 
   useData(id) {

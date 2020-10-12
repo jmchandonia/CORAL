@@ -1,10 +1,10 @@
 <div class="row mb-3 mt-3 search-nav-bar">
-  <div class="ml-4" [routerLink]="previousUrl">
+  <div class="ml-4">
     <i class="material-icons back-icon">keyboard_arrow_left</i>
-    <span class="menu-option">Go Back</span>
+    <span class="menu-option" [routerLink]="previousUrl">Go Back</span>
     <span 
     class="menu-option col-2" 
-  (click)="showQuery = true"
+    (click)="showQuery = true"
     *ngIf="!showQuery"
     >| &nbsp;&nbsp;Show Query</span>
   <span
@@ -60,7 +60,7 @@
     <ngx-datatable
       #table
       style="width: 100%"
-      class="ngx-datatable bootstrap mb-4"
+      class="ngx-datatable bootstrap mb-4 mt-4"
       [rows]="results"
       [columns]="resultFields"
       [columnMode]="columnMode.force"
@@ -70,6 +70,7 @@
       [footerHeight]="40"
       [summaryPosition]="top"
       [limit]="10"
+      (page)="handlePaging($event)"
     >
     <ngx-datatable-column name="options" [flexGrow]="1">
       <ng-template let-row="row" ngx-datatable-cell-template>
@@ -85,10 +86,12 @@
           <span *ngIf="!isLink(row[field.name]) && !isImage(row[field.name], field.name)">{{row[field.name]}}</span>
           <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
           <img
-            *ngIf="isImage(row[field.name], field.name)"
-            [src]="getImgSrc(row[field.name])"
+            *ngIf="row._imgSrc && isImage(row[field.name], field.name)"
+            style="width: 100px; height: 100px; cursor: pointer;"
+            [src]="row._imgSrc"
             class="search-result-icon" 
-            [alt]="row[field.name]"
+            [alt]="row.name"
+            (click)="displayImage(row._imgSrc, row.name)"
           />
         </ng-template>
       </ngx-datatable-column>
