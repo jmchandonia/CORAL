@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ChangeDetectionStrategy, SecurityContext } from '@angular/core';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
 import { QueryBuilder } from '../../shared/models/QueryBuilder';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -42,7 +42,8 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -133,6 +134,17 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   handlePaging(event) {
     this.chRef.detectChanges();
     this.getImageUrls();
+  }
+
+
+  handleDownload(row) {
+    if (row._imgSrc) {
+      const a = document.createElement('a');
+      a.href = this.sanitizer.sanitize(SecurityContext.URL, row._imgSrc);
+      a.download = row.name;
+      a.click();
+      a.remove();
+    }
   }
 
   viewData(id) {
