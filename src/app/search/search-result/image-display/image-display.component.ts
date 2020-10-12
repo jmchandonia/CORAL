@@ -17,4 +17,8 @@ export class ImageDisplayComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  closeModal() {
+    this.modalRef.hide();
+  }
+
 }
