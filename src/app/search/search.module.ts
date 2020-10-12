@@ -19,6 +19,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ProcessFilterComponent } from './advanced-search/process-filter/process-filter.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { ImageDisplayComponent } from './search-result/image-display/image-display.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     SearchResultCoreItemComponent,
     ProcessDataComponent,
     DimensionVariablePreviewComponent,
-    ProcessFilterComponent
+    ProcessFilterComponent,
+    ImageDisplayComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +45,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     NgxSpinnerModule,
     NgSelectModule,
     BsDatepickerModule.forRoot(),
-    NgxDatatableModule
+    NgxDatatableModule,
+    ModalModule.forRoot()
   ],
   providers: [QueryBuilderService],
   bootstrap: [DimensionVariablePreviewComponent]

@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { DomSanitizer } from '@angular/platform-browser'
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ImageDisplayComponent } from './image-display/image-display.component';
 
 @Component({
   selector: 'app-search-result',
@@ -32,6 +34,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   @ViewChild(DatatableComponent) table: DatatableComponent;
   columnMode = ColumnMode;
   tableWidth: number;
+  modalRef: BsModalRef;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -39,7 +42,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
-    private sanitizer: DomSanitizer
+    private modalService: BsModalService
   ) { }
 
   ngOnInit() {
@@ -89,6 +92,15 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         this.chRef.detectChanges();
       }
     });
+  }
+
+  displayImage(imgSrc, name) {
+    console.log('displaying image => ', imgSrc);
+    const initialState = {
+      title: name,
+      imgSrc
+    }
+    this.modalRef = this.modalService.show(ImageDisplayComponent, {initialState, class: 'modal-lg'})
   }
 
   updateFilter(event) {
