@@ -5,6 +5,8 @@ import xarray as xr
 import re
 import datetime
 import sys
+import io
+import csv
 from time import gmtime, strftime
 from .ontology import Term
 from .workspace import BrickDataHolder, ProcessDataHolder
@@ -603,6 +605,18 @@ class Brick:
                 typed_values_property_name=typed_values_property_name ),
             cls=NPEncoder)
 
+    def to_tsv(self, exclude_data_values=False, typed_values_property_name=True):
+        brick_dict = self.to_dict(exclude_data_values=exclude_data_values,
+                                  typed_values_property_name=typed_values_property_name )
+        # sys.stderr.write('bd = '+str(brick_dict)+'\n')
+        output = io.StringIO()
+        writer = csv.DictWriter(output, 
+                                fieldnames=brick_dict.keys(),
+                                delimiter='\t')
+        writer.writeheader()
+        writer.writerow(brick_dict)
+        return output.getvalue()
+    
     def to_dict(self, exclude_data_values=False, typed_values_property_name=True):
         data = {}
 
