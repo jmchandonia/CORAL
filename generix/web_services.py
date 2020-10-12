@@ -441,15 +441,31 @@ def do_search():
     except Exception as e:
         return _err_response(e)        
 
-@app.route("/generix/brick/<brick_id>", methods=['GET'])
+@app.route("/generix/brick/<brick_id>", methods=['GET','POST'])
 def get_brick(brick_id):
-    bp = dp._get_type_provider('Brick')
-    br = bp.load(brick_id)
-    
-    return json.dumps( {
+    try:
+        bp = dp._get_type_provider('Brick')
+        br = bp.load(brick_id)
+
+        (JSON, TSV) = range(2)
+        return_format = JSON
+        if request.method == 'POST':
+            query = request.json
+            if query is not None and 'format' in query and query['format'] == 'TSV':
+                return_format = TSV
+
+        if return_format == JSON:
+            res = br.to_dict()
+        else:
+            res = br.to_tsv()
+        
+        return json.dumps( {
             'status': 'success',
-            'res': br.to_dict()
-    } )
+            'res': res
+        } )
+    
+    except Exception as e:
+        return _err_response(e)        
 
 @app.route("/generix/do_report/<value>", methods=['GET'])
 def do_report(value):
