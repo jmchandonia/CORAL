@@ -95,7 +95,6 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   displayImage(imgSrc, name) {
-    console.log('displaying image => ', imgSrc);
     const initialState = {
       title: name,
       imgSrc
@@ -137,11 +136,13 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   viewData(id) {
-    this.router.navigate([`search/result/brick/${id}`]);
+    const queryParams = this.previousUrl[0] === '/home' ? { redirect: 'home' } : {};
+    this.router.navigate([`search/result/brick/${id}`], {queryParams});
   }
 
   viewCoreData(id) {
-    this.router.navigate([`search/result/core/${id}`]);
+    const queryParams = this.previousUrl[0] === '/home' ? { redirect: 'home' } : {};
+    this.router.navigate([`search/result/core/${id}`], {queryParams});
   }
 
   useData(id) {

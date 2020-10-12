@@ -47,7 +47,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   navigateToSearchResult() {
-    this.router.navigate(['search/result']);
+    const queryParams = this.navigatedFromHome ? { redirect: 'home' } : {}
+    this.router.navigate(['search/result'], {queryParams});
   }
 
   navigateToPreviousItem() {
