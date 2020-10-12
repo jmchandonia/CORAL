@@ -163,10 +163,26 @@ modal-container.modal {
     z-index: 100000;
 }
 
+/* BEGIN style overrides for ngx-datatable */
+
 .datatable-footer-inner {
     overflow-y: hidden!important;
 }
 
+.datatable-header {
+    background: #00489B;
+    color: white;
+}
 
+.datatable-footer-inner {
+    background: #00489B;
+    color: white;
+}
 
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
+    background-color: rgb(0, 99, 212);
+}
+
+/* END style overrides for ngx-datatable */
 
