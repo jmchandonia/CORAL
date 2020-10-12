@@ -77,7 +77,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
           width: this.tableWidth / res.schema.fields.length + 1
         }))];
         this.chRef.detectChanges();
-        this.getImageUrls();
+        if (this.temp.length) { this.getImageUrls(); }
       }
     );
   }
