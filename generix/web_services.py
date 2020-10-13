@@ -4,6 +4,8 @@ from flask import request
 from flask_cors import CORS, cross_origin
 from functools import wraps
 from diskcache import Cache
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 import pandas as pd
 import numpy as np
 import traceback as tb
@@ -64,7 +66,7 @@ def auth_required(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if valid_jwt():
+        if valid_jwt(get_jwt()):
             return func(*args, **kwargs)
         else:
             return jsonify({"message": "UNAUTHORIZED USER"}), 401
@@ -77,17 +79,38 @@ def auth_ro_required(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        # if valid_jwt():
-        return func(*args, **kwargs)
-        # else:
-        # return jsonify({"message": "UNAUTHORIZED USER"}), 401
+        token = get_jwt()
+        if valid_jwt(token):
+            return func(*args, **kwargs)
+
+        # path to check public key
+        headers = jwt.get_unverified_header(token)
+        if 'key' not in headers:
+            return jsonify({"message": "UNAUTHORIZED USER"}), 401
+
+        public_key = RSA.importKey(headers['key'])
+        private_key = RSA.importKey(cns['_AUTH_SECRET'])
+        encryptor = PKCS1_OAEP.new(public_key)
+        decryptor = PKCS1_OAEP.new(private_key)
+
+        message = b'data clearinghouse'
+        encrypted_message = encryptor.encrypt(message)
+        decrypted_message = decryptor.decrypt(encrypted_message)
+
+        if message == decrypted_message:
+            return func(*args, **kwargs)
+        else:
+            return jsonify({"message": "UNAUTHORIZED USER"}), 401
     return wrapper
 
-def valid_jwt():
+def get_jwt():
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return False
     auth_token = auth_header.split(' ')[1] # remove bearer from the front
+    return auth_token
+
+def valid_jwt(auth_token):
     try:
         # if token decoding failed then we know we didnt have a token that was encrypted with the same key
         # we can also check for valid user information or anything else we add to the token here
@@ -829,12 +852,17 @@ def login():
 		        'iat': datetime.datetime.utcnow(),
 		        'sub': login['username']
 	        }
-            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+
+            with open('/etc/ssl/certs/data_clearinghouse.pub', mode='rb') as publicfile:
+                pkeydata = publicfile.read()
+                public_key = RSA.importKey(pkeydata)
+            
+            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], headers={'key':pkeydata.decode('utf-8')}, algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
             return json.dumps({'success': False,
-                               'message': 'Something went wrong: '
-                               # 'message': 'Something went wrong: '+str(e)
+                               # 'message': 'Something went wrong: '
+                               'message': 'Something went wrong: '+str(e)
             })  
 
 
@@ -1867,7 +1895,7 @@ def stretch_avoid_collisions(nodes, edges):
                 
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
-@auth_required
+@auth_ro_required
 def generix_type_graph():
     arango_service = svs['arango_service']
 
