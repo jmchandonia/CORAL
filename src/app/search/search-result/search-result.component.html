@@ -37,7 +37,7 @@
   </div>
   <div class="table-container col-11" *ngIf="temp.length">
     <div class="row">
-        <div *ngIf="staticResults" class="col-4 core-type-button-group">
+        <div *ngIf="staticResults" class="col-6 core-type-button-group">
           <div class="row">
             <div class="col-6 pl-1 pr-1">
               <button class="btn btn-light btn-block" style="display: inline-flex; justify-content: center;">
@@ -53,8 +53,8 @@
             </div>
           </div>
         </div>
-        <div [ngClass]="staticResults ? 'col-8' : 'col-12'">
-          <input class="form-control" placeholder="narrow search results" type="text" (keyup)="updateFilter($event)" />
+        <div [ngClass]="staticResults ? 'col-6' : 'col-12'">
+          <input class="form-control m-0" placeholder="narrow search results" type="text" (keyup)="updateFilter($event)" />
         </div>
     </div>
     <ngx-datatable
