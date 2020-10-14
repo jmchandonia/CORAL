@@ -1261,9 +1261,9 @@ def generix_search():
                 res_df.rename(columns=col_map, inplace=True)
             # remove empty columns from search results
             empty_cols = []
-            for column in res_df.columns:
-                if len(res_df[column].value_counts())==0:
-                    empty_cols.append(column)
+            #for column in res_df.columns:
+                #if len(res_df[column].value_counts())==0:
+                #empty_cols.append(column)
             if len(empty_cols) > 0:
                 res_df.drop(columns=empty_cols, inplace=True)
             # return result as json table
