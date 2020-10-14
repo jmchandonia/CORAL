@@ -136,17 +136,6 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     this.getImageUrls();
   }
 
-
-  handleDownload(row) {
-    if (row._imgSrc) {
-      const a = document.createElement('a');
-      a.href = this.sanitizer.sanitize(SecurityContext.URL, row._imgSrc);
-      a.download = row.name;
-      a.click();
-      a.remove();
-    }
-  }
-
   viewData(id) {
     const queryParams = this.previousUrl[0] === '/home' ? { redirect: 'home' } : {};
     this.router.navigate([`search/result/brick/${id}`], {queryParams});
@@ -162,28 +151,49 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     this.router.navigate([`../../plot/options/${id}`], {relativeTo: this.route});
   }
 
+  // download all core type search results as tsv
   handleCoreTypeDownload() {
-    if (this.results) {
-      const replacer = (key, value) => value === null ? '' : value;
-      const tsv = this.results.map(row => {
-        return this.resultFields
-          .map(field => JSON.stringify(row[field.name], replacer))
-          .join('\t');
+    this.queryBuilder.getSearchResults('TSV')
+      .subscribe(data => {
+        const filename = JSON.parse(localStorage.getItem('queryBuilder'))?.queryMatch?.dataType || 'core-type';
+        this.download(data, filename + new Date().toISOString())
       });
-      tsv.unshift(this.resultFields.map(field => field.name).join('\t'));
-      const tsvArray = tsv.join('\n');
+  }
 
-      const a = document.createElement('a');
-      const blob = new Blob([tsvArray], { type: 'text/tsv' });
-      const url = window.URL.createObjectURL(blob);
+  handleDownload(row) {
+    // download actual image
+      if (row._imgSrc) {
+        const a = document.createElement('a');
+        a.href = this.sanitizer.sanitize(SecurityContext.URL, row._imgSrc);
+        a.download = row.name;
+        a.click();
+        a.remove();
+      } else {
+        if (row.brick_id) {
+          // download dynamic type tsv
+          this.queryBuilder.downloadBrick(row.brick_id, 'TSV')
+            .subscribe(data => {
+              this.download(data.res, row.brick_name);
+            });
+        } else {
+          // download singular core type tsv
+          this.queryBuilder.downloadCoreType(row.id)
+            .subscribe(data => {
+              this.download(data.results.items, row.name);
+          });
+        }
+      }
+  }
 
-      a.href = url;
-      a.download = `download-${new Date().toISOString()}.tsv`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    }
-
+  download(data, name) {
+    const blob = new Blob([data], {type: 'text/tsv'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.tsv`;
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
   }
 
 }
