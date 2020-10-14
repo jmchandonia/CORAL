@@ -75,29 +75,13 @@ def auth_required(func):
 # for methods that either a logged in user, or a read only app, can use
 def auth_ro_required(func):
     """
-    View decorator - require valid JWT
+    View decorator - require valid JWT or the right public key
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
         token = get_jwt()
-        if valid_jwt(token):
-            return func(*args, **kwargs)
-
-        # path to check public key
-        headers = jwt.get_unverified_header(token)
-        if 'key' not in headers:
-            return jsonify({"message": "UNAUTHORIZED USER"}), 401
-
-        public_key = RSA.importKey(headers['key'])
-        private_key = RSA.importKey(cns['_AUTH_SECRET'])
-        encryptor = PKCS1_OAEP.new(public_key)
-        decryptor = PKCS1_OAEP.new(private_key)
-
-        message = b'data clearinghouse'
-        encrypted_message = encryptor.encrypt(message)
-        decrypted_message = decryptor.decrypt(encrypted_message)
-
-        if message == decrypted_message:
+        
+        if valid_jwt(token) or valid_jwt_key(token):
             return func(*args, **kwargs)
         else:
             return jsonify({"message": "UNAUTHORIZED USER"}), 401
@@ -119,6 +103,27 @@ def valid_jwt(auth_token):
     except Exception as e:
         return False
 
+def valid_jwt_key(auth_token):
+    try:
+        # path to check public key
+        headers = jwt.get_unverified_header(token)
+        if 'key' not in headers:
+            return False
+
+        public_key = RSA.importKey(headers['key'])
+        private_key = RSA.importKey(cns['_AUTH_SECRET'])
+        encryptor = PKCS1_OAEP.new(public_key)
+        decryptor = PKCS1_OAEP.new(private_key)
+
+        message = b'data clearinghouse'
+        encrypted_message = encryptor.encrypt(message)
+        decrypted_message = decryptor.decrypt(encrypted_message)
+
+        if message == decrypted_message:
+            return True
+    except Exception as e:
+        return False
+    
 @app.route("/generix/")
 def hello():
     data_id = 'c74928ccf2e14c87a51a03e7d879eaf5'
