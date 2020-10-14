@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { QueryBuilder, QueryMatch, QueryParam } from '../models/QueryBuilder';
+import { QueryBuilder } from '../models/QueryBuilder';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router, NavigationEnd } from '@angular/router';
-import { Observable, Subscriber } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { Term } from 'src/app/shared/models/brick';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Injectable({
   providedIn: 'root'
@@ -81,11 +79,21 @@ export class QueryBuilderService {
     return this.queryBuilderObject.isValid;
   }
 
-  getSearchResults() {
+  getSearchResults(format = 'JSON') {
     if (this.queryBuilderObject.isEmpty) {
       this.queryBuilderObject = this.getQueryBuilderCache();
     }
-    return this.http.post<any>(`${environment.baseURL}/search`, this.queryBuilderObject);
+    return this.http.post<any>(`${environment.baseURL}/search`, {...this.queryBuilderObject, format}, {
+      responseType: format === 'TSV' ? 'arraybuffer' as 'json' : 'json'
+    });
+  }
+
+  downloadCoreType(id: string) {
+    return this.http.post<any>(`${environment.baseURL}/core_type_metadata/${id}`, {format: 'TSV'});
+  }
+
+  downloadBrick(id: string, format: string) {
+    return this.http.post<any>(`${environment.baseURL}/brick/${id}`, {format});
   }
 
   getObjectMetadata(id) {
