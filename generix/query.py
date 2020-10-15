@@ -384,7 +384,7 @@ class Query:
                 ''' % (' and '.join(po_aql_filter))
                 if self.__search_all_up:
                     link_aql += '''
-                      let upprocs=(
+                      let upprocs=unique(
                         for p1 in filtered_procs
                         for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
                         OPTIONS {
@@ -401,7 +401,7 @@ class Query:
                     '''
                 if self.__search_all_down:
                     link_aql += '''
-                      let dnprocs=(
+                      let dnprocs=unique(
                         for p1 in filtered_procs
                         for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
                         OPTIONS {
