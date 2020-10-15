@@ -2,6 +2,8 @@ import pandas as pd
 from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
 from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor, IndexDocument, BrickIndexDocumnet
+import sys
+import pprint
 from . import services
 
 
@@ -182,7 +184,7 @@ class ArangoService:
                  %s
                  return p1
                )
-               let up_procs=(
+               let up_procs=unique(
                  for p1 in filtered_procs
                  for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
                  OPTIONS {
@@ -192,7 +194,7 @@ class ArangoService:
                  filter is_same_collection("SYS_Process",p)
                  return p
                )
-               let dn_procs=(
+               let dn_procs=unique(
                   for p1 in filtered_procs
                   for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
                   OPTIONS {
@@ -236,6 +238,9 @@ class ArangoService:
               return {"from":f, "to":t, "pname":p.process_term_name}
             '''
         aql_bind = {}
+
+        sys.stderr.write('aql = '+aql+'\n')
+        
         return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True, batchSize=size)
     
     def __to_type2objects(self, aql_rs):
