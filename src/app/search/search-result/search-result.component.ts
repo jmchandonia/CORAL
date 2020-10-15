@@ -166,6 +166,8 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         const a = document.createElement('a');
         a.href = this.sanitizer.sanitize(SecurityContext.URL, row._imgSrc);
         a.download = row.name;
+        a.setAttribute('display', 'none');
+        document.body.appendChild(a);
         a.click();
         a.remove();
       } else {
@@ -191,6 +193,8 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     const a = document.createElement('a');
     a.href = url;
     a.download = `${name}.tsv`;
+    a.setAttribute('display', 'none');
+    document.body.appendChild(a);
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
