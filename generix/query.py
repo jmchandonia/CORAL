@@ -97,8 +97,8 @@ class Query:
                             term_ids = tc.term_ids
                         else:
                             term_ids.append( Term.get_term(value, parent_term_id=parent_term_id).term_id )
-                            sys.stderr.write('debug1 '+str(Term.get_term(value, parent_term_id=parent_term_id).term_id)+'\n')
-                            sys.stderr.write('debug2 '+str(value)+'\n')
+                            # sys.stderr.write('debug1 '+str(Term.get_term(value, parent_term_id=parent_term_id).term_id)+'\n')
+                            # sys.stderr.write('debug2 '+str(value)+'\n')
 
                     elif type(value) is list:
                         term_ids = [t.term_id for t in Term.get_terms(value, parent_term_id=parent_term_id) ]
