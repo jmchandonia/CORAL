@@ -9,6 +9,7 @@ const routes: Routes = [
   {
     path: 'plot', component: PlotComponent, canActivate: [AuthGuard], children: [
       { path: '', redirectTo: 'options/:id', pathMatch: 'full' },
+      { path: 'options', component: PlotOptionsComponent },
       { path: 'options/:id', component: PlotOptionsComponent },
       { path: 'result/:id', component: PlotResultComponent },
     ]
