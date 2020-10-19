@@ -146,9 +146,20 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     this.router.navigate([`search/result/core/${id}`], {queryParams});
   }
 
-  useData(id) {
+  plotDynamicTypeResults(id) {
     this.queryBuilder.setPreviousUrl('/search/result');
     this.router.navigate([`../../plot/options/${id}`], {relativeTo: this.route});
+  }
+
+  plotCoreTypeResults() {
+    const queryBuilder = localStorage.getItem('queryBuilder');
+    localStorage.setItem('coreTypePlotParams', queryBuilder);
+    this.router.navigate(['plot/options'], {
+      queryParams: {
+        coreType: true,
+        sampleId: this.results[0].id // we will use the first core type on the list to get the properties in the plot
+      }
+    })
   }
 
   // download all core type search results as tsv

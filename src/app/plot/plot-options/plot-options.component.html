@@ -44,12 +44,20 @@
     </div>
   </div>
   <div class="dimension-options-container" *ngIf="selectedPlotType">
-    <app-dimension-options
+    <ng-container *ngIf="coreTypePlot">
+      <app-core-axis-options
+        *ngFor="let axis of axes"
+        [axisOptions]="metadata"
+      ></app-core-axis-options>
+    </ng-container>
+    <ng-container *ngIf="!coreTypePlot">
+      <app-dimension-options
       *ngFor="let dimension of dimensions; let i = index;"
       [dimension]="dimension"
       [dimensionLabel]="axisBlocks[i].title"
       [index]="i"
     ></app-dimension-options>
+    </ng-container>
   </div>
   <div class="row bottom-button-row">
     <!-- <button (click)="test()">TEST</button> --> 

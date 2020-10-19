@@ -13,8 +13,9 @@ import { PlotService } from '../shared/services/plot.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CoreAxisOptionsComponent } from './plot-options/core-axis-options/core-axis-options.component';
 @NgModule({
-  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
+  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,
