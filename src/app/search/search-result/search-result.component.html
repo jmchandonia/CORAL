@@ -40,7 +40,7 @@
         <div *ngIf="staticResults" class="col-6 core-type-button-group">
           <div class="row">
             <div class="col-6 pl-1 pr-1">
-              <button class="btn btn-light btn-block" style="display: inline-flex; justify-content: center;">
+              <button class="btn btn-light btn-block" (click)="plotCoreTypeResults()" style="display: inline-flex; justify-content: center;">
                 <i class="material-icons mr-1">bar_chart</i>
                  Plot All Results
               </button>
@@ -76,7 +76,7 @@
       <ng-template let-row="row" ngx-datatable-cell-template>
         <i *ngIf="row.brick_id" class="material-icons options-icon ml-4" (click)="viewData(row.brick_id)">description</i>
         <i *ngIf="row.id" class="material-icons options-icon ml-4" (click)="viewCoreData(row.id)">description</i>
-        <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="useData(row.brick_id)">bar_chart</i>
+        <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="plotDynamicTypeResults(row.brick_id)">bar_chart</i>
         <i class="material-icons options-icon" (click)="handleDownload(row)">cloud_download</i>
       </ng-template>
     </ngx-datatable-column>

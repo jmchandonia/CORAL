@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
 import { PlotlyConfig } from 'src/app/shared/models/plotly-config';
+import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
+import { CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
 @Injectable({
   providedIn: 'root'
 })
