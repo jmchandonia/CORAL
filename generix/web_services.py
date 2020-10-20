@@ -196,8 +196,6 @@ def generix_refs_to_core_objects():
     except Exception as e:
         return _err_response(e)
 
-
-
 @app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
     if value is None:
@@ -2552,6 +2550,17 @@ def append_with_children(res,children,term_dict,term_id):
         sys.stderr.write("process child: "+child+"\n")
         append_with_children(res,children,term_dict,child)
     return
+
+@app.route('/generix/core_type_props/<obj_name>', methods=['GET'])
+@auth_ro_required
+def generix_core_type_props(obj_name):
+    """ Gets list of property names as axis options for plotting """
+    core_type = svs['typedef'].get_type_def(obj_name)
+    response = []
+    for field in core_type.property_names:
+        property = core_type.property_def(field)
+        response.append(dict(name=property.name, scalar_type=property.type, term_id=property.term_id))
+    return json.dumps({"results": response})
                
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
 @auth_ro_required
