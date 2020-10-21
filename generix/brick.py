@@ -1140,7 +1140,7 @@ class Brick:
             'date_start': datetime.datetime.today().strftime('%Y-%m-%d'),
             'date_end': datetime.datetime.today().strftime('%Y-%m-%d'),
             'input_objects': input_obj_ids,
-            'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK, brick_data_holder.id)]
+            'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK+'-'+str(self.type_term().term_id)[3:], brick_data_holder.id)]
         }
         services.workspace.save_process(ProcessDataHolder(process_data)) 
 
@@ -1571,7 +1571,7 @@ class BrickVariable:
         data = '%s%s' % (data_example, data_suffix)
         
         rows = [
-            _row2_header('<b>Dimnesion Variable</b>'),
+            _row2_header('<b>Dimension Variable</b>'),
             _row2('Name', self.name),
             _row2('Type', self.type_term),
             _row2('Units', self.units_term),
