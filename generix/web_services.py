@@ -22,6 +22,7 @@ import sys
 import pprint
 import math
 import base64
+from contextlib import redirect_stdout
 
 # from . import services
 # from .brick import Brick
@@ -58,6 +59,12 @@ _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
 _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
+
+def _print(*argv):
+    with open('/var/log/g_ws_.txt', 'w') as f:
+        with redirect_stdout(f):
+            for arg in argv:
+                print(arg)
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -1037,6 +1044,106 @@ def _get_plot_data(query):
                     res[axis] = br.data_vars[0].values.T.tolist()
 
     return res
+
+@app.route('/generix/plotly_core_data', methods=["POST"])
+def generix_plotly_core_data():
+    body = request.json
+    try:
+        rs = _get_core_plot_data(body['query'])
+        layout = {
+            'x': 800,
+            'y': 600,
+            # 'title': body['config']['title'],
+            'title': body['query']['queryMatch']['dataType'],
+            **body['plotly_layout']
+        }
+        if 'x' in body['config']:
+            if body['config']['x']['show_title']:
+                layout['xaxis'] = {
+                    'title': body['config']['x']['title']
+                }
+        if 'y' in body['config']:
+            if body['config']['y']['show_title']:
+                layout['yaxis'] = {
+                    'title': body['config']['y']['title']
+                }
+
+        x_field = body['data']['x']['name']
+        y_field = body['data']['y']['name']
+        data = [{
+            'x': [i for i in rs[x_field]],
+            'y': [i for i in rs[y_field]],
+            **body['plotly_trace']
+        }]
+
+        return _ok_response({
+            'layout': layout,
+            'data': data
+        })
+    except Exception as e:
+        return _err_response(e)
+
+    return json.dumps({'test': 'testing core type plot'}), 200
+
+def _get_core_plot_data(search_data):
+    query_match = search_data['queryMatch'] # change field name here
+    provider = dp._get_type_provider(query_match['dataModel'])
+    q = provider.query()
+
+    for criterion in query_match['params']:
+        (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+        q.has({prop_name: {operation: prop_value}})
+
+    if 'processesUp' in search_data:
+        for criterion in search_data['processesUp']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_output_of_process({prop_name: {operation: prop_value}})
+            # hack to search all people in labs
+            if operation == '=' and prop_name == 'person' and 'term' in criterion:
+                children = svs['ontology'].enigma.find_id(criterion['term']).children
+                for x in children:
+                    q.is_output_of_process({prop_name: {operation: x.term_name}})
+                    
+        if 'searchAllProcessesUp' in search_data:
+            if search_data['searchAllProcessesUp'] == True:
+                q.search_all_up(True)
+        if 'searchAllProcessesDown' in search_data:
+            if search_data['searchAllProcessesDown'] == True:
+                q.search_all_down(True)
+
+    # Do processesDown
+    if 'processesDown' in search_data:
+        for criterion in search_data['processesDown']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_input_of_process({prop_name: {operation: prop_value}})
+
+    # Do connectsUpTo
+    if 'connectsUpTo' in search_data:
+        connects_up_to = search_data['connectsUpTo']
+        params = {}
+        for criterion in connects_up_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params[prop_name] = {operation: prop_value}
+
+        q.linked_up_to(connects_up_to['dataModel'],  params )
+
+    # Do connectsDownTo
+    if 'connectsDownTo' in search_data:
+        connects_down_to = search_data['connectsDownTo']
+        params = {}
+        for criterion in connects_down_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params[prop_name] = {operation: prop_value}
+
+        q.linked_down_to(connects_down_to['dataModel'],  params )
+
+    # do immediate parent
+    if 'parentProcesses' in search_data:
+        q.immediate_parent(search_data['parentProcesses'])
+
+    # do the search
+    res_df = q.find().to_df()
+    return res_df
 
 @app.route('/generix/plotly_data', methods=['POST'])
 @auth_required
