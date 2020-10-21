@@ -17,7 +17,7 @@ import jwt
 import datetime
 import uuid 
 import os
-import cgi
+import html
 import sys
 import pprint
 import math
@@ -492,6 +492,7 @@ def do_search():
         return _err_response(e)        
 
 @app.route("/generix/brick/<brick_id>", methods=['GET','POST'])
+@auth_ro_required
 def get_brick(brick_id):
     try:
         bp = dp._get_type_provider('Brick')
@@ -594,6 +595,8 @@ def create_brick():
     except Exception as e:
         return _err_response(e, traceback=True)
 
+
+    
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
     try:
@@ -1192,7 +1195,7 @@ def _extract_criterion_props(criterion):
 
 
 @app.route('/generix/search', methods=['POST'])
-@auth_required
+@auth_ro_required
 def generix_search():
     try:
         search_data = request.json
@@ -1296,10 +1299,7 @@ def generix_search():
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
-        return _err_response(e)
-
-
-
+        return _err_response(e,traceback=True)
 
 @app.route("/generix/search_operations", methods=['GET'])
 @auth_required
@@ -2709,7 +2709,7 @@ def _err_response(e, traceback=False):
     err = str(e)
     if traceback or DEBUG_MODE:
         body = tb.format_exc()
-        err = '<PRE>' +  cgi.escape(body) + '</PRE>' 
+        err = '<PRE>' +  html.escape(body) + '</PRE>' 
 
     return  json.dumps( {
             'results': '', 

@@ -143,3 +143,4 @@ class dataAccessAPITest(unittest.TestCase):
         # this method is @auth_ro_required, so should work
         r = requests.post(self.url+'types_graph', headers=headers, json='', verify=False)
         self.assertEqual(r.status_code,200)
+
