@@ -41,12 +41,12 @@ class PropertyValidator:
 
 
 class PropertyTextValidator(PropertyValidator):
-    def __init__(self, reg_expression_constrint):
-        super().__init__(reg_expression_constrint)
+    def __init__(self, reg_expression_constraint):
+        super().__init__(reg_expression_constraint)
 
         self.__pattern = None
         if self.validatable:
-            self.__pattern = re.compile(reg_expression_constrint)
+            self.__pattern = re.compile(reg_expression_constraint)
 
     def validate_type(self, property_name, property_value):
         if type(property_value) is not str:

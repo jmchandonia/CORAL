@@ -33,8 +33,10 @@ _IMPORT_DIR_ONTOLOGY = __CONFIG['Import']['ontology_dir']
 _IMPORT_DIR_ENTITY = __CONFIG['Import']['entity_dir']
 _IMPORT_DIR_PROCESS = __CONFIG['Import']['process_dir']
 _IMPORT_DIR_BRICK = __CONFIG['Import']['brick_dir']
-with open(__CONFIG['WebService']['auth_pem'], 'rb') as authfile:
+with open(__CONFIG['WebService']['auth_private'], 'rb') as authfile:
     _AUTH_SECRET = authfile.read()
+with open(__CONFIG['WebService']['auth_public'], 'rb') as authfile:
+    _AUTH_PUBLIC = authfile.read()
 
 __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
 _BRICK_TYPE_TEMPLATES_FILE = os.path.join(__PACKAGE_DIR, 'var/brick_type_templates.json')
