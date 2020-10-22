@@ -482,9 +482,12 @@ class Ontology:
 
         return TermCollection(self.__find_terms(aql_filter, aql_bind, size=size))
 
-    def find_name(self, term_name):
-        aql_bind = {'term_name': term_name}
+    def find_name(self, term_name, parent_term_id=None):
+        aql_bind = {'term_name': term_name }
         aql_filter = 'x.term_name == @term_name'
+        if parent_term_id is not None and parent_term_id != '':
+            aql_bind['parent_term_id'] = parent_term_id
+            aql_filter += ' and @parent_term_id in x.parent_path_term_ids'
         return self.__find_term(aql_filter, aql_bind)
 
     def find_name_prefix(self, value, parent_term_id=None, size=1000):
@@ -743,10 +746,10 @@ class Term:
         . exact term name
     '''
     @staticmethod
-    def get_terms(term_id_names):
+    def get_terms(term_id_names, parent_term_id = None):
         terms = []
         for term_id_name in term_id_names:
-            terms.append( Term.get_term(term_id_name) )
+            terms.append( Term.get_term(term_id_name, parent_term_id=parent_term_id) )
         return terms
 
     '''
@@ -756,7 +759,7 @@ class Term:
         . exact term name
     '''
     @staticmethod
-    def get_term(term_id_name):
+    def get_term(term_id_name, parent_term_id = None):
         term = None
         if type(term_id_name) is Term:
             term = term_id_name
@@ -768,7 +771,7 @@ class Term:
                 except:
                     raise ValueError('Wrong term id: %s' % term_id_name)
             else:
-                term = services.ontology.all.find_name(term_id_name)
+                term = services.ontology.all.find_name(term_id_name, parent_term_id=parent_term_id)
                 if term is None:
                     raise ValueError('Wrong term name: %s' % term_id_name)
         else:
