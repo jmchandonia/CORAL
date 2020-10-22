@@ -1893,7 +1893,7 @@ def stretch_avoid_collisions(nodes, edges):
                         break
                 if hasOverlap:
                     # push n1 further out along edge from parent
-                    sys.stderr.write('OVERLAP '+str(n1['name'])+' '+str(n2['name'])+' '+str(dX)+' '+str(dY)+'\n')
+                    # sys.stderr.write('OVERLAP '+str(n1['name'])+' '+str(n2['name'])+' '+str(dX)+' '+str(dY)+'\n')
                     for e in edges:
                         if e['target'] != n1['index'] or e['source'] == n1['index']:
                             continue
@@ -1955,11 +1955,11 @@ def generix_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    #if cacheKey in cache:
-    #    sys.stderr.write('cache hit '+cacheKey+'\n')
-    #    return  _ok_response(cache[cacheKey])
-    #else:
-    #    sys.stderr.write('cache miss '+cacheKey+'\n')
+    if cacheKey in cache:
+        sys.stderr.write('cache hit '+cacheKey+'\n')
+        return  _ok_response(cache[cacheKey])
+    else:
+        sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
