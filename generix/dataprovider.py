@@ -50,7 +50,8 @@ class DataProvider:
             '_PLOT_TYPES_FILE': services._PLOT_TYPES_FILE,
             '_DATA_DIR': services._DATA_DIR,
             '_CACHE_DIR': services._CACHE_DIR,
-            '_AUTH_SECRET': services._AUTH_SECRET
+            '_AUTH_SECRET': services._AUTH_SECRET,
+            '_AUTH_PUBLIC': services._AUTH_PUBLIC
         }
 
 class GenericsProvider:

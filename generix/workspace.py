@@ -68,14 +68,28 @@ class ProcessDataHolder(DataHolder):
             type_name, upk_id = input_object.split(':')
             type_name = type_name.strip()
             upk_id = upk_id.strip()
-            # TODO hack
-            if type_name == 'Condition':
-                continue
+
+            # hack for imported files
             if type_name == 'Generic':
                 type_name = 'Brick'
 
+            # skip types not used for provenance
+            if not type_name.startswith('Brick'):
+                typedef = services.typedef.get_type_def(type_name)
+                if not typedef.for_provenance:
+                    continue
+
+            # get pk
             pk_id = services.workspace._get_pk_id(type_name, upk_id)
-            obj_ids.append('%s:%s' % (type_name, pk_id))
+
+            # add data model term id to bricks
+            full_type_name = type_name
+            if type_name == 'Brick':
+                br = services.workspace.get_brick_data(pk_id)
+                full_type_name += '-'+str(br['data_type']['oterm_ref'])[3:]
+                # sys.stderr.write('full_type_name for '+str(pk_id)+' = '+str(full_type_name)+'\n')
+
+            obj_ids.append('%s:%s' % (full_type_name, pk_id))
 
         self.data[ids_prop_name] = obj_ids
 
@@ -305,6 +319,8 @@ class Workspace:
         # Do input objects
         for input_object in process['input_objects']:
             type_name, obj_id = input_object.split(':')
+            if type_name.startswith('Brick-'):
+                type_name = 'Brick'
             type_def = services.indexdef.get_type_def(type_name)
             # sys.stderr.write('from = '+str(type_def.collection_name+':'+type_name+'/'+obj_id)+'\n')
 
@@ -318,6 +334,8 @@ class Workspace:
         # Do output objects
         for output_object in process['output_objects']:
             type_name, obj_id = output_object.split(':')
+            if type_name.startswith('Brick-'):
+                type_name = 'Brick'
             type_def = services.indexdef.get_type_def(type_name)
             # sys.stderr.write('to = '+str(type_def.collection_name+':'+type_name+'/'+obj_id)+'\n')
 

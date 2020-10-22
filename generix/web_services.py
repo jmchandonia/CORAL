@@ -17,7 +17,7 @@ import jwt
 import datetime
 import uuid 
 import os
-import cgi
+import html
 import sys
 import pprint
 import math
@@ -101,38 +101,62 @@ def get_jwt():
     auth_token = auth_header.split(' ')[1] # remove bearer from the front
     return auth_token
 
+def decrypt_token(auth_token, secret):
+    # if token decoding failed then we know we didnt have a token that was encrypted with the same key
+    # we can also check for valid user information or anything else we add to the token here
+    payload = jwt.decode(auth_token, secret)
+    # s = pprint.pformat(payload)
+    # sys.stderr.write(s+'\n')  
+
+    # check time is actually good, within 5 minutes
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    exp = datetime.datetime.fromtimestamp(payload['exp'], tz=datetime.timezone.utc)
+    iat = datetime.datetime.fromtimestamp(payload['iat'], tz=datetime.timezone.utc)
+    leeway = datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=5)
+    
+    if (now < iat-leeway) or (now > exp+leeway):
+        raise ValueError('token not good at this time')
+        
+    return payload
+
 def valid_jwt(auth_token):
     try:
-        # if token decoding failed then we know we didnt have a token that was encrypted with the same key
-        # we can also check for valid user information or anything else we add to the token here
-        payload = jwt.decode(auth_token, cns['_AUTH_SECRET'])
+        payload = decrypt_token(auth_token, cns['_AUTH_SECRET'])
+        
         return True
     except Exception as e:
+        sys.stderr.write('valid_jwt exception: '+str(e)+'\n') 
         return False
 
 def valid_jwt_key(auth_token):
     try:
         # path to check public key
-        headers = jwt.get_unverified_header(token)
-        if 'key' not in headers:
+        headers = jwt.get_unverified_header(auth_token)
+        if 'secret' not in headers:
             return False
 
-        public_key = RSA.importKey(headers['key'])
+        # decrypt with common jwt secret
+        payload = decrypt_token(auth_token, 'data clearinghouse')
+
+        # check that the decrypted secret header matches the iat time
         private_key = RSA.importKey(cns['_AUTH_SECRET'])
-        encryptor = PKCS1_OAEP.new(public_key)
         decryptor = PKCS1_OAEP.new(private_key)
+        secret = base64.b64decode(headers['secret'])
+        decrypted_message = decryptor.decrypt(secret)
 
-        message = b'data clearinghouse'
-        encrypted_message = encryptor.encrypt(message)
-        decrypted_message = decryptor.decrypt(encrypted_message)
-
-        if message == decrypted_message:
+        if str(payload['iat']) == decrypted_message.decode('utf-8'):
             return True
+        
     except Exception as e:
+        sys.stderr.write('valid_jwt_key exception: '+str(e)+'\n') 
         return False
-    
-@app.route("/generix/")
+
+@app.route("/generix/", methods=['GET','POST'])
 def hello():
+    return ('Welcome!')
+    
+@app.route("/generix/test_brick_upload")
+def test_brick_upload():
     data_id = 'c74928ccf2e14c87a51a03e7d879eaf5'
     uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
     uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
@@ -160,8 +184,6 @@ def hello():
     return s
     # return br.id
     
-    # return ('Welcome!')
-
 @app.route("/generix/refs_to_core_objects/", methods=['POST'])
 def generix_refs_to_core_objects():
     try:
@@ -475,6 +497,7 @@ def do_search():
         return _err_response(e)        
 
 @app.route("/generix/brick/<brick_id>", methods=['GET','POST'])
+@auth_ro_required
 def get_brick(brick_id):
     try:
         bp = dp._get_type_provider('Brick')
@@ -577,6 +600,8 @@ def create_brick():
     except Exception as e:
         return _err_response(e, traceback=True)
 
+
+    
 @app.route('/generix/validate_upload', methods=['POST'])
 def validate_upload():
     try:
@@ -863,16 +888,12 @@ def login():
 		        'sub': login['username']
 	        }
 
-            with open('/etc/ssl/certs/data_clearinghouse.pub', mode='rb') as publicfile:
-                pkeydata = publicfile.read()
-                public_key = RSA.importKey(pkeydata)
-            
-            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], headers={'key':pkeydata.decode('utf-8')}, algorithm='HS256')
+            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         except Exception as e:
             return json.dumps({'success': False,
-                               # 'message': 'Something went wrong: '
-                               'message': 'Something went wrong: '+str(e)
+                               'message': 'Something went wrong.'
+                               # 'message': 'Something went wrong: '+str(e)
             })  
 
 
@@ -1279,7 +1300,7 @@ def _extract_criterion_props(criterion):
 
 
 @app.route('/generix/search', methods=['POST'])
-@auth_required
+@auth_ro_required
 def generix_search():
     try:
         search_data = request.json
@@ -1383,10 +1404,7 @@ def generix_search():
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
-        return _err_response(e)
-
-
-
+        return _err_response(e,traceback=True)
 
 @app.route("/generix/search_operations", methods=['GET'])
 @auth_required
@@ -2011,8 +2029,8 @@ def generix_type_graph():
 
     # load filters
     query = request.json
-    # s = pprint.pformat(query)
-    # sys.stderr.write('query = '+s+'\n')
+    s = pprint.pformat(query)
+    sys.stderr.write('query = '+s+'\n')
     filterCampaigns = set()
     filterPersonnel = set()
     filtering = False
@@ -2807,7 +2825,7 @@ def _err_response(e, traceback=False):
     err = str(e)
     if traceback or DEBUG_MODE:
         body = tb.format_exc()
-        err = '<PRE>' +  cgi.escape(body) + '</PRE>' 
+        err = '<PRE>' +  html.escape(body) + '</PRE>' 
 
     return  json.dumps( {
             'results': '', 

@@ -65,6 +65,11 @@ class Query:
             if type(prop) is IndexPropertyDef:
                 prop_name = prop.name
 
+            if (prop_name=='data_type'):
+                parent_term_id = 'DA:0000000'
+            else:
+                parent_term_id = None
+
             self.__check_property(prop_name, index_type_def)
             if type(operation_value_pairs) is not dict:
                 operation_value_pairs = {
@@ -72,7 +77,6 @@ class Query:
                 }
 
             for operation, value in operation_value_pairs.items():
-
                 # check and polish operation
                 operation = operation.lower()
                 if operation not in _OPERATIONS:
@@ -87,14 +91,17 @@ class Query:
                     term_ids = []
                     if type(value) is str:
                         if operation == FILTER_FULLTEXT:
-                            tc = services.ontology.all.find_name_pattern(value)
+                            tc = services.ontology.all.find_name_pattern(value, parent_term_id=parent_term_id)
                             if tc.size == 0:
                                 raise ValueError('Can not find a term with pattern: %s' % value)
                             term_ids = tc.term_ids
                         else:
-                            term_ids.append( Term.get_term(value).term_id )
+                            term_ids.append( Term.get_term(value, parent_term_id=parent_term_id).term_id )
+                            # sys.stderr.write('debug1 '+str(Term.get_term(value, parent_term_id=parent_term_id).term_id)+'\n')
+                            # sys.stderr.write('debug2 '+str(value)+'\n')
+
                     elif type(value) is list:
-                        term_ids = [t.term_id for t in Term.get_terms(value) ]
+                        term_ids = [t.term_id for t in Term.get_terms(value, parent_term_id=parent_term_id) ]
                     elif type(value) is Term:
                         term_ids.append(value.term_id)
                     else:
@@ -384,7 +391,7 @@ class Query:
                 ''' % (' and '.join(po_aql_filter))
                 if self.__search_all_up:
                     link_aql += '''
-                      let upprocs=(
+                      let upprocs=unique(
                         for p1 in filtered_procs
                         for p in 0..100 inbound p1 SYS_ProcessInput, SYS_ProcessOutput
                         OPTIONS {
@@ -401,7 +408,7 @@ class Query:
                     '''
                 if self.__search_all_down:
                     link_aql += '''
-                      let dnprocs=(
+                      let dnprocs=unique(
                         for p1 in filtered_procs
                         for p in 1..100 outbound p1 SYS_ProcessInput, SYS_ProcessOutput
                         OPTIONS {
