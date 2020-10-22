@@ -33,10 +33,18 @@
                       <div class="col-8">
                         <label for="graphTitle">Plot Title</label>
                         <input class="form-control"
+                          *ngIf="!coreTypePlot"
                           type="text"
                           [(ngModel)]="plotBuilder.config.title"
                           [ngModelOptions]="{standalone: true}"
                         />
+                        <input
+                          class="form-control"
+                          *ngIf="coreTypePlot"
+                          type="text"
+                          [(ngModel)]="coreTypePlotBuilder.config.title"
+                          [ngModelOptions]="{standalone: true}"
+                          />
                       </div>
                 </div>
         </div>
@@ -49,7 +57,10 @@
         *ngFor="let axis of axes; let idx = index;"
         [axisOptions]="coreMetadata"
         [index]="idx"
+        [showTitle]="true"
         (onAxisSelection)="setCoreAxisSelection($event)"
+        (onAxisTitleSelection)="setCoreAxisTitleSelection($event)"
+        (onShowTitleChange)="setCoreAxisShowTitle($event)"
       ></app-core-axis-options>
     </ng-container>
     <ng-container *ngIf="!coreTypePlot">
