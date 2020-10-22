@@ -82,6 +82,10 @@ export class PlotService {
     this.plotBuilder.data[key] = value;
   }
 
+  getCorePlotlyData(plotBuilder: CoreTypePlotBuilder) {
+    return this.http.post<any>(`${environment.baseURL}/plotly_core_data`, plotBuilder);
+  }
+
   getPlotlyData() {
     this.parseIntDataAxes();
     return this.http.post<any>(`${environment.baseURL}/plotly_data`, this.plotBuilder);
@@ -102,6 +106,10 @@ export class PlotService {
   getReportPlotData(id) {
     // method used to get data for dashboard component
     return this.http.get(`${environment.baseURL}/report_plot_data/${id}`);
+  }
+
+  getCoreTypeMetadata() {
+    return this.http.get(environment.baseURL + '/plot_core_type_metadata');
   }
 
 }

@@ -14,6 +14,7 @@ import { CoreTypeAxis, CoreTypePlotBuilder } from 'src/app/shared/models/core-ty
 export class PlotOptionsComponent implements OnInit {
 
   public metadata: ObjectMetadata;
+  public coreMetadata: CoreTypeAxis[];
   public plotTypeData: PlotlyConfig[];
   public allPlotTypeData: PlotlyConfig[]; // currently just for core types
   public dimensionData: any[];
@@ -27,6 +28,7 @@ export class PlotOptionsComponent implements OnInit {
   public coreTypePlot = false;
   public numberOfAxes = 2; // currently just for core types
   public axes: any;
+  private coreTypeName: string;
 
   @Output() updated: EventEmitter<any> = new EventEmitter();
   currentUrl: string;
@@ -64,22 +66,22 @@ export class PlotOptionsComponent implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams['coreType']) {
         this.coreTypePlot = true;
-      }
-      if (queryParams['sampleId']) {
-        this.objectId = queryParams['sampleId'];
+        this.coreTypeName = queryParams['coreType'];
       }
     });
 
     if (this.coreTypePlot) {
-      this.queryBuilder.getCoreTypeMetadata(this.objectId)
+
+      this.queryBuilder.getCoreTypeProps(this.coreTypeName)
         .subscribe((data: any) => {
-          this.metadata = data.results.items;
+          this.metadata = data.results;
+          this.coreMetadata = data.results;
           this.coreTypePlotBuilder = new CoreTypePlotBuilder();
           this.axes = this.coreTypePlotBuilder.axes;
           this.getPlotTypes();
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
           this.coreTypePlotBuilder.query = query;
-        })
+        });
     } else {
       // get metadata
       this.queryBuilder.getObjectMetadata(this.objectId)
@@ -146,25 +148,41 @@ export class PlotOptionsComponent implements OnInit {
 
   get coreTypesHaveLatAndLong() {
     return Object.entries(this.metadata)
-      .filter(([key, val]) => val.property === 'latitude' || val.property === 'longitude')
+      .filter(([key, val]) => val.name === 'latitude' || val.name === 'longitude')
       .length === 2;
   }
 
   updatePlotType(event: PlotlyConfig) {
-    this.plotBuilder.plotly_trace = event.plotly_trace;
-    this.plotBuilder.plotly_layout = event.plotly_layout;
-    this.axisBlocks = event.axis_blocks;
+    if (this.coreTypePlot) {
+      this.coreTypePlotBuilder.plotly_trace = event.plotly_trace;
+      this.coreTypePlotBuilder.plotly_layout = event.plotly_layout;
+    } else {
+      this.plotBuilder.plotly_trace = event.plotly_trace;
+      this.plotBuilder.plotly_layout = event.plotly_layout;
+      this.axisBlocks = event.axis_blocks;
+    }
     this.selectedPlotType = event;
     this.plotService.setPlotType(event);
   }
 
+  setCoreAxisSelection({axis, value}) {
+    this.coreTypePlotBuilder.data[axis] = value;
+  }
+
   submitPlot() {
-    this.plotService.setPlotCache();
-    if (this.isEditor) {
-      this.updated.emit();
+    if (this.coreTypePlot) {
+      localStorage.setItem('coreTypePlotBuilder', JSON.stringify(this.coreTypePlotBuilder));
+      this.router.navigate(['/plot/result'], {queryParams: {
+        coreType: true
+      }});
     } else {
-      this.router.navigate([`plot/result/${this.objectId}`]);
-    }
+      this.plotService.setPlotCache();
+      if (this.isEditor) {
+        this.updated.emit();
+      } else {
+        this.router.navigate([`plot/result/${this.objectId}`]);
+      }
+    } 
   }
 
   onGoBack(id) {
