@@ -1,5 +1,6 @@
 import { QueryBuilder } from './QueryBuilder';
 import { Config } from './plot-builder';
+import { PlotlyConfig } from './plotly-config';
 
 export class CoreTypePlotBuilder {
 
@@ -12,7 +13,7 @@ export class CoreTypePlotBuilder {
 
     query: QueryBuilder;
     public data: any = {
-        x: '' as any,
+        x: '' as any, 
         y: '' as any
     };
     plotly_trace: any;
@@ -22,7 +23,8 @@ export class CoreTypePlotBuilder {
 }
 
 export class CoreTypeAxis {
-    propName: string;
-    propScalarType: string;
-    propAxisLabelPattern: string;
+    name: string;
+    scalar_type: string;
+    term_id: string;
+    propAxisLabelPattern?: string;
 }

@@ -46,8 +46,10 @@
   <div class="dimension-options-container" *ngIf="selectedPlotType">
     <ng-container *ngIf="coreTypePlot">
       <app-core-axis-options
-        *ngFor="let axis of axes"
-        [axisOptions]="metadata"
+        *ngFor="let axis of axes; let idx = index;"
+        [axisOptions]="coreMetadata"
+        [index]="idx"
+        (onAxisSelection)="setCoreAxisSelection($event)"
       ></app-core-axis-options>
     </ng-container>
     <ng-container *ngIf="!coreTypePlot">

@@ -156,8 +156,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     localStorage.setItem('coreTypePlotParams', queryBuilder);
     this.router.navigate(['plot/options'], {
       queryParams: {
-        coreType: true,
-        sampleId: this.results[0].id // we will use the first core type on the list to get the properties in the plot
+        coreType: JSON.parse(queryBuilder).queryMatch.dataType
       }
     })
   }

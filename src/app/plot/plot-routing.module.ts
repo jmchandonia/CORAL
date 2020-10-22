@@ -11,6 +11,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'options/:id', pathMatch: 'full' },
       { path: 'options', component: PlotOptionsComponent },
       { path: 'options/:id', component: PlotOptionsComponent },
+      { path: 'result', component: PlotResultComponent },
       { path: 'result/:id', component: PlotResultComponent },
     ]
   }
