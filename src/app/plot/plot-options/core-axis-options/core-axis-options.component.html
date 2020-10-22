@@ -2,7 +2,7 @@
 <div class="form-container">
     <div class="card">
       <div class="card-header" style="background-color: #eeeeff;">
-        Axis Label
+        {{axis}} axis
       </div>
       <form>
         <div class="form-group p-3 mb-0">
@@ -12,7 +12,8 @@
                   <ng-select
                     class="custom"
                     [items]="axisOptions"
-                    bindLabel="property"
+                    bindLabel="name"
+                    (change)="setAxis($event)"
                   ></ng-select>
                     <!-- <ng-select
                       class="custom"
