@@ -20,6 +20,16 @@ export class CoreTypePlotBuilder {
     plotly_layout: any;
     config: Config = new Config();
     axes: CoreTypeAxis[];
+    axisTitles: any = {
+        x: {
+            title: '',
+            showTitle: true
+        },
+        y: {
+            title: '',
+            showTitle: true
+        },
+    }
 }
 
 export class CoreTypeAxis {
