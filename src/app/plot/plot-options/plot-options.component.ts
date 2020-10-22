@@ -67,6 +67,8 @@ export class PlotOptionsComponent implements OnInit {
       if (queryParams['coreType']) {
         this.coreTypePlot = true;
         this.coreTypeName = queryParams['coreType'];
+        this.coreTypePlotBuilder = JSON.parse(localStorage.getItem('coreTypePlotBuilder')) || new CoreTypePlotBuilder()
+        this.coreTypePlotBuilder.config.title = this.coreTypeName
       }
     });
 
@@ -76,7 +78,7 @@ export class PlotOptionsComponent implements OnInit {
         .subscribe((data: any) => {
           this.metadata = data.results;
           this.coreMetadata = data.results;
-          this.coreTypePlotBuilder = new CoreTypePlotBuilder();
+          // this.coreTypePlotBuilder = new CoreTypePlotBuilder();
           this.axes = this.coreTypePlotBuilder.axes;
           this.getPlotTypes();
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
@@ -167,6 +169,14 @@ export class PlotOptionsComponent implements OnInit {
 
   setCoreAxisSelection({axis, value}) {
     this.coreTypePlotBuilder.data[axis] = value;
+  }
+
+  setCoreAxisTitleSelection({axis, value}) {
+    this.coreTypePlotBuilder.axisTitles[axis].title = value;
+  }
+
+  setCoreAxisShowTitle({axis, value}) {
+    this.coreTypePlotBuilder.axisTitles[axis].showTitle = value;
   }
 
   submitPlot() {
