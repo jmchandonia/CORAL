@@ -1750,7 +1750,8 @@ def reposition_spring(nodes, edges, k):
                     G_fixed.append(n['index'])
     for e in edges:
         G.add_edge(e['source'], e['target'], weight=e['thickness'])
-    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
+    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')
+    nx.nx_agraph.write_dot(G, "/tmp/graph0.dot")
     pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed, k=k, seed=1)
     for index, xy in pos.items():
         # sys.stderr.write('nx '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
@@ -1870,8 +1871,8 @@ def rescale_xy(nodes, edges):
 # if nodes are too close, stretch edges to avoid collisions
 def stretch_avoid_collisions(nodes, edges):
     # how much overlap is needed to move?
-    olapX = 140
-    olapY = 60
+    olapX = 90
+    olapY = 40
     for repeat in range(3): # multiple cycles to avoid secondary effects
         for n1 in nodes:
             if 'unused' in n1 or not 'x' in n1 or not 'y' in n1 or n1['category'] != TYPE_CATEGORY_DYNAMIC:
@@ -1892,7 +1893,7 @@ def stretch_avoid_collisions(nodes, edges):
                         break
                 if hasOverlap:
                     # push n1 further out along edge from parent
-                    # sys.stderr.write('OVERLAP '+str(n1['name'])+' '+str(n2['name'])+' '+str(dX)+' '+str(dY)+'\n')
+                    sys.stderr.write('OVERLAP '+str(n1['name'])+' '+str(n2['name'])+' '+str(dX)+' '+str(dY)+'\n')
                     for e in edges:
                         if e['target'] != n1['index'] or e['source'] == n1['index']:
                             continue
@@ -1903,8 +1904,8 @@ def stretch_avoid_collisions(nodes, edges):
                         # sys.stderr.write('SOURCE '+str(n3['name'])+' '+str(dX2)+' '+str(dY2)+'\n')
                         # move further along that direction, at least 10 units
                         moves = 10
-                        dX3 = int(moves * (dX2 / (abs(dX2) + abs(dY2))))
-                        dY3 = int(moves * (dY2 / (abs(dX2) + abs(dY2))))
+                        dX3 = moves * (dX2 / (abs(dX2) + abs(dY2)))
+                        dY3 = moves * (dY2 / (abs(dX2) + abs(dY2)))
                         n1['x'] += dX3
                         n1['y'] += dY3
                         # if cluster node, move kids as well
@@ -1915,7 +1916,16 @@ def stretch_avoid_collisions(nodes, edges):
                                     n4['x'] += dX3
                                     n4['y'] += dY3
                         break
-                
+            # make positions integers again
+            n1['x'] = int(n1['x'])
+            n1['y'] = int(n1['y'])
+            if 'isParent' in n1:
+                for i in n1['children']:
+                    n4 = nodes[i]
+                    if 'x' in n4 and 'y' in n4:
+                        n4['x'] = int(n4['x'])
+                        n4['y'] = int(n4['y'])
+            
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
 @auth_ro_required
@@ -1945,11 +1955,11 @@ def generix_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    if cacheKey in cache:
-        sys.stderr.write('cache hit '+cacheKey+'\n')
-        return  _ok_response(cache[cacheKey])
-    else:
-        sys.stderr.write('cache miss '+cacheKey+'\n')
+    #if cacheKey in cache:
+    #    sys.stderr.write('cache hit '+cacheKey+'\n')
+    #    return  _ok_response(cache[cacheKey])
+    #else:
+    #    sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
@@ -1978,6 +1988,7 @@ def generix_type_graph():
                     'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
                 }
             )
+            # sys.stderr.write('added static node '+td.name+'\n')
             nodeMap[td.name] = nodes[index]
             nodeMap[index] = nodes[index]
             index+=1
