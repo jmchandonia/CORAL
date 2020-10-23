@@ -6,6 +6,7 @@ import { QueryBuilderService } from '../../shared/services/query-builder.service
 import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 import { PlotlyConfig, AxisBlock } from 'src/app/shared/models/plotly-config';
 import { CoreTypeAxis, CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
+import { MapBuilder } from 'src/app/shared/models/map-builder';
 @Component({
   selector: 'app-plot-options',
   templateUrl: './plot-options.component.html',
@@ -29,6 +30,8 @@ export class PlotOptionsComponent implements OnInit {
   public numberOfAxes = 2; // currently just for core types
   public axes: any;
   private coreTypeName: string;
+  public isMap = false; // determines if we should use UI for map config
+  public mapBuilder: MapBuilder;
 
   @Output() updated: EventEmitter<any> = new EventEmitter();
   currentUrl: string;
@@ -76,9 +79,7 @@ export class PlotOptionsComponent implements OnInit {
 
       this.queryBuilder.getCoreTypeProps(this.coreTypeName)
         .subscribe((data: any) => {
-          this.metadata = data.results;
           this.coreMetadata = data.results;
-          // this.coreTypePlotBuilder = new CoreTypePlotBuilder();
           this.axes = this.coreTypePlotBuilder.axes;
           this.getPlotTypes();
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
@@ -149,15 +150,30 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   get coreTypesHaveLatAndLong() {
-    return Object.entries(this.metadata)
+    return Object.entries(this.coreMetadata)
       .filter(([key, val]) => val.name === 'latitude' || val.name === 'longitude')
       .length === 2;
   }
 
+  get scalarCoreProperties() {
+    return this.coreMetadata.filter(prop => {
+      return prop.scalar_type === 'int' ||
+        prop.scalar_type === 'float' ||
+        prop.name === 'date'
+    });
+  }
+
   updatePlotType(event: PlotlyConfig) {
+    this.isMap = false;
     if (this.coreTypePlot) {
-      this.coreTypePlotBuilder.plotly_trace = event.plotly_trace;
-      this.coreTypePlotBuilder.plotly_layout = event.plotly_layout;
+      if (event['useMap']) {
+        this.isMap = true;
+        this.mapBuilder = new MapBuilder();
+        this.mapBuilder.query = this.coreTypePlotBuilder.query;
+      } else {
+        this.coreTypePlotBuilder.plotly_trace = event.plotly_trace;
+        this.coreTypePlotBuilder.plotly_layout = event.plotly_layout;
+      }
     } else {
       this.plotBuilder.plotly_trace = event.plotly_trace;
       this.plotBuilder.plotly_layout = event.plotly_layout;
@@ -180,6 +196,12 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submitPlot() {
+    if (this.isMap) {
+      localStorage.setItem('mapBuilder', JSON.stringify(this.mapBuilder));
+      this.router.navigate(['/plot/map/result']);
+      return;
+    }
+
     if (this.coreTypePlot) {
       localStorage.setItem('coreTypePlotBuilder', JSON.stringify(this.coreTypePlotBuilder));
       this.router.navigate(['/plot/result'], {queryParams: {
