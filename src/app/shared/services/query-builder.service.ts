@@ -176,5 +176,9 @@ export class QueryBuilderService {
     });
   }
 
+  getMapSearchResults(query: QueryBuilder) {
+    return this.http.post<any>(`${environment.baseURL}/search`, query);
+  }
+
 
 }

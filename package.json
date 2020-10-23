@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^3.0.0-beta.0",
     "@angular/animations": "~9.1.11",
     "@angular/common": "~9.1.11",
     "@angular/compiler": "~9.1.11",
@@ -53,6 +54,7 @@
     "@angular/language-service": "~9.1.11",
     "@ngneat/spectator": "^5.9.0",
     "@types/datatables.net": "^1.10.19",
+    "@types/googlemaps": "3.39.12",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^12.11.1",

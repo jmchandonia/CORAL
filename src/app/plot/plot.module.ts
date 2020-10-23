@@ -14,8 +14,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CoreAxisOptionsComponent } from './plot-options/core-axis-options/core-axis-options.component';
+import { MapOptionsComponent } from './plot-options/map-options/map-options.component';
+import { MapResultComponent } from './map-result/map-result.component';
+import { AgmCoreModule } from '@agm/core';
 @NgModule({
-  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent],
+  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,
@@ -23,7 +26,8 @@ import { CoreAxisOptionsComponent } from './plot-options/core-axis-options/core-
     FormsModule,
     NgxSpinnerModule,
     NgSelectModule,
-    PlotlyViaWindowModule
+    PlotlyViaWindowModule,
+    AgmCoreModule
   ],
   providers: [PlotService, QueryBuilderService]
 })

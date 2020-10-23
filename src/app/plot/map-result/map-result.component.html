@@ -1,0 +1,13 @@
+<!-- <p>map-result works!</p>
+ -->
+<agm-map
+    *ngIf="results && results.length"
+    style="height: 600px;"
+    [latitude]="averageLat"
+    [longitude]="averageLng"
+    [zoom]="13"
+>
+    <agm-marker *ngFor="let result of results" [latitude]="result.latitude" [longitude]="result.longitude"></agm-marker>
+</agm-map>
+
+<!-- <agm-map></agm-map> -->
