@@ -1074,19 +1074,18 @@ def generix_plotly_core_data():
         layout = {
             'x': 800,
             'y': 600,
-            # 'title': body['config']['title'],
-            'title': body['query']['queryMatch']['dataType'],
+            'title': body['config']['title'],
             **body['plotly_layout']
         }
-        if 'x' in body['config']:
-            if body['config']['x']['show_title']:
+        if 'x' in body['axisTitles']:
+            if body['axisTitles']['x']['showTitle']:
                 layout['xaxis'] = {
-                    'title': body['config']['x']['title']
+                    'title': body['axisTitles']['x']['title']
                 }
-        if 'y' in body['config']:
-            if body['config']['y']['show_title']:
+        if 'y' in body['axisTitles']:
+            if body['axisTitles']['y']['showTitle']:
                 layout['yaxis'] = {
-                    'title': body['config']['y']['title']
+                    'title': body['axisTitles']['y']['title']
                 }
 
         x_field = body['data']['x']['name']
@@ -1662,7 +1661,7 @@ def line_thickness(n):
 # assign x, y to all static and intermediate nodes.
 # just assign y to dynamic nodes, and don't process any of their children
 def assign_xy_static(nodes, usedPos, i, x, y):
-    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
     # skip if already done
     if 'y' in nodes[i]:
         # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
@@ -1856,6 +1855,7 @@ def reposition_spring(nodes, edges, k):
     for e in edges:
         G.add_edge(e['source'], e['target'], weight=e['thickness'])
     # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
+    nx.nx_agraph.write_dot(G, "/tmp/graph0.dot")
     pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed, k=k, seed=1)
     for index, xy in pos.items():
         # sys.stderr.write('nx '+str(index)+' '+str(nodes[index]['name'])+' '+str(nodes[index]['category'])+'\n')
@@ -2050,11 +2050,11 @@ def generix_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    if cacheKey in cache:
-        sys.stderr.write('cache hit '+cacheKey+'\n')
-        return  _ok_response(cache[cacheKey])
-    else:
-        sys.stderr.write('cache miss '+cacheKey+'\n')
+    # if cacheKey in cache:
+    #    sys.stderr.write('cache hit '+cacheKey+'\n')
+    #    return  _ok_response(cache[cacheKey])
+    #else:
+    #    sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
@@ -2083,6 +2083,7 @@ def generix_type_graph():
                     'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
                 }
             )
+            sys.stderr.write('added static node '+td.name+'\n')
             nodeMap[td.name] = nodes[index]
             nodeMap[index] = nodes[index]
             index+=1
@@ -2212,7 +2213,7 @@ def generix_type_graph():
                 if n.startswith('SDT_'):
                     n = n[4:]
                     if n not in nodeMap:
-                        # sys.stderr.write('adding static node '+n+'\n')
+                        sys.stderr.write('adding static node '+n+'\n')
                         nodes.append(
                             {
                                 'index': index,
@@ -2237,7 +2238,7 @@ def generix_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
-            # sys.stderr.write('adding intermediate node\n')
+            sys.stderr.write('adding intermediate node\n')
             nodes.append(
                 {
                     'index': intermed,
@@ -2313,7 +2314,7 @@ def generix_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                # sys.stderr.write('adding dynamic node '+to+'\n')
+                sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -2396,7 +2397,7 @@ def generix_type_graph():
         MAX_DYNAMIC_NODES = 2
         if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
             num = 0
-            # sys.stderr.write('adding cluster node\n')
+            sys.stderr.write('adding cluster node\n')
             newDDTNodes = []
             for i in linkedDDTNodes:
                 num += nodes[i]['count']
@@ -2684,7 +2685,15 @@ def generix_core_type_props(obj_name):
     response = []
     for field in core_type.property_names:
         property = core_type.property_def(field)
-        response.append(dict(name=property.name, scalar_type=property.type, term_id=property.term_id))
+        if (property.units_term_id is not None):
+            units_term = svs['ontology'].units.find_id(property.units_term_id)
+            response.append(dict(name=property.name,
+                                 scalar_type=property.type,
+                                 term_id=property.term_id,
+                                 units=units_term.term_name
+                                ))
+        else:
+            response.append(dict(name=property.name, scalar_type=property.type, term_id=property.term_id))
     return json.dumps({"results": response})
                
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
