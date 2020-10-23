@@ -51,7 +51,7 @@
       </form>
     </div>
   </div>
-  <div class="dimension-options-container" *ngIf="selectedPlotType">
+  <div class="dimension-options-container" *ngIf="selectedPlotType && !isMap">
     <ng-container *ngIf="coreTypePlot">
       <app-core-axis-options
         *ngFor="let axis of axes; let idx = index;"
@@ -72,6 +72,11 @@
     ></app-dimension-options>
     </ng-container>
   </div>
+  <app-map-options
+    *ngIf="selectedPlotType && isMap"
+    [mapBuilder]="mapBuilder"
+    [options]="coreMetadata"
+  ></app-map-options>
   <div class="row bottom-button-row">
     <!-- <button (click)="test()">TEST</button> --> 
     <button class="btn btn-primary offset-10" (click)="submitPlot()">
