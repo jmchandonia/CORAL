@@ -277,6 +277,7 @@ class PropertyDef:
         self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
         self.__upk = 'UPK' in pdef_doc and pdef_doc['UPK'] == True
         self.__term_id = pdef_doc['type_term'] if 'type_term' in pdef_doc else False
+        self.__units_term_id = pdef_doc['units_term'] if 'units_term' in pdef_doc else None
 
         self.__property_validator = _PROPERTY_VALIDATORS[self.__type](
             self.__constraint)
@@ -303,6 +304,13 @@ class PropertyDef:
 
     def has_term_id(self):
         return self.__term_id is not None
+
+    @property
+    def units_term_id(self):
+        return self.__units_term_id
+
+    def has_units_term_id(self):
+        return self.__units_term_id is not None
 
     @property
     def name(self):
