@@ -20,6 +20,7 @@ export class PlotResultComponent implements OnInit {
   plotData: any;
   corePlot = false;
   coreTypePlotBuilder: CoreTypePlotBuilder;
+  coreTypeName: string;
   objectId: string;
   loading = false;
   data: any;
@@ -36,6 +37,7 @@ export class PlotResultComponent implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams['coreType']) {
         this.corePlot = true;
+        this.coreTypeName = queryParams['coreType'];
         this.coreTypePlotBuilder = JSON.parse(localStorage.getItem('coreTypePlotBuilder'));
       }
     })
@@ -70,7 +72,12 @@ export class PlotResultComponent implements OnInit {
   }
 
   onGoBack() {
-    this.router.navigate([`plot/options/${this.objectId}`]);
+    // this.router.navigate([`plot/options/${this.objectId}`]);
+    if (this.coreTypePlotBuilder) {
+      this.router.navigate(['plot/options'], {queryParams: {coreType: this.coreTypeName}});
+    } else {
+      this.router.navigate([`plot/options/${this.objectId}`]);
+    }
   }
 
 }
