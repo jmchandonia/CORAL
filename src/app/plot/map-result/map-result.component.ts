@@ -20,13 +20,10 @@ export class MapResultComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
-    console.log('MAP BUILDer', this.mapBuilder)
     this.queryBuilder.getMapSearchResults(this.mapBuilder.query)
       .subscribe(res => {
         this.averageLat = res.data.reduce((a, {latitude}) => a + latitude, 0) / res.data.length;
         this.averageLng = res.data.reduce((a, {longitude}) => a + longitude, 0) / res.data.length;
-        console.log('average lat', this.averageLat);
-        console.log("DATA", res);
         this.results = res.data;
       })
   } 
