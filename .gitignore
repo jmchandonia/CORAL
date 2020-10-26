@@ -43,6 +43,7 @@ testem.log
 /src/app/shared/test/mock_microtypes.json
 /src/app/shared/test/mock_microtypes_3.json
 /src/app/shared/test/mock-provenance-graph_v2.json
+/src/environments/environment.ts
 
 # System Files
 .DS_Store
