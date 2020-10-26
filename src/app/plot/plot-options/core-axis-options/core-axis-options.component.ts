@@ -28,8 +28,8 @@ export class CoreAxisOptionsComponent implements OnInit {
 
   setAxis(event) {
     this.onAxisSelection.emit({axis: this.axis, value: event});
-    this.onAxisTitleSelection.emit({axis: this.axis, value: event.name});
-    this.title = event.name;
+    this.onAxisTitleSelection.emit({axis: this.axis, value: event.name + (event.units ? ` (${event.units})` : '')});
+    this.title = event.name + (event.units ? ` (${event.units})` : '');
   }
 
   setTitle(event) {
