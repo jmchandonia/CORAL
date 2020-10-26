@@ -72,6 +72,7 @@ export class PlotOptionsComponent implements OnInit {
         this.coreTypeName = queryParams['coreType'];
         this.coreTypePlotBuilder = JSON.parse(localStorage.getItem('coreTypePlotBuilder')) || new CoreTypePlotBuilder()
         this.coreTypePlotBuilder.config.title = this.coreTypeName
+        this.selectedPlotType = this.plotService.getPlotType();
       }
     });
 
@@ -205,7 +206,7 @@ export class PlotOptionsComponent implements OnInit {
     if (this.coreTypePlot) {
       localStorage.setItem('coreTypePlotBuilder', JSON.stringify(this.coreTypePlotBuilder));
       this.router.navigate(['/plot/result'], {queryParams: {
-        coreType: true
+        coreType: this.coreTypeName
       }});
     } else {
       this.plotService.setPlotCache();
