@@ -14,7 +14,12 @@
                     [items]="axisOptions"
                     bindLabel="name"
                     (change)="setAxis($event)"
-                  ></ng-select>
+                  >
+                  <ng-template ng-option-tmp let-item="item">
+                    {{item.name}}
+                    <span *ngIf="item.units">({{item.units}})</span>
+                  </ng-template>
+                </ng-select>
                     <!-- <ng-select
                       class="custom"
                       [items]="dropdownValues"
