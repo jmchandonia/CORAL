@@ -17,8 +17,9 @@ import { CoreAxisOptionsComponent } from './plot-options/core-axis-options/core-
 import { MapOptionsComponent } from './plot-options/map-options/map-options.component';
 import { MapResultComponent } from './map-result/map-result.component';
 import { AgmCoreModule } from '@agm/core';
+import { AxisOptionComponent } from './plot-options/axis-option/axis-option.component';
 @NgModule({
-  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent],
+  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent, AxisOptionComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,

@@ -7,6 +7,8 @@ import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 import { PlotlyConfig, AxisBlock } from 'src/app/shared/models/plotly-config';
 import { CoreTypeAxis, CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
+import { PlotlyBuilder, AxisOption, Axis } from 'src/app/shared/models/plotly-builder';
+import { Response } from 'src/app/shared/models/response';
 @Component({
   selector: 'app-plot-options',
   templateUrl: './plot-options.component.html',
@@ -16,53 +18,37 @@ export class PlotOptionsComponent implements OnInit {
 
   public metadata: ObjectMetadata;
   public coreMetadata: CoreTypeAxis[];
-  public plotTypeData: PlotlyConfig[];
-  public allPlotTypeData: PlotlyConfig[]; // currently just for core types
-  public dimensionData: any[];
+  public allPlotTypeData: PlotlyConfig[];
+  public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
   public axisBlocks: AxisBlock[];
   public objectId: string;
-  public plotBuilder: PlotBuilder;
-  public coreTypePlotBuilder: CoreTypePlotBuilder;
-  public dimensions: Dimension[];
   public previousUrl: string;
   public coreTypePlot = false;
   public numberOfAxes = 2; // currently just for core types
-  public axes: any;
   private coreTypeName: string;
   public isMap = false; // determines if we should use UI for map config
   public mapBuilder: MapBuilder;
-
-  @Output() updated: EventEmitter<any> = new EventEmitter();
-  currentUrl: string;
-  isEditor = false; // determines whether component is in plot/options or plot/result
+  public axisOptions: AxisOption[];
+  public plot: PlotlyBuilder;
 
   constructor(
     private route: ActivatedRoute,
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
     private router: Router,
-    ) {
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          this.currentUrl = event.url;
-          this.isEditor = event.url.includes('result');
-        }
-      });
-    }
+    ) { }
 
   ngOnInit() {
 
     this.previousUrl = this.queryBuilder.getPreviousUrl();
 
-    // set up plot builder value from service;
-    this.plotBuilder = this.plotService.getPlotBuilder();
-
     // get object id
     this.route.params.subscribe(params => {
         if (params['id']) {
           this.objectId = params.id;
-          this.plotBuilder.objectId = params.id;
+          this.plot = this.plotService.getPlotlyBuilder();
+          this.plot.objectId = params.id;
         }
     });
 
@@ -70,87 +56,74 @@ export class PlotOptionsComponent implements OnInit {
       if (queryParams['coreType']) {
         this.coreTypePlot = true;
         this.coreTypeName = queryParams['coreType'];
-        this.coreTypePlotBuilder = JSON.parse(localStorage.getItem('coreTypePlotBuilder')) || new CoreTypePlotBuilder()
-        this.coreTypePlotBuilder.config.title = this.coreTypeName
-        this.selectedPlotType = this.plotService.getPlotType();
+        const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
+        this.plot = this.plotService.getPlotlyBuilder(true, query);
+        this.plot.title = this.coreTypeName;
       }
     });
 
     if (this.coreTypePlot) {
-
       this.queryBuilder.getCoreTypeProps(this.coreTypeName)
-        .subscribe((data: any) => {
-          this.coreMetadata = data.results;
-          this.axes = this.coreTypePlotBuilder.axes;
-          this.getPlotTypes();
+        .subscribe((data: Response<AxisOption>) => {
+          this.axisOptions = data.results;
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
-          this.coreTypePlotBuilder.query = query;
         });
     } else {
-      // get metadata
+      // get metadata and assign to AxisOption type 
+      // TODO: needs to be formatted like this on the backend
       this.queryBuilder.getObjectMetadata(this.objectId)
-        .subscribe((result: ObjectMetadata) => {
-        this.metadata = result;
-
-        // get list of plot types from server
-        this.getPlotTypes();
-
-        // set title and dimensions
-        const plotType = this.plotService.getPlotType();
-        if (!plotType) {
-          // create new plot config
-          this.plotService.setConfig(
-            result,
-            (dims: Dimension[]) => {
-              this.dimensions = dims;
-            }
-          );
-        } else {
-          // use old plot config (coming back from /result)
-          this.selectedPlotType = plotType;
-          this.axisBlocks = plotType.axis_blocks;
-          this.dimensions = this.plotService.getConfiguredDimensions();
-        }
-      });
-    }
-  }
-
-    getPlotTypes() {
-    this.plotService.getPlotTypes()
-      .subscribe((data: any) => {
-        // filter plot types by n_dimension
-        if (!this.coreTypePlot) {
-          this.allPlotTypeData = data.results.filter((val, idx) => {
-            return val.n_dimensions === this.metadata.dim_context.length;
+        .subscribe((result: any) => {
+        this.metadata = result; ///
+        this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
+        this.axisOptions = [];
+        result.dim_context.forEach((dim, i) => {
+          dim.typed_values.forEach((dimVar, j) => {
+            this.axisOptions.push({
+              scalarType: dimVar.scalar_type,
+              name: dimVar.value_no_units,
+              displayName: dimVar.value_with_units,
+              termId: dimVar.value_type.oterm_ref,
+              dimension: i,
+              dimensionVariable: j
+            });
           });
-        } else {
-          this.allPlotTypeData = this.coreTypesHaveLatAndLong
-            ? [
-                ...data.results,
-                {
-                  description: '2D Map',
-                  name: '2D Map',
-                  n_dimensions: 1,
-                  image_tag: '<i class="material-icons dropdown-icon">map</i>',
-                  useMap: true
-                }, 
-                {
-                  description: '3D Map',
-                  name: '3D Map',
-                  n_dimensions: 2,
-                  image_tag: '<i class="material-icons dropdown-icon">map</i>',
-                  useMap: true
-                }
-              ]
-            : data.results;
-        }
-        this.plotTypeData = this.allPlotTypeData.filter(plotType => {
-          return plotType.n_dimensions === this.numberOfAxes - 1;
+        });
+        result.typed_values.forEach(dataVar => {
+          this.axisOptions.push({
+            scalarType: '',
+            name: dataVar.value_no_units,
+            displayName: dataVar.value_with_units,
+            termId: dataVar.value_type.oterm_ref
+          });
         });
       });
+    }
+    this.getPlotTypes();
   }
 
-  get coreTypesHaveLatAndLong() {
+  onNumberOfAxisChange(event) {
+    if (this.numberOfAxes === 3) {
+      this.plot.axes.z = new Axis();
+    } else {
+      delete this.plot.axes.z;
+    }
+    this.plotTypeData = this.allPlotTypeData.filter(val => {
+      return val.n_dimensions === this.numberOfAxes - 1;
+    })
+  }
+
+  getPlotTypes() { // TODO: add validation elements to plot-types.json
+    // also TODO: add map types but figure out a way to only show it if theres lat and long
+    this.plotService.getPlotTypes()
+      .subscribe((data: Response<PlotlyConfig>) => {
+        this.allPlotTypeData = data.results;
+        this.plotTypeData = data.results.filter((val) => {
+          return val.n_dimensions === this.numberOfAxes - 1;
+        });
+    });
+  }
+
+  get coreTypesHaveLatAndLong() { // TODO: this should work for both core and dynamic types
     return Object.entries(this.coreMetadata)
       .filter(([key, val]) => val.name === 'latitude' || val.name === 'longitude')
       .length === 2;
@@ -166,34 +139,17 @@ export class PlotOptionsComponent implements OnInit {
 
   updatePlotType(event: PlotlyConfig) {
     this.isMap = false;
-    if (this.coreTypePlot) {
-      if (event['useMap']) {
-        this.isMap = true;
-        this.mapBuilder = new MapBuilder();
-        this.mapBuilder.query = this.coreTypePlotBuilder.query;
-      } else {
-        this.coreTypePlotBuilder.plotly_trace = event.plotly_trace;
-        this.coreTypePlotBuilder.plotly_layout = event.plotly_layout;
-      }
+    if (event.useMap) {
+      this.isMap = true;
+      this.mapBuilder = new MapBuilder();
     } else {
-      this.plotBuilder.plotly_trace = event.plotly_trace;
-      this.plotBuilder.plotly_layout = event.plotly_layout;
+      // TODO: this is redundant, can be viewed in this.plot.plotType
+      this.plot.plotly_layout = event.plotly_layout;
+      this.plot.plotly_trace = event.plotly_trace;
       this.axisBlocks = event.axis_blocks;
     }
-    this.selectedPlotType = event;
-    this.plotService.setPlotType(event);
-  }
-
-  setCoreAxisSelection({axis, value}) {
-    this.coreTypePlotBuilder.data[axis] = value;
-  }
-
-  setCoreAxisTitleSelection({axis, value}) {
-    this.coreTypePlotBuilder.axisTitles[axis].title = value;
-  }
-
-  setCoreAxisShowTitle({axis, value}) {
-    this.coreTypePlotBuilder.axisTitles[axis].showTitle = value;
+    this.plot.plotType = event;
+    // this.selectedPlotType = event; // TODO: this should just be in the plotybuilder models
   }
 
   submitPlot() {
@@ -203,23 +159,17 @@ export class PlotOptionsComponent implements OnInit {
       return;
     }
 
+    localStorage.setItem('plotlyBuilder', JSON.stringify(this.plot));
     if (this.coreTypePlot) {
-      localStorage.setItem('coreTypePlotBuilder', JSON.stringify(this.coreTypePlotBuilder));
       this.router.navigate(['/plot/result'], {queryParams: {
         coreType: this.coreTypeName
       }});
     } else {
-      this.plotService.setPlotCache();
-      if (this.isEditor) {
-        this.updated.emit();
-      } else {
         this.router.navigate([`plot/result/${this.objectId}`]);
-      }
     } 
   }
 
   onGoBack(id) {
-    this.plotService.clearPlotBuilder();
     const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
     this.router.navigate([url]);
   }

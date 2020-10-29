@@ -43,12 +43,12 @@ export class DimensionOptionsComponent implements OnInit {
   constructor(private plotService: PlotService, public chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.axis);
+    // this.selectedDropdownValue = this.plotService.getDimDropdownValue(this.axis);
   }
 
   setSelectedDimension(event) {
     const idx = parseInt(event.id, 10);
-    this.plotService.setPlotlyDataAxis(this.axis, event.id);
+    // this.plotService.setPlotlyDataAxis(this.axis, event.id);
 
     if (event.id === 'D') { // event value is a data var
       this.dimension.dimVars = this.dimension.dataValueMetadata;
