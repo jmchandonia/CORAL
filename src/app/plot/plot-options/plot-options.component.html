@@ -1,86 +1,95 @@
-    <div *ngIf="!isEditor" class="row mb-3 mt-3">
+    <div class="row mb-3 mt-3">
     <div class="offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem; position:relative; top: 3px">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
     </div>
   </div>
-  <hr *ngIf="!isEditor" />
+  <!-- <pre> numberOfAxes : {{numberOfAxes | json}}</pre> -->
+  <hr />
   <div class="form-container">
-    <div class="card">
+    <div class="card" *ngIf="plot">
       <div class="card-header" style="background-color: #eeeeff;">
         Data Plotting Options
       </div>
       <form>
         <div class="form-group p-3">
-                <div class="row">
-                    <div class="col-4">
-                        <label for="plotType">Plot Type</label>
-                          <ng-select
-                            class="custom"
-                            [items]="plotTypeData"
-                            bindLabel="name"
-                            (change)="updatePlotType($event)"
-                            [(ngModel)]="selectedPlotType"
-                            [ngModelOptions]="{standalone: true}"
-                            [clearable]="false"
-                          >
-                            <ng-template ng-option-tmp let-item="item">
-                              <span [innerHTML]="item.image_tag | safeHtml"></span>
-                              <span style="margin-left: 10px">{{item.name}}</span>
-                            </ng-template>
-                        </ng-select>
-                      </div>
-                      <div class="col-8">
-                        <label for="graphTitle">Plot Title</label>
-                        <input class="form-control"
-                          *ngIf="!coreTypePlot"
-                          type="text"
-                          [(ngModel)]="plotBuilder.config.title"
-                          [ngModelOptions]="{standalone: true}"
-                        />
-                        <input
-                          class="form-control"
-                          *ngIf="coreTypePlot"
-                          type="text"
-                          [(ngModel)]="coreTypePlotBuilder.config.title"
-                          [ngModelOptions]="{standalone: true}"
-                          />
-                      </div>
-                </div>
+            <div class="row">
+                <div class="col-4">
+                    <label for="plotType">Plot Type</label>
+                      <ng-select
+                        class="custom"
+                        [items]="plotTypeData"
+                        bindLabel="name"
+                        (change)="updatePlotType($event)"
+                        [(ngModel)]="plot.plotType"
+                        [ngModelOptions]="{standalone: true}"
+                        [clearable]="false"
+                      >
+                        <ng-template ng-option-tmp let-item="item">
+                          <span [innerHTML]="item.image_tag | safeHtml"></span>
+                          <span style="margin-left: 10px">{{item.name}}</span>
+                        </ng-template>
+                    </ng-select>
+                  </div>
+                  <div class="col-2">
+                    <label for="numberOfDims">Dimensionality</label>
+                    <ng-select
+                      class="custom"
+                      [items]="[2,3]"
+                      [(ngModel)]="numberOfAxes"
+                      [ngModelOptions]="{standalone: true}"
+                      [clearable]="false"
+                      (change)="onNumberOfAxisChange($event)"
+                    >
+                    <ng-template ng-label-tmp let-item="item">
+                        {{item}}D
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                      {{item}}D plot
+                    </ng-template>
+                  </ng-select>
+                  </div>
+                  <div class="col-6">
+                    <label for="graphTitle">Plot Title</label>
+                    <input class="form-control"
+                      type="text"
+                      [(ngModel)]="plot.title"
+                      [ngModelOptions]="{standalone: true}" />
+                  </div>
+            </div>
         </div>
       </form>
     </div>
   </div>
-  <div class="dimension-options-container" *ngIf="selectedPlotType && !isMap">
-    <ng-container *ngIf="coreTypePlot">
-      <app-core-axis-options
-        *ngFor="let axis of axes; let idx = index;"
-        [axisOptions]="coreMetadata"
-        [index]="idx"
-        [showTitle]="true"
-        (onAxisSelection)="setCoreAxisSelection($event)"
-        (onAxisTitleSelection)="setCoreAxisTitleSelection($event)"
-        (onShowTitleChange)="setCoreAxisShowTitle($event)"
-      ></app-core-axis-options>
-    </ng-container>
-    <ng-container *ngIf="!coreTypePlot">
-      <app-dimension-options
-      *ngFor="let dimension of dimensions; let i = index;"
-      [dimension]="dimension"
-      [dimensionLabel]="axisBlocks[i].title"
-      [index]="i"
-    ></app-dimension-options>
-    </ng-container>
+  <div *ngIf="plot.plotType && !isMap">
+    <app-axis-option
+      [axis]="plot.axes.x"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'X axis'"
+    ></app-axis-option>
+    <app-axis-option
+      [axis]="plot.axes.y"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'Y Axis'"
+    ></app-axis-option>
+    <app-axis-option
+      *ngIf="numberOfAxes === 3"
+      [axis]="plot.axes.z"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'Z Axis'"
+    ></app-axis-option>
   </div>
   <app-map-options
-    *ngIf="selectedPlotType && isMap"
+    *ngIf="mapBuilder && isMap"
     [mapBuilder]="mapBuilder"
     [options]="coreMetadata"
   ></app-map-options>
   <div class="row bottom-button-row">
-    <!-- <button (click)="test()">TEST</button> --> 
     <button class="btn btn-primary offset-10" (click)="submitPlot()">
-      {{isEditor ? 'Update Plot' : 'Plot Data'}}
+      Plot Data
     </button>
-    <!-- [routerLink]="['../../result/' + objectId]" -->
   </div>
+<!-- <pre *ngIf="plot">{{plot | json}}</pre> -->
