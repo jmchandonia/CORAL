@@ -6,6 +6,7 @@ export interface PlotlyConfig {
     name: string;
     plotly_layout: PlotlyLayout;
     plotly_trace: PlotlyTrace;
+    useMap: boolean;
 }
 
 export interface AxisBlock {
