@@ -6,6 +6,9 @@
   </div>
   <!-- <pre> numberOfAxes : {{numberOfAxes | json}}</pre> -->
   <hr />
+  <div *ngIf="unableToPlot" class="alert alert-danger" style="width: 800px; margin: 0px auto;">
+    This dataset is incompatible with any of the existing options for plotting. At least 1 numeric parameter is required in the brick for plotting.
+  </div>
   <div class="form-container">
     <div class="card" *ngIf="plot">
       <div class="card-header" style="background-color: #eeeeff;">
@@ -14,7 +17,7 @@
       <form>
         <div class="form-group p-3">
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <label for="plotType">Plot Type</label>
                       <ng-select
                         class="custom"
@@ -24,6 +27,7 @@
                         [(ngModel)]="plot.plotType"
                         [ngModelOptions]="{standalone: true}"
                         [clearable]="false"
+                        [disabled]="unableToPlot"
                       >
                         <ng-template ng-option-tmp let-item="item">
                           <span [innerHTML]="item.image_tag | safeHtml"></span>
@@ -31,7 +35,7 @@
                         </ng-template>
                     </ng-select>
                   </div>
-                  <div class="col-2">
+                  <!-- <div class="col-2">
                     <label for="numberOfDims">Dimensionality</label>
                     <ng-select
                       class="custom"
@@ -48,7 +52,7 @@
                       {{item}}D plot
                     </ng-template>
                   </ng-select>
-                  </div>
+                  </div> -->
                   <div class="col-6">
                     <label for="graphTitle">Plot Title</label>
                     <input class="form-control"
@@ -64,11 +68,13 @@
   <div *ngIf="plot.plotType && !isMap">
     <app-axis-option
       [axis]="plot.axes.x"
+      [axisValidation]="plot.plotType.axis_data.x"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'X axis'"
     ></app-axis-option>
     <app-axis-option
+      [axisValidation]="plot.plotType.axis_data.y"
       [axis]="plot.axes.y"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
@@ -76,6 +82,7 @@
     ></app-axis-option>
     <app-axis-option
       *ngIf="numberOfAxes === 3"
+      [axisValicdation]="plot.plotType.axis_data.z"
       [axis]="plot.axes.z"
       [options]="axisOptions"
       [coreType]="coreTypePlot"

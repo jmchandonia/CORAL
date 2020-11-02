@@ -31,6 +31,8 @@ export class PlotOptionsComponent implements OnInit {
   public mapBuilder: MapBuilder;
   public axisOptions: AxisOption[];
   public plot: PlotlyBuilder;
+  public needsConstraints = false;
+  public unableToPlot = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +69,7 @@ export class PlotOptionsComponent implements OnInit {
         .subscribe((data: Response<AxisOption>) => {
           this.axisOptions = data.results;
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
+          this.getPlotTypes();
         });
     } else {
       // get metadata and assign to AxisOption type 
@@ -79,7 +82,7 @@ export class PlotOptionsComponent implements OnInit {
         result.dim_context.forEach((dim, i) => {
           dim.typed_values.forEach((dimVar, j) => {
             this.axisOptions.push({
-              scalarType: dimVar.scalar_type,
+              scalarType: dimVar.values.scalar_type,
               name: dimVar.value_no_units,
               displayName: dimVar.value_with_units,
               termId: dimVar.value_type.oterm_ref,
@@ -90,15 +93,16 @@ export class PlotOptionsComponent implements OnInit {
         });
         result.typed_values.forEach(dataVar => {
           this.axisOptions.push({
-            scalarType: '',
+            scalarType: dataVar.values.scalar_type,
             name: dataVar.value_no_units,
             displayName: dataVar.value_with_units,
             termId: dataVar.value_type.oterm_ref
           });
         });
+        this.getPlotTypes();
       });
     }
-    this.getPlotTypes();
+    // this.getPlotTypes();
   }
 
   onNumberOfAxisChange(event) {
@@ -117,10 +121,37 @@ export class PlotOptionsComponent implements OnInit {
     this.plotService.getPlotTypes()
       .subscribe((data: Response<PlotlyConfig>) => {
         this.allPlotTypeData = data.results;
-        this.plotTypeData = data.results.filter((val) => {
-          return val.n_dimensions === this.numberOfAxes - 1;
-        });
+        this.plotTypeData = this.validateDimensions(data.results);
+        if (this.plotTypeData.length === 0) {
+          this.unableToPlot = true;
+        }
     });
+  }
+
+  validateDimensions(plotTypes: PlotlyConfig[]) {
+    // determine number of properties with numeric scalar in data to be plotted
+    if (!this.coreTypePlot) {
+      const totalLength = this.axisOptions.length;
+      const totalNumericLength = this.axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
+        if ((this.isNumeric(axisOption.scalarType))) { return acc + 1; }
+        return acc;
+      }, 0);
+      return plotTypes.filter(plotType => {
+        if (plotType.n_dimensions > totalLength) { return false; }
+        const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
+            if (val.numeric_only) { return acc + 1 }
+            return acc;
+        }, 0);
+        if (totalNumericAxes > totalNumericLength) {
+          return false;
+        }
+        return true;
+      });
+    }
+  }
+
+  isNumeric(scalar) {
+    return scalar === 'int' || scalar === 'date' || scalar === 'float'
   }
 
   get coreTypesHaveLatAndLong() { // TODO: this should work for both core and dynamic types
@@ -139,7 +170,7 @@ export class PlotOptionsComponent implements OnInit {
 
   updatePlotType(event: PlotlyConfig) {
     this.isMap = false;
-    if (event.useMap) {
+    if (event.map) {
       this.isMap = true;
       this.mapBuilder = new MapBuilder();
     } else {
