@@ -6,7 +6,8 @@ export interface PlotlyConfig {
     name: string;
     plotly_layout: PlotlyLayout;
     plotly_trace: PlotlyTrace;
-    useMap: boolean;
+    map: boolean;
+    axis_data: AxisData;
 }
 
 export interface AxisBlock {
@@ -23,3 +24,7 @@ export interface PlotlyTrace {
     mode?: string;
 }
 
+export interface AxisData {
+    title: string;
+    numeric_only: boolean;
+}
