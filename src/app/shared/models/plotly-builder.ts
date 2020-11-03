@@ -1,13 +1,16 @@
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PlotlyConfig } from 'src/app/shared/models/plotly-config'; 
+import { DimensionContext } from './object-metadata';
 
 export class Axis {
-    // fromField: string | AxisOption; // will only be AxisOption
     data: AxisOption = new AxisOption();
     title: string;
     showTitle = true;
     labelPattern: string;
     showLabels = true;
+    dimIdx?: number;
+    dimVarIdx?: number;
+    dataVarIdx?: number;
 }
 
 export class PlotlyBuilder {
@@ -29,30 +32,28 @@ export class PlotlyBuilder {
     plotly_layout: any;
 
     axes: Axes = new Axes();
-
-    // axes: {
-    //     x: Axis = new Axis(),
-    //     y?: Axis,
-    //     z?: Axis|Series
-    // } = {};
+    constraints: Constraint[] = [];
 }
-
-// export class Axis {
-//     fromField: string | AxisOption; // will only be AxisOption
-//     title: string;
-//     showTitle = true;
-//     labelPattern: string;
-//     showLabels = true;
-// }
 
 class Axes {
     x: Axis = new Axis();
     y: Axis = new Axis();
-    z: Axis | Series
+    z: Axis
 } 
 
 export class Series {
 
+}
+
+export enum ConstraintType {
+    SERIES = 'series',
+    MEAN = 'mean',
+    FLATTEN = 'flatten'
+}
+
+export class Constraint {
+    type: 'mean' | 'series' | 'flatten';
+    dimension: DimensionContext;
 }
 
 export class AxisOption { // list of items to be populated in dropdown list of axis menu

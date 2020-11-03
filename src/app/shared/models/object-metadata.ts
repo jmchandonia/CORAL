@@ -10,8 +10,7 @@ export class ObjectMetadata {
     public typed_values: TypedValue[]; // measurement values and data
 }
 
-export class
-    DimensionContext {
+export class DimensionContext {
     data_type: OTerm;
     size: number;
     typed_values: TypedValue[];

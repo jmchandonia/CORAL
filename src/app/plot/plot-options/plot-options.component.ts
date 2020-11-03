@@ -1,13 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { PlotService } from '../../shared/services/plot.service';
-import { ObjectMetadata } from '../../shared/models/object-metadata';
+import { ObjectMetadata, DimensionContext } from '../../shared/models/object-metadata';
 import { QueryBuilderService } from '../../shared/services/query-builder.service';
-import { PlotBuilder, Dimension } from '../../shared/models/plot-builder';
 import { PlotlyConfig, AxisBlock } from 'src/app/shared/models/plotly-config';
-import { CoreTypeAxis, CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
-import { PlotlyBuilder, AxisOption, Axis } from 'src/app/shared/models/plotly-builder';
+import { PlotlyBuilder, AxisOption, Axis, Constraint } from 'src/app/shared/models/plotly-builder';
 import { Response } from 'src/app/shared/models/response';
 @Component({
   selector: 'app-plot-options',
@@ -17,7 +15,6 @@ import { Response } from 'src/app/shared/models/response';
 export class PlotOptionsComponent implements OnInit {
 
   public metadata: ObjectMetadata;
-  public coreMetadata: CoreTypeAxis[];
   public allPlotTypeData: PlotlyConfig[];
   public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
@@ -33,6 +30,7 @@ export class PlotOptionsComponent implements OnInit {
   public plot: PlotlyBuilder;
   public needsConstraints = false;
   public unableToPlot = false;
+  constrainableDimensions: DimensionContext[];
 
   constructor(
     private route: ActivatedRoute,
@@ -79,6 +77,7 @@ export class PlotOptionsComponent implements OnInit {
         this.metadata = result; ///
         this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
         this.axisOptions = [];
+        this.constrainableDimensions = this.metadata.dim_context;
         result.dim_context.forEach((dim, i) => {
           dim.typed_values.forEach((dimVar, j) => {
             this.axisOptions.push({
@@ -102,7 +101,6 @@ export class PlotOptionsComponent implements OnInit {
         this.getPlotTypes();
       });
     }
-    // this.getPlotTypes();
   }
 
   onNumberOfAxisChange(event) {
@@ -116,28 +114,30 @@ export class PlotOptionsComponent implements OnInit {
     })
   }
 
-  getPlotTypes() { // TODO: add validation elements to plot-types.json
-    // also TODO: add map types but figure out a way to only show it if theres lat and long
+  getPlotTypes() {
+    // TODO: add map types but figure out a way to only show it if theres lat and long
     this.plotService.getPlotTypes()
       .subscribe((data: Response<PlotlyConfig>) => {
         this.allPlotTypeData = data.results;
-        this.plotTypeData = this.validateDimensions(data.results);
+        // only display plot types that match number of numeric variables
+        this.plotTypeData = this.validateAxes(data.results);
         if (this.plotTypeData.length === 0) {
           this.unableToPlot = true;
         }
     });
   }
 
-  validateDimensions(plotTypes: PlotlyConfig[]) {
+  validateAxes(plotTypes: PlotlyConfig[]) {
     // determine number of properties with numeric scalar in data to be plotted
-    if (!this.coreTypePlot) {
       const totalLength = this.axisOptions.length;
+      // number of variables that are numeric
       const totalNumericLength = this.axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
         if ((this.isNumeric(axisOption.scalarType))) { return acc + 1; }
         return acc;
       }, 0);
       return plotTypes.filter(plotType => {
         if (plotType.n_dimensions > totalLength) { return false; }
+        // number of plot axes that are required to be numeric
         const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
             if (val.numeric_only) { return acc + 1 }
             return acc;
@@ -147,25 +147,10 @@ export class PlotOptionsComponent implements OnInit {
         }
         return true;
       });
-    }
   }
 
   isNumeric(scalar) {
     return scalar === 'int' || scalar === 'date' || scalar === 'float'
-  }
-
-  get coreTypesHaveLatAndLong() { // TODO: this should work for both core and dynamic types
-    return Object.entries(this.coreMetadata)
-      .filter(([key, val]) => val.name === 'latitude' || val.name === 'longitude')
-      .length === 2;
-  }
-
-  get scalarCoreProperties() {
-    return this.coreMetadata.filter(prop => {
-      return prop.scalar_type === 'int' ||
-        prop.scalar_type === 'float' ||
-        prop.name === 'date'
-    });
   }
 
   updatePlotType(event: PlotlyConfig) {
@@ -180,7 +165,34 @@ export class PlotOptionsComponent implements OnInit {
       this.axisBlocks = event.axis_blocks;
     }
     this.plot.plotType = event;
+    if (event.axis_data.z) {
+      this.plot.axes.z = new Axis();
+    } else {
+      delete this.plot.axes.z;
+    }
+    if (!this.coreTypePlot) {
+      this.determineConstraints();
+    }
     // this.selectedPlotType = event; // TODO: this should just be in the plotybuilder models
+  }
+
+  determineConstraints() {
+    const plotDimensionality = this.plot.plotType.axis_data.z ? 3 : 2;
+    const brickDimensionality = this.metadata.dim_context.length + 1;
+    const extraDimensions = brickDimensionality - plotDimensionality;
+    if (extraDimensions > 0) {
+      this.plot.constraints = Array.apply(null, {length: extraDimensions}).map(() => new Constraint());
+    }
+  }
+
+  setConstrainableDimensions() {
+    this.constrainableDimensions = [
+      ...this.metadata.dim_context.filter((dim, idx) => {
+        return this.plot.axes.x.dimIdx !== idx &&
+        this.plot.axes.y.dimIdx !== idx &&
+        this.plot.axes.z?.dimIdx !== idx;
+      })
+    ];
   }
 
   submitPlot() {
