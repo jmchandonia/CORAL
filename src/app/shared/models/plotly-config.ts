@@ -7,7 +7,7 @@ export interface PlotlyConfig {
     plotly_layout: PlotlyLayout;
     plotly_trace: PlotlyTrace;
     map: boolean;
-    axis_data: AxisData;
+    axis_data: IAxisData;
 }
 
 export interface AxisBlock {
@@ -24,6 +24,11 @@ export interface PlotlyTrace {
     mode?: string;
 }
 
+interface IAxisData {
+    x: AxisData;
+    y: AxisData;
+    z?: AxisData;
+}
 export interface AxisData {
     title: string;
     numeric_only: boolean;

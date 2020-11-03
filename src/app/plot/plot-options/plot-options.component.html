@@ -4,7 +4,6 @@
       <span class="menu-option">Back to Result</span>
     </div>
   </div>
-  <!-- <pre> numberOfAxes : {{numberOfAxes | json}}</pre> -->
   <hr />
   <div *ngIf="unableToPlot" class="alert alert-danger" style="width: 800px; margin: 0px auto;">
     This dataset is incompatible with any of the existing options for plotting. At least 1 numeric parameter is required in the brick for plotting.
@@ -35,24 +34,6 @@
                         </ng-template>
                     </ng-select>
                   </div>
-                  <!-- <div class="col-2">
-                    <label for="numberOfDims">Dimensionality</label>
-                    <ng-select
-                      class="custom"
-                      [items]="[2,3]"
-                      [(ngModel)]="numberOfAxes"
-                      [ngModelOptions]="{standalone: true}"
-                      [clearable]="false"
-                      (change)="onNumberOfAxisChange($event)"
-                    >
-                    <ng-template ng-label-tmp let-item="item">
-                        {{item}}D
-                    </ng-template>
-                    <ng-template ng-option-tmp let-item="item">
-                      {{item}}D plot
-                    </ng-template>
-                  </ng-select>
-                  </div> -->
                   <div class="col-6">
                     <label for="graphTitle">Plot Title</label>
                     <input class="form-control"
@@ -64,7 +45,7 @@
         </div>
       </form>
     </div>
-  </div>
+  </div> 
   <div *ngIf="plot.plotType && !isMap">
     <app-axis-option
       [axis]="plot.axes.x"
@@ -72,6 +53,7 @@
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'X axis'"
+      (selected)="setConstrainableDimensions()"
     ></app-axis-option>
     <app-axis-option
       [axisValidation]="plot.plotType.axis_data.y"
@@ -79,16 +61,30 @@
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'Y Axis'"
+      (selected)="setConstrainableDimensions()"
     ></app-axis-option>
     <app-axis-option
-      *ngIf="numberOfAxes === 3"
-      [axisValicdation]="plot.plotType.axis_data.z"
+      *ngIf="plot.plotType.axis_data.z"
+      [axisValidation]="plot.plotType.axis_data.z"
       [axis]="plot.axes.z"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'Z Axis'"
+      (selected)="setConstrainableDimensions()"
     ></app-axis-option>
   </div>
+  <div *ngIf="plot.constraints.length" class="constraints-container">
+    <div class="alert alert-warning">
+      This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plotType.name}}.
+      please select the dimensions below to be constrained.
+    </div>
+    <app-plot-constraint
+      *ngFor="let constraint of plot.constraints; let idx = index;"
+      [constraint]="constraint"
+      [dimensions]="constrainableDimensions"
+      [index]="idx"
+    ></app-plot-constraint>
+  </div>  
   <app-map-options
     *ngIf="mapBuilder && isMap"
     [mapBuilder]="mapBuilder"
