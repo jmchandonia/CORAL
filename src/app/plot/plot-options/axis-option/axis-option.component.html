@@ -16,7 +16,14 @@
                         [(ngModel)]="axis.data"
                         [ngModelOptions]="{standalone: true}"
                         (change)="setAxis($event)"
-                    ></ng-select>
+                        (clear)="handleClear($event)"
+                        groupBy="dimension"
+                    >
+                    <!-- <ng-template ng-option-tmp let-item="item">{{item.dimension}}</ng-template> -->
+                    <ng-template ng-optgroup-tmp let-item="item">
+                      {{ item && item.dimension === undefined ? 'Data Variables' : dimContext[item.dimension].data_type.oterm_name }}
+                    </ng-template>
+                  </ng-select>
                 </div>
                 <div class="col-6">
                   <div class="form-check offset-1">
