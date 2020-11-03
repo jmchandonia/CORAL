@@ -18,7 +18,7 @@ export class PlotOptionsComponent implements OnInit {
   public allPlotTypeData: PlotlyConfig[];
   public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
-  public axisBlocks: AxisBlock[];
+  // public axisBlocks: AxisBlock[];
   public objectId: string;
   public previousUrl: string;
   public coreTypePlot = false;
@@ -26,7 +26,8 @@ export class PlotOptionsComponent implements OnInit {
   private coreTypeName: string;
   public isMap = false; // determines if we should use UI for map config
   public mapBuilder: MapBuilder;
-  public axisOptions: AxisOption[];
+  public axisOptions: AxisOption[]; // user facing options that displays options based on what can be plotted
+  private _axisOptions: AxisOption[]; // stores all axis options regardless of if theyre allowed to be displayed
   public plot: PlotlyBuilder;
   public needsConstraints = false;
   public unableToPlot = false;
@@ -66,6 +67,7 @@ export class PlotOptionsComponent implements OnInit {
       this.queryBuilder.getCoreTypeProps(this.coreTypeName)
         .subscribe((data: Response<AxisOption>) => {
           this.axisOptions = data.results;
+          this._axisOptions = [...this.axisOptions]
           const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
           this.getPlotTypes();
         });
@@ -90,14 +92,16 @@ export class PlotOptionsComponent implements OnInit {
             });
           });
         });
-        result.typed_values.forEach(dataVar => {
+        result.typed_values.forEach((dataVar, i) => {
           this.axisOptions.push({
             scalarType: dataVar.values.scalar_type,
             name: dataVar.value_no_units,
             displayName: dataVar.value_with_units,
-            termId: dataVar.value_type.oterm_ref
+            termId: dataVar.value_type.oterm_ref,
+            dataVariable: i
           });
         });
+        this._axisOptions = [...this.axisOptions];
         this.getPlotTypes();
       });
     }
@@ -162,7 +166,7 @@ export class PlotOptionsComponent implements OnInit {
       // TODO: this is redundant, can be viewed in this.plot.plotType
       this.plot.plotly_layout = event.plotly_layout;
       this.plot.plotly_trace = event.plotly_trace;
-      this.axisBlocks = event.axis_blocks;
+      // this.axisBlocks = event.axis_blocks;
     }
     this.plot.plotType = event;
     if (event.axis_data.z) {
@@ -183,6 +187,26 @@ export class PlotOptionsComponent implements OnInit {
     if (extraDimensions > 0) {
       this.plot.constraints = Array.apply(null, {length: extraDimensions}).map(() => new Constraint());
     }
+  }
+
+  handleSelectedAxis(event: AxisOption) {
+    this.axisOptions = [...this.axisOptions.filter(option => {
+      return option.dimension !== event.dimension || option.dataVariable !== event.dataVariable;
+    })];
+    this.setConstrainableDimensions();
+  }
+
+  handleSelectionCleared() {
+    this.axisOptions = [
+      ...this._axisOptions.filter((option) => {
+        for (const [_, val] of Object.entries(this.plot.axes)) {
+          if (val.dataVarIdx !== undefined && val.dataVarIdx === option.dimensionVariable) { return false; }
+          if (val.dimIdx !== undefined && val.dimIdx === option.dimension) { return false; }
+        }
+        return true;
+      })
+    ];
+    this.setConstrainableDimensions();
   }
 
   setConstrainableDimensions() {

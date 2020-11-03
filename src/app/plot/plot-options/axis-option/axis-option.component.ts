@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Axis, AxisOption } from 'src/app/shared/models/plotly-builder';
 import { AxisData } from 'src/app/shared/models/plotly-config';
+import { DimensionContext } from 'src/app/shared/models/object-metadata';
 
 @Component({
   selector: 'app-axis-option',
@@ -8,10 +9,11 @@ import { AxisData } from 'src/app/shared/models/plotly-config';
   styleUrls: ['./axis-option.component.css']
 })
 
-export class AxisOptionComponent implements OnInit {
+export class AxisOptionComponent implements OnInit, OnChanges {
 
   @Input() axis: Axis; // TODO: Figure out a way to combine these 2?
   @Input() axisValidation: AxisData;
+  @Input() public dimContext: DimensionContext;
   
   public validOptions: AxisOption[];
   private _options: AxisOption[];
@@ -31,7 +33,8 @@ export class AxisOptionComponent implements OnInit {
   @Input() coreType = false;
   @Input() label: string;
 
-  @Output() selected: EventEmitter<null> = new EventEmitter();
+  @Output() selected: EventEmitter<AxisOption> = new EventEmitter();
+  @Output() selectionCleared: EventEmitter<null> = new EventEmitter();
 
   constructor() { }
 
@@ -40,19 +43,30 @@ export class AxisOptionComponent implements OnInit {
       this.axis.data = this.validOptions[0];
       if (this.axis.data.dimension !== undefined) {
         this.axis.dimIdx = this.axis.data.dimension;
-        // this.selected.emit(this.axis.data.dimension);
-        this.selected.emit();
+        this.selected.emit(this.axis.data);
       }
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+  }
+
   setAxis(event: AxisOption) {
+    if (event === undefined) return; // dont handle cancelled items here
     this.axis.title = event.displayName;
     if (event.dimension !== undefined) {
       this.axis.dimIdx = event.dimension;
-      // this.selected.emit(event.dimension);
     }
-    this.selected.emit();
+    this.selected.emit(this.axis.data);
+  }
+
+  handleClear(event) {
+    delete this.axis.data;
+    delete this.axis.dimIdx;
+    delete this.axis.dimVarIdx;
+    delete this.axis.dataVarIdx;
+    this.axis.title = '';
+    this.selectionCleared.emit();
   }
 
 }
