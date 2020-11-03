@@ -53,7 +53,9 @@
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'X axis'"
-      (selected)="setConstrainableDimensions()"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata.dim_context"
     ></app-axis-option>
     <app-axis-option
       [axisValidation]="plot.plotType.axis_data.y"
@@ -61,7 +63,9 @@
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'Y Axis'"
-      (selected)="setConstrainableDimensions()"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata.dim_context"
     ></app-axis-option>
     <app-axis-option
       *ngIf="plot.plotType.axis_data.z"
@@ -70,7 +74,9 @@
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'Z Axis'"
-      (selected)="setConstrainableDimensions()"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata.dim_context"
     ></app-axis-option>
   </div>
   <div *ngIf="plot.constraints.length" class="constraints-container">
@@ -95,4 +101,5 @@
       Plot Data
     </button>
   </div>
-<!-- <pre *ngIf="plot">{{plot | json}}</pre> -->
+<pre *ngIf="plot">{{plot | json}}</pre>
+<!-- <pre *ngIf="metadata">{{metadata | json}}</pre> -->

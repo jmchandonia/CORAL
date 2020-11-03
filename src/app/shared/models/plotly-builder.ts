@@ -3,7 +3,7 @@ import { PlotlyConfig } from 'src/app/shared/models/plotly-config';
 import { DimensionContext } from './object-metadata';
 
 export class Axis {
-    data: AxisOption = new AxisOption();
+    data: AxisOption;
     title: string;
     showTitle = true;
     labelPattern: string;
@@ -64,6 +64,7 @@ export class AxisOption { // list of items to be populated in dropdown list of a
     units?: string;
     dimension?: number;
     dimensionVariable?: number;
+    dataVariable?: number;
 }
 
 export class DimensionVariable {}
