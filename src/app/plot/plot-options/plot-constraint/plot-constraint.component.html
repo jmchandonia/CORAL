@@ -1,0 +1,26 @@
+<div class="card mt-4">
+    <div class="card-header" style="background-color: #eeeeff;">
+        Constraint {{index + 1}}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-6">
+                <label>Choose a Dimension</label>
+                <ng-select
+                    class="custom"
+                    [items]="dimensions"
+                    [(ngModel)]="constraint.dimension"
+                    bindLabel="data_type.oterm_name"
+                ></ng-select>
+            </div>
+            <div class="col-6">
+                <label>Constraint Type</label>
+                <ng-select
+                    class="custom"
+                    [items]="constraintTypes"
+                    [(ngModel)]="constraint.type"
+                ></ng-select>
+            </div>
+        </div>
+    </div>
+</div>
