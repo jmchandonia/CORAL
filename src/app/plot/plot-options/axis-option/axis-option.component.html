@@ -1,5 +1,6 @@
 
-<div class="form-container">
+<div class="row justify-content-center mt-4">
+  <div class="col-8">
     <div class="card">
       <div class="card-header" style="background-color: #eeeeff;">
         {{label}}
@@ -8,7 +9,7 @@
         <div class="form-group p-3 mb-0">
             <div class="row">
                 <div class="col-6">
-                  <label for="axisOptions">From Dimension</label>
+                  <label for="axisOptions">Choose a parameter to plot</label>
                     <ng-select
                         class="custom"
                         [items]="validOptions"
@@ -47,4 +48,5 @@
           </div>
       </form>
     </div>
+  </div>
   </div>

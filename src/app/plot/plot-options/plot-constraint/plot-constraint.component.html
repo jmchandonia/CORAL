@@ -3,7 +3,7 @@
         {{constraint.dimension.data_type.oterm_name}}
     </div>
     <div class="card-body">
-        <div class="row" *ngFor="let v of constraint.variables">
+        <div class="row mt-2" *ngFor="let v of constraint.variables; let last = last;">
             <div class="col-12">
                 <div class="row">
                     <div class="col-6">
@@ -17,9 +17,11 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="row" *ngIf="v.type === 'flatten'">
-                    <div class="row">{{v.flattenValue}}</div>
-                    <div class="col-12">
+                <div class="row mt-2" *ngIf="v.type === 'flatten'">
+                    <div class="col-6">
+                        Select a possible value from which to flatten {{v.value.value_no_units}}.
+                    </div>
+                    <div class="col-6">
                         <ng-select
                             class="custom"
                             [items]="v.value.values.values"
@@ -28,6 +30,7 @@
                     </div>
                 </div>
             </div>
+            <hr *ngIf="!last" style="width: 100%" />
         </div>
     </div>
 </div>
