@@ -1,6 +1,6 @@
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PlotlyConfig } from 'src/app/shared/models/plotly-config'; 
-import { DimensionContext } from './object-metadata';
+import { DimensionContext, TypedValue } from './object-metadata';
 
 export class Axis {
     data: AxisOption;
@@ -33,6 +33,12 @@ export class PlotlyBuilder {
 
     axes: Axes = new Axes();
     constraints: Constraint[] = [];
+
+    setDimensionConstraints(dimensions: DimensionContext[]) {
+        this.constraints = [
+            ...dimensions.map(dimension => new Constraint(dimension))
+        ];
+    }
 }
 
 class Axes {
@@ -52,8 +58,27 @@ export enum ConstraintType {
 }
 
 export class Constraint {
-    type: 'mean' | 'series' | 'flatten';
+
+    constructor(dimension: DimensionContext) {
+        this.dimension = dimension;
+        this.variables = dimension.typed_values.map(value => new ConstraintVariable(value));
+    }
+
+    // type: 'mean' | 'series' | 'flatten';
     dimension: DimensionContext;
+    variables: ConstraintVariable[];
+}
+
+export class ConstraintVariable {
+
+    constructor(value: TypedValue) {
+        this.value = value;
+    }
+
+    value: TypedValue;
+
+    type: 'mean' | 'series' | 'flatten';
+    flattenValue: number | string;
 }
 
 export class AxisOption { // list of items to be populated in dropdown list of axis menu
