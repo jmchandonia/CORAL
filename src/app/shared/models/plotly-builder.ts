@@ -67,6 +67,7 @@ export class Constraint {
     // type: 'mean' | 'series' | 'flatten';
     dimension: DimensionContext;
     variables: ConstraintVariable[];
+    constrainByMean = false;
 }
 
 export class ConstraintVariable {
