@@ -175,7 +175,8 @@ export class PlotOptionsComponent implements OnInit {
       delete this.plot.axes.z;
     }
     if (!this.coreTypePlot) {
-      this.determineConstraints();
+      // this.determineConstraints();
+      this.plot.setDimensionConstraints(this.constrainableDimensions);
     }
     // this.selectedPlotType = event; // TODO: this should just be in the plotybuilder models
   }
@@ -185,7 +186,7 @@ export class PlotOptionsComponent implements OnInit {
     const brickDimensionality = this.metadata.dim_context.length + 1;
     const extraDimensions = brickDimensionality - plotDimensionality;
     if (extraDimensions > 0) {
-      this.plot.constraints = Array.apply(null, {length: extraDimensions}).map(() => new Constraint());
+      // this.plot.constraints = Array.apply(null, {length: extraDimensions}).map(() => new Constraint());
     }
   }
 
@@ -217,6 +218,7 @@ export class PlotOptionsComponent implements OnInit {
         this.plot.axes.z?.dimIdx !== idx;
       })
     ];
+    this.plot.setDimensionConstraints(this.constrainableDimensions);
   }
 
   submitPlot() {

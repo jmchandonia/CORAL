@@ -10,8 +10,6 @@ import { DimensionContext } from 'src/app/shared/models/object-metadata';
 export class PlotConstraintComponent implements OnInit {
 
   @Input() constraint: Constraint;
-  @Input() dimensions: DimensionContext;
-  @Input() index: number;
 
   constraintTypes: string[] = Object.values(ConstraintType);
 
