@@ -74,9 +74,16 @@ export class ConstraintVariable {
 
     constructor(value: TypedValue) {
         this.value = value;
+        this.uniqueValues = this.value.values.values.reduce((acc, value) => {
+            if (!acc.includes(value)) {
+                return [...acc, value];
+            }
+            return acc;
+        }, []);
     }
 
     value: TypedValue;
+    uniqueValues: number[] | string[]; // remove repeating instances of the same value for dropdown
 
     type: 'mean' | 'series' | 'flatten';
     flattenValue: number | string;
