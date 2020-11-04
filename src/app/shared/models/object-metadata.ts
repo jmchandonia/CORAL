@@ -32,6 +32,7 @@ export interface TypedValue {
     value_type: OTerm;
     value_with_units: string;
     selected?: boolean; // for dimension variable checkboxes in plotting
+    values: any; // TODO: make json model better
 }
 
 export interface OTerm {
