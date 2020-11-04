@@ -68,7 +68,6 @@ export class PlotOptionsComponent implements OnInit {
         .subscribe((data: Response<AxisOption>) => {
           this.axisOptions = data.results;
           this._axisOptions = [...this.axisOptions]
-          const query = JSON.parse(localStorage.getItem('coreTypePlotParams'));
           this.getPlotTypes();
         });
     } else {
@@ -166,7 +165,6 @@ export class PlotOptionsComponent implements OnInit {
       // TODO: this is redundant, can be viewed in this.plot.plotType
       this.plot.plotly_layout = event.plotly_layout;
       this.plot.plotly_trace = event.plotly_trace;
-      // this.axisBlocks = event.axis_blocks;
     }
     this.plot.plotType = event;
     if (event.axis_data.z) {
@@ -175,42 +173,49 @@ export class PlotOptionsComponent implements OnInit {
       delete this.plot.axes.z;
     }
     if (!this.coreTypePlot) {
-      // this.determineConstraints();
       this.plot.setDimensionConstraints(this.constrainableDimensions);
-    }
-    // this.selectedPlotType = event; // TODO: this should just be in the plotybuilder models
-  }
-
-  determineConstraints() {
-    const plotDimensionality = this.plot.plotType.axis_data.z ? 3 : 2;
-    const brickDimensionality = this.metadata.dim_context.length + 1;
-    const extraDimensions = brickDimensionality - plotDimensionality;
-    if (extraDimensions > 0) {
-      // this.plot.constraints = Array.apply(null, {length: extraDimensions}).map(() => new Constraint());
     }
   }
 
   handleSelectedAxis(event: AxisOption) {
-    this.axisOptions = [...this.axisOptions.filter(option => {
-      return option.dimension !== event.dimension || option.dataVariable !== event.dataVariable;
-    })];
-    this.setConstrainableDimensions();
+    if (this.coreTypePlot) {
+      this.axisOptions = [...this.axisOptions.filter(option => option.termId !== event.termId)];
+    } else {
+      this.axisOptions = [...this.axisOptions.filter(option => {
+        return option.dimension !== event.dimension || option.dataVariable !== event.dataVariable;
+      })];
+      this.setConstrainableDimensions();
+    }
   }
 
   handleSelectionCleared() {
-    this.axisOptions = [
-      ...this._axisOptions.filter((option) => {
-        for (const [_, val] of Object.entries(this.plot.axes)) {
-          if (val.dataVarIdx !== undefined && val.dataVarIdx === option.dimensionVariable) { return false; }
-          if (val.dimIdx !== undefined && val.dimIdx === option.dimension) { return false; }
-        }
-        return true;
-      })
-    ];
-    this.setConstrainableDimensions();
+    if (this.coreTypePlot) {
+      this.axisOptions = [
+        ...this._axisOptions.filter((option) => {
+          for (const [_, val] of Object.entries(this.plot.axes)) {
+            if (val.data?.termId === option.termId) {
+              return false;
+            }
+          }
+          return true;
+        })
+      ]
+    } else {
+      this.axisOptions = [
+        ...this._axisOptions.filter((option) => {
+          for (const [_, val] of Object.entries(this.plot.axes)) {
+            if (val.dataVarIdx !== undefined && val.dataVarIdx === option.dimensionVariable) { return false; }
+            if (val.dimIdx !== undefined && val.dimIdx === option.dimension) { return false; }
+          }
+          return true;
+        })
+      ];
+      this.setConstrainableDimensions();
+    }
   }
 
   setConstrainableDimensions() {
+    // whichever dimensions arent selected are all displayed as constrainable items
     this.constrainableDimensions = [
       ...this.metadata.dim_context.filter((dim, idx) => {
         return this.plot.axes.x.dimIdx !== idx &&
