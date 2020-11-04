@@ -1,6 +1,10 @@
 <div class="card mt-4">
     <div class="card-header" style="background-color: #eeeeff;">
-        {{constraint.dimension.data_type.oterm_name}}
+        <span class="float-left">{{constraint.dimension.data_type.oterm_name}}</span>
+        <div class="form-check float-right m-0">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="constraint.constrainByMean" />
+            <label class="form-check-label pl-0">Use mean values</label>
+        </div>
     </div>
     <div class="card-body">
         <div class="row mt-2" *ngFor="let v of constraint.variables; let last = last;">
@@ -11,6 +15,7 @@
                     </div>
                     <div class="col-6">
                         <ng-select
+                            [disabled]="constraint.constrainByMean"
                             class="custom"
                             [items]="constraintTypes"
                             [(ngModel)]="v.type">
