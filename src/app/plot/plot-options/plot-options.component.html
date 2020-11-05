@@ -21,6 +21,7 @@
                       <label for="plotType">Plot Type</label>
                         <ng-select
                           class="custom"
+                          [class.select-error]="invalid && !plot.plotType"
                           [items]="plotTypeData"
                           bindLabel="name"
                           (change)="updatePlotType($event)"
@@ -58,6 +59,7 @@
       (selected)="handleSelectedAxis($event)"
       (selectionCleared)="handleSelectionCleared()"
       [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
       [axisValidation]="plot.plotType.axis_data.y"
@@ -68,6 +70,7 @@
       (selected)="handleSelectedAxis($event)"
       (selectionCleared)="handleSelectionCleared()"
       [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
       *ngIf="plot.plotType.axis_data.z"
@@ -79,6 +82,7 @@
       (selected)="handleSelectedAxis($event)"
       (selectionCleared)="handleSelectionCleared()"
       [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
     ></app-axis-option>
   </div>
   <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length">
@@ -92,6 +96,7 @@
         [constraint]="constraint"
         [dimensions]="constrainableDimensions"
         [index]="idx"
+        [invalid]="invalid"
       ></app-plot-constraint>
     </div>  
   </div>
@@ -100,6 +105,13 @@
     [mapBuilder]="mapBuilder"
     [options]="coreMetadata"
   ></app-map-options>
+  <div class="row justify-content-center mt-4" *ngIf="invalid">
+    <div class="col-8">
+      <div class="alert alert-danger">
+        Error: Please complete all of the axes on this plot are filled out and that the extra variables have been accounted for.
+      </div>
+    </div>
+  </div>
   <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
     <div class="col-8">
       <button class="btn btn-primary float-right" (click)="submitPlot()">

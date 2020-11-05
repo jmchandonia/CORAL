@@ -11,6 +11,7 @@
                 <div class="col-6">
                   <label for="axisOptions">Choose a parameter to plot</label>
                     <ng-select
+                        [class.select-error]="invalid && !axis.data"
                         class="custom"
                         [items]="validOptions"
                         bindLabel="displayName"
