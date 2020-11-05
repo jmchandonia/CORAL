@@ -9,7 +9,7 @@ export class PlotValidatorService {
   constructor() { }
 
   public static validPlot(plot: PlotlyBuilder): boolean {
-    if (!plot.plotType) return false;
+    if (!plot.plot_type) return false;
 
     for(const [_, val] of Object.entries(plot.axes)) {
       if (!val.data) return false;
@@ -23,7 +23,7 @@ export class PlotValidatorService {
   }
 
   static validConstraint(constraint: Constraint): boolean {
-    if (constraint.constrainByMean) return true;
+    if (constraint.constrain_by_mean) return true;
     for (const variable of constraint.variables) {
       if (!this.validConstraintVariable(variable)) return false;
     }
@@ -32,7 +32,7 @@ export class PlotValidatorService {
 
   static validConstraintVariable(variable: ConstraintVariable) : boolean {
     if (!variable.type) return false;
-    if (variable.type === 'flatten' && variable.flattenValue === undefined) return false;
+    if (variable.type === 'flatten' && variable.flatten_value === undefined) return false;
     return true;
   }
 

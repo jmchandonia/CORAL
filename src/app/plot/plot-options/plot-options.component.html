@@ -21,11 +21,11 @@
                       <label for="plotType">Plot Type</label>
                         <ng-select
                           class="custom"
-                          [class.select-error]="invalid && !plot.plotType"
+                          [class.select-error]="invalid && !plot.plot_type"
                           [items]="plotTypeData"
                           bindLabel="name"
                           (change)="updatePlotType($event)"
-                          [(ngModel)]="plot.plotType"
+                          [(ngModel)]="plot.plot_type"
                           [ngModelOptions]="{standalone: true}"
                           [clearable]="false"
                           [disabled]="unableToPlot"
@@ -49,10 +49,10 @@
       </div>
     </div>
   </div> 
-  <div *ngIf="plot.plotType && !isMap && axisOptions">
+  <div *ngIf="plot.plot_type && !isMap && axisOptions">
     <app-axis-option
       [axis]="plot.axes.x"
-      [axisValidation]="plot.plotType.axis_data.x"
+      [axisValidation]="plot.plot_type.axis_data.x"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
       [label]="'X axis'"
@@ -62,7 +62,7 @@
       [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
-      [axisValidation]="plot.plotType.axis_data.y"
+      [axisValidation]="plot.plot_type.axis_data.y"
       [axis]="plot.axes.y"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
@@ -73,8 +73,8 @@
       [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
-      *ngIf="plot.plotType.axis_data.z"
-      [axisValidation]="plot.plotType.axis_data.z"
+      *ngIf="plot.plot_type.axis_data.z"
+      [axisValidation]="plot.plot_type.axis_data.z"
       [axis]="plot.axes.z"
       [options]="axisOptions"
       [coreType]="coreTypePlot"
@@ -88,7 +88,7 @@
   <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length">
     <div *ngIf="plot.constraints.length" class="col-8">
       <div class="alert alert-warning">
-        This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plotType.name}}.
+        This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plot_type.name}}.
         please select the dimensions below to be constrained.
       </div>
       <app-plot-constraint

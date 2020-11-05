@@ -5,28 +5,28 @@ import { DimensionContext, TypedValue } from './object-metadata';
 export class Axis {
     data: AxisOption;
     title: string;
-    showTitle = true;
-    labelPattern: string;
-    showLabels = true;
-    dimIdx?: number;
-    dimVarIdx?: number;
-    dataVarIdx?: number;
+    show_title = true;
+    label_pattern: string;
+    show_labels = true;
+    dim_idx?: number;
+    dim_var_idx?: number;
+    data_var_idx?: number;
 }
 
 export class PlotlyBuilder {
 
-    constructor(isCoreType = false, query?: QueryBuilder) {
-        this.isCoreType = isCoreType;
-        if (this.isCoreType && query) {
+    constructor(core_type = false, query?: QueryBuilder) {
+        this.core_type = core_type;
+        if (this.core_type && query) {
             this.query = query;
         }
     }
 
     title: string;
-    objectId: string;
+    object_id: string;
     query: QueryBuilder;
-    isCoreType: boolean;
-    plotType: PlotlyConfig;
+    core_type: boolean;
+    plot_type: PlotlyConfig;
 
     plotly_trace: any;
     plotly_layout: any;
@@ -65,14 +65,14 @@ export class Constraint {
     }
     dimension: DimensionContext;
     variables: ConstraintVariable[];
-    constrainByMean = false;
+    constrain_by_mean = false;
 }
 
 export class ConstraintVariable {
 
     constructor(value: TypedValue) {
         this.value = value;
-        this.uniqueValues = this.value.values.values.reduce((acc, value) => {
+        this.unique_values = this.value.values.values.reduce((acc, value) => {
             if (!acc.includes(value)) {
                 return [...acc, value];
             }
@@ -81,21 +81,21 @@ export class ConstraintVariable {
     }
 
     value: TypedValue;
-    uniqueValues: number[] | string[]; // remove repeating instances of the same value for dropdown
+    unique_values: number[] | string[]; // remove repeating instances of the same value for dropdown
 
     type: 'mean' | 'series' | 'flatten';
-    flattenValue: number | string;
+    flatten_value: number | string;
 }
 
 export class AxisOption { // list of items to be populated in dropdown list of axis menu
     name: string;
-    displayName: string; // display including units (if there are any)
-    termId: string;
-    scalarType: string;
+    display_name: string; // display including units (if there are any)
+    term_id: string;
+    scalar_type: string;
     units?: string;
     dimension?: number;
-    dimensionVariable?: number;
-    dataVariable?: number;
+    dimension_variable?: number;
+    data_variable?: number;
 }
 
 export class DimensionVariable {}

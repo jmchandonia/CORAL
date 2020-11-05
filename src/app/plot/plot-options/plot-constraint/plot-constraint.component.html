@@ -1,10 +1,10 @@
 <div class="card mt-4">
     <div class="card-header" style="background-color: #eeeeff;">
         <span class="float-left">{{constraint.dimension.data_type.oterm_name}}</span>
-        <div class="form-check float-right m-0">
+        <!-- <div class="form-check float-right m-0">
             <input type="checkbox" class="form-check-input" [(ngModel)]="constraint.constrainByMean" />
             <label class="form-check-label pl-0">Use mean values</label>
-        </div>
+        </div> -->
     </div>
     <div class="card-body">
         <div class="row mt-2" *ngFor="let v of constraint.variables; let last = last;">
@@ -30,9 +30,9 @@
                     <div class="col-6">
                         <ng-select
                             class="custom"
-                            [items]="v.uniqueValues"
-                            [(ngModel)]="v.flattenValue"
-                            [class.select-error]="invalid && v.type === 'flatten' && !v.flattenValue"
+                            [items]="v.unique_values"
+                            [(ngModel)]="v.flatten_value"
+                            [class.select-error]="invalid && v.type === 'flatten' && !v.flatten_value"
                         ></ng-select>
                     </div>
                 </div>

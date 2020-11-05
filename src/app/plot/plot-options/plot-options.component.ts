@@ -50,7 +50,7 @@ export class PlotOptionsComponent implements OnInit {
         if (params['id']) {
           this.objectId = params.id;
           this.plot = this.plotService.getPlotlyBuilder();
-          this.plot.objectId = params.id;
+          this.plot.object_id = params.id;
         }
     });
 
@@ -83,22 +83,22 @@ export class PlotOptionsComponent implements OnInit {
         result.dim_context.forEach((dim, i) => {
           dim.typed_values.forEach((dimVar, j) => {
             this.axisOptions.push({
-              scalarType: dimVar.values.scalar_type,
+              scalar_type: dimVar.values.scalar_type,
               name: dimVar.value_no_units,
-              displayName: dimVar.value_with_units,
-              termId: dimVar.value_type.oterm_ref,
+              display_name: dimVar.value_with_units,
+              term_id: dimVar.value_type.oterm_ref,
               dimension: i,
-              dimensionVariable: j
+              dimension_variable: j
             });
           });
         });
         result.typed_values.forEach((dataVar, i) => {
           this.axisOptions.push({
-            scalarType: dataVar.values.scalar_type,
+            scalar_type: dataVar.values.scalar_type,
             name: dataVar.value_no_units,
-            displayName: dataVar.value_with_units,
-            termId: dataVar.value_type.oterm_ref,
-            dataVariable: i
+            display_name: dataVar.value_with_units,
+            term_id: dataVar.value_type.oterm_ref,
+            data_variable: i
           });
         });
         this._axisOptions = [...this.axisOptions];
@@ -136,7 +136,7 @@ export class PlotOptionsComponent implements OnInit {
       const totalLength = this.axisOptions.length;
       // number of variables that are numeric
       const totalNumericLength = this.axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
-        if ((this.isNumeric(axisOption.scalarType))) { return acc + 1; }
+        if ((this.isNumeric(axisOption.scalar_type))) { return acc + 1; }
         return acc;
       }, 0);
       return plotTypes.filter(plotType => {
@@ -168,7 +168,7 @@ export class PlotOptionsComponent implements OnInit {
       this.plot.plotly_layout = event.plotly_layout;
       this.plot.plotly_trace = event.plotly_trace;
     }
-    this.plot.plotType = event;
+    this.plot.plot_type = event;
     if (event.axis_data.z) {
       this.plot.axes.z = new Axis();
     } else {
@@ -181,10 +181,10 @@ export class PlotOptionsComponent implements OnInit {
 
   handleSelectedAxis(event: AxisOption) {
     if (this.coreTypePlot) {
-      this.axisOptions = [...this.axisOptions.filter(option => option.termId !== event.termId)];
+      this.axisOptions = [...this.axisOptions.filter(option => option.term_id !== event.term_id)];
     } else {
       this.axisOptions = [...this.axisOptions.filter(option => {
-        return option.dimension !== event.dimension || option.dataVariable !== event.dataVariable;
+        return option.dimension !== event.dimension || option.data_variable !== event.data_variable;
       })];
       this.setConstrainableDimensions();
     }
@@ -195,7 +195,7 @@ export class PlotOptionsComponent implements OnInit {
       this.axisOptions = [
         ...this._axisOptions.filter((option) => {
           for (const [_, val] of Object.entries(this.plot.axes)) {
-            if (val.data?.termId === option.termId) {
+            if (val.data?.term_id === option.term_id) {
               return false;
             }
           }
@@ -206,8 +206,8 @@ export class PlotOptionsComponent implements OnInit {
       this.axisOptions = [
         ...this._axisOptions.filter((option) => {
           for (const [_, val] of Object.entries(this.plot.axes)) {
-            if (val.dataVarIdx !== undefined && val.dataVarIdx === option.dimensionVariable) { return false; }
-            if (val.dimIdx !== undefined && val.dimIdx === option.dimension) { return false; }
+            if (val.data_var_idx !== undefined && val.data_var_idx === option.dimension_variable) { return false; }
+            if (val.dim_idx !== undefined && val.dim_idx === option.dimension) { return false; }
           }
           return true;
         })
@@ -220,9 +220,9 @@ export class PlotOptionsComponent implements OnInit {
     // whichever dimensions arent selected are all displayed as constrainable items
     this.constrainableDimensions = [
       ...this.metadata.dim_context.filter((dim, idx) => {
-        return this.plot.axes.x.dimIdx !== idx &&
-        this.plot.axes.y.dimIdx !== idx &&
-        this.plot.axes.z?.dimIdx !== idx;
+        return this.plot.axes.x.dim_idx !== idx &&
+        this.plot.axes.y.dim_idx !== idx &&
+        this.plot.axes.z?.dim_idx !== idx;
       })
     ];
     this.plot.setDimensionConstraints(this.constrainableDimensions);
