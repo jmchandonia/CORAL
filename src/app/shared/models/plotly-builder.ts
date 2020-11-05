@@ -39,6 +39,19 @@ export class PlotlyBuilder {
             ...dimensions.map(dimension => new Constraint(dimension))
         ];
     }
+
+    get isValid(): boolean {
+        if (!this.plotType) return false;
+
+        for (const [_, val] of Object.entries(this.axes)) {
+            if (!val.data) return false;
+        }
+
+        for (const constraint of this.constraints) {
+            if(!constraint.isValid) return false;
+        }
+        return true;
+    }
 }
 
 class Axes {
@@ -64,6 +77,14 @@ export class Constraint {
         this.variables = dimension.typed_values.map(value => new ConstraintVariable(value));
     }
 
+    get isValid(): boolean {
+        if (this.constrainByMean) return true;
+        for (const variable of this.variables) {
+            if (!variable.isValid) return false;
+        }
+        return true;
+    }
+
     // type: 'mean' | 'series' | 'flatten';
     dimension: DimensionContext;
     variables: ConstraintVariable[];
@@ -80,6 +101,12 @@ export class ConstraintVariable {
             }
             return acc;
         }, []);
+    }
+
+    get isValid(): boolean {
+        if (this.type === undefined) return false;
+        if (this.type === ConstraintType.FLATTEN && this.flattenValue === undefined) return false;
+        return true;
     }
 
     value: TypedValue;
