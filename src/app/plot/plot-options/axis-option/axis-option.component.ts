@@ -22,9 +22,9 @@ export class AxisOptionComponent implements OnInit, OnChanges {
     this._options = _options;
     this.validOptions = this.axisValidation.numeric_only
       ? this.options.filter(option => {
-        return option.scalarType === 'float' ||
-        option.scalarType === 'int' ||
-        option.scalarType === 'date';
+        return option.scalar_type === 'float' ||
+        option.scalar_type === 'int' ||
+        option.scalar_type === 'date';
       })
       : this.options;
   }
@@ -42,7 +42,7 @@ export class AxisOptionComponent implements OnInit, OnChanges {
     if (this.validOptions.length === 1) {
       this.axis.data = this.validOptions[0];
       if (this.axis.data.dimension !== undefined) {
-        this.axis.dimIdx = this.axis.data.dimension;
+        this.axis.dim_idx = this.axis.data.dimension;
         this.selected.emit(this.axis.data);
       }
     }
@@ -53,18 +53,18 @@ export class AxisOptionComponent implements OnInit, OnChanges {
 
   setAxis(event: AxisOption) {
     if (event === undefined) return; // dont handle cancelled items here
-    this.axis.title = event.displayName;
+    this.axis.title = event.display_name;
     if (event.dimension !== undefined) {
-      this.axis.dimIdx = event.dimension;
+      this.axis.dim_idx = event.dimension;
     }
     this.selected.emit(this.axis.data);
   }
 
   handleClear(event) {
     delete this.axis.data;
-    delete this.axis.dimIdx;
-    delete this.axis.dimVarIdx;
-    delete this.axis.dataVarIdx;
+    delete this.axis.dim_idx;
+    delete this.axis.dim_var_idx;
+    delete this.axis.data_var_idx;
     this.axis.title = '';
     this.selectionCleared.emit();
   }

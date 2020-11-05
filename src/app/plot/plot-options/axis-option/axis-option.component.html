@@ -14,7 +14,7 @@
                         [class.select-error]="invalid && !axis.data"
                         class="custom"
                         [items]="validOptions"
-                        bindLabel="displayName"
+                        bindLabel="display_name"
                         [(ngModel)]="axis.data"
                         [ngModelOptions]="{standalone: true}"
                         (change)="setAxis($event)"
@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-6">
                   <div class="form-check offset-1">
-                    <input class="form-check-input" type="checkbox" [(ngModel)]="axis.showTitle" [ngModelOptions]="{standalone: true}" id="axisTitle" />
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="axis.show_title" [ngModelOptions]="{standalone: true}" id="axisTitle" />
                     <label class="form-check-label" for="axisTitle">Axis Title</label>
                   </div>
                   <input name="axisTitle" class="form-control" [(ngModel)]="axis.title" [ngModelOptions]="{standalone: true}">
