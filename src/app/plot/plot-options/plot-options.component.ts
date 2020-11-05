@@ -18,7 +18,6 @@ export class PlotOptionsComponent implements OnInit {
   public allPlotTypeData: PlotlyConfig[];
   public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
-  // public axisBlocks: AxisBlock[];
   public objectId: string;
   public previousUrl: string;
   public coreTypePlot = false;
@@ -32,6 +31,7 @@ export class PlotOptionsComponent implements OnInit {
   public needsConstraints = false;
   public unableToPlot = false;
   constrainableDimensions: DimensionContext[];
+  public invalid = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -157,6 +157,7 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   updatePlotType(event: PlotlyConfig) {
+    this.invalid = false; // dont mark all the other forms invalid before anyone tried to fill them out
     this.isMap = false;
     if (event.map) {
       this.isMap = true;
@@ -228,6 +229,7 @@ export class PlotOptionsComponent implements OnInit {
 
   submitPlot() {
     if (!this.plot.isValid) {
+      this.invalid = true;
       return;
     }
     if (this.isMap) {
