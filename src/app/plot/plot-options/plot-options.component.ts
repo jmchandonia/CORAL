@@ -227,6 +227,9 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submitPlot() {
+    if (!this.plot.isValid) {
+      return;
+    }
     if (this.isMap) {
       localStorage.setItem('mapBuilder', JSON.stringify(this.mapBuilder));
       this.router.navigate(['/plot/map/result']);
