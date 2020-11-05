@@ -7,6 +7,7 @@ import { PlotlyConfig, AxisBlock } from 'src/app/shared/models/plotly-config';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { PlotlyBuilder, AxisOption, Axis, Constraint } from 'src/app/shared/models/plotly-builder';
 import { Response } from 'src/app/shared/models/response';
+import { PlotValidatorService as validator } from 'src/app/shared/services/plot-validator.service';
 @Component({
   selector: 'app-plot-options',
   templateUrl: './plot-options.component.html',
@@ -228,7 +229,7 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submitPlot() {
-    if (!this.plot.isValid) {
+    if (!validator.validPlot(this.plot)) {
       this.invalid = true;
       return;
     }
