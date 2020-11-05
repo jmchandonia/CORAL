@@ -2,22 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
-import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
+import { PlotlyBuilder, Constraint } from 'src/app/shared/models/plotly-builder';
 @Injectable({
   providedIn: 'root'
 })
 export class PlotService {
 
   public plot: PlotlyBuilder;
-  // public plotBuilder: PlotBuilder = new PlotBuilder();
-  // public plotType: string;
-  // metadata: ObjectMetadata;
 
   constructor(private http: HttpClient) { }
 
   getPlotlyBuilder(coreType?, query?: QueryBuilder) {
     if (!this.plot) {
-      this.plot = JSON.parse(localStorage.getItem('plotlyBuilder')) || new PlotlyBuilder(coreType, query);
+      // needs object.assign to have class methods
+      this.plot = Object.assign(
+        new PlotlyBuilder(coreType, query),
+        JSON.parse(localStorage.getItem('plotlyBuilder'))
+      );
     }
     return this.plot;
   }
