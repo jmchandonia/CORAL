@@ -15,6 +15,7 @@
                     </div>
                     <div class="col-6">
                         <ng-select
+                            [class.select-error]="invalid && !v.type"
                             [disabled]="constraint.constrainByMean"
                             class="custom"
                             [items]="constraintTypes"
@@ -31,6 +32,7 @@
                             class="custom"
                             [items]="v.uniqueValues"
                             [(ngModel)]="v.flattenValue"
+                            [class.select-error]="invalid && v.type === 'flatten' && !v.flattenValue"
                         ></ng-select>
                     </div>
                 </div>
