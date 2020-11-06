@@ -183,7 +183,11 @@ export class PlotOptionsComponent implements OnInit {
     if (this.coreTypePlot) {
       this.axisOptions = [...this.axisOptions.filter(option => option.term_id !== event.term_id)];
     } else {
+      // validator.hasOneRemainingAxis(this.plot);
       this.axisOptions = [...this.axisOptions.filter(option => {
+        if (validator.hasOneRemainingAxis(this.plot)) {
+          return option.data_variable !== event.data_variable && option.dimension === undefined;
+        }
         return option.dimension !== event.dimension || option.data_variable !== event.data_variable;
       })];
       this.setConstrainableDimensions();
@@ -206,6 +210,7 @@ export class PlotOptionsComponent implements OnInit {
       this.axisOptions = [
         ...this._axisOptions.filter((option) => {
           for (const [_, val] of Object.entries(this.plot.axes)) {
+            if (validator.hasOneRemainingAxis(this.plot) && option.dimension !== undefined) { return false; }
             if (val.data_var_idx !== undefined && val.data_var_idx === option.dimension_variable) { return false; }
             if (val.dim_idx !== undefined && val.dim_idx === option.dimension) { return false; }
           }
