@@ -36,4 +36,8 @@ export class PlotValidatorService {
     return true;
   }
 
+  public static hasOneRemainingAxis(plot: PlotlyBuilder) {
+    return Object.entries(plot.axes).reduce<number>((acc, [_, axis]) => axis.data ? acc : acc + 1, 0) === 1;
+  }
+
 }
