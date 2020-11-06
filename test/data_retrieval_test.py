@@ -99,3 +99,13 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+
+    # get a brick as CSV
+    def test_get_brick_CSV(self):
+        headers = self.get_authorized_headers()
+        
+        # this method is @auth_ro_required, so should work
+        query = {'format': 'TSV'}
+        r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
+        # print (r.text)
+        self.assertEqual(r.status_code,200)
