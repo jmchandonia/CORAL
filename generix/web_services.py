@@ -22,6 +22,7 @@ import sys
 import pprint
 import math
 import base64
+import subprocess
 
 # from . import services
 # from .brick import Brick
@@ -495,20 +496,19 @@ def do_search():
 @auth_ro_required
 def get_brick(brick_id):
     try:
-        bp = dp._get_type_provider('Brick')
-        br = bp.load(brick_id)
-
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
         if request.method == 'POST':
             query = request.json
             if query is not None and 'format' in query and query['format'] == 'TSV':
-                return_format = TSV
+                return_format = CSV
 
         if return_format == JSON:
+            bp = dp._get_type_provider('Brick')
+            br = bp.load(brick_id)
             res = br.to_dict()
         else:
-            res = br.to_tsv()
+            res = _brick_to_csv(brick_id)
         
         return json.dumps( {
             'status': 'success',
@@ -775,7 +775,17 @@ def _data_var_example(vals, max_items=5):
 def _dim_var_example(vals, max_items=5):
     return '%s%s' % ( 
         ','.join(str(val) for val in vals[0:max_items]), 
-        '...' if len(vals) > max_items else '' ) 
+        '...' if len(vals) > max_items else '' )
+
+def _brick_to_csv(brick_id):
+    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
+    cmd = '/home/clearinghouse/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmdProcess.wait()
+    with open(file_name_csv, 'r') as file:
+        data = file.read()
+    return data
 
 def _create_brick(brick_ds, brick_data):
     # TODO: check "brick type" and "brick name"
