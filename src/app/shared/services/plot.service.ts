@@ -24,6 +24,7 @@ export class PlotService {
   }
 
   deletePlotBuilder() {
+    localStorage.removeItem('mapBuilder');
     localStorage.removeItem('plotlyBuilder');
     delete this.plot;
   }

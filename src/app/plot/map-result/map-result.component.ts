@@ -42,12 +42,13 @@ export class MapResultComponent implements OnInit {
   }
 
   calculateScale(result: any): string {
-    if (!this.mapBuilder.colorField) return '0000FF';
+    // caluculate hex color scale based on numeric value
+    if (!this.mapBuilder.colorField) return '0000FF'; // return red by default
 
     const totalRange = this.highestScale - this.lowestScale;
     const field = this.mapBuilder.colorField;
     let red = 255, blue = 255;
-                                        
+    
     if (result[field] < this.averageScale) {
       blue = 255;
       const difference = result[field] - this.lowestScale;

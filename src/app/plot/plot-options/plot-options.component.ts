@@ -64,11 +64,16 @@ export class PlotOptionsComponent implements OnInit {
       }
     });
 
+    this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    if (this.mapBuilder) {
+      this.isMap = true;
+    }
+
     if (this.coreTypePlot) {
       this.queryBuilder.getCoreTypeProps(this.coreTypeName)
         .subscribe((data: Response<AxisOption>) => {
           this.axisOptions = data.results;
-          this._axisOptions = [...this.axisOptions]
+          this._axisOptions = [...this.axisOptions];
           this.getPlotTypes();
         });
     } else {
@@ -169,6 +174,8 @@ export class PlotOptionsComponent implements OnInit {
         this.mapBuilder.query = this.plot.query;
       }
     } else {
+      delete this.mapBuilder;
+      localStorage.removeItem('mapBuilder');
       // TODO: this is redundant, can be viewed in this.plot.plotType
       this.plot.plotly_layout = event.plotly_layout;
       this.plot.plotly_trace = event.plotly_trace;
