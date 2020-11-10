@@ -1014,12 +1014,10 @@ def generix_brick_metadata(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
     
-    return br.to_json(exclude_data_values=True, typed_values_property_name=False)
+    return br.to_json(exclude_data_values=False, typed_values_property_name=False)
 
 
 def _get_plot_data(query):
-    ''' We will currently support 1D and 2D and only the first data variable '''
-
     bp = dp._get_type_provider('Brick')
     brick_id = query['objectId']
     try:
@@ -2690,10 +2688,11 @@ def generix_core_type_props(obj_name):
             response.append(dict(name=property.name,
                                  scalar_type=property.type,
                                  term_id=property.term_id,
-                                 units=units_term.term_name
+                                 units=units_term.term_name,
+                                 display_name='%s (%s)' % (property.name, units_term.term_name)
                                 ))
         else:
-            response.append(dict(name=property.name, scalar_type=property.type, term_id=property.term_id))
+            response.append(dict(name=property.name, display_name=property.name, scalar_type=property.type, term_id=property.term_id))
     return json.dumps({"results": response})
                
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
