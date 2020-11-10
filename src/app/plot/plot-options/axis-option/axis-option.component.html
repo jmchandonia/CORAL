@@ -36,16 +36,30 @@
                 </div>
               </div>
               <div class="row mt-3">
-                <div class="col-12">
-                  <!-- <button
-                  >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button> -->
-                </div>
-              </div>
-                <div class="row axis-labeler-container" [hidden]="true">
-                  <div class="col-12">
-                    <!-- <app-axis-labeler [dimension]="dimension" [labelPattern]="dimension.label_pattern" [dimVars]="dimVars"></app-axis-labeler> -->
+                <div class="col-6">
+                  <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="axis.show_err_margin" [ngModelOptions]="{standalone: true}" />
+                    <label class="form-check-label p-0">Show margins of error (if applicable)</label>
                   </div>
                 </div>
+                <div class="col-6">
+                  <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="axis.logarithmic" [ngModelOptions]="{standalone: true}" />
+                    <label class="form-check-label p-0">Display axis logarithmically</label>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="row mt-3">
+                <div class="col-12">
+                  <button
+                  >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button>
+                </div>
+              </div> -->
+                <!-- <div class="row axis-labeler-container" [hidden]="true">
+                  <div class="col-12">
+                    <app-axis-labeler [dimension]="dimension" [labelPattern]="dimension.label_pattern" [dimVars]="dimVars"></app-axis-labeler>
+                  </div>
+                </div> -->
           </div>
       </form>
     </div>
