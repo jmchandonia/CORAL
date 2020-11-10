@@ -1,33 +1,37 @@
 <div class="row justify-content-center">
-    <div class="card" style="width: 800px;">
-        <div class="card-header" style="background-color: #eeeeff;">Marker coloring options</div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-12">
-                    <ng-select
-                    *ngIf="colorOptions.length"
-                    class="custom"
-                    [items]="colorOptions"
-                    bindLabel="name"
-                    bindValue="name"
-                    [clearable]="false"
-                    [(ngModel)]="mapBuilder.colorField"
-                    [ngModelOptions]="{standalone: true}"
-                ></ng-select>
+    <div class="col-8">
+        <div class="card mt-4">
+            <div class="card-header" style="background-color: #eeeeff;">Marker coloring options</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <ng-select
+                        *ngIf="options.length"
+                        class="custom"
+                        [items]="options"
+                        bindLabel="name"
+                        bindValue="name"
+                        [clearable]="false"
+                        [(ngModel)]="mapBuilder.colorField"
+                        [ngModelOptions]="{standalone: true}"
+                    ></ng-select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card mt-4" style="width: 800px;">
-        <div class="card" style="width: 800px;">
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card mt-4">
             <div class="card-header" style="background-color: #eeeeff;">Labeling options</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
                         <ng-select
-                        *ngIf="colorOptions.length"
+                        *ngIf="options.length"
                         class="custom"
-                        [items]="labelOptions"
+                        [items]="options"
                         bindLabel="name"
                         bindValue="name"
                         [clearable]="false"

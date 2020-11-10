@@ -107,31 +107,31 @@ export class PlotOptionsComponent implements OnInit {
     }
   }
 
-  onNumberOfAxisChange(event) {
-    if (this.numberOfAxes === 3) {
-      this.plot.axes.z = new Axis();
-    } else {
-      delete this.plot.axes.z;
-    }
-    this.plotTypeData = this.allPlotTypeData.filter(val => {
-      return val.n_dimensions === this.numberOfAxes - 1;
-    })
-  }
-
   getPlotTypes() {
     // TODO: add map types but figure out a way to only show it if theres lat and long
     this.plotService.getPlotTypes()
       .subscribe((data: Response<PlotlyConfig>) => {
-        this.allPlotTypeData = data.results;
-        // only display plot types that match number of numeric variables
-        this.plotTypeData = this.validateAxes(data.results);
+
+        // add map option to plots if the variables include lat and long
+        const includeMap = this.axisOptions.filter(option => {
+          return option.name === 'latitude' || option.name === 'longitude'
+        }).length === 2;
+
+        if (!this.coreTypePlot) {
+          this.plotTypeData = this.validateAxes(data.results, includeMap);
+        } else {
+          this.plotTypeData = includeMap
+            ? data.results
+            : data.results.filter(result => !result.map);
+        }
+        // this should never be true for core types
         if (this.plotTypeData.length === 0) {
           this.unableToPlot = true;
         }
     });
   }
 
-  validateAxes(plotTypes: PlotlyConfig[]) {
+  validateAxes(plotTypes: PlotlyConfig[], includeMap = false) {
     // determine number of properties with numeric scalar in data to be plotted
       const totalLength = this.axisOptions.length;
       // number of variables that are numeric
@@ -140,7 +140,9 @@ export class PlotOptionsComponent implements OnInit {
         return acc;
       }, 0);
       return plotTypes.filter(plotType => {
-        if (plotType.n_dimensions > totalLength) { return false; }
+        if (plotType.n_dimensions > totalLength) return false;
+        if (includeMap && plotType.map) return false;
+        
         // number of plot axes that are required to be numeric
         const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
             if (val.numeric_only) { return acc + 1 }
@@ -163,6 +165,9 @@ export class PlotOptionsComponent implements OnInit {
     if (event.map) {
       this.isMap = true;
       this.mapBuilder = new MapBuilder();
+      if (this.coreTypePlot) {
+        this.mapBuilder.query = this.plot.query;
+      }
     } else {
       // TODO: this is redundant, can be viewed in this.plot.plotType
       this.plot.plotly_layout = event.plotly_layout;
@@ -183,7 +188,6 @@ export class PlotOptionsComponent implements OnInit {
     if (this.coreTypePlot) {
       this.axisOptions = [...this.axisOptions.filter(option => option.term_id !== event.term_id)];
     } else {
-      // validator.hasOneRemainingAxis(this.plot);
       this.axisOptions = [...this.axisOptions.filter(option => {
         if (validator.hasOneRemainingAxis(this.plot)) {
           return option.data_variable !== event.data_variable && option.dimension === undefined;
@@ -234,13 +238,15 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submitPlot() {
-    if (!validator.validPlot(this.plot)) {
-      this.invalid = true;
-      return;
-    }
+
     if (this.isMap) {
       localStorage.setItem('mapBuilder', JSON.stringify(this.mapBuilder));
       this.router.navigate(['/plot/map/result']);
+      return;
+    }
+
+    if (!validator.validPlot(this.plot)) {
+      this.invalid = true;
       return;
     }
 

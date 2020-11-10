@@ -19,6 +19,7 @@ import { MapResultComponent } from './map-result/map-result.component';
 import { AgmCoreModule } from '@agm/core';
 import { AxisOptionComponent } from './plot-options/axis-option/axis-option.component';
 import { PlotConstraintComponent } from './plot-options/plot-constraint/plot-constraint.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @NgModule({
   declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent, AxisOptionComponent, PlotConstraintComponent],
   imports: [
@@ -29,7 +30,8 @@ import { PlotConstraintComponent } from './plot-options/plot-constraint/plot-con
     NgxSpinnerModule,
     NgSelectModule,
     PlotlyViaWindowModule,
-    AgmCoreModule
+    AgmCoreModule,
+    TooltipModule
   ],
   providers: [PlotService, QueryBuilderService]
 })

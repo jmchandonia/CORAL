@@ -1,13 +1,27 @@
 <!-- <p>map-result works!</p>
  -->
 <agm-map
-    *ngIf="results && results.length"
+    #map
     style="height: 600px;"
     [latitude]="averageLat"
     [longitude]="averageLng"
-    [zoom]="13"
+    [fitBounds]="true"
 >
-    <agm-marker *ngFor="let result of results" [latitude]="result.latitude" [longitude]="result.longitude"></agm-marker>
+    <agm-marker
+        *ngFor="let result of results"
+        [agmFitBounds]="true"
+        [latitude]="result.latitude"
+        [longitude]="result.longitude"
+        [tooltip]="'yo does this work'"
+        [title]="result[mapBuilder.labelField]"
+        [iconUrl]="getIconUrl(result.scale)"
+        (mouseOver)="map.lastOpen?.close(); map.lastOpen = infoWindow"
+    >
+    <agm-info-window #infoWindow>
+        {{result.name}}
+    </agm-info-window>
+    </agm-marker>
+    <!-- <agm-circle *ngFor="let result of results" [latitude]="result.latitude" [longitude]="result.longitude" fillColor="#333"></agm-circle> -->
 </agm-map>
 
 <!-- <agm-map></agm-map> -->
