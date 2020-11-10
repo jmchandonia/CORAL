@@ -167,20 +167,19 @@ export class PlotOptionsComponent implements OnInit {
   updatePlotType(event: PlotlyConfig) {
     this.invalid = false; // dont mark all the other forms invalid before anyone tried to fill them out
     this.isMap = false;
+    this.plot.plot_type = event;
     if (event.map) {
       this.isMap = true;
-      this.mapBuilder = new MapBuilder();
+      this.mapBuilder = new MapBuilder(this.coreTypePlot);
       if (this.coreTypePlot) {
         this.mapBuilder.query = this.plot.query;
+      } else {
+        this.mapBuilder.brickId = this.objectId;
       }
     } else {
       delete this.mapBuilder;
       localStorage.removeItem('mapBuilder');
-      // TODO: this is redundant, can be viewed in this.plot.plotType
-      this.plot.plotly_layout = event.plotly_layout;
-      this.plot.plotly_trace = event.plotly_trace;
     }
-    this.plot.plot_type = event;
     if (event.axis_data.z) {
       this.plot.axes.z = new Axis();
     } else {
