@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { AgmMap, AgmInfoWindow } from '@agm/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-result',
@@ -11,7 +12,8 @@ import { AgmMap, AgmInfoWindow } from '@agm/core';
 export class MapResultComponent implements OnInit {
 
   constructor(
-   private queryBuilder: QueryBuilderService
+   private queryBuilder: QueryBuilderService,
+   private router: Router
   ) { }
 
   private mapBuilder: MapBuilder;
@@ -64,7 +66,17 @@ export class MapResultComponent implements OnInit {
   }
 
   getIconUrl(scale) {
-    return `http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|${scale}|000000`
+    return `http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|${scale}|000000`;
+  }
+
+  navigateBack() {
+    if (this.mapBuilder.isCoreType) {
+      this.router.navigate(['/plot/options'], {
+        queryParams: { coreType: this.mapBuilder.query.queryMatch.dataType }
+      })
+    } else {
+      this.router.navigate([`/plot/options/${this.mapBuilder.brickId}`]);
+    }
   }
 
 }
