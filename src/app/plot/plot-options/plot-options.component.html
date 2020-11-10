@@ -101,7 +101,7 @@
     </div>  
   </div>
   <app-map-options
-    *ngIf="mapBuilder && isMap"
+    *ngIf="mapBuilder && isMap && axisOptions"
     [mapBuilder]="mapBuilder"
     [options]="axisOptions"
   ></app-map-options>
