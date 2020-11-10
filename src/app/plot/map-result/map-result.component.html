@@ -1,5 +1,10 @@
-<!-- <p>map-result works!</p>
- -->
+<div class="row">
+    <span class="col-2 offset-1" style="cursor: pointer; color: #00365C;" (click)="navigateBack()">
+        <i class="material-icons back-icon">keyboard_arrow_left</i>
+      Go back
+    </span>
+    <hr style="width: 100%" />
+</div>
 <agm-map
     #map
     style="height: 600px;"
@@ -12,7 +17,6 @@
         [agmFitBounds]="true"
         [latitude]="result.latitude"
         [longitude]="result.longitude"
-        [tooltip]="'yo does this work'"
         [title]="result[mapBuilder.labelField]"
         [iconUrl]="getIconUrl(result.scale)"
         (mouseOver)="map.lastOpen?.close(); map.lastOpen = infoWindow"
@@ -21,7 +25,4 @@
         {{result.name}}
     </agm-info-window>
     </agm-marker>
-    <!-- <agm-circle *ngFor="let result of results" [latitude]="result.latitude" [longitude]="result.longitude" fillColor="#333"></agm-circle> -->
 </agm-map>
-
-<!-- <agm-map></agm-map> -->
