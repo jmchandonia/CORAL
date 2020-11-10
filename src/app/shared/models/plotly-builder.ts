@@ -11,6 +11,8 @@ export class Axis {
     dim_idx?: number;
     dim_var_idx?: number;
     data_var_idx?: number;
+    show_err_margin = true;
+    logarithmic = false;
 }
 
 export class PlotlyBuilder {
