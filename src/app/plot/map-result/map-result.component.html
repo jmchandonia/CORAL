@@ -16,8 +16,10 @@
         [latitude]="result.latitude"
         [longitude]="result.longitude"
         [title]="result[mapBuilder.labelField]"
-        [iconUrl]="getIconUrl(result.scale)"
-        (mouseOver)="map.lastOpen?.close(); map.lastOpen = infoWindow"
+        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
+        (mouseOver)="onMouseOver(result)"
+        (mouseOut)="onMouseOut(result)"
+        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: result[mapBuilder.labelField]}"
     >
     <agm-info-window #infoWindow>
         {{result.name}}
