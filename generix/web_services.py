@@ -518,6 +518,21 @@ def get_brick(brick_id):
     except Exception as e:
         return _err_response(e)        
 
+@app.route("/generix/filter_brick/<brick_id>", methods=['POST'])
+@auth_ro_required
+def filter_brick(brick_id):
+    try:
+        query = request.json
+        res = _filter_brick(brick_id, query)
+        
+        return json.dumps( {
+            'status': 'success',
+            'res': res
+        } )
+    
+    except Exception as e:
+        return _err_response(e)        
+    
 @app.route("/generix/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
@@ -784,6 +799,17 @@ def _brick_to_csv(brick_id):
     cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmdProcess.wait()
     with open(file_name_csv, 'r') as file:
+        data = file.read()
+    return data
+
+def _filter_brick(brick_id, query):
+    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
+    cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' '+json.dumps(query)+'>'+file_name_out
+    sys.stderr.write('running '+cmd+'\n')
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmdProcess.wait()
+    with open(file_name_out, 'r') as file:
         data = file.read()
     return data
 
