@@ -10,11 +10,30 @@ import { AxisOption } from 'src/app/shared/models/plotly-builder';
 })
 export class MapOptionsComponent implements OnInit {
 
+  labelOptions: AxisOption[];
+  colorOptions: AxisOption[];
+
   @Input() mapBuilder: MapBuilder;
-  @Input() options: AxisOption[];
+  @Input() set options(options: AxisOption[]) {
+    this.labelOptions = options;
+    this.colorOptions = options.filter(option => {
+      // only allow user to color pins by numeric value or by category (things like unique ids or names not allowed)
+      const { scalar_type } = option;
+      return scalar_type === 'float' || scalar_type === 'int' || scalar_type === 'date' || scalar_type === 'term';
+    })
+  }
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  setColorOptions(event) {
+    if (!event) {
+      delete this.mapBuilder.colorFieldScalarType;
+      return;
+    }
+    // map will handle coloring pins differently depending on if its a nubmer or a term
+    this.mapBuilder.colorFieldScalarType = event.scalar_type;
   }
 }

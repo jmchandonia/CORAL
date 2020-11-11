@@ -1,4 +1,5 @@
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder'
+import { AxisOption } from 'src/app/shared/models/plotly-builder';
 
 export class MapBuilder {
 
@@ -7,7 +8,8 @@ export class MapBuilder {
     }
 
     query: QueryBuilder;
-    colorField: string = '';
+    colorField: AxisOption;
+    colorFieldScalarType: string;
     labelField: string;
     isCoreType: boolean;
     brickId: string;
