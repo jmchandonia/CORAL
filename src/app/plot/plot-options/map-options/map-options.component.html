@@ -6,14 +6,13 @@
                 <div class="row">
                     <div class="col-12">
                         <ng-select
-                        *ngIf="options.length"
+                        *ngIf="colorOptions.length"
                         class="custom"
-                        [items]="options"
+                        [items]="colorOptions"
                         bindLabel="name"
-                        bindValue="name"
-                        [clearable]="false"
                         [(ngModel)]="mapBuilder.colorField"
                         [ngModelOptions]="{standalone: true}"
+                        (change)="setColorOptions($event)"
                     ></ng-select>
                     </div>
                 </div>
@@ -29,12 +28,11 @@
                 <div class="row">
                     <div class="col-12">
                         <ng-select
-                        *ngIf="options.length"
+                        *ngIf="labelOptions.length"
                         class="custom"
-                        [items]="options"
+                        [items]="labelOptions"
                         bindLabel="name"
                         bindValue="name"
-                        [clearable]="false"
                         [(ngModel)]="mapBuilder.labelField"
                         [ngModelOptions]="{standalone: true}"
                     ></ng-select>

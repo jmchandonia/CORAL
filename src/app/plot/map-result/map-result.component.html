@@ -8,8 +8,6 @@
 <agm-map
     #map
     style="height: 600px;"
-    [latitude]="averageLat"
-    [longitude]="averageLng"
     [fitBounds]="true"
 >
     <agm-marker
@@ -26,3 +24,6 @@
     </agm-info-window>
     </agm-marker>
 </agm-map>
+<!-- <div *ngIf="categories && categories.size">
+    <div *ngFor="let category of categories | keyvalue" [ngStyle]="{backgroundColor : '#' + category.value}" style="width: 100px; height: 100px">{{category.key}} {{category.value}}</div>
+</div> -->
