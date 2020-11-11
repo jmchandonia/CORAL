@@ -37,7 +37,7 @@ export class MapResultComponent implements OnInit {
             this.plotNumericColorMarkers(res.data);
           }
         } else {
-          this.results = res.data.map(result => ({...result, scale: 'FF0000'})); // red markers by default
+          this.results = res.data.map(result => ({...result, scale: 'FF0000', hover: false})); // red markers by default
         }
       });
   }
@@ -50,7 +50,7 @@ export class MapResultComponent implements OnInit {
       }
       const newColor = this.generateRandomColor();
       this.categories.set(result[field], newColor);
-      return {...result, scale: newColor};
+      return {...result, scale: newColor, hover: false};
     });
   }
 
@@ -71,7 +71,7 @@ export class MapResultComponent implements OnInit {
     this.highestScale = Math.max.apply(null, data.map(d => d[field]));
     this.averageScale = data.reduce((a, d) => a + d[field], 0) / data.length;
 
-    this.results = data.map(result => ({...result, scale: this.calculateScale(result)}));
+    this.results = data.map(result => ({...result, scale: this.calculateScale(result), hover: false}));
   }
 
   calculateScale(result: any): string {
@@ -107,6 +107,17 @@ export class MapResultComponent implements OnInit {
     } else {
       this.router.navigate([`/plot/options/${this.mapBuilder.brickId}`]);
     }
+  }
+
+  onMouseOver(marker) {
+    /* TODO: zooming was more performant when the text was switched from an empty value to a 
+      new string but agm-maps uses the string constructor and '' displays as [object Object]
+     */
+    marker.hover = true;
+  }
+
+  onMouseOut(marker) {
+    marker.hover = false;
   }
 
 }
