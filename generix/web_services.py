@@ -23,6 +23,7 @@ import pprint
 import math
 import base64
 from contextlib import redirect_stdout
+import subprocess
 
 # from . import services
 # from .brick import Brick
@@ -500,20 +501,19 @@ def do_search():
 @auth_ro_required
 def get_brick(brick_id):
     try:
-        bp = dp._get_type_provider('Brick')
-        br = bp.load(brick_id)
-
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
         if request.method == 'POST':
             query = request.json
             if query is not None and 'format' in query and query['format'] == 'TSV':
-                return_format = TSV
+                return_format = CSV
 
         if return_format == JSON:
+            bp = dp._get_type_provider('Brick')
+            br = bp.load(brick_id)
             res = br.to_dict()
         else:
-            res = br.to_tsv()
+            res = _brick_to_csv(brick_id)
         
         return json.dumps( {
             'status': 'success',
@@ -523,6 +523,21 @@ def get_brick(brick_id):
     except Exception as e:
         return _err_response(e)        
 
+@app.route("/generix/filter_brick/<brick_id>", methods=['POST'])
+@auth_ro_required
+def filter_brick(brick_id):
+    try:
+        query = request.json
+        res = _filter_brick(brick_id, query)
+        
+        return json.dumps( {
+            'status': 'success',
+            'res': res
+        } )
+    
+    except Exception as e:
+        return _err_response(e)        
+    
 @app.route("/generix/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
@@ -780,7 +795,28 @@ def _data_var_example(vals, max_items=5):
 def _dim_var_example(vals, max_items=5):
     return '%s%s' % ( 
         ','.join(str(val) for val in vals[0:max_items]), 
-        '...' if len(vals) > max_items else '' ) 
+        '...' if len(vals) > max_items else '' )
+
+def _brick_to_csv(brick_id):
+    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
+    cmd = '/home/clearinghouse/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmdProcess.wait()
+    with open(file_name_csv, 'r') as file:
+        data = file.read()
+    return data
+
+def _filter_brick(brick_id, query):
+    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
+    cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' '+json.dumps(query)+'>'+file_name_out
+    sys.stderr.write('running '+cmd+'\n')
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmdProcess.wait()
+    with open(file_name_out, 'r') as file:
+        data = file.read()
+    return data
 
 def _create_brick(brick_ds, brick_data):
     # TODO: check "brick type" and "brick name"
@@ -1852,7 +1888,7 @@ def reposition_spring(nodes, edges, k):
                     G_fixed.append(n['index'])
     for e in edges:
         G.add_edge(e['source'], e['target'], weight=e['thickness'])
-    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')        
+    # sys.stderr.write('graph '+str(nx.node_link_data(G))+'\n')
     nx.nx_agraph.write_dot(G, "/tmp/graph0.dot")
     pos = nx.spring_layout(G, pos=G_pos, fixed=G_fixed, k=k, seed=1)
     for index, xy in pos.items():
@@ -1973,8 +2009,8 @@ def rescale_xy(nodes, edges):
 # if nodes are too close, stretch edges to avoid collisions
 def stretch_avoid_collisions(nodes, edges):
     # how much overlap is needed to move?
-    olapX = 140
-    olapY = 60
+    olapX = 90
+    olapY = 40
     for repeat in range(3): # multiple cycles to avoid secondary effects
         for n1 in nodes:
             if 'unused' in n1 or not 'x' in n1 or not 'y' in n1 or n1['category'] != TYPE_CATEGORY_DYNAMIC:
@@ -2006,8 +2042,8 @@ def stretch_avoid_collisions(nodes, edges):
                         # sys.stderr.write('SOURCE '+str(n3['name'])+' '+str(dX2)+' '+str(dY2)+'\n')
                         # move further along that direction, at least 10 units
                         moves = 10
-                        dX3 = int(moves * (dX2 / (abs(dX2) + abs(dY2))))
-                        dY3 = int(moves * (dY2 / (abs(dX2) + abs(dY2))))
+                        dX3 = moves * (dX2 / (abs(dX2) + abs(dY2)))
+                        dY3 = moves * (dY2 / (abs(dX2) + abs(dY2)))
                         n1['x'] += dX3
                         n1['y'] += dY3
                         # if cluster node, move kids as well
@@ -2018,7 +2054,16 @@ def stretch_avoid_collisions(nodes, edges):
                                     n4['x'] += dX3
                                     n4['y'] += dY3
                         break
-                
+            # make positions integers again
+            n1['x'] = int(n1['x'])
+            n1['y'] = int(n1['y'])
+            if 'isParent' in n1:
+                for i in n1['children']:
+                    n4 = nodes[i]
+                    if 'x' in n4 and 'y' in n4:
+                        n4['x'] = int(n4['x'])
+                        n4['y'] = int(n4['y'])
+            
 # for types graph on front page
 @app.route('/generix/types_graph', methods=['GET','POST'])
 @auth_ro_required
@@ -2081,7 +2126,7 @@ def generix_type_graph():
                     'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
                 }
             )
-            sys.stderr.write('added static node '+td.name+'\n')
+            # sys.stderr.write('added static node '+td.name+'\n')
             nodeMap[td.name] = nodes[index]
             nodeMap[index] = nodes[index]
             index+=1

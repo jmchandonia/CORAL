@@ -29,6 +29,7 @@ class dataAccessAPITest(unittest.TestCase):
     
         # default url for web services
         host = "localhost"
+        # host = "psnov1.lbl.gov"
         port = cls.cns['_WEB_SERVICE']['port']
         https = cls.cns['_WEB_SERVICE']['https']
         if https:
