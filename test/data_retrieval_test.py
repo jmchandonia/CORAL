@@ -109,3 +109,14 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+
+    # get a brick, filtered for graphing
+    def test_get_brick_filtered(self):
+        headers = self.get_authorized_headers()
+        
+        # this method is @auth_ro_required, so should work
+        query = {"variable":["1","2"], "constatnt":[{"var":"3","value":1}]}
+        r = requests.post(self.url+'filter_brick/Brick0000003', headers=headers, json=query, verify=False)
+        print (r.text)
+        self.assertEqual(r.status_code,200)
+        
