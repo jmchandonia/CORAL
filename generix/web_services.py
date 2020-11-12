@@ -22,6 +22,7 @@ import sys
 import pprint
 import math
 import base64
+from contextlib import redirect_stdout
 import subprocess
 
 # from . import services
@@ -59,6 +60,12 @@ _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
 _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
+
+def _print(*argv):
+    with open('/var/log/g_ws_.txt', 'w') as f:
+        with redirect_stdout(f):
+            for arg in argv:
+                print(arg)
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -218,8 +225,6 @@ def generix_refs_to_core_objects():
         return _ok_response(res)
     except Exception as e:
         return _err_response(e)
-
-
 
 @app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
@@ -1045,12 +1050,10 @@ def generix_brick_metadata(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
     
-    return br.to_json(exclude_data_values=True, typed_values_property_name=False)
+    return br.to_json(exclude_data_values=False, typed_values_property_name=False)
 
 
 def _get_plot_data(query):
-    ''' We will currently support 1D and 2D and only the first data variable '''
-
     bp = dp._get_type_provider('Brick')
     brick_id = query['objectId']
     try:
@@ -1096,6 +1099,105 @@ def _get_plot_data(query):
                     res[axis] = br.data_vars[0].values.T.tolist()
 
     return res
+
+@app.route('/generix/plotly_core_data', methods=["POST"])
+def generix_plotly_core_data():
+    body = request.json
+    try:
+        rs = _get_core_plot_data(body['query'])
+        layout = {
+            'x': 800,
+            'y': 600,
+            'title': body['config']['title'],
+            **body['plotly_layout']
+        }
+        if 'x' in body['axisTitles']:
+            if body['axisTitles']['x']['showTitle']:
+                layout['xaxis'] = {
+                    'title': body['axisTitles']['x']['title']
+                }
+        if 'y' in body['axisTitles']:
+            if body['axisTitles']['y']['showTitle']:
+                layout['yaxis'] = {
+                    'title': body['axisTitles']['y']['title']
+                }
+
+        x_field = body['data']['x']['name']
+        y_field = body['data']['y']['name']
+        data = [{
+            'x': [i for i in rs[x_field]],
+            'y': [i for i in rs[y_field]],
+            **body['plotly_trace']
+        }]
+
+        return _ok_response({
+            'layout': layout,
+            'data': data
+        })
+    except Exception as e:
+        return _err_response(e)
+
+    return json.dumps({'test': 'testing core type plot'}), 200
+
+def _get_core_plot_data(search_data):
+    query_match = search_data['queryMatch'] # change field name here
+    provider = dp._get_type_provider(query_match['dataModel'])
+    q = provider.query()
+
+    for criterion in query_match['params']:
+        (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+        q.has({prop_name: {operation: prop_value}})
+
+    if 'processesUp' in search_data:
+        for criterion in search_data['processesUp']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_output_of_process({prop_name: {operation: prop_value}})
+            # hack to search all people in labs
+            if operation == '=' and prop_name == 'person' and 'term' in criterion:
+                children = svs['ontology'].enigma.find_id(criterion['term']).children
+                for x in children:
+                    q.is_output_of_process({prop_name: {operation: x.term_name}})
+                    
+        if 'searchAllProcessesUp' in search_data:
+            if search_data['searchAllProcessesUp'] == True:
+                q.search_all_up(True)
+        if 'searchAllProcessesDown' in search_data:
+            if search_data['searchAllProcessesDown'] == True:
+                q.search_all_down(True)
+
+    # Do processesDown
+    if 'processesDown' in search_data:
+        for criterion in search_data['processesDown']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            q.is_input_of_process({prop_name: {operation: prop_value}})
+
+    # Do connectsUpTo
+    if 'connectsUpTo' in search_data:
+        connects_up_to = search_data['connectsUpTo']
+        params = {}
+        for criterion in connects_up_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params[prop_name] = {operation: prop_value}
+
+        q.linked_up_to(connects_up_to['dataModel'],  params )
+
+    # Do connectsDownTo
+    if 'connectsDownTo' in search_data:
+        connects_down_to = search_data['connectsDownTo']
+        params = {}
+        for criterion in connects_down_to['params']:
+            (prop_name, prop_value, operation) = _extract_criterion_props(criterion)
+            params[prop_name] = {operation: prop_value}
+
+        q.linked_down_to(connects_down_to['dataModel'],  params )
+
+    # do immediate parent
+    if 'parentProcesses' in search_data:
+        q.immediate_parent(search_data['parentProcesses'])
+
+    # do the search
+    res_df = q.find().to_df()
+    return res_df
 
 @app.route('/generix/plotly_data', methods=['POST'])
 @auth_required
@@ -1593,7 +1695,7 @@ def line_thickness(n):
 # assign x, y to all static and intermediate nodes.
 # just assign y to dynamic nodes, and don't process any of their children
 def assign_xy_static(nodes, usedPos, i, x, y):
-    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
     # skip if already done
     if 'y' in nodes[i]:
         # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
@@ -1991,11 +2093,11 @@ def generix_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    if cacheKey in cache:
-        sys.stderr.write('cache hit '+cacheKey+'\n')
-        return  _ok_response(cache[cacheKey])
-    else:
-        sys.stderr.write('cache miss '+cacheKey+'\n')
+    # if cacheKey in cache:
+    #    sys.stderr.write('cache hit '+cacheKey+'\n')
+    #    return  _ok_response(cache[cacheKey])
+    #else:
+    #    sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
@@ -2154,7 +2256,7 @@ def generix_type_graph():
                 if n.startswith('SDT_'):
                     n = n[4:]
                     if n not in nodeMap:
-                        # sys.stderr.write('adding static node '+n+'\n')
+                        sys.stderr.write('adding static node '+n+'\n')
                         nodes.append(
                             {
                                 'index': index,
@@ -2179,7 +2281,7 @@ def generix_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
-            # sys.stderr.write('adding intermediate node\n')
+            sys.stderr.write('adding intermediate node\n')
             nodes.append(
                 {
                     'index': intermed,
@@ -2255,7 +2357,7 @@ def generix_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                # sys.stderr.write('adding dynamic node '+to+'\n')
+                sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -2338,7 +2440,7 @@ def generix_type_graph():
         MAX_DYNAMIC_NODES = 2
         if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
             num = 0
-            # sys.stderr.write('adding cluster node\n')
+            sys.stderr.write('adding cluster node\n')
             newDDTNodes = []
             for i in linkedDDTNodes:
                 num += nodes[i]['count']
@@ -2617,6 +2719,26 @@ def append_with_children(res,children,term_dict,term_id):
         sys.stderr.write("process child: "+child+"\n")
         append_with_children(res,children,term_dict,child)
     return
+
+@app.route('/generix/core_type_props/<obj_name>', methods=['GET'])
+@auth_ro_required
+def generix_core_type_props(obj_name):
+    """ Gets list of property names as axis options for plotting """
+    core_type = svs['typedef'].get_type_def(obj_name)
+    response = []
+    for field in core_type.property_names:
+        property = core_type.property_def(field)
+        if (property.units_term_id is not None):
+            units_term = svs['ontology'].units.find_id(property.units_term_id)
+            response.append(dict(name=property.name,
+                                 scalar_type=property.type,
+                                 term_id=property.term_id,
+                                 units=units_term.term_name,
+                                 display_name='%s (%s)' % (property.name, units_term.term_name)
+                                ))
+        else:
+            response.append(dict(name=property.name, display_name=property.name, scalar_type=property.type, term_id=property.term_id))
+    return json.dumps({"results": response})
                
 @app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
 @auth_ro_required
