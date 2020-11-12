@@ -133,6 +133,10 @@ export class PlotOptionsComponent implements OnInit {
         if (this.plotTypeData.length === 0) {
           this.unableToPlot = true;
         }
+
+        if (this.isMap) {
+          this.plot.plot_type = this.plotTypeData[this.plotTypeData.length - 1];
+        }
     });
   }
 
