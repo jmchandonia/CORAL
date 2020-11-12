@@ -115,7 +115,7 @@ class dataRetrievalTest(unittest.TestCase):
         headers = self.get_authorized_headers()
         
         # this method is @auth_ro_required, so should work
-        query = {"variable":["1","2"], "constatnt":[{"var":"3","value":1}]}
+        query = {"constant":{"2/1":5,"2/4":2,"3":1}, "variable":["1/1", "2/2", "2/3"]}
         r = requests.post(self.url+'filter_brick/Brick0000003', headers=headers, json=query, verify=False)
         print (r.text)
         self.assertEqual(r.status_code,200)
