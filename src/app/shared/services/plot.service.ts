@@ -46,6 +46,10 @@ export class PlotService {
     return this.http.get(environment.baseURL + '/plot_core_type_metadata');
   }
 
+  getCorePlot() {
+    return this.http.post(`${environment.baseURL}/plotly_core_data`, this.getPlotlyBuilder());
+  }
+
   getDynamicPlot(id: string) {
     const plot = this.getPlotlyBuilder();
     const variable = [`${plot.axes.x.dim_idx + 1}/1`];
