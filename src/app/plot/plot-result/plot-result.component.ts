@@ -3,6 +3,7 @@ import { PlotService } from 'src/app/shared/services/plot.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
+import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
 
 @Component({
   selector: 'app-plot-result',
@@ -28,6 +29,7 @@ export class PlotResultComponent implements OnInit {
     width: 800,
     height: 600,
   };
+  plot: PlotlyBuilder;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -40,6 +42,7 @@ export class PlotResultComponent implements OnInit {
         this.coreTypeName = queryParams['coreType'];
       }
     })
+    this.plot = JSON.parse(localStorage.getItem('plotlyBuilder'));
     this.getPlotData();
   }
 
@@ -53,9 +56,37 @@ export class PlotResultComponent implements OnInit {
           const plotlyResult = [];
           const results = JSON.parse(data.res);
           results['values-x'].forEach((value, idx) => {
-            plotlyResult.push({x: value, y: results['values-y'][idx], mode: 'lines'});
+            plotlyResult.push({
+              x: value,
+              y: results['values-y'][idx],
+              mode: 'lines', // TODO: this should be dynamic according to plot
+              name: results['series-labels'][idx],
+              ...this.plot.plot_type.plotly_trace
+            });
           });
           this.data = plotlyResult;
+          this.layout = {
+            ...this.plot.plot_type.plotly_layout,
+            legend: {
+              orientation: 'h',
+              y: -0.5
+            },
+            title: this.plot.title,
+            xaxis: {
+              autorange: true,
+              title: this.plot.axes.x.show_title ? this.plot.axes.x.title : '',
+            },
+            yaxis: {
+              autorange: true,
+              title: this.plot.axes.y.show_title ? this.plot.axes.y.title : ''
+            }
+          }
+          if (this.plot.axes.x.logarithmic) {
+            this.layout.xaxis.type = 'log';
+          }
+          if (this.plot.axes.y.logarithmic) {
+            this.layout.xaxis.type = 'log';
+          }
           this.loading = false;
           this.spinner.hide();
         });
