@@ -19,6 +19,7 @@
                             [disabled]="constraint.constrainByMean"
                             class="custom"
                             [items]="constraintTypes"
+                            (change)="setSeriesLabel($event, v)"
                             [(ngModel)]="v.type">
                         </ng-select>
                     </div>
@@ -35,6 +36,25 @@
                             (change)="setSelectedValue($event, v)"
                             [class.select-error]="invalid && v.type === 'flatten' && !v.flatten_value"
                         ></ng-select>
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="v.type === 'series'">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                Choose the format you would like your series trace to be displayed. use '#VAR' to indicate where you would like the variable value to go. Note that multiple series traces will group these formats together.
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" [class.button-error]="v.invalid_label_pattern" class="form-control" (focusout)="validateFormat(v)" [(ngModel)]="v.series_label_pattern" [ngModelOptions]="{standalone: true}" />
+                            </div>
+                        </div>
+                        <div class="row mt-2" *ngIf="v.invalid_label_pattern">
+                            <div class="col-12">
+                                <div class="alert alert-danger">You must use '#VAR' in your format in order for distinct values to be displayed properly</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

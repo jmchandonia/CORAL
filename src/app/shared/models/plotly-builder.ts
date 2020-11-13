@@ -95,6 +95,8 @@ export class ConstraintVariable {
 
     type: 'mean' | 'series' | 'flatten';
     flatten_value: number | string;
+    series_label_pattern: string;
+    invalid_label_pattern = false;
 }
 
 export class AxisOption { // list of items to be populated in dropdown list of axis menu
