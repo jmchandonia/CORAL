@@ -150,7 +150,7 @@ export class PlotOptionsComponent implements OnInit {
       }, 0);
       return plotTypes.filter(plotType => {
         if (plotType.n_dimensions > totalLength) return false;
-        if (includeMap && plotType.map) return false;
+        if (!includeMap && plotType.map) return false;
         
         // number of plot axes that are required to be numeric
         const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
