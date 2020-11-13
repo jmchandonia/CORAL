@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Constraint, ConstraintType } from 'src/app/shared/models/plotly-builder';
+import { Constraint, ConstraintType, ConstraintVariable } from 'src/app/shared/models/plotly-builder';
 import { DimensionContext } from 'src/app/shared/models/object-metadata';
 
 @Component({
@@ -17,6 +17,10 @@ export class PlotConstraintComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  setSelectedValue(event, dimVar: ConstraintVariable) {
+    dimVar.selected_value = dimVar.unique_values.indexOf(event as never); // TODO: get rid of type never
   }
 
 }

@@ -244,7 +244,7 @@ export class PlotOptionsComponent implements OnInit {
         this.plot.axes.z?.dim_idx !== idx;
       })
     ];
-    this.plot.setDimensionConstraints(this.constrainableDimensions);
+    this.plot.setDimensionConstraints(this.constrainableDimensions, this.metadata);
   }
 
   submitPlot() {

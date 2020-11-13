@@ -47,7 +47,20 @@ export class PlotResultComponent implements OnInit {
     window.scroll(0, 0);
     this.loading = true;
     this.spinner.show();
-    this.plotService.getPlotlyResult()
+    if (!this.corePlot) {
+      this.plotService.getDynamicPlot(this.objectId)
+        .subscribe((data: any) => {
+          const plotlyResult = [];
+          const results = JSON.parse(data.res);
+          results['values-x'].forEach((value, idx) => {
+            plotlyResult.push({x: value, y: results['values-y'][idx], mode: 'lines'});
+          });
+          this.data = plotlyResult;
+          this.loading = false;
+          this.spinner.hide();
+        });
+    }
+    // this.plotService.getPlotlyResult()
       // .subscribe((res: any) => {
       //   const { data, layout } = res.results;
       //   this.data = data;
