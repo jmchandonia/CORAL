@@ -21,9 +21,9 @@
         (mouseOut)="onMouseOut(result)"
         [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: result[mapBuilder.labelField]}"
     >
-    <agm-info-window #infoWindow>
-        {{result.name}}
-    </agm-info-window>
+        <agm-info-window #infoWindow>
+            {{result.name}}
+        </agm-info-window>
     </agm-marker>
 </agm-map>
 <!-- <div *ngIf="categories && categories.size">
