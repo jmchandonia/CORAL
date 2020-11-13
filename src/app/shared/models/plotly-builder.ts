@@ -1,6 +1,6 @@
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PlotlyConfig } from 'src/app/shared/models/plotly-config'; 
-import { DimensionContext, TypedValue } from './object-metadata';
+import { DimensionContext, TypedValue, ObjectMetadata } from './object-metadata';
 
 export class Axis {
     data: AxisOption;
@@ -36,9 +36,12 @@ export class PlotlyBuilder {
     axes: Axes = new Axes();
     constraints: Constraint[] = [];
 
-    setDimensionConstraints(dimensions: DimensionContext[]) {
+    setDimensionConstraints(dimensions: DimensionContext[], metadata?: ObjectMetadata) {
         this.constraints = [
-            ...dimensions.map(dimension => new Constraint(dimension))
+            ...dimensions.map((dimension, idx) => new Constraint(
+                dimension,
+                metadata ? metadata.dim_context.indexOf(dimension) : idx
+            ))
         ];
     }
 }
@@ -61,10 +64,12 @@ export enum ConstraintType {
 
 export class Constraint {
 
-    constructor(dimension: DimensionContext) {
+    constructor(dimension: DimensionContext, dimIdx: number) {
+        this.dim_idx = dimIdx;
         this.dimension = dimension;
-        this.variables = dimension.typed_values.map(value => new ConstraintVariable(value));
+        this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
     }
+    dim_idx: number;
     dimension: DimensionContext;
     variables: ConstraintVariable[];
     constrain_by_mean = false;
@@ -72,7 +77,8 @@ export class Constraint {
 
 export class ConstraintVariable {
 
-    constructor(value: TypedValue) {
+    constructor(value: TypedValue, index: number) {
+        this.dim_var_idx = index;
         this.value = value;
         this.unique_values = this.value.values.values.reduce((acc, value) => {
             if (!acc.includes(value)) {
@@ -82,6 +88,8 @@ export class ConstraintVariable {
         }, []);
     }
 
+    dim_var_idx: number;
+    selected_value: number;
     value: TypedValue;
     unique_values: number[] | string[]; // remove repeating instances of the same value for dropdown
 

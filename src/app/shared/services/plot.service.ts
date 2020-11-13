@@ -46,4 +46,32 @@ export class PlotService {
     return this.http.get(environment.baseURL + '/plot_core_type_metadata');
   }
 
+  getDynamicPlot(id: string) {
+    const plot = this.getPlotlyBuilder();
+    const variable = [`${plot.axes.x.dim_idx + 1}/1`];
+    const constant = {};
+    plot.constraints.forEach(constraint => {
+      const dim_idx = constraint.dim_idx + 1;
+      constraint.variables.forEach(dimVar => {
+        const dim_var_idx = dimVar.dim_var_idx + 1;
+        if (dimVar.type === 'flatten') {
+          if (constraint.variables.length === 1) {
+            constant[`${dim_idx}`] = dimVar.selected_value + 1;
+          } else {
+            constant[`${dim_idx}/${dim_var_idx}`] = dimVar.selected_value + 1;
+          }
+        } else if (dimVar.type === 'series') {
+          variable.push(`${dim_idx}/${dim_var_idx}`);
+        }
+      });
+    });
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, {constant, variable});
+  }
+
+  testPlotlyResult(id: string) {
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, {
+      'constant': {'2/1': 5, '2/4': 2, '3': 1},
+      'variable': ['1/1', '2/2', '2/3']
+    });
+  }
 }
