@@ -90,36 +90,16 @@ export class PlotResultComponent implements OnInit {
           this.loading = false;
           this.spinner.hide();
         });
+    } else {
+      this.plotService.getCorePlot()
+        .subscribe((res: any) => {
+          const { data, layout } = res.results;
+          this.data = data;
+          this.layout = layout;
+          this.loading = false;
+          this.spinner.hide();
+        });
     }
-    // this.plotService.getPlotlyResult()
-      // .subscribe((res: any) => {
-      //   const { data, layout } = res.results;
-      //   this.data = data;
-      //   this.layout = layout;
-      //   this.loading = false;
-      //   this.spinner.hide();
-      // });
-    // if (this.corePlot) {
-    //   this.plotService.getCorePlotlyData(this.coreTypePlotBuilder)
-    //     .subscribe((res: any) => {
-    //       const { data, layout } = res.results;
-    //       this.data = data;
-    //       this.layout = layout;
-    //       this.loading = false;
-    //       this.spinner.hide();
-    //     })
-    // } else {
-    //   this.plotService.getPlotlyData()
-    //     .subscribe((res: any) => {
-    //       const { data, layout } = res.results;
-    //       this.data = data;
-    //       this.layout = layout;
-    //       if (this.layout.yaxis) { this.layout.yaxis.automargin = true; }
-    //       if (this.layout.xaxis) { this.layout.xaxis.automargin = true; }
-    //       this.loading = false;
-    //       this.spinner.hide();
-    //   });
-    // }
   }
 
   onGoBack() {
