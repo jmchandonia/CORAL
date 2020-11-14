@@ -810,13 +810,14 @@ def _brick_to_csv(brick_id):
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
-    cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\' > '+file_name_out
+    cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     sys.stderr.write('running '+cmd+'\n')
-    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
-    cmdProcess.wait()
-    with open(file_name_out, 'r') as file:
-        data = file.read()
-    return data
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    try:
+        data = json.loads(output)
+        return data
+    except Exception as e:
+        raise Exception('FAILED brick filter: '+str(output.stdout))
 
 def _create_brick(brick_ds, brick_data):
     # TODO: check "brick type" and "brick name"
