@@ -1109,26 +1109,26 @@ def generix_plotly_core_data():
         layout = {
             'x': 800,
             'y': 600,
-            'title': body['config']['title'],
-            **body['plotly_layout']
+            'title': body['title'],
+            **body['plot_type']['plotly_layout']
         }
-        if 'x' in body['axisTitles']:
-            if body['axisTitles']['x']['showTitle']:
+        if 'x' in body['axes']:
+            if body['axes']['x']['show_title']:
                 layout['xaxis'] = {
-                    'title': body['axisTitles']['x']['title']
+                    'title': body['axes']['x']['title']
                 }
-        if 'y' in body['axisTitles']:
-            if body['axisTitles']['y']['showTitle']:
+        if 'y' in body['axes']:
+            if body['axes']['y']['show_title']:
                 layout['yaxis'] = {
-                    'title': body['axisTitles']['y']['title']
+                    'title': body['axes']['y']['title']
                 }
 
-        x_field = body['data']['x']['name']
-        y_field = body['data']['y']['name']
+        x_field = body['axes']['x']['data']['name']
+        y_field = body['axes']['y']['data']['name']
         data = [{
             'x': [i for i in rs[x_field]],
             'y': [i for i in rs[y_field]],
-            **body['plotly_trace']
+            **body['plot_type']['plotly_trace']
         }]
 
         return _ok_response({
