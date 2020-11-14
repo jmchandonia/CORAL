@@ -117,6 +117,28 @@ class dataRetrievalTest(unittest.TestCase):
         # this method is @auth_ro_required, so should work
         query = {"constant":{"2/1":5,"2/4":2,"3":1}, "variable":["1/1", "2/2", "2/3"]}
         r = requests.post(self.url+'filter_brick/Brick0000003', headers=headers, json=query, verify=False)
+        # print (r.text)
+        self.assertEqual(r.status_code,200)
+        
+
+    # get a brick, filtered for graphing
+    def test_get_brick_filtered_2(self):
+        headers = self.get_authorized_headers()
+        
+        # this method is @auth_ro_required, so should work
+        query = {"constant":{"1":11,"4":1}, "variable":["2", "3"]}
+        r = requests.post(self.url+'filter_brick/Brick0000004', headers=headers, json=query, verify=False)
         print (r.text)
+        self.assertEqual(r.status_code,200)
+        
+
+    # fail due to index too high
+    def test_get_brick_filtered_3(self):
+        headers = self.get_authorized_headers()
+        
+        # this method is @auth_ro_required, so should work
+        query = {"constant":{"1":11,"4":1}, "variable":["2", "7"]}
+        r = requests.post(self.url+'filter_brick/Brick0000004', headers=headers, json=query, verify=False)
+        # print (r.text)
         self.assertEqual(r.status_code,200)
         
