@@ -814,11 +814,10 @@ def _filter_brick(brick_id, query):
     sys.stderr.write('running '+cmd+'\n')
     output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     try:
-        data = json.loads(output)
+        data = json.loads(output.stdout)
         return data
     except Exception as e:
         raise Exception('FAILED brick filter: '+str(output.stdout))
-
 def _create_brick(brick_ds, brick_data):
     # TODO: check "brick type" and "brick name"
     brick_dims = brick_ds['dimensions']
