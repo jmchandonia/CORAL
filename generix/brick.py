@@ -480,10 +480,16 @@ class Brick:
     @property
     def name(self):
         return self.__get_attr('__name')
+
+    def set_name(self, name):
+        self.__xds.attrs['__name'] = name
     
     @property
     def description(self):
         return self.__get_attr('__description')
+
+    def set_description(self, description):
+        self.__xds.attrs['__description'] = description
     
     @property
     def type_term(self):
@@ -1128,7 +1134,7 @@ class Brick:
             'date_start': datetime.datetime.today().strftime('%Y-%m-%d'),
             'date_end': datetime.datetime.today().strftime('%Y-%m-%d'),
             'input_objects': input_obj_ids,
-            'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK+'-'+str(self.type_term().term_id)[3:], brick_data_holder.id)]
+            'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK+'-'+str(self.type_term.term_id)[3:], brick_data_holder.id)]
         }
         services.workspace.save_process(ProcessDataHolder(process_data)) 
 
