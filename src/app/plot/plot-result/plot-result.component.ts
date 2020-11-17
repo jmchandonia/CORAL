@@ -53,8 +53,8 @@ export class PlotResultComponent implements OnInit {
     if (!this.corePlot) {
       this.plotService.getDynamicPlot(this.objectId)
         .subscribe((data: any) => {
-          const plotlyResult = [];
-          const results = JSON.parse(data.res);
+          const results = data.res;
+          const plotlyResult = [];  
           results['values-x'].forEach((value, idx) => {
             plotlyResult.push({
               x: value,

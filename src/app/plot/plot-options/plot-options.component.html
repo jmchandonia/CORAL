@@ -86,7 +86,7 @@
     ></app-axis-option>
   </div>
   <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length">
-    <div *ngIf="plot.constraints.length" class="col-8">
+    <div *ngIf="plot.plot_type && plot.constraints.length" class="col-8">
       <div class="alert alert-warning">
         This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plot_type.name}}.
         please select the dimensions below to be constrained.
@@ -119,4 +119,4 @@
       </button>
     </div>
   </div>
-  <!-- <pre *ngIf="plot">{{plot | json}}</pre> -->
+  <pre *ngIf="plot">{{plot | json}}</pre>
