@@ -36,8 +36,12 @@ export class PlotValidatorService {
     return true;
   }
 
-  public static hasOneRemainingAxis(plot: PlotlyBuilder) {
+  public static hasOneRemainingAxis(plot: PlotlyBuilder): boolean {
     return Object.entries(plot.axes).reduce<number>((acc, [_, axis]) => axis.data ? acc : acc + 1, 0) === 1;
+  }
+
+  public static hasDataVarsInPlot(plot: PlotlyBuilder): boolean {
+    return Object.entries(plot.axes).filter(([_, axis]) => axis.data?.data_variable !== undefined).length > 0;
   }
 
 }
