@@ -20,7 +20,6 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
   public objectId: string;
-  public previousUrl: string;
   public coreTypePlot = false;
   public numberOfAxes = 2; // currently just for core types
   private coreTypeName: string;
@@ -42,8 +41,6 @@ export class PlotOptionsComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-
-    this.previousUrl = this.queryBuilder.getPreviousUrl();
 
     // get object id
     this.route.params.subscribe(params => {
@@ -84,7 +81,10 @@ export class PlotOptionsComponent implements OnInit {
         this.metadata = result; ///
         this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
         this.axisOptions = [];
-        this.constrainableDimensions = this.metadata.dim_context;
+        // this.setConstrainableDimensions();
+        if (!validator.validPlot(this.plot)) {
+          this.setConstrainableDimensions();
+        }
         result.dim_context.forEach((dim, i) => {
           dim.typed_values.forEach((dimVar, j) => {
             this.axisOptions.push({
@@ -199,7 +199,7 @@ export class PlotOptionsComponent implements OnInit {
       this.axisOptions = [...this.axisOptions.filter(option => option.term_id !== event.term_id)];
     } else {
       this.axisOptions = [...this.axisOptions.filter(option => {
-        if (validator.hasOneRemainingAxis(this.plot)) {
+        if (validator.hasOneRemainingAxis(this.plot) && !validator.hasDataVarsInPlot(this.plot)) {
           return option.data_variable !== event.data_variable && option.dimension === undefined;
         }
         return option.dimension !== event.dimension || option.data_variable !== event.data_variable;
@@ -224,7 +224,10 @@ export class PlotOptionsComponent implements OnInit {
       this.axisOptions = [
         ...this._axisOptions.filter((option) => {
           for (const [_, val] of Object.entries(this.plot.axes)) {
-            if (validator.hasOneRemainingAxis(this.plot) && option.dimension !== undefined) { return false; }
+            if (validator.hasOneRemainingAxis(this.plot) && option.dimension !== undefined) {
+              // only show data variables if theres one axis left and no data vars have been chosen yet
+              return validator.hasDataVarsInPlot(this.plot);
+            }
             if (val.data_var_idx !== undefined && val.data_var_idx === option.dimension_variable) { return false; }
             if (val.dim_idx !== undefined && val.dim_idx === option.dimension) { return false; }
           }
@@ -271,8 +274,11 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   onGoBack(id) {
-    const url = this.previousUrl ? this.previousUrl : `/search/result/brick/${id}`;
-    this.router.navigate([url]);
+    if (!this.coreTypePlot) {
+      this.router.navigate([`/search/result/brick/${id}`]);
+    } else {
+      this.router.navigate(['/search/result']); // TODO: make sure localStorage works with queries from plotly builder
+    }
   }
 
 }
