@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PlotlyBuilder, Constraint } from 'src/app/shared/models/plotly-builder';
+import { MapBuilder } from 'src/app/shared/models/map-builder';
 @Injectable({
   providedIn: 'root'
 })
@@ -48,6 +49,10 @@ export class PlotService {
 
   getCorePlot() {
     return this.http.post(`${environment.baseURL}/plotly_core_data`, this.getPlotlyBuilder());
+  }
+
+  getDynamicMap(mapBuilder: MapBuilder) {
+    return this.http.post(`${environment.baseURL}/brick_map/${mapBuilder.brickId}`, mapBuilder);
   }
 
   getDynamicPlot(id: string) {
