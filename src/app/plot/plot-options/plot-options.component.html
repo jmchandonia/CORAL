@@ -85,7 +85,7 @@
       [invalid]="invalid"
     ></app-axis-option>
   </div>
-  <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length">
+  <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length && !isMap">
     <div *ngIf="plot.plot_type && plot.constraints.length" class="col-8">
       <div class="alert alert-warning">
         This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plot_type.name}}.
@@ -104,6 +104,7 @@
     *ngIf="mapBuilder && isMap && axisOptions"
     [mapBuilder]="mapBuilder"
     [options]="axisOptions"
+    [dimensions]="constrainableDimensions"
   ></app-map-options>
   <div class="row justify-content-center mt-4" *ngIf="invalid">
     <div class="col-8">
@@ -119,4 +120,3 @@
       </button>
     </div>
   </div>
-  <pre *ngIf="plot">{{plot | json}}</pre>

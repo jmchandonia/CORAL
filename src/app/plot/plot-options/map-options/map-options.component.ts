@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { CoreTypeAxis } from 'src/app/shared/models/core-type-plot-builder';
 import { AxisOption } from 'src/app/shared/models/plotly-builder';
+import { DimensionContext } from 'src/app/shared/models/object-metadata';
 
 @Component({
   selector: 'app-map-options',
@@ -12,7 +13,9 @@ export class MapOptionsComponent implements OnInit {
 
   labelOptions: AxisOption[];
   colorOptions: AxisOption[];
+  public invalid = false;
 
+  @Input() dimensions: DimensionContext[];
   @Input() mapBuilder: MapBuilder;
   @Input() set options(options: AxisOption[]) {
     this.labelOptions = options;
@@ -35,5 +38,9 @@ export class MapOptionsComponent implements OnInit {
     }
     // map will handle coloring pins differently depending on if its a nubmer or a term
     this.mapBuilder.colorFieldScalarType = event.scalar_type;
+    if (!this.mapBuilder.isCoreType) {
+      this.mapBuilder.setConstraints(this.dimensions, event.dimension, event.data_variable);
+    }
   }
+
 }

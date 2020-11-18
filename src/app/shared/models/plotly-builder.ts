@@ -64,11 +64,13 @@ export enum ConstraintType {
 
 export class Constraint {
 
-    constructor(dimension: DimensionContext, dimIdx: number) {
+    constructor(dimension: DimensionContext, dimIdx: number, disabled = false) {
         this.dim_idx = dimIdx;
         this.dimension = dimension;
         this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+        this.disabled = disabled;
     }
+    disabled = false;
     dim_idx: number;
     dimension: DimensionContext;
     variables: ConstraintVariable[];

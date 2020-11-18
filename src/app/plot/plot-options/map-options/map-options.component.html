@@ -52,3 +52,21 @@
         </div>
     </div>
 </div>
+<div class="row justify-content-center mt-4" *ngIf="!mapBuilder.isCoreType && mapBuilder.constraints?.length">
+    <div class="col-8">
+      <div class="alert alert-warning">
+        This dataset requires constraints to be applied it can be plotted as a map.
+        please select the dimensions below to be constrained. Greyed out options are dimensions that
+        you do not need to constrain.
+      </div>
+      <app-plot-constraint
+        *ngFor="let constraint of mapBuilder.constraints; let idx = index;"
+        [disabled]="constraint.disabled"
+        [constraint]="constraint"
+        [dimensions]="dimensions"
+        [index]="idx"
+        [invalid]="invalid"
+      ></app-plot-constraint>
+    </div>  
+  </div>
+  <!-- <pre>{{mapBuilder | json}}</pre> -->

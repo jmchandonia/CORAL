@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { AgmMap, AgmInfoWindow } from '@agm/core';
 import { Router } from '@angular/router';
+import { PlotService } from 'src/app/shared/services/plot.service';
+import { Response } from 'src/app/shared/models/response';
 
 @Component({
   selector: 'app-map-result',
@@ -12,8 +14,10 @@ import { Router } from '@angular/router';
 export class MapResultComponent implements OnInit {
 
   constructor(
-   private queryBuilder: QueryBuilderService,
-   private router: Router
+   private queryBuilder: QueryBuilderService, // TODO: get results method should be in plot service, not query builder
+   private router: Router,
+   private plotService: PlotService,
+   private chRef: ChangeDetectorRef
   ) { }
 
   private mapBuilder: MapBuilder;
@@ -28,7 +32,8 @@ export class MapResultComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
-    this.queryBuilder.getMapSearchResults(this.mapBuilder.query)
+    if (this.mapBuilder.isCoreType) {
+      this.queryBuilder.getMapSearchResults(this.mapBuilder.query)
       .subscribe(res => {
         if (this.mapBuilder.colorField) {
           if (this.mapBuilder.colorFieldScalarType === 'term') {
@@ -40,6 +45,22 @@ export class MapResultComponent implements OnInit {
           this.results = res.data.map(result => ({...result, scale: 'FF0000', hover: false})); // red markers by default
         }
       });
+    } else {
+      this.plotService.getDynamicMap(this.mapBuilder)
+        .subscribe((res: Response<any>) => {
+          if (this.mapBuilder.colorField) {
+            if (this.mapBuilder.colorFieldScalarType === 'term') {
+              this.plotCategoryColorMarkers(res.results);
+            } else {
+              this.plotNumericColorMarkers(res.results);
+            }
+          } else {
+            this.results = res.results.map(result => ({...result, scale: 'FF0000', hover: false}));
+          }
+          // this.results = res.results;
+          // this.chRef.detectChanges();
+        });
+    }
   }
 
   plotCategoryColorMarkers(data: any[]) {

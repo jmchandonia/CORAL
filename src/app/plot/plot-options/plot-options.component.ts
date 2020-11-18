@@ -119,7 +119,7 @@ export class PlotOptionsComponent implements OnInit {
 
         // add map option to plots if the variables include lat and long
         const includeMap = this.axisOptions.filter(option => {
-          return option.name === 'latitude' || option.name === 'longitude'
+          return option.name.toLowerCase() === 'latitude' || option.name.toLowerCase() === 'longitude'
         }).length === 2;
 
         if (!this.coreTypePlot) {

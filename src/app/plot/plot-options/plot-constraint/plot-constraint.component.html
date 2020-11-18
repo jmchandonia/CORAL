@@ -1,5 +1,5 @@
 <div class="card mt-4">
-    <div class="card-header" style="background-color: #eeeeff;">
+    <div class="card-header" [ngStyle]="{background: disabled ? '#eee' : '#eeeeff'}">
         <span class="float-left">{{constraint.dimension.data_type.oterm_name}}</span>
         <!-- <div class="form-check float-right m-0">
             <input type="checkbox" class="form-check-input" [(ngModel)]="constraint.constrainByMean" />
@@ -16,7 +16,7 @@
                     <div class="col-6">
                         <ng-select
                             [class.select-error]="invalid && !v.type"
-                            [disabled]="constraint.constrainByMean"
+                            [disabled]="constraint.constrainByMean || disabled"
                             class="custom"
                             [items]="constraintTypes"
                             (change)="setSeriesLabel($event, v)"
@@ -30,6 +30,7 @@
                     </div>
                     <div class="col-6">
                         <ng-select
+                            [disabled]="disabled"
                             class="custom"
                             [items]="v.unique_values"
                             [(ngModel)]="v.flatten_value"
@@ -47,7 +48,7 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-12">
-                                <input type="text" [class.button-error]="v.invalid_label_pattern" class="form-control" (focusout)="validateFormat(v)" [(ngModel)]="v.series_label_pattern" [ngModelOptions]="{standalone: true}" />
+                                <input type="text" [disabled]="disabled" [class.button-error]="v.invalid_label_pattern" class="form-control" (focusout)="validateFormat(v)" [(ngModel)]="v.series_label_pattern" [ngModelOptions]="{standalone: true}" />
                             </div>
                         </div>
                         <div class="row mt-2" *ngIf="v.invalid_label_pattern">
