@@ -11,6 +11,7 @@ export class PlotConstraintComponent implements OnInit {
 
   @Input() constraint: Constraint;
   @Input() invalid = false;
+  @Input() disabled = false;
 
   constraintTypes: string[] = Object.values(ConstraintType);
 

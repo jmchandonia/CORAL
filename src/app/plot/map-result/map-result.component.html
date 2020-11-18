@@ -15,12 +15,11 @@
         [agmFitBounds]="true"
         [latitude]="result.latitude"
         [longitude]="result.longitude"
-        [title]="result[mapBuilder.labelField]"
-        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
         (mouseOver)="onMouseOver(result)"
         (mouseOut)="onMouseOut(result)"
-        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: result[mapBuilder.labelField]}"
-    >
+        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
+        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField] : ''}"
+        >
         <agm-info-window #infoWindow>
             {{result.name}}
         </agm-info-window>
