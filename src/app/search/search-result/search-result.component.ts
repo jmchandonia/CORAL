@@ -87,7 +87,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   getImageUrls() {
-    this.table.bodyComponent.temp.forEach(async (row) => {
+    this.table?.bodyComponent.temp.forEach(async (row) => {
       if (row.link && this.isImage(row.link, 'link') && !row._imgSrc) {
         row._imgSrc = await this.queryBuilder.getImageSrc(row.link.substring(1));
         this.chRef.detectChanges();
