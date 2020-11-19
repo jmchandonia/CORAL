@@ -21,7 +21,7 @@ export class MapResultComponent implements OnInit {
    private chRef: ChangeDetectorRef
   ) { }
 
-  private mapBuilder: MapBuilder;
+  mapBuilder: MapBuilder;
   results: any[];
   _results: any[]; // contains all results including results that are hidden
   lowestScale: number;
