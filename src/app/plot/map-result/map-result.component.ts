@@ -5,6 +5,7 @@ import { AgmMap, AgmInfoWindow } from '@agm/core';
 import { Router } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Response } from 'src/app/shared/models/response';
+import { Options as SliderOptions } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-map-result',
@@ -22,10 +23,17 @@ export class MapResultComponent implements OnInit {
 
   private mapBuilder: MapBuilder;
   results: any[];
+  _results: any[]; // contains all results including results that are hidden
   lowestScale: number;
   highestScale: number;
   averageScale: number;
   categories: Map<string, string> = new Map();
+  public sliderOptions: SliderOptions;
+  public showSlider = false;
+  averageLong: number;
+  averageLat: number;
+  showNullValues = true;
+  hasNullValues = false;
 
   @ViewChild('map') map: AgmMap;
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
@@ -35,6 +43,7 @@ export class MapResultComponent implements OnInit {
     if (this.mapBuilder.isCoreType) {
       this.queryBuilder.getMapSearchResults(this.mapBuilder.query)
       .subscribe(res => {
+        this.setMapCenter(res.data);
         if (this.mapBuilder.colorField) {
           if (this.mapBuilder.colorFieldScalarType === 'term') {
             this.plotCategoryColorMarkers(res.data);
@@ -43,11 +52,13 @@ export class MapResultComponent implements OnInit {
           }
         } else {
           this.results = res.data.map(result => ({...result, scale: 'FF0000', hover: false})); // red markers by default
+          this._results = this.results;
         }
       });
     } else {
       this.plotService.getDynamicMap(this.mapBuilder)
         .subscribe((res: Response<any>) => {
+          this.setMapCenter(res.results);
           if (this.mapBuilder.colorField) {
             if (this.mapBuilder.colorFieldScalarType === 'term') {
               this.plotCategoryColorMarkers(res.results);
@@ -56,11 +67,17 @@ export class MapResultComponent implements OnInit {
             }
           } else {
             this.results = res.results.map(result => ({...result, scale: 'FF0000', hover: false}));
+            this._results = this.results;
           }
           // this.results = res.results;
           // this.chRef.detectChanges();
         });
     }
+  }
+
+  setMapCenter(data) {
+    this.averageLat = data.reduce((a, d) => a + d.latitude, 0) / data.length;
+    this.averageLong = data.reduce((a, d) => a + d.longitude, 0) / data.length;
   }
 
   plotCategoryColorMarkers(data: any[]) {
@@ -73,6 +90,7 @@ export class MapResultComponent implements OnInit {
       this.categories.set(result[field], newColor);
       return {...result, scale: newColor, hover: false};
     });
+    this._results = this.results;
   }
 
   generateRandomColor(): string {
@@ -93,6 +111,8 @@ export class MapResultComponent implements OnInit {
     this.averageScale = data.reduce((a, d) => a + d[field], 0) / data.length;
 
     this.results = data.map(result => ({...result, scale: this.calculateScale(result), hover: false}));
+    this._results = this.results;
+    this.setSliderOptions();
   }
 
   calculateScale(result: any): string {
@@ -101,6 +121,10 @@ export class MapResultComponent implements OnInit {
     const totalRange = this.highestScale - this.lowestScale;
     const field = this.mapBuilder.colorField.name;
     let red = 255, blue = 255;
+    if (result[field] === null) { 
+      this.hasNullValues = true; // TODO: this is a side effect
+      return 'AAA';
+     }
     
     if (result[field] < this.averageScale) {
       blue = 255;
@@ -114,6 +138,28 @@ export class MapResultComponent implements OnInit {
       blue = Math.min(Math.floor((difference / (totalRange/2)) * 255), 255);
     }
     return `${red.toString(16).toUpperCase().padStart(2, '0')}00${blue.toString(16).toUpperCase().padStart(2, '0')}`;
+  }
+
+  setSliderOptions() {
+    this.sliderOptions = {
+      floor: this.lowestScale,
+      ceil: this.highestScale,
+      step: (this.highestScale - this.lowestScale) / this.results.length,
+      getPointerColor: () => '#00489B',
+      selectionBarGradient: {
+        from: '#0000FF',
+        to: '#FF0000'
+      }
+    }
+    this.showSlider = true;
+  }
+
+  filterMarkersWithSlider(event) {
+    const field = this.mapBuilder.colorField.name;
+    this.results = this._results.filter(result => {
+      if (result[field] === null) return true;
+      return result[field] > event.value && result[field] < event.highValue;
+    })
   }
 
   getIconUrl(scale) {
