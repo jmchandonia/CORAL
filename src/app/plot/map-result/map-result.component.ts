@@ -27,7 +27,7 @@ export class MapResultComponent implements OnInit {
   lowestScale: number;
   highestScale: number;
   averageScale: number;
-  categories: Map<string, string> = new Map();
+  categories: Map<string, any> = new Map();
   public sliderOptions: SliderOptions;
   public showSlider = false;
   averageLong: number;
@@ -84,13 +84,23 @@ export class MapResultComponent implements OnInit {
     const field = this.mapBuilder.colorField.name;
     this.results = data.map(result => {
       if (this.categories.has(result[field])) {
-        return {...result, scale: this.categories.get(result[field])}
+        return {...result, scale: this.categories.get(result[field]).color}
       }
       const newColor = this.generateRandomColor();
-      this.categories.set(result[field], newColor);
+      this.categories.set(result[field], {color: newColor, display: true});
       return {...result, scale: newColor, hover: false};
     });
     this._results = this.results;
+  }
+
+  markerShouldBeDisplayed(marker) {
+    if (this.mapBuilder.colorFieldScalarType === 'term') {
+      return this.categories.get(marker[this.mapBuilder.colorField.name]).display
+    }
+    if (this.mapBuilder.colorField) {
+      return !this.hasNullValues || (marker[this.mapBuilder.colorField.name] !== null || this.showNullValues)
+    }
+    return true;
   }
 
   generateRandomColor(): string {

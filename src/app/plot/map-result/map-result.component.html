@@ -10,23 +10,9 @@
     style="height: 550px;"
     [fitBounds]="true"
 >
-    <!-- <agm-marker
-        *ngFor="let result of results"
-        [agmFitBounds]="true"
-        [latitude]="result.latitude"
-        [longitude]="result.longitude"
-        (mouseOver)="onMouseOver(result)"
-        (mouseOut)="onMouseOut(result)"
-        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
-        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField] : ''}"
-        >
-        <agm-info-window #infoWindow>
-            {{result.name}}
-        </agm-info-window>
-    </agm-marker> -->
     <ng-container *ngFor="let result of results">
         <agm-marker
-        *ngIf="!hasNullValues || (result[mapBuilder.colorField.name] !== null || showNullValues)"
+        *ngIf="markerShouldBeDisplayed(result)"
         [agmFitBounds]="true"
         [latitude]="result.latitude"
         [longitude]="result.longitude"
@@ -58,6 +44,31 @@
         [options]="sliderOptions"
         (userChangeEnd)="filterMarkersWithSlider($event)"
     ></ngx-slider>
+    </div>
+</div>
+<div class="row mt-2 pr-4 pl-4" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType === 'term'">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <p>Filter markers by {{mapBuilder.colorField.name}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card-group col-12">
+                <div class="col-2" *ngFor="let category of categories | keyvalue">
+                    <div class="card" style="border: 0px!important">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <div class="form-check offset-2 d-flex align-items-center">
+                                    <input type="checkbox" [(ngModel)]="category.value.display" class="form-check-input" />
+                                    <label class="form-check-label badge badge-pill" style="position: relative; top: 3px;" [ngStyle]="{backgroundColor: '#' + category.value.color}">{{category.key}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <!-- <div *ngIf="categories && categories.size">
