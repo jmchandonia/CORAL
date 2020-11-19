@@ -20,6 +20,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AxisOptionComponent } from './plot-options/axis-option/axis-option.component';
 import { PlotConstraintComponent } from './plot-options/plot-constraint/plot-constraint.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 @NgModule({
   declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent, AxisOptionComponent, PlotConstraintComponent],
   imports: [
@@ -31,7 +32,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     NgSelectModule,
     PlotlyViaWindowModule,
     AgmCoreModule,
-    TooltipModule
+    TooltipModule,
+    NgxSliderModule
   ],
   providers: [PlotService, QueryBuilderService]
 })
