@@ -7,10 +7,10 @@
 </div>
 <agm-map
     #map
-    style="height: 600px;"
+    style="height: 550px;"
     [fitBounds]="true"
 >
-    <agm-marker
+    <!-- <agm-marker
         *ngFor="let result of results"
         [agmFitBounds]="true"
         [latitude]="result.latitude"
@@ -23,8 +23,43 @@
         <agm-info-window #infoWindow>
             {{result.name}}
         </agm-info-window>
+    </agm-marker> -->
+    <ng-container *ngFor="let result of results">
+        <agm-marker
+        *ngIf="!hasNullValues || (result[mapBuilder.colorField.name] !== null || showNullValues)"
+        [agmFitBounds]="true"
+        [latitude]="result.latitude"
+        [longitude]="result.longitude"
+        (mouseOver)="onMouseOver(result)"
+        (mouseOut)="onMouseOut(result)"
+        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
+        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField] : ''}"
+        >
+        <agm-info-window #infoWindow>
+            {{result.name}}
+        </agm-info-window>
     </agm-marker>
+    </ng-container>
 </agm-map>
+<div class="row justify-content-center mt-2" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType !== 'term'">
+    <div class="col-3" *ngIf="hasNullValues">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="showNullValues" /> 
+            <label class="form-check-label">Show Null Values (Grey)</label>
+        </div>
+    </div>
+    <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'">
+        <label>Filter by {{mapBuilder.colorField.name}}</label>
+        <ngx-slider
+        #slider
+        *ngIf="showSlider"
+        [(value)]="lowestScale"
+        [(highValue)]="highestScale"
+        [options]="sliderOptions"
+        (userChangeEnd)="filterMarkersWithSlider($event)"
+    ></ngx-slider>
+    </div>
+</div>
 <!-- <div *ngIf="categories && categories.size">
     <div *ngFor="let category of categories | keyvalue" [ngStyle]="{backgroundColor : '#' + category.value}" style="width: 100px; height: 100px">{{category.key}} {{category.value}}</div>
 </div> -->
