@@ -61,7 +61,11 @@ export class PlotOptionsComponent implements OnInit {
       }
     });
 
-    this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    // this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    this.mapBuilder = Object.assign(
+      new MapBuilder(this.coreTypePlot),
+      JSON.parse(localStorage.getItem('mapBuilder'))
+    );
     if (this.mapBuilder) {
       this.isMap = true;
     }
