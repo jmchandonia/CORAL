@@ -10,54 +10,25 @@ export class MapBuilder {
 
     query: QueryBuilder;
     colorField: AxisOption;
+    labelField: AxisOption;
     colorFieldScalarType: string;
-    labelField: string;
     isCoreType: boolean;
     brickId: string;
     constraints: Constraint[];
+    dimWithCoords: number;
 
-    setConstraints(dims: DimensionContext[], dimIdx: number, dataVarIdx: number) {
-        // if (dataVarIdx !== undefined) {
-            this.constraints = dims.map((dim, idx) => {
-                for (const dimVar of dim.typed_values) {
-                    if (
-                        dimVar.value_no_units.toLowerCase() === 'latitude'
-                        || dimVar.value_no_units.toLowerCase() === 'longitude'
-                    ) {
-                        return new Constraint(dim, idx, true);
-                    }
-                }
-                if (dataVarIdx !== undefined) return new Constraint(dim, idx, false);
-                return new Constraint(dim, idx, idx > dimIdx);
-            })
-        // }
+    setConstraints(dims: DimensionContext[]): void {
+        // we only need to constraint dimensions for data vars
+        // the only other option available to the user is options from the same dimension (wouldnt need constraining)
+        this.constraints = dims.map((dim, idx) => {
+            if (idx === this.dimWithCoords) return new Constraint(dim, idx, true);
+            return new Constraint(dim, idx, this.colorField?.data_variable === undefined && this.labelField?.data_variable === undefined);
+        });
     }
 
-    // setConstraints(dims: DimensionContext[], dimIdx: number, dataVarIdx: number)  {
-        
-    //     if (dataVarIdx !== undefined) {
-    //         // if were plotting data value then we need constraints on all dimensions
-    //         this.constraints = dims
-    //             .filter(dim => {
-    //                 // we always want to remove the dimension that contains lat and long (it will be plotted as a series)
-    //                 for (const dimVar of dim.typed_values) {
-    //                     if (dimVar.value_no_units.toLowerCase() === 'latitude') return false;
-    //                     if (dimVar.value_no_units.toLowerCase() === 'longitude') return false;
-    //                 }
-    //                 return true;
-    //             })
-    //             .map((dim, idx) => new Constraint(dim, idx));
-    //     } else {
-    //         // otherwise we only need constraints up to the highest dimension from the color or label
-    //         this.constraints = dims
-    //             .filter((dim, idx) => {
-    //                 for (const dimVar of dim.typed_values) {
-    //                     if (dimVar.value_no_units.toLowerCase() === 'latitude') return false;
-    //                     if (dimVar.value_no_units.toLowerCase() === 'longitude') return false;
-    //                 }
-    //                 return idx <= dimIdx
-    //             })
-    //             .map((dim, idx) => new Constraint(dim, idx));
-    //     }
-    // }
+    setLatLongDimension(options: AxisOption[]): void {
+        this.dimWithCoords = options.find(option => {
+            return option.name.toLowerCase() === 'latitude' || option.name.toLowerCase() === 'longitude';
+        }).dimension;
+    }
 }
