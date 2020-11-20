@@ -1044,6 +1044,69 @@ def generix_brick_dimension(brick_id, dim_index):
 
     return _ok_response(res)
 
+@app.route('/generix/brick_map/<brick_id>', methods=['POST'])
+@auth_required
+def generix_brick_map_data(brick_id):
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    body = request.json
+    dim_constraints = []
+    if body['constrainingRequired']:
+        for constraint in body['constraints']:
+            if constraint['dim_idx'] == 0:
+                continue
+            for dv in constraint['variables']:
+                # TODO: this method only works for non combinatorial brick dimensions
+                if dv['type'] == 'flatten':
+                    dim_constraints.append(dv['selected_value'])
+                    break
+        if 'data_variable' in body['colorField']:
+            color_values = []
+            cfi = body['colorField']['data_variable']
+            for i in range(br.dims[0].size):
+                data_vars = br.data_vars[cfi].values[i]
+                for j in dim_constraints:
+                    data_vars = data_vars[j]
+                color_values.append(data_vars)
+
+    if 'data_variable' in body['labelField']:
+        label_values = []
+        lfi = body['labelField']['data_variable']
+        for i in range(br.dims[0].size):
+            data_vars = br.data_vars[lfi].values[i]
+            for j in dim_constraints:
+                data_vars = data_vars[j]
+            label_values.append(data_vars)
+        
+    # assume for now Lat and Long vars reside in first dimension
+    for idx, dv in enumerate(br.dims[0].vars):
+        if dv.name == 'Latitude':
+            lat_idx = idx
+        if dv.name == 'Longitude':
+            long_idx = idx
+
+    if 'dimension_variable' in body['colorField']:
+        dv_cf = body['colorField']['dimension_variable']
+    if 'dimension_variable' in body['labelField']:
+        dv_lf = body['labelField']['dimension_variable']
+
+    res = []
+    for i in range(br.dims[0].size):
+        item = dict(
+            latitude=br.dims[0].vars[lat_idx].values[i],
+            longitude=br.dims[0].vars[long_idx].values[i]
+        )
+        if 'dimension_variable' in body['colorField']:
+            item[body['colorField']['name']] = br.dims[0].vars[dv_cf].values[i]
+        elif color_values:
+            item[body['colorField']['name']] = color_values[i]
+        if 'dimension_variable' in body['labelField']:
+            item[body['labelField']['name']] = str(br.dims[0].vars[dv_lf].values[i])
+        elif label_values:
+            item[body['labelField']['name']] = str(label_values[i])
+        res.append(item)
+    return _ok_response(res)
+
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
 @auth_required
 def generix_brick_metadata(brick_id):
