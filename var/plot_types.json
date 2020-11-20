@@ -121,7 +121,7 @@
             "image_tag": "<i class=\"material-icons dropdown-icon\">gradient</i>",
             "n_dimensions": 2,
             "plotly_trace": {
-                "type": "heatmap"
+                "type": "heatmapgl"
             },
             "plotly_layout": {},
             "axis_blocks": [
@@ -138,11 +138,11 @@
             "axis_data": {
                 "x": {
                     "title": "X axis",
-                    "numeric_only": true
+                    "numeric_only": false
                 },
                 "y": {
                     "title": "Y axis",
-                    "numeric_only": true
+                    "numeric_only": false
                 },
                 "z": {
                     "title": "Series",
