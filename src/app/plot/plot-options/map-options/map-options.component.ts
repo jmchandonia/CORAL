@@ -18,9 +18,14 @@ export class MapOptionsComponent implements OnInit {
   @Input() dimensions: DimensionContext[];
   @Input() mapBuilder: MapBuilder;
   @Input() set options(options: AxisOption[]) {
-    this.labelOptions = options;
+    this.labelOptions = options.filter(option => {
+      return option.data_variable !== undefined || option.dimension === this.mapBuilder.dimWithCoords;
+    });
     this.colorOptions = options.filter(option => {
       // only allow user to color pins by numeric value or by category (things like unique ids or names not allowed)
+      if (option.data_variable === undefined && option.dimension !== this.mapBuilder.dimWithCoords) {
+        return false;
+      }
       const { scalar_type } = option;
       return scalar_type === 'float' || scalar_type === 'int' || scalar_type === 'date' || scalar_type === 'term';
     })
@@ -34,12 +39,18 @@ export class MapOptionsComponent implements OnInit {
   setColorOptions(event) {
     if (!event) {
       delete this.mapBuilder.colorFieldScalarType;
-      return;
+    } else {
+      // map will handle coloring pins differently depending on if its a nubmer or a term
+      this.mapBuilder.colorFieldScalarType = event.scalar_type;
     }
-    // map will handle coloring pins differently depending on if its a nubmer or a term
-    this.mapBuilder.colorFieldScalarType = event.scalar_type;
     if (!this.mapBuilder.isCoreType) {
-      this.mapBuilder.setConstraints(this.dimensions, event.dimension, event.data_variable);
+      this.mapBuilder.setConstraints(this.dimensions);
+    }
+  }
+
+  setLabelOptions(event) {
+    if (!this.mapBuilder.isCoreType) {
+      this.mapBuilder.setConstraints(this.dimensions);
     }
   }
 

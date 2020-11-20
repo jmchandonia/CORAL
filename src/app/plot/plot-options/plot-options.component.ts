@@ -81,7 +81,6 @@ export class PlotOptionsComponent implements OnInit {
         this.metadata = result; ///
         this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
         this.axisOptions = [];
-        // this.setConstrainableDimensions();
         if (!validator.validPlot(this.plot)) {
           this.setConstrainableDimensions();
         }
@@ -179,6 +178,7 @@ export class PlotOptionsComponent implements OnInit {
         this.mapBuilder.query = this.plot.query;
       } else {
         this.mapBuilder.brickId = this.objectId;
+        this.mapBuilder.setLatLongDimension(this.axisOptions);
       }
     } else {
       delete this.mapBuilder;

@@ -42,9 +42,9 @@
                         class="custom"
                         [items]="labelOptions"
                         bindLabel="name"
-                        bindValue="name"
                         [(ngModel)]="mapBuilder.labelField"
                         [ngModelOptions]="{standalone: true}"
+                        (change)="setLabelOptions($event)"
                     ></ng-select>
                     </div>
                 </div>
@@ -69,4 +69,3 @@
       ></app-plot-constraint>
     </div>  
   </div>
-  <!-- <pre>{{mapBuilder | json}}</pre> -->
