@@ -16,6 +16,7 @@ export class MapBuilder {
     brickId: string;
     constraints: Constraint[];
     dimWithCoords: number;
+    constrainingRequired = false; // for dynamic type dimensions
 
     setConstraints(dims: DimensionContext[]): void {
         // we only need to constraint dimensions for data vars
@@ -24,6 +25,7 @@ export class MapBuilder {
             if (idx === this.dimWithCoords) return new Constraint(dim, idx, true);
             return new Constraint(dim, idx, this.colorField?.data_variable === undefined && this.labelField?.data_variable === undefined);
         });
+        this.constrainingRequired = this.constraints.reduce((acc, c) => +c.disabled, 0) === 0;
     }
 
     setLatLongDimension(options: AxisOption[]): void {
