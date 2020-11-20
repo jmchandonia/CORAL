@@ -19,7 +19,7 @@
         (mouseOver)="onMouseOver(result)"
         (mouseOut)="onMouseOut(result)"
         [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
-        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField] : ''}"
+        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField.name] : ' '}"
         >
         <agm-info-window #infoWindow>
             {{result.name}}
