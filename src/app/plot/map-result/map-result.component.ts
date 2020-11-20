@@ -69,8 +69,6 @@ export class MapResultComponent implements OnInit {
             this.results = res.results.map(result => ({...result, scale: 'FF0000', hover: false}));
             this._results = this.results;
           }
-          // this.results = res.results;
-          // this.chRef.detectChanges();
         });
     }
   }
