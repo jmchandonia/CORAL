@@ -60,12 +60,11 @@ export class PlotOptionsComponent implements OnInit {
         this.plot.title = this.coreTypeName;
       }
     });
-
-    // this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
-    this.mapBuilder = Object.assign(
-      new MapBuilder(this.coreTypePlot),
-      JSON.parse(localStorage.getItem('mapBuilder'))
-    );
+    
+    const mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    if (mapBuilder) {
+      this.mapBuilder = Object.assign(new MapBuilder(this.coreTypePlot),mapBuilder);
+    }
     if (this.mapBuilder) {
       this.isMap = true;
     }
@@ -111,6 +110,9 @@ export class PlotOptionsComponent implements OnInit {
         });
         this._axisOptions = [...this.axisOptions];
         this.getPlotTypes();
+        if (this.mapBuilder?.dimWithCoords === undefined) {
+          this.mapBuilder.setLatLongDimension(this.axisOptions);
+        }
       });
     }
   }
