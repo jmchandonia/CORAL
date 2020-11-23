@@ -60,7 +60,7 @@ export class PlotOptionsComponent implements OnInit {
         this.plot.title = this.coreTypeName;
       }
     });
-    
+
     const mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
     if (mapBuilder) {
       this.mapBuilder = Object.assign(new MapBuilder(this.coreTypePlot),mapBuilder);
@@ -95,7 +95,8 @@ export class PlotOptionsComponent implements OnInit {
               display_name: dimVar.value_with_units,
               term_id: dimVar.value_type.oterm_ref,
               dimension: i,
-              dimension_variable: j
+              dimension_variable: j,
+              units: dimVar.value_units
             });
           });
         });
@@ -105,12 +106,13 @@ export class PlotOptionsComponent implements OnInit {
             name: dataVar.value_no_units,
             display_name: dataVar.value_with_units,
             term_id: dataVar.value_type.oterm_ref,
-            data_variable: i
+            data_variable: i,
+            units: dataVar.value_units
           });
         });
         this._axisOptions = [...this.axisOptions];
         this.getPlotTypes();
-        if (this.mapBuilder?.dimWithCoords === undefined) {
+        if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
           this.mapBuilder.setLatLongDimension(this.axisOptions);
         }
       });

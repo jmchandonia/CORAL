@@ -34,6 +34,8 @@ export class MapResultComponent implements OnInit {
   averageLat: number;
   showNullValues = true;
   hasNullValues = false;
+  colorSignificantDigits: number;
+  labelSignificantDigits: number;
 
   @ViewChild('map') map: AgmMap;
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
@@ -59,6 +61,12 @@ export class MapResultComponent implements OnInit {
       this.plotService.getDynamicMap(this.mapBuilder)
         .subscribe((res: Response<any>) => {
           this.setMapCenter(res.results);
+          if (this.mapBuilder.colorField.scalar_type === 'float') {
+            this.colorSignificantDigits = this.caluculateSignificantDigits(res.results, 'color');
+          }
+          if (this.mapBuilder.colorField.scalar_type === 'float') {
+            this.labelSignificantDigits = this.caluculateSignificantDigits(res.results,'label_text');
+          }
           if (this.mapBuilder.colorField) {
             if (this.mapBuilder.colorFieldScalarType === 'term') {
               this.plotCategoryColorMarkers(res.results);
@@ -81,11 +89,11 @@ export class MapResultComponent implements OnInit {
   plotCategoryColorMarkers(data: any[]) {
     const field = this.mapBuilder.colorField.name;
     this.results = data.map(result => {
-      if (this.categories.has(result[field])) {
-        return {...result, scale: this.categories.get(result[field]).color}
+      if (this.categories.has(result.color)) {
+        return {...result, scale: this.categories.get(result.color).color}
       }
       const newColor = this.generateRandomColor();
-      this.categories.set(result[field], {color: newColor, display: true});
+      this.categories.set(result.color, {color: newColor, display: true});
       return {...result, scale: newColor, hover: false};
     });
     this._results = this.results;
@@ -114,13 +122,59 @@ export class MapResultComponent implements OnInit {
   plotNumericColorMarkers(data: any[]) {
     const field = this.mapBuilder.colorField.name;
 
-    this.lowestScale = Math.min.apply(null, data.map(d => d[field]));
-    this.highestScale = Math.max.apply(null, data.map(d => d[field]));
-    this.averageScale = data.reduce((a, d) => a + d[field], 0) / data.length;
+    this.lowestScale = +Math.min.apply(null, data.map(d => d.color)).toFixed(this.colorSignificantDigits);
+    this.highestScale = +Math.max.apply(null, data.map(d => d.color)).toFixed(this.colorSignificantDigits);
+    this.averageScale = data.reduce((a, d) => a + d.color, 0) / data.length;
 
-    this.results = data.map(result => ({...result, scale: this.calculateScale(result), hover: false}));
+    // this.results = data.map(result => ({...result, scale: this.calculateScale(result), hover: false}));
+    this.results = data.map(result => {
+      const item: any = {
+        scale: this.calculateScale(result),
+        hover: false,
+        latitude: result.latitude,
+        longitude: result.longitude
+      }
+      try {
+        if (this.mapBuilder.colorFieldScalarType !== 'term' && this.colorSignificantDigits !== undefined) {
+          item.color = +result.color.toFixed(this.colorSignificantDigits)
+        } else {
+          item.color = result.color;
+        }
+      } catch(e) {
+        item.color = null;
+      }
+      try {
+        if (this.mapBuilder.labelField.scalar_type === 'float' && this.labelSignificantDigits !== undefined) {
+          const numString = parseFloat(result.label_text).toFixed(this.labelSignificantDigits);
+          item.label_text = isNaN(parseFloat(result.label_text)) ? 'null' : numString;
+        } else {
+          item.label_text = result.label_text;
+        }
+      } catch(e) {
+        item.label_text = 'Null';
+      }
+      return item;
+  })
     this._results = this.results;
     this.setSliderOptions();
+  }
+
+  caluculateSignificantDigits(data, field): number {
+
+    let smallest = Infinity;
+    data.sort((a, b) => a.color - b.color).forEach((d, i) => {
+      if (i === 0) return;
+      const difference = d.color - data[i - 1].color;
+      if (difference < smallest && difference !== 0) {
+        smallest = difference;
+      }
+    });
+    let idx = 0;
+    const string = smallest.toString().split('.')[1];
+    while (string[idx] === '0') {
+      idx++;
+    }
+    return idx;
   }
 
   calculateScale(result: any): string {
@@ -129,20 +183,20 @@ export class MapResultComponent implements OnInit {
     const totalRange = this.highestScale - this.lowestScale;
     const field = this.mapBuilder.colorField.name;
     let red = 255, blue = 255;
-    if (result[field] === null) { 
+    if (result.color === null) { 
       this.hasNullValues = true; // TODO: this is a side effect
       return 'AAA';
      }
     
-    if (result[field] < this.averageScale) {
+    if (result.color < this.averageScale) {
       blue = 255;
-      const difference = result[field] - this.lowestScale;
+      const difference = result.color - this.lowestScale;
       red = Math.min(Math.floor((difference / (totalRange / 2)) * 255), 255);
     }
 
-    if (result[field] > this.averageScale) {
+    if (result.color > this.averageScale) {
       red = 255;
-      const difference = this.highestScale - result[field];
+      const difference = this.highestScale - result.color;
       blue = Math.min(Math.floor((difference / (totalRange/2)) * 255), 255);
     }
     return `${red.toString(16).toUpperCase().padStart(2, '0')}00${blue.toString(16).toUpperCase().padStart(2, '0')}`;
@@ -165,8 +219,8 @@ export class MapResultComponent implements OnInit {
   filterMarkersWithSlider(event) {
     const field = this.mapBuilder.colorField.name;
     this.results = this._results.filter(result => {
-      if (result[field] === null) return true;
-      return result[field] > event.value && result[field] < event.highValue;
+      if (result.color === null) return true;
+      return result.color > event.value && result.color < event.highValue;
     })
   }
 
