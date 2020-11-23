@@ -19,7 +19,7 @@
         (mouseOver)="onMouseOver(result)"
         (mouseOut)="onMouseOut(result)"
         [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
-        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result[mapBuilder.labelField.name] : ' '}"
+        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result.label_text : ' '}"
         >
         <agm-info-window #infoWindow>
             {{result.name}}
@@ -35,7 +35,7 @@
         </div>
     </div>
     <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'">
-        <label>Filter by {{mapBuilder.colorField.name}}</label>
+        <label>Filter by {{mapBuilder.colorField.name}} ({{mapBuilder.colorField.units.oterm_name}})</label>
         <ngx-slider
         #slider
         *ngIf="showSlider"
@@ -71,6 +71,3 @@
         </div>
     </div>
 </div>
-<!-- <div *ngIf="categories && categories.size">
-    <div *ngFor="let category of categories | keyvalue" [ngStyle]="{backgroundColor : '#' + category.value}" style="width: 100px; height: 100px">{{category.key}} {{category.value}}</div>
-</div> -->
