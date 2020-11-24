@@ -238,15 +238,14 @@ export class MapResultComponent implements OnInit {
     }
   }
 
-  onMouseOver(marker) {
-    /* TODO: zooming was more performant when the text was switched from an empty value to a 
-      new string but agm-maps uses the string constructor and '' displays as [object Object]
-     */
-    marker.hover = true;
+  onMouseOver(infoWindow: AgmInfoWindow) {
+    if (this.mapBuilder.labelField) {
+      infoWindow.open();
+    }
   }
 
-  onMouseOut(marker) {
-    marker.hover = false;
+  onMouseOut(infoWindow: AgmInfoWindow) {
+    infoWindow.close();
   }
 
 }
