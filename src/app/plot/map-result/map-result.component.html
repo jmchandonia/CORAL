@@ -12,19 +12,18 @@
 >
     <ng-container *ngFor="let result of results">
         <agm-marker
-        *ngIf="markerShouldBeDisplayed(result)"
-        [agmFitBounds]="true"
-        [latitude]="result.latitude"
-        [longitude]="result.longitude"
-        (mouseOver)="onMouseOver(result)"
-        (mouseOut)="onMouseOut(result)"
-        [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 50, y: 20}}"
-        [label]="{color: result.hover ? 'black' : 'rgba(0,0,0,0)', text: mapBuilder.labelField ? result.label_text : ' '}"
+            *ngIf="markerShouldBeDisplayed(result)"
+            [agmFitBounds]="true"
+            [latitude]="result.latitude"
+            [longitude]="result.longitude"
+            [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 0, y: -10}}"
+            (mouseOver)="onMouseOver(infoWindow)"
+            (mouseOut)="onMouseOut(infoWindow)"
         >
-        <agm-info-window #infoWindow>
-            {{result.name}}
-        </agm-info-window>
-    </agm-marker>
+            <agm-info-window #infoWindow>
+                {{result.label_text}} <span *ngIf="mapBuilder.labelField.units">{{mapBuilder.labelField.units.oterm_name}}</span>
+            </agm-info-window>
+        </agm-marker>
     </ng-container>
 </agm-map>
 <div class="row justify-content-center mt-2" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType !== 'term'">
@@ -37,13 +36,13 @@
     <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'">
         <label>Filter by {{mapBuilder.colorField.name}} ({{mapBuilder.colorField.units.oterm_name}})</label>
         <ngx-slider
-        #slider
-        *ngIf="showSlider"
-        [(value)]="lowestScale"
-        [(highValue)]="highestScale"
-        [options]="sliderOptions"
-        (userChangeEnd)="filterMarkersWithSlider($event)"
-    ></ngx-slider>
+            #slider
+            *ngIf="showSlider"
+            [(value)]="lowestScale"
+            [(highValue)]="highestScale"
+            [options]="sliderOptions"
+            (userChangeEnd)="filterMarkersWithSlider($event)"
+        ></ngx-slider>
     </div>
 </div>
 <div class="row mt-2 pr-4 pl-4" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType === 'term'">
