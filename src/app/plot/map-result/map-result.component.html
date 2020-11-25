@@ -22,6 +22,10 @@
         >
             <agm-info-window #infoWindow>
                 {{result.label_text}} <span *ngIf="mapBuilder.labelField.units">{{mapBuilder.labelField.units.oterm_name}}</span>
+                <br />
+                <span *ngIf="mapBuilder.colorField && !colorFieldEqualsLabelField">
+                    {{mapBuilder.colorField.name}}: {{result.color}} <span *ngIf="mapBuilder.colorField.units">{{mapBuilder.colorField.units.oterm_name}}</span>
+                </span>
             </agm-info-window>
         </agm-marker>
     </ng-container>
@@ -34,7 +38,7 @@
         </div>
     </div>
     <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'">
-        <label>Filter by {{mapBuilder.colorField.name}} ({{mapBuilder.colorField.units.oterm_name}})</label>
+        <label>Filter by {{mapBuilder.colorField.name}} ({{mapBuilder.colorField.units?.oterm_name}})</label>
         <ngx-slider
             #slider
             *ngIf="showSlider"

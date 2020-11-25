@@ -36,6 +36,7 @@ export class MapResultComponent implements OnInit {
   hasNullValues = false;
   colorSignificantDigits: number;
   labelSignificantDigits: number;
+  colorFieldEqualsLabelField = false;
 
   @ViewChild('map') map: AgmMap;
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
@@ -58,6 +59,7 @@ export class MapResultComponent implements OnInit {
         }
       });
     } else {
+      this.setColorFieldEqualsLabelField();
       this.plotService.getDynamicMap(this.mapBuilder)
         .subscribe((res: Response<any>) => {
           this.setMapCenter(res.results);
@@ -79,6 +81,14 @@ export class MapResultComponent implements OnInit {
           }
         });
     }
+  }
+
+  setColorFieldEqualsLabelField() {
+    const {colorField, labelField} = this.mapBuilder
+    if (labelField.data_variable === colorField.data_variable) {
+      this.colorFieldEqualsLabelField = true;
+    }
+    this.colorFieldEqualsLabelField = colorField.dimension === labelField.dimension && colorField.dimension_variable === labelField.dimension_variable;
   }
 
   setMapCenter(data) {
@@ -171,6 +181,7 @@ export class MapResultComponent implements OnInit {
     });
     let idx = 0;
     const string = smallest.toString().split('.')[1];
+    if (!string) return 0;
     while (string[idx] === '0') {
       idx++;
     }
