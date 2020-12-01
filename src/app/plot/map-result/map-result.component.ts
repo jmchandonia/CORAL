@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
-import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { AgmMap, AgmInfoWindow } from '@agm/core';
 import { Router } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
@@ -15,10 +14,8 @@ import { Options as SliderOptions } from '@angular-slider/ngx-slider';
 export class MapResultComponent implements OnInit {
 
   constructor(
-   private queryBuilder: QueryBuilderService, // TODO: get results method should be in plot service, not query builder
    private router: Router,
    private plotService: PlotService,
-   private chRef: ChangeDetectorRef
   ) { }
 
   mapBuilder: MapBuilder;
@@ -43,48 +40,40 @@ export class MapResultComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    this.setColorFieldEqualsLabelField();
     if (this.mapBuilder.isCoreType) {
-      this.queryBuilder.getMapSearchResults(this.mapBuilder.query)
-      .subscribe(res => {
-        this.setMapCenter(res.data);
-        if (this.mapBuilder.colorField) {
-          if (this.mapBuilder.colorFieldScalarType === 'term') {
-            this.plotCategoryColorMarkers(res.data);
-          } else {
-            this.plotNumericColorMarkers(res.data);
-          }
-        } else {
-          this.results = res.data.map(result => ({...result, scale: 'FF0000', hover: false})); // red markers by default
-          this._results = this.results;
-        }
-      });
+      this.plotService.getStaticMap(this.mapBuilder).subscribe(res => this.initMap(res));
     } else {
-      this.setColorFieldEqualsLabelField();
-      this.plotService.getDynamicMap(this.mapBuilder)
-        .subscribe((res: Response<any>) => {
-          this.setMapCenter(res.results);
-          if (this.mapBuilder.colorField.scalar_type === 'float') {
-            this.colorSignificantDigits = this.caluculateSignificantDigits(res.results, 'color');
-          }
-          if (this.mapBuilder.colorField.scalar_type === 'float') {
-            this.labelSignificantDigits = this.caluculateSignificantDigits(res.results,'label_text');
-          }
-          if (this.mapBuilder.colorField) {
-            if (this.mapBuilder.colorFieldScalarType === 'term') {
-              this.plotCategoryColorMarkers(res.results);
-            } else {
-              this.plotNumericColorMarkers(res.results);
-            }
-          } else {
-            this.results = res.results.map(result => ({...result, scale: 'FF0000', hover: false}));
-            this._results = this.results;
-          }
-        });
+      this.plotService.getDynamicMap(this.mapBuilder).subscribe((res: Response<any>) => this.initMap(res.results));
+    }
+  }
+
+  initMap(results) {
+    this.setMapCenter(results);
+    if (this.mapBuilder.colorField.scalar_type === 'float') {
+      this.colorSignificantDigits = this.calculateSignificantDigits(results, 'color');
+    }
+    if (this.mapBuilder.labelField.scalar_type === 'float') {
+      this.labelSignificantDigits = this.calculateSignificantDigits(results,'label_text');
+    }
+    if (this.mapBuilder.colorField) {
+      if (this.mapBuilder.colorFieldScalarType === 'term') {
+        this.plotCategoryColorMarkers(results);
+      } else {
+        this.plotNumericColorMarkers(results);
+      }
+    } else {
+      this.results = results.map(result => ({...result, scale: 'FF0000', hover: false})); // TODO: handle extra object fields in subscription
+      this._results = this.results;
     }
   }
 
   setColorFieldEqualsLabelField() {
     const {colorField, labelField} = this.mapBuilder
+    if (this.mapBuilder.isCoreType) {
+      this.colorFieldEqualsLabelField = colorField.term_id === labelField.term_id;
+      return;
+    }
     if (labelField.data_variable === colorField.data_variable) {
       this.colorFieldEqualsLabelField = true;
     }
@@ -136,7 +125,6 @@ export class MapResultComponent implements OnInit {
     this.highestScale = +Math.max.apply(null, data.map(d => d.color)).toFixed(this.colorSignificantDigits);
     this.averageScale = data.reduce((a, d) => a + d.color, 0) / data.length;
 
-    // this.results = data.map(result => ({...result, scale: this.calculateScale(result), hover: false}));
     this.results = data.map(result => {
       const item: any = {
         scale: this.calculateScale(result),
@@ -169,8 +157,7 @@ export class MapResultComponent implements OnInit {
     this.setSliderOptions();
   }
 
-  caluculateSignificantDigits(data, field): number {
-
+  calculateSignificantDigits(data, field): number {
     let smallest = Infinity;
     data.sort((a, b) => a.color - b.color).forEach((d, i) => {
       if (i === 0) return;
@@ -179,6 +166,10 @@ export class MapResultComponent implements OnInit {
         smallest = difference;
       }
     });
+    if (/[0-9]e\-[0-9]/.test(smallest.toString())) {
+      // if number converted to string is exponent like 1e-9 we just need to use the exponent value
+      return +smallest.toString().split('-')[1];
+    }
     let idx = 0;
     const string = smallest.toString().split('.')[1];
     if (!string) return 0;
@@ -192,7 +183,6 @@ export class MapResultComponent implements OnInit {
     // calculate hex color scale based on numeric value
 
     const totalRange = this.highestScale - this.lowestScale;
-    const field = this.mapBuilder.colorField.name;
     let red = 255, blue = 255;
     if (result.color === null) { 
       this.hasNullValues = true; // TODO: this is a side effect

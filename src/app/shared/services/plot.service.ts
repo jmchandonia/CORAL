@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PlotlyBuilder, Constraint } from 'src/app/shared/models/plotly-builder';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
+import { map, tap } from 'rxjs/operators';
+import { Response } from 'src/app/shared/models/response';
 @Injectable({
   providedIn: 'root'
 })
@@ -53,6 +55,19 @@ export class PlotService {
 
   getDynamicMap(mapBuilder: MapBuilder) {
     return this.http.post(`${environment.baseURL}/brick_map/${mapBuilder.brickId}`, mapBuilder);
+  }
+
+  getStaticMap(mapBuilder: MapBuilder) {
+    return this.http.post<any>(`${environment.baseURL}/search`, mapBuilder.query)
+      .pipe(
+        map(({data}) => {
+          return data.map(item => ({
+            ...item,
+            color: item[mapBuilder.colorField.name],
+            label_text: item[mapBuilder.labelField.name]}
+          ));
+        })
+      );
   }
 
   getDynamicPlot(id: string) {
