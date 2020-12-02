@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Constraint, ConstraintType, ConstraintVariable } from 'src/app/shared/models/plotly-builder';
 import { DimensionContext } from 'src/app/shared/models/object-metadata';
+import { PlotService } from 'src/app/shared/services/plot.service';
+import { Response } from 'src/app/shared/models/response';
 
 @Component({
   selector: 'app-plot-constraint',
@@ -12,10 +14,11 @@ export class PlotConstraintComponent implements OnInit {
   @Input() constraint: Constraint;
   @Input() invalid = false;
   @Input() disabled = false;
+  @Input() objectId: string;
 
   constraintTypes: string[] = Object.values(ConstraintType);
 
-  constructor() { }
+  constructor(private plotService: PlotService) { }
 
   ngOnInit(): void {
   }
@@ -38,6 +41,16 @@ export class PlotConstraintComponent implements OnInit {
 
   setSelectedValue(event, dimVar: ConstraintVariable) {
     dimVar.selected_value = dimVar.unique_values.indexOf(event as never); // TODO: get rid of type never
+  }
+
+  handleSearch(event: any, variable: ConstraintVariable) {
+    if (!this.constraint.dimension.limit_dimension_variables || !event.term.length) return;
+    this.plotService.getBrickDimVarValues(this.objectId, this.constraint.dim_idx, variable.dim_var_idx, event.term)
+      .subscribe((res: Response<any>) => {
+        if (res.results.length < 100) {
+          variable.unique_values = [...res.results];
+        }
+      });
   }
 
 }
