@@ -24,7 +24,6 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
-
 # from . import services
 # from .brick import Brick
 
@@ -1053,21 +1052,21 @@ def generix_brick_map_data(brick_id):
     dim_constraints = []
     if body['constrainingRequired']:
         for constraint in body['constraints']:
-            if constraint['dim_idx'] == 0:
+            if constraint['dim_idx'] == 0: # or constraint['disabled']:
                 continue
             for dv in constraint['variables']:
                 # TODO: this method only works for non combinatorial brick dimensions
                 if dv['type'] == 'flatten':
                     dim_constraints.append(dv['selected_value'])
                     break
-        if 'data_variable' in body['colorField']:
-            color_values = []
-            cfi = body['colorField']['data_variable']
-            for i in range(br.dims[0].size):
-                data_vars = br.data_vars[cfi].values[i]
-                for j in dim_constraints:
-                    data_vars = data_vars[j]
-                color_values.append(data_vars)
+    if 'data_variable' in body['colorField']:
+        color_values = []
+        cfi = body['colorField']['data_variable']
+        for i in range(br.dims[0].size):
+            data_vars = br.data_vars[cfi].values[i]
+            for j in dim_constraints:
+                data_vars = data_vars[j]
+            color_values.append(data_vars)
 
     if 'data_variable' in body['labelField']:
         label_values = []
@@ -1097,15 +1096,38 @@ def generix_brick_map_data(brick_id):
             longitude=br.dims[0].vars[long_idx].values[i]
         )
         if 'dimension_variable' in body['colorField']:
-            item[body['colorField']['name']] = br.dims[0].vars[dv_cf].values[i]
+            # item[body['colorField']['name']] = br.dims[0].vars[dv_cf].values[i]
+            item['color'] = br.dims[0].vars[dv_cf].values[i]
         elif color_values:
-            item[body['colorField']['name']] = color_values[i]
+            # item[body['colorField']['name']] = color_values[i]
+            item['color'] = color_values[i]
         if 'dimension_variable' in body['labelField']:
-            item[body['labelField']['name']] = str(br.dims[0].vars[dv_lf].values[i])
+            # item[body['labelField']['name']] = br.dims[0].vars[dv_lf].values[i]
+            item['label_text'] = str(br.dims[0].vars[dv_lf].values[i])
         elif label_values:
-            item[body['labelField']['name']] = str(label_values[i])
+            # item[body['labelField']['name']] = label_values[i]
+            item['label_text'] = str(label_values[i])
         res.append(item)
     return _ok_response(res)
+
+
+@app.route('/generix/brick_plot_metadata/<brick_id>/<limit>', methods=['GET'])
+@auth_required
+def generix_brick_plot_metadata(brick_id, limit):
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+
+    return br.to_json(exclude_data_values=False, typed_values_property_name=False, truncate_variable_length=int(limit))
+
+@app.route('/generix/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
+@auth_required
+def get_brick_dim_var_values(brick_id, dim_idx, dv_idx, keyword):
+    # used for populating plot constraints for dimensions with more than the specified amount of variables
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    dim_var = br.dims[int(dim_idx)].vars[int(dv_idx)]
+    dv_results = [i for i in dim_var.values if i.find(keyword) > 0]
+    return _ok_response(dv_results)
 
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
 @auth_required
@@ -1114,7 +1136,6 @@ def generix_brick_metadata(brick_id):
     br = bp.load(brick_id)
     
     return br.to_json(exclude_data_values=False, typed_values_property_name=False)
-
 
 def _get_plot_data(query):
     bp = dp._get_type_provider('Brick')
@@ -1400,7 +1421,6 @@ def _extract_criterion_props(criterion):
 def generix_search():
     try:
         search_data = request.json
-
         # Do queryMatch
         query_match = search_data['queryMatch']
         provider = dp._get_type_provider(query_match['dataModel'])
