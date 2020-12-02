@@ -58,7 +58,7 @@ export class PlotService {
   }
 
   getObjectPlotMetadata(id: string) {
-    return this.http.get(`${environment.baseURL}/brick_plot_metadata/${id}`);
+    return this.http.get(`${environment.baseURL}/brick_plot_metadata/${id}/100`);
   }
 
   getBrickDimVarValues(id: string, dimIdx: number, dvIdx: number, keyword: string) {
