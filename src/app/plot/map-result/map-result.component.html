@@ -38,7 +38,7 @@
         </div>
     </div>
     <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'">
-        <label>Filter by {{mapBuilder.colorField.name}} <span *ngIf="mapBuilder.colorField.units">({{mapBuilder.colorField.units?.oterm_name}})</span></label>
+        <label>Filter by {{mapBuilder.colorField.name}} <span *ngIf="mapBuilder.colorField.units">({{mapBuilder.colorField.units.oterm_name ? mapBuilder.colorField.units.oterm_name : mapBuilder.colorField.units}})</span></label>
         <ngx-slider
             #slider
             *ngIf="showSlider"
