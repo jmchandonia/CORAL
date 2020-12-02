@@ -14,6 +14,7 @@ export class DimensionContext {
     data_type: OTerm;
     size: number;
     typed_values: TypedValue[];
+    limit_dimension_variables = false; // for dimensions with a high amound of dim vars
 }
 
 export interface ArrayContext {

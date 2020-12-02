@@ -79,7 +79,7 @@ export class PlotOptionsComponent implements OnInit {
     } else {
       // get metadata and assign to AxisOption type 
       // TODO: needs to be formatted like this on the backend
-      this.queryBuilder.getObjectMetadata(this.objectId)
+      this.plotService.getObjectPlotMetadata(this.objectId)
         .subscribe((result: any) => {
         this.metadata = result; ///
         this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
