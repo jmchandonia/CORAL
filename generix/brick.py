@@ -605,13 +605,15 @@ class Brick:
             pk_upks = query._find_upks([ufk_values])
             return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
 
-    def to_json(self, exclude_data_values=False, typed_values_property_name=True):
+    def to_json(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False):
         return json.dumps(
             self.to_dict(exclude_data_values=exclude_data_values,
-                typed_values_property_name=typed_values_property_name ),
+                typed_values_property_name=typed_values_property_name,
+                truncate_variable_length=truncate_variable_length
+            ),
             cls=NPEncoder)
 
-    def to_dict(self, exclude_data_values=False, typed_values_property_name=True):
+    def to_dict(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -740,6 +742,9 @@ class Brick:
             #         var_values = var_json['values'][var_scalar_type + '_values']
 
 
+            if isinstance(truncate_variable_length, int):
+                dim_data['truncate_variable_length'] = dim.size > truncate_variable_length
+
             for var in dim.vars:
 
                 # Do type and values
@@ -758,7 +763,8 @@ class Brick:
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
-
+                if isinstance(truncate_variable_length, int) and dim.size > truncate_variable_length:
+                    value_vals = value_vals[:truncate_variable_length]
                 if not typed_values_property_name:
                     value_key = 'values'
 
