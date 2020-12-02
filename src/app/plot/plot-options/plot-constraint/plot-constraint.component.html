@@ -32,6 +32,7 @@
                         <ng-select
                             [disabled]="disabled"
                             class="custom"
+                            (search)="handleSearch($event, v)"
                             [items]="v.unique_values"
                             [(ngModel)]="v.flatten_value"
                             (change)="setSelectedValue($event, v)"
