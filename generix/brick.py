@@ -605,15 +605,16 @@ class Brick:
             pk_upks = query._find_upks([ufk_values])
             return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
 
-    def to_json(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False):
+    def to_json(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False, show_unique_indices=False):
         return json.dumps(
             self.to_dict(exclude_data_values=exclude_data_values,
                 typed_values_property_name=typed_values_property_name,
-                truncate_variable_length=truncate_variable_length
+                truncate_variable_length=truncate_variable_length,
+                show_unique_indices=show_unique_indices
             ),
             cls=NPEncoder)
 
-    def to_dict(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False):
+    def to_dict(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False, show_unique_indices=False):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -716,6 +717,8 @@ class Brick:
             }
             dim_data['size'] = dim.size
             dim_data['typed_values'] = []
+            if show_unique_indices:
+                dim_data['has_uniqe_indices'] = dim.has_unique_indices
 
             # # Do variables
             # ds.attrs[dim_name + '_var_count'] = 0
@@ -1196,6 +1199,35 @@ class BrickDimension:
         for var in self.vars:
             data[var.long_name] = var.values
         return pd.DataFrame(data)    
+
+    @property
+    def has_unique_indices(self):
+        n_indices = len(self.vars)
+        if n_indices == 1:
+            return True
+
+        objects = []
+        unique_objects = []
+        for i in range(n_indices):
+            vals = self.vars[i].values
+            unique_vals = []
+            for val in vals:
+                if not val in unique_vals:
+                    unique_vals.append(val)
+            objects.append(vals)
+            unique_objects.append(unique_vals)
+
+        used_indices = []
+        for i in range(n_indices):
+            sub_index_combo = ''
+            for j in range(self.size):
+                object = objects[i][j]
+                k = unique_objects[i].index(object)
+                sub_index_combo += '_' + str(k)
+            if sub_index_combo in used_indices:
+                return True
+            used_indices.append(sub_index_combo)
+        return False
 
     def where(self, dim_filter):
         kwargs = {self.__dim_prefix: dim_filter.bool_array}
