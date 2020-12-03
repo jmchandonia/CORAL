@@ -718,7 +718,7 @@ class Brick:
             dim_data['size'] = dim.size
             dim_data['typed_values'] = []
             if show_unique_indices:
-                dim_data['has_uniqe_indices'] = dim.has_unique_indices
+                dim_data['has_unique_indices'] = dim.has_unique_indices
 
             # # Do variables
             # ds.attrs[dim_name + '_var_count'] = 0
