@@ -60,11 +60,11 @@ describe('AppComponent', () => {
   });
 
   it('should clear on search click', () => {
-    spyOn(spectator.component, 'clearPlotBuilder');
+    spyOn(spectator.component, 'handleHomeNavigation');
     spectator.component.homeSearchRedirect = true;
     spectator.click('a#search-nav-link');
     spectator.detectChanges();
 
-    expect(spectator.component.clearPlotBuilder).toHaveBeenCalled();
+    expect(spectator.component.handleHomeNavigation).toHaveBeenCalled();
   });
 });
