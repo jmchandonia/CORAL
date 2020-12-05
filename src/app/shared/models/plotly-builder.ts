@@ -67,27 +67,71 @@ export class Constraint {
     constructor(dimension: DimensionContext, dimIdx: number, disabled = false) {
         this.dim_idx = dimIdx;
         this.dimension = dimension;
-        this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+        this.has_unique_indices = dimension.has_unique_indices;
         this.disabled = disabled;
+        // this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+        if (!this.has_unique_indices) {
+            let correspondsToOneVar = this.dimension.typed_values
+                .map(typedValue => {
+                    return typedValue.values.values.reduce((acc, value) => acc.includes(value) && value !== null ? acc : [...acc, value], []);
+                })
+                .map(typedValue => typedValue.length)
+                .reduce((acc, typedValue) => typedValue === this.dimension.size, false);
+            if (correspondsToOneVar) {
+                // brick does not have unique values but is also not combinatoric
+                const concatTypedValue = {
+                    value_with_units: dimension.typed_values.reduce<string>((acc, cur, i) => {
+                        let newValWithUnits = cur.value_with_units;
+                        if (i < dimension.typed_values.length - 1) { newValWithUnits += ', ' }
+                        return acc + newValWithUnits;
+                    }, '')
+                
+                } as TypedValue;
+                this.variables = [new ConstraintVariable(concatTypedValue, -1, dimension.typed_values)];
+                this.concat_variables = true;
+            } else {
+                // brick is combinatoric and doesnt depend on specific values from other dim vars
+                this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+            }
+        } else {
+            this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+        }
     }
+    has_unique_indices = false;
     disabled = false;
     dim_idx: number;
     dimension: DimensionContext;
     variables: ConstraintVariable[];
     constrain_by_mean = false;
+    concat_variables = false;
 }
 
 export class ConstraintVariable {
 
-    constructor(value: TypedValue, index: number) {
+    constructor(value: TypedValue, index: number, concatValues?: TypedValue[]) {
         this.dim_var_idx = index;
         this.value = value;
-        this.unique_values = this.value.values.values.reduce((acc, value) => {
-            if (!acc.includes(value)) {
-                return [...acc, value];
+        if (concatValues) {
+            this.unique_values = [];
+            for (let i = 0; i < concatValues[0].values.values.length; i++) {
+                let newValue = '';
+                for (let j = 0; j < concatValues.length; j++) {
+                    newValue += concatValues[j].values.values[i] !== null ? concatValues[j].values.values[i] : 'N/A';
+                    if (concatValues[j])
+                    if (j < concatValues.length - 1) {
+                        newValue += ', '
+                    }
+                }
+                this.unique_values.push(newValue as never);
             }
-            return acc;
-        }, []);
+        } else {
+            this.unique_values = this.value.values.values.reduce((acc, value) => {
+                if (!acc.includes(value)) {
+                    return [...acc, value];
+                }
+                return acc;
+            }, []);
+        }
     }
 
     dim_var_idx: number;

@@ -44,7 +44,7 @@ export class PlotConstraintComponent implements OnInit {
   }
 
   handleSearch(event: any, variable: ConstraintVariable) {
-    if (!this.constraint.dimension.limit_dimension_variables || !event.term.length) return;
+    if (!this.constraint.dimension.truncate_variable_length || !event.term.length) return;
     this.plotService.getBrickDimVarValues(this.objectId, this.constraint.dim_idx, variable.dim_var_idx, event.term)
       .subscribe((res: Response<any>) => {
         if (res.results.length < 100) {
