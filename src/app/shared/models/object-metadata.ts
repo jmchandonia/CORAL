@@ -14,7 +14,8 @@ export class DimensionContext {
     data_type: OTerm;
     size: number;
     typed_values: TypedValue[];
-    limit_dimension_variables = false; // for dimensions with a high amound of dim vars
+    truncate_variable_length = false; // for dimensions with a high amound of dim vars
+    has_unique_indices = false; // determines whether variables in a brick are distinct or combinatoric
 }
 
 export interface ArrayContext {

@@ -1,4 +1,5 @@
 import { FormsModule } from '@angular/forms';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { PlotOptionsComponent } from './plot-options.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,29 +14,26 @@ import { of } from 'rxjs';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { NgSelectModule } from  '@ng-select/ng-select';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
 const plotTypes = require('src/app/shared/test/plot-types.json');
-const metadata = require('src/app/shared/test/object-metadata.json');
+// const metadata = require('src/app/shared/test/object-metadata.json');
+const brick3Metadata = require('src/app/shared/test/brick_metadata_test_3.json');
 
 describe('PlotOptionsComponent', () => {
 
+  let coreTypeQueryParams = {}
+  let brickId = 'Brick0000003'
+
   const MockPlotService = {
-    getPlotBuilder: () => new PlotBuilder(),
+    getPlotlyBuilder: (core_type = false, query?) => new PlotlyBuilder(core_type, query),
+    getObjectPlotMetadata: id => of(brick3Metadata),
     getPlotTypes: () => of(plotTypes),
     getPlotType: () => null,
-    setConfig: (name, length, callback: Function) => {
-      const dimvars = metadata.dim_context;
-      const datavars = metadata.typed_values;
-      callback([
-        new Dimension(dimvars[0], datavars),
-        new Dimension(dimvars[1], datavars),
-        new Dimension(dimvars[2], datavars)
-      ]);
-    }
   };
 
   const MockQueryBuilder = {
     getPreviousUrl: () => 'plot/test/url',
-    getObjectMetadata: (id) => of(metadata)
+    getObjectMetadata: (id) => of(brick3Metadata)
   };
 
   let spectator: Spectator<PlotOptionsComponent>;
@@ -57,15 +55,17 @@ describe('PlotOptionsComponent', () => {
       {
         provide: ActivatedRoute,
         useValue: {
-          params: of({id: 'Brick0000002'})
+          params: of({id: brickId}),
+          queryParams: of(coreTypeQueryParams)
         }
       },
       {
         provide: Router,
         useValue: {
           events: of({
-            url: '/plot/options/Brick0000002'
-          })
+            url: '/plot/options/Brick0000003'
+          }),
+          navigate() {}
         }
       }
     ]
@@ -78,37 +78,72 @@ describe('PlotOptionsComponent', () => {
   });
 
   it('should get object id from url', () => {
-    expect(spectator.component.objectId).toBe('Brick0000002');
+    expect(spectator.component.objectId).toBe('Brick0000003');
+    expect(spectator.component.plot.core_type).toBeFalsy();
   });
 
-  it('should have previous url', () => {
-    spyOn(MockQueryBuilder, 'getPreviousUrl').and.callThrough();
-    expect(spectator.component.previousUrl).toBe('plot/test/url');
-  });
-
-  it('should get plot types correctly', () => {
-    const comp = spectator.component;
-    spyOn(comp, 'ngOnInit').and.callThrough();
-    spyOn(comp, 'getPlotTypes').and.callThrough();
+  it('should call get plot metadata for bricks', () => {
+    const mockPlotService = spectator.get(PlotService);
+    spyOn(mockPlotService, 'getObjectPlotMetadata').and.callThrough();
+    spectator.component.ngOnInit();
     spectator.detectChanges();
-    expect(comp.plotTypeData instanceof Array).toBeTruthy();
-    expect(comp.plotTypeData).toHaveLength(6);
-    expect(comp.plotTypeData[0]).toEqual(plotTypes.results[1]);
+    expect(mockPlotService.getObjectPlotMetadata).toHaveBeenCalledWith('Brick0000003');
+    expect(spectator.component.axisOptions).toHaveLength(7);
   });
 
-  it('should add correct number of dimensions', () => {
-    spectator.component.updatePlotType(plotTypes.results[1])
+  it('should filter plot types by validating', () => {
+    spyOn(spectator.component, 'validateAxes').and.callThrough();
 
-    const dimvars = metadata.dim_context;
-    const datavars = metadata.typed_values;
-    spectator.component.dimensions = [
-       new Dimension(dimvars[0], datavars),
-        new Dimension(dimvars[1], datavars),
-        new Dimension(dimvars[2], datavars)
-      ];
+    spectator.component.ngOnInit();
+    expect(spectator.component.validateAxes).toHaveBeenCalled();
+    expect(spectator.component.plotTypeData).toHaveLength(5);
+    expect(spectator.component.unableToPlot).toBeFalsy();
+    expect(spectator.component.plotTypeData.find(plot => plot.map)).toBeUndefined();
+  });
+
+  it('should update plot type', () => {
+    spyOn(spectator.component.plot, 'setDimensionConstraints').and.callThrough();
+
+    spectator.triggerEventHandler('#plot-type-selector', 'change', spectator.component.plotTypeData[0]);
+    expect(spectator.component.plot.setDimensionConstraints).toHaveBeenCalled();
+    expect(spectator.component.plot.axes.z).toBeUndefined();
+    expect(spectator.component.plot.constraints).toHaveLength(3);
+    expect(spectator.component.plot.plot_type).toEqual(spectator.component.plotTypeData[0]);
+  });
+
+  it('should handle selecting an axis across all axis values', () => {
+    spyOn(spectator.component, 'handleSelectedAxis').and.callThrough();
+    // plot type must be selected first
+     // manually set value for dimension (handled in axis option component)
+    spectator.component.plot.axes.x.data = spectator.component.axisOptions[0];
+    spectator.triggerEventHandler('#plot-type-selector', 'change', spectator.component.plotTypeData[0]);
+    // select item from x axis dropdown
+    spectator.triggerEventHandler('#x-axis', 'selected', spectator.component.axisOptions[0]);
+
+    expect(spectator.component.handleSelectedAxis).toHaveBeenCalled();
+    // with a 2d item, there should only be one axis option left because the last item has to be a data var
+    expect(spectator.component.axisOptions).toHaveLength(1);
+    expect(spectator.component.axisOptions[0].data_variable).toBe(0);
+  });
+
+  it('should handle clearing an axis correctly', () => {
+    delete spectator.component.plot.axes.x.data;
+    spectator.triggerEventHandler('#x-axis', 'selectionCleared', null);
     spectator.detectChanges();
-    expect(spectator.component.axisBlocks).not.toBeUndefined();
-    expect(spectator.component.selectedPlotType).not.toBeUndefined();
-    expect(spectator.queryAll('app-dimension-options')).toHaveLength(3);
+
+    expect(spectator.component.axisOptions).toHaveLength(7);
+  });
+
+  it('should not navigate if plot is invalid', () => {
+    const router = spectator.get(Router);
+    spyOn(router, 'navigate');
+    spectator.click('#submit-plot');
+    spectator.detectChanges();
+
+    expect (spectator.component.invalid).toBeTruthy();
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    brickId = null;
+    coreTypeQueryParams = { coreType: 'Well' }
   });
 });

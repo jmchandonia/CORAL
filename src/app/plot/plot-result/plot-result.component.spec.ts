@@ -63,7 +63,7 @@ describe('PlotResultComponent', () => {
         provide: ActivatedRoute, 
         useValue: { params: of({id: 'brick0000002'}) }
       },
-      mockProvider(PlotService, MockPlotService)
+      // mockProvider(PlotService, MockPlotService)
     ]
   });
 

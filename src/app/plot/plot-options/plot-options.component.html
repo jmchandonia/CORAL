@@ -20,6 +20,7 @@
                   <div class="col-6">
                       <label for="plotType">Plot Type</label>
                         <ng-select
+                          id="plot-type-selector"
                           class="custom"
                           [class.select-error]="invalid && !plot.plot_type"
                           [items]="plotTypeData"
@@ -51,6 +52,7 @@
   </div> 
   <div *ngIf="plot.plot_type && !isMap && axisOptions">
     <app-axis-option
+      id="x-axis"
       [axis]="plot.axes.x"
       [axisValidation]="plot.plot_type.axis_data.x"
       [options]="axisOptions"
@@ -62,6 +64,7 @@
       [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
+      id="y-axis"
       [axisValidation]="plot.plot_type.axis_data.y"
       [axis]="plot.axes.y"
       [options]="axisOptions"
@@ -73,6 +76,7 @@
       [invalid]="invalid"
     ></app-axis-option>
     <app-axis-option
+      id="z-axis"
       *ngIf="plot.plot_type.axis_data.z"
       [axisValidation]="plot.plot_type.axis_data.z"
       [axis]="plot.axes.z"
@@ -116,7 +120,7 @@
   </div>
   <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
     <div class="col-8">
-      <button class="btn btn-primary float-right" (click)="submitPlot()">
+      <button id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
         Plot Data
       </button>
     </div>
