@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
-import { PlotlyBuilder, Constraint } from 'src/app/shared/models/plotly-builder';
+import { PlotlyBuilder, Constraint, AxisOption } from 'src/app/shared/models/plotly-builder';
 import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { map, delay } from 'rxjs/operators';
 import { Response } from 'src/app/shared/models/response';
+import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,7 +59,13 @@ export class PlotService {
   }
 
   getObjectPlotMetadata(id: string) {
-    return this.http.get(`${environment.baseURL}/brick_plot_metadata/${id}/100`);
+    return this.http.get<ObjectMetadata>(`${environment.baseURL}/brick_plot_metadata/${id}/100`)
+      .pipe(map(data => {
+        return {
+          result: data,
+          axisOptions: PlotService.mapBrickPropertiesToAxisOptions(data)
+        }
+      }))
   }
 
   getBrickDimVarValues(id: string, dimIdx: number, dvIdx: number, keyword: string) {
@@ -76,6 +83,34 @@ export class PlotService {
           ));
         })
       );
+  }
+
+  public static mapBrickPropertiesToAxisOptions(data: ObjectMetadata): AxisOption[] {
+    const axisOptions: AxisOption[] = [];
+    data.dim_context.forEach((dim, i) => {
+      dim.typed_values.forEach((dimVar, j) => {
+        axisOptions.push({
+          scalar_type: dimVar.values.scalar_type,
+          name: dimVar.value_no_units,
+          display_name: dimVar.value_with_units,
+          term_id: dimVar.value_type.oterm_ref,
+          dimension: i,
+          dimension_variable: j,
+          units: dimVar.value_units
+        });
+      });
+    });
+    data.typed_values.forEach((dataVar, i) => {
+      axisOptions.push({
+        scalar_type: dataVar.values.scalar_type,
+        name: dataVar.value_no_units,
+        display_name: dataVar.value_with_units,
+        term_id: dataVar.value_type.oterm_ref,
+        data_variable: i,
+        units: dataVar.value_units
+      })
+    });
+    return axisOptions;
   }
 
   getDynamicPlot(id: string) {

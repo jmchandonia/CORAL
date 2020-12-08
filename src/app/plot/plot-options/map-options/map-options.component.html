@@ -11,6 +11,7 @@
                 <div class="row">
                     <div class="col-12">
                         <ng-select
+                        id="map-color"
                         *ngIf="colorOptions.length"
                         class="custom"
                         [items]="colorOptions"
@@ -38,6 +39,7 @@
                 <div class="row">
                     <div class="col-12">
                         <ng-select
+                        id="map-labels"
                         *ngIf="labelOptions.length"
                         class="custom"
                         [items]="labelOptions"
