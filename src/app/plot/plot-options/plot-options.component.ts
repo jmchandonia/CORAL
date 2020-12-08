@@ -80,42 +80,19 @@ export class PlotOptionsComponent implements OnInit {
       // get metadata and assign to AxisOption type 
       // TODO: needs to be formatted like this on the backend
       this.plotService.getObjectPlotMetadata(this.objectId)
-        .subscribe((result: any) => {
-        this.metadata = result; ///
-        this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
-        this.axisOptions = [];
-        if (!validator.validPlot(this.plot)) {
-          this.setConstrainableDimensions();
-        }
-        result.dim_context.forEach((dim, i) => {
-          dim.typed_values.forEach((dimVar, j) => {
-            this.axisOptions.push({
-              scalar_type: dimVar.values.scalar_type,
-              name: dimVar.value_no_units,
-              display_name: dimVar.value_with_units,
-              term_id: dimVar.value_type.oterm_ref,
-              dimension: i,
-              dimension_variable: j,
-              units: dimVar.value_units
-            });
-          });
+        .subscribe(({result, axisOptions}: {result: ObjectMetadata, axisOptions: AxisOption[]}) => {
+          this.metadata = result;
+          this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
+          if (!validator.validPlot(this.plot)) {
+            this.setConstrainableDimensions();
+          }
+          this.axisOptions = axisOptions;
+          this._axisOptions = [...this.axisOptions];
+          this.getPlotTypes();
+          if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
+            this.mapBuilder.setLatLongDimension(this.axisOptions);
+          }
         });
-        result.typed_values.forEach((dataVar, i) => {
-          this.axisOptions.push({
-            scalar_type: dataVar.values.scalar_type,
-            name: dataVar.value_no_units,
-            display_name: dataVar.value_with_units,
-            term_id: dataVar.value_type.oterm_ref,
-            data_variable: i,
-            units: dataVar.value_units
-          });
-        });
-        this._axisOptions = [...this.axisOptions];
-        this.getPlotTypes();
-        if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
-          this.mapBuilder.setLatLongDimension(this.axisOptions);
-        }
-      });
     }
   }
 

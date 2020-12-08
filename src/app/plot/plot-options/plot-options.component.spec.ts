@@ -19,14 +19,17 @@ const plotTypes = require('src/app/shared/test/plot-types.json');
 // const metadata = require('src/app/shared/test/object-metadata.json');
 const brick3Metadata = require('src/app/shared/test/brick_metadata_test_3.json');
 
-describe('PlotOptionsComponent', () => {
+fdescribe('PlotOptionsComponent', () => {
 
   let coreTypeQueryParams = {}
   let brickId = 'Brick0000003'
 
   const MockPlotService = {
     getPlotlyBuilder: (core_type = false, query?) => new PlotlyBuilder(core_type, query),
-    getObjectPlotMetadata: id => of(brick3Metadata),
+    getObjectPlotMetadata: id => of({
+      result: brick3Metadata,
+      axisOptions: PlotService.mapBrickPropertiesToAxisOptions(brick3Metadata)
+    }),
     getPlotTypes: () => of(plotTypes),
     getPlotType: () => null,
   };
