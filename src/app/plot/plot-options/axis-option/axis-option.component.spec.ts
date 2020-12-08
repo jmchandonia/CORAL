@@ -13,7 +13,7 @@ const createComponent = createComponentFactory({
   component: AxisOptionComponent,
 })
 
-fdescribe('AxisOptionComponent', () => {
+describe('AxisOptionComponent', () => {
 
   const mockPlotlyBuilder = new PlotlyBuilder(true);
 
