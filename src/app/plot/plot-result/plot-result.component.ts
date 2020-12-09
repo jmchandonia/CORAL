@@ -54,17 +54,26 @@ export class PlotResultComponent implements OnInit {
       this.plotService.getDynamicPlot(this.objectId)
         .subscribe((data: any) => {
           const results = data.res;
-          const plotlyResult = [];  
-          results['values-x'].forEach((value, idx) => {
-            plotlyResult.push({
-              x: value,
-              y: results['values-y'][idx],
-              mode: 'lines', // TODO: this should be dynamic according to plot
-              name: results['series-labels'][idx],
-              ...this.plot.plot_type.plotly_trace
-            });
+          this.data = results.map(result => {
+            const trace = {
+              ...result,
+              ...this.plot.plot_type.plotly_trace,
+              name: result.label,
+              error_x: {
+                type: 'data',
+                array: result.error_x,
+                visible: this.plot.axes.x.show_err_margin,
+                thickness: 0.75
+              },
+              error_y: {
+                type: 'data',
+                array: result.error_y,
+                visible: this.plot.axes.y.show_err_margin,
+                thickness: 0.75
+              }
+            };
+            return trace;
           });
-          this.data = plotlyResult;
           this.layout = {
             ...this.plot.plot_type.plotly_layout,
             legend: {
