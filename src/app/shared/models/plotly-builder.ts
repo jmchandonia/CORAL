@@ -138,7 +138,6 @@ export class ConstraintVariable {
     dim_var_idx: number;
     selected_value: number;
     value: TypedValue;
-    // unique_values: number[] | string[]; // remove repeating instances of the same value for dropdown
     unique_values: UniqueValue[]
 
     type: 'mean' | 'series' | 'flatten';
