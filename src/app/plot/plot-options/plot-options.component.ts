@@ -174,8 +174,9 @@ export class PlotOptionsComponent implements OnInit {
     } else {
       delete this.plot.axes.z;
     }
-    if (!this.coreTypePlot) {
-      this.plot.setDimensionConstraints(this.constrainableDimensions);
+    if (!this.coreTypePlot && !validator.validPlot(this.plot)) {
+      // this.plot.setDimensionConstraints(this.constrainableDimensions);
+      this.setConstrainableDimensions();
     }
   }
 
