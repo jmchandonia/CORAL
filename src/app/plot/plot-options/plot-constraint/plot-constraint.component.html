@@ -34,6 +34,8 @@
                             class="custom"
                             (search)="handleSearch($event, v)"
                             [items]="v.unique_values"
+                            bindLabel="display"
+                            bindValue="index"
                             [(ngModel)]="v.flatten_value"
                             (change)="setSelectedValue($event, v)"
                             [class.select-error]="invalid && v.type === 'flatten' && !v.flatten_value"

@@ -91,10 +91,10 @@ export class Constraint {
                 this.concat_variables = true;
             } else {
                 // brick is combinatoric and doesnt depend on specific values from other dim vars
-                this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+                this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx,null, this.has_unique_indices));
             }
         } else {
-            this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
+            this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx, null, this.has_unique_indices));
         }
     }
     has_unique_indices = false;
@@ -108,7 +108,7 @@ export class Constraint {
 
 export class ConstraintVariable {
 
-    constructor(value: TypedValue, index: number, concatValues?: TypedValue[]) {
+    constructor(value: TypedValue, index: number, concatValues?: TypedValue[], has_unique_indices = true) {
         this.dim_var_idx = index;
         this.value = value;
         if (concatValues) {
@@ -122,12 +122,13 @@ export class ConstraintVariable {
                         newValue += ', '
                     }
                 }
-                this.unique_values.push(newValue as never);
+                this.unique_values.push({display: newValue, index: i});
             }
         } else {
-            this.unique_values = this.value.values.values.reduce((acc, value) => {
-                if (!acc.includes(value)) {
-                    return [...acc, value];
+            this.unique_values = this.value.values.values.reduce((acc, value, index) => {
+                if (!acc.find(d => d.display === value)) {
+                    // if its a combinatoric brick set it by the index of the unique value, otherwise position in array
+                    return [...acc, {display: value, index: has_unique_indices ? index : acc.length}];
                 }
                 return acc;
             }, []);
@@ -137,12 +138,18 @@ export class ConstraintVariable {
     dim_var_idx: number;
     selected_value: number;
     value: TypedValue;
-    unique_values: number[] | string[]; // remove repeating instances of the same value for dropdown
+    // unique_values: number[] | string[]; // remove repeating instances of the same value for dropdown
+    unique_values: UniqueValue[]
 
     type: 'mean' | 'series' | 'flatten';
     flatten_value: number | string;
     series_label_pattern: string;
     invalid_label_pattern = false;
+}
+
+export interface UniqueValue {
+    display: string | number;
+    index: number;
 }
 
 export class AxisOption { // list of items to be populated in dropdown list of axis menu
