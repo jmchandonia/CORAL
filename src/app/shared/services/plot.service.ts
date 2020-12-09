@@ -108,14 +108,23 @@ export class PlotService {
         term_id: dataVar.value_type.oterm_ref,
         data_variable: i,
         units: dataVar.value_units
-      })
+      });
     });
     return axisOptions;
   }
 
   getDynamicPlot(id: string) {
     const plot = this.getPlotlyBuilder();
-    const variable = [`${plot.axes.x.dim_idx + 1}/1`];
+    const variable = [];
+    // const variable = [`${plot.axes.x.dim_idx + 1}/1`];
+    const {x, y} = plot.axes
+    if (plot.axes.z) {
+      // TODO: there needs to be a check to make sure that data variables arent on the x or y axis
+      variable.push(`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`);
+      variable.push(`${y.data.dimension + 1}/${y.data.dimension_variable + 1}`);
+    } else {
+      variable.push(`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`);
+    }
     const constant = {};
     plot.constraints.forEach(constraint => {
       const dim_idx = constraint.dim_idx + 1;
@@ -132,7 +141,11 @@ export class PlotService {
         }
       });
     });
-    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, {constant, variable});
+    const postData: any = {constant, variable};
+    if (plot.axes.z) {
+      postData.z = true;
+    }
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, postData);
   }
 
   testPlotlyResult(id: string) {
