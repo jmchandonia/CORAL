@@ -44,6 +44,55 @@ export class PlotlyBuilder {
             ))
         ];
     }
+
+    createPostData(): PlotlyPostData {
+        let variable: string[];
+        const {x, y} = this.axes;
+        if (this.axes.z) {
+            variable = [
+                `${x.data.dimension + 1}/${x.data.dimension_variable + 1}`,
+                `${y.data.dimension + 1}/${y.data.dimension_variable + 1}`
+            ];
+        } else {
+            variable = [`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`]
+        }
+
+        this.constraints.forEach(constraint => {
+            constraint.variables.forEach(dimVar => {
+                if (dimVar.type === 'series') {
+                    variable.push(`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`);
+                }
+            });
+        });
+
+        const constant = this.constraints.reduce((acc, constraint) => {
+            const dim_idx = constraint.dim_idx + 1;
+            const oneVar = constraint.variables.length === 1;
+            return {
+                ...acc,
+                ...constraint.variables.reduce((acc, dimVar) => {
+                    const dim_var_idx = dimVar.dim_var_idx + 1;
+                    if (dimVar.type !== 'flatten') return acc;
+                    return {
+                        ...acc,
+                        [oneVar ? dim_idx : `${dim_idx}/${dim_var_idx}`]: dimVar.selected_value + 1
+                    };
+                }, {})
+            };
+        }, {});
+        const postData: PlotlyPostData = {constant, variable};
+        if (this.axes.z) {
+            postData.z = true;
+        }
+        return postData;
+    }
+}
+
+export interface PlotlyPostData {
+    constant: object;
+    variable: string[];
+    z?: boolean;
+    'point-labels'?: string;
 }
 
 class Axes {
