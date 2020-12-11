@@ -57,30 +57,36 @@ export class PlotlyBuilder {
             variable = [`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`]
         }
 
+        const label_format = {};
+
         this.constraints.forEach(constraint => {
             constraint.variables.forEach(dimVar => {
                 if (dimVar.type === 'series') {
                     variable.push(`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`);
+                    label_format[`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`] = dimVar.series_label_pattern;
                 }
             });
         });
 
         const constant = this.constraints.reduce((acc, constraint) => {
             const dim_idx = constraint.dim_idx + 1;
-            const oneVar = constraint.variables.length === 1;
+            if (constraint.has_unique_indices || constraint.concat_variables) {
+                if (constraint.variables[0].type !== 'flatten') return acc;
+                return {
+                    ...acc, 
+                    [dim_idx]: constraint.variables[0].selected_value + 1
+                };
+            }
             return {
                 ...acc,
                 ...constraint.variables.reduce((acc, dimVar) => {
                     const dim_var_idx = dimVar.dim_var_idx + 1;
                     if (dimVar.type !== 'flatten') return acc;
-                    return {
-                        ...acc,
-                        [oneVar ? dim_idx : `${dim_idx}/${dim_var_idx}`]: dimVar.selected_value + 1
-                    };
+                    return {...acc, [`${dim_idx}/${dim_var_idx}`]: dimVar.selected_value + 1}
                 }, {})
-            };
+            }
         }, {});
-        const postData: BrickFilter = {constant, variable};
+        const postData: BrickFilter = {constant, variable, 'label-format': label_format};
         if (this.axes.z) {
             postData.z = true;
         }
@@ -91,8 +97,9 @@ export class PlotlyBuilder {
 export interface BrickFilter {
     constant: object;
     variable: string[];
-    z?: boolean;
+    z?: boolean | number;
     'point-labels'?: string;
+    'label-format'?: any;
 }
 
 class Axes {
