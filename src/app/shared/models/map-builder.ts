@@ -1,5 +1,5 @@
 import { QueryBuilder } from './QueryBuilder'
-import { AxisOption, Constraint } from './plotly-builder';
+import { AxisOption, Constraint, BrickFilter } from './plotly-builder';
 import { DimensionContext } from  './object-metadata';
 
 export class MapBuilder {
@@ -16,7 +16,10 @@ export class MapBuilder {
     brickId: string;
     constraints: Constraint[];
     dimWithCoords: number;
+    latDimIdx: number;
+    longDimIdx: number;
     constrainingRequired = false; // for dynamic type dimensions
+    multipleCoordinates = false; //TODO: edge case where bricks have more thant one instance of 'latitude and longitude'
 
     setConstraints(dims: DimensionContext[]): void {
         // we only need to constraint dimensions for data vars
@@ -49,8 +52,57 @@ export class MapBuilder {
     }
 
     setLatLongDimension(options: AxisOption[]): void {
-        this.dimWithCoords = options.find(option => {
+        const latLongOptions = options.filter(option => {
             return option.name.toLowerCase() === 'latitude' || option.name.toLowerCase() === 'longitude';
-        }).dimension;
+        });
+
+        if (latLongOptions.length !== 2) {
+            this.multipleCoordinates = true;
+        } else {
+            this.dimWithCoords = latLongOptions[0].dimension;
+            this.latDimIdx = latLongOptions.find(d => d.name.toLowerCase() === 'latitude').dimension_variable;
+            this.longDimIdx = latLongOptions.find(d => d.name.toLowerCase() === 'longitude').dimension_variable;
+        }
+    }
+
+    createPostData(): BrickFilter {
+        let variable = [
+            `${this.dimWithCoords + 1}/${this.latDimIdx}`,
+            `${this.dimWithCoords + 1}/${this.longDimIdx}`
+        ];
+
+        let constant = {};
+
+        this.constraints
+            .filter(c => !c.disabled)
+            .forEach(constraint => {
+                const dim_idx = constraint.dim_idx;
+                constraint.variables.forEach(variable => {
+                    if (variable.type === 'flatten') {
+                        if (constraint.concat_variables) {
+                            constant = {
+                                ...constant,
+                                ...Array(constraint.dimension.typed_values.length)
+                                    .fill(null)
+                                    .reduce((acc, _, i) => ({
+                                        ...acc,
+                                        [`${dim_idx + 1}/${i + 1}`]: variable.selected_value + 1
+                                    }), {})
+                            };
+                        } else {
+                            constant = {
+                                ...constant,
+                                [dim_idx + 1]: variable.selected_value + 1
+                            }
+                        }
+                    }
+                });
+        })
+
+        const postData: BrickFilter = {variable, constant, z: true};
+        if (this.labelField) {
+            postData['point-labels'] = `${this.labelField.dimension + 1}/${this.labelField.dimension_variable + 1}`;
+        };
+        return postData;
     }
 }

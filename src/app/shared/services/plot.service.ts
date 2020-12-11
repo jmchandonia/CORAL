@@ -113,6 +113,10 @@ export class PlotService {
     return axisOptions;
   }
 
+  testDynamicMap(id: string, mapBuilder: MapBuilder) {
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, mapBuilder.createPostData());
+  }
+
   getDynamicPlot(id: string) {
     const plot = this.getPlotlyBuilder();
     return this.http.post(`${environment.baseURL}/filter_brick/${id}`, plot.createPostData());
