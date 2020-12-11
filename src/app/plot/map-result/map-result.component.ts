@@ -39,7 +39,7 @@ export class MapResultComponent implements OnInit {
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
 
   ngOnInit(): void {
-    this.mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
+    this.mapBuilder = Object.assign(new MapBuilder(), JSON.parse(localStorage.getItem('mapBuilder')));
     this.setColorFieldEqualsLabelField();
     if (this.mapBuilder.isCoreType) {
       this.plotService.getStaticMap(this.mapBuilder).subscribe(res => this.initMap(res));

@@ -45,7 +45,7 @@ export class PlotlyBuilder {
         ];
     }
 
-    createPostData(): PlotlyPostData {
+    createPostData(): BrickFilter {
         let variable: string[];
         const {x, y} = this.axes;
         if (this.axes.z) {
@@ -80,7 +80,7 @@ export class PlotlyBuilder {
                 }, {})
             };
         }, {});
-        const postData: PlotlyPostData = {constant, variable};
+        const postData: BrickFilter = {constant, variable};
         if (this.axes.z) {
             postData.z = true;
         }
@@ -88,7 +88,7 @@ export class PlotlyBuilder {
     }
 }
 
-export interface PlotlyPostData {
+export interface BrickFilter {
     constant: object;
     variable: string[];
     z?: boolean;
