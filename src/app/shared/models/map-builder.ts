@@ -67,8 +67,8 @@ export class MapBuilder {
 
     createPostData(): BrickFilter {
         let variable = [
-            `${this.dimWithCoords + 1}/${this.latDimIdx}`,
-            `${this.dimWithCoords + 1}/${this.longDimIdx}`
+            `${this.dimWithCoords + 1}/${this.latDimIdx + 1}`,
+            `${this.dimWithCoords + 1}/${this.longDimIdx + 1}`
         ];
 
         let constant = {};
@@ -77,29 +77,16 @@ export class MapBuilder {
             .filter(c => !c.disabled)
             .forEach(constraint => {
                 const dim_idx = constraint.dim_idx;
-                constraint.variables.forEach(variable => {
-                    if (variable.type === 'flatten') {
-                        if (constraint.concat_variables) {
-                            constant = {
-                                ...constant,
-                                ...Array(constraint.dimension.typed_values.length)
-                                    .fill(null)
-                                    .reduce((acc, _, i) => ({
-                                        ...acc,
-                                        [`${dim_idx + 1}/${i + 1}`]: variable.selected_value + 1
-                                    }), {})
-                            };
-                        } else {
-                            constant = {
-                                ...constant,
-                                [dim_idx + 1]: variable.selected_value + 1
-                            }
-                        }
-                    }
-                });
+                if (constraint.concat_variables || constraint.has_unique_indices) {
+                    constant = {...constant, [`${dim_idx + 1}`]: constraint.variables[0].selected_value + 1};
+                } else {
+                    constraint.variables.forEach(dimVar => {
+                        constant = {...constant, [dim_idx]: dimVar.selected_value + 1}
+                    });
+                }
         })
 
-        const postData: BrickFilter = {variable, constant, z: true};
+        const postData: BrickFilter = {variable, constant, z: 1};
         if (this.labelField) {
             postData['point-labels'] = `${this.labelField.dimension + 1}/${this.labelField.dimension_variable + 1}`;
         };
