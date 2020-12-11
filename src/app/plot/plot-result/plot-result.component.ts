@@ -94,7 +94,7 @@ export class PlotResultComponent implements OnInit {
             this.layout.xaxis.type = 'log';
           }
           if (this.plot.axes.y.logarithmic) {
-            this.layout.xaxis.type = 'log';
+            this.layout.yaxis.type = 'log';
           }
           this.loading = false;
           this.spinner.hide();
