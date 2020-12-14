@@ -66,6 +66,7 @@ export class MapBuilder {
     }
 
     createPostData(): BrickFilter {
+
         let variable = [
             `${this.dimWithCoords + 1}/${this.latDimIdx + 1}`,
             `${this.dimWithCoords + 1}/${this.longDimIdx + 1}`
@@ -90,6 +91,10 @@ export class MapBuilder {
         if (this.labelField) {
             postData['point-labels'] = `${this.labelField.dimension + 1}/${this.labelField.dimension_variable + 1}`;
         };
+
+        if (this.colorField.dimension !== undefined) {
+            postData.data = `${this.colorField.dimension + 1}/${this.colorField.dimension_variable + 1}`;
+        }
         return postData;
     }
 }

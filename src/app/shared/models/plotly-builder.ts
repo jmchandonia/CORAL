@@ -103,6 +103,7 @@ export interface BrickFilter {
     constant: object;
     variable: string[];
     z?: boolean | number;
+    data?: string; // for selecting dimension values to plot as points in map builder
     'point-labels'?: string;
     'label-format'?: any;
 }
