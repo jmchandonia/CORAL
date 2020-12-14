@@ -114,7 +114,19 @@ export class PlotService {
   }
 
   testDynamicMap(id: string, mapBuilder: MapBuilder) {
-    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, mapBuilder.createPostData());
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, mapBuilder.createPostData())
+      .pipe(map((data: any) => {
+        const response = data.res[0];
+        return Array(response.x.length)
+          .fill(null)
+          .map((_, i) => ({
+            latitude: response.x[i],
+            longitude: response.y[i],
+            color: response.z[i],
+            label_text: response['point-labels'][i],
+            hover: false
+          }))
+      }))
   }
 
   getDynamicPlot(id: string) {
