@@ -163,7 +163,7 @@ export class PlotOptionsComponent implements OnInit {
         this.mapBuilder.query = this.plot.query;
       } else {
         this.mapBuilder.brickId = this.objectId;
-        this.mapBuilder.setLatLongDimension(this.axisOptions);
+        this.mapBuilder.setLatLongDimension(this._axisOptions);
       }
     } else {
       delete this.mapBuilder;
@@ -175,7 +175,6 @@ export class PlotOptionsComponent implements OnInit {
       delete this.plot.axes.z;
     }
     if (!this.coreTypePlot && !validator.validPlot(this.plot)) {
-      // this.plot.setDimensionConstraints(this.constrainableDimensions);
       this.setConstrainableDimensions();
     }
   }
