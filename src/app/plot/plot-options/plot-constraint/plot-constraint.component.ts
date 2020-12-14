@@ -15,12 +15,15 @@ export class PlotConstraintComponent implements OnInit {
   @Input() invalid = false;
   @Input() disabled = false;
   @Input() objectId: string;
+  @Input() isMap = false;
 
-  constraintTypes: string[] = Object.values(ConstraintType);
+  constraintTypes: string[];
 
   constructor(private plotService: PlotService) { }
 
   ngOnInit(): void {
+    // don't allow 'series' as an option for maps
+    this.constraintTypes = Object.values(ConstraintType).filter(c => !this.isMap || c !== 'series');
   }
 
   setSeriesLabel(event: 'flatten' | 'series' | 'mean', dimVar: ConstraintVariable) {
