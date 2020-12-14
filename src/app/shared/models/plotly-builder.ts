@@ -60,12 +60,17 @@ export class PlotlyBuilder {
         const label_format = {};
 
         this.constraints.forEach(constraint => {
-            constraint.variables.forEach(dimVar => {
-                if (dimVar.type === 'series') {
-                    variable.push(`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`);
-                    label_format[`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`] = dimVar.series_label_pattern;
-                }
-            });
+            if (constraint.concat_variables && constraint.variables[0].type === 'series') {
+                variable.push(`${constraint.dim_idx + 1}`);
+                //TODO: Handle what to do here for label formatting
+            } else {
+                constraint.variables.forEach(dimVar => {
+                    if (dimVar.type === 'series') {
+                        variable.push(`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`);
+                        label_format[`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`] = dimVar.series_label_pattern;
+                    }
+                })
+            }
         });
 
         const constant = this.constraints.reduce((acc, constraint) => {
@@ -125,30 +130,24 @@ export class Constraint {
         this.dimension = dimension;
         this.has_unique_indices = dimension.has_unique_indices;
         this.disabled = disabled;
-        // this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx));
-        if (!this.has_unique_indices) {
-            let correspondsToOneVar = this.dimension.typed_values
-                .map(typedValue => {
-                    return typedValue.values.values.reduce((acc, value) => acc.includes(value) && value !== null ? acc : [...acc, value], []);
-                })
-                .map(typedValue => typedValue.length)
-                .reduce((acc, typedValue) => typedValue === this.dimension.size, false);
-            if (correspondsToOneVar) {
-                // brick does not have unique values but is also not combinatoric
-                const concatTypedValue = {
-                    value_with_units: dimension.typed_values.reduce<string>((acc, cur, i) => {
-                        let newValWithUnits = cur.value_with_units;
-                        if (i < dimension.typed_values.length - 1) { newValWithUnits += ', ' }
-                        return acc + newValWithUnits;
-                    }, '')
-                
-                } as TypedValue;
-                this.variables = [new ConstraintVariable(concatTypedValue, -1, dimension.typed_values)];
-                this.concat_variables = true;
-            } else {
-                // brick is combinatoric and doesnt depend on specific values from other dim vars
-                this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx,null, this.has_unique_indices));
-            }
+
+        let correspondsToOneVar = this.dimension.typed_values
+            .map(typedValue => {
+                return typedValue.values.values.reduce((acc, value) => acc.includes(value) && value !== null ? acc : [...acc, value], []);
+            })
+            .map(typedValue => typedValue.length)
+            .reduce((acc, typedValue) => typedValue === this.dimension.size, false);
+
+        if (this.has_unique_indices || correspondsToOneVar) {
+            const concatTypedValue = {
+                value_with_units: dimension.typed_values.reduce<string>((acc, curr, i) => {
+                    let newValWithUnits = curr.value_with_units;
+                    if (i < dimension.typed_values.length - 1) { newValWithUnits += ', '; }
+                    return acc + newValWithUnits;
+                }, '')
+            } as TypedValue;
+            this.variables = [new ConstraintVariable(concatTypedValue, -1, dimension.typed_values)];
+            this.concat_variables = true;
         } else {
             this.variables = dimension.typed_values.map((value, idx) => new ConstraintVariable(value, idx, null, this.has_unique_indices));
         }
@@ -173,7 +172,6 @@ export class ConstraintVariable {
                 let newValue = '';
                 for (let j = 0; j < concatValues.length; j++) {
                     newValue += concatValues[j].values.values[i] !== null ? concatValues[j].values.values[i] : 'N/A';
-                    if (concatValues[j])
                     if (j < concatValues.length - 1) {
                         newValue += ', '
                     }
