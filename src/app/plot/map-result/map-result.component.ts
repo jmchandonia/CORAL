@@ -44,7 +44,9 @@ export class MapResultComponent implements OnInit {
     if (this.mapBuilder.isCoreType) {
       this.plotService.getStaticMap(this.mapBuilder).subscribe(res => this.initMap(res));
     } else {
-      this.plotService.getDynamicMap(this.mapBuilder).subscribe((res: Response<any>) => this.initMap(res.results));
+      this.plotService.testDynamicMap(this.mapBuilder.brickId, this.mapBuilder)
+        .subscribe(data => this.initMap(data))
+      // this.plotService.getDynamicMap(this.mapBuilder).subscribe((res: Response<any>) => this.initMap(res.results));
     }
   }
 
@@ -103,7 +105,7 @@ export class MapResultComponent implements OnInit {
       return this.categories.get(marker[this.mapBuilder.colorField.name]).display
     }
     if (this.mapBuilder.colorField) {
-      return !this.hasNullValues || (marker[this.mapBuilder.colorField.name] !== null || this.showNullValues)
+      return !this.hasNullValues || (marker.color !== null || this.showNullValues)
     }
     return true;
   }
