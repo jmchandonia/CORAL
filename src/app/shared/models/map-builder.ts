@@ -66,7 +66,6 @@ export class MapBuilder {
     }
 
     createPostData(): BrickFilter {
-
         let variable = [
             `${this.dimWithCoords + 1}/${this.latDimIdx + 1}`,
             `${this.dimWithCoords + 1}/${this.longDimIdx + 1}`
@@ -79,10 +78,14 @@ export class MapBuilder {
             .forEach(constraint => {
                 const dim_idx = constraint.dim_idx;
                 if (constraint.concat_variables || constraint.has_unique_indices) {
-                    constant = {...constant, [`${dim_idx + 1}`]: constraint.variables[0].selected_value + 1};
+                    if (constraint.variables[0].type === 'flatten') {
+                        constant = {...constant, [`${dim_idx + 1}`]: constraint.variables[0].selected_value + 1};
+                    }
                 } else {
                     constraint.variables.forEach(dimVar => {
-                        constant = {...constant, [dim_idx]: dimVar.selected_value + 1}
+                        if (dimVar.type === 'flatten') {
+                            constant = {...constant, [dim_idx]: dimVar.selected_value + 1};
+                        }
                     });
                 }
         })
