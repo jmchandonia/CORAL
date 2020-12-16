@@ -3,3 +3,13 @@
     position: relative;
     top: 2px;
 }
+
+::ng-deep .custom-slider .ngx-slider .ngx-slider-tick {
+    border-radius: 0;
+    width: 1px;
+    background: black;
+}
+
+::ng-deep .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: black;
+}
