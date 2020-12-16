@@ -4,6 +4,11 @@
     top: 2px;
 }
 
+.loading {
+    height: 550px;
+    width: 100%;
+}
+
 ::ng-deep .custom-slider .ngx-slider .ngx-slider-tick {
     border-radius: 0;
     width: 1px;
