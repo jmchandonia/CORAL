@@ -4,7 +4,7 @@ import { AgmMap, AgmInfoWindow } from '@agm/core';
 import { Router } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Response } from 'src/app/shared/models/response';
-import { Options as SliderOptions } from '@angular-slider/ngx-slider';
+import { Options as SliderOptions, CustomStepDefinition } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-map-result',
@@ -238,23 +238,58 @@ export class MapResultComponent implements OnInit {
   setSliderOptions() {
     this.sliderOptions = {
       floor: this.lowestScale,
-      ceil: this.highestScale,
-      step: (this.highestScale - this.lowestScale) / this.results.length,
+      showTicks: true,
+      hideLimitLabels: true,
       getPointerColor: () => '#00489B',
       selectionBarGradient: {
         from: '#0000FF',
         to: '#FF0000'
       },
     }
+    if (this.mapBuilder.logarithmicColorScale) {
+      this.sliderOptions.stepsArray = this.getStepsArray(this.lowestNonZeroScale, this.highestScale);
+      this.highestScale = this.sliderOptions.stepsArray[this.sliderOptions.stepsArray.length - 1].value;
+    } else {
+      this.sliderOptions.step = (this.highestScale - this.lowestScale) / this.results.length;
+      this.sliderOptions.ceil = this.highestScale;
+    }
     this.showSlider = true;
   }
 
+  getStepsArray(min: number, max: number): CustomStepDefinition[] {
+    let minDec = +min.toExponential().split('e')[1];
+    let maxDec = +max.toExponential().split('e')[1];
+
+    let n = minDec;
+    let stepsArray = [];
+    while (n <= maxDec) {
+      stepsArray.push(
+        ...Array(9).fill(null).map((_, i) => {
+          return {
+            value: +((i + 1) * Math.pow(10, n)).toFixed(Math.abs(n)),
+            legend: i > 0 ? null : +((i + 1) * Math.pow(10, n)).toFixed(Math.abs(n))
+          };
+        })
+      );
+      n++;
+    }
+    if (this.highestScale > stepsArray[stepsArray.length - 1].value) {
+      stepsArray.push({
+        value: +(Math.pow(10, n)).toFixed(Math.abs(n)),
+        legend: +(Math.pow(10, n)).toFixed(Math.abs(n))
+      });
+    }
+    return stepsArray;
+  }
+
   filterMarkersWithSlider(event) {
-    const field = this.mapBuilder.colorField.name;
     this.results = this._results.filter(result => {
       if (result.color === null) return true;
+      if (this.mapBuilder.logarithmicColorScale) {
+        if (event.value === this.sliderOptions.stepsArray[0].value && result.color === 0) return true;
+      }
       return result.color > event.value && result.color < event.highValue;
-    })
+    });
   }
 
   getIconUrl(scale) {
