@@ -20,6 +20,7 @@ export class MapBuilder {
     longDimIdx: number;
     constrainingRequired = false; // for dynamic type dimensions
     multipleCoordinates = false; //TODO: edge case where bricks have more thant one instance of 'latitude and longitude'
+    logarithmicColorScale = false;
 
     setConstraints(dims: DimensionContext[]): void {
         // we only need to constraint dimensions for data vars
