@@ -247,7 +247,7 @@ export class MapResultComponent implements OnInit {
       },
     }
     if (this.mapBuilder.logarithmicColorScale) {
-      this.sliderOptions.stepsArray = this.getStepsArray(this.lowestNonZeroScale, this.highestScale);
+      this.sliderOptions.stepsArray = this.getLogSteps(this.lowestNonZeroScale, this.highestScale);
       this.highestScale = this.sliderOptions.stepsArray[this.sliderOptions.stepsArray.length - 1].value;
     } else {
       this.sliderOptions.step = (this.highestScale - this.lowestScale) / this.results.length;
@@ -256,18 +256,31 @@ export class MapResultComponent implements OnInit {
     this.showSlider = true;
   }
 
-  getStepsArray(min: number, max: number): CustomStepDefinition[] {
+  getLogSteps(min: number, max: number): CustomStepDefinition[] {
     let minDec = +min.toExponential().split('e')[1];
     let maxDec = +max.toExponential().split('e')[1];
 
-    let n = minDec;
-    let stepsArray = [];
+    // let n = minDec;
+    // let stepsArray = [];
+
+    let stepsArray = Array.from(Array(9), (_, i) => {
+      if (i === 0) {
+        return {value: 0, legend: '0'};
+      }
+      return {
+        value: +((i + 1) * Math.pow(10, minDec)).toFixed(Math.abs(minDec)),
+        legend: null
+      };
+    }) as CustomStepDefinition[];
+
+    let n = minDec + 1;
+
     while (n <= maxDec) {
       stepsArray.push(
         ...Array(9).fill(null).map((_, i) => {
           return {
             value: +((i + 1) * Math.pow(10, n)).toFixed(Math.abs(n)),
-            legend: i > 0 ? null : +((i + 1) * Math.pow(10, n)).toFixed(Math.abs(n))
+            legend: i > 0 ? null : ((i + 1) * Math.pow(10, n)).toFixed(Math.abs(n > 0 ? 0 : n))
           };
         })
       );
@@ -276,7 +289,7 @@ export class MapResultComponent implements OnInit {
     if (this.highestScale > stepsArray[stepsArray.length - 1].value) {
       stepsArray.push({
         value: +(Math.pow(10, n)).toFixed(Math.abs(n)),
-        legend: +(Math.pow(10, n)).toFixed(Math.abs(n))
+        legend: (Math.pow(10, n)).toFixed(Math.abs(n > 0 ? 0 : n))
       });
     }
     return stepsArray;
