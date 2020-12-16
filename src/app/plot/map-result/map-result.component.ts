@@ -22,6 +22,7 @@ export class MapResultComponent implements OnInit {
   results: any[];
   _results: any[]; // contains all results including results that are hidden
   lowestScale: number;
+  lowestNonZeroScale: number;
   highestScale: number;
   averageScale: number;
   categories: Map<string, any> = new Map();
@@ -34,6 +35,7 @@ export class MapResultComponent implements OnInit {
   colorSignificantDigits: number;
   labelSignificantDigits: number;
   colorFieldEqualsLabelField = false;
+  logMultiplier = 1;
 
   @ViewChild('map') map: AgmMap;
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
@@ -46,7 +48,6 @@ export class MapResultComponent implements OnInit {
     } else {
       this.plotService.testDynamicMap(this.mapBuilder.brickId, this.mapBuilder)
         .subscribe(data => this.initMap(data))
-      // this.plotService.getDynamicMap(this.mapBuilder).subscribe((res: Response<any>) => this.initMap(res.results));
     }
   }
 
@@ -88,7 +89,6 @@ export class MapResultComponent implements OnInit {
   }
 
   plotCategoryColorMarkers(data: any[]) {
-    const field = this.mapBuilder.colorField.name;
     this.results = data.map(result => {
       if (this.categories.has(result.color)) {
         return {...result, scale: this.categories.get(result.color).color}
@@ -121,11 +121,20 @@ export class MapResultComponent implements OnInit {
   }
 
   plotNumericColorMarkers(data: any[]) {
-    const field = this.mapBuilder.colorField.name;
-
     this.lowestScale = +Math.min.apply(null, data.map(d => d.color)).toFixed(this.colorSignificantDigits);
     this.highestScale = +Math.max.apply(null, data.map(d => d.color)).toFixed(this.colorSignificantDigits);
+    this.lowestNonZeroScale = data.reduce((a, n) => {
+      if (n.color < a) {
+        return n.color !== 0 && n.color !== null ? n.color : a;
+      }
+      return a;
+    }, this.highestScale);
     this.averageScale = data.reduce((a, d) => a + d.color, 0) / data.length;
+
+    if (this.mapBuilder.logarithmicColorScale && this.lowestNonZeroScale < 1) {
+      const exponent = +this.lowestNonZeroScale.toExponential().split('-')[1];
+      this.logMultiplier = Math.pow(10, exponent)
+    }
 
     this.results = data.map(result => {
       const item: any = {
@@ -184,24 +193,45 @@ export class MapResultComponent implements OnInit {
   calculateScale(result: any): string {
     // calculate hex color scale based on numeric value
 
-    const totalRange = this.highestScale - this.lowestScale;
-    let red = 255, blue = 255;
     if (result.color === null) { 
       this.hasNullValues = true; // TODO: this is a side effect
       return 'AAA';
      }
-    
-    if (result.color < this.averageScale) {
+
+     if (result.color === 0) {
+       return '0000FF';
+     }
+
+    let { color } = result;
+    let { highestScale, lowestScale, averageScale } = this;
+    const l = this.logMultiplier;
+
+    if (this.mapBuilder.logarithmicColorScale) {
+      color = color === 0 ? 0 : Math.log10(color * l);
+      highestScale = highestScale === 0 ? 0 : Math.log10(highestScale * l);
+      averageScale = averageScale === 0 ? 0 : Math.log10(averageScale * l);
+      lowestScale = lowestScale === 0 ? 0 : Math.log10(lowestScale * l);
+    }
+
+    const totalRange = highestScale - lowestScale;
+
+    let red = 255, blue = 255;
+
+     if (result.color > this.highestScale) return 'FF0000';
+
+    if (color < averageScale) {
       blue = 255;
-      const difference = result.color - this.lowestScale;
+      const difference = color - lowestScale;
       red = Math.min(Math.floor((difference / (totalRange / 2)) * 255), 255);
     }
 
-    if (result.color > this.averageScale) {
+    if (color > averageScale) {
       red = 255;
-      const difference = this.highestScale - result.color;
+      const difference = highestScale - color;
       blue = Math.min(Math.floor((difference / (totalRange/2)) * 255), 255);
     }
+    
+
     return `${red.toString(16).toUpperCase().padStart(2, '0')}00${blue.toString(16).toUpperCase().padStart(2, '0')}`;
   }
 
@@ -214,7 +244,7 @@ export class MapResultComponent implements OnInit {
       selectionBarGradient: {
         from: '#0000FF',
         to: '#FF0000'
-      }
+      },
     }
     this.showSlider = true;
   }
