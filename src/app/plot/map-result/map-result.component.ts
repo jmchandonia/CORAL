@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Response } from 'src/app/shared/models/response';
 import { Options as SliderOptions, CustomStepDefinition } from '@angular-slider/ngx-slider';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-map-result',
@@ -16,6 +17,7 @@ export class MapResultComponent implements OnInit {
   constructor(
    private router: Router,
    private plotService: PlotService,
+   private spinner: NgxSpinnerService
   ) { }
 
   mapBuilder: MapBuilder;
@@ -41,6 +43,7 @@ export class MapResultComponent implements OnInit {
   @ViewChild('infoWindow') infoWindow: AgmInfoWindow;
 
   ngOnInit(): void {
+    this.spinner.show();
     this.mapBuilder = Object.assign(new MapBuilder(), JSON.parse(localStorage.getItem('mapBuilder')));
     this.setColorFieldEqualsLabelField();
     if (this.mapBuilder.isCoreType) {
@@ -69,6 +72,16 @@ export class MapResultComponent implements OnInit {
       this.results = results.map(result => ({...result, scale: 'FF0000', hover: false})); // TODO: handle extra object fields in subscription
       this._results = this.results;
     }
+  }
+
+  onMapReady(event: google.maps.Map) {
+    this.spinner.hide();
+    // set center and zoom level of map once map is initialized
+    const bounds = new google.maps.LatLngBounds();
+    this.results.forEach(result => {
+      bounds.extend(new google.maps.LatLng(result.latitude, result.longitude));
+    });
+    event.fitBounds(bounds);
   }
 
   setColorFieldEqualsLabelField() {

@@ -5,17 +5,26 @@
     </span>
     <hr style="width: 100%" />
 </div>
+<div *ngIf="!results" class="loading">
+    <ngx-spinner
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false">
+    </ngx-spinner>
+  </div>
 <agm-map
     #map
+    *ngIf="results?.length"
     style="height: 550px;"
-    [fitBounds]="true"
     mapTypeId="satellite"
+    (mapReady)="onMapReady($event)"
 >
     <agm-map-type-control></agm-map-type-control>
     <ng-container *ngFor="let result of results">
         <agm-marker
             *ngIf="markerShouldBeDisplayed(result)"
-            [agmFitBounds]="true"
             [latitude]="result.latitude"
             [longitude]="result.longitude"
             [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 0, y: -10}}"
@@ -39,7 +48,7 @@
             <label class="form-check-label">Show Null Values (Grey)</label>
         </div>
     </div>
-    <div [ngClass]="hasNullValues ? 'col-8' : 'col-11'" class="custom-slider">
+    <div *ngIf="results?.length" [ngClass]="hasNullValues ? 'col-8' : 'col-11'" class="custom-slider">
         <label>Filter by {{mapBuilder.colorField.name}} <span *ngIf="mapBuilder.colorField.units">({{mapBuilder.colorField.units.oterm_name ? mapBuilder.colorField.units.oterm_name : mapBuilder.colorField.units}})</span></label>
         <ngx-slider
             #slider
