@@ -261,12 +261,10 @@ export class MapResultComponent implements OnInit {
     }
     if (this.mapBuilder.logarithmicColorScale) {
       this.sliderOptions.stepsArray = this.getLogSteps(this.lowestNonZeroScale, this.highestScale);
-      this.highestScale = this.sliderOptions.stepsArray[this.sliderOptions.stepsArray.length - 1].value;
     } else {
       this.getLinearSteps(this.lowestScale, this.highestScale);
       // this.sliderOptions.step = (this.highestScale - this.lowestScale) / this.results.length;
       this.sliderOptions.stepsArray = this.getLinearSteps(this.lowestScale, this.highestScale);
-      this.sliderOptions.ceil = this.highestScale;
     }
     this.showSlider = true;
   }
@@ -302,9 +300,13 @@ export class MapResultComponent implements OnInit {
       n++;
     }
     if (this.highestScale > stepsArray[stepsArray.length - 1].value) {
+      // stepsArray.push({
+      //   value: +(Math.pow(10, n)).toFixed(Math.abs(n)),
+      //   legend: (Math.pow(10, n)).toFixed(Math.abs(n > 0 ? 0 : n))
+      // });
       stepsArray.push({
-        value: +(Math.pow(10, n)).toFixed(Math.abs(n)),
-        legend: (Math.pow(10, n)).toFixed(Math.abs(n > 0 ? 0 : n))
+        value: this.highestScale,
+        legend: null
       });
     }
     return stepsArray;
@@ -316,29 +318,35 @@ export class MapResultComponent implements OnInit {
 
     const totalRange = minDec + maxDec;
     const stepLength = Math.pow(10, totalRange + 1) / 100;
-    const stepArray: CustomStepDefinition[] = [];
+    const stepsArray: CustomStepDefinition[] = [];
     let i = 0;
-    while (i < 100 && (i * stepLength) < (max + Math.pow(10, totalRange))) {
+    while (i < 100 && (i * stepLength) < max) {
       if (i === 0) {
-        stepArray.push({value: 0, legend: '0'});
+        stepsArray.push({value: 0, legend: '0'});
       } else {
-        stepArray.push({
+        stepsArray.push({
           value: i * stepLength,
-          legend: i % 10 === 0 ? (i * stepLength).toString() : null
+          legend: i % 10 === 0 ? (+(i * stepLength).toFixed(this.colorSignificantDigits)).toString() : null
         })
       }
       i++;
     }
-    return stepArray;
+    if (this.highestScale > stepsArray[stepsArray.length - 1].value) {
+      stepsArray.push({
+        value: this.highestScale,
+        legend: null
+      })
+    }
+    return stepsArray;
   }
 
   filterMarkersWithSlider(event) {
-    this.results = this._results.filter(result => {
+    this.results = this._results.filter((result, i) => {
       if (result.color === null) return true;
-      if (this.mapBuilder.logarithmicColorScale) {
-        if (event.value === this.sliderOptions.stepsArray[0].value && result.color === 0) return true;
-      }
-      return result.color > event.value && result.color < event.highValue;
+      // if (this.mapBuilder.logarithmicColorScale) {
+      //   if (event.value === this.sliderOptions.stepsArray[0].value && result.color === 0) return true;
+      // }
+      return result.color >= event.value && result.color <= event.highValue;
     });
   }
 
