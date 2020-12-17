@@ -273,9 +273,6 @@ export class MapResultComponent implements OnInit {
     let minDec = +min.toExponential().split('e')[1];
     let maxDec = +max.toExponential().split('e')[1];
 
-    // let n = minDec;
-    // let stepsArray = [];
-
     let stepsArray = Array.from(Array(9), (_, i) => {
       if (i === 0) {
         return {value: 0, legend: '0'};
@@ -299,16 +296,15 @@ export class MapResultComponent implements OnInit {
       );
       n++;
     }
+
+    stepsArray = stepsArray.filter(item => item.value <= this.highestScale);
+
     if (this.highestScale > stepsArray[stepsArray.length - 1].value) {
-      // stepsArray.push({
-      //   value: +(Math.pow(10, n)).toFixed(Math.abs(n)),
-      //   legend: (Math.pow(10, n)).toFixed(Math.abs(n > 0 ? 0 : n))
-      // });
       stepsArray.push({
         value: this.highestScale,
         legend: null
       });
-    }
+    } 
     return stepsArray;
   }
 
@@ -343,9 +339,6 @@ export class MapResultComponent implements OnInit {
   filterMarkersWithSlider(event) {
     this.results = this._results.filter((result, i) => {
       if (result.color === null) return true;
-      // if (this.mapBuilder.logarithmicColorScale) {
-      //   if (event.value === this.sliderOptions.stepsArray[0].value && result.color === 0) return true;
-      // }
       return result.color >= event.value && result.color <= event.highValue;
     });
   }
