@@ -28,7 +28,14 @@ export class PlotConstraintComponent implements OnInit {
 
   setSeriesLabel(event: 'flatten' | 'series' | 'mean', dimVar: ConstraintVariable) {
     if (event === 'series') {
-      dimVar.series_label_pattern = dimVar.value.value_with_units + '=#VAR';
+      if (this.constraint.concat_variables) {
+        dimVar.series_label_pattern = dimVar.value.value_with_units
+          .split(',')
+          .map((value, index) => value + '=#VAR' + (index + 1))
+          .join(', ')
+      } else {
+        dimVar.series_label_pattern = dimVar.value.value_with_units + '=#VAR'
+      }
     } else {
       delete dimVar.series_label_pattern;
     }

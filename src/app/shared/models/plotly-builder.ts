@@ -62,7 +62,9 @@ export class PlotlyBuilder {
         this.constraints.forEach(constraint => {
             if (constraint.concat_variables && constraint.variables[0].type === 'series') {
                 variable.push(`${constraint.dim_idx + 1}`);
-                //TODO: Handle what to do here for label formatting
+                /////
+                label_format[`${constraint.dim_idx + 1}`] = constraint.variables[0].series_label_pattern;
+                /////
             } else {
                 constraint.variables.forEach(dimVar => {
                     if (dimVar.type === 'series') {
