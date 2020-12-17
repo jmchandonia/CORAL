@@ -16,7 +16,7 @@
   </div>
 <agm-map
     #map
-    *ngIf="results?.length"
+    *ngIf="_results?.length"
     style="height: 550px;"
     mapTypeId="satellite"
     (mapReady)="onMapReady($event)"
@@ -48,7 +48,7 @@
             <label class="form-check-label">Show Null Values (Grey)</label>
         </div>
     </div>
-    <div *ngIf="results?.length" [ngClass]="hasNullValues ? 'col-8' : 'col-11'" class="custom-slider">
+    <div *ngIf="_results?.length" [ngClass]="hasNullValues ? 'col-8' : 'col-11'" class="custom-slider">
         <label>Filter by {{mapBuilder.colorField.name}} <span *ngIf="mapBuilder.colorField.units">({{mapBuilder.colorField.units.oterm_name ? mapBuilder.colorField.units.oterm_name : mapBuilder.colorField.units}})</span></label>
         <ngx-slider
             #slider
