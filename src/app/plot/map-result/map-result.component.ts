@@ -263,7 +263,9 @@ export class MapResultComponent implements OnInit {
       this.sliderOptions.stepsArray = this.getLogSteps(this.lowestNonZeroScale, this.highestScale);
       this.highestScale = this.sliderOptions.stepsArray[this.sliderOptions.stepsArray.length - 1].value;
     } else {
-      this.sliderOptions.step = (this.highestScale - this.lowestScale) / this.results.length;
+      this.getLinearSteps(this.lowestScale, this.highestScale);
+      // this.sliderOptions.step = (this.highestScale - this.lowestScale) / this.results.length;
+      this.sliderOptions.stepsArray = this.getLinearSteps(this.lowestScale, this.highestScale);
       this.sliderOptions.ceil = this.highestScale;
     }
     this.showSlider = true;
@@ -306,6 +308,28 @@ export class MapResultComponent implements OnInit {
       });
     }
     return stepsArray;
+  }
+
+  getLinearSteps(min: number, max: number): CustomStepDefinition[] {
+    const minDec = +min.toExponential().split('e')[1];
+    const maxDec = +max.toExponential().split('e')[1];
+
+    const totalRange = minDec + maxDec;
+    const stepLength = Math.pow(10, totalRange + 1) / 100;
+    const stepArray: CustomStepDefinition[] = [];
+    let i = 0;
+    while (i < 100 && (i * stepLength) < (max + Math.pow(10, totalRange))) {
+      if (i === 0) {
+        stepArray.push({value: 0, legend: '0'});
+      } else {
+        stepArray.push({
+          value: i * stepLength,
+          legend: i % 10 === 0 ? (i * stepLength).toString() : null
+        })
+      }
+      i++;
+    }
+    return stepArray;
   }
 
   filterMarkersWithSlider(event) {
