@@ -75,6 +75,7 @@ export class PlotResultComponent implements OnInit {
             return trace;
           });
           this.layout = {
+            ...this.layout,
             ...this.plot.plot_type.plotly_layout,
             legend: {
               orientation: 'h',
@@ -90,6 +91,12 @@ export class PlotResultComponent implements OnInit {
               title: this.plot.axes.y.show_title ? this.plot.axes.y.title : ''
             }
           }
+
+          if (results.length > 4) {
+            // add 16px for every extra tracelabel (prevents plot from being squeezed up in the top)
+            this.layout.height += (16 * (results.length - 4));
+          }
+
           if (this.plot.axes.x.logarithmic) {
             this.layout.xaxis.type = 'log';
           }
