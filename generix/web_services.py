@@ -812,7 +812,8 @@ def _filter_brick(brick_id, query):
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
     cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     sys.stderr.write('running '+cmd+'\n')
-    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    # output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
     try:
         data = json.loads(output.stdout)
         return data
