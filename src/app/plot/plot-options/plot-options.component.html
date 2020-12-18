@@ -10,6 +10,14 @@
   </div>
   <div class="row justify-content-center">
     <div class="col-8">
+      <ngx-spinner
+        style="position: absolute; top: 300px; left: 50%"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false">
+      </ngx-spinner>
       <div class="card" *ngIf="plot">
         <div class="card-header" style="background-color: #eeeeff;">
           Data Plotting Options
@@ -29,7 +37,7 @@
                           [(ngModel)]="plot.plot_type"
                           [ngModelOptions]="{standalone: true}"
                           [clearable]="false"
-                          [disabled]="unableToPlot"
+                          [disabled]="!axisOptions?.length || unableToPlot"
                         >
                           <ng-template ng-option-tmp let-item="item">
                             <span [innerHTML]="item.image_tag | safeHtml"></span>
@@ -41,6 +49,7 @@
                       <label for="graphTitle">Plot Title</label>
                       <input class="form-control"
                         type="text"
+                        [disabled]="!axisOptions?.length"
                         [(ngModel)]="plot.title"
                         [ngModelOptions]="{standalone: true}" />
                     </div>
@@ -120,7 +129,7 @@
   </div>
   <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
     <div class="col-8">
-      <button id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
+      <button *ngIf="axisOptions?.length" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
         Plot Data
       </button>
     </div>
