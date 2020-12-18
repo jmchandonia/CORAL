@@ -8,6 +8,7 @@ import { MapBuilder } from 'src/app/shared/models/map-builder';
 import { PlotlyBuilder, AxisOption, Axis, Constraint } from 'src/app/shared/models/plotly-builder';
 import { Response } from 'src/app/shared/models/response';
 import { PlotValidatorService as validator } from 'src/app/shared/services/plot-validator.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-plot-options',
   templateUrl: './plot-options.component.html',
@@ -32,16 +33,19 @@ export class PlotOptionsComponent implements OnInit {
   public unableToPlot = false;
   constrainableDimensions: DimensionContext[];
   public invalid = false;
+  public loading = true;
 
   constructor(
     private route: ActivatedRoute,
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
     private router: Router,
+    private spinner: NgxSpinnerService
     ) { }
 
   ngOnInit() {
 
+    this.spinner.show();
     // get object id
     this.route.params.subscribe(params => {
         if (params['id']) {
@@ -75,6 +79,8 @@ export class PlotOptionsComponent implements OnInit {
           this.axisOptions = data.results;
           this._axisOptions = [...this.axisOptions];
           this.getPlotTypes();
+          // this.loading = false;
+          this.spinner.hide();
         });
     } else {
       // get metadata and assign to AxisOption type 
@@ -92,6 +98,8 @@ export class PlotOptionsComponent implements OnInit {
           if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
             this.mapBuilder.setLatLongDimension(this.axisOptions);
           }
+          // this.loading = false;
+          this.spinner.hide();
         });
     }
   }
