@@ -94,6 +94,11 @@ export class PlotOptionsComponent implements OnInit {
           }
           this.axisOptions = axisOptions;
           this._axisOptions = [...this.axisOptions];
+
+          if (this.axisOptions.filter(x => x.data_variable !== undefined).length > 1) {
+            this.plot.multi_data_vars = true;
+          }
+
           this.getPlotTypes();
           if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
             this.mapBuilder.setLatLongDimension(this.axisOptions);
