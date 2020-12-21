@@ -57,7 +57,7 @@ export class PlotlyBuilder {
                 `${y.data.dimension + 1 + m}/${y.data.dimension_variable + 1}`
             ];
         } else {
-            variable = [`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`]
+            variable = [`${x.data.dimension + 1 + m}/${x.data.dimension_variable + 1}`]
         }
 
         const label_format = {};
@@ -66,13 +66,13 @@ export class PlotlyBuilder {
             if (constraint.concat_variables && constraint.variables[0].type === 'series') {
                 variable.push(`${constraint.dim_idx + 1}`);
                 /////
-                label_format[`${constraint.dim_idx + 1}`] = constraint.variables[0].series_label_pattern;
+                label_format[`${constraint.dim_idx + 1 + m}`] = constraint.variables[0].series_label_pattern;
                 /////
             } else {
                 constraint.variables.forEach(dimVar => {
                     if (dimVar.type === 'series') {
-                        variable.push(`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`);
-                        label_format[`${constraint.dim_idx + 1}/${dimVar.dim_var_idx + 1}`] = dimVar.series_label_pattern;
+                        variable.push(`${constraint.dim_idx + 1 + m}/${dimVar.dim_var_idx + 1}`);
+                        label_format[`${constraint.dim_idx + 1 + m}/${dimVar.dim_var_idx + 1}`] = dimVar.series_label_pattern;
                     }
                 })
             }
@@ -106,9 +106,6 @@ export class PlotlyBuilder {
                 ? this.axes.z.data.data_variable + 1
                 : this.axes.y.data.data_variable + 1;
         }
-
-        
-
         return postData;
     }
 }
