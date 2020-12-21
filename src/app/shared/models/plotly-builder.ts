@@ -30,6 +30,7 @@ export class PlotlyBuilder {
     query: QueryBuilder;
     core_type: boolean;
     plot_type: PlotlyConfig;
+    multi_data_vars = false;
 
     plotly_trace: any;
     plotly_layout: any;
@@ -47,12 +48,13 @@ export class PlotlyBuilder {
     }
 
     createPostData(): BrickFilter {
+        const m = +this.multi_data_vars
         let variable: string[];
         const {x, y} = this.axes;
         if (this.axes.z) {
             variable = [
-                `${x.data.dimension + 1}/${x.data.dimension_variable + 1}`,
-                `${y.data.dimension + 1}/${y.data.dimension_variable + 1}`
+                `${x.data.dimension + 1 + m}/${x.data.dimension_variable + 1}`,
+                `${y.data.dimension + 1 + m}/${y.data.dimension_variable + 1}`
             ];
         } else {
             variable = [`${x.data.dimension + 1}/${x.data.dimension_variable + 1}`]
@@ -77,7 +79,7 @@ export class PlotlyBuilder {
         });
 
         const constant = this.constraints.reduce((acc, constraint) => {
-            const dim_idx = constraint.dim_idx + 1;
+            const dim_idx = constraint.dim_idx + 1 + m;
             if (constraint.has_unique_indices || constraint.concat_variables) {
                 if (constraint.variables[0].type !== 'flatten') return acc;
                 return {
@@ -98,6 +100,15 @@ export class PlotlyBuilder {
         if (this.axes.z) {
             postData.z = true;
         }
+
+        if (this.multi_data_vars) {
+            constant['1'] = this.axes.z
+                ? this.axes.z.data.data_variable + 1
+                : this.axes.y.data.data_variable + 1;
+        }
+
+        
+
         return postData;
     }
 }
