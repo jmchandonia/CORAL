@@ -49,7 +49,7 @@
                       <label for="graphTitle">Plot Title</label>
                       <input class="form-control"
                         type="text"
-                        [disabled]="!_axisOptions?.length"
+                        [disabled]="!hasAxisOptions"
                         [(ngModel)]="plot.title"
                         [ngModelOptions]="{standalone: true}" />
                     </div>
@@ -129,7 +129,7 @@
   </div>
   <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
     <div class="col-8">
-      <button *ngIf="_axisOptions?.length" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
+      <button *ngIf="hasAxisOptions" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
         Plot Data
       </button>
     </div>
