@@ -58,7 +58,7 @@ export class PlotResultComponent implements OnInit {
             const trace = {
               ...result,
               ...this.plot.plot_type.plotly_trace,
-              name: result.label,
+              name: result.label.replace(/#VAR =/g, ''),
               error_x: {
                 type: 'data',
                 array: result.error_x,
