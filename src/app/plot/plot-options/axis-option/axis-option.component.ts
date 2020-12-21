@@ -24,7 +24,8 @@ export class AxisOptionComponent implements OnInit, OnChanges {
       ? this.options.filter(option => {
         return option.scalar_type === 'float' ||
         option.scalar_type === 'int' ||
-        option.scalar_type === 'date';
+        option.scalar_type === 'date' ||
+        option.name === 'DateTime';
       })
       : this.options;
   }

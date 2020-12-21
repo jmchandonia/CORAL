@@ -13,6 +13,7 @@ export class Axis {
     data_var_idx?: number;
     show_err_margin = true;
     logarithmic = false;
+    show_tick_labels = true;
 }
 
 export class PlotlyBuilder {

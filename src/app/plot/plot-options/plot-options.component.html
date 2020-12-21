@@ -49,7 +49,7 @@
                       <label for="graphTitle">Plot Title</label>
                       <input class="form-control"
                         type="text"
-                        [disabled]="!axisOptions?.length"
+                        [disabled]="!_axisOptions?.length"
                         [(ngModel)]="plot.title"
                         [ngModelOptions]="{standalone: true}" />
                     </div>
@@ -98,7 +98,7 @@
       [invalid]="invalid"
     ></app-axis-option>
   </div>
-  <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length && !isMap">
+  <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length && !isMap && axisOptions">
     <div *ngIf="plot.plot_type && plot.constraints.length" class="col-8">
       <div class="alert alert-warning">
         This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plot_type.name}}.
@@ -129,7 +129,7 @@
   </div>
   <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
     <div class="col-8">
-      <button *ngIf="axisOptions?.length" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
+      <button *ngIf="_axisOptions?.length" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
         Plot Data
       </button>
     </div>

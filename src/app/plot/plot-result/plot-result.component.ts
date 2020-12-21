@@ -92,6 +92,10 @@ export class PlotResultComponent implements OnInit {
             }
           }
 
+          if (this.plot.axes.z?.show_title) {
+            this.layout.zaxis = {title: this.plot.axes.z.title};
+          }
+
           if (results.length > 4) {
             // add 16px for every extra tracelabel (prevents plot from being squeezed up in the top)
             this.layout.height += (16 * (results.length - 4));
@@ -100,8 +104,17 @@ export class PlotResultComponent implements OnInit {
           if (this.plot.axes.x.logarithmic) {
             this.layout.xaxis.type = 'log';
           }
+
+          if (!this.plot.axes.x.show_tick_labels) {
+            this.layout.xaxis.showticklabels = false;
+          }
+
           if (this.plot.axes.y.logarithmic) {
             this.layout.yaxis.type = 'log';
+          }
+
+          if (!this.plot.axes.x.show_tick_labels) {
+            this.layout.yaxis.showticklabels = false;
           }
           this.loading = false;
           this.spinner.hide();

@@ -98,7 +98,6 @@ export class PlotOptionsComponent implements OnInit {
           if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
             this.mapBuilder.setLatLongDimension(this.axisOptions);
           }
-          // this.loading = false;
           this.spinner.hide();
         });
     }
@@ -157,7 +156,7 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   isNumeric(scalar) {
-    return scalar === 'int' || scalar === 'date' || scalar === 'float'
+    return scalar === 'int' || scalar === 'date' || scalar === 'float' || scalar === 'DateTime';
   }
 
   updatePlotType(event: PlotlyConfig) {
