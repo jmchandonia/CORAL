@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
 import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
+import { PlotlyData, PlotlyLayout } from 'plotly.js';
 
 @Component({
   selector: 'app-plot-result',
@@ -24,9 +25,8 @@ export class PlotResultComponent implements OnInit {
   coreTypeName: string;
   objectId: string;
   loading = false;
-  data: any;
-  layout: any = {
-    width: 800,
+  data: PlotlyData;
+  layout: PlotlyLayout = {
     height: 600,
   };
   plot: PlotlyBuilder;
@@ -90,6 +90,30 @@ export class PlotResultComponent implements OnInit {
               autorange: true,
               title: this.plot.axes.y.show_title ? this.plot.axes.y.title : ''
             }
+          }
+
+          if(this.plot.plot_type.plotly_trace.type === 'heatmap') {
+            // TODO: All of this can go in plot_tyes.json
+            if (this.plot.axes.z.logarithmic) {
+              const colorScale = [];
+              for (var i = 0; i < 10; i++) {
+                const color = (255 / 10) * i
+                colorScale.push([Math.log10(i + 1).toString(), `rgb(${color}, ${color}, ${255 - color})`]);
+              }
+              this.data[0].colorscale = colorScale;
+            } else {
+              const colorScale = [
+                ['0.0', 'rgb(0,0,255)'],
+                ['0.5', 'rgb(235,235,235)'],
+                ['1.0', 'rgb(255,255,0)']
+              ];
+              this.data[0].colorscale = colorScale;
+            }
+            this.data[0].hoverongaps = false;
+
+            this.layout.plot_bgcolor = '#333';
+            this.layout.xaxis.gridcolor = '#444';
+            this.layout.yaxis.gridcolor = '#444';
           }
 
           if (this.plot.axes.z?.show_title) {
