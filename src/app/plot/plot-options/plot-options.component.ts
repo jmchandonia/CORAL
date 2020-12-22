@@ -40,7 +40,7 @@ export class PlotOptionsComponent implements OnInit {
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
     private router: Router,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
     ) { }
 
   ngOnInit() {
@@ -87,7 +87,19 @@ export class PlotOptionsComponent implements OnInit {
       // TODO: needs to be formatted like this on the backend
       this.plotService.getObjectPlotMetadata(this.objectId)
         .subscribe(({result, axisOptions}: {result: ObjectMetadata, axisOptions: AxisOption[]}) => {
+          this.spinner.hide();
           this.metadata = result;
+
+          // as of now we are not supporting plotting brick with non numeric data vars
+          const numericDataVars = axisOptions
+            .filter(axisOption => axisOption.data_variable !== undefined)
+            .reduce((acc, axisOption) => acc || validator.isNumeric(axisOption), false);
+
+          if (!numericDataVars) {
+            this.unableToPlot = true;
+            return;
+          }
+
           this.plot.title = this.metadata.data_type.oterm_name + ` (${this.objectId})`;
           if (!validator.validPlot(this.plot)) {
             this.setConstrainableDimensions();
@@ -103,7 +115,7 @@ export class PlotOptionsComponent implements OnInit {
           if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
             this.mapBuilder.setLatLongDimension(this.axisOptions);
           }
-          this.spinner.hide();
+          // this.spinner.hide();
         });
     }
   }
@@ -119,7 +131,8 @@ export class PlotOptionsComponent implements OnInit {
         }).length === 2;
 
         if (!this.coreTypePlot) {
-          this.plotTypeData = this.validateAxes(data.results, includeMap);
+          // this.plotTypeData = this.validateAxes(data.results, includeMap);
+          this.plotTypeData = validator.getValidPlotTypes(data.results, this.axisOptions, includeMap, this.metadata.dim_context.length);
         } else {
           this.plotTypeData = includeMap
             ? data.results
@@ -134,34 +147,6 @@ export class PlotOptionsComponent implements OnInit {
           this.plot.plot_type = this.plotTypeData[this.plotTypeData.length - 1];
         }
     });
-  }
-
-  validateAxes(plotTypes: PlotlyConfig[], includeMap = false) {
-    // determine number of properties with numeric scalar in data to be plotted
-      const totalLength = this.axisOptions.length;
-      // number of variables that are numeric
-      const totalNumericLength = this.axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
-        if ((this.isNumeric(axisOption.scalar_type))) { return acc + 1; }
-        return acc;
-      }, 0);
-      return plotTypes.filter(plotType => {
-        if (plotType.n_dimensions > totalLength) return false;
-        if (!includeMap && plotType.map) return false;
-        
-        // number of plot axes that are required to be numeric
-        const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
-            if (val.numeric_only) { return acc + 1 }
-            return acc;
-        }, 0);
-        if (totalNumericAxes > totalNumericLength) {
-          return false;
-        }
-        return true;
-      });
-  }
-
-  isNumeric(scalar) {
-    return scalar === 'int' || scalar === 'date' || scalar === 'float' || scalar === 'DateTime';
   }
 
   updatePlotType(event: PlotlyConfig) {

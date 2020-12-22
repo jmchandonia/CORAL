@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PlotlyBuilder, Constraint, ConstraintVariable } from 'src/app/shared/models/plotly-builder';
+import { PlotlyBuilder, Constraint, ConstraintVariable, AxisOption } from 'src/app/shared/models/plotly-builder';
+import { PlotlyConfig } from '../models/plotly-config';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,43 @@ export class PlotValidatorService {
 
   public static hasDataVarsInPlot(plot: PlotlyBuilder): boolean {
     return Object.entries(plot.axes).filter(([_, axis]) => axis.data?.data_variable !== undefined).length > 0;
+  }
+
+  public static getValidPlotTypes(
+    plotTypes: PlotlyConfig[],
+    axisOptions: AxisOption[],
+    includeMap = false,
+    n_dimensions: number): PlotlyConfig[] {
+    // determine number of properties with numeric scalar in data to be plotted
+    const totalLength = axisOptions.length;
+    // number of variables that are numeric
+    const totalNumericLength = axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
+      if ((this.isNumeric(axisOption))) { return acc + 1; }
+      return acc;
+    }, 0);
+    return plotTypes.filter(plotType => {
+      if (n_dimensions < plotType.n_dimensions) return false;
+      if (plotType.n_dimensions > totalLength) return false;
+      if (!includeMap && plotType.map) return false;
+      
+      // number of plot axes that are required to be numeric
+      const totalNumericAxes = Object.entries(plotType.axis_data).reduce<number>((acc: number, [_, val]) => {
+          if (val.numeric_only) { return acc + 1 }
+          return acc;
+      }, 0);
+      if (totalNumericAxes > totalNumericLength) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  public static isNumeric(axisOption: AxisOption): boolean {
+    const {scalar_type, name} = axisOption;
+    return scalar_type === 'int'
+      || scalar_type === 'date'
+      || scalar_type === 'float'
+      || name === 'DateTime';
   }
 
 }
