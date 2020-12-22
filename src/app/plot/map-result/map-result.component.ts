@@ -208,7 +208,7 @@ export class MapResultComponent implements OnInit {
 
     if (result.color === null) { 
       this.hasNullValues = true; // TODO: this is a side effect
-      return 'AAA';
+      return '333'
      }
 
      if (result.color === 0) {
@@ -230,7 +230,7 @@ export class MapResultComponent implements OnInit {
 
     let red = 255, blue = 255;
 
-     if (result.color > this.highestScale) return 'FF0000';
+    if (result.color > this.highestScale) return 'FFFF00';
 
     if (color < averageScale) {
       blue = 255;
@@ -244,8 +244,7 @@ export class MapResultComponent implements OnInit {
       blue = Math.min(Math.floor((difference / (totalRange/2)) * 255), 255);
     }
     
-
-    return `${red.toString(16).toUpperCase().padStart(2, '0')}00${blue.toString(16).toUpperCase().padStart(2, '0')}`;
+    return `${red.toString(16).toUpperCase().padStart(2, '0')}${red.toString(16).toUpperCase().padStart(2, '0')}${blue.toString(16).toUpperCase().padStart(2, '0')}`;
   }
 
   setSliderOptions() {
@@ -256,7 +255,7 @@ export class MapResultComponent implements OnInit {
       getPointerColor: () => '#00489B',
       selectionBarGradient: {
         from: '#0000FF',
-        to: '#FF0000'
+        to: '#FFFF00',
       },
     }
     if (this.mapBuilder.logarithmicColorScale) {
