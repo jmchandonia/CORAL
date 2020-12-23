@@ -84,10 +84,12 @@ export class PlotResultComponent implements OnInit {
             title: this.plot.title,
             xaxis: {
               autorange: true,
+              automargin: true,
               title: this.plot.axes.x.show_title ? this.plot.axes.x.title : '',
             },
             yaxis: {
               autorange: true,
+              automargin: true,
               title: this.plot.axes.y.show_title ? this.plot.axes.y.title : ''
             }
           }
