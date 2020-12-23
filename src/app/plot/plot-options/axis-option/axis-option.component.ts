@@ -50,6 +50,9 @@ export class AxisOptionComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes['axisValidation']) {
+      this.options = this._options;
+    }
   }
 
   setAxis(event: AxisOption) {
