@@ -15,11 +15,12 @@ import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { NgSelectModule } from  '@ng-select/ng-select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
+import { PlotValidatorService as Validator } from 'src/app/shared/services/plot-validator.service';
 const plotTypes = require('src/app/shared/test/plot-types.json');
 // const metadata = require('src/app/shared/test/object-metadata.json');
 const brick3Metadata = require('src/app/shared/test/brick_metadata_test_3.json');
 
-fdescribe('PlotOptionsComponent', () => {
+describe('PlotOptionsComponent', () => {
 
   let coreTypeQueryParams = {}
   let brickId = 'Brick0000003'
@@ -95,10 +96,12 @@ fdescribe('PlotOptionsComponent', () => {
   });
 
   it('should filter plot types by validating', () => {
-    spyOn(spectator.component, 'validateAxes').and.callThrough();
+    // spyOn(spectator.component, 'validateAxes').and.callThrough();
+    spyOn(Validator, 'getValidPlotTypes').and.callThrough();
 
     spectator.component.ngOnInit();
-    expect(spectator.component.validateAxes).toHaveBeenCalled();
+    // expect(spectator.component.validateAxes).toHaveBeenCalled();
+    expect(Validator.getValidPlotTypes).toHaveBeenCalled();
     expect(spectator.component.plotTypeData).toHaveLength(5);
     expect(spectator.component.unableToPlot).toBeFalsy();
     expect(spectator.component.plotTypeData.find(plot => plot.map)).toBeUndefined();
