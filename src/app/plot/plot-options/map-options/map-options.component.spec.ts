@@ -10,7 +10,7 @@ const testBrick66 = require('src/app/shared/test/brick_metadata_test_66.json');
 const axisOptions = require('src/app/shared/test/axis-options.json');
 const brick3 = require('src/app/shared/test/brick_metadata_test_3.json');
 
-fdescribe('MapOptionsComponent', () => {
+describe('MapOptionsComponent', () => {
 
   // const dimContext = brick3.results.dim_context;
   const mapBuilder = new MapBuilder(false);

@@ -6,9 +6,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
 import { Subject } from 'rxjs';
-import { QueryBuilder, QueryParam } from 'src/app/shared/models/QueryBuilder'; 
+import { QueryBuilder, QueryParam } from 'src/app/shared/models/QueryBuilder';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-describe('SearchResultComponent', () => {
+fdescribe('SearchResultComponent', () => {
 
   const mockResultsSub = new Subject();
   const mockQueryBuilder = new QueryBuilder();
@@ -25,7 +26,8 @@ describe('SearchResultComponent', () => {
     imports: [
       RouterModule.forRoot([]),
       NgxSpinnerModule,
-      HttpClientModule
+      HttpClientModule,
+      ModalModule.forRoot()
     ],
     providers: [
       mockProvider(QueryBuilderService, MockQueryBuilder)
