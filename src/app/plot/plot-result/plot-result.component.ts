@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CoreTypePlotBuilder } from 'src/app/shared/models/core-type-plot-builder';
 import { PlotlyBuilder } from 'src/app/shared/models/plotly-builder';
 import { PlotlyData, PlotlyLayout } from 'plotly.js';
+import { TooltipDirective } from 'ngx-bootstrap/tooltip';
 
 @Component({
   selector: 'app-plot-result',
@@ -31,6 +32,7 @@ export class PlotResultComponent implements OnInit {
   };
   plot: PlotlyBuilder;
   shareableLink = false;
+  @ViewChild(TooltipDirective) copyLink: TooltipDirective;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -206,6 +208,7 @@ export class PlotResultComponent implements OnInit {
     el.select();
     document.execCommand('copy');
     document.body.removeChild(el);
+    setTimeout(() => this.copyLink.hide(), 1000)
   }
 
 }

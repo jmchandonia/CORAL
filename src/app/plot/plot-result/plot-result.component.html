@@ -32,7 +32,15 @@
   </div>
   <div class="row">
     <div class="col-12 mb-4">
-      <button class="btn brn secondary float-right" (click)="getShareablePlotUrl()">Share Plot</button>
+      <button
+        class="btn brn secondary float-right"
+        (click)="getShareablePlotUrl()"
+        tooltip="Copied to clipboard"
+        placement="left"
+        triggers="click"
+        >
+        Share Plot
+      </button>
     </div>
   </div>
   <!-- <div class="form-container" style="margin-bottom: 0px; padding-bottom: 0px">
