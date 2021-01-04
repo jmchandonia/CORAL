@@ -233,7 +233,6 @@ export class PlotOptionsComponent implements OnInit {
   }
 
   submitPlot() {
-
     if (this.isMap) {
       localStorage.setItem('mapBuilder', JSON.stringify(this.mapBuilder));
       this.router.navigate(['/plot/map/result']);
@@ -258,6 +257,7 @@ export class PlotOptionsComponent implements OnInit {
   get hasAxisOptions() {
     return this._axisOptions?.length > 0;
   }
+  
 
   onGoBack(id) {
     if (!this.coreTypePlot) {
