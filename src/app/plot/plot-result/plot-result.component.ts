@@ -30,6 +30,7 @@ export class PlotResultComponent implements OnInit {
     height: 600,
   };
   plot: PlotlyBuilder;
+  shareableLink = false;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -41,8 +42,15 @@ export class PlotResultComponent implements OnInit {
         this.corePlot = true;
         this.coreTypeName = queryParams['coreType'];
       }
+      if (queryParams['zip']) {
+        this.shareableLink = true;
+        this.plot = this.createPlotFromLink(decodeURIComponent(queryParams.zip));
+      } 
     })
-    this.plot = JSON.parse(localStorage.getItem('plotlyBuilder'));
+
+    if (!this.shareableLink) {
+      this.plot = Object.assign(new PlotlyBuilder(), JSON.parse(localStorage.getItem('plotlyBuilder')));
+    }
     this.getPlotData();
   }
 
@@ -157,6 +165,30 @@ export class PlotResultComponent implements OnInit {
     }
   }
 
+  createPlotFromLink(queryString: string) {
+    const data = JSON.parse(queryString);
+    return Object.assign(new PlotlyBuilder(), {
+      plot_type: {
+        plotly_data: data.plt.plotly_data,
+        plotly_trace: data.plt.plotly_trace
+      },
+      axes: Object.entries(data.axes).reduce((acc, [key, val]: any[]) => {
+        return {
+          ...acc,
+          [key]: {
+            logarithmic: val.lg,
+            show_err_margin: val.e,
+            show_labels: val.lb,
+            show_tick_labels: val.tl,
+            title: val.t,
+            show_title: val.t.length > 0
+          }
+        }
+      }, {}),
+      createPostData: () => data.flt
+    })
+  }
+
   onGoBack() {
     // this.router.navigate([`plot/options/${this.objectId}`]);
     if (this.corePlot) {
@@ -164,6 +196,16 @@ export class PlotResultComponent implements OnInit {
     } else {
       this.router.navigate([`plot/options/${this.objectId}`]);
     }
+  }
+
+  getShareablePlotUrl() {
+    const el = document.createElement('textarea');
+    el.value = this.plot.getPlotShareableUrl();
+    el.setAttribute('readonly', ''),
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
 }

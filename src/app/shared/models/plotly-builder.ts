@@ -108,6 +108,37 @@ export class PlotlyBuilder {
         }
         return postData;
     }
+
+    deflate() {
+        // returns minified data to store plot in shareable URL
+        return encodeURIComponent(JSON.stringify(
+            {
+                flt: this.createPostData(),
+                axes: Object.entries(this.axes).reduce((acc, [key, value]) => {
+                    return {
+                        ...acc,
+                        [key]: {
+                            lg: value.logarithmic,
+                            e: value.show_err_margin,
+                            lb: value.show_labels,
+                            tl: value.show_tick_labels,
+                            t: value.show_title ? value.title : ''
+                        }
+                    };
+                }, {}),
+                plt: {
+                    plotly_trace: this.plot_type.plotly_trace,
+                    plotly_layout: this.plot_type.plotly_layout
+                }
+            }
+        ));
+    }
+
+    getPlotShareableUrl() {
+        if (!this.core_type) {
+            return `${window.location.origin}/plot/result/${this.object_id}?zip=${this.deflate()}`;
+        }
+    }
 }
 
 export interface BrickFilter {
