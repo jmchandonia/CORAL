@@ -154,7 +154,7 @@ export class PlotResultComponent implements OnInit {
             this.layout.yaxis.type = 'log';
           }
 
-          if (!this.plot.axes.x.show_tick_labels) {
+          if (!this.plot.axes.y.show_tick_labels) {
             this.layout.yaxis.showticklabels = false;
           }
           this.loading = false;
