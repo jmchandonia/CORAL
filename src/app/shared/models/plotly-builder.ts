@@ -57,7 +57,10 @@ export class PlotlyBuilder {
                 `${y.data.dimension + 1 + m}/${y.data.dimension_variable + 1}`
             ];
         } else {
-            variable = [`${x.data.dimension + 1 + m}/${x.data.dimension_variable + 1}`]
+            // we have to invert the axes if its a horizontal barchart
+            variable = this.plot_type.name === 'Horizontal Barchart'
+                ? [`${y.data.dimension + 1 + m}/${y.data.dimension_variable + 1}`]
+                : [`${x.data.dimension + 1 + m}/${x.data.dimension_variable + 1}`];
         }
 
         const label_format = {};
