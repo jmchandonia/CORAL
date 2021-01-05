@@ -82,6 +82,11 @@ export class PlotResultComponent implements OnInit {
                 thickness: 0.75
               }
             };
+            if (this.plot.plot_type.name === 'Horizontal Barchart') {
+              const x = trace.x;
+              trace.x = trace.y;
+              trace.y = x;
+            }
             return trace;
           });
           this.layout = {
