@@ -53,10 +53,12 @@ export class PlotValidatorService {
     // determine number of properties with numeric scalar in data to be plotted
     const totalLength = axisOptions.length;
     // number of variables that are numeric
-    const totalNumericLength = axisOptions.reduce<number>((acc: number, axisOption: AxisOption) => {
+    const totalNumericLength = axisOptions
+      .filter(option => option.data_variable === undefined)
+      .reduce<number>((acc: number, axisOption: AxisOption) => {
       if ((this.isNumeric(axisOption))) { return acc + 1; }
       return acc;
-    }, 0);
+    }, 0) + 1; // adding one accounts for only allowing 1 data var to be plotted for bricks with multiple data vars
     return plotTypes.filter(plotType => {
       if (n_dimensions < plotType.n_dimensions) return false;
       if (plotType.n_dimensions > totalLength) return false;
