@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -11,7 +10,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class LoginComponent implements OnInit {
 
   constructor(
-    private router: Router,
     private auth: AuthService,
     private spinner: NgxSpinnerService
   ) { }
@@ -32,9 +30,7 @@ export class LoginComponent implements OnInit {
       .subscribe(res => {
         this.spinner.hide();
         this.loading = false;
-        if (res.success) {
-          this.router.navigate(['home']);
-        } else {
+        if (!res.success) {
           this.error = true;
           this.errorMessage = res.message;
         }

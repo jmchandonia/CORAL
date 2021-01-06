@@ -129,9 +129,9 @@ export class PlotService {
       }))
   }
 
-  getDynamicPlot(id: string) {
-    const plot = this.getPlotlyBuilder();
-    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, plot.createPostData());
+  getDynamicPlot(plot: PlotlyBuilder) {
+    const data = plot.urlPostData !== undefined ? plot.urlPostData : plot.createPostData();
+    return this.http.post(`${environment.baseURL}/filter_brick/${plot.object_id}`, data);
   }
 
   testPlotlyResult(id: string) {
