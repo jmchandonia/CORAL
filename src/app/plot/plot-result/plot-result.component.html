@@ -22,12 +22,16 @@
     <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
     <div *ngIf="loading" class="loading">
       <ngx-spinner
+      *ngIf="!shareableLink"
       bdColor="rgba(0,0,0,0)"
       color="#aaa"
       size="medium"
-      style="position: relative; top: 250px"
+      style="position: relative; top: 250px;"
       type="ball-spin-fade-rotating"
       [fullScreen]="false"></ngx-spinner>
+      <h2 *ngIf="shareableLink" style="position: relative; top: 250px;">
+        Loading...
+      </h2>
     </div>
   </div>
   <div class="row">
