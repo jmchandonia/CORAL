@@ -145,7 +145,7 @@ export class PlotlyBuilder {
 
     getPlotShareableUrl() {
         if (!this.core_type) {
-            return `${window.location.origin}/plot/result/${this.object_id}?zip=${this.deflate()}`;
+            return `${window.location.href}?zip=${this.deflate()}`;
         }
     }
 }
