@@ -31,6 +31,7 @@ export class PlotlyBuilder {
     core_type: boolean;
     plot_type: PlotlyConfig;
     multi_data_vars = false;
+    urlPostData?: BrickFilter; // bricks created from urls dont need to use createPostData()
 
     plotly_trace: any;
     plotly_layout: any;
@@ -135,7 +136,8 @@ export class PlotlyBuilder {
                 }, {}),
                 plt: {
                     plotly_trace: this.plot_type.plotly_trace,
-                    plotly_layout: this.plot_type.plotly_layout
+                    plotly_layout: this.plot_type.plotly_layout,
+                    n: this.plot_type.name
                 }
             }
         ));

@@ -47,7 +47,7 @@ export class PlotResultComponent implements OnInit {
       if (queryParams['zip']) {
         this.shareableLink = true;
         this.plot = this.createPlotFromLink(decodeURIComponent(queryParams.zip));
-      } 
+      }
     })
 
     if (!this.shareableLink) {
@@ -61,7 +61,8 @@ export class PlotResultComponent implements OnInit {
     this.loading = true;
     this.spinner.show();
     if (!this.corePlot) {
-      this.plotService.getDynamicPlot(this.objectId)
+      // this.plotService.getDynamicPlot(this.objectId)
+      this.plotService.getDynamicPlot(this.plot)
         .subscribe((data: any) => {
           const results = data.res;
           this.data = results.map(result => {
@@ -175,9 +176,12 @@ export class PlotResultComponent implements OnInit {
   createPlotFromLink(queryString: string) {
     const data = JSON.parse(queryString);
     return Object.assign(new PlotlyBuilder(), {
+      urlPostData: data.flt,
+      object_id: this.objectId,
       plot_type: {
         plotly_data: data.plt.plotly_data,
-        plotly_trace: data.plt.plotly_trace
+        plotly_trace: data.plt.plotly_trace,
+        name: data.plt.n
       },
       axes: Object.entries(data.axes).reduce((acc, [key, val]: any[]) => {
         return {
@@ -188,11 +192,10 @@ export class PlotResultComponent implements OnInit {
             show_labels: val.lb,
             show_tick_labels: val.tl,
             title: val.t,
-            show_title: val.t.length > 0
+            show_title: val.t?.length > 0
           }
         }
       }, {}),
-      createPostData: () => data.flt
     })
   }
 
