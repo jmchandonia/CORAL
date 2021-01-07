@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 import { QueryBuilder, QueryParam } from 'src/app/shared/models/QueryBuilder';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-fdescribe('SearchResultComponent', () => {
+describe('SearchResultComponent', () => {
 
   const mockResultsSub = new Subject();
   const mockQueryBuilder = new QueryBuilder();
@@ -52,9 +52,8 @@ fdescribe('SearchResultComponent', () => {
         }
       });
     spectator.detectChanges();
-    expect(spectator.query('table')).not.toBeNull();
-    expect(spectator.queryAll('table > thead > tr > th').length).toBe(4);
-    expect(spectator.queryAll('table > tbody > tr').length).toBe(2);
+    expect(spectator.query('ngx-datatable')).not.toBeNull();
+    expect(spectator.queryAll('ngx-datatable-column').length).toBe(4);
   });
 
   it('should have access to query builder object', () => {
