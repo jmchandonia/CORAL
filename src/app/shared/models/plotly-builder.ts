@@ -110,7 +110,7 @@ export class PlotlyBuilder {
                 constant['1'] = this.axes.x.data.data_variable + 1;
             } else {
                 constant['1'] = this.axes.z
-                    ? this.axes.x.data.data_variable + 1
+                    ? this.axes.z.data.data_variable + 1
                     : this.axes.y.data.data_variable + 1;
             }
         }
