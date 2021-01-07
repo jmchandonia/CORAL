@@ -82,6 +82,7 @@ export class PlotValidatorService {
     return scalar_type === 'int'
       || scalar_type === 'date'
       || scalar_type === 'float'
+      || scalar_type === 'boolean'
       || name === 'DateTime';
   }
 

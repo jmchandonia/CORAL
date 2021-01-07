@@ -25,6 +25,7 @@ export class AxisOptionComponent implements OnInit, OnChanges {
         return option.scalar_type === 'float' ||
         option.scalar_type === 'int' ||
         option.scalar_type === 'date' ||
+        option.scalar_type === 'boolean' ||
         option.name === 'DateTime';
       })
       : this.options;
