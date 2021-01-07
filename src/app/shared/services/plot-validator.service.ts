@@ -49,7 +49,8 @@ export class PlotValidatorService {
     plotTypes: PlotlyConfig[],
     axisOptions: AxisOption[],
     includeMap = false,
-    n_dimensions: number): PlotlyConfig[] {
+    n_dimensions: number
+  ): PlotlyConfig[] {
     // determine number of properties with numeric scalar in data to be plotted
     const totalLength = axisOptions.length;
     // number of variables that are numeric

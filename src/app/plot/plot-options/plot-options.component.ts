@@ -136,7 +136,7 @@ export class PlotOptionsComponent implements OnInit {
         } else {
           this.plotTypeData = includeMap
             ? data.results
-            : data.results.filter(result => !result.map);
+            : data.results.filter(result => !result.map && result.name !== 'Heatmap');
         }
         // this should never be true for core types
         if (this.plotTypeData.length === 0) {
