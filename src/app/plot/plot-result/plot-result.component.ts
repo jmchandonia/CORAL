@@ -65,31 +65,39 @@ export class PlotResultComponent implements OnInit {
       this.plotService.getDynamicPlot(this.plot)
         .subscribe((data: any) => {
           const results = data.res;
-          this.data = results.map(result => {
-            const trace = {
-              ...result,
+          if (this.plot.plot_type.name === '1D Heatmap') {
+            this.data = [{
               ...this.plot.plot_type.plotly_trace,
-              name: result.label.replace(/#VAR =/g, ''),
-              error_x: {
-                type: 'data',
-                array: result.error_x,
-                visible: this.plot.axes.x.show_err_margin,
-                thickness: 0.75
-              },
-              error_y: {
-                type: 'data',
-                array: result.error_y,
-                visible: this.plot.axes.y.show_err_margin,
-                thickness: 0.75
+              x: results[0].x,
+              z: [results[0].y]
+            }];
+          } else {
+            this.data = results.map(result => {
+              const trace = {
+                ...result,
+                ...this.plot.plot_type.plotly_trace,
+                name: result.label.replace(/#VAR =/g, ''),
+                error_x: {
+                  type: 'data',
+                  array: result.error_x,
+                  visible: this.plot.axes.x.show_err_margin,
+                  thickness: 0.75
+                },
+                error_y: {
+                  type: 'data',
+                  array: result.error_y,
+                  visible: this.plot.axes.y.show_err_margin,
+                  thickness: 0.75
+                }
+              };
+              if (this.plot.plot_type.name === 'Horizontal Barchart') {
+                const x = trace.x;
+                trace.x = trace.y;
+                trace.y = x;
               }
-            };
-            if (this.plot.plot_type.name === 'Horizontal Barchart') {
-              const x = trace.x;
-              trace.x = trace.y;
-              trace.y = x;
-            }
-            return trace;
-          });
+              return trace;
+            });
+          }
           this.layout = {
             ...this.layout,
             ...this.plot.plot_type.plotly_layout,
@@ -110,9 +118,14 @@ export class PlotResultComponent implements OnInit {
             }
           }
 
+          if (this.plot.plot_type.name === '1D Heatmap') {
+            this.layout.yaxis.ticks = '';
+            this.layout.yaxis.showticklabels = false;
+          }
+
           if(this.plot.plot_type.plotly_trace.type === 'heatmap') {
             // TODO: All of this can go in plot_tyes.json
-            if (this.plot.axes.z.logarithmic) {
+            if (this.plot.axes.z?.logarithmic) {
               const colorScale = [];
               for (var i = 0; i < 10; i++) {
                 const color = (255 / 10) * i
@@ -165,7 +178,16 @@ export class PlotResultComponent implements OnInit {
       this.plotService.getCorePlot()
         .subscribe((res: any) => {
           const { data, layout } = res.results;
-          this.data = data;
+          if (this.plot.plot_type.name === '1D Heatmap') { 
+            this.data = [{
+              ...data,
+              ...this.plot.plot_type.plotly_trace,
+              x: data[0].x,
+              z: [data[0].y]
+            }];
+          } else {
+            this.data = data;
+          }
           this.layout = layout;
           this.loading = false;
           this.spinner.hide();
