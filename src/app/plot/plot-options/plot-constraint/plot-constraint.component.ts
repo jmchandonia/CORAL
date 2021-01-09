@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Constraint, ConstraintType, ConstraintVariable, UniqueValue } from 'src/app/shared/models/plotly-builder';
 import { DimensionContext } from 'src/app/shared/models/object-metadata';
 import { PlotService } from 'src/app/shared/services/plot.service';
@@ -9,21 +9,25 @@ import { Response } from 'src/app/shared/models/response';
   templateUrl: './plot-constraint.component.html',
   styleUrls: ['./plot-constraint.component.css']
 })
-export class PlotConstraintComponent implements OnInit {
+export class PlotConstraintComponent implements OnInit, OnChanges {
 
   @Input() constraint: Constraint;
   @Input() invalid = false;
   @Input() disabled = false;
   @Input() objectId: string;
-  @Input() isMap = false;
+  @Input() hideSeries = false;
 
   constraintTypes: string[];
 
   constructor(private plotService: PlotService) { }
 
   ngOnInit(): void {
-    // don't allow 'series' as an option for maps
-    this.constraintTypes = Object.values(ConstraintType).filter(c => !this.isMap || c !== 'series');
+  }
+
+  ngOnChanges(changes) {
+    if (changes['hideSeries']) {
+      this.constraintTypes = Object.values(ConstraintType).filter(c => !this.hideSeries || c !== 'series');
+    }
   }
 
   setSeriesLabel(event: 'flatten' | 'series' | 'mean', dimVar: ConstraintVariable) {
