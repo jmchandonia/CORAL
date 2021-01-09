@@ -151,9 +151,9 @@ export class PlotResultComponent implements OnInit {
             this.layout.zaxis = {title: this.plot.axes.z.title};
           }
 
-          if (results.length > 4) {
-            // add 16px for every extra tracelabel (prevents plot from being squeezed up in the top)
-            this.layout.height += (16 * (results.length - 4));
+          if (results.length > 50) {
+            // if there are more than 50 results, add more height to iframe so that the legend doesnt take up all the space
+            this.layout.height += 600;
           }
 
           if (this.plot.axes.x.logarithmic) {
