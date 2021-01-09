@@ -37,7 +37,7 @@
                           [(ngModel)]="plot.plot_type"
                           [ngModelOptions]="{standalone: true}"
                           [clearable]="false"
-                          [disabled]="!axisOptions?.length || unableToPlot"
+                          [disabled]="!_axisOptions?.length || unableToPlot"
                         >
                           <ng-template ng-option-tmp let-item="item">
                             <span [innerHTML]="item.image_tag | safeHtml"></span>
@@ -109,6 +109,7 @@
         [constraint]="constraint"
         [dimensions]="constrainableDimensions"
         [index]="idx"
+        [hideSeries]="shouldHideSeries()"
         [invalid]="invalid"
         [objectId]="objectId"
       ></app-plot-constraint>
