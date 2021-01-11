@@ -34,6 +34,7 @@
                             bindValue="index"
                             [(ngModel)]="v.flatten_value"
                             (change)="setSelectedValue($event, v)"
+                            (clear)="clearSelectedValue(v)"
                             [class.select-error]="invalid && v.type === 'flatten' && !v.flatten_value"
                         ></ng-select>
                     </div>
