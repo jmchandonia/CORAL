@@ -54,7 +54,11 @@ export class PlotConstraintComponent implements OnInit, OnChanges {
   }
 
   setSelectedValue(event: UniqueValue, dimVar: ConstraintVariable) {
-    dimVar.selected_value = event.index;
+    dimVar.selected_value = event?.index;
+  }
+
+  clearSelectedValue(dimVar: ConstraintVariable) {
+    delete dimVar.selected_value;
   }
 
   handleSearch(event: any, variable: ConstraintVariable) {
