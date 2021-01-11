@@ -33,6 +33,7 @@ export class PlotOptionsComponent implements OnInit {
   public unableToPlot = false;
   constrainableDimensions: DimensionContext[];
   public invalid = false;
+  public tooManyTraces = false;
   public loading = true;
 
   constructor(
@@ -232,19 +233,9 @@ export class PlotOptionsComponent implements OnInit {
     this.plot.setDimensionConstraints(this.constrainableDimensions, this.metadata);
   }
 
-  shouldHideSeries(x = false) {
+  shouldHideSeries() {
     // determines whether series should be an option for plot constraint
-    if (this.plot.plot_type?.name.toLowerCase().includes('heatmap')) return true;
-    if (!this.plot.constraints.length) return true;
-    
-    const allSeriesVars = this.plot.constraints
-      .map(constraint => constraint.variables)
-      .reduce((acc, cv) => acc.concat(cv))
-      .filter(constraint => constraint.type === 'series')
-      .reduce<number>((acc, cv) => acc * cv.unique_values.length, 1)
-    
-    // limit number of series plottable
-    return allSeriesVars > 1000;
+    return this.plot.plot_type?.name.toLowerCase().includes('heatmap')
   }
 
   submitPlot() {
@@ -256,6 +247,11 @@ export class PlotOptionsComponent implements OnInit {
 
     if (!validator.validPlot(this.plot)) {
       this.invalid = true;
+      return;
+    }
+
+    if (validator.tooManyTraces(this.plot.constraints)) {
+      this.tooManyTraces = true;
       return;
     }
 

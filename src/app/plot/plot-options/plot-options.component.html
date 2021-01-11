@@ -121,10 +121,13 @@
     [options]="_axisOptions"
     [dimensions]="metadata?.dim_context"
   ></app-map-options>
-  <div class="row justify-content-center mt-4" *ngIf="invalid">
+  <div class="row justify-content-center mt-4" *ngIf="invalid || tooManyTraces">
     <div class="col-8">
-      <div class="alert alert-danger">
+      <div class="alert alert-danger" *ngIf="invalid">
         Error: Please complete all of the axes on this plot are filled out and that the extra variables have been accounted for.
+      </div>
+      <div class="alert alert-danger" *ngIf="tooManyTraces">
+        Error: There are too many traces for this plot. please constraint extra dimensions using mean or flatten. Plots cannot contain above 1000 traces.
       </div>
     </div>
   </div>

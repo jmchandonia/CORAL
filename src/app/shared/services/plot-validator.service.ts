@@ -85,5 +85,18 @@ export class PlotValidatorService {
       || scalar_type === 'boolean'
       || name === 'DateTime';
   }
+  
+  public static tooManyTraces(constraints: Constraint[]) {
+
+    // limits max number of individual plotly traces too 1000
+
+    const allTraces = constraints
+      .map(constraint => constraint.variables)
+      .reduce((acc, cv) => acc.concat(cv))
+      .filter(constraint => constraint.type === 'series')
+      .reduce<number>((acc, cv) => acc * cv.unique_values.length , 1);
+
+    return allTraces > 1000;
+  }
 
 }
