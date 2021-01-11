@@ -35,6 +35,7 @@ export class PlotOptionsComponent implements OnInit {
   public invalid = false;
   public tooManyTraces = false;
   public loading = true;
+  private previousUrl: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,6 +48,9 @@ export class PlotOptionsComponent implements OnInit {
   ngOnInit() {
 
     this.spinner.show();
+
+    this.previousUrl = this.queryBuilder.getPreviousUrl();
+
     // get object id
     this.route.params.subscribe(params => {
         if (params['id']) {
@@ -271,11 +275,11 @@ export class PlotOptionsComponent implements OnInit {
   
 
   onGoBack(id) {
-    if (!this.coreTypePlot) {
-      this.router.navigate([`/search/result/brick/${id}`]);
-    } else {
-      this.router.navigate(['/search/result']); // TODO: make sure localStorage works with queries from plotly builder
-    }
+  if (this.previousUrl) {
+    this.router.navigate([this.previousUrl]);
+  } else {
+    this.router.navigate(['/search/result'])
+  }
   }
 
 }
