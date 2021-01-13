@@ -10,9 +10,16 @@
         <div class="row">
           <div class="col-8">
             <ng-select
+              *ngIf="moreThan3Dims"
               class="custom"
+              [class.select-error]="templateTypeError"
               style="position: relative; top: 5px;"
               placeholder="Select a template type"
+              [items]="templateTypeOptions"
+              bindLabel="text"
+              bindValue="type"
+              [(ngModel)]="brick.templateType"
+              [ngModelOptions]="{standalone: true}"
             ></ng-select>
           </div>
           <div class="col-4">
@@ -89,6 +96,13 @@
     <div class="col-12">
       <div class="alert alert-danger">
         Error: You must upload a valid file before continuing to the next steps.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="templateTypeError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: For Bricks with 3 or more dimensions, you must select the type of template to download.
       </div>
     </div>
   </div>
