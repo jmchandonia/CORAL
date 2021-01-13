@@ -22,6 +22,7 @@ export class Brick {
     start_date: Date;
     end_date: Date;
     coreObjectRefsError = false;
+    templateType: 'interlace' | 'tab_data' | 'tab_dim' = null;
 
     get isEmpty() {
         return isEqual(this, new Brick());

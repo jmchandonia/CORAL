@@ -4,6 +4,7 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { Brick } from 'src/app/shared/models/brick';
 
 
 @Component({
@@ -28,8 +29,32 @@ export class LoadComponent implements OnInit, OnDestroy {
   loading = false;
   validationError = false;
   validationErrorSub: Subscription;
+  moreThan3Dims = false;
+  public brick: Brick;
+  templateTypeError = false;
+
+  templateTypeOptions: {type: string, text: string}[] = [
+    {type: 'interlace', text: 'Interlace all data on same page'},
+  ];
 
   ngOnInit() {
+    this.brick = this.uploadService.getBrickBuilder();
+    this.moreThan3Dims = this.brick.dimensions.length > 2;
+
+    if (this.brick.dataValues.length > 1) {
+      this.templateTypeOptions.push({
+        type: 'tab_data',
+        text: 'Spread individual data vars across tabs'
+      })
+    }
+
+    if (this.moreThan3Dims) {
+      this.templateTypeOptions.push({
+        type: 'tab_data',
+        text: `Spread out ${this.brick.dimensions[this.brick.dimensions.length - 1].type.text} across tabs`
+      });
+    }
+
     this.getUploadData();
     this.validationErrorSub = this.validator.getValidationErrors()
      .subscribe(error => this.validationError = error);
@@ -83,6 +108,11 @@ export class LoadComponent implements OnInit, OnDestroy {
    }
 
    downloadTemplate() {
+     if (this.moreThan3Dims && !this.brick.templateType) {
+       this.templateTypeError = true;
+       return;
+     }
+     this.templateTypeError = false;
      this.uploadService.downloadBrickTemplate()
       .then((data: Blob) => {
         this.addUrlToPageAndClick(data);
