@@ -89,6 +89,7 @@ export class PlotValidatorService {
   public static tooManyTraces(constraints: Constraint[]) {
 
     // limits max number of individual plotly traces too 1000
+    if (constraints.length === 0) return false;
 
     const allTraces = constraints
       .map(constraint => constraint.variables)
