@@ -149,7 +149,7 @@ export class PlotOptionsComponent implements OnInit {
         }
 
         if (this.isMap) {
-          this.plot.plot_type = this.plotTypeData[this.plotTypeData.length - 1];
+          this.plot.plot_type = this.plotTypeData[0];
         }
     });
   }
