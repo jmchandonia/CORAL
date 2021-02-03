@@ -50,7 +50,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
     if (this.moreThan3Dims) {
       this.templateTypeOptions.push({
-        type: 'tab_data',
+        type: 'tab_dims',
         text: `Spread out ${this.brick.dimensions[this.brick.dimensions.length - 1].type.text} across tabs`
       });
     }
@@ -137,6 +137,8 @@ export class LoadComponent implements OnInit, OnDestroy {
     this.uploadService.uploadBrick(this.file).then((res: any) => {
       this.loading = false;
       this.spinner.hide();
+      this.error = false;
+      delete this.errorMessage;
       this.successData = res.results;
       this.uploadService.setSuccessData(res.results);
     },
