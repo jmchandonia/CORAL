@@ -1,0 +1,129 @@
+<div class="container">
+  <div class="row jusity-content-center mb-3">
+    <div class="col-12">
+      <div class="card p-3" style="border: 0px;">
+          <h3>Browse Microtypes</h3>
+          <p class="card-text">
+            This is where you can browse for microtype ontologies in our system to see which types are supported
+            by which parts of our brick data type. Click below in the arrows to sort by microtypes supported by 
+            specific members of a brick.
+          </p>
+          <div class="card p-3">
+            <h4>Key</h4>
+            <p>
+              Select the items below to filter microtype objects by where they are valid. You can also use the search bar to match microtypes by text.
+            </p>
+            <div class="row">
+              <div class="col-3">
+                <span class="badge badge-pill badge-primary">
+                  Data
+                </span>
+                <span> = Data Variable</span>
+                <input
+                  id="mt_data_var"
+                  type="checkbox"
+                  (change)="setCategoryFilter()"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_data_var"
+                  [ngModelOptions]="{standalone: true}"
+                />
+              </div>
+              <div class="col-3 p-0">
+                <span class="badge badge-pill badge-success">
+                  Dim
+                </span>
+                <span> = Dimension</span>
+                <input
+                  id="mt_dimension"
+                  type="checkbox"
+                  (change)="setCategoryFilter()"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_dimension"
+                  [ngModelOptions]="{standalone: true}"
+                />
+              </div>
+              <div class="col-3">
+                <span class="badge badge-pill badge-warning">
+                  DimV
+                </span>
+                <span> = Dimension Variable</span>
+                <input
+                  id="mt_dim_var"
+                  type="checkbox"
+                  (change)="setCategoryFilter()"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_dim_var"
+                  [ngModelOptions]="{standalone: true}"
+                />
+              </div>
+              <div class="col-3">
+                <span class="badge badge-pill badge-danger">
+                  Prop
+                </span>
+                <span> = Property</span>
+                <input
+                  id="mt_property"
+                  type="checkbox"
+                  (change)="setCategoryFilter()"
+                  class="ml-2"
+                  [(ngModel)]="filters.mt_property"
+                  [ngModelOptions]="{standalone: true}"
+                />
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <input type="text" id="keyword-filter" class="form-control" (keyup)="setKeywordSearchFilter($event)" placeholder="Filter by keyword" />
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center" *ngIf="!microtypes">
+    <div class="col-12">
+      <ngx-spinner
+        [fullScreen]="false"
+        name="spinner"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        style="position: relative; top: 200px; left: 50%;"
+        type="ball-spin-fade-rotating"></ngx-spinner>
+    </div>
+  </div>
+  <div class="row mb-3 ml-3" *ngIf="microtypes">
+    <tree-root #tree *ngIf="microtypes" [nodes]="microtypes" [options]="treeOptions">
+      <ng-template #treeNodeTemplate let-node let-index="index">
+        <ng-container>
+          <h5 class="mb-0" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_name}}
+              <span *ngIf="node.data.mt_value_scalar_type.length" style="font-weight: normal"> ({{node.data.mt_value_scalar_type}})</span>
+              &nbsp;
+              <span style="font-size: 1rem;">
+                <span
+                  class="badge badge-pill badge-primary mr-1"
+                  *ngIf="node.data.mt_data_var"
+                  >Data</span>
+                <span
+                  class="badge badge-pill badge-success mr-1"
+                  *ngIf="node.data.mt_dimension">
+                  Dim
+                </span>
+                <span
+                  class="badge badge-pill badge-warning mr-1"
+                  *ngIf="node.data.mt_dim_var">
+                  DimV
+                </span>
+                <span
+                  class="badge badge-pill badge-danger"
+                  *ngIf="node.data.mt_property"
+                >
+                  Prop
+                </span>
+              </span>
+          </h5>
+          <span *ngIf="descriptionVisible(node)" [class.non-microtype]="!node.data.mt_microtype">{{node.data.term_desc}}</span>
+        </ng-container>
+      </ng-template>
+    </tree-root>
+  </div>
+</div>

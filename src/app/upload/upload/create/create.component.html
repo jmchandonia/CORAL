@@ -1,0 +1,155 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 mb-3">
+      <h5 class="mb-0 mt-2">Final Information Needed</h5>
+    </div>
+  </div>
+  <!-- <hr /> -->
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <label for="brick-name">Brick Name (analogous to a file name; must be unique among all ENIGMA brick names):</label>
+              <input
+                type="text"
+                [class.button-error]="error && !brick.name"
+                [(ngModel)]="brick.name"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control"
+                id="brick-name" />
+            </div>
+            <div class="col-12">
+              <label for="brick-description">Human-readable description of this dataset:</label>
+              <input
+                type="text"
+                [class.button-error]="error && !brick.description"
+                [(ngModel)]="brick.description"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control"
+                id="brick-description" />
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12">
+              <label for="brick-process">Process used to generate the data:</label>
+                <ng-select
+                  class="custom"
+                  [class.select-error]="error && !brick.process"
+                  id="brick-process"
+                  [items]="processData"
+                  [(ngModel)]="processValue"
+                  [ngModelOptions]="{standalone: true}"
+                  [readonly]="requiredProcess"
+                  (change)="setBrickProcess($event)"
+                  [clearable]="false"
+                  bindLabel="text"
+                  bindValue="id"
+                ></ng-select>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12">
+              <label for="brick-campaign">ENIGMA campaign: </label>
+              <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.campaign"
+                id="brick-campaign"
+                [items]="campaignData"
+                bindLabel="text"
+                bindValue="id"
+                [clearable]="false"
+                (change)="setBrickCampaign($event)"
+              ></ng-select>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12">
+              <label for="brick-personnel">Personnel primarily responsible for generating this dataset: </label>
+              <ng-select
+                class="custom"
+                [class.select-error]="error && !brick.personnel"
+                id="brick-personnel"
+                [items]="personnelData"
+                bindValue="id"
+                bindLabel="text"
+                [clearable]="false"
+                (change)="setBrickPersonnel($event)"
+              ></ng-select>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-6">
+              <label for="start-date">Data generation start date: </label>
+              <input
+                class="form-control"
+                id="start-date"
+                type="text"
+                placeholder="mm/dd/yyyy"
+                bsDatepicker
+                placement="top"
+                [class.button-error]="error && (!brick.start_date || startDateError)"
+                [bsConfig]="datepickerConfig"
+                [(ngModel)]="brick.start_date"
+                [ngModelOptions]="{standalone: true}"
+              />
+            </div>
+            <div class="col-6">
+              <label for="end-date">Data generation end date: </label>
+              <input
+                class="form-control"
+                id="end-date"
+                type="text"
+                placeholder="mm/dd/yyyy"
+                bsDatepicker
+                placement="top"
+                [class.button-error]="error && (!brick.end_date || endDateError)"
+                [bsConfig]="datepickerConfig"
+                [(ngModel)]="brick.end_date"
+                [ngModelOptions]="{standalone: true}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+          <div class="col-2">
+            <button class="btn btn-primary" id="submit-brick" [disabled]="successId" (click)="submitBrick()">
+              Create
+            </button>
+          </div>
+        </div>
+        <div class="row" *ngIf="loading">
+          <div class="col-12 loading-container">
+              <ngx-spinner
+              bdColor="rgba(0,0,0,0)"
+              color="#aaa"
+              size="medium"
+              type="ball-spin-fade-rotating"
+              [fullScreen]="false"
+            ></ngx-spinner>
+          </div>
+        </div>
+        <div class="row mt-3 mr-1 ml-1" *ngFor="let message of errorMessages">
+          <div class="col-12">
+              <div class="alert alert-danger">
+                  {{message}}
+              </div>
+          </div>
+        </div>
+        <div class="row mt-3" *ngIf="successId" id="success-banner">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header light-blue">
+                <h5>Create Success</h5>
+              </div>
+              <div class="card-body">
+                <p>Your Brick has been created successfully with brick ID <a id="success-link" href="/search/result/brick/{{successId}}">{{successId}}</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

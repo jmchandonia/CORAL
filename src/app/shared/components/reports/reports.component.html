@@ -1,0 +1,41 @@
+<div class="container">
+    <div>
+      <div class="card mb-5  p-3" style="border: 0px;">
+        <h3 class="card-title">Predefined Reports</h3>
+        <p class="card-text">
+            This page shows reports on datasets that have been uploaded into the
+            Data Clearinghouse.
+        </p>
+      </div>
+        <div class="card">
+          <h5 class="card-header light-blue">
+            Display Summary of Uploaded Datasets, sorted by:
+          </h5>
+          <div class="card-body">
+            <ng-select
+              class="custom"
+              [items]="reportsData"
+              bindLabel="name"
+              (change)="updateTable($event)"
+              [clearable]="false"
+            ></ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="option-container mt-3" *ngIf="selectedValue">
+        <div class="table-background">
+            <table class="table table-hover" cellspacing="1">
+                <thead class="table-header">
+                  <tr>
+                    <th *ngFor="let field of selectedValue?.schema.fields">{{field.name}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of selectedValue?.data">
+                    <td *ngFor="let field of selectedValue?.schema.fields">{{item[field.name]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+      </div>     
+</div>

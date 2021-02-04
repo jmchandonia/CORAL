@@ -1,0 +1,12 @@
+.option-container {
+    background-color: rgb(211, 209, 208);
+    border-radius: 20px;
+    width: 800px;
+    margin: 0px auto;
+    padding: 20px;
+}
+
+h5 {
+    display: inline-block;
+    margin-left: 15px;
+}

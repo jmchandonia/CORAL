@@ -1,0 +1,68 @@
+<div class="card mt-4">
+  <div class="card-header light-blue">
+    <h5 class="mt-2 mb-0" style="float: left">
+      Dimension {{dimension.index + 1}}
+    </h5>
+    <button
+      class="btn btn-link"
+      id="delete-dimension"
+      *ngIf="!dimension.required"
+      (click)="delete()"
+      style="float: right"
+      >Delete</button>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12">
+        <label>Dimension Type:</label>
+        <ng-select
+          class="custom type-selector"
+          [class.select-error]="error && !dimension.type"
+          [items]="data"
+          [(ngModel)]="selectedType"
+          bindLabel="text"
+          bindValue="id"
+          (search)="handleSearch($event)"
+          [loading]="loading"
+          [clearable]="false"
+          [readonly]="dimension.required"
+          (change)="setDimensionType($event)"
+        >
+        <ng-template ng-option-tmp let-item="item">
+          {{item.text}} {{formatOptionLabel(item)}}
+        </ng-template>
+      </ng-select>
+      </div>
+    </div>
+    <div class="row mt-3 p-1">
+      <h6 class="col-7 mt-1">Dimension Variables ({{dimension.variables.length}})</h6>
+      <button id="add-dimension-variable" (click)="addDimensionVariable()" class="btn btn-sm btn-link pb-2">+ Add Dimension Variable</button>
+      <span style="color: #AAA;">|</span>
+      <a
+        style="padding-right: 6px; padding-top: 5px; font-size: 0.875rem; padding-left: 8px;"
+        routerLink="/microtypes"
+        [queryParams]="{filter: 'mt_dim_var'}"
+        target="_blank"
+      >View Valid Dimension Variables</a>
+    </div>
+    <ng-container *ngIf="dimension.variables.length">
+      <hr class="mt-0" />
+      <div class="row">
+        <div class="col-6">
+          <strong>Data Type</strong>
+        </div>
+        <div class="col-5">
+          <strong>Units</strong>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let dimVar of dimension.variables">
+        <app-dimension-variable-form
+          (deleted)="removeDimensionVariable($event)"
+          (reset)="resetDimensionVariable($event, dimVar.index)"
+          *ngIf="!dimVar.hidden"
+          [dimVar]="dimVar"
+        ></app-dimension-variable-form>
+      </ng-container>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="row mt-1 mb-2">
+  <div class="col-3">
+    <div>
+      <ng-select
+          class="custom"
+          bindLabel="name"
+          [items]="propertyTypes"
+          [(ngModel)]="selectedAttribute"
+          [ngModelOptions]="{standalone: true}"
+          (change)="setAttribute($event)"
+          [clearable]="false"
+      ></ng-select>
+    </div>
+  </div>
+  <div class="col-3">
+    <div>
+      <ng-select
+          class="custom"
+          [items]="matchTypes"
+          [(ngModel)]="selectedMatchType"
+          (change)="setMatchType($event)"
+          [clearable]="false"
+      ></ng-select>
+    </div>
+  </div>
+  <div class="col-4">
+    <input class="form-control" [(ngModel)]="queryParam.keyword" />
+  </div>
+  <div class="col-2">
+    <button class="btn btn-link" (click)="removeParam()">Delete</button>
+  </div>
+</div>

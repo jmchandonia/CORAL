@@ -1,0 +1,112 @@
+{
+    "id": "Brick0000002",
+    "name": "isolate_16S.ndarray",
+    "description": "Chandonia Lab Isolate 16S Sequences",
+    "data_type": {
+        "oterm_ref": "DA:0000064",
+        "oterm_name": "Microbial Sequence"
+    },
+    "array_context": [
+        {
+            "value_type": {
+                "oterm_ref": "ENIGMA:0000002",
+                "oterm_name": "ENIGMA Campaign"
+            },
+            "value": {
+                "scalar_type": "oterm_ref",
+                "value": "ENIGMA Microbial Isolation Characterization"
+            }
+        },
+        {
+            "value_type": {
+                "oterm_ref": "ENIGMA:0000029",
+                "oterm_name": "ENIGMA Labs and Personnel"
+            },
+            "value": {
+                "scalar_type": "oterm_ref",
+                "value": "Chandonia Lab"
+            }
+        }
+    ],
+    "dim_context": [
+        {
+            "data_type": {
+                "oterm_ref": "ME:0000042",
+                "oterm_name": "Strain"
+            },
+            "size": 4,
+            "typed_values": [
+                {
+                    "value_type": {
+                        "oterm_ref": "ME:0000044",
+                        "oterm_name": "Strain ID"
+                    },
+                    "values": {
+                        "scalar_type": "object_ref",
+                        "values": [
+                            "GW101-3H11",
+                            "GW460-12-10-14-LB2",
+                            "GW247-C5",
+                            "GW456-L12"
+                        ]
+                    },
+                    "value_context": [],
+                    "value_with_units": "Strain ID",
+                    "value_no_units": "Strain ID"
+                }
+            ]
+        },
+        {
+            "data_type": {
+                "oterm_ref": "ME:0000189",
+                "oterm_name": "Sequence Type"
+            },
+            "size": 2,
+            "typed_values": [
+                {
+                    "value_type": {
+                        "oterm_ref": "ME:0000189",
+                        "oterm_name": "Sequence Type"
+                    },
+                    "values": {
+                        "scalar_type": "oterm_ref",
+                        "values": [
+                            "16S Sequence",
+                            "16S Sequence"
+                        ]
+                    },
+                    "value_context": [],
+                    "value_with_units": "Sequence Type",
+                    "value_no_units": "Sequence Type"
+                },
+                {
+                    "value_type": {
+                        "oterm_ref": "ME:0000186",
+                        "oterm_name": "Strand"
+                    },
+                    "values": {
+                        "scalar_type": "oterm_ref",
+                        "values": [
+                            "Forward",
+                            "Reverse Complement"
+                        ]
+                    },
+                    "value_context": [],
+                    "value_with_units": "Strand",
+                    "value_no_units": "Strand"
+                }
+            ]
+        }
+    ],
+    "typed_values": [
+        {
+            "value_type": {
+                "oterm_ref": "ME:0000282",
+                "oterm_name": "Sequence"
+            },
+            "value_context": [],
+            "value_with_units": "Sequence",
+            "value_no_units": "Sequence"
+        }
+    ]
+}

@@ -1,0 +1,93 @@
+<div class="form-container form-container-sm" style="padding: 0px; background-color: white; border: 1px solid #aaa;">
+  <div class="clearinghouse-header" style="padding-top: 85px;">
+    <h5 class="login-title">ENIGMA Data Clearinghouse</h5>
+  </div>
+  <div class="row justify-content-center mt-3">
+    <!-- <div class="col-10"> -->
+        <!-- <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+              <a 
+                [ngClass]="displayLogin ? 'active' : ''"
+                class="nav-link"
+                href="JavaScript:void(0)"
+                (click)="displayLogin = true;"
+              >Login</a>
+            </li>
+            <li class="nav-item">
+              <a
+                [ngClass]="!displayLogin ? 'active' : ''"
+                class="nav-link"
+                href="JavaScript:void(0)"  
+                (click)="displayLogin = false;"
+              >Sign Up</a>
+            </li>
+          </ul> -->
+          <span class="login-options" (click)="displayLogin = true;">Login |</span>
+          <span class="login-options" (click)="displayLogin = false;"> &nbsp;Sign up</span>
+    <!-- </div> -->
+  </div>
+  <div class="pl-4 pr-4" *ngIf="displayLogin">
+    <div class="row justify-content-center">
+      <div class="col-9 loading-container" *ngIf="loading">
+        <ngx-spinner
+          bdColor="rgba(0,0,0,0)"
+          color="#aaa"
+          size="medium"
+          type="ball-spin-fade-rotating"
+          [fullScreen]="false"
+        ></ngx-spinner>
+      </div>
+      <div class="col-9" *ngIf="!loading">
+          <div class="alert alert-danger mt-2" *ngIf="errorMessage.length">
+            Error: {{errorMessage}}
+          </div>
+          <form class="form-group">
+              <label for="email">Username:</label>
+              <input
+                type="text"
+                [(ngModel)]="username"
+                name="username"
+                id="username"
+                class="form-control"
+                [ngClass]="error ? 'form-control-error' : ''"
+              />
+              <label for="password">Password:</label>
+              <input
+                type="password"
+                [(ngModel)]="password"
+                name="password"
+                id="password"
+                class="form-control"
+                [ngClass]="error ? 'form-control-error' : ''"  
+              />
+              <div class="row">
+                <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
+                  Login
+                </button>
+              </div>
+            </form>
+      </div>
+    </div>
+  </div>
+  <div class="pl-4 pr-4" *ngIf="!displayLogin">
+    <div class="row justify-content-center">
+      <div class="col-9">
+          <form class="form-group">
+              <label for="first-name">First Name:</label>
+              <input type="text" id="first-name" class="form-control" />
+              <label for="last-name">Last Name:</label>
+              <input type="text" id="last-name" class="form-control" />
+              <label for="signup-email">Username:</label>
+              <input type="text" id="signup-email" class="form-control" />
+              <label for="signup-password">Password:</label>
+              <input type="password" id="signup-password" class="form-control" />
+              <div class="row">
+                <button class="btn btn-primary offset-10 mt-4 mb-4" (click)="login()">
+                  Sign Up
+                </button>
+              </div>
+            </form>
+      </div>
+    </div>
+  </div>
+</div>

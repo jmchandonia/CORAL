@@ -1,0 +1,13 @@
+.simple-search-container {
+    background-color: rgb(211, 209, 208);
+    padding: 20px;
+    border-radius: 20px;
+    margin: 0px auto;
+    width: 600px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+

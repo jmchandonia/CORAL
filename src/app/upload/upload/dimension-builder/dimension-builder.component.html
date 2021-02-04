@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <h5 class="mb-0 mt-2" style="float: left">
+                Add Dimensions to your Brick
+            </h5>
+          </div>
+        </div>
+        <!-- <hr /> -->
+        <div class="p-3">
+          <span>Dimensions represent controlled (independent) variables in your experiment.  Usually, everything that is independently varied will get its own dimension.  However, if you varied two things together (e.g., temperature and concentration of nitrate), you can make one dimension to represent what changed ("Condition" in this case), and add both temperature and concentration of nitrate as variables in that dimension.  Each dimension needs at least one variable, which is usually a more specific description of the variable that you controlled along that dimension.</span>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button style="float: left;" class="btn btn-link add-dimension" (click)="addDimension()">
+              + Add a Dimension
+            </button>
+            <a
+              style="float: right; padding-top: 8px; padding-right: 6px;"
+              routerLink="/microtypes"
+              [queryParams]="{filter: 'mt_dimension'}"
+              target="_blank"
+            >View Valid Dimensions</a>
+          </div>
+        </div>
+        <app-dimension-form *ngFor="let dim of brick.dimensions" (deleted)="removeDimension($event)" [dimension]="dim"></app-dimension-form>
+    </div>
+  </div>
+  <div class="row mt-2" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: Please make sure all your brick's dimensions and dimension variables fields are filled out.
+      </div>
+    </div>
+  </div>
+</div>
