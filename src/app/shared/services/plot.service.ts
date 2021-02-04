@@ -1,96 +1,40 @@
 import { Injectable } from '@angular/core';
-import { PlotBuilder, Dimension, Config } from '../models/plot-builder';
 import { HttpClient } from '@angular/common/http';
-import { ObjectMetadata, DimensionContext, TypedValue } from 'src/app/shared/models/object-metadata';
 import { environment } from 'src/environments/environment';
-import { PlotlyConfig } from 'src/app/shared/models/plotly-config';
+import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
+import { PlotlyBuilder, Constraint, AxisOption } from 'src/app/shared/models/plotly-builder';
+import { MapBuilder } from 'src/app/shared/models/map-builder';
+import { map, delay } from 'rxjs/operators';
+import { Response } from 'src/app/shared/models/response';
+import { ObjectMetadata } from 'src/app/shared/models/object-metadata';
 @Injectable({
   providedIn: 'root'
 })
 export class PlotService {
 
-  public plotBuilder: PlotBuilder = new PlotBuilder();
-  public plotType: string;
-  metadata: ObjectMetadata;
+  public plot: PlotlyBuilder;
 
-  constructor(private http: HttpClient) {
-    const cachedPlotBuilder = this.getPlotCache();
-    this.plotBuilder = cachedPlotBuilder ? cachedPlotBuilder : new PlotBuilder();
-  }
+  constructor(private http: HttpClient) { }
 
-  getPlotBuilder() {
-    return this.plotBuilder;
-  }
-
-  getPlotType() {
-    return JSON.parse(localStorage.getItem('plotType'));
-  }
-
-  setPlotType(value: PlotlyConfig) {
-    localStorage.setItem('plotType', JSON.stringify(value));
-  }
-
-  setPlotCache() {
-    localStorage.setItem('plotBuilder', JSON.stringify(this.plotBuilder));
-  }
-
-  getPlotCache() {
-    return JSON.parse(localStorage.getItem('plotBuilder'));
-  }
-
-  getConfiguredDimensions() {
-    const keys = Object.keys(this.plotBuilder.config);
-    // return all refenences to dimensions without adding config.title
-    return keys.map(v => this.plotBuilder.config[v]).filter(t => typeof t !== 'string');
-  }
-
-  getDimDropdownValue(axis: string) {
-    return this.plotBuilder.data[axis].toString();
-  }
-
-  setConfig(
-    metadata: ObjectMetadata,
-    callback: (dims: Dimension[]) => void
-    ) {
-    const { config } = this.plotBuilder;
-    const length = metadata.dim_context.length;
-    const dim_context: DimensionContext[] = metadata.dim_context;
-    const typed_values: TypedValue[] = metadata.typed_values;
-
-    config.title = metadata.data_type.oterm_name + ` (${this.plotBuilder.objectId})`;
-    config.x = new Dimension(dim_context, typed_values);
-    config.y = new Dimension(dim_context, typed_values);
-    if (length > 1) {
-      config.z = new Dimension(dim_context, typed_values);
-      this.plotBuilder.data.z = '' as any;
-      callback([config.x, config.y, config.z]); // add 3 dimensions to form
-    } else {
-      callback([config.x, config.y]); // add 2 dimensions to form
+  getPlotlyBuilder(coreType?, query?: QueryBuilder) {
+    if (!this.plot) {
+      // needs object.assign to have class methods
+      this.plot = Object.assign(
+        new PlotlyBuilder(coreType, query),
+        JSON.parse(localStorage.getItem('plotlyBuilder'))
+      );
     }
-    this.setPlotCache();
+    return this.plot;
   }
 
-  clearPlotBuilder() {
-    localStorage.removeItem('plotType');
-    localStorage.removeItem('plotBuilder');
-    this.plotBuilder = new PlotBuilder();
+  deletePlotBuilder() {
+    localStorage.removeItem('mapBuilder');
+    localStorage.removeItem('plotlyBuilder');
+    delete this.plot;
   }
 
-  setPlotlyDataAxis(key: string, value: string) {
-    this.plotBuilder.data[key] = value;
-  }
-
-  getPlotlyData() {
-    this.parseIntDataAxes();
-    return this.http.post<any>(`${environment.baseURL}/plotly_data`, this.plotBuilder);
-  }
-
-  parseIntDataAxes() {
-    Object.keys(this.plotBuilder.data).forEach(key => {
-      if (this.plotBuilder.data[key] !== 'D') {
-        this.plotBuilder.data[key] = parseInt(this.plotBuilder.data[key], 10);
-      }
-    });
+  getPlotlyResult() {
+    return this.http.post<any>(`${environment.baseURL}/plotly_data`, this.getPlotlyBuilder());
   }
 
   getPlotTypes() {
@@ -102,4 +46,98 @@ export class PlotService {
     return this.http.get(`${environment.baseURL}/report_plot_data/${id}`);
   }
 
+  getCoreTypeMetadata() {
+    return this.http.get(environment.baseURL + '/plot_core_type_metadata');
+  }
+
+  getCorePlot() {
+    return this.http.post(`${environment.baseURL}/plotly_core_data`, this.getPlotlyBuilder());
+  }
+
+  getDynamicMap(mapBuilder: MapBuilder) {
+    return this.http.post(`${environment.baseURL}/brick_map/${mapBuilder.brickId}`, mapBuilder);
+  }
+
+  getObjectPlotMetadata(id: string) {
+    return this.http.get<ObjectMetadata>(`${environment.baseURL}/brick_plot_metadata/${id}/100`)
+      .pipe(map(data => {
+        return {
+          result: data,
+          axisOptions: PlotService.mapBrickPropertiesToAxisOptions(data)
+        }
+      }))
+  }
+
+  getBrickDimVarValues(id: string, dimIdx: number, dvIdx: number, keyword: string) {
+    return this.http.get(`${environment.baseURL}/brick_dim_var_values/${id}/${dimIdx}/${dvIdx}/${keyword}`).pipe(delay(500));
+  }
+
+  getStaticMap(mapBuilder: MapBuilder) {
+    return this.http.post<any>(`${environment.baseURL}/search`, mapBuilder.query)
+      .pipe(
+        map(({data}) => {
+          return data.map(item => ({
+            ...item,
+            color: item[mapBuilder.colorField.name],
+            label_text: item[mapBuilder.labelField.name]}
+          ));
+        })
+      );
+  }
+
+  public static mapBrickPropertiesToAxisOptions(data: ObjectMetadata): AxisOption[] {
+    const axisOptions: AxisOption[] = [];
+    data.dim_context.forEach((dim, i) => {
+      dim.typed_values.forEach((dimVar, j) => {
+        axisOptions.push({
+          scalar_type: dimVar.values.scalar_type,
+          name: dimVar.value_no_units,
+          display_name: dimVar.value_with_units,
+          term_id: dimVar.value_type.oterm_ref,
+          dimension: i,
+          dimension_variable: j,
+          units: dimVar.value_units
+        });
+      });
+    });
+    data.typed_values.forEach((dataVar, i) => {
+      axisOptions.push({
+        scalar_type: dataVar.values.scalar_type,
+        name: dataVar.value_no_units,
+        display_name: dataVar.value_with_units,
+        term_id: dataVar.value_type.oterm_ref,
+        data_variable: i,
+        units: dataVar.value_units
+      });
+    });
+    return axisOptions;
+  }
+
+  testDynamicMap(id: string, mapBuilder: MapBuilder) {
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, mapBuilder.createPostData())
+      .pipe(map((data: any) => {
+        const response = data.res[0];
+        return Array(response.x.length)
+          .fill(null)
+          .map((_, i) => ({
+            latitude: response.x[i],
+            longitude: response.y[i],
+            color: response.z[i],
+            label_text: response['point-labels'][i],
+            hover: false
+          }))
+      }))
+  }
+
+  getDynamicPlot(plot: PlotlyBuilder) {
+    const data = plot.urlPostData !== undefined ? plot.urlPostData : plot.createPostData();
+    return this.http.post(`${environment.baseURL}/filter_brick/${plot.object_id}`, data);
+  }
+
+  testPlotlyResult(id: string) {
+    return this.http.post(`${environment.baseURL}/filter_brick/${id}`, {
+      'constant': {'2/1': 5, '2/4': 2, '3': 1},
+      'variable': ['1/1', '2/2', '2/3']
+    });
+  }
 }

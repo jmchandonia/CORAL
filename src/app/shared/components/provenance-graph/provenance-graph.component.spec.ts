@@ -15,7 +15,7 @@ const smallGraphData = require('src/app/shared/test/small-graph-test.json');
 const multiParentGraphData = require('src/app/shared/test/multi-parent-node-graph.json');
 const multiParentClusterData = require('src/app/shared/test/multi-parent-cluster-graph.json');
 
-fdescribe('ProvenanceGraphComponent', () => {
+describe('ProvenanceGraphComponent', () => {
   let spectator: Spectator<ProvenanceGraphComponent>;
 
   const mockHomeService = {

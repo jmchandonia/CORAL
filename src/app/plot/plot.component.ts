@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PlotService } from 'src/app/shared/services/plot.service';
 
 @Component({
   selector: 'app-plot',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlotComponent implements OnInit {
 
-  constructor() { }
+  constructor(private plotService: PlotService) { }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.plotService.deletePlotBuilder()
   }
 
 }

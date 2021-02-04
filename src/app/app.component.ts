@@ -43,9 +43,7 @@ export class AppComponent implements OnInit {
      this.router.navigate(['login']);
    }
 
-   clearPlotBuilder() {
-     // method to clear cached plot form before navigating to another tab
-     this.plotService.clearPlotBuilder();
+   handleHomeNavigation() {
      if (this.homeSearchRedirect) {
        this.queryBuilder.resetObject();
        this.homeSearchRedirect = false;

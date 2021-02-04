@@ -104,6 +104,10 @@ export class QueryBuilderService {
     return this.http.get(`${environment.baseURL}/core_type_metadata/${id}`);
   }
 
+  getCoreTypeProps(name: string) {
+    return this.http.get(`${environment.baseURL}/core_type_props/${name}`)
+  }
+
   getDimensionVariableValues(id: string, dimIdx: number) {
     return this.http.get(`${environment.baseURL}/brick_dimension/${id}/${dimIdx}`);
   }
@@ -170,6 +174,10 @@ export class QueryBuilderService {
           resolve(this.santitizer.bypassSecurityTrustUrl('data:image/jpeg;base64,' + response.results.image))
         });
     });
+  }
+
+  getMapSearchResults(query: QueryBuilder) {
+    return this.http.post<any>(`${environment.baseURL}/search`, query);
   }
 
 

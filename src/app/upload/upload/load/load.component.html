@@ -2,10 +2,34 @@
   <div class="row mb-2">
     <div class="col-12">
       <h5 class="mb-0 mt-3" style="float: left">Upload Brick Data</h5>
-      <button id="download-template" class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
+      <!-- <button id="download-template" class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
         <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
         Download Template
-      </button>
+      </button> -->
+      <div class="col-8 float-right">
+        <div class="row">
+          <div class="col-8">
+            <ng-select
+              *ngIf="moreThan3Dims"
+              class="custom"
+              [class.select-error]="templateTypeError"
+              style="position: relative; top: 5px;"
+              placeholder="Select a template type"
+              [items]="templateTypeOptions"
+              bindLabel="text"
+              bindValue="type"
+              [(ngModel)]="brick.templateType"
+              [ngModelOptions]="{standalone: true}"
+            ></ng-select>
+          </div>
+          <div class="col-4">
+            <button id="download-template" class="btn btn-primary" (click)="downloadTemplate()">
+              <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
+              Download Template
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!-- <hr /> -->
@@ -72,6 +96,13 @@
     <div class="col-12">
       <div class="alert alert-danger">
         Error: You must upload a valid file before continuing to the next steps.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="templateTypeError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: For Bricks with 3 or more dimensions, you must select the type of template to download.
       </div>
     </div>
   </div>

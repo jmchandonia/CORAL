@@ -22,6 +22,7 @@ export class Brick {
     start_date: Date;
     end_date: Date;
     coreObjectRefsError = false;
+    templateType: 'interlace' | 'tab_data' | 'tab_dims' = null;
 
     get isEmpty() {
         return isEqual(this, new Brick());
@@ -196,6 +197,7 @@ export class DimensionVariable {
     invalidCount: number;
     mapped = false; //
     mapPk = false; //
+    unitOptions: Term[]; // if a dimension is added with context
 
     type: Term;
 

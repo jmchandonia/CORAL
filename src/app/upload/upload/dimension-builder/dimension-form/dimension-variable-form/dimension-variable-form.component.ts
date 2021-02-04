@@ -19,6 +19,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     if (d.typeTerm) {
       if (d.context.length) {
         this.typeData = [this.setContextLabel(d.typeTerm, d.context)];
+        // this.getDimVarUnits();
       } else {
         this.typeData = [d.typeTerm];
       }
@@ -28,6 +29,10 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
     if (d.units) {
       this.unitsData = [d.units];
       this.selectedUnits = d.units.id;
+    }
+
+    if (d.unitOptions) {
+      this.unitsData = d.unitOptions
     }
   }
 
@@ -109,14 +114,18 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
       this.dimVar.units = null;
     } else {
       this.dimVar.units = undefined;
-      this.unitsLoading = true;
-      this.uploadService.searchOntPropertyUnits(this.dimVar.microType)
-        .subscribe(data => {
-          this.unitsData = [...data.results];
-          this.unitsLoading = false;
-        });
+      this.getDimVarUnits();
     }
     this.validate();
+  }
+
+  getDimVarUnits() {
+    this.unitsLoading = true;
+    this.uploadService.searchOntPropertyUnits(this.dimVar.microType)
+      .subscribe(data => {
+        this.unitsData = [...data.results];
+        this.unitsLoading = false;
+      });
   }
 
   setDimVarUnits(event: Term) {
@@ -145,6 +154,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
         new DimensionVariable(this.dimVar.dimension, this.dimVar.index, this.dimVar.required),
         this.dimVar
       ) as DimensionVariable;
+      newDimVar.unitOptions = this.unitsData
       this.reset.emit(newDimVar);
       modalSub.unsubscribe();
     });

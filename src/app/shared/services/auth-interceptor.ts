@@ -35,7 +35,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
     handleAuthError(error: HttpErrorResponse): Observable<any> {
         if (error.status === 401 || error.status === 403) {
-            localStorage.clear();
+            // localStorage.clear();
+            localStorage.removeItem('authToken');
             this.router.navigate(['/login']);
             return of(empty());
         }
