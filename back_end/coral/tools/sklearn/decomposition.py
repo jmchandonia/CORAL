@@ -1,7 +1,7 @@
 from sklearn import decomposition
-from generix import services
-from generix.brick import Brick, BrickProvenance
-from generix.ontology import Term
+from coral import services
+from coral.brick import Brick, BrickProvenance
+from coral.ontology import Term
 
 
 class PCA:

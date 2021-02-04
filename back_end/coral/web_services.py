@@ -151,11 +151,11 @@ def valid_jwt_key(auth_token):
         sys.stderr.write('valid_jwt_key exception: '+str(e)+'\n') 
         return False
 
-@app.route("/generix/", methods=['GET','POST'])
+@app.route("/coral/", methods=['GET','POST'])
 def hello():
     return ('Welcome!')
     
-@app.route("/generix/test_brick_upload")
+@app.route("/coral/test_brick_upload")
 def test_brick_upload():
     data_id = 'c74928ccf2e14c87a51a03e7d879eaf5'
     uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
@@ -184,8 +184,8 @@ def test_brick_upload():
     return s
     # return br.id
     
-@app.route("/generix/refs_to_core_objects/", methods=['POST'])
-def generix_refs_to_core_objects():
+@app.route("/coral/refs_to_core_objects/", methods=['POST'])
+def coral_refs_to_core_objects():
     try:
         brick_ds = json.loads(request.form['brick'])       
         data_id = brick_ds['data_id']
@@ -225,26 +225,26 @@ def generix_refs_to_core_objects():
     except Exception as e:
         return _err_response(e)
 
-@app.route("/generix/search_dimension_microtypes/<value>", methods=['GET'])
+@app.route("/coral/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
     if value is None:
         value = '*'
     return _search_microtypes(svs['ontology'].dimension_microtypes, value)
 
-@app.route("/generix/search_dimension_variable_microtypes/<value>", methods=['GET'])
+@app.route("/coral/search_dimension_variable_microtypes/<value>", methods=['GET'])
 def search_dimension_variable_microtypes(value):
     if value is None:
         value = '*'
     return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
 
-@app.route("/generix/search_data_variable_microtypes/<value>", methods=['GET'])
+@app.route("/coral/search_data_variable_microtypes/<value>", methods=['GET'])
 def search_data_variable_microtypes(value):
     # TODO: do we need a special OTerm property to select data variable - specific terms
     if value is None:
         value = '*'
     return _search_microtypes(svs['ontology'].dimension_variable_microtypes, value)
 
-@app.route("/generix/search_property_microtypes/<value>", methods=['GET'])
+@app.route("/coral/search_property_microtypes/<value>", methods=['GET'])
 def search_property_microtypes(value):
     return _search_microtypes(svs['ontology'].property_microtypes, value)
 
@@ -291,14 +291,14 @@ def _search_microtypes(ontology, value):
     except Exception as e:
         return _err_response(e)
 
-@app.route("/generix/search_property_value_oterms", methods=['POST'])
+@app.route("/coral/search_property_value_oterms", methods=['POST'])
 def search_property_value_oterms():
     query = request.json
     value = query['value']
     parent_term_id = query['microtype']['valid_values_parent']
     return _search_oterms(svs['ontology'].all, value, parent_term_id=parent_term_id)
 
-@app.route("/generix/search_property_value_objrefs", methods=['POST'])
+@app.route("/coral/search_property_value_objrefs", methods=['POST'])
 def search_property_value_objrefs():
     try:
         query = request.json
@@ -364,22 +364,22 @@ def _search_oterms(ontology, value, parent_term_id=None):
         'results': res
     })
 
-@app.route("/generix/get_property_units_oterms", methods=['POST'])
+@app.route("/coral/get_property_units_oterms", methods=['POST'])
 def get_property_units_oterms():
     query = request.json
     parent_term_ids = query['microtype']['valid_units_parents']
     term_ids = query['microtype']['valid_units'] 
     return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
 
-@app.route("/generix/get_personnel_oterms", methods=['GET'])
+@app.route("/coral/get_personnel_oterms", methods=['GET'])
 def get_personnel_oterms():
     return _get_oterms(svs['ontology'].all,parent_term_ids=[_PERSONNEL_PARENT_TERM_ID])
 
-@app.route("/generix/get_campaign_oterms", methods=['GET'])
+@app.route("/coral/get_campaign_oterms", methods=['GET'])
 def get_campaign_oterms():
     return _get_oterms(svs['ontology'].all,parent_term_ids=[_CAMPAIGN_PARENT_TERM_ID])
 
-@app.route("/generix/get_process_oterms", methods=['GET'])
+@app.route("/coral/get_process_oterms", methods=['GET'])
 def get_process_oterms():
     return _get_oterms(svs['ontology'].all,parent_term_ids=[_PROCESS_PARENT_TERM_ID])
 
@@ -408,22 +408,22 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
     })    
 
 
-# @app.route("/generix/search_ont_dtypes/<value>", methods=['GET'])
+# @app.route("/coral/search_ont_dtypes/<value>", methods=['GET'])
 # def search_ont_dtypes(value):
 #     # value = request.args.get('term')
 #     return _search_oterms(svs['ontology'].data_types, value)
 
-# @app.route("/generix/search_ont_all/<value>", methods=['GET'])
+# @app.route("/coral/search_ont_all/<value>", methods=['GET'])
 # def search_ont_all(value):
 #     # value = request.args.get('term')
 #     return _search_oterms(svs['ontology'].all, value)
 
-# @app.route("/generix/search_ont_units/<value>", methods=['GET'])
+# @app.route("/coral/search_ont_units/<value>", methods=['GET'])
 # def search_ont_units(value):
 #     # value = request.args.get('term')
 #     return _search_oterms(svs['ontology'].units, value)
 
-@app.route("/generix/brick_type_templates", methods=['GET'])
+@app.route("/coral/brick_type_templates", methods=['GET'])
 def brick_type_templates():
     try:
         templates = svs['brick_template_provider'].templates
@@ -431,7 +431,7 @@ def brick_type_templates():
     except Exception as e:
         return _err_response(e)
 
-@app.route("/generix/core_types", methods=['GET'])
+@app.route("/coral/core_types", methods=['GET'])
 def core_types():
     try:
         res = []
@@ -450,7 +450,7 @@ def core_types():
         return _err_response(e)
 
 # this API seems unused - see /search instead!
-@app.route('/generix/do_search', methods=['GET', 'POST'])
+@app.route('/coral/do_search', methods=['GET', 'POST'])
 def do_search():
     try:
         if request.method == 'POST':
@@ -496,7 +496,7 @@ def do_search():
     except Exception as e:
         return _err_response(e)        
 
-@app.route("/generix/brick/<brick_id>", methods=['GET','POST'])
+@app.route("/coral/brick/<brick_id>", methods=['GET','POST'])
 @auth_ro_required
 def get_brick(brick_id):
     try:
@@ -522,7 +522,7 @@ def get_brick(brick_id):
     except Exception as e:
         return _err_response(e)        
 
-@app.route("/generix/filter_brick/<brick_id>", methods=['POST'])
+@app.route("/coral/filter_brick/<brick_id>", methods=['POST'])
 @auth_ro_required
 def filter_brick(brick_id):
     try:
@@ -537,7 +537,7 @@ def filter_brick(brick_id):
     except Exception as e:
         return _err_response(e)        
     
-@app.route("/generix/do_report/<value>", methods=['GET'])
+@app.route("/coral/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
     # res = df.head(n=100).to_json(orient="table", index=False)
@@ -550,7 +550,7 @@ def do_report(value):
     } )
 
 
-@app.route('/generix/dim_var_validation_errors/<data_id>/<dim_index>/<dim_var_index>', methods=['GET'])
+@app.route('/coral/dim_var_validation_errors/<data_id>/<dim_index>/<dim_var_index>', methods=['GET'])
 def dim_var_validation_errors(data_id, dim_index, dim_var_index):
     try:
         dim_index = int(dim_index)
@@ -566,7 +566,7 @@ def dim_var_validation_errors(data_id, dim_index, dim_var_index):
         return _err_response(e)
 
 
-@app.route('/generix/data_var_validation_errors/<data_id>/<data_var_index>', methods=['GET'])
+@app.route('/coral/data_var_validation_errors/<data_id>/<data_var_index>', methods=['GET'])
 def data_var_validation_errors(data_id, data_var_index):
     try:
         data_var_index = int(data_var_index)
@@ -581,7 +581,7 @@ def data_var_validation_errors(data_id, data_var_index):
         return _err_response(e)
 
 
-@app.route('/generix/create_brick', methods=['POST'])
+@app.route('/coral/create_brick', methods=['POST'])
 def create_brick():
     try:
         brick_ds = json.loads(request.form['brick'])       
@@ -616,7 +616,7 @@ def create_brick():
 
 
     
-@app.route('/generix/validate_upload', methods=['POST'])
+@app.route('/coral/validate_upload', methods=['POST'])
 def validate_upload():
     try:
         query = request.json
@@ -707,7 +707,7 @@ def validate_upload():
         return _err_response(e)
 
 
-@app.route('/generix/upload', methods=['POST'])
+@app.route('/coral/upload', methods=['POST'])
 def upload_file():
     try:
         data_id = uuid.uuid4().hex
@@ -803,7 +803,7 @@ def _dim_var_example(vals, max_items=5):
 def _brick_to_csv(brick_id):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
-    cmd = '/home/clearinghouse/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
+    cmd = '/home/coral/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
     cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmdProcess.wait()
     with open(file_name_csv, 'r') as file:
@@ -813,7 +813,7 @@ def _brick_to_csv(brick_id):
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
-    cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
+    cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     sys.stderr.write('running '+cmd+'\n')
     output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
     try:
@@ -910,7 +910,7 @@ def _get_term(term_data):
 ##########################################################################################
 
 @cross_origin
-@app.route("/generix/user_login", methods=['GET', 'POST'])
+@app.route("/coral/user_login", methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return json.dumps({ 'message': 'testing login route handler' })
@@ -936,9 +936,9 @@ def login():
             })  
 
 
-@app.route("/generix/data_types", methods=['GET'])
+@app.route("/coral/data_types", methods=['GET'])
 @auth_required
-def generix_data_types():
+def coral_data_types():
     res = []
     
     # Core types
@@ -969,9 +969,9 @@ def generix_data_types():
     res.sort(key=lambda x: x['dataType']) 
     return  json.dumps({'results': res})
 
-@app.route("/generix/data_models", methods=['GET'])
+@app.route("/coral/data_models", methods=['GET'])
 @auth_required
-def generix_data_models():
+def coral_data_models():
     res = {}
 
     type_defs = svs['indexdef'].get_type_defs()
@@ -989,9 +989,9 @@ def generix_data_models():
 
     return  json.dumps({'results': res})
 
-@app.route('/generix/brick_dimension/<brick_id>/<dim_index>', methods=['GET'])
+@app.route('/coral/brick_dimension/<brick_id>/<dim_index>', methods=['GET'])
 @auth_required
-def generix_brick_dimension(brick_id, dim_index):
+def coral_brick_dimension(brick_id, dim_index):
     MAX_ROW_COUNT = 100
     res = {}
     try:
@@ -1047,9 +1047,9 @@ def generix_brick_dimension(brick_id, dim_index):
 
     return _ok_response(res)
 
-@app.route('/generix/brick_map/<brick_id>', methods=['POST'])
+@app.route('/coral/brick_map/<brick_id>', methods=['POST'])
 @auth_required
-def generix_brick_map_data(brick_id):
+def coral_brick_map_data(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
     body = request.json
@@ -1115,15 +1115,15 @@ def generix_brick_map_data(brick_id):
     return _ok_response(res)
 
 
-@app.route('/generix/brick_plot_metadata/<brick_id>/<limit>', methods=['GET'])
+@app.route('/coral/brick_plot_metadata/<brick_id>/<limit>', methods=['GET'])
 @auth_required
-def generix_brick_plot_metadata(brick_id, limit):
+def coral_brick_plot_metadata(brick_id, limit):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
 
     return br.to_json(exclude_data_values=False, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
 
-@app.route('/generix/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
+@app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required
 def get_brick_dim_var_values(brick_id, dim_idx, dv_idx, keyword):
     # used for populating plot constraints for dimensions with more than the specified amount of variables
@@ -1133,9 +1133,9 @@ def get_brick_dim_var_values(brick_id, dim_idx, dv_idx, keyword):
     dv_results = [{'display': v, 'index': i} for i, v in enumerate(dim_var.values) if v.find(keyword) > 0]
     return _ok_response(dv_results)
 
-@app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
+@app.route('/coral/brick_metadata/<brick_id>', methods=['GET'])
 @auth_required
-def generix_brick_metadata(brick_id):
+def coral_brick_metadata(brick_id):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
     
@@ -1188,8 +1188,8 @@ def _get_plot_data(query):
 
     return res
 
-@app.route('/generix/plotly_core_data', methods=["POST"])
-def generix_plotly_core_data():
+@app.route('/coral/plotly_core_data', methods=["POST"])
+def coral_plotly_core_data():
     body = request.json
     try:
         rs = _get_core_plot_data(body['query'])
@@ -1287,9 +1287,9 @@ def _get_core_plot_data(search_data):
     res_df = q.find().to_df()
     return res_df
 
-@app.route('/generix/plotly_data', methods=['POST'])
+@app.route('/coral/plotly_data', methods=['POST'])
 @auth_required
-def generix_plotly_data():
+def coral_plotly_data():
     query = request.json
     try:
         rs = _get_plot_data(query)
@@ -1350,9 +1350,9 @@ def generix_plotly_data():
     except Exception as e:
         return _err_response(e)
 
-@app.route('/generix/plot_data', methods=['POST'])
+@app.route('/coral/plot_data', methods=['POST'])
 @auth_required
-def generix_plot_data():
+def coral_plot_data():
     try:
         res = _get_plot_data(request.json)
         return _ok_response(res)
@@ -1370,9 +1370,9 @@ def _build_dim_labels(dim, pattern):
     return labels
 
 
-@app.route('/generix/plot_data_test', methods=['POST'])
+@app.route('/coral/plot_data_test', methods=['POST'])
 @auth_required
-def generix_plot_data_test():
+def coral_plot_data_test():
     query = request.json
     bp = dp._get_type_provider('Brick')
     # brick_id = query['objectId']
@@ -1420,9 +1420,9 @@ def _extract_criterion_props(criterion):
     return (prop_name, prop_value, operation)           
 
 
-@app.route('/generix/search', methods=['POST'])
+@app.route('/coral/search', methods=['POST'])
 @auth_ro_required
-def generix_search():
+def coral_search():
     try:
         search_data = request.json
         # Do queryMatch
@@ -1526,9 +1526,9 @@ def generix_search():
     except Exception as e:
         return _err_response(e,traceback=True)
 
-@app.route("/generix/search_operations", methods=['GET'])
+@app.route("/coral/search_operations", methods=['GET'])
 @auth_required
-def generix_search_operations():
+def coral_search_operations():
     # '=':  FILTER_EQ,
     # '==': FILTER_EQ,
     # 'eq': FILTER_EQ,
@@ -1548,9 +1548,9 @@ def generix_search_operations():
     res = ['=','>','<','>=','<=','like']
     return  json.dumps({'results': res})
 
-@app.route("/generix/plot_types", methods=['GET'])
+@app.route("/coral/plot_types", methods=['GET'])
 @auth_required
-def generix_plot_types():
+def coral_plot_types():
     fname = cns['_PLOT_TYPES_FILE']
     try:
         plot_types = json.loads(open(fname).read())['plot_types']
@@ -1559,9 +1559,9 @@ def generix_plot_types():
         
     return _ok_response(plot_types)
 
-@app.route("/generix/report_plot_data/<report_id>", methods=['GET'])
+@app.route("/coral/report_plot_data/<report_id>", methods=['GET'])
 @auth_required
-def generix_report_plot_data(report_id):
+def coral_report_plot_data(report_id):
     reports_map = {
         'report1': 'brick_types',
         'report2': 'process_campaigns'
@@ -1594,9 +1594,9 @@ def generix_report_plot_data(report_id):
         return _err_response(e)
 
 
-@app.route("/generix/reports", methods=['GET'])
+@app.route("/coral/reports", methods=['GET'])
 @auth_required
-def generix_reports():
+def coral_reports():
 
     reports = [
         {
@@ -1626,9 +1626,9 @@ def generix_reports():
     ]        
     return _ok_response(reports)
 
-@app.route("/generix/reports/<id>", methods=['GET'])
+@app.route("/coral/reports/<id>", methods=['GET'])
 @auth_required
-def generix_report(id):
+def coral_report(id):
     try:
         report = getattr(svs['reports'], id)
         df = report.to_df()
@@ -1639,9 +1639,9 @@ def generix_report(id):
 
     return  _ok_response(res)
 
-@app.route("/generix/filters", methods=['GET'])
+@app.route("/coral/filters", methods=['GET'])
 @auth_required
-def generix_filters():
+def coral_filters():
     reports = svs['reports']
 
     df_campaign = reports.process_campaigns.to_df()
@@ -1684,9 +1684,9 @@ def _get_category_items(process_stat_df, attr):
     return res
 
 # Test version
-@app.route('/generix/types_stat', methods=['GET','POST'])
+@app.route('/coral/types_stat', methods=['GET','POST'])
 @auth_required
-def generix_type_stat():
+def coral_type_stat():
     arango_service = svs['arango_service']
 
     # query = request.json
@@ -2152,9 +2152,9 @@ def stretch_avoid_collisions(nodes, edges):
                         n4['y'] = int(n4['y'])
             
 # for types graph on front page
-@app.route('/generix/types_graph', methods=['GET','POST'])
+@app.route('/coral/types_graph', methods=['GET','POST'])
 @auth_ro_required
-def generix_type_graph():
+def coral_type_graph():
     arango_service = svs['arango_service']
 
     # load filters
@@ -2651,9 +2651,9 @@ def generix_type_graph():
     return  _ok_response(res)
 
 
-@app.route('/generix/dn_process_docs/<obj_id>', methods=['GET'])
+@app.route('/coral/dn_process_docs/<obj_id>', methods=['GET'])
 @auth_required
-def generix_dn_process_docs(obj_id):
+def coral_dn_process_docs(obj_id):
     try:
         arango_service = svs['arango_service']
         indexdef = svs['indexdef']
@@ -2673,9 +2673,9 @@ def generix_dn_process_docs(obj_id):
         return _err_response(e)
 
 
-@app.route('/generix/up_process_docs/<obj_id>', methods=['GET'])
+@app.route('/coral/up_process_docs/<obj_id>', methods=['GET'])
 @auth_required
-def generix_up_process_docs(obj_id):
+def coral_up_process_docs(obj_id):
     try:
         arango_service = svs['arango_service']
         indexdef = svs['indexdef']
@@ -2735,9 +2735,9 @@ def _to_process_docs(rows):
     return process_docs
 
 
-@app.route('/generix/microtypes', methods=['GET'])
+@app.route('/coral/microtypes', methods=['GET'])
 @auth_required
-def generix_microtypes():
+def coral_microtypes():
     try:
         res = []
         term_collection = svs['ontology'].all.find_microtypes()
@@ -2807,9 +2807,9 @@ def append_with_children(res,children,term_dict,term_id):
         append_with_children(res,children,term_dict,child)
     return
 
-@app.route('/generix/core_type_props/<obj_name>', methods=['GET'])
+@app.route('/coral/core_type_props/<obj_name>', methods=['GET'])
 @auth_ro_required
-def generix_core_type_props(obj_name):
+def coral_core_type_props(obj_name):
     """ Gets list of property names as axis options for plotting """
     core_type = svs['typedef'].get_type_def(obj_name)
     response = []
@@ -2827,9 +2827,9 @@ def generix_core_type_props(obj_name):
             response.append(dict(name=property.name, display_name=property.name, scalar_type=property.type, term_id=property.term_id))
     return json.dumps({"results": response})
                
-@app.route('/generix/core_type_metadata/<obj_id>', methods=['GET','POST'])
+@app.route('/coral/core_type_metadata/<obj_id>', methods=['GET','POST'])
 @auth_ro_required
-def generix_core_type_metadata(obj_id):
+def coral_core_type_metadata(obj_id):
     obj_type = ''
     try:
         (JSON, TSV) = range(2)
@@ -2865,7 +2865,7 @@ def generix_core_type_metadata(obj_id):
     except Exception as e:
         return _err_response(e)
 
-@app.route('/generix/image', methods=['POST'])
+@app.route('/coral/image', methods=['POST'])
 @auth_required
 def get_image():
     try:
@@ -2923,7 +2923,7 @@ def get_image():
         return _err_response(e)
 
     
-@app.route('/generix/generate_brick_template', methods=['POST'])
+@app.route('/coral/generate_brick_template', methods=['POST'])
 @auth_required
 def generate_brick_template():
     try:
