@@ -1,0 +1,87 @@
+<div class="row">
+    <span class="col-2 offset-1" style="cursor: pointer; color: #00365C;" (click)="navigateBack()">
+        <i class="material-icons back-icon">keyboard_arrow_left</i>
+      Go back
+    </span>
+    <hr style="width: 100%" />
+</div>
+<div *ngIf="!results" class="loading">
+    <ngx-spinner
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false">
+    </ngx-spinner>
+  </div>
+<agm-map
+    #map
+    *ngIf="_results?.length"
+    style="height: 550px;"
+    mapTypeId="satellite"
+    (mapReady)="onMapReady($event)"
+>
+    <agm-map-type-control></agm-map-type-control>
+    <ng-container *ngFor="let result of results">
+        <agm-marker
+            *ngIf="markerShouldBeDisplayed(result)"
+            [latitude]="result.latitude"
+            [longitude]="result.longitude"
+            [iconUrl]="{url: getIconUrl(result.scale), labelOrigin: {x: 0, y: -10}}"
+            (mouseOver)="onMouseOver(infoWindow)"
+            (mouseOut)="onMouseOut(infoWindow)"
+        >
+            <agm-info-window #infoWindow>
+                {{result.label_text}} <span *ngIf="mapBuilder.labelField.units">{{mapBuilder.labelField.units.oterm_name}}</span>
+                <br />
+                <span *ngIf="mapBuilder.colorField && !colorFieldEqualsLabelField">
+                    {{mapBuilder.colorField.name}}: {{result.color === null ? 'N/A' : result.color}} <span *ngIf="mapBuilder.colorField.units && result.color !== null">{{mapBuilder.colorField.units.oterm_name}}</span>
+                </span>
+            </agm-info-window>
+        </agm-marker>
+    </ng-container>
+</agm-map>
+<div class="row justify-content-center mt-2" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType !== 'term'">
+    <div class="col-3" *ngIf="hasNullValues">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" [(ngModel)]="showNullValues" /> 
+            <label class="form-check-label">Show Missing Values (Dark Grey)</label>
+        </div>
+    </div>
+    <div *ngIf="_results?.length" [ngClass]="hasNullValues ? 'col-8' : 'col-11'" class="custom-slider">
+        <label>Filter by {{mapBuilder.colorField.name}} <span *ngIf="mapBuilder.colorField.units">({{mapBuilder.colorField.units.oterm_name ? mapBuilder.colorField.units.oterm_name : mapBuilder.colorField.units}})</span></label>
+        <ngx-slider
+            #slider
+            *ngIf="showSlider"
+            [(value)]="lowestScale"
+            [(highValue)]="highestScale"
+            [options]="sliderOptions"
+            (userChangeEnd)="filterMarkersWithSlider($event)"
+        ></ngx-slider>
+    </div>
+</div>
+<div class="row mt-2 pr-4 pl-4" *ngIf="mapBuilder.colorField && mapBuilder.colorFieldScalarType === 'term'">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <p>Filter markers by {{mapBuilder.colorField.name}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card-group col-12">
+                <div class="col-2" *ngFor="let category of categories | keyvalue">
+                    <div class="card" style="border: 0px!important">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <div class="form-check offset-2 d-flex align-items-center">
+                                    <input type="checkbox" [(ngModel)]="category.value.display" class="form-check-input" />
+                                    <label class="form-check-label badge badge-pill" style="position: relative; top: 3px;" [ngStyle]="{backgroundColor: '#' + category.value.color}">{{category.key}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

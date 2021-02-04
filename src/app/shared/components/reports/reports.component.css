@@ -1,0 +1,14 @@
+
+.table-background {
+    background-color: white;
+    padding: 10px;
+}
+
+.table-header {
+    background-color: #00489B;
+    color: white;
+}
+
+th {
+    border-right: 1px solid white;
+}

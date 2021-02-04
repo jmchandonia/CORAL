@@ -1,0 +1,83 @@
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card mt-2" id="dim-var-info">
+      <div class="card-header light-blue">
+        <h6>Dimension Metadata</h6>
+      </div>
+      <div class="card-body">
+        <div class="row" *ngFor="let dim of brick.dimensions">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-12">
+                <h5>Dimension {{dim.index + 1}} ({{dim.type.text}}, size = {{dim.size}})</h5>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-bordered dim-var-info-table">
+                  <thead class="table-header">
+                    <tr>
+                      <td><strong>#</strong></td>
+                      <td><strong>Dimension Variable</strong></td>
+                      <td><strong>Units</strong></td>
+                      <td><strong>Values</strong></td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let dimVar of dim.variables">
+                      <td>{{dimVar.index + 1}}</td>
+                      <td>
+                        {{dimVar.type.text}}
+                        <span *ngFor="let item of dimVar.context">
+                          , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                          <span *ngIf="item.units"> {{item.units.text}}</span>
+                        </span>
+                      </td>
+                      <td>{{dimVar.units ? dimVar.units.text : 'N/A'}}</td>
+                      <td>{{dimVar.valuesSample}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card mt-2 mb-2" id="data-var-info">
+      <div class="card-header light-blue">
+        <h6>Data Variables</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered" id="data-var-info-table">
+          <thead class="table-header">
+            <tr>
+              <td><strong>#</strong></td>
+              <td><strong>Type</strong></td>
+              <td><strong>Units</strong></td>
+              <td><strong>Values</strong></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dataValue of brick.dataValues">
+              <td>{{dataValue.index + 1}}</td>
+              <td>
+                {{dataValue.type.text}}
+                <span *ngFor="let item of dataValue.context">
+                  , {{item.type.text}}={{item.value.text ? item.value.text : item.value}}
+                  <span *ngIf="item.units"> {{item.units.text}}</span>
+                </span>
+              </td>
+              <td>{{dataValue.units ? dataValue.units.text : 'N/A'}}</td>
+              <td>{{dataValue.valuesSample}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

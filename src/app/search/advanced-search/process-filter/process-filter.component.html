@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-4">
+        <label for="processType">
+            Process Type
+        </label>
+        <ng-select
+            id="processes"
+            class="custom"
+            name="processType"
+            [items]="processes | async"
+            bindLabel="text"
+            [ngModel]="process?.keyword"
+            [ngModelOptions]="{standalone: true}"
+            placeholder="Select a Process"
+            (change)="addFilter($event, 'process', '=')"
+            ></ng-select>
+    </div>
+    <div class="col-4">
+        <label for="campaignType">
+            Campaign Type
+        </label>
+        <ng-select
+            id="campaigns"
+            class="custom"
+            name="campaignType"
+            [ngModel]="campaign?.keyword"
+            [ngModelOptions]="{standalone: true}"
+            [items]="campaigns | async"
+            bindLabel="text"
+            placeholder="Select a Campaign"
+            (change)="addFilter($event, 'campaign', '=')"
+        ></ng-select>
+    </div>
+    <div class="col-4">
+        <label for="personnel">Personnel</label>
+        <ng-select
+            id="personnel"
+            class="custom"
+            name="personnel"
+            [ngModel]="person?.keyword"
+            [ngModelOptions]="{standalone: true}"
+            [items]="personnel | async"
+            bindLabel="text"
+            placeholder="Select Personnel"
+            (change)="addFilter($event, 'person', '=')"
+            ></ng-select>
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+</div>
+<div class="row mt-2">
+    <div class="col-6">
+        <label for="start-date">Start Date</label>
+        <input
+            placeholder="mm/dd/yyyy"
+            class="form-control"
+            [ngModel]="date_start && reformat(date_start.keyword)"
+            id="start-date"
+            bsDatepicker
+            placement="bottom"
+            [bsConfig]="datePickerConfig"
+            (bsValueChange)="addFilter($event, 'date_start', '>=')"
+        />
+    </div>
+    <div class="col-6">
+        <label for="end-date">End Date</label>
+        <input
+            placeholder="mm/dd/yyyy"
+            class="form-control"
+            [ngModel]="date_end && reformat(date_end.keyword)"
+            id="end-date"
+            bsDatepicker
+            placement="bottom"
+            [bsConfig]="datePickerConfig"
+            (bsValueChange)="addFilter($event, 'date_end', '<=')"
+            />
+    </div>
+</div>

@@ -1,0 +1,196 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~datatables.net-bs4/css/dataTables.bootstrap4.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~angular-tree-component/dist/angular-tree-component.css";
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Red+Hat+Text:400,500&display=swap');
+@import '~@swimlane/ngx-datatable/index.css';
+@import '~@swimlane/ngx-datatable/themes/bootstrap.css';
+/* @import '~@swimlane/ngx-datatable/themes/material.scss'; */
+@import '~@swimlane/ngx-datatable/assets/icons.css';
+body {
+    font-family: 'Red Hat Text', sans-serif;
+}
+
+.bold {
+    font-family: 'Red Hat Text', sans-serif;
+    font-weight: medium;
+}
+
+.btn-primary {
+    background-color:#00489B!important; 
+    border: 1px solid #00489B!important;
+}
+
+.btn-secondary {
+    background-color: rgb(255, 98, 0)!important;
+}
+
+.btn-secondary:hover {
+    background-color: rgb(247, 115, 33)!important;
+}
+
+.btn-primary:hover {
+    background-color: rgb(24, 96, 179)!important;
+}
+
+.icon {
+    height: 24px;
+    width: 24px;
+    margin-right: 15px;
+}
+
+.dropdown-icon {
+    height: 20px;
+    width:  20px;
+    margin-right: 15px;
+    color: #00365C;
+    position: relative;
+    top: 5px;
+}
+
+.dropdown-item {
+    margin-bottom: 5px;
+}
+
+.rotated {
+    transform: rotate(90deg);
+    margin-left: 5px;
+}
+
+/* .form-control {
+    height: 28px!important;
+    border: 1px solid #aaa!important;
+} */
+
+.form-container {
+    margin: 0px auto;
+    width: 800px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.form-container-column {
+    border-radius: 10px;
+    background-color: #ECECEC;
+    padding: 10px;
+}
+
+.form-container-sm {
+    width: 700px;
+}
+
+.data-information-header {
+    margin: 0px auto;
+    width: 800px;
+}
+
+.table-header {
+    background-color: #00489B;
+    color: white;
+}
+
+.no-units {
+    background-color: #e9ecef;
+    border-radius: 3px;
+    height: 38px;
+    margin-left: 0.1275rem;
+    margin-right: 0.1275rem;
+}
+
+.no-units > span {
+    margin-top: 8px;
+}
+
+.light-blue {
+    background-color: #eeeeff;
+}
+
+.button-error {
+    border: 1px solid red!important;
+}
+
+.ng-select.custom.ng-select-disabled .ng-arrow-wrapper {
+    background-color: #eee
+}
+
+.select-custom-button {
+    height: 38px;
+    width: 38px;
+    margin: 0!important;
+    background-color: #EEEEFF;
+    color: #888;
+    border: 1px solid #CED4DA;
+    padding: 0px!important;
+    padding-top: 5px;
+}
+
+.select-custom-button-icon {
+    margin: 0px auto;
+    margin-top: 6px;
+}
+
+.ng-select.custom > .ng-select-container {
+    height: 38px;
+}
+
+/* for parent container of ng-selects with buttons (upload module) */
+.select-button-group {
+    display: flex;
+    align-items: flex-start;
+}
+
+.ng-select.custom.select-error > .ng-select-container {
+    border: 1px solid red;
+}
+
+.ng-select.custom .ng-arrow-wrapper {
+    background: #EEEEFF;
+    padding: 0;
+    padding-top: 5px;
+    border-left: 1px solid #CCC;
+    height: 100%;
+    width: 38px;
+}
+
+.ng-select.custom.select-error .ng-arrow-wrapper {
+    border-left: 1px solid red;
+}
+
+.ng-select.type-selector > .ng-dropdown-panel {
+    width: auto!important;
+    max-width: 1000px;
+    min-width: 100%;
+}
+
+modal-container.modal {
+    z-index: 100000;
+}
+
+/* BEGIN style overrides for ngx-datatable */
+
+.datatable-footer-inner {
+    overflow-y: hidden!important;
+}
+
+.datatable-header {
+    background: #00489B;
+    color: white;
+}
+
+.datatable-footer-inner {
+    background: #00489B;
+    color: white;
+}
+
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
+.ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
+    background-color: rgb(0, 99, 212);
+}
+
+/* END style overrides for ngx-datatable */
+
+.gm-ui-hover-effect {
+    display: none!important;
+}
+

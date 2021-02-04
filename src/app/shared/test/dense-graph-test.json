@@ -1,0 +1,1084 @@
+{
+    "error": "",
+    "results": {
+        "links": [
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 12,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 3,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 6,
+                "target": 7,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 6,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 6,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 11,
+                "target": 13,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 14,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 15,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 5,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 3,
+                "target": 5,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 5,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "reversible": true,
+                "source": 6,
+                "target": 8,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "reversible": true,
+                "source": 8,
+                "target": 6,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 7,
+                "target": 11,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 4,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 4,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 4,
+                "target": 16,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 17,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 5,
+                "target": 18,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 18,
+                "target": 19,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 18,
+                "target": 20,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 21,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 22,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 23,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 24,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 24,
+                "target": 25,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 24,
+                "target": 10,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 26,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 27,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 32,
+                "target": 28,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "in_filter": false,
+                "source": 1,
+                "target": 29,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 29,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 29,
+                "target": 30,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 0,
+                "target": 31,
+                "text": "text",
+                "thickness": 4
+            },
+            {
+                "in_filter": false,
+                "source": 31,
+                "target": 4,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "in_filter": false,
+                "source": 31,
+                "target": 1,
+                "text": "text",
+                "thickness": 3
+            },
+            {
+                "inFilter": false,
+                "source": 1,
+                "target": 32,
+                "text": "text",
+                "thickness": 2
+            },
+            {
+                "inFilter": false,
+                "source": 0,
+                "target": 33,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 1,
+                "target": 34,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 2,
+                "target": 35,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 3,
+                "target": 36,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 4,
+                "target": 37,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 5,
+                "target": 38,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 6,
+                "target": 39,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 7,
+                "target": 40,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 8,
+                "target": 41,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 9,
+                "target": 42,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 10,
+                "target": 43,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 11,
+                "target": 44,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 12,
+                "target": 45,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 13,
+                "target": 46,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 14,
+                "target": 47,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 15,
+                "target": 48,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 16,
+                "target": 49,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 17,
+                "target": 50,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 18,
+                "target": 51,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 19,
+                "target": 52,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 20,
+                "target": 53,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 21,
+                "target": 54,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 22,
+                "target": 55,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 23,
+                "target": 56,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 24,
+                "target": 57,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 25,
+                "target": 58,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 26,
+                "target": 59,
+                "text": "text",
+                "thickness": 1
+            },
+            {
+                "inFilter": false,
+                "source": 27,
+                "target": 60,
+                "text": "text",
+                "thickness": 1
+            }
+        ],
+        "nodes": [
+            {
+                "category": "SDT_",
+                "count": 469,
+                "dataModel": "W",
+                "dataType": "W",
+                "index": 0,
+                "name": "text",
+                "root": true,
+                "x": 700.34,
+                "y": 175.01
+            },
+            {
+                "category": "SDT_",
+                "count": 1487,
+                "dataModel": "S",
+                "dataType": "S",
+                "index": 1,
+                "name": "text",
+                "x": 435.86,
+                "y": 454.09
+            },
+            {
+                "category": "SDT_",
+                "count": 1120,
+                "dataModel": "S2",
+                "dataType": "S2",
+                "index": 3,
+                "name": "text",
+                "x": 541.47,
+                "y": 652.98
+            },
+            {
+                "category": "SDT_",
+                "count": 1550,
+                "dataModel": "C",
+                "dataType": "C",
+                "index": 4,
+                "name": "text",
+                "x": 635.04,
+                "y": 495.34
+            },
+            {
+                "category": "SDT_",
+                "count": 950,
+                "dataModel": "R",
+                "dataType": "R",
+                "index": 5,
+                "name": "text",
+                "x": 737.31,
+                "y": 695.78
+            },
+            {
+                "category": "SDT_",
+                "count": 278,
+                "dataModel": "A",
+                "dataType": "A",
+                "index": 6,
+                "name": "text",
+                "x": 612.79,
+                "y": 838.5
+            },
+            {
+                "category": "SDT_",
+                "count": 258,
+                "dataModel": "G",
+                "dataType": "G",
+                "index": 7,
+                "name": "text",
+                "x": 658.29,
+                "y": 1036.8
+            },
+            {
+                "category": "SDT_",
+                "count": 623,
+                "dataModel": "B",
+                "dataType": "B",
+                "index": 8,
+                "name": "text",
+                "x": 486.3,
+                "y": 985
+            },
+            {
+                "category": "SDT_",
+                "count": 123,
+                "dataModel": "I",
+                "dataType": "I",
+                "index": 10,
+                "name": "text",
+                "x": 150.2,
+                "y": 757.34
+            },
+            {
+                "category": "SDT_",
+                "count": 1,
+                "dataModel": "T",
+                "dataType": "T",
+                "index": 11,
+                "name": "text",
+                "x": 650.84,
+                "y": 1226.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "M1",
+                "index": 12,
+                "name": "text",
+                "x": 690.7,
+                "y": 599.17
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "G2",
+                "index": 13,
+                "name": "text",
+                "x": 637.62,
+                "y": 1405.5
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "T2",
+                "index": 14,
+                "name": "text",
+                "x": 849.19,
+                "y": 827.7
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "M2",
+                "index": 15,
+                "name": "text",
+                "x": 417.86,
+                "y": 781.87
+            },
+            {
+                "category": "DDT_",
+                "count": 4,
+                "dataModel": "Brick",
+                "dataType": "M3",
+                "index": 16,
+                "name": "text",
+                "x": 816.54,
+                "y": 395.41
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "P",
+                "index": 17,
+                "name": "text",
+                "parent": 32,
+                "x": 311.45,
+                "y": 145.12
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 18,
+                "name": "text",
+                "x": 957.2,
+                "y": 689.06
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "T3",
+                "index": 19,
+                "name": "text",
+                "x": 1139.4,
+                "y": 616.5
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "T4",
+                "index": 20,
+                "name": "text",
+                "x": 1109.3,
+                "y": 815.93
+            },
+            {
+                "category": "DDT_",
+                "count": 20,
+                "dataModel": "Brick",
+                "dataType": "P2",
+                "index": 21,
+                "name": "text",
+                "x": 821.53,
+                "y": 18
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "E",
+                "index": 22,
+                "name": "text",
+                "parent": 32,
+                "x": 216.35,
+                "y": 120.56
+            },
+            {
+                "category": "DDT_",
+                "count": 11,
+                "dataModel": "Brick",
+                "dataType": "C2",
+                "index": 23,
+                "name": "text",
+                "parent": 32,
+                "x": 110.35,
+                "y": 442.74
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 24,
+                "name": "text",
+                "x": 272.91,
+                "y": 586.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "M4",
+                "index": 25,
+                "name": "text",
+                "x": 67.22,
+                "y": 645.37
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "M5",
+                "index": 26,
+                "name": "text",
+                "parent": 32,
+                "x": 125.72,
+                "y": 176.73
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "M6",
+                "index": 27,
+                "name": "text",
+                "parent": 32,
+                "x": 43.546,
+                "y": 369.48
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "M7",
+                "index": 28,
+                "name": "text",
+                "parent": 32,
+                "x": 65.42,
+                "y": 264.38
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 29,
+                "name": "text",
+                "x": 522.61,
+                "y": 250.64
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "C3",
+                "index": 30,
+                "name": "text",
+                "x": 533.01,
+                "y": 45.128
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 31,
+                "name": "text",
+                "x": 592.86,
+                "y": 353.22
+            },
+            {
+                "category": "DDT_",
+                "count": 21,
+                "dataModel": "Brick",
+                "dataType": "D2",
+                "index": 32,
+                "name": "text",
+                "x": 254.02,
+                "y": 327.11
+            },
+            {
+                "category": "SDT_",
+                "count": 32,
+                "dataModel": "W",
+                "dataType": "W",
+                "index": 33,
+                "name": "text",
+                "x": -700.34,
+                "y": -175.01
+            },
+            {
+                "category": "SDT_",
+                "count": 1487,
+                "dataModel": "S",
+                "dataType": "S",
+                "index": 34,
+                "name": "text",
+                "x": -435.86,
+                "y": -454.09
+            },
+            {
+                "category": "SDT_",
+                "count": 1120,
+                "dataModel": "S2",
+                "dataType": "S2",
+                "index": 35,
+                "name": "text",
+                "x": 541.47,
+                "y": 652.98
+            },
+            {
+                "category": "SDT_",
+                "count": 1550,
+                "dataModel": "C",
+                "dataType": "C",
+                "index": 36,
+                "name": "text",
+                "x": -635.04,
+                "y": 495.34
+            },
+            {
+                "category": "SDT_",
+                "count": 950,
+                "dataModel": "R",
+                "dataType": "R",
+                "index": 37,
+                "name": "text",
+                "x": -737.31,
+                "y": -695.78
+            },
+            {
+                "category": "SDT_",
+                "count": 278,
+                "dataModel": "A",
+                "dataType": "A",
+                "index": 38,
+                "name": "text",
+                "x": -612.79,
+                "y": -838.5
+            },
+            {
+                "category": "SDT_",
+                "count": 258,
+                "dataModel": "G",
+                "dataType": "G",
+                "index": 39,
+                "name": "text",
+                "x": -658.29,
+                "y": -1036.8
+            },
+            {
+                "category": "SDT_",
+                "count": 623,
+                "dataModel": "B",
+                "dataType": "B",
+                "index": 40,
+                "name": "text",
+                "x": -486.3,
+                "y": -985
+            },
+            {
+                "category": "SDT_",
+                "count": 123,
+                "dataModel": "I",
+                "dataType": "I",
+                "index": 41,
+                "name": "text",
+                "x": -150.2,
+                "y": -757.34
+            },
+            {
+                "category": "SDT_",
+                "count": 1,
+                "dataModel": "T",
+                "dataType": "T",
+                "index": 42,
+                "name": "text",
+                "x": -650.84,
+                "y": -1226.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 43,
+                "name": "text",
+                "x": -690.7,
+                "y": -599.17
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 44,
+                "name": "text",
+                "x": -637.62,
+                "y": -1405.5
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 45,
+                "name": "text",
+                "x": -849.19,
+                "y": -827.7
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 46,
+                "name": "text",
+                "x": -417.86,
+                "y": -781.87
+            },
+            {
+                "category": "DDT_",
+                "count": 4,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 47,
+                "name": "text",
+                "x": -816.54,
+                "y": -395.41
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 48,
+                "name": "text",
+                "parent": 32,
+                "x": -311.45,
+                "y": -145.12
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 49,
+                "name": "text",
+                "x": -957.2,
+                "y": -689.06
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 50,
+                "name": "text",
+                "x": -1139.4,
+                "y": -616.5
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 51,
+                "name": "text",
+                "x": -1109.3,
+                "y": -815.93
+            },
+            {
+                "category": "DDT_",
+                "count": 20,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 52,
+                "name": "text",
+                "x": -821.53,
+                "y": -18
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 53,
+                "name": "text",
+                "parent": 32,
+                "x": -216.35,
+                "y": -120.56
+            },
+            {
+                "category": "DDT_",
+                "count": 11,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 54,
+                "name": "text",
+                "parent": 32,
+                "x": -110.35,
+                "y": -442.74
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 55,
+                "name": "text",
+                "x": -272.91,
+                "y": -586.8
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 56,
+                "name": "text",
+                "x": -67.22,
+                "y": -645.37
+            },
+            {
+                "category": "DDT_",
+                "count": 2,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 57,
+                "name": "text",
+                "parent": 32,
+                "x": -125.72,
+                "y": -176.73
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 58,
+                "name": "text",
+                "parent": 32,
+                "x": -43.546,
+                "y": -369.48
+            },
+            {
+                "category": "DDT_",
+                "count": 3,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 59,
+                "name": "text",
+                "parent": 32,
+                "x": -65.42,
+                "y": -264.38
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 60,
+                "name": "text",
+                "x": -522.61,
+                "y": -250.64
+            },
+            {
+                "category": "DDT_",
+                "count": 1,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 61,
+                "name": "text",
+                "x": -533.01,
+                "y": -45.128
+            },
+            {
+                "category": false,
+                "count": 0,
+                "index": 62,
+                "name": "text",
+                "x": -592.86,
+                "y": -353.22
+            },
+            {
+                "category": "DDT_",
+                "count": 21,
+                "dataModel": "Brick",
+                "dataType": "DD",
+                "index": 63,
+                "name": "text",
+                "x": -254.02,
+                "y": -327.11
+            }
+        ]
+    },
+    "status": "OK"
+}

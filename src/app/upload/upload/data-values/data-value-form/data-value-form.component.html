@@ -1,0 +1,57 @@
+<div class="row mt-4">
+  <div class="col-5 type-options-container select-button-group">
+    <ng-select
+      class="custom type-selector"
+      [class.select-error]="error && !dataValue.type"
+      [items]="typeValues"
+      bindLabel="text"
+      style="width: calc(100% - 38px); display: inline-block" 
+      bindValue="id"
+      [loading]="loading"
+      (change)="updateType($event)"
+      (search)="handleSearch($event)"
+      [(ngModel)]="typeValuesItem"
+      [readonly]="dataValue.required"
+      [clearable]="false"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        {{item.text}} {{formatOptionLabel(item)}}
+      </ng-template>
+    </ng-select>
+    <button
+      class="btn select-custom-button"
+      (click)="openContextModal()"
+      [class.button-error]="error && !dataValue.type"
+      [tooltip]="'Click to view data value context (' + dataValue.context.length + ' items)'"
+      [delay]="750"
+      [disabled]="!dataValue.type"
+    >
+    <i class="material-icons select-custom-button-icon">
+      more_horiz
+    </i>
+  </button>
+  </div>
+  <div class="col-5 units-container">
+    <ng-select
+      class="custom units-selector"
+      [class.select-error]="error && !dataValue.units"
+      *ngIf="dataValue.units !== null && dataValue.type"
+      [items]="unitsValues"
+      bindLabel="text"
+      bindValue="id"
+      [loading]="loadingUnits"
+      [clearable]="false"
+      (change)="updateUnits($event)"
+      [(ngModel)]="unitsItem"
+    ></ng-select>
+    <div class="row justify-content-center no-units" *ngIf="dataValue.units === null || !dataValue.type">
+      <span>N/A</span>
+    </div>
+  </div>
+  <div class="col-2" *ngIf="!dataValue.required">
+    <button
+      class="btn btn-sm btn-link"
+      (click)="onDelete()"  
+    >Delete</button>
+  </div>
+</div>

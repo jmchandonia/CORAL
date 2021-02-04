@@ -1,0 +1,60 @@
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6 type-container select-button-group">
+          <ng-select
+            class="custom type-selector"
+            [class.select-error]="error && !dimVar.type"
+            [items]="typeData"
+            bindLabel="text"
+            bindValue="id"
+            [(ngModel)]="selectedType"
+            [ngModelOptions]="{standalone: true}"
+            [readonly]="dimVar.required"
+            (search)="handleSearch($event)"
+            style="width: calc(100% - 38px); display: inline-block" 
+            (change)="setDimVarType($event)"
+            [loading]="typeLoading"
+            [clearable]="false"
+          >
+          <ng-template ng-option-tmp let-item="item">
+            {{item.text}} {{formatOptionLabel(item)}}
+          </ng-template>
+        </ng-select>
+        <button
+          class="btn select-custom-button"
+          (click)="openModal()"
+          [class.button-error]="error && !dimVar.type"
+          [disabled]="!dimVar.type"
+          [tooltip]="'Click to view Dimension Variable context (' + dimVar.context.length + ' items)'"
+          [delay]="750">
+          <i class="material-icons select-custom-button-icon">
+            more_horiz
+          </i>
+        </button>
+      </div>
+      <div class="col-5 units-container" *ngIf="dimVar.units !== null && dimVar.type">
+        <ng-select
+          class="custom"
+          [class.select-error]="error && !dimVar.units"
+          [items]="unitsData"
+          [(ngModel)]="selectedUnits"
+          [ngModelOptions]="{standalone: true}"
+          bindLabel="text"
+          bindValue="id"
+          [loading]="unitsLoading"
+          (change)="setDimVarUnits($event)"
+          [clearable]="false"
+        ></ng-select>
+      </div>
+      <div class="col-5" *ngIf="dimVar.units === null || !dimVar.type">
+        <div class="row justify-content-center no-units">
+          <span>N/A</span>
+        </div>
+      </div>
+      <div class="col-1">
+        <button class="btn btn-sm btn-link delete-dim-var" *ngIf="!dimVar.required" (click)="delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

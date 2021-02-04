@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+</div>
+<div class="modal-body">
+    <img [src]="imgSrc" style="width: 100%" />
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" (click)="handleDownload()" style="cursor: pointer;">Download</button>
+    <button class="btn btn-primary" (click)="closeModal()" style="cursor: pointer;">Close</button>
+</div>

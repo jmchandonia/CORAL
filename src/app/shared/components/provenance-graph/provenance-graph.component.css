@@ -1,0 +1,47 @@
+line { 
+    stroke: #ccc;
+}
+
+circle {
+    fill: blue;
+}
+
+text {
+    text-anchor: middle;
+    fill: black;
+    font-size: 0.2em;
+}
+
+.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+#canvas-container {
+    height: 800px;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#pgraph-container {
+    height: 800px;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+#no-results-container {
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+#no-results-container > span {
+    font-size: 2em;
+    color: #aaa;
+}

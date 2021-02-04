@@ -1,0 +1,101 @@
+<div class="row mb-3 mt-3 search-nav-bar">
+  <div class="ml-4">
+    <i class="material-icons back-icon">keyboard_arrow_left</i>
+    <span class="menu-option" [routerLink]="previousUrl">Go Back</span>
+    <span 
+    class="menu-option col-2" 
+    (click)="showQuery = true"
+    *ngIf="!showQuery"
+    >| &nbsp;&nbsp;Show Query</span>
+  <span
+    class="menu-option col-2"
+    (click)="showQuery = false"
+    *ngIf="showQuery"
+    >| &nbsp;&nbsp;Hide Query</span>
+  </div>
+</div>
+<div class="row justify-content-center" *ngIf="showQuery">
+  <div class="query-container col-10">
+    <pre>{{ searchQuery | json }}</pre>
+  </div>
+</div>
+<hr />
+<div class="row justify-content-center">
+  <div class="loading-container" *ngIf="loading">
+      <ngx-spinner
+      bdColor="rgba(0,0,0,0)"
+      color="#aaa"
+      size="medium"
+      type="ball-spin-fade-rotating"
+      [fullScreen]="false"
+    ></ngx-spinner>
+  </div>
+  <div class="no-results-container" *ngIf="!loading && !temp.length">
+    <span>
+      No results match these queries. <a [routerLink]="previousUrl">Click here</a> to return to search.
+    </span>
+  </div>
+  <div class="table-container col-11" *ngIf="temp.length">
+    <div class="row">
+        <div *ngIf="staticResults" class="col-6 core-type-button-group">
+          <div class="row">
+            <div class="col-6 pl-1 pr-1">
+              <button class="btn btn-light btn-block" (click)="plotCoreTypeResults()" style="display: inline-flex; justify-content: center;">
+                <i class="material-icons mr-1">bar_chart</i>
+                 Plot All Results
+              </button>
+            </div>
+            <div class="col-6 pl-1 pr-1">
+              <button (click)="handleCoreTypeDownload()" class="btn btn-light btn-block" style="display: inline-flex; justify-content: center;">
+                <i class="material-icons mr-1">cloud_download</i>
+                 Download All Results
+              </button>
+            </div>
+          </div>
+        </div>
+        <div [ngClass]="staticResults ? 'col-6' : 'col-12'">
+          <input class="form-control m-0" placeholder="narrow search results" type="text" (keyup)="updateFilter($event)" />
+        </div>
+    </div>
+    <ngx-datatable
+      id="search-results"
+      #table
+      style="width: 100%"
+      class="ngx-datatable bootstrap mb-4 mt-4"
+      [rows]="results"
+      [columns]="resultFields"
+      [columnMode]="columnMode.force"
+      [summaryRow]="true"
+      rowHeight="auto"
+      [scrollbarH]="true"
+      [footerHeight]="40"
+      [summaryPosition]="top"
+      [limit]="10"
+      (page)="handlePaging($event)"
+    >
+    <ngx-datatable-column name="options" [flexGrow]="1">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <i *ngIf="row.brick_id" class="material-icons options-icon ml-4" (click)="viewData(row.brick_id)">description</i>
+        <i *ngIf="row.id" class="material-icons options-icon ml-4" (click)="viewCoreData(row.id)">description</i>
+        <i *ngIf="row.brick_id" class="material-icons options-icon" (click)="plotDynamicTypeResults(row.brick_id)">bar_chart</i>
+        <i class="material-icons options-icon" (click)="handleDownload(row)">cloud_download</i>
+      </ng-template>
+    </ngx-datatable-column>
+      <ngx-datatable-column *ngFor="let field of resultFields" [name]="field.name" [flexGrow]="1">
+        <ng-template let-column="column" ngx-datatable-header-template>{{column.name}}</ng-template>
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span *ngIf="!isLink(row[field.name]) && !isImage(row[field.name], field.name)">{{row[field.name]}}</span>
+          <a *ngIf="isLink(row[field.name])" [href]="row[field.name]" target="_blank">{{row[field.name]}}</a>
+          <img
+            *ngIf="row._imgSrc && isImage(row[field.name], field.name)"
+            style="width: 100px; height: 100px; cursor: pointer;"
+            [src]="row._imgSrc"
+            class="search-result-icon" 
+            [alt]="row.name"
+            (click)="displayImage(row._imgSrc, row.name)"
+          />
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>

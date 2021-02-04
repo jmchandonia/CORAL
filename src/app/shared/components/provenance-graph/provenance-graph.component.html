@@ -1,0 +1,22 @@
+<div
+    id="canvas-container"
+    [ngStyle]="{'width' : 'calc(100% + ' + resizeWidth + 'px)'}"
+    mwlResizable
+    [enableGhostResize]="true"
+    [resizeEdges]="{right: true}"
+    (resizeEnd)="onResizeEnd($event)"
+>
+    <div #pGraph id="pgraph-container" [hidden]="!network || noResults"></div>
+    <div id="no-results-container" [hidden]="!noResults">
+        <span class="no-results" *ngIf="noResults">
+            No results match these categories.
+        </span>
+    </div>
+    <ngx-spinner
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="large"
+        name="pgraph-loading"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false"></ngx-spinner>
+</div>
