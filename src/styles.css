@@ -110,6 +110,10 @@ body {
     border: 1px solid red!important;
 }
 
+.ng-select.custom.ng-select-disabled .ng-arrow-wrapper {
+    background-color: #eee
+}
+
 .select-custom-button {
     height: 38px;
     width: 38px;
@@ -185,4 +189,8 @@ modal-container.modal {
 }
 
 /* END style overrides for ngx-datatable */
+
+.gm-ui-hover-effect {
+    display: none!important;
+}
 

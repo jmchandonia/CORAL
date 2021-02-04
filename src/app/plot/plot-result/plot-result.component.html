@@ -18,16 +18,34 @@
       </p>
     </div>
   </div>
-  <div class="form-container" style="padding: 0px; border: 1px solid #ccc;">
+  <div class="mb-4" style="padding: 0px; border: 1px solid #ccc;">
     <plotly-plot *ngIf="!loading" [data]="data" [useResizeHandler]="true" [layout]="layout"></plotly-plot>
     <div *ngIf="loading" class="loading">
       <ngx-spinner
+      *ngIf="!shareableLink"
       bdColor="rgba(0,0,0,0)"
       color="#aaa"
       size="medium"
-      style="position: relative; top: 250px"
+      style="position: relative; top: 250px;"
       type="ball-spin-fade-rotating"
       [fullScreen]="false"></ngx-spinner>
+      <h2 *ngIf="shareableLink" style="position: relative; top: 250px;">
+        Loading...
+      </h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mb-4">
+      <button
+        id="share-plot"
+        class="btn brn secondary float-right"
+        (click)="getShareablePlotUrl()"
+        tooltip="Copied to clipboard"
+        placement="left"
+        triggers="click"
+        >
+        Share Plot
+      </button>
     </div>
   </div>
   <!-- <div class="form-container" style="margin-bottom: 0px; padding-bottom: 0px">

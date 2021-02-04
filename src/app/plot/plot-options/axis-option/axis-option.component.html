@@ -1,0 +1,75 @@
+
+<div class="row justify-content-center mt-4">
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header" style="background-color: #eeeeff;">
+        {{label}}
+      </div>
+      <form>
+        <div class="form-group p-3 mb-0">
+            <div class="row">
+                <div class="col-6">
+                  <label for="axisOptions">Choose a parameter to plot</label>
+                    <ng-select
+                        [class.select-error]="invalid && !axis.data"
+                        class="custom"
+                        [items]="validOptions"
+                        bindLabel="display_name"
+                        [(ngModel)]="axis.data"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="setAxis($event)"
+                        (clear)="handleClear($event)"
+                        groupBy="dimension"
+                    >
+                    <!-- <ng-template ng-option-tmp let-item="item">{{item.dimension}}</ng-template> -->
+                    <ng-template ng-optgroup-tmp let-item="item">
+                      {{ item && item.dimension === undefined ? 'Data Variables' : dimContext[item.dimension].data_type.oterm_name }}
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="col-6">
+                  <div class="form-check offset-1">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="axis.show_title" [ngModelOptions]="{standalone: true}" id="axisTitle" />
+                    <label class="form-check-label" for="axisTitle">Axis Title</label>
+                  </div>
+                  <input name="axisTitle" class="form-control" [(ngModel)]="axis.title" [ngModelOptions]="{standalone: true}">
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-6">
+                  <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="axis.show_err_margin" [ngModelOptions]="{standalone: true}" />
+                    <label class="form-check-label p-0">Show margins of error (if applicable)</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="axis.logarithmic" [ngModelOptions]="{standalone: true}" />
+                    <label class="form-check-label p-0">Display axis logarithmically</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-6">
+                  <div class="form-check ml-4">
+                    <input type="checkbox" class="form-check-input" [(ngModel)]="axis.show_tick_labels" [ngModelOptions]="{standalone: true}" />
+                    <label class="form-check-label p-0">Show Tick Labels</label>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="row mt-3">
+                <div class="col-12">
+                  <button
+                  >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button>
+                </div>
+              </div> -->
+                <!-- <div class="row axis-labeler-container" [hidden]="true">
+                  <div class="col-12">
+                    <app-axis-labeler [dimension]="dimension" [labelPattern]="dimension.label_pattern" [dimVars]="dimVars"></app-axis-labeler>
+                  </div>
+                </div> -->
+          </div>
+      </form>
+    </div>
+  </div>
+  </div>

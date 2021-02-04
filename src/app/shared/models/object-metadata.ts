@@ -10,11 +10,12 @@ export class ObjectMetadata {
     public typed_values: TypedValue[]; // measurement values and data
 }
 
-export class
-    DimensionContext {
+export class DimensionContext {
     data_type: OTerm;
     size: number;
     typed_values: TypedValue[];
+    truncate_variable_length = false; // for dimensions with a high amound of dim vars
+    has_unique_indices = false; // determines whether variables in a brick are distinct or combinatoric
 }
 
 export interface ArrayContext {
@@ -33,6 +34,8 @@ export interface TypedValue {
     value_type: OTerm;
     value_with_units: string;
     selected?: boolean; // for dimension variable checkboxes in plotting
+    values: any; // TODO: make json model better
+    value_units: string;
 }
 
 export interface OTerm {

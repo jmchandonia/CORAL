@@ -87,7 +87,7 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   getImageUrls() {
-    this.table.bodyComponent.temp.forEach(async (row) => {
+    this.table?.bodyComponent.temp.forEach(async (row) => {
       if (row.link && this.isImage(row.link, 'link') && !row._imgSrc) {
         row._imgSrc = await this.queryBuilder.getImageSrc(row.link.substring(1));
         this.chRef.detectChanges();
@@ -146,9 +146,19 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     this.router.navigate([`search/result/core/${id}`], {queryParams});
   }
 
-  useData(id) {
+  plotDynamicTypeResults(id) {
     this.queryBuilder.setPreviousUrl('/search/result');
     this.router.navigate([`../../plot/options/${id}`], {relativeTo: this.route});
+  }
+
+  plotCoreTypeResults() {
+    const queryBuilder = localStorage.getItem('queryBuilder');
+    localStorage.setItem('coreTypePlotParams', queryBuilder);
+    this.router.navigate(['plot/options'], {
+      queryParams: {
+        coreType: JSON.parse(queryBuilder).queryMatch.dataType
+      }
+    })
   }
 
   // download all core type search results as tsv

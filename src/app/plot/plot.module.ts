@@ -13,8 +13,16 @@ import { PlotService } from '../shared/services/plot.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SafeHtmlPipe } from 'src/app/shared/pipes/safe-html.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CoreAxisOptionsComponent } from './plot-options/core-axis-options/core-axis-options.component';
+import { MapOptionsComponent } from './plot-options/map-options/map-options.component';
+import { MapResultComponent } from './map-result/map-result.component';
+import { AgmCoreModule } from '@agm/core';
+import { AxisOptionComponent } from './plot-options/axis-option/axis-option.component';
+import { PlotConstraintComponent } from './plot-options/plot-constraint/plot-constraint.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 @NgModule({
-  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent],
+  declarations: [SafeHtmlPipe, PlotComponent, PlotOptionsComponent, DimensionOptionsComponent, AxisLabelerComponent, PlotResultComponent, CoreAxisOptionsComponent, MapOptionsComponent, MapResultComponent, AxisOptionComponent, PlotConstraintComponent],
   imports: [
     CommonModule,
     PlotRoutingModule,
@@ -22,7 +30,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormsModule,
     NgxSpinnerModule,
     NgSelectModule,
-    PlotlyViaWindowModule
+    PlotlyViaWindowModule,
+    AgmCoreModule,
+    TooltipModule,
+    NgxSliderModule
   ],
   providers: [PlotService, QueryBuilderService]
 })

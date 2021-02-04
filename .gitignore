@@ -40,9 +40,13 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+/src/app/shared/test/brick_metadata_test_3.json
+/src/app/shared/test/brick_metadata_test_66.json
+/src/app/shared/test/axis-options.json
 /src/app/shared/test/mock_microtypes.json
 /src/app/shared/test/mock_microtypes_3.json
 /src/app/shared/test/mock-provenance-graph_v2.json
+/src/environments/environment.ts
 
 # System Files
 .DS_Store

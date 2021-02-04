@@ -1,0 +1,20 @@
+.back-icon {
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
+}
+
+.loading {
+    height: 550px;
+    width: 100%;
+}
+
+::ng-deep .custom-slider .ngx-slider .ngx-slider-tick {
+    border-radius: 0;
+    width: 1px;
+    background: black;
+}
+
+::ng-deep .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: black;
+}
