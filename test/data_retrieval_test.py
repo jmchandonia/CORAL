@@ -75,6 +75,7 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'search', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('FW305-130' in r.text)
 
     # get JSON list of all strains
     def test_get_strains_JSON(self):
@@ -87,7 +88,10 @@ class dataRetrievalTest(unittest.TestCase):
                                 'dataType': 'Strain',
                                 'params': []}}
         r = requests.post(self.url+'search', headers=headers, json=query, verify=False)
+        # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('FW305-130' in r.text)
+        self.assertTrue('schema' in r.text)
 
 
     # get a brick as JSON
@@ -99,6 +103,8 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('"status": "success"' in r.text)
+        self.assertTrue('[0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05, 0.1, 0.03, 0.04, 0.01, 0.56, 0.11, 0.0]' in r.text)
 
     # get a brick as CSV
     def test_get_brick_CSV(self):
@@ -109,6 +115,8 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('"status": "success"' in r.text)
+        self.assertTrue('1,0.01\\n2,0.01\\n3,0.01\\n4,0.01\\n5,0.01\\n6,0.01\\n7,0.01\\n8,0.01\\n9,0.01\\n10,0.05\\n11,0.1\\n12,0.03\\n13,0.04\\n14,0.01\\n15,0.56\\n16,0.11\\n17,0.0\\n' in r.text)
 
     # get a brick, filtered for graphing
     def test_get_brick_filtered(self):
@@ -119,8 +127,9 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'filter_brick/Brick0000003', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('"status": "success"' in r.text)
+        self.assertTrue('"y": [0.097, 0.096,' in r.text)
         
-
     # get a brick, filtered for graphing
     def test_get_brick_filtered_2(self):
         headers = self.get_authorized_headers()
@@ -128,9 +137,10 @@ class dataRetrievalTest(unittest.TestCase):
         # this method is @auth_ro_required, so should work
         query = {"constant":{"1":11,"4":1}, "variable":["2", "3"]}
         r = requests.post(self.url+'filter_brick/Brick0000004', headers=headers, json=query, verify=False)
-        print (r.text)
+        # print (r.text)
         self.assertEqual(r.status_code,200)
-        
+        self.assertTrue('"status": "success"' in r.text)
+        self.assertTrue('"x": ["Co", "Ni"], "y": [0.29' in r.text)
 
     # fail due to index too high
     def test_get_brick_filtered_3(self):
@@ -141,6 +151,21 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'filter_brick/Brick0000004', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
+        self.assertTrue('"status": "ERR"' in r.text)
+        self.assertTrue('Dimension index 7 invalid' in r.text)
+
+    # avg and sd
+    def test_get_brick_filtered_4(self):
+        headers = self.get_authorized_headers()
+        
+        # this method is @auth_ro_required, so should work
+        query = {"constant":{"2/1":3,"3":1}, "variable":["1/1", "2/2", "2/3"]}
+        r = requests.post(self.url+'filter_brick/Brick0000003', headers=headers, json=query, verify=False)
+        # print (r.text)
+        self.assertEqual(r.status_code,200)
+        self.assertTrue('"status": "success"' in r.text)
+        self.assertTrue('"y": [0.0853' in r.text)
+        self.assertTrue('"error_y": [0.0015' in r.text)
 
     # get brick metadata, limit variables for plotting
     def test_get_brick_plot_metadata(self):
