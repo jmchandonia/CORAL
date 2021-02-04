@@ -1,0 +1,28 @@
+.drop-zone {
+    border-radius: 5px;
+    /* background-color: #eeeeff; */
+    border: 1px solid #ced4da;
+    height: 300px;
+}
+
+.click-to-browse {
+    color: #2969a5;
+    cursor: pointer;
+}
+
+.process-container {
+    /* height: 200px; */
+    border: 1px solid #cedfda;
+    border-radius: 5px;
+}
+
+.loading-container { 
+    height: 200px;
+    width: 100%;
+    text-align: center;
+}
+
+.error-header {
+    background-color: #F8D7DA;
+    color: #721C24;
+}

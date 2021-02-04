@@ -1,0 +1,65 @@
+<div class="card mt-4">
+    <div class="card-header" [ngStyle]="{background: disabled ? '#dedede' : '#eeeeff'}">
+        <span class="float-left">{{constraint.dimension.data_type.oterm_name}}</span>
+    </div>
+    <div class="card-body" [ngStyle]="{background: disabled ? '#efefef' : 'white'}">
+        <div class="row mt-2" *ngFor="let v of constraint.variables; let last = last;">
+            <div class="col-12" >
+                <div class="row">
+                    <div class="col-6">
+                        {{v.value.value_with_units}}
+                    </div>
+                    <div class="col-6">
+                        <ng-select
+                            [class.select-error]="invalid && !v.type"
+                            [disabled]="constraint.constrainByMean || disabled"
+                            class="custom"
+                            [items]="constraintTypes"
+                            (change)="setSeriesLabel($event, v)"
+                            [(ngModel)]="v.type">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="v.type === 'flatten'">
+                    <div class="col-6">
+                        Select a possible value from which to flatten {{v.value.value_no_units}}.
+                    </div>
+                    <div class="col-6">
+                        <ng-select
+                            [disabled]="disabled"
+                            class="custom"
+                            (search)="handleSearch($event, v)"
+                            [items]="v.unique_values"
+                            bindLabel="display"
+                            bindValue="index"
+                            [(ngModel)]="v.flatten_value"
+                            (change)="setSelectedValue($event, v)"
+                            (clear)="clearSelectedValue(v)"
+                            [class.select-error]="invalid && v.type === 'flatten' && !v.flatten_value"
+                        ></ng-select>
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="v.type === 'series'">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                Choose the format you would like your series trace to be displayed. use '#VAR' to indicate where you would like the variable value to go. Note that multiple series traces will group these formats together.
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" [disabled]="disabled" [class.button-error]="v.invalid_label_pattern" class="form-control" (focusout)="validateFormat(v)" [(ngModel)]="v.series_label_pattern" [ngModelOptions]="{standalone: true}" />
+                            </div>
+                        </div>
+                        <div class="row mt-2" *ngIf="v.invalid_label_pattern">
+                            <div class="col-12">
+                                <div class="alert alert-danger">You must use '#VAR' in your format in order for distinct values to be displayed properly</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr *ngIf="!last" style="width: 100%" />
+        </div>
+    </div>
+</div>

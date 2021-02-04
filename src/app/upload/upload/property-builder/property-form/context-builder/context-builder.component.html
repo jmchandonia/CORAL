@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row">
+    <h4 class="ml-3 mt-3">Add Context to Property</h4>
+  </div>
+  <div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card header light-blue">
+              <div class="row">
+                <div class="col-12">
+                    <h5 class="mb-0 mt-2 ml-2" style="float: left;">
+                        {{title}}
+                      </h5>
+                      <button
+                        id="add-context"
+                        type="button"
+                        (click)="addContext()"
+                        style="float: right"
+                        class="btn btn-link">
+                      + Add Context
+                      </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4">
+                  Context Type
+                </div>
+                <div class="col-3">
+                  Value
+                </div>
+                <div class="col-3">
+                  Units
+                </div>
+              </div>
+              <app-context-form
+                *ngFor="let item of context; let i = index"
+                [context]="item"
+                (resetContext)="resetContext($event, i)"
+                (deleted)="removeContext(i)"
+                (valueError)="setValueError($event)"
+                ></app-context-form>
+            </div>
+          </div>
+    </div>
+  </div>
+  <div class="row mt-3" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger" *ngFor="let message of errorMessages">
+        {{message}}
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3 mb-3">
+    <div class="col-12">
+        <button style="float:right" id="close-context-modal" class="btn btn-primary" (click)="onClose()">
+            Done
+          </button>
+    </div>
+  </div>
+</div>

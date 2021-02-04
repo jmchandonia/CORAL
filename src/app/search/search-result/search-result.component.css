@@ -1,0 +1,85 @@
+
+app-search-result {
+    padding: 0px 2rem 0px 2rem;
+}
+
+.menu-option {
+    color: #00365C;
+    cursor: pointer;
+}
+
+.search-nav-bar {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 100%;
+    margin: 0px 2rem 0px 2rem;
+}
+
+.back-icon {
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
+}
+
+.options-icon {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+}
+
+.query-container {
+    border-radius: 20px;
+    background-color: rgb(211, 209, 208);
+    color: #00365C;
+    padding: 20px;
+}
+
+.data-button {
+    width: 100px!important;
+}
+
+.view-data {
+    margin-bottom: 5px!important;
+}
+
+.loading-container {
+    height: 500px;
+    position: relative;
+}
+
+.no-results-container {
+    height: 500px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-results-container > span {
+    color: #aaa;
+    font-size: 2em;
+}
+
+.table-header {
+    background-color: #00489B;
+    color: white;
+    border-radius: 10px;
+}
+
+::ng-deep #search-results.ngx-datatable.scroll-horz .datatable-body {
+    transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
+::ng-deep #search-results.ngx-datatable .datatable-body .datatable-scroll {
+    transform: rotateX(180deg);
+    -ms-transform: rotateX(180deg);
+    -webkit-transform: rotateX(180deg);
+}
+
+::ng-deep #search-results.ngx-datatable.bootstrap .datatable-body .empty-row {
+    transform: rotateX(180deg);
+}

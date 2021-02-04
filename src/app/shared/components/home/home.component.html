@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3 mb-4">
+          <div class="form-container-column filter-box">
+              <h5>Narrow Results</h5>
+              <ul class="nav flex-column">
+                  <li class="nav-item pt-4 pb-4" class="category-li" *ngFor="let category of filterCategories; let i = index;">
+                    <span class="category-label">{{category.categoryName}}</span>
+                    <div class="checkbox-container" style="display: flex; flex-direction: row; align-items: center;" *ngFor="let item of category.items; let j = index;">
+                      <input [id]="i + '_' + j" type="checkbox" [checked]="shouldBeChecked(i + '_' + j)" (change)="onValueChecked($event)" />
+		                  <label style="font-size: 0.7em; margin-bottom: 0;" [for]="i + ' ' + j">{{item.name}}</label>
+                    </div>
+                  </li>
+                </ul>
+              <button id="get-updated-values" class="btn btn-sm btn-block mt-2 btn-primary" (click)="getUpdatedValues()">Update Filter</button>
+          </div>
+        </div>
+        <div class="col-9">
+          <div class="row">
+            <div class="card" style="border: 0px;">
+              <div class="card-body">
+                <h3 class="card-title">ENIGMA Data Clearinghouse</h3>
+                <p class="card-text">This is a summary of all data in the ENIGMA Data Clearinghouse.  It
+                    is divided into "core objects" - information about our wells, samples,
+                    and other objects that mark important points in our workflow - and
+                    "datasets," which represent the results of all other assays and
+                    analyses.</p>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+              <div class="col-12">
+                <app-provenance-graph (querySelected)="navigateToSearch($event)"></app-provenance-graph>
+              </div>
+          </div>
+      </div>
+</div>

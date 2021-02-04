@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="row mb-2">
+    <div class="col-12">
+      <h5 class="mb-0 mt-3" style="float: left">Upload Brick Data</h5>
+      <!-- <button id="download-template" class="btn btn-primary" style="float:right" (click)="downloadTemplate()">
+        <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
+        Download Template
+      </button> -->
+      <div class="col-8 float-right">
+        <div class="row">
+          <div class="col-8">
+            <ng-select
+              *ngIf="moreThan3Dims"
+              class="custom"
+              [class.select-error]="templateTypeError"
+              style="position: relative; top: 5px;"
+              placeholder="Select a template type"
+              [items]="templateTypeOptions"
+              bindLabel="text"
+              bindValue="type"
+              [(ngModel)]="brick.templateType"
+              [ngModelOptions]="{standalone: true}"
+            ></ng-select>
+          </div>
+          <div class="col-4">
+            <button id="download-template" class="btn btn-primary" (click)="downloadTemplate()">
+              <i class="material-icons" style="position: relative; top: 5px;">cloud_download</i>
+              Download Template
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <hr /> -->
+  <div class="p-3 mb-3">
+    <span>First, download the Excel template for your dataset using the "Download Template" button.  Paste your data into the right place, using the colors in the spreadsheet as a guide.  Don't worry if your data extend outside the colored boxes.  When you have pasted in your data, save and upload the spreadsheet.  Check the preview below to make sure data were parsed correctly.  If you want to add/change a variable or rearrange dimensions, use the "back" button to go back and change things, then generate a new template; editing the template spreadsheet won't work.</span>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
+        <div class="row justify-content-center" style="margin-top: 80px;">
+          <div class="col-10 d-block">
+            <h2>Drag and drop your files here</h2>
+          </div>
+          <div class="col-10 d-block">
+            <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
+            <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="loading">
+    <div class="col-12" style="height: 200px;">
+        <ngx-spinner
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false"
+      ></ngx-spinner>
+    </div>
+  </div>
+  <div *ngIf="file" class="row mt-4 justify-content-center">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header light-blue">
+          <h5 style="float: left" class=" mt-1 mb-0">File Information</h5>
+          <button (click)="removeFile()" id="remove-file" style="float: right" class="btn btn-link">Remove</button>
+        </div>
+        <div class="card-body">
+          <span style="float: left">
+            <strong>{{file?.name}}</strong>
+            <span> ({{fileSize}})</span>
+          </span>
+          <button style="float: right" id="upload-brick" class="btn btn-sm btn-primary" (click)="upload()">Upload</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4" *ngIf="error">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header error-header">
+          Upload Error
+        </div>
+        <div class="card-body">
+          {{errorMessage}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-load-success-table *ngIf="successData" [data]="successData"></app-load-success-table>
+  <div *ngIf="validationError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: You must upload a valid file before continuing to the next steps.
+      </div>
+    </div>
+  </div>
+  <div *ngIf="templateTypeError" class="row mt-4">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: For Bricks with 3 or more dimensions, you must select the type of template to download.
+      </div>
+    </div>
+  </div>
+</div>

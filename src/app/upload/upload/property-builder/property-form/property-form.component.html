@@ -1,0 +1,79 @@
+<div class="row mt-2">
+  <div class="col-6 select-button-group">
+    <ng-select
+      class="custom type-selector"
+      [class.select-error]="errors && !property.type"
+      [items]="typesData"
+      bindLabel="text"
+      bindValue="id"
+      [(ngModel)]="propTypeItem"
+      (change)="setPropertyType($event)"
+      (search)="handlePropertySearch($event)"
+      [clearable]="false"
+      style="width: calc(100% - 38px); display: inline-block"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        {{item.text}} {{formatOptionLabel(item)}}
+      </ng-template>
+    </ng-select>
+    <button
+      class="btn select-custom-button"
+      (click)="openContextModal()"
+      [tooltip]="'View Property context (' + property.context.length + ' items)'"
+      [delay]="750"
+      [disabled]="!property.type"
+      [class.button-error]="errors && !property.type"
+      >
+      <i class="material-icons select-custom-button-icon">
+        more_horiz
+      </i>
+    </button>
+  </div>
+  <div class="col-3 value-container">
+      <ng-select
+        *ngIf="property.type && property.requireDropdownForVal"
+        class="custom"
+        [class.select-error]="errors && !property.value"
+        [items]="valuesData"
+        bindValue="id"
+        bindLabel="text"
+        [(ngModel)]="propValueItem"
+        [ngModelOptions]="{standalone: true}"
+        (search)="handleValueSearch($event)"
+        (change)="setValue($event)"
+        [clearable]="false"
+      ></ng-select>
+      <input
+        *ngIf="property.type && !property.requireDropdownForVal"
+        class="form-control"
+        [(ngModel)]="property.value"
+        [ngModelOptions]="{standalone: true}" 
+        [ngClass]="{'button-error' : (errors && !property.value) || property.invalidValue}" 
+        (focusout)="validateScalarType()"
+      >
+      <div class="row justify-content-center no-units" *ngIf="!property.type">
+        <span>N/A</span>
+      </div>
+  </div>
+  <div class="col-2 units-container">
+    <ng-select
+        *ngIf="property.units !== null && property.type"
+        class="custom"
+        [class.select-error]="errors && property.units === undefined"
+        [items]="unitsData"
+        bindLabel="text"
+        bindValue="id"
+        [(ngModel)]="unitsItem"
+        [ngModelOptions]="{standalone: true}"
+        (change)="setUnits($event)"
+        [clearable]="false"
+    ></ng-select>
+
+      <div class="row justify-content-center no-units" *ngIf="!property.type || property.units === null">
+        <span>N/A</span>
+      </div>
+  </div>
+  <div class="col-1">
+    <button *ngIf="!property.required" class="btn btn-sm btn-link" (click)="onDelete()">Delete</button> 
+  </div>
+</div>

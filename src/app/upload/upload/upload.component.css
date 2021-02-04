@@ -1,0 +1,22 @@
+.arrow-icon {
+    position: relative;
+    top: 5px;
+}
+ 
+button {
+    width: 120px;
+}
+
+.next-button {
+    margin-left: 1px;
+}
+
+.complete a{
+    color: #00489B!important;
+}
+
+.incomplete a {
+    color: #aaa!important;
+    text-decoration: none!important;
+    cursor: default;
+}

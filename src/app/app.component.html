@@ -1,0 +1,87 @@
+<!-- <div class="top-nav"> -->
+    <div class="row top-nav pl-4">
+        <img id="logo-image" src="assets/enigma-logo.png">
+        <div class="nav-container" *ngIf="!currentUrl?.includes('login')">
+            <ul class="nav nav-tabs offset-3 white">
+                <li class="nav-item">
+                    <a
+                      id="home-nav-link"
+                      class="nav-link" 
+                      href="Javascript:void:(0)"
+                      [routerLink]="['home']"
+                      [ngClass]="currentUrl?.includes('home') ? 'active' : ''"
+                      (click)="handleHomeNavigation()"
+                    >
+                      Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                    class="nav-link"
+                    id="upload-nav-link"
+                    href="JavaScript:void(0)"
+                    [routerLink]="['upload']"
+                    [ngClass]="currentUrl?.includes('upload') ? 'active' : ''"
+                    >
+                        Upload
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                      class="nav-link"
+                      id="search-nav-link"
+                      href="JavaScript:void(0)"
+                      [routerLink]="['search']"
+                      [ngClass]="currentUrl?.includes('search') ? 'active' : ''"
+                      (click)="handleHomeNavigation()"
+                    >
+                        Search
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="Javascript:void(0)"
+                        [routerLink]="['microtypes']"
+                        [ngClass]="currentUrl?.includes('microtypes') ? 'active' : ''"
+                    >
+                        Microtypes
+                    </a>
+                </li>
+                <li class="nav-item">
+                        <a
+                          class="nav-link"
+                          id="reports-nav-link"
+                          href="Javascript:void(0)"
+                          [routerLink]="['reports']"
+                          [ngClass]="currentUrl?.includes('reports') ? 'active' : ''"
+                        >
+                            Reports
+                        </a>
+                    </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        id="dashboard-nav-link"
+                        href="JavaScript:void(0)"
+                        [routerLink]="['dashboard']"
+                        [ngClass]="currentUrl?.includes('dashboard') ? 'active' : ''"
+                    > Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="signout-nav-link"
+                      href="JavaScript:void(0)"
+                      (click)="logout()"
+                    >
+                        Sign Out
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+<!-- </div> -->
+
+<router-outlet></router-outlet>

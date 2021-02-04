@@ -1,0 +1,32 @@
+<div class="container pt-2">
+    <div class="row mt-3 mb-3">
+        <h4 class="ml-3">{{title}}</h4>
+      </div>
+    <div class="row">
+      <div class="col-12">
+        <ngx-datatable
+          style="width: 100%"
+          class="ngx-datatable bootstrap"
+          [columns]="dataResults"
+          [columnMode]="columnMode.force"
+          [rows]="rows"
+          [limit]="10"
+          [footerHeight]="40"
+          rowHeight="auto"
+        >
+        <ngx-datatable-column *ngFor="let dimVar of dataResults" [name]="dimVar.type_with_units">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row[dimVar.type_with_units]}}
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-12">
+        <button style="float: right;" class="btn btn-primary" (click)="modalRef.hide()">
+          Close
+        </button>
+      </div>
+    </div>
+</div>

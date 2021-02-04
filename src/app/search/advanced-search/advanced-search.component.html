@@ -1,0 +1,66 @@
+<app-query-builder
+    [queryMatch]="queryBuilderObject.queryMatch"
+    [title]="'Search Options'"
+    ></app-query-builder>
+ <div class="mb-2 data-information-header" (click)="showAdvancedFilters = !showAdvancedFilters">
+    <i class="material-icons" *ngIf="!showAdvancedFilters" style="font-size: 1.25rem;">arrow_right</i>
+    <i class="material-icons" *ngIf="showAdvancedFilters" style="font-size: 1.25rem;">arrow_drop_down</i>
+    <h5 style="display: inline-block">Advanced Filters</h5>
+</div>
+<hr class="data-divider" *ngIf="!showAdvancedFilters" />
+<app-query-builder
+    [queryMatch]="queryBuilderObject.connectsUpTo"
+    [hidden]="!showAdvancedFilters"
+    [title]="'Filter By Parent'"
+    (create)="setConnectsUpTo($event)"
+    ></app-query-builder>
+<app-query-builder 
+    [queryMatch]="queryBuilderObject.connectsDownTo"
+    [hidden]="!showAdvancedFilters"
+    [title]="'Filter By Children'"
+    (create)="setConnectsDownTo($event)"
+    ></app-query-builder>
+<div class="form-container" style="padding: 0px;" [hidden]="!showAdvancedFilters">
+    <div class="card">
+        <div class="card-header" style="background-color: #eeeeff;">
+            Processes That Generated the Data
+        </div>
+        <div class="form-group p-3">
+            <!-- <app-process-filter
+                *ngFor="let queryParam of queryBuilderObject.processesUp; let idx = index;"
+                [queryParam]="queryParam"
+                (removed)="removeProcessUp(idx)"
+            ></app-process-filter> -->
+            <app-process-filter [queryParams]=queryBuilderObject.processesUp></app-process-filter>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input
+                            class="form-check-input ml-0 mt-1"
+                            [(ngModel)]="queryBuilderObject.searchAllProcessesUp"
+                            [ngModelOptions]="{standalone: true}"
+                            type="checkbox"
+                            id="only-first-parent">
+                        <label class="form-check-label" for="only-first-parent">Search all processes that led to the data</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <hr > -->
+        <!-- <div class="row">
+            <div class="col-2 offset-10">
+                <button class="btn btn-link mb-2" [disabled]="!queryBuilderObject.queryMatch.dataType" (click)="addProcessUp()">
+                    Add
+                </button>
+            </div>
+        </div> -->
+    </div>
+</div>
+<div class="search-button-footer">
+    <div class="row mt-4 mb-4">
+        <div class="col-2 offset-10">
+            <button class="btn btn-primary" (click)="onSubmit()">Search</button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,60 @@
+
+<div class="form-container">
+    <div class="card">
+      <div class="card-header" style="background-color: #eeeeff;">
+        {{axis}} axis
+      </div>
+      <form>
+        <div class="form-group p-3 mb-0">
+            <div class="row">
+                <div class="col-6">
+                  <label for="fromDimension">From Property</label>
+                  <ng-select
+                    class="custom"
+                    [items]="axisOptions"
+                    bindLabel="name"
+                    (change)="setAxis($event)"
+                  >
+                  <ng-template ng-option-tmp let-item="item">
+                    {{item.name}}
+                    <span *ngIf="item.units">({{item.units}})</span>
+                  </ng-template>
+                </ng-select>
+                    <!-- <ng-select
+                      class="custom"
+                      [items]="dropdownValues"
+                      bindLabel="text"
+                      bindValue="id"
+                      [(ngModel)]="selectedDropdownValue"
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="setSelectedDimension($event)"
+                      [clearable]="false"
+                    ></ng-select> -->
+                </div>
+                <div class="col-6">
+                  <div class="form-check offset-1">
+                    <input class="form-check-input" [(ngModel)]="showTitle" (change)="setShowTitle()" [ngModelOptions]="{standalone: true}" type="checkbox" id="axisTitle" />
+                    <label class="form-check-label" for="axisTitle">Axis Title</label>
+                  </div>
+                  <input name="axisTitle" class="form-control" [(ngModel)]="title" (change)="setTitle($event)">
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <!-- <button
+                    *ngIf="dimension.dimVars"
+                    class="btn btn-sm btn-link pl-0"
+                    (click)="showDisplayValues = !showDisplayValues"  
+                  >{{ showDisplayValues ? 'Hide Variable Display Options' : 'Show Variable Display Options' }}</button> -->
+                </div>
+              </div>
+                <!-- <div class="row axis-labeler-container" [hidden]="!showDisplayValues">
+                  <div class="col-12" *ngIf="dimension.dimVars">
+                    <app-axis-labeler [dimension]="dimension" [labelPattern]="dimension.label_pattern" [dimVars]="dimVars"></app-axis-labeler>
+                  </div>
+                </div> -->
+          </div>
+      </form>
+    </div>
+  </div>
+  

@@ -1,0 +1,422 @@
+{
+    "results": {
+        "nodes": [
+            {
+                "index": 0,
+                "category": "SDT_",
+                "name": "Wells",
+                "dataModel": "Well",
+                "dataType": "Well",
+                "count": 459,
+                "x": -300,
+                "y": -300
+            },
+            {
+                "index": 1,
+                "category": "DDT_",
+                "name": "Physical Measurements \n Datasets",
+                "dataModel": "Brick",
+                "dataType": "Phyisical Measurement",
+                "count": 1
+            },
+            {
+                "index": 2,
+                "category": "DDT_",
+                "name": "Datasets",
+                "dataModel": "Brick",
+                "dataType": "Dataset",
+                "count": 15,
+                "x": -350,
+                "y": -350,
+                "children": [
+                    {
+                        "index": 19,
+                        "category": "DDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20,
+                        "cid": 2,
+                        "x": -450,
+                        "y": -400
+                    },
+                    {
+                        "index": 20,
+                        "category": "DDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20,
+                        "cid": 2,
+                        "x": -250,
+                        "y": -400
+                    },
+                    {
+                        "index": 21,
+                        "category": "DDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20,
+                        "cid": 2,
+                        "x": -50,
+                        "y": -400
+                    },
+                    {
+                        "index": 22,
+                        "category": "DDT_",
+                        "name": "Expanded wells 1",
+                        "dataModel": "Well",
+                        "dataType": "Well",
+                        "count": 20,
+                        "cid": 2,
+                        "x": 150,
+                        "y": -400
+                    }
+                ]
+            },
+            {
+                "index": 3,
+                "category": "SDT_",
+                "name": "Samples",
+                "dataModel": "Sample",
+                "dataType": "Sample",
+                "count": 728,
+                "x": -200,
+                "y": -200
+            },
+            {
+                "index": 4,
+                "category": "SDT_",
+                "name": "Communities",
+                "dataModel": "Community",
+                "dataType": "Community",
+                "count": 1581,
+                "x": 0,
+                "y": -200
+            },
+            {
+                "index": 5,
+                "category": "DDT_",
+                "name": "Chemical Measurements \n Datasets",
+                "dataModel": "Brick",
+                "dataType": "Chemical Measurement",
+                "count": 5
+            },
+            {
+                "index": 6,
+                "category": "SDT_",
+                "name": "Conditions",
+                "dataModel": "Condition",
+                "dataType": "Condition",
+                "count": 344,
+                "x": -400,
+                "y": -200
+            },
+            {
+                "index": 7,
+                "category": "DDT_",
+                "name": "Microbial Abundances \n Datasets",
+                "dataModel": "Brick",
+                "dataType": "Microbial Abundance",
+                "count": 4
+            },
+            {
+                "index": 8,
+                "category": "SDT_",
+                "name": "Strains",
+                "dataModel": "Strain",
+                "dataType": "Strain",
+                "count": 1121,
+                "x": -250,
+                "y": -100
+            },
+            {
+                "index": 9,
+                "category": "DDT_",
+                "name": "Microbial Sequences \n Datasets",
+                "count": 1
+            },
+            {
+                "index": 10,
+                "category": "SDT_",
+                "name": "Reads",
+                "count": 950,
+                "x": -100,
+                "y": -100
+            },
+            {
+                "index": 11,
+                "category": "DDT_",
+                "name": "Microbial Community Assays \n Datasets",
+                "dataModel": "Brick",
+                "dataType": "Microbial Community Assay",
+                "count": 6
+            },
+            {
+                "index": 12,
+                "category": "SDT_",
+                "name": "Assemblies",
+                "dataModel": "Assembly",
+                "dataType": "Assembly",
+                "count": 278,
+                "x": -150,
+                "y": 0
+            },
+            {
+                "index": 13,
+                "category": "SDT_",
+                "name": "Bins",
+                "dataModel": "Bin",
+                "dataType": "Bin",
+                "count": 623,
+                "x": -100,
+                "y": 100
+            },
+            {
+                "index": 14,
+                "category": "SDT_",
+                "name": "Genome",
+                "dataModel": "Genome",
+                "dataType": "Genome",
+                "count": 269,
+                "x": -200,
+                "y": 100
+            },
+            {
+                "index": 15,
+                "category": "SDT_",
+                "name": "TnSeq Libraries",
+                "dataModel": "TnSeq_Library",
+                "dataType": "TnSeq_library",
+                "count": 1,
+                "x": -200,
+                "y": 200
+            },
+            {
+                "index": 16,
+                "category": "DDT_",
+                "name": "Gene Knockout Fitnesses \n Datasets",
+                "dataModel": "Brick",
+                "dataType": "Gene Knockout Fitness",
+                "count": 1
+            },
+            {
+                "index": 17,
+                "category": "null",
+                "name": "samples communities connector",
+                "count": 0,
+                "x": -300,
+                "y": -275
+            },
+            {
+                "index": 18,
+                "category": "null",
+                "name": "samples conditions connector",
+                "count": 0,
+                "x": -250,
+                "y": -150
+            }
+        ],
+        "links": [
+            {
+                "source": 0,
+                "target": 1,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1
+            },
+            {
+                "source": 0,
+                "target": 2,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 3
+            },
+            {
+                "source": 0,
+                "target": 17,
+                "type": "connector",
+                "hoverText": "",
+                "width": 4
+            },
+            {
+                "source": 17,
+                "target": 3,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 5
+            },
+            {
+                "source": 17,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2
+            },
+            {
+                "source": 3,
+                "target": 5,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 4
+            },
+            {
+                "source": 3,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 3.3
+            },
+            {
+                "source": 4,
+                "target": 4,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2.1
+            },
+            {
+                "source": 4,
+                "target": 7,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2
+            },
+            {
+                "source": 6,
+                "target": 18,
+                "type": "connector",
+                "hoverText": "",
+                "width": 1.7
+            },
+            {
+                "source": 3,
+                "target": 18,
+                "type": "connector",
+                "hoverText": "",
+                "width": 2.8
+            },
+            {
+                "source": 18,
+                "target": 8,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 3
+            },
+            {
+                "source": 8,
+                "target": 10,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1.6
+            },
+            {
+                "source": 8,
+                "target": 9,
+                "type": "wasGeneratedBy",
+                "hoverText": "1083 16S Sequencing",
+                "width": 4.4
+            },
+            {
+                "source": 4,
+                "target": 10,
+                "type": "wasGeneratedBy",
+                "hoverText":"hover text",
+                "width": 3.1
+            },
+            {
+                "source": 10,
+                "target": 10,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1.1
+            },
+            {
+                "source": 10,
+                "target": 11,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2.9
+            },
+            {
+                "source": 10,
+                "target": 12,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1.5
+            },
+            {
+                "source": 12,
+                "target": 13,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2,
+                "double": true
+            },
+            {
+                "source": 13,
+                "target": 12,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2,
+                "double": true
+            },
+            {
+                "source": 12,
+                "target": 14,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1
+            },
+            {
+                "source": 14,
+                "target": 15,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1.4
+            },
+            {
+                "source": 15,
+                "target": 16,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 2.2
+            },
+            {
+                "source": 6,
+                "target": 16,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1
+            },
+            {
+                "source": 2,
+                "target": 19,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1.6
+            },
+            {
+                "source": 2,
+                "target": 20,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 3.14
+            },
+            {
+                "source": 2,
+                "target": 21,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 1
+            },
+                        {
+                "source": 2,
+                "target": 22,
+                "type": "wasGeneratedBy",
+                "hoverText": "hover text",
+                "width": 3
+            }
+        ]
+    }
+}

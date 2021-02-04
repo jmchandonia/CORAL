@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head style="width: 100%!important">
+  <meta charset="utf-8">
+  <title>GenerixUi</title>
+  <base href="/">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="./assets/favicon.png" />
+  <!-- <script src="node_modules/reflect-metadata/Reflect.js"></script> -->
+</head>
+<body style="width: 100%; padding: 0px; margin: 0px; overflow-x: hidden;">
+  <app-root></app-root>
+  <script type="text/javascript">
+    window.onbeforeunload = function(e) {
+      const authToken = localStorage.getItem('authToken');
+      if (!authToken) {
+        localStorage.clear();
+      }
+    }
+  </script>
+</body>
+</html>

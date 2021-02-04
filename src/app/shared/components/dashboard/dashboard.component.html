@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+        <div class="card p-3" style='border: 0px;'>
+          <h3 class="card-title">Dashboard</h3>
+          <p class="card-text">This page shows graphs indicating the current state of the system.
+              It can be customized by each user, according to what graphs are most
+              relevant to their work.</p>
+        </div>
+      </div>
+  </div>
+  <div class="row mt-3 mb-3">
+    <div class="col-6">
+    <div  style="border: 1px solid #aaa; padding-right: 5px;">
+        <app-dashboard-plot [id]="'report1'"></app-dashboard-plot>
+      </div>
+      </div>
+    <div class="col-6">
+      <div style="border: 1px solid #aaa; padding-left: 5px;">
+        <app-dashboard-plot [id]="'report2'"></app-dashboard-plot>
+      </div>
+    </div>
+  </div>
+</div>

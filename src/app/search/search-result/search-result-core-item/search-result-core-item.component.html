@@ -1,0 +1,30 @@
+<div class="row justify-content-center">
+  <div class="col-10">
+    <div class="card">
+      <div class="card-header light-blue">
+        {{type}}
+      </div>
+      <div class="card-body" *ngIf="data">
+        <div class="row justify-content-center">
+          <div class="col-12">
+              <table class="table table-bordered table-striped">
+                  <thead class="table-header">
+                    <tr>
+                      <th>Property</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of data;">
+                      <td style="font-weight: bold; width: 20%;">{{item.property}}</td>
+                      <td>{{item.value}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-process-data [id]="objectId"></app-process-data>
+  </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="mb-0 mt-3" style="float: left">Validate Brick Data</h5>
+          <button class="btn btn-primary get-validation" style="float: right" (click)="getValidationResults()">Validate</button>
+        </div>
+      </div>
+      <!-- <hr /> -->
+      <div class="p-3 mb-3">
+        <span>Press the "Validate" button, then make sure all your data are valid before continuing.  You can see any import errors.  Common errors include missing strain/sample names and improperly parsed missing data.  Contact JMChandonia@lbl.gov to report bugs.</span>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="card" *ngIf="dataVars.length">
+            <div class="card-header light-blue">
+              <h5>Data Variables</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered data-vars-map">
+                <thead class="table-header">
+                  <tr>
+                    <th>Variable</th>
+                    <th class="stats-column">Total</th>
+                    <th class="stats-column">Valid</th>
+                    <th class="stats-column">Errors</th>
+                    <th class="stats-column"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dataVar of dataVars; let i = index;">
+                    <td [class.error-text]="mapped && dataVar.totalCount !== dataVar.validCount">
+                      {{dataVar.type.text}}
+                      <span *ngIf="dataVar.context.length">
+                        : {{dataVar.context[0].type.text}}
+                        <span *ngIf="dataVar.context[0].value.text && dataVar.context[0].value.text.length">
+                                = {{dataVar.context[0].value.text}}
+                        </span>
+                      </span>
+                      <i
+                        class="material-icons mapping-icon"
+                        *ngIf="dataVar.require_mapping"
+                        tooltip="This type of Data Variable requires mapping with core objects in our system."
+                        >
+                        assignment_late
+                      </i>
+                    </td>
+                    <td class="stats-column">
+                      {{dataVar.totalCount}}
+                    </td>
+                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dataVar.validCount, dataVar.totalCount) : ''">
+                      <span *ngIf="mapped">{{dataVar.validCount}}</span>
+                      <ngx-spinner
+                        bdColor="rgba(0,0,0,0)"
+                        color="#aaa"
+                        size="small"
+                        [name]="'v' + i"
+                        style="position: relative;"
+                        type="ball-spin-fade-rotating"
+                        [fullScreen]="false"></ngx-spinner>
+                    </td>
+                    <td class="stats-column">
+                      <button *ngIf="mapped && dataVar.invalidCount > 0" class="btn btn-link" role="button" (click)="openModal(i)">
+                        {{dataVar.invalidCount}}
+                      </button>
+                      <span *ngIf="mapped && dataVar.invalidCount === 0">
+                        {{dataVar.invalidCount}}
+                      </span>
+                    </td>
+                    <td class="stats-column">
+                      <i *ngIf="mapped && dataVar.validCount === dataVar.totalCount" class="material-icons success">
+                        check_circle
+                      </i>
+                      <i *ngIf="mapped && dataVar.validCount !== dataVar.totalCount" class="material-icons fail">
+                        cancel
+                      </i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card mt-2" *ngIf="dimVars.length">
+            <div class="card-header light-blue">
+              <h5>Dimension Variables</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered dim-vars-map">
+                <thead class="table-header">
+                  <tr>
+                    <th>Variable</th>
+                    <th class="stats-column">Total</th>
+                    <th class="stats-column">Valid</th>
+                    <th class="stats-column">Errors</th>
+                    <th class="stats-column"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let dimVar of dimVars; let i = index">
+                    <td [class.error-text]="mapped && dimVar.totalCount !== dimVar.validCount">
+                      {{dimVar.dimension.type.text}}: {{dimVar.type.text}}
+                      <i
+                        class="material-icons mapping-icon"
+                        *ngIf="dimVar.require_mapping"
+                        tooltip="This type of Dimension Variable requires mapping with core objects in our system."
+                        >
+                          assignment_late
+                        </i>
+                    </td>
+                    <td class="stats-column">
+                      {{dimVar.totalCount}}
+                    </td>
+                    <td class="stats-column" [ngClass]="mapped ? getMappedStatus(dimVar.validCount, dimVar.totalCount) : ''">
+                      <span *ngIf="mapped">{{dimVar.validCount}}</span>
+                      <ngx-spinner
+                      bdColor="rgba(0,0,0,0)"
+                      color="#aaa"
+                      size="small"
+                      [name]="'d' + i"
+                      style="position: relative;"
+                      type="ball-spin-fade-rotating"
+                      [fullScreen]="false"
+                    ></ngx-spinner>
+                    </td>
+                    <td class="stats-column">
+                      <button *ngIf="mapped && dimVar.validCount !== dimVar.totalCount" class="btn btn-link" role="button" (click)="openModal(dimVar.dimension.index, dimVar.index)">
+                        {{dimVar.invalidCount}}
+                      </button>
+                      <span *ngIf="mapped && dimVar.validCount === dimVar.totalCount">{{dimVar.invalidCount}}</span>
+                    </td>
+                    <td class="stats-column">
+                      <i *ngIf="mapped && dimVar.validCount === dimVar.totalCount" class="material-icons success">
+                        check_circle
+                      </i>
+                      <i *ngIf="mapped && dimVar.validCount !== dimVar.totalCount" class="material-icons fail">
+                        cancel
+                      </i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center" *ngIf="error">
+    <div class="col-12">
+      <div class="alert alert-danger">
+        Error: Please check your brick for inconsistent dimension variable and data values before submitting.
+      </div>
+    </div>
+  </div>
+</div>
+
