@@ -1,0 +1,82 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card mt-4">
+            <div class="card-header" style="background-color: #eeeeff;">Marker coloring options</div>
+            <div class="card-body">
+                <div class="row">
+                    <p class="col-12">
+                        Choose a property to display color values on the pins in the map.
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ng-select
+                        id="map-color"
+                        *ngIf="colorOptions.length"
+                        class="custom"
+                        [items]="colorOptions"
+                        bindLabel="name"
+                        [(ngModel)]="mapBuilder.colorField"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="setColorOptions($event)"
+                    ></ng-select>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input type="checkbox" [(ngModel)]="mapBuilder.logarithmicColorScale" />
+                            <label class="form-check-label">Display values logarithmically</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div class="card mt-4">
+            <div class="card-header" style="background-color: #eeeeff;">Labeling options</div>
+            <div class="card-body">
+                <div class="row">
+                    <p class="col-12">
+                        Choose what property to label the pins on the map with.
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <ng-select
+                        id="map-labels"
+                        *ngIf="labelOptions.length"
+                        class="custom"
+                        [items]="labelOptions"
+                        bindLabel="name"
+                        [(ngModel)]="mapBuilder.labelField"
+                        [ngModelOptions]="{standalone: true}"
+                        (change)="setLabelOptions($event)"
+                    ></ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center mt-4" *ngIf="!mapBuilder.isCoreType && mapBuilder.constraints?.length">
+    <div class="col-8">
+      <div class="alert alert-warning">
+        This dataset requires constraints to be applied it can be plotted as a map.
+        please select the dimensions below to be constrained. Greyed out options are dimensions that
+        you do not need to constrain.
+      </div>
+      <app-plot-constraint
+        *ngFor="let constraint of mapBuilder.constraints; let idx = index;"
+        [disabled]="constraint.disabled"
+        [constraint]="constraint"
+        [dimensions]="dimensions"
+        [index]="idx"
+        [invalid]="invalid"
+        [hideSeries]="true"
+      ></app-plot-constraint>
+    </div>  
+  </div>

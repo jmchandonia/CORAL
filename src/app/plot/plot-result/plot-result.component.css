@@ -10,7 +10,7 @@
 
 .loading {
     height: 600px;
-    width: 800px;
+    /* width: 800px; */
     background-color: rgb(250,250,250);
     color: rgb(180,180,180);
     text-align: center;

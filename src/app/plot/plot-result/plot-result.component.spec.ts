@@ -8,13 +8,48 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { of } from 'rxjs';
+import { TooltipDirective, TooltipModule } from 'ngx-bootstrap/tooltip';
 
 describe('PlotResultComponent', () => {
   PlotlyModule.plotlyjs = PlotlyJS;
   let spectator: Spectator<PlotResultComponent>;
 
   const MockPlotService = {
-    getPlotlyData: () => of({
+    getDynamicPlot: () => of({
+      error: "",
+      results: {
+        data: [{
+          type: "bar",
+          x: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+          y: [1, 2, 3, 4, 5, 6, 7]
+        }],
+        layout: {
+          height: 600,
+          title: {
+            text: 'Test Plot Result'
+          },
+          width: 800,
+          xaxis: {
+            automargin: true,
+            type: "category",
+            autorange: true,
+            range: [0,8],
+            title: {
+              text: ''
+            },
+          yaxis: {
+            automargin: true,
+            autorange: true,
+            range: [0,8],
+            title: { text: '' },
+            type: "linear"
+          }
+          }
+        }
+      },
+      status: "OK"
+    }),
+    getCorePlot: () => of({
       error: "",
       results: {
         data: [{
@@ -56,15 +91,19 @@ describe('PlotResultComponent', () => {
       PlotlyModule,
       NgxSpinnerModule,
       HttpClientModule,
-      RouterModule.forRoot([])
+      RouterModule.forRoot([]),
+      TooltipModule.forRoot()
     ],
     providers: [
       {
         provide: ActivatedRoute, 
-        useValue: { params: of({id: 'brick0000002'}) }
+        useValue: {
+          params: of({id: 'brick0000002'}),
+          queryParams: of({coreType: 'true'})
+        },
       },
       mockProvider(PlotService, MockPlotService)
-    ]
+    ],
   });
 
   beforeEach(() => spectator = createComponent());
@@ -110,4 +149,13 @@ describe('PlotResultComponent', () => {
         }
       });
   });
+
+  it('should create shareable plot URL', () => {
+    spyOn(spectator.component.plot, 'getPlotShareableUrl');
+    spyOn(document, 'execCommand');
+
+    spectator.click('button#share-plot');
+    expect(spectator.component.plot.getPlotShareableUrl).toHaveBeenCalled();
+    expect(document.execCommand).toHaveBeenCalledWith('copy');
+  })
 });

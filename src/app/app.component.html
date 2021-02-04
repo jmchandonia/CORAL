@@ -10,7 +10,7 @@
                       href="Javascript:void:(0)"
                       [routerLink]="['home']"
                       [ngClass]="currentUrl?.includes('home') ? 'active' : ''"
-                      (click)="clearPlotBuilder()"
+                      (click)="handleHomeNavigation()"
                     >
                       Home
                     </a>
@@ -33,7 +33,7 @@
                       href="JavaScript:void(0)"
                       [routerLink]="['search']"
                       [ngClass]="currentUrl?.includes('search') ? 'active' : ''"
-                      (click)="clearPlotBuilder()"
+                      (click)="handleHomeNavigation()"
                     >
                         Search
                     </a>

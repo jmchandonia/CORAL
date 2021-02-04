@@ -1,60 +1,140 @@
-    <div *ngIf="!isEditor" class="row mb-3 mt-3">
+    <div class="row mb-3 mt-3">
     <div class="offset-1" style="cursor: pointer; color: #00365C;" (click)="onGoBack(objectId)">
       <i class="material-icons" style="font-size: 1rem; position:relative; top: 3px">keyboard_arrow_left</i>
       <span class="menu-option">Back to Result</span>
     </div>
   </div>
-  <hr *ngIf="!isEditor" />
-  <div class="form-container">
-    <div class="card">
-      <div class="card-header" style="background-color: #eeeeff;">
-        Data Plotting Options
-      </div>
-      <form>
-        <div class="form-group p-3">
-                <div class="row">
-                    <div class="col-4">
-                        <label for="plotType">Plot Type</label>
-                          <ng-select
-                            class="custom"
-                            [items]="plotTypeData"
-                            bindLabel="name"
-                            (change)="updatePlotType($event)"
-                            [(ngModel)]="selectedPlotType"
-                            [ngModelOptions]="{standalone: true}"
-                            [clearable]="false"
-                          >
-                            <ng-template ng-option-tmp let-item="item">
-                              <span [innerHTML]="item.image_tag | safeHtml"></span>
-                              <span style="margin-left: 10px">{{item.name}}</span>
-                            </ng-template>
-                        </ng-select>
-                      </div>
-                      <div class="col-8">
-                        <label for="graphTitle">Plot Title</label>
-                        <input class="form-control"
-                          type="text"
-                          [(ngModel)]="plotBuilder.config.title"
-                          [ngModelOptions]="{standalone: true}"
-                        />
-                      </div>
-                </div>
+  <hr />
+  <div *ngIf="unableToPlot" class="alert alert-danger mb-4" style="width: 800px; margin: 0px auto;">
+    This dataset is incompatible with any of the existing options for plotting. At least 1 numeric parameter is required in the brick for plotting.
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <ngx-spinner
+        style="position: absolute; top: 300px; left: 50%"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        size="medium"
+        type="ball-spin-fade-rotating"
+        [fullScreen]="false">
+      </ngx-spinner>
+      <div class="card" *ngIf="plot">
+        <div class="card-header" style="background-color: #eeeeff;">
+          Data Plotting Options
         </div>
-      </form>
+        <form>
+          <div class="form-group p-3">
+              <div class="row">
+                  <div class="col-6">
+                      <label for="plotType">Plot Type</label>
+                        <ng-select
+                          id="plot-type-selector"
+                          class="custom"
+                          [class.select-error]="invalid && !plot.plot_type"
+                          [items]="plotTypeData"
+                          bindLabel="name"
+                          (change)="updatePlotType($event)"
+                          [(ngModel)]="plot.plot_type"
+                          [ngModelOptions]="{standalone: true}"
+                          [clearable]="false"
+                          [disabled]="!_axisOptions?.length || unableToPlot"
+                        >
+                          <ng-template ng-option-tmp let-item="item">
+                            <span [innerHTML]="item.image_tag | safeHtml"></span>
+                            <span style="margin-left: 10px">{{item.name}}</span>
+                          </ng-template>
+                      </ng-select>
+                    </div>
+                    <div class="col-6">
+                      <label for="graphTitle">Plot Title</label>
+                      <input class="form-control"
+                        type="text"
+                        [disabled]="!hasAxisOptions"
+                        [(ngModel)]="plot.title"
+                        [ngModelOptions]="{standalone: true}" />
+                    </div>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> 
+  <div *ngIf="plot.plot_type && !isMap && axisOptions">
+    <app-axis-option
+      id="x-axis"
+      [axis]="plot.axes.x"
+      [axisValidation]="plot.plot_type.axis_data.x"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'X axis'"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
+    ></app-axis-option>
+    <app-axis-option
+      id="y-axis"
+      [axisValidation]="plot.plot_type.axis_data.y"
+      [axis]="plot.axes.y"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'Y Axis'"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
+    ></app-axis-option>
+    <app-axis-option
+      id="z-axis"
+      *ngIf="plot.plot_type.axis_data.z"
+      [axisValidation]="plot.plot_type.axis_data.z"
+      [axis]="plot.axes.z"
+      [options]="axisOptions"
+      [coreType]="coreTypePlot"
+      [label]="'Z Axis'"
+      (selected)="handleSelectedAxis($event)"
+      (selectionCleared)="handleSelectionCleared()"
+      [dimContext]="metadata ? metadata.dim_context : null"
+      [invalid]="invalid"
+    ></app-axis-option>
+  </div>
+  <div class="row justify-content-center mt-4" *ngIf="plot.constraints.length && !isMap && axisOptions">
+    <div *ngIf="plot.plot_type && plot.constraints.length" class="col-8">
+      <div class="alert alert-warning">
+        This dataset requires {{plot.constraints.length}} constraints to be applied it can be plotted as a {{plot.plot_type.name}}.
+        please select the dimensions below to be constrained.
+      </div>
+      <app-plot-constraint
+        *ngFor="let constraint of plot.constraints; let idx = index;"
+        [constraint]="constraint"
+        [dimensions]="constrainableDimensions"
+        [index]="idx"
+        [hideSeries]="shouldHideSeries()"
+        [invalid]="invalid"
+        [objectId]="objectId"
+      ></app-plot-constraint>
+    </div>  
+  </div>
+  <app-map-options
+    *ngIf="mapBuilder && isMap && axisOptions"
+    [mapBuilder]="mapBuilder"
+    [options]="_axisOptions"
+    [dimensions]="metadata?.dim_context"
+  ></app-map-options>
+  <div class="row justify-content-center mt-4" *ngIf="invalid || tooManyTraces">
+    <div class="col-8">
+      <div class="alert alert-danger" *ngIf="invalid">
+        Error: Please complete all of the axes on this plot are filled out and that the extra variables have been accounted for.
+      </div>
+      <div class="alert alert-danger" *ngIf="tooManyTraces">
+        Error: There are too many traces for this plot. please constraint extra dimensions using mean or flatten. Plots cannot contain above 1000 traces.
+      </div>
     </div>
   </div>
-  <div class="dimension-options-container" *ngIf="selectedPlotType">
-    <app-dimension-options
-      *ngFor="let dimension of dimensions; let i = index;"
-      [dimension]="dimension"
-      [dimensionLabel]="axisBlocks[i].title"
-      [index]="i"
-    ></app-dimension-options>
-  </div>
-  <div class="row bottom-button-row">
-    <!-- <button (click)="test()">TEST</button> --> 
-    <button class="btn btn-primary offset-10" (click)="submitPlot()">
-      {{isEditor ? 'Update Plot' : 'Plot Data'}}
-    </button>
-    <!-- [routerLink]="['../../result/' + objectId]" -->
+  <div class="row mt-4 mb-4 bottom-button-row justify-content-center">
+    <div class="col-8">
+      <button *ngIf="hasAxisOptions" id="submit-plot" class="btn btn-primary float-right" (click)="submitPlot()">
+        Plot Data
+      </button>
+    </div>
   </div>

@@ -26,6 +26,9 @@ import { TreeModule } from 'angular-tree-component';
 import { ProvenanceGraphComponent } from './shared/components/provenance-graph/provenance-graph.component';
 import { ResizableModule } from 'angular-resizable-element'
 import { AuthInterceptor } from 'src/app/shared/services/auth-interceptor';
+import { AgmCoreModule } from '@agm/core';
+import { environment }  from 'src/environments/environment';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,6 +56,10 @@ import { AuthInterceptor } from 'src/app/shared/services/auth-interceptor';
     TreeModule.forRoot(),
     ResizableModule,
     PlotlyViaWindowModule,
+    AgmCoreModule.forRoot({
+      apiKey: environment.GOOGLE_MAPS_API_KEY
+    }),
+    NgxSliderModule
   ],
   providers: [
     {
