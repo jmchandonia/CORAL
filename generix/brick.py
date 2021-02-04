@@ -1028,7 +1028,7 @@ class Brick:
                 values.add(val)
         return values        
         
-    def add_data_var(self, type_term, units_term, values, scalar_type='text'):
+    def add_data_var(self, type_term, units_term, values, scalar_type='string'):
         dim_names = [ '__dim%s'%(i+1)  for i in range(self.dim_count) ]
         var = Brick._xds_build_var(self, None, self.__xds, '__data', dim_names, 
             type_term, units_term, values, scalar_type)
@@ -1252,7 +1252,7 @@ class BrickDimension:
            self.__dict__['VAR%s_%s' %(i+1, var.var_name)] = var
 
 
-    def add_var(self, type_term, units_term, values, scalar_type='text'):
+    def add_var(self, type_term, units_term, values, scalar_type='string'):
         var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
             type_term, units_term, values, scalar_type)
 
