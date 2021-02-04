@@ -1,5 +1,5 @@
-# generix_prototype
-Prototype for the GeneriX project.
+# CORAL back end
+Back end CORAL prototype
 
 ## Installation on Debian 10
 
@@ -230,9 +230,9 @@ _e.g., in /home/httpd/html/dc/index.html:_
 ```
 <html>
 <body>
-Data Clearinghouse
+CORAL
   <ul>
-    <li><a href="/generix-ui/">CORAL UI</a>
+    <li><a href="/coral-ui/">CORAL UI</a>
     <li><a href="/jupyterhub/">JupyterHub</a>
     <li><a href="/arangodb/">ArangoDB</a>
   </ul>
@@ -254,7 +254,7 @@ production.  But as mentioned above, you might want more than one,
 for testing and development.
 
 ```
-cd /home/clearinghouse
+cd /home/coral
 mkdir prod
 cd prod
 mkdir bin
@@ -267,8 +267,9 @@ mkdir data_store/tmp
 mkdir notebooks
 mkdir modules
 cd modules
-git clone git@github.com:jmchandonia/generix_prototype.git
 ```
+
+Move the files under "back_end" into the modules subdirectory.
 
 ### Initial data, microtypes, and ontologies loading
 
@@ -287,13 +288,13 @@ _make var/config.json based on the following template:_
 ```
 {
   "Import":{
-    "ontology_dir": "/home/clearinghouse/prod/data_import/ontologies/",
-    "entity_dir": "/home/clearinghouse/prod/data_import/data/",
-    "process_dir": "/home/clearinghouse/prod/data_import/data/",
-    "brick_dir": "/home/clearinghouse/prod/data_import/data/"
+    "ontology_dir": "/home/coral/prod/data_import/ontologies/",
+    "entity_dir": "/home/coral/prod/data_import/data/",
+    "process_dir": "/home/coral/prod/data_import/data/",
+    "brick_dir": "/home/coral/prod/data_import/data/"
   },
   "Workspace":{
-    "data_dir": "/home/clearinghouse/prod/data_store/"
+    "data_dir": "/home/coral/prod/data_store/"
   }, 
  "ArangoDB": {
     "url": "http://127.0.0.1:8529",
@@ -314,41 +315,41 @@ _make var/config.json based on the following template:_
 
 _make a "reload_data" notebook to load and set everything up, then run it._
 
-_sample "reload data" notebook contents (e.g., in /home/clearinghouse/prod/notebooks/reload_data.ipynb):_
+_sample "reload data" notebook contents (e.g., in /home/coral/prod/notebooks/reload_data.ipynb):_
 
 ```
-from generix.dataprovider import DataProvider
-from generix import toolx
+from coral.dataprovider import DataProvider
+from coral import toolx
 toolx.init_system()
 ```
 
 _this will set up tables required for web services to start._
 
-### Generix Web Services
+### CORAL Web Services
 
 _These run in a virtualenv, so install this first:_
 
 ```
 pip3 install virtualenv 
-python3 -m virtualenv /home/clearinghouse/env/
-source /home/clearinghouse/env/bin/activate
+python3 -m virtualenv /home/coral/env/
+source /home/coral/env/bin/activate
 pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl
 ```
 
 _note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
 
-_create /etc/systemd/system/generix-web-services.service:_
+_create /etc/systemd/system/coral-web-services.service:_
 
 ```
 [Unit]
-Description=Generix Web Services
+Description=CORAL Web Services
 After=network.target
 
 [Service]
 User=root
-EnvironmentFile=/etc/sysconfig/generix-web-services
-ExecStart=/home/clearinghouse/env/bin/python -m generix.web_services
-WorkingDirectory=/home/clearinghouse/prod/modules/generix_prototype
+EnvironmentFile=/etc/sysconfig/coral-web-services
+ExecStart=/home/coral/env/bin/python -m coral.web_services
+WorkingDirectory=/home/coral/prod/modules/coral
 Restart=always
 RemainAfterExit=yes
 
@@ -356,19 +357,19 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 ```
 
-_create /etc/sysconfig/generix-web-services:_
+_create /etc/sysconfig/coral-web-services:_
 
 ```
-PATH=/home/clearinghouse/env/bin:/usr/local/bin:/usr/bin:/bin
+PATH=/home/coral/env/bin:/usr/local/bin:/usr/bin:/bin
 PYTHONIOENCODING=utf-8
-PYTHONPATH=/home/clearinghouse/env/
-VIRTUAL_ENV=/home/clearinghouse/env/
+PYTHONPATH=/home/coral/env/
+VIRTUAL_ENV=/home/coral/env/
 ```
 
 _to start web services_
 
 ```
-service generix-web-services start
+service coral-web-services start
 ```
 
 _debug by looking in /var/log/daemon.log_
@@ -377,4 +378,4 @@ _debug by looking in /var/log/daemon.log_
 
 ### Install UI
 
-See https://github.com/jmchandonia/generix-ui
+See README.md in front\_end direcotry

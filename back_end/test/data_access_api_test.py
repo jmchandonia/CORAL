@@ -12,7 +12,7 @@ import pprint
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
-from generix.dataprovider import DataProvider
+from coral.dataprovider import DataProvider
 
 class dataAccessAPITest(unittest.TestCase):
 
@@ -33,9 +33,9 @@ class dataAccessAPITest(unittest.TestCase):
         port = cls.cns['_WEB_SERVICE']['port']
         https = cls.cns['_WEB_SERVICE']['https']
         if https:
-            cls.url = "https://"+host+':'+str(port)+'/generix/'
+            cls.url = "https://"+host+':'+str(port)+'/coral/'
         else:
-            cls.url = "http://"+host+':'+str(port)+'/generix/'
+            cls.url = "http://"+host+':'+str(port)+'/coral/'
 
     def get_key_data_public(self):
         return self.cns['_AUTH_PUBLIC']
