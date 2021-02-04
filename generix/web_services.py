@@ -725,17 +725,21 @@ def upload_file():
             + data_id + '_' + f.filename)
         f.save( udf_file_name )
 
-        # Parse brick data    
+        # Parse brick data
         brick_data = {}
+        brick_data = template.parse_brick_FND_data(brick_ds, udf_file_name)
 
-        dim_count = len(brick_ds['dimensions'])
-        if dim_count == 1:
-            brick_data = template.parse_brick_F1DM_data(brick_ds, udf_file_name)
-        elif dim_count == 2:
-            brick_data = template.parse_brick_F2D_data(brick_ds, udf_file_name)
-        else:
-            raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
-
+#        # Parse brick data    
+#        brick_data = {}
+#
+#        dim_count = len(brick_ds['dimensions'])
+#        if dim_count == 1:
+#            brick_data = template.parse_brick_F1DM_data(brick_ds, udf_file_name)
+#        elif dim_count == 2:
+#            brick_data = template.parse_brick_F2D_data(brick_ds, udf_file_name)
+#        else:
+#            # raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
+#            brick_data = template.parse_brick_FND_data(brick_ds, udf_file_name)
         # Save brick processed data
         upd_file_name = os.path.join(TMP_DIR, _UPLOAD_PROCESSED_DATA_PREFIX + data_id )
         with open(upd_file_name, 'w') as f:
@@ -777,7 +781,7 @@ def upload_file():
                 })
 
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
@@ -811,7 +815,7 @@ def _filter_brick(brick_id, query):
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
     cmd = '/home/clearinghouse/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     sys.stderr.write('running '+cmd+'\n')
-    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
     try:
         data = json.loads(output.stdout)
         return data
@@ -1126,7 +1130,7 @@ def get_brick_dim_var_values(brick_id, dim_idx, dv_idx, keyword):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
     dim_var = br.dims[int(dim_idx)].vars[int(dv_idx)]
-    dv_results = [i for i in dim_var.values if i.find(keyword) > 0]
+    dv_results = [{'display': v, 'index': i} for i, v in enumerate(dim_var.values) if v.find(keyword) > 0]
     return _ok_response(dv_results)
 
 @app.route('/generix/brick_metadata/<brick_id>', methods=['GET'])
@@ -2926,6 +2930,7 @@ def generate_brick_template():
         data_id = uuid.uuid4().hex
 
         brick_ds = json.loads(request.form['brick'])
+        _print('BRICK DS', brick_ds)
 
         # Save brick data structure
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
@@ -2936,19 +2941,34 @@ def generate_brick_template():
 
         dim_count = len(brick_ds['dimensions'])
         data_var_count = len(brick_ds['dataValues'])
+        _print('TEMPLATE TYPE', brick_ds['sheet_template_type'])
+        if brick_ds['sheet_template_type'] == 'tab_data':
+            template.generate_brick_FND_template(brick_ds, utp_file_name, tab_data=True)
+        elif brick_ds['sheet_template_type'] == 'tab_dims':
+            template.generate_brick_FND_template(brick_ds, utp_file_name)
+        elif brick_ds['sheet_template_type'] == 'interlace':
+            template.generate_brick_FND_interlace_template(brick_ds, utp_file_name)
 
-        if dim_count == 1:
-            template.generate_brick_F1DM_template(brick_ds, utp_file_name)
-        elif dim_count == 2:
-            if data_var_count == 1:
-                template.generate_brick_F2D_template(brick_ds, utp_file_name)
-
+#        if dim_count == 1:
+#            template.generate_brick_F1DM_template(brick_ds, utp_file_name)
+#        elif dim_count == 2:
+#            if data_var_count == 1:
+#                template.generate_brick_F2D_template(brick_ds, utp_file_name)
+#        elif dim_count > 2:
+#           # if data_var_count == 1:
+#               # template.generate_brick_F3D_tabs_template(brick_ds, utp_file_name)
+#            if brick_ds['templateType'] == 'tab_data':
+#                template.generate_brick_FND_template(brick_ds, utp_file_name, tab_data=True)
+#            elif brick_ds['templateType'] == 'tab_dims':
+#                template.generate_brick_FND_template(brick_ds, utp_file_name)
+#            elif brick_ds['templateType'] == 'interlace':
+#                template.generate_brick_FND_interlace_template(brick_ds, utp_file_name)
         return send_file(utp_file_name, 
             as_attachment=True,
             attachment_filename='data_template.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 def _ok_response(res):
     return  json.dumps( {

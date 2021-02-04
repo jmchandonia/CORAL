@@ -141,4 +141,21 @@ class dataRetrievalTest(unittest.TestCase):
         r = requests.post(self.url+'filter_brick/Brick0000004', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
-        
+
+    # get brick metadata, limit variables for plotting
+    def test_get_brick_plot_metadata(self):
+        headers = self.get_authorized_headers()
+
+        # this method is @auth_ro_required, so should work
+        # Brick0000015 has high number of variables in one dimension, so should be good test case
+        print('URL =>', self.url+'brick_plot_metadata/Brick0000015/100')
+        r = requests.get(self.url+'brick_plot_metadata/Brick0000015/100', headers=headers, verify=False)
+        # self.assertEqual(r.status_code, 200)
+        json_response = json.loads(r.text)
+        # print('headers =>', headers)
+        print('json response ->>>', json_response)
+        dim_length_0 = json_response['dim_context'][0]['typed_values'][0]['values']['values'] # size is 25588, so should be truncated at 100
+        dim_length_1 = json_response['dim_context'][1]['typed_values'][0]['values']['values'] # size is 42, so should not be truncated
+
+        self.assertEqual(dim_length_0, 100)
+        self.assertEqual(dim_length_1, 42)
