@@ -108,6 +108,7 @@ export class DataValue {
         this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
+        this.scalarType = t.scalar_type;
     }
 
     get typeTerm() { return this.type; }
@@ -205,6 +206,7 @@ export class DimensionVariable {
         this.type = new Term(t.id, t.text, t.has_units);
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
+        this.scalarType = t.scalar_type;
     }
 
     get typeTerm() { return this.type; }
