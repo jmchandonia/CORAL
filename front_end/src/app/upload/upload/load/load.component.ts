@@ -29,7 +29,6 @@ export class LoadComponent implements OnInit, OnDestroy {
   loading = false;
   validationError = false;
   validationErrorSub: Subscription;
-  moreThan3Dims = false;
   public brick: Brick;
   templateTypeError = false;
 
@@ -39,22 +38,7 @@ export class LoadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.brick = this.uploadService.getBrickBuilder();
-    this.moreThan3Dims = this.brick.dimensions.length > 2;
-
-    if (this.brick.dataValues.length > 1) {
-      this.templateTypeOptions.push({
-        type: 'tab_data',
-        text: 'Spread individual data vars across tabs'
-      })
-    }
-
-    if (this.moreThan3Dims) {
-      this.templateTypeOptions.push({
-        type: 'tab_dims',
-        text: `Spread out ${this.brick.dimensions[this.brick.dimensions.length - 1].type.text} across tabs`
-      });
-    }
-
+    this.setTemplateTypeOptions();
     this.getUploadData();
     this.validationErrorSub = this.validator.getValidationErrors()
      .subscribe(error => this.validationError = error);
@@ -63,6 +47,22 @@ export class LoadComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.validationErrorSub) {
       this.validationErrorSub.unsubscribe();
+    }
+  }
+
+  setTemplateTypeOptions() {
+    if (this.brick.dimensions.length < 2) return;
+    if (this.brick.dataValues.length > 1) {
+      this.templateTypeOptions.push({
+        type: 'tab_data',
+        text: 'Spread individual data vars across tabs'
+      });
+    }
+    if (this.brick.dimensions.length > 2) {
+      this.templateTypeOptions.push({
+        type: 'tab_dims',
+        text: `Spread out ${this.brick.dimensions[this.brick.dimensions.length - 1].type.text} across tabs`
+      });
     }
   }
 
@@ -108,7 +108,7 @@ export class LoadComponent implements OnInit, OnDestroy {
    }
 
    downloadTemplate() {
-     if (this.moreThan3Dims && !this.brick.templateType) {
+     if (this.templateTypeOptions.length > 1 && !this.brick.sheet_template_type) {
        this.templateTypeError = true;
        return;
      }
