@@ -60,12 +60,6 @@ _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 
-def _print(*argv):
-    with open('/var/log/g_ws_.txt', 'w') as f:
-        with redirect_stdout(f):
-            for arg in argv:
-                print(arg)
-
 # for methods that only a logged in user can use
 def auth_required(func):
     """
@@ -2930,7 +2924,6 @@ def generate_brick_template():
         data_id = uuid.uuid4().hex
 
         brick_ds = json.loads(request.form['brick'])
-        _print('BRICK DS', brick_ds)
 
         # Save brick data structure
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
@@ -2941,7 +2934,6 @@ def generate_brick_template():
 
         dim_count = len(brick_ds['dimensions'])
         data_var_count = len(brick_ds['dataValues'])
-        _print('TEMPLATE TYPE', brick_ds['sheet_template_type'])
         if brick_ds['sheet_template_type'] == 'tab_data':
             template.generate_brick_FND_template(brick_ds, utp_file_name, tab_data=True)
         elif brick_ds['sheet_template_type'] == 'tab_dims':
