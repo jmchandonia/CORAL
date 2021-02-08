@@ -5,7 +5,6 @@ from openpyxl.styles import PatternFill, Font
 from openpyxl.utils import get_column_letter
 from contextlib import redirect_stdout 
 import xarray as xr
-import pprint
 
 def generate_brick_F1DM_template(brick_ds,file_name):
 
@@ -1030,7 +1029,6 @@ def generate_brick_FND_interlace_template(brick_ds, file_name):
             data_color = 221
             data_sub_color -= 15
         color_hex = f'{data_sub_color:02X}' + f'{data_color:02X}' + f'{data_color:02X}'
-        _print('COLOR HEX>>>>>D>D>', color_hex, '\nCOLOR>>>>', data_color)
         pattern_fill = PatternFill('solid', fgColor=color_hex)
         data_pattern_fills.append(pattern_fill)
         for cell in row:
@@ -1264,8 +1262,6 @@ def parse_brick_FND_interlace_data(brick_ds, sheet):
             else:
                 _data_vars.append(_get_nd_interlace_data(dv_row, dims[1:]))
         data_vars.append({'values': _data_vars})
-    _print('DIMS', dims)
-    _print('DATA VARS', data_vars)
     _validate(dims, data_vars)
     return {
         'dims': dims,
@@ -1273,9 +1269,6 @@ def parse_brick_FND_interlace_data(brick_ds, sheet):
     }
 
 def parse_brick_FND_tab_data(brick_ds, book):
-    with open('/var/log/template_debug.txt' ,'w') as f:
-        with redirect_stdout(f):
-            print('***')
     dims_ds = brick_ds['dimensions']
     template_dims = [dim['type']['text'] for dim in dims_ds]
     template_dim_vars = []
@@ -1290,7 +1283,6 @@ def parse_brick_FND_tab_data(brick_ds, book):
 
     #sheet = book.active # TODO: add validation to ensure dim vars are never the same across sheets
     sheet = book.worksheets[0]
-    _print('SHEET TITLE', sheet.title)
     start_row = len(dims_ds) + len(brick_ds['dataValues']) + 7
     # Do dimension 1 variables
     interlace_dim_var_length = 0
@@ -1397,10 +1389,6 @@ def parse_brick_FND_tab_dim(brick_ds, book):
         for dim_var in dim['variables']:
             var_name = _get_contexted_var_name(dim_var)
             template_dim_vars[-1].append('%s:%s' % (template_dims[di], var_name))
-
-    with open('/var/log/template_debug.txt', 'w') as f:
-        with redirect_stdout(f):
-            print('starting FND tab dims... \n')
 
     dims = [{'size': 0, 'dim_vars': []} for _ in dims_ds]
     data_vars = []
@@ -1558,20 +1546,5 @@ def _get_nd_interlace_data(row, dims):
     n_intervals = int(len(row) / dim['size'])
     for i in range(0, len(row), n_intervals):
         interlace_row.append(_get_nd_interlace_data(row[i:i + n_intervals], dims[1:]))
-    _print('interlace_row::', interlace_row)
     return interlace_row
-
-
-def _print(*argv):
-    with open('/var/log/template_debug.txt', 'a') as f:
-        with redirect_stdout(f):
-            for arg in argv:
-                print(arg)
-
-def _pprint(*argv):
-    with open('/var/log/template_debug.txt', 'a') as f:
-        with redirect_stdout(f):
-            pp = pprint.PrettyPrinter(indent=4)
-            for arg in argv:
-                pp.pprint(arg)
 
