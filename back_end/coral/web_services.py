@@ -721,19 +721,8 @@ def upload_file():
 
         # Parse brick data
         brick_data = {}
-        brick_data = template.parse_brick_FND_data(brick_ds, udf_file_name)
+        brick_data = template.parse_brick_data(brick_ds, udf_file_name)
 
-#        # Parse brick data    
-#        brick_data = {}
-#
-#        dim_count = len(brick_ds['dimensions'])
-#        if dim_count == 1:
-#            brick_data = template.parse_brick_F1DM_data(brick_ds, udf_file_name)
-#        elif dim_count == 2:
-#            brick_data = template.parse_brick_F2D_data(brick_ds, udf_file_name)
-#        else:
-#            # raise ValueError('Brick with %s dimensions is not supported yet' % dim_count)
-#            brick_data = template.parse_brick_FND_data(brick_ds, udf_file_name)
         # Save brick processed data
         upd_file_name = os.path.join(TMP_DIR, _UPLOAD_PROCESSED_DATA_PREFIX + data_id )
         with open(upd_file_name, 'w') as f:
@@ -2932,29 +2921,13 @@ def generate_brick_template():
 
         utp_file_name = os.path.join(TMP_DIR,_UPLOAD_TEMPLATE_PREFIX + data_id)
 
-        dim_count = len(brick_ds['dimensions'])
-        data_var_count = len(brick_ds['dataValues'])
         if brick_ds['sheet_template_type'] == 'tab_data':
-            template.generate_brick_FND_template(brick_ds, utp_file_name, tab_data=True)
+            template.generate_brick_template(brick_ds, utp_file_name, tab_data=True)
         elif brick_ds['sheet_template_type'] == 'tab_dims':
-            template.generate_brick_FND_template(brick_ds, utp_file_name)
+            template.generate_brick_template(brick_ds, utp_file_name)
         elif brick_ds['sheet_template_type'] == 'interlace':
-            template.generate_brick_FND_interlace_template(brick_ds, utp_file_name)
+            template.generate_brick_interlace_template(brick_ds, utp_file_name)
 
-#        if dim_count == 1:
-#            template.generate_brick_F1DM_template(brick_ds, utp_file_name)
-#        elif dim_count == 2:
-#            if data_var_count == 1:
-#                template.generate_brick_F2D_template(brick_ds, utp_file_name)
-#        elif dim_count > 2:
-#           # if data_var_count == 1:
-#               # template.generate_brick_F3D_tabs_template(brick_ds, utp_file_name)
-#            if brick_ds['templateType'] == 'tab_data':
-#                template.generate_brick_FND_template(brick_ds, utp_file_name, tab_data=True)
-#            elif brick_ds['templateType'] == 'tab_dims':
-#                template.generate_brick_FND_template(brick_ds, utp_file_name)
-#            elif brick_ds['templateType'] == 'interlace':
-#                template.generate_brick_FND_interlace_template(brick_ds, utp_file_name)
         return send_file(utp_file_name, 
             as_attachment=True,
             attachment_filename='data_template.xlsx',
