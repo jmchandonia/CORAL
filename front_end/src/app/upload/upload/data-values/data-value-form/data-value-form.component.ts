@@ -123,7 +123,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
 
   getUnits() {
     this.loadingUnits = true;
-    this.uploadService.searchOntPropertyUnits(this.dataValue.microType)
+    this.uploadService.getOntPropertyUnits(this.dataValue.microType)
       .subscribe(data => {
         this.loadingUnits = false;
         this.unitsValues = [...data.results];
