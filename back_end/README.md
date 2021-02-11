@@ -1,7 +1,7 @@
 # CORAL back end
 Back end CORAL prototype
 
-## Installation on Debian 10
+## Installation on Linux (Debian 10) and MacOS
 
 Each step in the installation is described below.  If you already
 have a prerequisite step installed, you can skip it.
@@ -12,6 +12,16 @@ _install package managers pip3 and npm, and setuptools:_
 
 ```
 apt-get install python3-pip npm nodejs python3-setuptools
+```
+
+_for MacOS:_
+
+```
+brew install python3-pip node python3-setuptools
+```
+_Note: if running on MacOS and brew is not installed, you can install with this command, as described by [the docs](https://brew.sh/)
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 _upgrade pip:_
@@ -30,6 +40,10 @@ pip3 install pandas pyArango dumper xarray
 
 ```
 apt-get install apache2
+```
+
+```
+brew install apache2
 ```
 
 This installation guide assumes you use SSL.  If on a public
@@ -51,7 +65,7 @@ mv localhost.key ../private
 _(based on https://jupyterhub.readthedocs.io/en/stable/quickstart.html)_
 
 _install jupyter:_
-
+what 
 ```
 pip3 install jupyter
 ````
@@ -64,11 +78,17 @@ npm install -g configurable-http-proxy
 pip3 install notebook
 ```
 
+_add jupyterhub as user on Linux:_
 ```
 useradd jupyterhub
 ```
-
 _remember to set shell to nologin, add to shadow group_
+
+_add jupyterhub as user on MacOS:_
+- Click on System Preferences > Users & Groups
+- After clicking unlock in the bottom left, add a new user named "jupyterhub"
+- When user is created, right click on user in left sidebar and click "Advanced options"
+- Set jupyterhub's login shell to /sbin/nologin
 
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
 
@@ -122,6 +142,8 @@ chmod -R g+w .
 chmod -R g+s .
 setfacl -dm g:clearinghouse:rw .
 ```
+
+note: for MacOS creating a directory in /home will not work! It is recommended to put the base directory at /Users/clearinghouse
 
 ### ArangoDB setup
 
