@@ -270,6 +270,7 @@ mkdir data_store/cache
 mkdir data_store/images
 mkdir data_store/images/thumbs
 mkdir data_store/tmp
+mkdir java
 mkdir notebooks
 mkdir modules
 cd modules
@@ -400,7 +401,19 @@ chmod 755 coral-thumbnails.sh
 ```
 
 
-### Add java code
+### Install java code needed for format conversion
+
+Copy or move the files under "back_end/java" into the /home/coral/prod/java subdirectory.
+
+Install dependencies:
+
+```
+cd /home/coral/prod/java/
+git clone https://github.com/kbase/jars.git
+git clone https://github.com/kbaseapps/GenericsUtil.git
+../bin/compile_java.sh
+
+```
 
 
 ### Install UI
