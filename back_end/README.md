@@ -1,5 +1,4 @@
-# CORAL back end
-Back end CORAL prototype
+# CORAL back end prototype
 
 ## Installation on Debian 10
 
@@ -340,7 +339,7 @@ _These run in a virtualenv, so install this first:_
 pip3 install virtualenv 
 python3 -m virtualenv /home/coral/env/
 source /home/coral/env/bin/activate
-pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome
 ```
 
 _note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
@@ -356,7 +355,7 @@ After=network.target
 User=root
 EnvironmentFile=/etc/sysconfig/coral-web-services
 ExecStart=/home/coral/env/bin/python -m coral.web_services
-WorkingDirectory=/home/coral/prod/modules/coral
+WorkingDirectory=/home/coral/prod/modules
 Restart=always
 RemainAfterExit=yes
 
@@ -373,15 +372,16 @@ PYTHONPATH=/home/coral/env/
 VIRTUAL_ENV=/home/coral/env/
 ```
 
-_to start web services_
+_Start web services automatically on boot_
 
 ```
+systemctl enable coral-web-services
 service coral-web-services start
 ```
 
 _debug by looking in /var/log/daemon.log_
 
-### Add image thumbnail generation script (if Image is a static type)
+### Add image thumbnail generation script (if Image is a static type in your instance)
 
 Install prerequisite perl library and software:
 
@@ -399,6 +399,8 @@ echo "cd /home/coral/prod/data_store/ && /home/coral/prod/bin/thumbnails.pl" > c
 chmod 755 coral-thumbnails.sh
 ```
 
+
+### Add java code
 
 
 ### Install UI
