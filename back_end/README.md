@@ -1,5 +1,4 @@
-# CORAL back end
-Back end CORAL prototype
+# CORAL back end prototype
 
 ## Installation on Linux (Debian 10) and MacOS
 
@@ -121,26 +120,33 @@ _In /etc/sudoers:_
 Cmnd_Alias JUPYTER_CMD = /usr/local/bin/sudospawner
 
 # actually give the Hub user permission to run the above command on behalf 
-# of the clearinghouse users without prompting for a password:
+# of the coral users without prompting for a password:
 
 %jupyterhub ALL=(jupyterhub) /bin/sudo
-jupyterhub ALL=(%clearinghouse) NOPASSWD:JUPYTER_CMD
+jupyterhub ALL=(%coral) NOPASSWD:JUPYTER_CMD
 ```
 
-_add users who use clearinghouse, and jupyterhub, to linux group clearinghouse_
+_add users who use coral, and jupyterhub, to linux group coral_
 
 ### Directory setup
 
-_set up new base directory for clearinghouse_
+_add linux group for coral_
 
 ```
-mkdir /home/clearinghouse/
-cd /home/clearinghouse
+groupadd coral
+usermod -a -G coral jupyterhub
+```
+
+_set up new base directory for coral_
+
+```
+mkdir /home/coral/
+cd /home/coral
 chown jupyterhub .
-chgrp clearinghouse .
+chgrp coral .
 chmod -R g+w .
 chmod -R g+s .
-setfacl -dm g:clearinghouse:rw .
+setfacl -dm g:coral:rw .
 ```
 
 note: for MacOS creating a directory in /home will not work! It is recommended to put the base directory at /Users/clearinghouse
@@ -151,12 +157,12 @@ _Follow directions from ArangoDB website; something like this:_
 
 ```
 cd /tmp
-curl -OL https://download.arangodb.com/arangodb36/DEBIAN/Release.key
+curl -OL https://download.arangodb.com/arangodb37/DEBIAN/Release.key
 apt-key add - < Release.key
-echo 'deb https://download.arangodb.com/arangodb36/DEBIAN/ /' | tee /etc/apt/sources.list.d/arangodb.list
+echo 'deb https://download.arangodb.com/arangodb37/DEBIAN/ /' | tee /etc/apt/sources.list.d/arangodb.list
 apt-get install apt-transport-https
 apt-get update
-apt-get install arangodb3=3.6.1-1
+apt-get install arangodb3
 ```
 
 ### Make Systemd start up Jupyterhub automatically
@@ -245,14 +251,14 @@ _in apache conf (/etc/apache2/sites-enabled/000-default.conf):_
         </Location>
 ```
 
-_Set up Data Clearinghouse front end links_
+_Set up CORAL front end links_
 
-_e.g., in /home/httpd/html/dc/index.html:_
+_e.g., in /var/www/html/coral/index.html:_
 
 ```
 <html>
 <body>
-CORAL
+CORAL Resources
   <ul>
     <li><a href="/coral-ui/">CORAL UI</a>
     <li><a href="/jupyterhub/">JupyterHub</a>
@@ -286,12 +292,13 @@ mkdir data_store/cache
 mkdir data_store/images
 mkdir data_store/images/thumbs
 mkdir data_store/tmp
+mkdir java
 mkdir notebooks
 mkdir modules
 cd modules
 ```
 
-Move the files under "back_end" into the modules subdirectory.
+Copy or move the files under "back_end/python" into the modules subdirectory.
 
 ### Initial data, microtypes, and ontologies loading
 
@@ -299,9 +306,9 @@ _load in the data from a jupyter notebook:_
 
 _rsync data_import, notebooks, images from server with data_
 
-_define your process type and all other static types in var/typedef.json_
+_define your process type and all other static types in /home/coral/prod/modules/var/typedef.json_
 
-_set up var/upload_config.json with all the filenames of all ontologies, bricks, entities, and processes that you want to load._
+_set up /home/coral/prod/modules/var/upload_config.json with all the filenames of all ontologies, bricks, entities, and processes that you want to load._
 
 _set up any predefined brick type templates in var/brick_type_templates.json_
 
@@ -355,7 +362,7 @@ _These run in a virtualenv, so install this first:_
 pip3 install virtualenv 
 python3 -m virtualenv /home/coral/env/
 source /home/coral/env/bin/activate
-pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome
 ```
 
 _note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
@@ -371,7 +378,7 @@ After=network.target
 User=root
 EnvironmentFile=/etc/sysconfig/coral-web-services
 ExecStart=/home/coral/env/bin/python -m coral.web_services
-WorkingDirectory=/home/coral/prod/modules/coral
+WorkingDirectory=/home/coral/prod/modules
 Restart=always
 RemainAfterExit=yes
 
@@ -388,15 +395,48 @@ PYTHONPATH=/home/coral/env/
 VIRTUAL_ENV=/home/coral/env/
 ```
 
-_to start web services_
+_Start web services automatically on boot_
 
 ```
+systemctl enable coral-web-services
 service coral-web-services start
 ```
 
 _debug by looking in /var/log/daemon.log_
 
-### TODO: add thumbnail generation script, run it in cron
+### Add image thumbnail generation script (if Image is a static type in your instance)
+
+Install prerequisite perl library and software:
+
+```
+apt-get install libimage-size-perl imagemagick
+```
+
+Copy or move the files under "back_end/bin" into the /home/coral/prod/bin subdirectory.
+
+Set up cron job to create thumbnails:
+
+```
+cd /etc/cron.hourly
+echo "cd /home/coral/prod/data_store/ && /home/coral/prod/bin/thumbnails.pl" > coral-thumbnails.sh
+chmod 755 coral-thumbnails.sh
+```
+
+
+### Install java code needed for format conversion
+
+Copy or move the files under "back_end/java" into the /home/coral/prod/java subdirectory.
+
+Install dependencies:
+
+```
+cd /home/coral/prod/java/
+git clone https://github.com/kbase/jars.git
+git clone https://github.com/kbaseapps/GenericsUtil.git
+../bin/compile_java.sh
+
+```
+
 
 ### Install UI
 
