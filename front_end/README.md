@@ -18,6 +18,17 @@ If you run into dependency problems you can't resolve, try installing an older v
 
 To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200
 
+## Environment
+
+Once the program is installed, you will need to configure environment variables for the application. in `src/environments`, create a file called `environment.ts` if one does not already exist. You can create an `environment.prod.ts` and an `environment.dev.ts` to create different environments for development and production. The required environment variables are as follows:
+
+`production` - Boolean indicating whether to build or serve in production mode. Setting it to false will allow the developer to more easily navigate certain parts of CORAL UI without validation.
+`baseURL` - The URL location of your backend API
+`GOOGLE_MAPS_API_KEY` - Required for plotting maps of items with geographic data. You will need to create a google maps api key using the Google developer console. [Click here](https://developers.google.com/maps/documentation/embed/get-api-key) for more information on how to generate a key.
+
+Please note that without these variables, the application will fail to compile.
+
+
 ## Deployment
 
 Note: these directions assume building the site in an Apache2 environment.
