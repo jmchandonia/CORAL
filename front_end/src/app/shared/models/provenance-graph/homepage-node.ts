@@ -4,7 +4,7 @@ export interface HomepageNode extends Node {
 
     /* 
     Extension interface to provide metadata to nodes to 
-    enable search and interaction with generix system. This
+    enable search and interaction with the coral system. This
     is a wrapper for the VisJS Node interface that will allow
     us to use nodes with a 'data' property without throwing
     a type error.
