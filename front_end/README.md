@@ -5,7 +5,7 @@ on our system that can be challenging for data producers and data consumers alik
 
 ## Installation
 
-to get started, make sure you have npm and Angular installed. This app is built with Angular version
+To get started, make sure you have npm and Angular installed. This app is built with Angular version
 9.1.11.
 
 `npm install -g @angular/cli`
@@ -28,6 +28,11 @@ After installing the back end, copy all files from this front_end repository int
 cp -r . /home/coral/env/coral-ui
 cd /home/coral/env/coral-ui
 ```
+
+Obtain a Google Maps API key, using directions here:
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+
 
 Make sure that mod_rewrite is enabled and add the following to your httpd.conf file: 
 
