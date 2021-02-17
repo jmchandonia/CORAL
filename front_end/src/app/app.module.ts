@@ -29,6 +29,7 @@ import { AuthInterceptor } from 'src/app/shared/services/auth-interceptor';
 import { AgmCoreModule } from '@agm/core';
 import { environment }  from 'src/environments/environment';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { WarningComponent } from './shared/components/warning/warning.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +41,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     MicrotypeBrowserComponent,
     DashboardPlotComponent,
     ProvenanceGraphComponent,
+    WarningComponent,
   ],
   imports: [
     BrowserModule,

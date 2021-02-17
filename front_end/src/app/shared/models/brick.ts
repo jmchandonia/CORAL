@@ -23,6 +23,7 @@ export class Brick {
     end_date: Date;
     coreObjectRefsError = false;
     sheet_template_type: 'interlace' | 'tab_data' | 'tab_dims' = 'interlace';
+    missingFields: string[] = [];
 
     get isEmpty() {
         return isEqual(this, new Brick());
