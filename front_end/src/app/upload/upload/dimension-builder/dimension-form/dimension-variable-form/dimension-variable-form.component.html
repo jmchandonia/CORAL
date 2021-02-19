@@ -17,6 +17,9 @@
             [loading]="typeLoading"
             [clearable]="false"
           >
+          <ng-template ng-label-tmp let-item="item">
+            {{item.text}} ({{dimVar.scalarType?.text ? dimVar.scalarType.text : dimVar.scalarType}})
+          </ng-template>
           <ng-template ng-option-tmp let-item="item">
             {{item.text}} {{formatOptionLabel(item)}}
           </ng-template>
