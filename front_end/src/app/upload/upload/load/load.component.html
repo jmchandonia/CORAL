@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-8">
             <ng-select
-              *ngIf="moreThan3Dims"
+              *ngIf="templateTypeOptions.length > 1"
               class="custom"
               [class.select-error]="templateTypeError"
               style="position: relative; top: 5px;"
@@ -18,7 +18,7 @@
               [items]="templateTypeOptions"
               bindLabel="text"
               bindValue="type"
-              [(ngModel)]="brick.templateType"
+              [(ngModel)]="brick.sheet_template_type"
               [ngModelOptions]="{standalone: true}"
             ></ng-select>
           </div>

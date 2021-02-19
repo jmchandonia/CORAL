@@ -1,6 +1,6 @@
 # CORAL back end prototype
 
-## Installation on Debian 10
+## Installation on Linux (Debian 10)
 
 Each step in the installation is described below.  If you already
 have a prerequisite step installed, you can skip it.
@@ -31,6 +31,10 @@ pip3 install pandas pyArango dumper xarray
 apt-get install apache2
 ```
 
+```
+brew install apache2
+```
+
 This installation guide assumes you use SSL.  If on a public
 server, you can get a SSL certificate from letsencrypt.org.  If on
 a private development server, you can generate your own certificate
@@ -50,7 +54,7 @@ mv localhost.key ../private
 _(based on https://jupyterhub.readthedocs.io/en/stable/quickstart.html)_
 
 _install jupyter:_
-
+what 
 ```
 pip3 install jupyter
 ````
@@ -63,10 +67,10 @@ npm install -g configurable-http-proxy
 pip3 install notebook
 ```
 
+_add jupyterhub as user on Linux:_
 ```
 useradd jupyterhub
 ```
-
 _remember to set shell to nologin, add to shadow group_
 
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
@@ -428,6 +432,102 @@ git clone https://github.com/kbaseapps/GenericsUtil.git
 
 ```
 
+### Install on MacOS for Development
+
+Please note that it is not recommended to try to set up the CORAL back end in a production capacity. These instructions are for local development only. These instructions are to install CORAL at a user profile level for personal development.
+
+_Begin with installing environment dependencies:_
+
+```
+brew install python3-pip node python3-setuptools
+```
+_Note: if running on MacOS and brew is not installed, you can install with this command, as described by [the docs](https://brew.sh/)
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+- Create a new directory anywhere in your User directory and clone the repository.
+- Create a new python environment and activate:
+```
+pip3 install virtualenv 
+python3 -m virtualenv /home/coral/env/
+source /home/coral/env/bin/activate
+```
+when you are activated, install the following packages:
+```
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome
+```
+_install jupyterhub and dependencies:_
+
+```
+pip3 install jupyterhub
+npm install -g configurable-http-proxy
+pip3 install notebook
+```
+When Jupyterhub is installed, the server can be run in development with the command 'Jupyterhub'
+- ArangoDB can be installed on MacOS via homebrew:
+```
+brew install arangodb
+```
+when ArangoDB is installed you can start up the server by running the command:
+```
+/usr/local/Cellar/arangodb/<VERSION>/sbin/arangod &
+```
+You can also stop, start, or restart arangodb using brew services:
+```
+sudo brew services start arangodb
+sudo brew services stop arangodb
+sudo brew services restart arangodb
+```
+- In order to import data into arango, you will first need to create a database. When ArangoDB is running, you can run the arango shell with the command `arangosh`
+- You may be prompted to reset the root password, if not, reset it in the shell with the following command:
+```
+require("/org/arangodb/users").update("root", "YOUR_NEW_PASSWORD")
+```
+refer [here](https://www.arangodb.com/docs/stable/security-change-root-password.html) for more information and troubleshooting.
+- Once users are configured, you will need to create a new database to use for development. Without creating a new database, the data import will fail.
+```
+db._createDatabase('YOUR_DEV_DB_NAME')
+```
+- in order to run CORAL back end locally, you will need to create a config.json file in /back_end/var/, with the following parameters filled out. Running CORAL will fail without these parameters.
+```json
+{
+    "WebService": {
+        "port": 8082,
+        "https": false, # can be true if you set up a self signed certificate
+        "cert_pem": "/path/to/your/localhost.crt",
+        "key_em": "/path/to/your/localhost.key",
+        "plot_types_file": "plot_types.json",
+        "auth_private": "/path/to/your/private/key",
+        "auth_public": "/path/to/your/public/key"
+    },
+    "Workspace": {
+        "data_dir": "/path/to/data/to/use/in/CORAL"
+    },
+    "Import": {
+        "ontology_dir": "/path/to/ontologies",
+        "entity_dir": "/path/to/entities",
+        "process_dir": "/path/to/processes",
+        "brick_dir": "/path/to/bricks"
+    },
+    "ArangoDB": {
+        "url": "http://127.0.0.1:8529",
+        "user": "root",
+        "password": "<YOUR_PASSWORD>",
+        "db": "<YOUR_DEV_DB_NAME>"
+    }
+}
+```
+- Once you have configured your config.json, you can import your data into the development database. This import may take a while depending on the size of your imported data.
+_make a "reload_data" notebook to load and set everything up, then run it._
+_sample "reload data" notebook contents (e.g., in /home/coral/prod/notebooks/reload_data.ipynb):_
+```
+from coral.dataprovider import DataProvider
+from coral import toolx
+toolx.init_system()
+```
+_NOTE: On MacOS, if the import fails with `[Errno 49] Can't assign requested address`, check in /etc/hosts to make sure that 127.0.0.1 is set to localhost. If you are still getting this error, restarting your computer should fix the issue. This is a bug with MacOS._
+
+- Once the data import has completed, you can visit localhost:8529 to view the database and make sure everything has imported properly. You can also view the imported data via the Arango Shell.
 
 ### Install UI
 

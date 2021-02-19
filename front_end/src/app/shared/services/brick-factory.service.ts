@@ -36,6 +36,11 @@ export class BrickFactoryService {
         // clear brickbuilder datavalues if different template is selected
         // this.brickBuilder.dataValues = [];
 
+        if (dataVars === undefined) {
+          brick.missingFields.push('"Data Variables"');
+          return;
+        }
+
         dataVars.forEach((dataVar, idx) => {
           // set required to true in constructor
           const dataValue = new DataValue(idx, true);
@@ -62,6 +67,11 @@ export class BrickFactoryService {
 
     // clear previous dimensions if new template is selected
     // this.brickBuilder.dimensions = [];
+
+    if (dims === undefined) {
+      brick.missingFields.push('"Dimensions"');
+      return;
+    }
 
     dims.forEach((item, idx) => {
       // set required to true in constructor
@@ -98,6 +108,11 @@ export class BrickFactoryService {
   static setTemplateProperties(brick: Brick, props: any[]) {
         // clear previous properties if new template is selected
         // this.brickBuilder.properties = [];
+
+        if (props === undefined) {
+           brick.missingFields.push('"Properties"');
+           return;
+        }
 
         props.forEach((item, idx) => {
           // set required to true in constructor
