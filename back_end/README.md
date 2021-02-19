@@ -357,7 +357,7 @@ _These run in a virtualenv, so install this first:_
 pip3 install virtualenv 
 python3 -m virtualenv /home/coral/env/
 source /home/coral/env/bin/activate
-pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome networx
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome networkx pygraphviz
 ```
 
 _note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
