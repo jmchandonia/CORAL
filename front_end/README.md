@@ -24,7 +24,7 @@ Once the program is installed, you will need to configure environment variables 
 
 `production` - Boolean indicating whether to build or serve in production mode. Setting it to false will allow the developer to more easily navigate certain parts of CORAL UI without validation.
 `baseURL` - The URL location of your backend API
-`GOOGLE_MAPS_API_KEY` - Required for plotting maps of items with geographic data. You will need to create a google maps api key using the Google developer console. [Click here](https://developers.google.com/maps/documentation/embed/get-api-key) for more information on how to generate a key.
+`GOOGLE_MAPS_API_KEY` - Required for plotting maps of items with geographic data. You will need to create a google maps api key using the Google developer console. [Click here](https://developers.google.com/maps/documentation/embed/get-api-key) for more information on how to generate a key. If you do not have access to a google maps api key, you can simply leave the GOOGLE_MAPS_API_KEY as an empty string `''` and map options will not be loaded as a part of the UI.
 
 Please note that without these variables, the application will fail to compile.
 
