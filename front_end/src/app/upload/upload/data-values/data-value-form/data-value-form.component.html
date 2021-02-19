@@ -14,6 +14,9 @@
       [readonly]="dataValue.required"
       [clearable]="false"
     >
+      <ng-template ng-label-tmp let-item="item">
+        {{item.text}} ({{ dataValue.scalarType?.text ? dataValue.scalarType.text : dataValue.scalarType}})
+      </ng-template>
       <ng-template ng-option-tmp let-item="item">
         {{item.text}} {{formatOptionLabel(item)}}
       </ng-template>

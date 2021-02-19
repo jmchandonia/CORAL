@@ -113,7 +113,7 @@ class Brick:
 
 
     @staticmethod
-    def read_dict(brick_id, json_data):            
+    def read_dict(brick_id, json_data):
         ds = xr.Dataset()        
         
         # Do general properties

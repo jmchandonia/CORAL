@@ -10,10 +10,13 @@ import {
   Context
  } from 'src/app/shared/models/brick';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { delay, tap, publish, refCount, finalize } from 'rxjs/operators';
 import { isEqual } from 'lodash';
 import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
+import { Response } from 'src/app/shared/models/response';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { WarningComponent } from 'src/app/shared/components/warning/warning.component';
 
 @Injectable({
   providedIn: 'root'
@@ -29,9 +32,11 @@ export class UploadService {
   uploadSuccessData: any = null;
   uploadFile: File = null;
   requiredProcess = false;
+  unitsCache: {[key: string]: Observable<Response<Term>>} = {}; // cache for multiple http calls to get units
 
   constructor(
     private http: HttpClient,
+    private modalService: BsModalService
   ) {
     // get brick type templates once the user is in /upload
     this.getBrickTypeTemplates();
@@ -72,6 +77,19 @@ export class UploadService {
   setSelectedTemplate(template) {
     delete this.brickBuilder;
     this.brickBuilder = BrickFactoryService.createUploadInstance(template);
+    if (this.brickBuilder.missingFields.length) {
+      const initialState = {
+        title: 'Warning: missing fields from template',
+        message: `
+          This template is missing the fields
+          ${this.brickBuilder.missingFields.join(', ')}.
+          Please review the template file for ${template.text} or contact the site administrator to ensure that the data is correct.
+          `
+      }
+      const modalRef: BsModalRef = this.modalService.show(WarningComponent, {
+        initialState, class: 'modal-lg'
+      });
+    }
     this.selectedTemplate = template.id;
     localStorage.setItem('selectedTemplate', this.selectedTemplate);
     this.saveBrickBuilder();
@@ -126,9 +144,20 @@ export class UploadService {
     return this.http.post<any>(`${environment.baseURL}/search_property_value_objrefs`, body).pipe(delay(500));
   }
 
+  getOntPropertyUnits(microtype: any) {
+    const key = JSON.stringify(microtype);
+    this.unitsCache[key] = this.unitsCache[key] || this.searchOntPropertyUnits(microtype);
+    return this.unitsCache[key];
+  }
+
   public searchOntPropertyUnits(microtype: any) {
     const body = { microtype };
-    return this.http.post<any>(`${environment.baseURL}/get_property_units_oterms`, body);
+    return this.http.post<any>(`${environment.baseURL}/get_property_units_oterms`, body)
+      .pipe(
+        publish(),
+        refCount(),
+        finalize(() => delete this.unitsCache[JSON.stringify(microtype)])
+      );
   }
 
   public searchDataVariableMicroTypes(term) {
