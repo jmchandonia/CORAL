@@ -363,7 +363,7 @@ def get_property_units_oterms():
     query = request.json
     parent_term_ids = query['microtype']['valid_units_parents']
     term_ids = query['microtype']['valid_units'] 
-    return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
+    return _get_oterms(svs['ontology'].all, term_ids=term_ids,  parent_term_ids=parent_term_ids)
 
 @app.route("/coral/get_personnel_oterms", methods=['GET'])
 def get_personnel_oterms():
