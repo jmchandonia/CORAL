@@ -98,7 +98,7 @@ def get_jwt():
 def decrypt_token(auth_token, secret):
     # if token decoding failed then we know we didnt have a token that was encrypted with the same key
     # we can also check for valid user information or anything else we add to the token here
-    payload = jwt.decode(auth_token, secret)
+    payload = jwt.decode(auth_token, secret, algorithms=['HS256'])
     # s = pprint.pformat(payload)
     # sys.stderr.write(s+'\n')  
 
@@ -911,7 +911,8 @@ def login():
 	        }
 
             new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
-            return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
+            return json.dumps({'success': True, 'token': new_jwt})
+        
         except Exception as e:
             return json.dumps({'success': False,
                                'message': 'Something went wrong.'
