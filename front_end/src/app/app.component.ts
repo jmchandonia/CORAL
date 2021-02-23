@@ -10,7 +10,7 @@ import { QueryBuilderService } from 'src/app/shared/services/query-builder.servi
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'generix-ui';
+  title = 'coral-ui';
   currentUrl: string;
   homeSearchRedirect = false;
   constructor(

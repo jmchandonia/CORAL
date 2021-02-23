@@ -75,6 +75,16 @@ _remember to set shell to nologin, add to shadow group_
 
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
 
+Be sure the following paths are set to point to the right directory:
+
+```
+in jupyterhub_config.py:
+c.Spawner.notebook_dir = '/home/coral/prod/notebooks'
+
+in jupyter_notebook_config.py:
+c.NotebookApp.notebook_dir = '/home/coral/prod/notebooks'
+```
+
 _make these files owned by jupyterhub, delete old sqlite and jupyterhub_cookie_secret_
 
 _ssl certs need to be readable by jupyterhub user_
@@ -110,8 +120,6 @@ Cmnd_Alias JUPYTER_CMD = /usr/local/bin/sudospawner
 jupyterhub ALL=(%coral) NOPASSWD:JUPYTER_CMD
 ```
 
-_add users who use coral, and jupyterhub, to linux group coral_
-
 ### Directory setup
 
 _add linux group for coral_
@@ -121,13 +129,15 @@ groupadd coral
 usermod -a -G coral jupyterhub
 ```
 
+_also, add all linux users who use coral to linux group coral, as above_
+
 _set up new base directory for coral_
 
 ```
 mkdir /home/coral/
 cd /home/coral
-chown jupyterhub .
-chgrp coral .
+chown -R jupyterhub .
+chgrp -R coral .
 chmod -R g+w .
 chmod -R g+s .
 setfacl -dm g:coral:rw .
@@ -280,7 +290,10 @@ mkdir modules
 cd modules
 ```
 
-Copy or move the files under "back_end/python" into the modules subdirectory.
+_Copy or move the files under "back_end/python" into the modules subdirectory._
+
+_symlink 'coral' and 'var' directories from modules into the 'notebooks' directory_
+
 
 ### Initial data, microtypes, and ontologies loading
 
@@ -344,7 +357,7 @@ _These run in a virtualenv, so install this first:_
 pip3 install virtualenv 
 python3 -m virtualenv /home/coral/env/
 source /home/coral/env/bin/activate
-pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome
+pip3 install flask flask_cors pandas simplepam pyjwt pyArango dumper xarray openpyxl diskcache pycryptodome networkx pygraphviz
 ```
 
 _note:  Be careful to install pyjwt, NOT jwt!  Or login will fail!_
