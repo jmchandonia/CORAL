@@ -45,6 +45,10 @@ export class AuthService {
       }));
   }
 
+  submitGoogleOAuthCode(authCode: string) {
+    return this.http.post(`${environment.baseURL}/google_auth_code_store`, {authCode});
+  }
+
   logout() {
     localStorage.removeItem('authToken');
     // localStorage.clear();

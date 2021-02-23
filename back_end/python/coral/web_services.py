@@ -892,6 +892,11 @@ def _get_term(term_data):
 ## NEW VERSION
 ##########################################################################################
 
+@app.route("/coral/google_auth_code_store", methods=["POST"])
+def handle_auth_code():
+    print ("Auth code ______________>>>", request.json['authCode'])
+    return _ok_response({"message": "testing google auth"})
+
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])
 def login():

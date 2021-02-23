@@ -13,7 +13,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
-    "types": ["node", "googlemaps"],
+    "types": ["node", "googlemaps", "gapi", "gapi.auth2"],
     "typeRoots": [
       "node_modules/@types"
     ],
