@@ -5,7 +5,7 @@ on our system that can be challenging for data producers and data consumers alik
 
 ## Installation
 
-to get started, make sure you have npm and Angular installed. This app is built with Angular version
+To get started, make sure you have npm and Angular installed. This app is built with Angular version
 9.1.11.
 
 `npm install -g @angular/cli`
@@ -24,6 +24,7 @@ Once the program is installed, you will need to configure environment variables 
 
 `production` - Boolean indicating whether to build or serve in production mode. Setting it to false will allow the developer to more easily navigate certain parts of CORAL UI without validation.
 `baseURL` - The URL location of your backend API
+
 `GOOGLE_MAPS_API_KEY` - Required for plotting maps of items with geographic data. You will need to create a google maps api key using the Google developer console. [Click here](https://developers.google.com/maps/documentation/embed/get-api-key) for more information on how to generate a key. If you do not have access to a google maps api key, you can simply leave the GOOGLE_MAPS_API_KEY as an empty string `''` and map options will not be loaded as a part of the UI.
 
 Please note that without these variables, the application will fail to compile.
@@ -33,7 +34,15 @@ Please note that without these variables, the application will fail to compile.
 
 Note: these directions assume building the site in an Apache2 environment.
 
-Once you are logged into the server, you can find a clone of the repository at `/home/coral/env/coral-ui/coral-ui`. If you are building CORAL UI on a new server, you will need to make sure that mod_rewrite is enabled and add the following to your httpd.conf file: 
+After installing the back end, copy all files from this front_end repository into `/home/coral/env/coral-ui/`:
+
+```
+cp -r . /home/coral/env/coral-ui
+cd /home/coral/env/coral-ui
+```
+
+
+Make sure that mod_rewrite is enabled and add the following to your httpd.conf file: 
 
 ```
 <Directory "/var/www/html/coral-ui">
@@ -51,8 +60,8 @@ It is also possible to add these conditions in a .htaccess file at the same leve
 
 You also need to be sure .htaccess files are enabled in your web server setup; in Apache, be sure "AllowOverride All" is configured for the build target directory.
 
-Once you are logged into the server, you can find a clone of the repository at `/home/coral/env/coral-ui/coral-ui`.
-Pull your changes and run the following build command:
+To install, go to the installation directory at `/home/coral/env/coral-ui/`.
+Make any desired changes and then run the following build command:
 
 `npm install`
 

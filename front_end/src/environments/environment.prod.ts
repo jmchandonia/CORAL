@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  baseURL: 'https://psnov1.lbl.gov:8082/generix'
+  baseURL: 'https://localhost:8082/coral',
+  GOOGLE_MAPS_API_KEY: false
 };
