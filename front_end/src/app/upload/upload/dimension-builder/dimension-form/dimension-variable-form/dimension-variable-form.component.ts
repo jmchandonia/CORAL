@@ -79,7 +79,7 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
   handleSearch(event) {
     if (event.term.length) {
       this.typeLoading = true;
-      this.uploadService.searchDimensionMicroTypes(event.term).subscribe((data: any) => {
+      this.uploadService.searchDimensionVariableMicroTypes(event.term).subscribe((data: any) => {
         this.typeData = [...data.results];
         this.typeLoading = false;
       });

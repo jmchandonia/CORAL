@@ -9,6 +9,7 @@ import { PlotlyBuilder, AxisOption, Axis, Constraint } from 'src/app/shared/mode
 import { Response } from 'src/app/shared/models/response';
 import { PlotValidatorService as validator } from 'src/app/shared/services/plot-validator.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-plot-options',
   templateUrl: './plot-options.component.html',
@@ -139,7 +140,8 @@ export class PlotOptionsComponent implements OnInit {
           // this.plotTypeData = this.validateAxes(data.results, includeMap);
           this.plotTypeData = validator.getValidPlotTypes(data.results, this.axisOptions, includeMap, this.metadata.dim_context.length);
         } else {
-          this.plotTypeData = includeMap
+          // dont show map options if there is no google maps api key in env
+          this.plotTypeData = includeMap && environment.GOOGLE_MAPS_API_KEY.length
             ? data.results
             : data.results.filter(result => !result.map && result.name !== 'Heatmap');
         }
