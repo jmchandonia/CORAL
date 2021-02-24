@@ -41,7 +41,7 @@ export class BrickFactoryService {
           return;
         }
 
-        dataVars.forEach((dataVar, idx) => {
+        dataVars?.forEach((dataVar, idx) => {
           // set required to true in constructor
           const dataValue = new DataValue(idx, true);
 
@@ -73,7 +73,7 @@ export class BrickFactoryService {
       return;
     }
 
-    dims.forEach((item, idx) => {
+    dims?.forEach((item, idx) => {
       // set required to true in constructor
       const dim = new BrickDimension(brick, idx, true);
       // set dimension type
@@ -109,12 +109,7 @@ export class BrickFactoryService {
         // clear previous properties if new template is selected
         // this.brickBuilder.properties = [];
 
-        if (props === undefined) {
-           brick.missingFields.push('"Properties"');
-           return;
-        }
-
-        props.forEach((item, idx) => {
+        props?.forEach((item, idx) => {
           // set required to true in constructor
           const prop = new TypedProperty(idx, true);
 
