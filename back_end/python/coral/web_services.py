@@ -1,4 +1,4 @@
-from flask import Flask, request, json, jsonify, send_file
+from flask import Flask, request, json, jsonify, send_file, url_for
 from flask import Response
 from flask import request
 from flask_cors import CORS, cross_origin
@@ -24,8 +24,8 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
-# from . import services
-# from .brick import Brick
+from .auth import OAuthSignin
+import requests
 
 from .dataprovider import DataProvider
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
@@ -177,7 +177,8 @@ def test_brick_upload():
 
     return s
     # return br.id
-    
+
+@cross_origin
 @app.route("/coral/refs_to_core_objects/", methods=['POST'])
 def coral_refs_to_core_objects():
     try:
@@ -894,8 +895,33 @@ def _get_term(term_data):
 
 @app.route("/coral/google_auth_code_store", methods=["POST"])
 def handle_auth_code():
-    print ("Auth code ______________>>>", request.json['authCode'])
-    return _ok_response({"message": "testing google auth"})
+
+    with open(cns['_GOOGLE_OAUTH2_CREDENTIALS']) as f:
+        client_credentials =  json.load(f)
+
+    result = requests.post('https://www.googleapis.com/oauth2/v4/token', {
+        'client_id': client_credentials['web']['client_id'],
+        'client_secret': client_credentials['web']['client_secret'],
+        'redirect_uri': 'postmessage',
+        'grant_type': 'authorization_code',
+        'code': request.json['authCode']
+    })
+
+    tokens = json.loads(result.content.decode('utf-8'))
+    access_token = tokens['access_token']
+    # refresh_token = tokens['refresh_token']
+    # TODO: store access_token and refresh_token ?
+
+    test = requests.get(' https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
+
+    # TODO: generate token using user data from google
+    return _ok_response({'user': 'test'})
+
+
+    flow.fetch_token(code=refresh_token, authorization_url=authorization_url)
+    credentials = flow.credentials
+
+    print('CREDENTIALS', credentials)
 
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])

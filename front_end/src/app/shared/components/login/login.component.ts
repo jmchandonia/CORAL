@@ -51,40 +51,30 @@ export class LoginComponent implements OnInit {
       await gapi.auth2
         .init({
           client_id: environment.GOOGLE_OAUTH2_CLIENT_KEY,
-          // ux_mode: 'redirect',
-          // redirect_uri: `${environment.baseURL}/google_oauth_callback`
         })
         .then(auth => {
           this.gapiSetup = true;
           this.googleAuthInstance = auth;
-          // console.log('GOOGLE AUTH IS ALL SET UP', this.googleAuthInstance);
         });
     });
   }
 
   async handleGoogleAuthSignIn() {
-    console.log('Signing in with google...');
     if (!this.gapiSetup) {
       await this.initGoogleAuth();
     }
 
-    // return new Promise(async () => {
-    //   await this.googleAuthInstance.signIn().then(
-    //     user => console.log('user', user),
-    //     error => console.log('error', error)
-    //   );
-    // });
     await this.googleAuthInstance.grantOfflineAccess().then(
-      data => this.handleSigninCode(data.code),
+      data => this.handleSigninCode(data),
       err => console.error(err)
     );
   }
 
-  handleSigninCode(code: string) {
-    console.log('CODE', code);
-    this.auth.submitGoogleOAuthCode(code)
-      .subscribe(data => {
-        console.log('DATA', data);
+  handleSigninCode(data: any) {
+    this.auth.submitGoogleOAuthCode(data.code)
+      .subscribe(d => {
+        console.log('DATA', d);
+        // TODO: set token from new url
       })
   }
 

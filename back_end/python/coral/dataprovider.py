@@ -51,7 +51,8 @@ class DataProvider:
             '_DATA_DIR': services._DATA_DIR,
             '_CACHE_DIR': services._CACHE_DIR,
             '_AUTH_SECRET': services._AUTH_SECRET,
-            '_AUTH_PUBLIC': services._AUTH_PUBLIC
+            '_AUTH_PUBLIC': services._AUTH_PUBLIC,
+            '_GOOGLE_OAUTH2_CREDENTIALS': services._GOOGLE_OAUTH2_CREDENTIALS
         }
 
 class GenericsProvider:
