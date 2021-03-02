@@ -1,0 +1,134 @@
+format-version: 1.4
+ontology:mixs
+date: 01:03:2021 11:54
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: MIxS:0000000
+name: term
+namespace: mixs.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: MIxS:0000001
+name: MIxS
+namespace: mixs.ontology
+def: "MIxS." []
+is_a: MIxS:0000000 ! term
+
+[Term]
+id: MIxS:0000002
+name: Environmental Package
+namespace: mixs.ontology
+def: "Environmental Package." []
+is_a: MIxS:0000001 ! MIxS
+
+[Term]
+id: MIxS:0000003
+name: air
+namespace: mixs.ontology
+def: "air." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000004
+name: built environment
+namespace: mixs.ontology
+def: "built environment." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000005
+name: host-associated
+namespace: mixs.ontology
+def: "host-associated." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000006
+name: human-associated
+namespace: mixs.ontology
+def: "human-associated." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000007
+name: human-oral
+namespace: mixs.ontology
+def: "human-oral." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000008
+name: human-gut
+namespace: mixs.ontology
+def: "human-gut." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000009
+name: human-skin
+namespace: mixs.ontology
+def: "human-skin." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000010
+name: human-vaginal
+namespace: mixs.ontology
+def: "human-vaginal." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000011
+name: microbial mat|biofilm
+namespace: mixs.ontology
+def: "microbial mat|biofilm." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000012
+name: miscellaneous
+namespace: mixs.ontology
+def: "miscellaneous." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000013
+name: plant-associated
+namespace: mixs.ontology
+def: "plant-associated." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000014
+name: sediment
+namespace: mixs.ontology
+def: "sediment." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000015
+name: soil
+namespace: mixs.ontology
+def: "soil." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000016
+name: wastewater|sludge
+namespace: mixs.ontology
+def: "wastewater|sludge." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Term]
+id: MIxS:0000017
+name: water
+namespace: mixs.ontology
+def: "water." []
+is_a: MIxS:0000002 ! Environmental Package
+
+[Typedef]
+id: is_a
+name: is_a
