@@ -1,0 +1,540 @@
+format-version: 1.4
+ontology:da
+date: 05:09:2018 11:16
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: DA:0000000
+name: term
+namespace: datatype.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: DA:0000001
+name: Dynamic Object
+namespace: datatype.ontology
+def: "Dynamic Object." []
+synonym: "Brick" EXACT []
+synonym: "Measurements and Processed Data" EXACT []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000002
+name: Physical Measurement
+namespace: datatype.ontology
+def: "Physical Measurement." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000003
+name: Small Molecule Measurement
+namespace: datatype.ontology
+def: "Small Molecule Measurement." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000004
+name: Environmental Measurement
+namespace: datatype.ontology
+def: "Environmental Measurement." []
+is_a: DA:0000003 ! Small Molecule Measurement
+
+[Term]
+id: DA:0000005
+name: Chemical Measurement
+namespace: datatype.ontology
+def: "Chemical Measurement." []
+is_a: DA:0000003 ! Small Molecule Measurement
+
+[Term]
+id: DA:0000006
+name: Metabolite Assay
+namespace: datatype.ontology
+def: "Metabolite Assay." []
+is_a: DA:0000005 ! Chemical Measurement
+
+[Term]
+id: DA:0000007
+name: Reaction Yield
+namespace: datatype.ontology
+def: "Reaction Yield." []
+is_a: DA:0000003 ! Small Molecule Measurement
+
+[Term]
+id: DA:0000008
+name: Functional Genomics Data
+namespace: datatype.ontology
+def: "Functional Genomics Data." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000009
+name: Gene Fitness
+namespace: datatype.ontology
+def: "Gene Fitness." []
+is_a: DA:0000008 ! Functional Genomics Data
+
+[Term]
+id: DA:0000010
+name: Gene Knockout Fitness
+namespace: datatype.ontology
+def: "Gene Knockout Fitness." []
+is_a: DA:0000009 ! Gene Fitness
+
+[Term]
+id: DA:0000011
+name: Gene Upregulation Fitness
+namespace: datatype.ontology
+def: "Gene Upregulation Fitness." []
+is_a: DA:0000009 ! Gene Fitness
+
+[Term]
+id: DA:0000012
+name: Genetic Interaction
+namespace: datatype.ontology
+def: "Genetic Interaction." []
+is_a: DA:0000009 ! Gene Fitness
+
+[Term]
+id: DA:0000013
+name: Gene Expression
+namespace: datatype.ontology
+def: "Gene Expression." []
+is_a: DA:0000008 ! Functional Genomics Data
+
+[Term]
+id: DA:0000014
+name: Enzyme Activity
+namespace: datatype.ontology
+def: "Enzyme Activity." []
+is_a: DA:0000008 ! Functional Genomics Data
+
+[Term]
+id: DA:0000015
+name: Protein Interaction
+namespace: datatype.ontology
+def: "Protein Interaction." []
+is_a: DA:0000008 ! Functional Genomics Data
+
+[Term]
+id: DA:0000016
+name: Protein Function
+namespace: datatype.ontology
+def: "Protein Function." []
+is_a: DA:0000008 ! Functional Genomics Data
+
+[Term]
+id: DA:0000017
+name: Microbial Assay
+namespace: datatype.ontology
+def: "Microbial Assay." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000018
+name: Microbial Abundance
+namespace: datatype.ontology
+def: "Microbial Abundance." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000019
+name: Microbial Growth
+namespace: datatype.ontology
+def: "Microbial Growth." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000020
+name: Microbial Mobility
+namespace: datatype.ontology
+def: "Microbial Mobility." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000021
+name: Microbial Thermodynamics
+namespace: datatype.ontology
+def: "Microbial Thermodynamics." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000022
+name: Microbial Activity
+namespace: datatype.ontology
+def: "Microbial Activity." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000023
+name: Microbial Evolution
+namespace: datatype.ontology
+def: "Microbial Evolution." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000024
+name: Microbial Solute Permeability
+namespace: datatype.ontology
+def: "Microbial Solute Permeability." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000025
+name: Metabolic Potential
+namespace: datatype.ontology
+def: "Metabolic Potential." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000026
+name: Microbial Community Assay
+namespace: datatype.ontology
+def: "Microbial Community Assay." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000027
+name: Metagenomic Gene Abundance
+namespace: datatype.ontology
+def: "Metagenomic Gene Abundance." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000028
+name: Taxonomic Abundance
+namespace: datatype.ontology
+def: "Taxonomic Abundance." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000029
+name: Geochip Data
+namespace: datatype.ontology
+def: "Geochip Data." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000030
+name: Association
+namespace: datatype.ontology
+def: "Association." []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000031
+name: Set
+namespace: datatype.ontology
+def: "Set." []
+synonym: "Cluster" EXACT []
+synonym: "Group" EXACT []
+is_a: DA:0000030 ! Association
+
+[Term]
+id: DA:0000032
+name: Bicluster
+namespace: datatype.ontology
+def: "Bicluster." []
+is_a: DA:0000030 ! Association
+
+[Term]
+id: DA:0000033
+name: Map
+namespace: datatype.ontology
+def: "Map." []
+is_a: DA:0000030 ! Association
+
+[Term]
+id: DA:0000034
+name: Correlation
+namespace: datatype.ontology
+def: "Correlation." []
+is_a: DA:0000030 ! Association
+
+[Term]
+id: DA:0000035
+name: Similarity
+namespace: datatype.ontology
+def: "Similarity." []
+is_a: DA:0000030 ! Association
+
+[Term]
+id: DA:0000036
+name: Static Object
+namespace: datatype.ontology
+def: "Static Object." []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000037
+name: Taxon
+namespace: datatype.ontology
+def: "Taxon." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000039
+name: Genome
+namespace: datatype.ontology
+def: "Genome." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000040
+name: Gene
+namespace: datatype.ontology
+def: "Gene." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000041
+name: Environmental Sample Location
+namespace: datatype.ontology
+def: "Environmental Sample Location." []
+synonym: "Well" EXACT []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000042
+name: Environmental Sample
+namespace: datatype.ontology
+def: "Environmental Sample." []
+synonym: "Sample" EXACT []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000043
+name: Reagent
+namespace: datatype.ontology
+def: "Reagent." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000044
+name: Media
+namespace: datatype.ontology
+def: "Media." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000045
+name: Condition
+namespace: datatype.ontology
+def: "Condition." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000046
+name: Isolation Condition
+namespace: datatype.ontology
+def: "Isolation Condition." []
+is_a: DA:0000045 ! Condition
+
+[Term]
+id: DA:0000047
+name: Enrichment Condition
+namespace: datatype.ontology
+def: "Enrichment Condition." []
+is_a: DA:0000045 ! Condition
+
+[Term]
+id: DA:0000048
+name: Community
+namespace: datatype.ontology
+def: "Community." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000049
+name: Isolate
+namespace: datatype.ontology
+def: "Isolate." []
+is_a: DA:0000048 ! Community
+
+[Term]
+id: DA:0000050
+name: Enrichment
+namespace: datatype.ontology
+def: "Enrichment." []
+is_a: DA:0000048 ! Community
+
+[Term]
+id: DA:0000051
+name: Active Fraction
+namespace: datatype.ontology
+def: "Active Fraction." []
+is_a: DA:0000050 ! Enrichment
+
+[Term]
+id: DA:0000052
+name: Assemblage
+namespace: datatype.ontology
+def: "Assemblage." []
+is_a: DA:0000048 ! Community
+
+[Term]
+id: DA:0000053
+name: Consortium
+namespace: datatype.ontology
+def: "Consortium." []
+is_a: DA:0000052 ! Assemblage
+
+[Term]
+id: DA:0000054
+name: Reads
+namespace: datatype.ontology
+def: "Reads." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000055
+name: Amplicon Reads
+namespace: datatype.ontology
+def: "Amplicon Reads." []
+is_a: DA:0000054 ! Reads
+
+[Term]
+id: DA:0000056
+name: 16S Reads
+namespace: datatype.ontology
+def: "16S Reads." []
+is_a: DA:0000055 ! Amplicon Reads
+
+[Term]
+id: DA:0000057
+name: 18S Reads
+namespace: datatype.ontology
+def: "18S Reads." []
+is_a: DA:0000055 ! Amplicon Reads
+
+[Term]
+id: DA:0000058
+name: ITS Reads
+namespace: datatype.ontology
+def: "ITS Reads." []
+is_a: DA:0000055 ! Amplicon Reads
+
+[Term]
+id: DA:0000059
+name: WGS Reads
+namespace: datatype.ontology
+def: "WGS Reads." []
+is_a: DA:0000054 ! Reads
+
+[Term]
+id: DA:0000060
+name: Tn-Seq Library
+namespace: datatype.ontology
+def: "Tn-Seq Library." []
+synonym: "TnSeqLibrary" EXACT []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000061
+name: Process
+namespace: datatype.ontology
+def: "Process." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000062
+name: Strain
+namespace: datatype.ontology
+def: "Strain." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000063
+name: OTU
+namespace: datatype.ontology
+def: "OTU." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000064
+name: Microbial Sequence
+namespace: datatype.ontology
+def: "Microbial Sequence." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
+id: DA:0000065
+name: Microbial Community Sequence
+namespace: datatype.ontology
+def: "Microbial Community Sequence." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000066
+name: Assembly
+namespace: datatype.ontology
+def: "Assembly." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000067
+name: Taxonomic Assignment
+namespace: datatype.ontology
+def: "Taxonomic Assignment." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000068
+name: Profile
+namespace: datatype.ontology
+def: "Profile." []
+is_a: DA:0000026 ! Microbial Community Assay
+
+[Term]
+id: DA:0000069
+name: Taxonomic Profile
+namespace: datatype.ontology
+def: "Taxonomic Profile." []
+is_a: DA:0000068 ! Profile
+
+[Term]
+id: DA:0000070
+name: Functional Profile
+namespace: datatype.ontology
+def: "Functional Profile." []
+is_a: DA:0000068 ! Profile
+
+[Term]
+id: DA:0000071
+name: Functional and Taxonomic Profile
+namespace: datatype.ontology
+def: "Functional and Taxonomic Profile." []
+is_a: DA:0000068 ! Profile
+
+[Term]
+id: DA:0000072
+name: Bin
+namespace: datatype.ontology
+def: "Bin." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000073
+name: Protocol
+namespace: datatype.ontology
+def: "Protocol." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000074
+name: Image
+namespace: datatype.ontology
+def: "Image." []
+is_a: DA:0000036 ! Static Object
+
+[Term]
+id: DA:0000075
+name: Dub-Seq Library
+namespace: datatype.ontology
+def: "Dub-Seq Library." []
+synonym: "DubSeqLibrary" EXACT []
+is_a: DA:0000036 ! Static Object
+
+[Typedef]
+id: is_a
