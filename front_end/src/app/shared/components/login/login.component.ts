@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private chRef: ChangeDetectorRef
   ) { }
   public displayLogin = true;
   public error = false;
@@ -72,9 +73,12 @@ export class LoginComponent implements OnInit {
 
   handleSigninCode(data: any) {
     this.auth.submitGoogleOAuthCode(data.code)
-      .subscribe(d => {
-        console.log('DATA', d);
-        // TODO: set token from new url
+      .subscribe(res => {
+        if (!res.results.success) {
+          this.error = true;
+          this.errorMessage = res.results.message;
+          this.chRef.detectChanges();
+        }
       })
   }
 

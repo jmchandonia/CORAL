@@ -912,16 +912,36 @@ def handle_auth_code():
     # refresh_token = tokens['refresh_token']
     # TODO: store access_token and refresh_token ?
 
-    test = requests.get(' https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
+    user = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
 
-    # TODO: generate token using user data from google
-    return _ok_response({'user': 'test'})
+    user_email = json.loads(user.content.decode('utf-8'))['email']
 
+    with open(cns['_USERS']) as user_file:
+        allowed_users = json.load(user_file)
 
-    flow.fetch_token(code=refresh_token, authorization_url=authorization_url)
-    credentials = flow.credentials
+    match_user = None
+    for allowed_user in allowed_users:
+        if allowed_user['email'] == user_email:
+            match_user = allowed_user
 
-    print('CREDENTIALS', credentials)
+    if match_user == None:
+        return _ok_response({
+            'success': False,
+            'message': 'User not registered in system'
+        })
+
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, milliseconds=0, microseconds=0, minutes=120),
+            'iat': datetime.datetime.utcnow(),
+            'sub': match_user['username']
+        }
+
+        new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+        return _ok_response({'success': True, 'token': new_jwt.decode('utf-8')})
+    except Exception as e:
+        return json.dumps({'success': False, 'message': 'Something went wrong.'})
+
 
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])

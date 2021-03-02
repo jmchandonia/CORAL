@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { Response } from 'src/app/shared/models/response';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,21 @@ export class AuthService {
   }
 
   submitGoogleOAuthCode(authCode: string) {
-    return this.http.post(`${environment.baseURL}/google_auth_code_store`, {authCode});
+    return this.http.post<any>(`${environment.baseURL}/google_auth_code_store`, {authCode})
+      .pipe(map((res) => {
+        const { results } = res;
+        const success = results.success;
+        if (success) {
+          localStorage.setItem('authToken', results.token);
+          if (this.redirectUrl) {
+            this.router.navigateByUrl(this.redirectUrl);
+            this.redirectUrl = null;
+          } else {
+            this.router.navigate(['/home']);
+          }
+        }
+        return res;
+      }));
   }
 
   logout() {

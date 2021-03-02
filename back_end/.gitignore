@@ -105,3 +105,4 @@ venv.bak/
 
 # New files for local build
 var/config.json
+var/users.json

@@ -17,6 +17,13 @@
             Register to be a part of CORAL
           </button>
         </div>
+        <div class="row" *ngIf="errorMessage.length">
+          <div class="col-12">
+            <div class="alert alert-danger mt-2">
+              Error: {{errorMessage}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- <div class="row justify-content-center">
