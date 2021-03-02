@@ -1,0 +1,2071 @@
+format-version: 1.4
+ontology:country
+date: 01:03:2021 11:53
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: COUNTRY:0000000
+name: term
+namespace: country.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: COUNTRY:0000001
+name: Country
+namespace: country.ontology
+def: "Country." []
+is_a: COUNTRY:0000000 ! term
+
+[Term]
+id: COUNTRY:0000002
+name: UN Countries and Oceans 2018
+namespace: country.ontology
+def: "UN Countries and Oceans 2018." []
+is_a: COUNTRY:0000001 ! Country
+
+[Term]
+id: COUNTRY:0000003
+name: Afghanistan
+namespace: country.ontology
+def: "Afghanistan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000004
+name: Albania
+namespace: country.ontology
+def: "Albania." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000005
+name: Algeria
+namespace: country.ontology
+def: "Algeria." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000006
+name: American Samoa
+namespace: country.ontology
+def: "American Samoa." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000007
+name: Andorra
+namespace: country.ontology
+def: "Andorra." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000008
+name: Angola
+namespace: country.ontology
+def: "Angola." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000009
+name: Anguilla
+namespace: country.ontology
+def: "Anguilla." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000010
+name: Antarctica
+namespace: country.ontology
+def: "Antarctica." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000011
+name: Antigua and Barbuda
+namespace: country.ontology
+def: "Antigua and Barbuda." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000012
+name: Arctic Ocean
+namespace: country.ontology
+def: "Arctic Ocean." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000013
+name: Argentina
+namespace: country.ontology
+def: "Argentina." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000014
+name: Armenia
+namespace: country.ontology
+def: "Armenia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000015
+name: Aruba
+namespace: country.ontology
+def: "Aruba." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000016
+name: Ashmore and Cartier Islands
+namespace: country.ontology
+def: "Ashmore and Cartier Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000017
+name: Atlantic Ocean
+namespace: country.ontology
+def: "Atlantic Ocean." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000018
+name: Australia
+namespace: country.ontology
+def: "Australia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000019
+name: Austria
+namespace: country.ontology
+def: "Austria." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000020
+name: Azerbaijan
+namespace: country.ontology
+def: "Azerbaijan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000021
+name: Bahamas
+namespace: country.ontology
+def: "Bahamas." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000022
+name: Bahrain
+namespace: country.ontology
+def: "Bahrain." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000023
+name: Baltic Sea
+namespace: country.ontology
+def: "Baltic Sea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000024
+name: Baker Island
+namespace: country.ontology
+def: "Baker Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000025
+name: Bangladesh
+namespace: country.ontology
+def: "Bangladesh." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000026
+name: Barbados
+namespace: country.ontology
+def: "Barbados." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000027
+name: Bassas da India
+namespace: country.ontology
+def: "Bassas da India." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000028
+name: Belarus
+namespace: country.ontology
+def: "Belarus." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000029
+name: Belgium
+namespace: country.ontology
+def: "Belgium." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000030
+name: Belize
+namespace: country.ontology
+def: "Belize." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000031
+name: Benin
+namespace: country.ontology
+def: "Benin." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000032
+name: Bermuda
+namespace: country.ontology
+def: "Bermuda." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000033
+name: Bhutan
+namespace: country.ontology
+def: "Bhutan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000034
+name: Bolivia
+namespace: country.ontology
+def: "Bolivia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000035
+name: Borneo
+namespace: country.ontology
+def: "Borneo." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000036
+name: Bosnia and Herzegovina
+namespace: country.ontology
+def: "Bosnia and Herzegovina." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000037
+name: Botswana
+namespace: country.ontology
+def: "Botswana." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000038
+name: Bouvet Island
+namespace: country.ontology
+def: "Bouvet Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000039
+name: Brazil
+namespace: country.ontology
+def: "Brazil." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000040
+name: British Virgin Islands
+namespace: country.ontology
+def: "British Virgin Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000041
+name: Brunei
+namespace: country.ontology
+def: "Brunei." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000042
+name: Bulgaria
+namespace: country.ontology
+def: "Bulgaria." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000043
+name: Burkina Faso
+namespace: country.ontology
+def: "Burkina Faso." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000044
+name: Burundi
+namespace: country.ontology
+def: "Burundi." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000045
+name: Cambodia
+namespace: country.ontology
+def: "Cambodia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000046
+name: Cameroon
+namespace: country.ontology
+def: "Cameroon." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000047
+name: Canada
+namespace: country.ontology
+def: "Canada." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000048
+name: Cape Verde
+namespace: country.ontology
+def: "Cape Verde." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000049
+name: Cayman Islands
+namespace: country.ontology
+def: "Cayman Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000050
+name: Central African Republic
+namespace: country.ontology
+def: "Central African Republic." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000051
+name: Chad
+namespace: country.ontology
+def: "Chad." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000052
+name: Chile
+namespace: country.ontology
+def: "Chile." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000053
+name: China
+namespace: country.ontology
+def: "China." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000054
+name: Christmas Island
+namespace: country.ontology
+def: "Christmas Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000055
+name: Clipperton Island
+namespace: country.ontology
+def: "Clipperton Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000056
+name: Cocos Islands
+namespace: country.ontology
+def: "Cocos Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000057
+name: Colombia
+namespace: country.ontology
+def: "Colombia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000058
+name: Comoros
+namespace: country.ontology
+def: "Comoros." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000059
+name: Cook Islands
+namespace: country.ontology
+def: "Cook Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000060
+name: Coral Sea Islands
+namespace: country.ontology
+def: "Coral Sea Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000061
+name: Costa Rica
+namespace: country.ontology
+def: "Costa Rica." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000062
+name: Cote d'Ivoire
+namespace: country.ontology
+def: "Cote d'Ivoire." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000063
+name: Croatia
+namespace: country.ontology
+def: "Croatia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000064
+name: Cuba
+namespace: country.ontology
+def: "Cuba." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000065
+name: Curacao
+namespace: country.ontology
+def: "Curacao." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000066
+name: Cyprus
+namespace: country.ontology
+def: "Cyprus." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000067
+name: Czech Republic
+namespace: country.ontology
+def: "Czech Republic." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000068
+name: Democratic Republic of the Congo
+namespace: country.ontology
+def: "Democratic Republic of the Congo." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000069
+name: Denmark
+namespace: country.ontology
+def: "Denmark." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000070
+name: Djibouti
+namespace: country.ontology
+def: "Djibouti." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000071
+name: Dominica
+namespace: country.ontology
+def: "Dominica." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000072
+name: Dominican Republic
+namespace: country.ontology
+def: "Dominican Republic." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000073
+name: East Timor
+namespace: country.ontology
+def: "East Timor." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000074
+name: Ecuador
+namespace: country.ontology
+def: "Ecuador." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000075
+name: Egypt
+namespace: country.ontology
+def: "Egypt." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000076
+name: El Salvador
+namespace: country.ontology
+def: "El Salvador." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000077
+name: Equatorial Guinea
+namespace: country.ontology
+def: "Equatorial Guinea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000078
+name: Eritrea
+namespace: country.ontology
+def: "Eritrea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000079
+name: Estonia
+namespace: country.ontology
+def: "Estonia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000080
+name: Ethiopia
+namespace: country.ontology
+def: "Ethiopia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000081
+name: Europa Island
+namespace: country.ontology
+def: "Europa Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000082
+name: Falkland Islands
+namespace: country.ontology
+def: "Falkland Islands." []
+synonym: "Islas Malvinas" EXACT []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000083
+name: Faroe Islands
+namespace: country.ontology
+def: "Faroe Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000084
+name: Fiji
+namespace: country.ontology
+def: "Fiji." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000085
+name: Finland
+namespace: country.ontology
+def: "Finland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000086
+name: France
+namespace: country.ontology
+def: "France." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000087
+name: French Guiana
+namespace: country.ontology
+def: "French Guiana." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000088
+name: French Polynesia
+namespace: country.ontology
+def: "French Polynesia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000089
+name: French Southern and Antarctic Lands
+namespace: country.ontology
+def: "French Southern and Antarctic Lands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000090
+name: Gabon
+namespace: country.ontology
+def: "Gabon." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000091
+name: Gambia
+namespace: country.ontology
+def: "Gambia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000092
+name: Gaza Strip
+namespace: country.ontology
+def: "Gaza Strip." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000093
+name: Georgia
+namespace: country.ontology
+def: "Georgia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000094
+name: Germany
+namespace: country.ontology
+def: "Germany." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000095
+name: Ghana
+namespace: country.ontology
+def: "Ghana." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000096
+name: Gibraltar
+namespace: country.ontology
+def: "Gibraltar." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000097
+name: Glorioso Islands
+namespace: country.ontology
+def: "Glorioso Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000098
+name: Greece
+namespace: country.ontology
+def: "Greece." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000099
+name: Greenland
+namespace: country.ontology
+def: "Greenland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000100
+name: Grenada
+namespace: country.ontology
+def: "Grenada." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000101
+name: Guadeloupe
+namespace: country.ontology
+def: "Guadeloupe." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000102
+name: Guam
+namespace: country.ontology
+def: "Guam." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000103
+name: Guatemala
+namespace: country.ontology
+def: "Guatemala." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000104
+name: Guernsey
+namespace: country.ontology
+def: "Guernsey." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000105
+name: Guinea
+namespace: country.ontology
+def: "Guinea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000106
+name: Guinea-Bissau
+namespace: country.ontology
+def: "Guinea-Bissau." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000107
+name: Guyana
+namespace: country.ontology
+def: "Guyana." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000108
+name: Haiti
+namespace: country.ontology
+def: "Haiti." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000109
+name: Heard Island and McDonald Islands
+namespace: country.ontology
+def: "Heard Island and McDonald Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000110
+name: Honduras
+namespace: country.ontology
+def: "Honduras." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000111
+name: Hong Kong
+namespace: country.ontology
+def: "Hong Kong." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000112
+name: Howland Island
+namespace: country.ontology
+def: "Howland Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000113
+name: Hungary
+namespace: country.ontology
+def: "Hungary." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000114
+name: Iceland
+namespace: country.ontology
+def: "Iceland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000115
+name: India
+namespace: country.ontology
+def: "India." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000116
+name: Indian Ocean
+namespace: country.ontology
+def: "Indian Ocean." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000117
+name: Indonesia
+namespace: country.ontology
+def: "Indonesia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000118
+name: Iran
+namespace: country.ontology
+def: "Iran." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000119
+name: Iraq
+namespace: country.ontology
+def: "Iraq." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000120
+name: Ireland
+namespace: country.ontology
+def: "Ireland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000121
+name: Isle of Man
+namespace: country.ontology
+def: "Isle of Man." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000122
+name: Israel
+namespace: country.ontology
+def: "Israel." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000123
+name: Italy
+namespace: country.ontology
+def: "Italy." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000124
+name: Jamaica
+namespace: country.ontology
+def: "Jamaica." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000125
+name: Jan Mayen
+namespace: country.ontology
+def: "Jan Mayen." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000126
+name: Japan
+namespace: country.ontology
+def: "Japan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000127
+name: Jarvis Island
+namespace: country.ontology
+def: "Jarvis Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000128
+name: Jersey
+namespace: country.ontology
+def: "Jersey." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000129
+name: Johnston Atoll
+namespace: country.ontology
+def: "Johnston Atoll." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000130
+name: Jordan
+namespace: country.ontology
+def: "Jordan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000131
+name: Juan de Nova Island
+namespace: country.ontology
+def: "Juan de Nova Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000132
+name: Kazakhstan
+namespace: country.ontology
+def: "Kazakhstan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000133
+name: Kenya
+namespace: country.ontology
+def: "Kenya." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000134
+name: Kerguelen Archipelago
+namespace: country.ontology
+def: "Kerguelen Archipelago." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000135
+name: Kingman Reef
+namespace: country.ontology
+def: "Kingman Reef." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000136
+name: Kiribati
+namespace: country.ontology
+def: "Kiribati." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000137
+name: Kosovo
+namespace: country.ontology
+def: "Kosovo." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000138
+name: Kuwait
+namespace: country.ontology
+def: "Kuwait." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000139
+name: Kyrgyzstan
+namespace: country.ontology
+def: "Kyrgyzstan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000140
+name: Laos
+namespace: country.ontology
+def: "Laos." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000141
+name: Latvia
+namespace: country.ontology
+def: "Latvia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000142
+name: Lebanon
+namespace: country.ontology
+def: "Lebanon." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000143
+name: Lesotho
+namespace: country.ontology
+def: "Lesotho." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000144
+name: Liberia
+namespace: country.ontology
+def: "Liberia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000145
+name: Libya
+namespace: country.ontology
+def: "Libya." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000146
+name: Liechtenstein
+namespace: country.ontology
+def: "Liechtenstein." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000147
+name: Line Islands
+namespace: country.ontology
+def: "Line Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000148
+name: Lithuania
+namespace: country.ontology
+def: "Lithuania." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000149
+name: Luxembourg
+namespace: country.ontology
+def: "Luxembourg." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000150
+name: Macau
+namespace: country.ontology
+def: "Macau." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000151
+name: Madagascar
+namespace: country.ontology
+def: "Madagascar." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000152
+name: Malawi
+namespace: country.ontology
+def: "Malawi." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000153
+name: Malaysia
+namespace: country.ontology
+def: "Malaysia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000154
+name: Maldives
+namespace: country.ontology
+def: "Maldives." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000155
+name: Mali
+namespace: country.ontology
+def: "Mali." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000156
+name: Malta
+namespace: country.ontology
+def: "Malta." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000157
+name: Marshall Islands
+namespace: country.ontology
+def: "Marshall Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000158
+name: Martinique
+namespace: country.ontology
+def: "Martinique." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000159
+name: Mauritania
+namespace: country.ontology
+def: "Mauritania." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000160
+name: Mauritius
+namespace: country.ontology
+def: "Mauritius." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000161
+name: Mayotte
+namespace: country.ontology
+def: "Mayotte." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000162
+name: Mediterranean Sea
+namespace: country.ontology
+def: "Mediterranean Sea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000163
+name: Mexico
+namespace: country.ontology
+def: "Mexico." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000164
+name: Micronesia
+namespace: country.ontology
+def: "Micronesia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000165
+name: Midway Islands
+namespace: country.ontology
+def: "Midway Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000166
+name: Moldova
+namespace: country.ontology
+def: "Moldova." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000167
+name: Monaco
+namespace: country.ontology
+def: "Monaco." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000168
+name: Mongolia
+namespace: country.ontology
+def: "Mongolia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000169
+name: Montenegro
+namespace: country.ontology
+def: "Montenegro." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000170
+name: Montserrat
+namespace: country.ontology
+def: "Montserrat." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000171
+name: Morocco
+namespace: country.ontology
+def: "Morocco." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000172
+name: Mozambique
+namespace: country.ontology
+def: "Mozambique." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000173
+name: Myanmar
+namespace: country.ontology
+def: "Myanmar." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000174
+name: Namibia
+namespace: country.ontology
+def: "Namibia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000175
+name: Nauru
+namespace: country.ontology
+def: "Nauru." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000176
+name: Navassa Island
+namespace: country.ontology
+def: "Navassa Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000177
+name: Nepal
+namespace: country.ontology
+def: "Nepal." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000178
+name: Netherlands
+namespace: country.ontology
+def: "Netherlands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000179
+name: New Caledonia
+namespace: country.ontology
+def: "New Caledonia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000180
+name: New Zealand
+namespace: country.ontology
+def: "New Zealand." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000181
+name: Nicaragua
+namespace: country.ontology
+def: "Nicaragua." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000182
+name: Niger
+namespace: country.ontology
+def: "Niger." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000183
+name: Nigeria
+namespace: country.ontology
+def: "Nigeria." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000184
+name: Niue
+namespace: country.ontology
+def: "Niue." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000185
+name: Norfolk Island
+namespace: country.ontology
+def: "Norfolk Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000186
+name: North Korea
+namespace: country.ontology
+def: "North Korea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000187
+name: North Sea
+namespace: country.ontology
+def: "North Sea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000188
+name: Northern Mariana Islands
+namespace: country.ontology
+def: "Northern Mariana Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000189
+name: Norway
+namespace: country.ontology
+def: "Norway." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000190
+name: Oman
+namespace: country.ontology
+def: "Oman." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000191
+name: Pacific Ocean
+namespace: country.ontology
+def: "Pacific Ocean." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000192
+name: Pakistan
+namespace: country.ontology
+def: "Pakistan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000193
+name: Palau
+namespace: country.ontology
+def: "Palau." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000194
+name: Palmyra Atoll
+namespace: country.ontology
+def: "Palmyra Atoll." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000195
+name: Panama
+namespace: country.ontology
+def: "Panama." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000196
+name: Papua New Guinea
+namespace: country.ontology
+def: "Papua New Guinea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000197
+name: Paracel Islands
+namespace: country.ontology
+def: "Paracel Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000198
+name: Paraguay
+namespace: country.ontology
+def: "Paraguay." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000199
+name: Peru
+namespace: country.ontology
+def: "Peru." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000200
+name: Philippines
+namespace: country.ontology
+def: "Philippines." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000201
+name: Pitcairn Islands
+namespace: country.ontology
+def: "Pitcairn Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000202
+name: Poland
+namespace: country.ontology
+def: "Poland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000203
+name: Portugal
+namespace: country.ontology
+def: "Portugal." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000204
+name: Puerto Rico
+namespace: country.ontology
+def: "Puerto Rico." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000205
+name: Qatar
+namespace: country.ontology
+def: "Qatar." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000206
+name: Republic of the Congo
+namespace: country.ontology
+def: "Republic of the Congo." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000207
+name: Reunion
+namespace: country.ontology
+def: "Reunion." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000208
+name: Romania
+namespace: country.ontology
+def: "Romania." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000209
+name: Ross Sea
+namespace: country.ontology
+def: "Ross Sea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000210
+name: Russia
+namespace: country.ontology
+def: "Russia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000211
+name: Rwanda
+namespace: country.ontology
+def: "Rwanda." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000212
+name: Saint Helena
+namespace: country.ontology
+def: "Saint Helena." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000213
+name: Saint Kitts and Nevis
+namespace: country.ontology
+def: "Saint Kitts and Nevis." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000214
+name: Saint Lucia
+namespace: country.ontology
+def: "Saint Lucia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000215
+name: Saint Pierre and Miquelon
+namespace: country.ontology
+def: "Saint Pierre and Miquelon." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000216
+name: Saint Vincent and the Grenadines
+namespace: country.ontology
+def: "Saint Vincent and the Grenadines." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000217
+name: Samoa
+namespace: country.ontology
+def: "Samoa." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000218
+name: San Marino
+namespace: country.ontology
+def: "San Marino." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000219
+name: Sao Tome and Principe
+namespace: country.ontology
+def: "Sao Tome and Principe." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000220
+name: Saudi Arabia
+namespace: country.ontology
+def: "Saudi Arabia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000221
+name: Senegal
+namespace: country.ontology
+def: "Senegal." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000222
+name: Serbia
+namespace: country.ontology
+def: "Serbia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000223
+name: Seychelles
+namespace: country.ontology
+def: "Seychelles." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000224
+name: Sierra Leone
+namespace: country.ontology
+def: "Sierra Leone." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000225
+name: Singapore
+namespace: country.ontology
+def: "Singapore." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000226
+name: Sint Maarten
+namespace: country.ontology
+def: "Sint Maarten." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000227
+name: Slovakia
+namespace: country.ontology
+def: "Slovakia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000228
+name: Slovenia
+namespace: country.ontology
+def: "Slovenia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000229
+name: Solomon Islands
+namespace: country.ontology
+def: "Solomon Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000230
+name: Somalia
+namespace: country.ontology
+def: "Somalia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000231
+name: South Africa
+namespace: country.ontology
+def: "South Africa." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000232
+name: South Georgia and the South Sandwich Islands
+namespace: country.ontology
+def: "South Georgia and the South Sandwich Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000233
+name: South Korea
+namespace: country.ontology
+def: "South Korea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000234
+name: South Sudan
+namespace: country.ontology
+def: "South Sudan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000235
+name: Southern Ocean
+namespace: country.ontology
+def: "Southern Ocean." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000236
+name: Spain
+namespace: country.ontology
+def: "Spain." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000237
+name: Spratly Islands
+namespace: country.ontology
+def: "Spratly Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000238
+name: Sri Lanka
+namespace: country.ontology
+def: "Sri Lanka." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000239
+name: State of Palestine
+namespace: country.ontology
+def: "State of Palestine." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000240
+name: Sudan
+namespace: country.ontology
+def: "Sudan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000241
+name: Suriname
+namespace: country.ontology
+def: "Suriname." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000242
+name: Svalbard
+namespace: country.ontology
+def: "Svalbard." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000243
+name: Swaziland
+namespace: country.ontology
+def: "Swaziland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000244
+name: Sweden
+namespace: country.ontology
+def: "Sweden." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000245
+name: Switzerland
+namespace: country.ontology
+def: "Switzerland." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000246
+name: Syria
+namespace: country.ontology
+def: "Syria." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000247
+name: Taiwan
+namespace: country.ontology
+def: "Taiwan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000248
+name: Tajikistan
+namespace: country.ontology
+def: "Tajikistan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000249
+name: Tanzania
+namespace: country.ontology
+def: "Tanzania." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000250
+name: Tasman Sea
+namespace: country.ontology
+def: "Tasman Sea." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000251
+name: Thailand
+namespace: country.ontology
+def: "Thailand." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000252
+name: The former Yugoslav Republic of Macedonia
+namespace: country.ontology
+def: "The former Yugoslav Republic of Macedonia." []
+synonym: "Macedonia" EXACT []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000253
+name: Togo
+namespace: country.ontology
+def: "Togo." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000254
+name: Tokelau
+namespace: country.ontology
+def: "Tokelau." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000255
+name: Tonga
+namespace: country.ontology
+def: "Tonga." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000256
+name: Trinidad and Tobago
+namespace: country.ontology
+def: "Trinidad and Tobago." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000257
+name: Tromelin Island
+namespace: country.ontology
+def: "Tromelin Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000258
+name: Tunisia
+namespace: country.ontology
+def: "Tunisia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000259
+name: Turkey
+namespace: country.ontology
+def: "Turkey." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000260
+name: Turkmenistan
+namespace: country.ontology
+def: "Turkmenistan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000261
+name: Turks and Caicos Islands
+namespace: country.ontology
+def: "Turks and Caicos Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000262
+name: Tuvalu
+namespace: country.ontology
+def: "Tuvalu." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000263
+name: USA
+namespace: country.ontology
+def: "USA." []
+synonym: "United States of America" EXACT []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000264
+name: Uganda
+namespace: country.ontology
+def: "Uganda." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000265
+name: Ukraine
+namespace: country.ontology
+def: "Ukraine." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000266
+name: United Arab Emirates
+namespace: country.ontology
+def: "United Arab Emirates." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000267
+name: United Kingdom
+namespace: country.ontology
+def: "United Kingdom." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000268
+name: Uruguay
+namespace: country.ontology
+def: "Uruguay." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000269
+name: Uzbekistan
+namespace: country.ontology
+def: "Uzbekistan." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000270
+name: Vanuatu
+namespace: country.ontology
+def: "Vanuatu." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000271
+name: Venezuela
+namespace: country.ontology
+def: "Venezuela." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000272
+name: Viet Nam
+namespace: country.ontology
+def: "Viet Nam." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000273
+name: Virgin Islands
+namespace: country.ontology
+def: "Virgin Islands." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000274
+name: Wake Island
+namespace: country.ontology
+def: "Wake Island." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000275
+name: Wallis and Futuna
+namespace: country.ontology
+def: "Wallis and Futuna." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000276
+name: West Bank
+namespace: country.ontology
+def: "West Bank." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000277
+name: Western Sahara
+namespace: country.ontology
+def: "Western Sahara." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000278
+name: Yemen
+namespace: country.ontology
+def: "Yemen." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000279
+name: Zambia
+namespace: country.ontology
+def: "Zambia." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000280
+name: Zimbabwe
+namespace: country.ontology
+def: "Zimbabwe." []
+is_a: COUNTRY:0000002 ! UN Countries and Oceans 2018
+
+[Term]
+id: COUNTRY:0000281
+name: Historical Country Names
+namespace: country.ontology
+def: "Historical Country Names." []
+is_a: COUNTRY:0000001 ! Country
+
+[Term]
+id: COUNTRY:0000282
+name: Belgian Congo
+namespace: country.ontology
+def: "Belgian Congo." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000283
+name: British Guiana
+namespace: country.ontology
+def: "British Guiana." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000284
+name: Burma
+namespace: country.ontology
+def: "Burma." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000285
+name: Czechoslovakia
+namespace: country.ontology
+def: "Czechoslovakia." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000286
+name: Former Yugoslav Republic of Macedonia
+namespace: country.ontology
+def: "Former Yugoslav Republic of Macedonia." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000287
+name: Korea
+namespace: country.ontology
+def: "Korea." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000288
+name: Netherlands Antilles
+namespace: country.ontology
+def: "Netherlands Antilles." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000289
+name: Serbia and Montenegro
+namespace: country.ontology
+def: "Serbia and Montenegro." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000290
+name: Siam
+namespace: country.ontology
+def: "Siam." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000291
+name: USSR
+namespace: country.ontology
+def: "USSR." []
+synonym: "Soviet Union" EXACT []
+synonym: "Union of Soviet Socialist Republics" EXACT []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000292
+name: Yugoslavia
+namespace: country.ontology
+def: "Yugoslavia." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Term]
+id: COUNTRY:0000293
+name: Zaire
+namespace: country.ontology
+def: "Zaire." []
+is_a: COUNTRY:0000281 ! Historical Country Names
+
+[Typedef]
+id: is_a
+name: is_a
