@@ -1,0 +1,17 @@
+MIxS
+  Environmental Package
+    air
+    built environment
+    host-associated
+    human-associated
+    human-oral
+    human-gut
+    human-skin
+    human-vaginal
+    microbial mat|biofilm
+    miscellaneous
+    plant-associated
+    sediment
+    soil
+    wastewater|sludge
+    water
