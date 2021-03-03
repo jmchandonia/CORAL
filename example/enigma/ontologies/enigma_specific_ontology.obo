@@ -1,0 +1,1184 @@
+format-version: 1.4
+ontology:enigma
+date: 27:08:2018 15:16
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: ENIGMA:0000000
+name: term
+namespace: enigma.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: ENIGMA:0000001
+name: ENIGMA
+namespace: enigma.ontology
+def: "ENIGMA." []
+is_a: ENIGMA:0000000 ! term
+is_a: ME:0000001
+
+[Term]
+id: ENIGMA:0000002
+name: ENIGMA Campaign
+namespace: enigma.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "ENIGMA Campaign." []
+xref: ORef: ENIGMA:0000002
+is_a: ENIGMA:0000001 ! ENIGMA
+
+[Term]
+id: ENIGMA:0000003
+name: 100 Well Survey
+namespace: enigma.ontology
+def: "100 Well Survey." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000004
+name: ENIGMA Microbial Isolation Characterization
+namespace: enigma.ontology
+def: "ENIGMA Microbial Isolation Characterization." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000005
+name: Printable Worlds
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Printable Worlds." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000006
+name: Predictive Network Biology
+namespace: enigma.ontology
+def: "Predictive Network Biology." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000007
+name: Time Series
+namespace: enigma.ontology
+def: "Time Series." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000008
+name: Memory
+namespace: enigma.ontology
+def: "Memory." []
+synonym: "EtOH Memory Response" EXACT []
+synonym: "EVO Memory Response" EXACT []
+synonym: "Memory Response" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000009
+name: Groundwater
+namespace: enigma.ontology
+def: "Groundwater." []
+synonym: "Groundwater Microbiome" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000010
+name: Natural and Synthetic Ecologies
+namespace: enigma.ontology
+def: "Natural and Synthetic Ecologies." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000011
+name: Microparticle
+namespace: enigma.ontology
+def: "Microparticle." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000012
+name: Microfluidics
+namespace: enigma.ontology
+def: "Microfluidics." []
+synonym: "Microfluidic-based" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000013
+name: Metal Metabolism
+namespace: enigma.ontology
+def: "Metal Metabolism." []
+synonym: "Metal" EXACT []
+synonym: "Metals" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000014
+name: Microbial Assembly Evolution
+namespace: enigma.ontology
+def: "Microbial Assembly Evolution." []
+synonym: "Assembly of Microbial Communities" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000015
+name: BigEMAC
+namespace: enigma.ontology
+def: "BigEMAC." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000016
+name: Constructed Community
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Constructed Community." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000017
+name: Sediment-Core
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Sediment-Core." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000018
+name: Nitrate Respiratory Activity
+namespace: enigma.ontology
+def: "Nitrate Respiratory Activity." []
+synonym: "Nitrate Activity" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000020
+name: UPO
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "UPO." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000021
+name: Core Pilot
+namespace: enigma.ontology
+def: "Core Pilot." []
+synonym: "Metacampaign Pilot-Groundwater" EXACT []
+synonym: "Pilot" EXACT []
+synonym: "Sediment" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000022
+name: Ecophysiology of Nitrate and Sulfate Reducing Communities
+namespace: enigma.ontology
+def: "Ecophysiology of Nitrate and Sulfate Reducing Communities." []
+synonym: "ENSuRC" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000023
+name: Environmental Ark
+namespace: enigma.ontology
+def: "Environmental Ark." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000024
+name: Environmental Simulation and Modeling
+namespace: enigma.ontology
+def: "Environmental Simulation and Modeling." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000025
+name: Control of Nitrate and Sulfate Reducing Communities
+namespace: enigma.ontology
+def: "Control of Nitrate and Sulfate Reducing Communities." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000026
+name: Mercury Mystery Project
+namespace: enigma.ontology
+def: "Mercury Mystery Project." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000027
+name: Natural Organic Matter
+namespace: enigma.ontology
+def: "Natural Organic Matter." []
+synonym: "NOM" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000028
+name: Extrachromosomal Plasmid DNA Project
+namespace: enigma.ontology
+def: "Extrachromosomal Plasmid DNA Project." []
+synonym: "Plasmidome" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000029
+name: ENIGMA Labs and Personnel
+namespace: enigma.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "ENIGMA Labs and Personnel." []
+synonym: "ENIGMA PI" EXACT []
+xref: ORef: ENIGMA:0000029
+is_a: ENIGMA:0000001 ! ENIGMA
+
+[Term]
+id: ENIGMA:0000030
+name: Adams Lab
+namespace: enigma.ontology
+def: "Adams Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000031
+name: Mike Adams
+namespace: enigma.ontology
+def: "Mike Adams." []
+is_a: ENIGMA:0000030 ! Adams Lab
+
+[Term]
+id: ENIGMA:0000032
+name: Michael Thorgersen
+namespace: enigma.ontology
+def: "Michael Thorgersen." []
+synonym: "Mike Thorgersen" EXACT []
+is_a: ENIGMA:0000030 ! Adams Lab
+
+[Term]
+id: ENIGMA:0000033
+name: Alm Lab
+namespace: enigma.ontology
+def: "Alm Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000034
+name: Eric Alm
+namespace: enigma.ontology
+def: "Eric Alm." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000035
+name: Sarah Spencer
+namespace: enigma.ontology
+def: "Sarah Spencer." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000036
+name: Arkin Lab
+namespace: enigma.ontology
+def: "Arkin Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000037
+name: Adam Arkin
+namespace: enigma.ontology
+def: "Adam Arkin." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000038
+name: Lauren Lui
+namespace: enigma.ontology
+def: "Lauren Lui." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000039
+name: Morgan Price
+namespace: enigma.ontology
+def: "Morgan Price." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000040
+name: Dylan Chivian
+namespace: enigma.ontology
+def: "Dylan Chivian." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000041
+name: Paramvir Dehal
+namespace: enigma.ontology
+def: "Paramvir Dehal." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000042
+name: Ryan Melnyk
+namespace: enigma.ontology
+def: "Ryan Melnyk." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000043
+name: Baliga Lab
+namespace: enigma.ontology
+def: "Baliga Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000044
+name: Nitin Baliga
+namespace: enigma.ontology
+def: "Nitin Baliga." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000045
+name: Serdar Turkarslan
+namespace: enigma.ontology
+def: "Serdar Turkarslan." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000046
+name: Anne Otwell
+namespace: enigma.ontology
+def: "Anne Otwell." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+is_a: ENIGMA:0000081 ! Stahl Lab
+
+[Term]
+id: ENIGMA:0000047
+name: Bender Lab
+namespace: enigma.ontology
+def: "Bender Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000048
+name: Kelly Bender
+namespace: enigma.ontology
+def: "Kelly Bender." []
+is_a: ENIGMA:0000047 ! Bender Lab
+
+[Term]
+id: ENIGMA:0000049
+name: Brenner Lab
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Brenner Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000050
+name: Steven Brenner
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Steven Brenner." []
+is_a: ENIGMA:0000049 ! Brenner Lab
+
+[Term]
+id: ENIGMA:0000051
+name: Butland Lab
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Butland Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000052
+name: Gareth Butland
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Gareth Butland." []
+is_a: ENIGMA:0000051 ! Butland Lab
+
+[Term]
+id: ENIGMA:0000053
+name: Chakraborty Lab
+namespace: enigma.ontology
+def: "Chakraborty Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000054
+name: Romy Chakraborty
+namespace: enigma.ontology
+def: "Romy Chakraborty." []
+is_a: ENIGMA:0000053 ! Chakraborty Lab
+
+[Term]
+id: ENIGMA:0000055
+name: Xiaoqin Sherry Wu
+namespace: enigma.ontology
+def: "Xiaoqin Sherry Wu." []
+is_a: ENIGMA:0000053 ! Chakraborty Lab
+
+[Term]
+id: ENIGMA:0000056
+name: Chandonia Lab
+namespace: enigma.ontology
+def: "Chandonia Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000057
+name: John-Marc Chandonia
+namespace: enigma.ontology
+def: "John-Marc Chandonia." []
+synonym: "JMC" EXACT []
+is_a: ENIGMA:0000056 ! Chandonia Lab
+
+[Term]
+id: ENIGMA:0000058
+name: Deutschbauer Lab
+namespace: enigma.ontology
+def: "Deutschbauer Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000059
+name: Adam Deutschbauer
+namespace: enigma.ontology
+def: "Adam Deutschbauer." []
+is_a: ENIGMA:0000058 ! Deutschbauer Lab
+
+[Term]
+id: ENIGMA:0000060
+name: Hans Carlson
+namespace: enigma.ontology
+def: "Hans Carlson." []
+is_a: ENIGMA:0000058 ! Deutschbauer Lab
+
+[Term]
+id: ENIGMA:0000061
+name: Elias Lab
+namespace: enigma.ontology
+def: "Elias Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000062
+name: Dwayne Elias
+namespace: enigma.ontology
+def: "Dwayne Elias." []
+is_a: ENIGMA:0000061 ! Elias Lab
+
+[Term]
+id: ENIGMA:0000063
+name: Fields Lab
+namespace: enigma.ontology
+def: "Fields Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000064
+name: Matthew Fields
+namespace: enigma.ontology
+def: "Matthew Fields." []
+synonym: "Matt Fields" EXACT []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000065
+name: Heidi Smith
+namespace: enigma.ontology
+def: "Heidi Smith." []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000066
+name: Hazen Lab
+namespace: enigma.ontology
+def: "Hazen Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000067
+name: Terry Hazen
+namespace: enigma.ontology
+def: "Terry Hazen." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000068
+name: Dominique Joyner
+namespace: enigma.ontology
+def: "Dominique Joyner." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000070
+name: Northen Lab
+namespace: enigma.ontology
+def: "Northen Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000071
+name: Trent Northen
+namespace: enigma.ontology
+def: "Trent Northen." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000072
+name: Suzanne Kosina
+namespace: enigma.ontology
+def: "Suzanne Kosina." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000073
+name: Novichkov Lab
+namespace: enigma.ontology
+def: "Novichkov Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000074
+name: Pavel Novichkov
+namespace: enigma.ontology
+def: "Pavel Novichkov." []
+is_a: ENIGMA:0000073 ! Novichkov Lab
+
+[Term]
+id: ENIGMA:0000075
+name: Alexey Kazakov
+namespace: enigma.ontology
+def: "Alexey Kazakov." []
+is_a: ENIGMA:0000058 ! Deutschbauer Lab
+is_a: ENIGMA:0000073 ! Novichkov Lab
+
+[Term]
+id: ENIGMA:0000076
+name: Mukhopadhyay Lab
+namespace: enigma.ontology
+def: "Mukhopadhyay Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000077
+name: Andrilla Mukhopadhyay
+namespace: enigma.ontology
+def: "Andrilla Mukhopadhyay." []
+is_a: ENIGMA:0000076 ! Mukhopadhyay Lab
+
+[Term]
+id: ENIGMA:0000078
+name: Ankita Kothari
+namespace: enigma.ontology
+def: "Ankita Kothari." []
+is_a: ENIGMA:0000076 ! Mukhopadhyay Lab
+
+[Term]
+id: ENIGMA:0000079
+name: Singh Lab
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Singh Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000080
+name: Anup Singh
+namespace: enigma.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Anup Singh." []
+is_a: ENIGMA:0000079 ! Singh Lab
+
+[Term]
+id: ENIGMA:0000081
+name: Stahl Lab
+namespace: enigma.ontology
+def: "Stahl Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000082
+name: David Stahl
+namespace: enigma.ontology
+def: "David Stahl." []
+synonym: "Dave Stahl" EXACT []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
+[Term]
+id: ENIGMA:0000083
+name: Frederick von Netzer
+namespace: enigma.ontology
+def: "Frederick von Netzer." []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
+[Term]
+id: ENIGMA:0000084
+name: Siuzdak Lab
+namespace: enigma.ontology
+def: "Siuzdak Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000085
+name: Gary Siuzdak
+namespace: enigma.ontology
+def: "Gary Siuzdak." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000086
+name: Wall Lab
+namespace: enigma.ontology
+def: "Wall Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000087
+name: Judy Wall
+namespace: enigma.ontology
+def: "Judy Wall." []
+is_a: ENIGMA:0000086 ! Wall Lab
+
+[Term]
+id: ENIGMA:0000088
+name: Kara De Leon
+namespace: enigma.ontology
+def: "Kara De Leon." []
+is_a: ENIGMA:0000086 ! Wall Lab
+
+[Term]
+id: ENIGMA:0000089
+name: Erica Majumder
+namespace: enigma.ontology
+def: "Erica Majumder." []
+is_a: ENIGMA:0000086 ! Wall Lab
+
+[Term]
+id: ENIGMA:0000090
+name: Zhou Lab
+namespace: enigma.ontology
+def: "Zhou Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000091
+name: Jizhong Joe Zhou
+namespace: enigma.ontology
+def: "Jizhong Joe Zhou." []
+synonym: "Jizhong Zhou" EXACT []
+synonym: "Joe Jizhong Zhou" EXACT []
+synonym: "Joe Zhou" EXACT []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000092
+name: Daliang Ning
+namespace: enigma.ontology
+def: "Daliang Ning." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000093
+name: Renmao Tian
+namespace: enigma.ontology
+def: "Renmao Tian." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000094
+name: Joy Van Nostrand
+namespace: enigma.ontology
+def: "Joy Van Nostrand." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000095
+name: Field Sampling
+namespace: enigma.ontology
+def: "Field Sampling." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000096
+name: Microbial Associations in Groundwater
+namespace: enigma.ontology
+def: "Microbial Associations in Groundwater." []
+synonym: "Floc" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000097
+name: Ji-Won Moon
+namespace: enigma.ontology
+def: "Ji-Won Moon." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000098
+name: Nielsen Lab
+namespace: enigma.ontology
+def: "Nielsen Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000099
+name: Torben Nielsen
+namespace: enigma.ontology
+def: "Torben Nielsen." []
+is_a: ENIGMA:0000098 ! Nielsen Lab
+
+[Term]
+id: ENIGMA:0000100
+name: Spring 2019 Integrated Sampling
+namespace: enigma.ontology
+def: "Spring 2019 Integrated Sampling." []
+synonym: "Geochemistry/Geophysics Deep Dive" EXACT []
+synonym: "GeoDD" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000101
+name: 27 Well Survey
+namespace: enigma.ontology
+def: "27 Well Survey." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000102
+name: Xiaoxuan Grace Ge
+namespace: enigma.ontology
+def: "Xiaoxuan Grace Ge." []
+is_a: ENIGMA:0000030 ! Adams Lab
+
+[Term]
+id: ENIGMA:0000103
+name: Farris Poole
+namespace: enigma.ontology
+def: "Farris Poole." []
+is_a: ENIGMA:0000030 ! Adams Lab
+
+[Term]
+id: ENIGMA:0000104
+name: Ethan Evans
+namespace: enigma.ontology
+def: "Ethan Evans." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000105
+name: Katya Moniz
+namespace: enigma.ontology
+def: "Katya Moniz." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000106
+name: Anni Zhang
+namespace: enigma.ontology
+def: "Anni Zhang." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000107
+name: Shijie Zhao
+namespace: enigma.ontology
+def: "Shijie Zhao." []
+is_a: ENIGMA:0000033 ! Alm Lab
+
+[Term]
+id: ENIGMA:0000108
+name: Sean Carim
+namespace: enigma.ontology
+def: "Sean Carim." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000109
+name: Yasha Ektefaie
+namespace: enigma.ontology
+def: "Yasha Ektefaie." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000110
+name: Andrew Hendrickson
+namespace: enigma.ontology
+def: "Andrew Hendrickson." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000111
+name: Yolanda Huang
+namespace: enigma.ontology
+def: "Yolanda Huang." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000112
+name: Jen Kuehl
+namespace: enigma.ontology
+def: "Jen Kuehl." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000113
+name: Vivek Mutalik
+namespace: enigma.ontology
+def: "Vivek Mutalik." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000114
+name: Denish Piya
+namespace: enigma.ontology
+def: "Denish Piya." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000115
+name: Tuesday Simmons
+namespace: enigma.ontology
+def: "Tuesday Simmons." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000116
+name: Fangchao Song
+namespace: enigma.ontology
+def: "Fangchao Song." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000117
+name: Kelly Wetmore
+namespace: enigma.ontology
+def: "Kelly Wetmore." []
+is_a: ENIGMA:0000036 ! Arkin Lab
+
+[Term]
+id: ENIGMA:0000118
+name: Mario Arrieta-Ortiz
+namespace: enigma.ontology
+def: "Mario Arrieta-Ortiz." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000119
+name: Alex Carr
+namespace: enigma.ontology
+def: "Alex Carr." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000120
+name: Adrian Lopez Garcia de Lomana
+namespace: enigma.ontology
+def: "Adrian Lopez Garcia de Lomana." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000121
+name: Monica Orellana
+namespace: enigma.ontology
+def: "Monica Orellana." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000122
+name: Jake Valenzuela
+namespace: enigma.ontology
+def: "Jake Valenzuela." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000123
+name: Maryann Watkins Ruiz
+namespace: enigma.ontology
+def: "Maryann Watkins Ruiz." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000124
+name: James Wilson
+namespace: enigma.ontology
+def: "James Wilson." []
+is_a: ENIGMA:0000043 ! Baliga Lab
+
+[Term]
+id: ENIGMA:0000125
+name: Yifan Li
+namespace: enigma.ontology
+def: "Yifan Li." []
+is_a: ENIGMA:0000053 ! Chakraborty Lab
+
+[Term]
+id: ENIGMA:0000126
+name: Valentine Trotter
+namespace: enigma.ontology
+def: "Valentine Trotter." []
+is_a: ENIGMA:0000058 ! Deutschbauer Lab
+
+[Term]
+id: ENIGMA:0000127
+name: Caitlin Gionfriddo
+namespace: enigma.ontology
+def: "Caitlin Gionfriddo." []
+is_a: ENIGMA:0000061 ! Elias Lab
+
+[Term]
+id: ENIGMA:0000128
+name: Regina Wilpiszeski
+namespace: enigma.ontology
+def: "Regina Wilpiszeski." []
+is_a: ENIGMA:0000061 ! Elias Lab
+
+[Term]
+id: ENIGMA:0000129
+name: Katie Davis
+namespace: enigma.ontology
+def: "Katie Davis." []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000130
+name: Chiachi Hwang
+namespace: enigma.ontology
+def: "Chiachi Hwang." []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000131
+name: KaeLee Massey
+namespace: enigma.ontology
+def: "KaeLee Massey." []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000132
+name: Kristen Brileya
+namespace: enigma.ontology
+def: "Kristen Brileya." []
+is_a: ENIGMA:0000063 ! Fields Lab
+
+[Term]
+id: ENIGMA:0000133
+name: Emma Dixon
+namespace: enigma.ontology
+def: "Emma Dixon." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000134
+name: Andrew Putt
+namespace: enigma.ontology
+def: "Andrew Putt." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000135
+name: Katie Fitzgerald Walker
+namespace: enigma.ontology
+def: "Katie Fitzgerald Walker." []
+is_a: ENIGMA:0000066 ! Hazen Lab
+
+[Term]
+id: ENIGMA:0000136
+name: Ben Bowen
+namespace: enigma.ontology
+def: "Ben Bowen." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000137
+name: Yan Chen
+namespace: enigma.ontology
+def: "Yan Chen." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000138
+name: Marcus de Raad
+namespace: enigma.ontology
+def: "Marcus de Raad." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000139
+name: Amber Golini
+namespace: enigma.ontology
+def: "Amber Golini." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000140
+name: La Zhen Han
+namespace: enigma.ontology
+def: "La Zhen Han." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000141
+name: Chris Petzold
+namespace: enigma.ontology
+def: "Chris Petzold." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000142
+name: Nicholas Saichek
+namespace: enigma.ontology
+def: "Nicholas Saichek." []
+is_a: ENIGMA:0000070 ! Northen Lab
+
+[Term]
+id: ENIGMA:0000143
+name: Megan Garber
+namespace: enigma.ontology
+def: "Megan Garber." []
+is_a: ENIGMA:0000076 ! Mukhopadhyay Lab
+
+[Term]
+id: ENIGMA:0000144
+name: Lara Rajeev
+namespace: enigma.ontology
+def: "Lara Rajeev." []
+is_a: ENIGMA:0000076 ! Mukhopadhyay Lab
+
+[Term]
+id: ENIGMA:0000145
+name: Jessica Hardwicke
+namespace: enigma.ontology
+def: "Jessica Hardwicke." []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
+[Term]
+id: ENIGMA:0000146
+name: Madelyn Shapiro
+namespace: enigma.ontology
+def: "Madelyn Shapiro." []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
+[Term]
+id: ENIGMA:0000147
+name: Paul Benton
+namespace: enigma.ontology
+def: "Paul Benton." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000148
+name: Elizabeth Billings
+namespace: enigma.ontology
+def: "Elizabeth Billings." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000149
+name: Xavier Domingo-Almenara
+namespace: enigma.ontology
+def: "Xavier Domingo-Almenara." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000150
+name: Linh Hoang
+namespace: enigma.ontology
+def: "Linh Hoang." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000151
+name: Jingchuan Xue
+namespace: enigma.ontology
+def: "Jingchuan Xue." []
+is_a: ENIGMA:0000084 ! Siuzdak Lab
+
+[Term]
+id: ENIGMA:0000152
+name: Walian Lab
+namespace: enigma.ontology
+def: "Walian Lab." []
+is_a: ENIGMA:0000029 ! ENIGMA Labs and Personnel
+
+[Term]
+id: ENIGMA:0000153
+name: Peter Walian
+namespace: enigma.ontology
+def: "Peter Walian." []
+is_a: ENIGMA:0000152 ! Walian Lab
+
+[Term]
+id: ENIGMA:0000154
+name: Yupeng Fan
+namespace: enigma.ontology
+def: "Yupeng Fan." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000155
+name: Megan Kempher
+namespace: enigma.ontology
+def: "Megan Kempher." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000156
+name: Jonathan Michael
+namespace: enigma.ontology
+def: "Jonathan Michael." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000157
+name: David Needham
+namespace: enigma.ontology
+def: "David Needham." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000158
+name: Gangsheng Wang
+namespace: enigma.ontology
+def: "Gangsheng Wang." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000159
+name: Yajiao Wang
+namespace: enigma.ontology
+def: "Yajiao Wang." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000160
+name: Liyou Wu
+namespace: enigma.ontology
+def: "Liyou Wu." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000161
+name: Ya Zhang
+namespace: enigma.ontology
+def: "Ya Zhang." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Term]
+id: ENIGMA:0000162
+name: Aifen Zhou
+namespace: enigma.ontology
+def: "Aifen Zhou." []
+is_a: ENIGMA:0000090 ! Zhou Lab
+
+[Typedef]
+id: is_a
+name: is_a

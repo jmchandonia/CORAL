@@ -178,7 +178,7 @@ def test_brick_upload():
     return s
     # return br.id
     
-@app.route("/coral/refs_to_core_objects/", methods=['POST'])
+@app.route("/coral/refs_to_core_objects", methods=['POST'])
 def coral_refs_to_core_objects():
     try:
         brick_ds = json.loads(request.form['brick'])       
@@ -363,7 +363,7 @@ def get_property_units_oterms():
     query = request.json
     parent_term_ids = query['microtype']['valid_units_parents']
     term_ids = query['microtype']['valid_units'] 
-    return _get_oterms(svs['ontology'].units, term_ids=term_ids,  parent_term_ids=parent_term_ids)
+    return _get_oterms(svs['ontology'].all, term_ids=term_ids,  parent_term_ids=parent_term_ids)
 
 @app.route("/coral/get_personnel_oterms", methods=['GET'])
 def get_personnel_oterms():
@@ -423,7 +423,7 @@ def brick_type_templates():
         templates = svs['brick_template_provider'].templates
         return _ok_response(templates['types'])
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 @app.route("/coral/core_types", methods=['GET'])
 def core_types():

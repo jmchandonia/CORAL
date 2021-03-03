@@ -1,0 +1,71 @@
+format-version: 1.4
+ontology:continent
+date: 22:02:2021 14:15
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: CONTINENT:0000000
+name: term
+namespace: continent.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: CONTINENT:0000001
+name: Continent
+namespace: continent.ontology
+def: "Continent." []
+is_a: CONTINENT:0000000 ! term
+
+[Term]
+id: CONTINENT:0000002
+name: Africa
+namespace: continent.ontology
+def: "Africa." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000003
+name: Antarctica
+namespace: continent.ontology
+def: "Antarctica." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000004
+name: Asia
+namespace: continent.ontology
+def: "Asia." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000005
+name: Australia
+namespace: continent.ontology
+def: "Australia." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000006
+name: Europe
+namespace: continent.ontology
+def: "Europe." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000007
+name: North America
+namespace: continent.ontology
+def: "North America." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Term]
+id: CONTINENT:0000008
+name: South America
+namespace: continent.ontology
+def: "South America." []
+is_a: CONTINENT:0000001 ! Continent
+
+[Typedef]
+id: is_a
+name: is_a
