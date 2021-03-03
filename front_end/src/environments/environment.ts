@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  baseURL: 'http://localhost:5000/coral',
+  baseURL: 'https://localhost:8082/coral',
   GOOGLE_MAPS_API_KEY: ''
 };

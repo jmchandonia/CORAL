@@ -351,6 +351,14 @@ _this will set up tables required for web services to start._
 
 ### CORAL Web Services
 
+The back end relies on graphviz to draw graphs.  Version 2.42 or
+higher is recommended.  The "dev" or "devel" package is also needed,
+so that the python library pygraphviz will install:
+
+```
+apt-get install graphviz graphviz-dev
+``
+
 _These run in a virtualenv, so install this first:_
 
 ```

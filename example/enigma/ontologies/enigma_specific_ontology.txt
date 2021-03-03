@@ -1,0 +1,189 @@
+ENIGMA
+  is_a: ME:0000001
+  ENIGMA Campaign:
+    27 Well Survey
+    100 Well Survey
+    ENIGMA Microbial Isolation Characterization
+    -Printable Worlds
+    Predictive Network Biology
+    Time Series
+    Memory
+      alias: Memory Response
+      alias: EtOH Memory Response
+      alias: EVO Memory Response
+    Groundwater
+      alias: Groundwater Microbiome
+    Natural and Synthetic Ecologies
+    Microparticle
+    Microfluidics
+      alias: Microfluidic-based
+    Metal Metabolism
+      alias: Metals
+      alias: Metal
+    Microbial Assembly Evolution
+      alias: Assembly of Microbial Communities
+    BigEMAC
+    -Constructed Community
+    -Sediment-Core
+    Nitrate Respiratory Activity
+      alias: Nitrate Activity
+    -UPO
+    Core Pilot
+      alias: Pilot
+      alias: Sediment
+      alias: Metacampaign Pilot-Groundwater
+    Ecophysiology of Nitrate and Sulfate Reducing Communities
+      alias: ENSuRC
+    Environmental Ark
+    Environmental Simulation and Modeling
+    Control of Nitrate and Sulfate Reducing Communities
+    Mercury Mystery Project
+    Natural Organic Matter
+      alias: NOM
+    Extrachromosomal Plasmid DNA Project
+      alias: Plasmidome
+    Field Sampling
+    Microbial Associations in Groundwater
+      alias: Floc
+    Spring 2019 Integrated Sampling
+      alias: GeoDD
+      alias: Geochemistry/Geophysics Deep Dive
+  ENIGMA Labs and Personnel:
+    alias: ENIGMA PI
+    Adams Lab
+      Mike Adams
+      Xiaoxuan Grace Ge
+      Farris Poole
+      Michael Thorgersen
+        alias: Mike Thorgersen
+    Alm Lab
+      Eric Alm
+      Ethan Evans
+      Katya Moniz
+      Sarah Spencer
+      Anni Zhang
+      Shijie Zhao
+    Arkin Lab
+      Adam Arkin
+      Sean Carim
+      Dylan Chivian
+      Paramvir Dehal
+      Yasha Ektefaie
+      Andrew Hendrickson
+      Yolanda Huang
+      Jen Kuehl
+      Lauren Lui
+      Ryan Melnyk
+      Vivek Mutalik
+      Denish Piya
+      Morgan Price
+      Tuesday Simmons
+      Fangchao Song
+      Kelly Wetmore
+    Baliga Lab
+      Nitin Baliga
+      Mario Arrieta-Ortiz
+      Alex Carr
+      Adrian Lopez Garcia de Lomana
+      Monica Orellana
+      Serdar Turkarslan
+      Jake Valenzuela
+      Maryann Watkins Ruiz
+      James Wilson
+    Bender Lab
+      Kelly Bender
+    -Brenner Lab
+      -Steven Brenner
+    -Butland Lab
+      -Gareth Butland
+    Chakraborty Lab
+      Romy Chakraborty
+      Yifan Li
+      Xiaoqin Sherry Wu
+    Chandonia Lab
+      John-Marc Chandonia
+      alias: JMC
+    Deutschbauer Lab
+      Adam Deutschbauer
+      Hans Carlson
+      Alexey Kazakov
+        is_a: ENIGMA:0000073
+      Valentine Trotter
+    Elias Lab
+      Dwayne Elias
+      Caitlin Gionfriddo
+      Regina Wilpiszeski
+    Fields Lab
+      Matthew Fields
+        alias: Matt Fields
+      Katie Davis
+      Chiachi Hwang
+      KaeLee Massey
+      Heidi Smith
+      Kristen Brileya
+    Hazen Lab
+      Terry Hazen
+      Emma Dixon
+      Dominique Joyner
+      Ji-Won Moon
+      Andrew Putt
+      Katie Fitzgerald Walker
+    Nielsen Lab
+      Torben Nielsen
+    Northen Lab
+      Trent Northen
+      Ben Bowen
+      Yan Chen
+      Marcus de Raad
+      Amber Golini
+      La Zhen Han
+      Suzanne Kosina
+      Chris Petzold
+      Nicholas Saichek
+    Novichkov Lab
+      Pavel Novichkov
+    Mukhopadhyay Lab
+      Andrilla Mukhopadhyay
+      Megan Garber
+      Ankita Kothari
+      Lara Rajeev
+    -Singh Lab
+      -Anup Singh
+    Stahl Lab
+      David Stahl
+        alias: Dave Stahl
+      Jessica Hardwicke
+      Anne Otwell
+        is_a: ENIGMA:0000043
+      Madelyn Shapiro
+      Frederick von Netzer
+    Siuzdak Lab
+      Gary Siuzdak
+      Paul Benton
+      Elizabeth Billings
+      Xavier Domingo-Almenara
+      Linh Hoang
+      Jingchuan Xue
+    Wall Lab
+      Judy Wall
+      Kara De Leon
+      Erica Majumder
+    Walian Lab
+      Peter Walian
+    Zhou Lab
+      Jizhong Joe Zhou
+      alias: Jizhong Zhou
+      alias: Joe Zhou
+      alias: Joe Jizhong Zhou
+      Yupeng Fan
+      Megan Kempher
+      Jonathan Michael
+      David Needham
+      Daliang Ning
+      Renmao Tian
+      Joy Van Nostrand
+      Gangsheng Wang
+      Yajiao Wang
+      Liyou Wu
+      Ya Zhang
+      Aifen Zhou

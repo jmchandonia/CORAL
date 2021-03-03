@@ -1,0 +1,85 @@
+Dynamic Object
+  alias: Measurements and Processed Data # likely Generic
+  alias: Brick
+  Physical Measurement
+  Small Molecule Measurement
+    Environmental Measurement
+    Chemical Measurement
+      Metabolite Assay
+    Reaction Yield
+  Functional Genomics Data
+    Gene Fitness
+      Gene Knockout Fitness
+      Gene Upregulation Fitness
+      Genetic Interaction
+    Gene Expression
+    Enzyme Activity
+    Protein Interaction
+    Protein Function
+  Microbial Assay # assays that can be done on either isolates or communities
+    Microbial Abundance # combine with microbial growth?
+    Microbial Growth # binary or quantitative (e.g., od, cell counts)
+    Microbial Mobility
+    Microbial Thermodynamics
+    Microbial Activity
+    Microbial Evolution
+    Microbial Solute Permeability
+    Metabolic Potential # combine with metagenomic gene abundance?
+    Microbial Sequence
+  Microbial Community Assay # only assays that must be done on communities
+    Metagenomic Gene Abundance
+    Taxonomic Assignment
+    Profile
+      Taxonomic Profile
+      Functional Profile
+      Functional and Taxonomic Profile
+    Taxonomic Abundance
+    Geochip Data # combination of gene and taxonomic abundance
+    Microbial Community Sequence
+
+Association
+  Set
+    alias: Group
+    alias: Cluster
+  Bicluster
+  Map
+  Correlation
+  Similarity
+
+Static Object
+  Strain # may have 16S or complete genome
+  OTU # may have 16S
+  Taxon
+  Assembly
+  Bin
+  Genome
+  Gene
+  Image
+  Environmental Sample Location
+    alias: Well
+  Environmental Sample # linked to environmental sample location
+    alias: Sample
+  Reagent
+  Media # from lab, includes defined media and complex media including extracts
+  Condition # lab-defined condition
+    # includes media plus other conditions like pH and temperature
+    Isolation Condition
+    Enrichment Condition
+  Community # linked to sample
+    Isolate # linked to community, taxon and isolation condition
+    Enrichment # linked to community and enrichment condition
+      Active Fraction
+    Assemblage # linked to list of taxa
+      Consortium # need a special term to indicate symbiotic assemblage?
+  Reads # linked to community
+    Amplicon Reads
+      16S Reads
+      18S Reads
+      ITS Reads
+    WGS Reads
+  Tn-Seq Library
+    alias: TnSeqLibrary
+  Dub-Seq Library
+    alias: DubSeqLibrary
+  Process
+  Protocol
