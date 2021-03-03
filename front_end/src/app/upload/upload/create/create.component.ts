@@ -4,6 +4,7 @@ import { Brick, Term } from 'src/app/shared/models/brick';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create',
@@ -15,7 +16,8 @@ export class CreateComponent implements OnInit {
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
-    private validator: UploadValidationService
+    private validator: UploadValidationService,
+    private route: ActivatedRoute
   ) { }
 
   loading = false;
@@ -35,7 +37,17 @@ export class CreateComponent implements OnInit {
   brick: Brick;
 
   ngOnInit() {
-    this.brick = this.uploadService.getBrickBuilder();
+
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams['tsvUpload']) {
+        // TODO: get tsv uploaded brick information from back end
+        this.brick = new Brick();
+      } else {
+        this.brick = this.uploadService.getBrickBuilder();
+      }
+    })
+
+    // this.brick = this.uploadService.getBrickBuilder();
     this.requiredProcess = this.uploadService.requiredProcess;
 
     if (this.requiredProcess) {
