@@ -27,6 +27,7 @@ import { ContextFormComponent } from './upload/property-builder/property-form/co
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ValidationErrorItemComponent } from './upload/map/validation-error-item/validation-error-item.component';
+import { TSVUploadWidgetComponent } from './upload/tsv-upload-widget/tsv-upload-widget.component';
  
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ValidationErrorItemComponent } from './upload/map/validation-error-item
     MapComponent,
     ContextBuilderComponent,
     ContextFormComponent,
-    ValidationErrorItemComponent
+    ValidationErrorItemComponent,
+    TSVUploadWidgetComponent
   ],
   imports: [
     CommonModule,
