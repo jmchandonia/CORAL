@@ -243,6 +243,22 @@ export class UploadService {
     return returnResponse;
   }
 
+  uploadTSV(file: File) {
+    const formData: FormData = new FormData();
+    formData.append('files', file, file.name);
+
+    return new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/upload_tsv`, formData)
+        .subscribe((res: any) => {
+          if (res.error) {
+            reject(res.error);
+          } else {
+            resolve(res);
+          }
+        })
+    });
+  }
+
   setSuccessData(data: any) {
     this.uploadSuccessData = data;
   }
