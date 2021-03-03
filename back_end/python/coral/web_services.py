@@ -767,6 +767,14 @@ def upload_file():
     except Exception as e:
         return _err_response(e, traceback=True)
 
+@app.route('/coral/upload_tsv', methods=["POST"])
+def upload_tsv():
+    f = request.files['files']
+
+    # TODO: handle uploading files
+
+    return _ok_response({"test": 'test'})
+
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
     data = json.loads(data_json)
@@ -963,6 +971,7 @@ def login():
 
             new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
             return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
+
         except Exception as e:
             return json.dumps({'success': False,
                                'message': 'Something went wrong.'
