@@ -22,7 +22,7 @@ pip3 install --upgrade pip
 ### Other Python prerequisites
 
 ```
-pip3 install pandas pyArango dumper xarray
+pip3 install pandas pyArango dumper xarray diskcache
 ```
 
 ### Apache installation
