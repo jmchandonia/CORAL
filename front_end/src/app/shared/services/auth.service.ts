@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -16,7 +16,8 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     public jwtHelper: JwtHelperService,
-    private router: Router
+    private router: Router,
+    private zone: NgZone
   ) { }
 
 
@@ -54,10 +55,14 @@ export class AuthService {
         if (success) {
           localStorage.setItem('authToken', results.token);
           if (this.redirectUrl) {
-            this.router.navigateByUrl(this.redirectUrl);
+            this.zone.run(() => {
+              this.router.navigateByUrl(this.redirectUrl);
+            });
             this.redirectUrl = null;
           } else {
-            this.router.navigate(['/home']);
+            this.zone.run(() => {
+              this.router.navigate(['/home']);
+            });
           }
         }
         return res;
