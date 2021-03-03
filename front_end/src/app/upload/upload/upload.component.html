@@ -50,4 +50,4 @@
     </div>
   </div>
 </div>
-<app-tsv-upload-widget *ngIf="currentUrl === 'type'"></app-tsv-upload-widget>
+<app-tsv-upload-widget *ngIf="currentUrl === 'type' && user.user_level > 0"></app-tsv-upload-widget>

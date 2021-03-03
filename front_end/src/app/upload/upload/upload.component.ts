@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { UploadValidationService } from 'src/app/shared/services/upload-validation.service';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { environment } from 'src/environments/environment';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/models/user';
 
 @Component({
   selector: 'app-upload',
@@ -26,10 +28,13 @@ export class UploadComponent implements OnInit, OnDestroy {
   progressIndex = 0;
   maxStep = 0;
 
+  public readonly user: User;
+
   constructor(
     private router: Router,
     private validator: UploadValidationService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private userService: UserService
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -41,6 +46,8 @@ export class UploadComponent implements OnInit, OnDestroy {
         }
       }
     });
+
+    this.user = this.userService.getUser();
   }
 
   ngOnInit() {

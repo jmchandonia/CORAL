@@ -5,6 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { Response } from 'src/app/shared/models/response';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
     private http: HttpClient,
     public jwtHelper: JwtHelperService,
     private router: Router,
-    private zone: NgZone
+    private zone: NgZone,
+    private userService: UserService
   ) { }
 
 
@@ -54,6 +56,7 @@ export class AuthService {
         const success = results.success;
         if (success) {
           localStorage.setItem('authToken', results.token);
+          this.userService.setUser(results.user);
           if (this.redirectUrl) {
             this.zone.run(() => {
               this.router.navigateByUrl(this.redirectUrl);
@@ -71,6 +74,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
     // localStorage.clear();
   }
 

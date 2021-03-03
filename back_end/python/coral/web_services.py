@@ -925,12 +925,12 @@ def handle_auth_code():
     user_email = json.loads(user.content.decode('utf-8'))['email']
 
     with open(cns['_USERS']) as user_file:
-        allowed_users = json.load(user_file)
+        registered_users = json.load(user_file)
 
     match_user = None
-    for allowed_user in allowed_users:
-        if allowed_user['email'] == user_email:
-            match_user = allowed_user
+    for registered_user in registered_users:
+        if registered_user['email'] == user_email:
+            match_user = registered_user
 
     if match_user == None:
         return _ok_response({
@@ -946,7 +946,7 @@ def handle_auth_code():
         }
 
         new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
-        return _ok_response({'success': True, 'token': new_jwt.decode('utf-8')})
+        return _ok_response({'success': True, 'token': new_jwt.decode('utf-8'), 'user': match_user})
     except Exception as e:
         return json.dumps({'success': False, 'message': 'Something went wrong.'})
 
