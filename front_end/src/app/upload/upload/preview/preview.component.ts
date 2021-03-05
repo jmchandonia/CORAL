@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Brick, TypedProperty, Term, ORef } from 'src/app/shared/models/brick';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-preview',
@@ -15,29 +15,43 @@ export class PreviewComponent implements OnInit {
   coreObjectRefs: any[] = [];
   totalObjectsMapped = 0;
   // coreObjectError = false;
+  csvUpload = false;
 
   constructor(
     private uploadService: UploadService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   brick: Brick;
 
   ngOnInit() {
-    this.brick = this.uploadService.getBrickBuilder();
+
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams['tsvUpload']) {
+        this.brick = new Brick();
+        this.uploadService.brickBuilder = this.brick;
+        // TODO: implement method to load uploaded brick from server
+        this.csvUpload = true;
+      } else {
+        this.brick = this.uploadService.getBrickBuilder();
+      }
+    });
+
+    // this.brick = this.uploadService.getBrickBuilder();
     if (!this.brick || !this.brick.dataValues.length) {
       this.router.navigate(['/upload/type']);
     }
     this.uploadService.getRefsToCoreObjects()
       .subscribe((res: any) => {
         this.coreObjectRefs = res.results;
-	this.totalObjectsMapped = 0;
-	if ((this.coreObjectRefs) && (this.coreObjectRefs.length > 0)) {
-	   for (var x of this.coreObjectRefs) {
-	      this.totalObjectsMapped += x.count;
-	   }
-	}
+        this.totalObjectsMapped = 0;
+        if ((this.coreObjectRefs) && (this.coreObjectRefs.length > 0)) {
+          for (var x of this.coreObjectRefs) {
+              this.totalObjectsMapped += x.count;
+          }
+        }
         this.brick.coreObjectRefsError = (this.totalObjectsMapped === 0);
       });
   }
