@@ -1,0 +1,851 @@
+{
+  "system_types":[
+    {
+      "name": "Process",
+      "term": "DA:0000061",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000277",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "process",
+          "type_term": "ME:0000204",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "PROCESS:0000001"
+        },
+        {
+          "name": "person",
+          "type_term": "ME:0000205",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ENIGMA:0000029"
+        },
+        {
+          "name": "campaign",
+          "type_term": "ME:0000206",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ENIGMA:0000002"
+        },
+        {
+          "name": "protocol",
+          "type_term": "ME:0000328",
+          "scalar_type": "text",
+          "FK": "Protocol.name"
+        },
+        {
+          "name": "date_start",
+          "type_term": "ME:0000009",
+          "scalar_type": "text",
+          "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
+          "comment": "YYYY[-MM[-DD]]"
+        },
+        {
+          "name": "date_end",
+          "type_term": "ME:0000009",
+          "scalar_type": "text",
+          "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
+          "comment": "YYYY[-MM[-DD]]"
+        },
+        {
+          "name": "input_objects",
+          "type_term": "ME:0000207",
+          "scalar_type": "[ref]",
+          "required": true,
+          "constraint": "[Entity|Brick]"
+        },
+        {
+          "name": "output_objects",
+          "type_term": "ME:0000208",
+          "scalar_type": "[ref]",
+          "required": true,
+          "constraint": "[Entity|Brick]"
+        }
+      ]
+    }  
+  ],
+  "static_types":[
+    {
+      "name": "ENIGMA",
+      "fields": []
+    },
+    {
+      "name": "Well",
+      "term": "DA:0000041",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000266",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000228",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "latitude",
+          "type_term": "ME:0000211",
+          "scalar_type": "float",
+          "required": true,
+          "constraint": [-180, 180],
+          "units_term": "UO:0000185"
+        },
+        {
+          "name": "longitude",
+          "type_term": "ME:0000212",
+          "scalar_type": "float",
+          "required": true,
+          "constraint": [-180, 180],
+          "units_term": "UO:0000185"
+        },
+        {
+          "name": "continent",
+          "type_term": "ME:0000213",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "CONTINENT:0000001"
+        },
+        {
+          "name": "country",
+          "type_term": "ME:0000214",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "COUNTRY:0000001"
+        },
+        {
+          "name": "region",
+          "type_term": "ME:0000215",
+          "scalar_type": "text",
+          "required": true,
+          "comment": "specific local region name(s)"
+        },
+        {
+          "name": "biome",
+          "type_term": "ME:0000216",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ENVO:01000254"
+        },
+        {
+          "name": "feature",
+          "type_term": "ME:0000217",
+          "scalar_type": "term",
+          "constraint": "ENVO:00002297"
+        }
+      ],
+      "process_types": ["PROCESS:0000028"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name":"Sample",
+      "term": "DA:0000042",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000267",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000102",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "well",
+          "type_term": "ME:0000228",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Well.name"
+        },
+        {
+          "name": "depth",
+          "type_term": "ME:0000219",
+          "scalar_type": "float",
+          "comment": "in meters below ground level",
+          "units_term": "UO:0000008"
+        },
+        {
+          "name": "elevation",
+          "type_term": "ME:0000220",
+          "scalar_type": "float",
+          "comment": "in meters above ground level",
+          "units_term": "UO:0000008"
+        },
+        {
+          "name": "date",
+          "type_term": "ME:0000009",
+          "scalar_type": "text",
+          "required": true,
+          "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
+          "comment": "YYYY[-MM[-DD]]"
+        },
+        {
+          "name": "time",
+          "type_term": "ME:0000010",
+          "scalar_type": "text",
+          "constraint": "\\d\\d(:\\d\\d(:\\d\\d)?)?\\s*([apAP][mM])?",
+          "comment": "HH[:MM[:SS]] [AM|PM]"
+        },
+        {
+          "name": "timezone",
+          "type_term": "ME:0000201",
+          "scalar_type": "text",
+          "comment": "ISO8601 compliant format, ie. UTC-7"
+        },
+        {
+          "name": "material",
+          "type_term": "ME:0000230",
+          "scalar_type": "term",
+          "constraint": "ENVO:00010483"
+        },
+        {
+          "name": "env_package",
+          "type_term": "ME:0000229",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "MIxS:0000002"
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000002"],
+      "process_inputs": [["Well"]]
+    },
+    {
+      "name": "Taxon",
+      "term": "DA:0000037",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000268",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000046",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "ncbi_taxid",
+          "type_term": "ME:0000047",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000029"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name": "OTU",
+      "term": "DA:0000063",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000269",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000221",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        }
+      ],
+      "process_types": ["PROCESS:0000031"],
+      "process_inputs": [["Reads"]]
+    },
+    { 
+      "name": "Condition",
+      "term": "DA:0000045",
+      "used_for_provenance": false,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000270",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000200",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        }
+      ],
+      "process_types": ["PROCESS:0000032"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name": "Strain",
+      "term": "DA:0000062",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000271",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000044",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "genome",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "FK": "Genome.name",
+          "comment": "genome object for sequenced, WT strains"
+        },
+        {
+          "name": "derived_from",
+          "type_term": "ME:0000044",
+          "scalar_type": "text",
+          "FK": "Strain.name"
+        },
+        {
+          "name": "genes_changed",
+          "type_term": "ME:0000091",
+          "scalar_type": "[text]",
+          "FK": "[Gene.gene_id]"
+        }
+      ],
+      "process_types": ["PROCESS:0000015", "PROCESS:0000030"],
+      "process_inputs": [["Sample"], ["Strain"]]
+    },
+    { 
+      "name": "Community",
+      "term": "DA:0000048",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000272",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000233",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "community_type",
+          "type_term": "ME:0000234",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ME:0000234"
+        },
+        {
+          "name": "sample",
+          "type_term": "ME:0000102",
+          "scalar_type": "text",
+          "FK": "Sample.name"
+        },
+        {
+          "name": "parent_community",
+          "type_term": "ME:0000233",
+          "scalar_type": "text",
+          "FK": "Community.name"
+        },
+        {
+          "name": "condition",
+          "type_term": "ME:0000200",
+          "scalar_type": "text",
+          "FK": "Condition.name"
+        },
+        {
+          "name": "defined_strains",
+          "type_term": "ME:0000044",
+          "scalar_type": "[text]",
+          "FK": "[Strain.Name]"
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000015", "PROCESS:0000016", "PROCESS:0000011"],
+      "process_inputs": [["Sample"], ["Community"]]
+    },
+    {
+      "name": "Reads",
+      "term": "DA:0000054",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000273",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000248",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "read_count",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "read_type",
+          "type_term": "ME:0000112",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ME:0000112"
+        },
+        {
+          "name": "sequencing_technology",
+          "type_term": "ME:0000116",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "ME:0000116"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000017"],
+      "process_inputs": [["Sample"], ["Community"]]
+    },
+    {
+      "name": "Assembly",
+      "term": "DA:0000066",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000281",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000280",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "strain",
+          "type_term": "ME:0000044",
+          "scalar_type": "text",
+          "FK": "Strain.name"
+        },
+        {
+          "name": "n_contigs",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000023","PROCESS:0000024"],
+      "process_inputs": [["Reads"],["Reads"]]
+    },
+    {
+      "name": "Genome",
+      "term": "DA:0000039",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000274",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "strain",
+          "type_term": "ME:0000044",
+          "scalar_type": "text",
+          "FK": "Strain.name"
+        },
+        {
+          "name": "n_contigs",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_features",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000034", "PROCESS:0000045"],
+      "process_inputs": [["Assembly"],["Bin"]]
+    },
+    {
+      "name": "Gene",
+      "term": "DA:0000040",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000275",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "gene_id",
+          "type_term": "ME:0000224",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome"
+        },
+        {
+          "name": "aliases",
+          "type_term": "ME:0000060",
+          "scalar_type": "[text]"
+        },
+        {
+          "name": "contig_number",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "comment": "indexed starting at 1, as in KBase",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "strand",
+          "type_term": "ME:0000186",
+          "scalar_type": "text",
+          "required": true,
+          "constraint": "[+-]"
+        },
+        {
+          "name": "start",
+          "type_term": "ME:0000242",
+          "scalar_type": "int",
+          "required": true,
+          "comment": "indexed starting at 1, as in KBase",
+          "units_term": "UO:0000244"
+        },
+        {
+          "name": "stop",
+          "type_term": "ME:0000243",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000244"
+        },
+        {
+          "name": "function",
+          "type_term": "ME:0000250",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000034"],
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Bin",
+      "term": "DA:0000072",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000331",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000330",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "assembly",
+          "type_term": "ME:0000280",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Assembly"
+        },
+        {
+          "name": "contigs",
+          "type_term": "ME:0000240",
+          "scalar_type": "[text]",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000039"],
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Protocol",
+      "term": "DA:0000073",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000332",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000328",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text",
+          "constraint": "http.*"
+        }
+      ],
+      "process_types": ["PROCESS:0000044"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name": "Image",
+      "term": "DA:0000074",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000356",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000355",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "MIME type",
+          "type_term": "ME:0000357",
+          "scalar_type": "text"
+        },
+        {
+          "name": "size",
+          "type_term": "ME:0000128",
+          "scalar_type": "int",
+          "units_term": "UO:0000233"
+        },
+        {
+          "name": "dimensions",
+          "type_term": "ME:0000292",
+          "scalar_type": "text",
+          "units_term": "UO:0000236"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000044"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name": "TnSeq_Library",
+      "term": "DA:0000060",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000276",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000262",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome"
+        },
+        {
+          "name": "primers_model",
+          "type_term": "ME:0000263",
+          "scalar_type": "text",
+          "required": true
+        },
+        {
+          "name": "n_mapped_reads",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_barcodes",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_usable_barcodes",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_insertion_locations",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "hit_rate_essential",
+          "type_term": "ME:0000264",
+          "scalar_type": "float",
+          "units_term": "UO:0000190"
+        },
+        {
+          "name": "hit_rate_other",
+          "type_term": "ME:0000264",
+          "scalar_type": "float",
+          "units_term": "UO:0000190"
+        }
+      ],
+      "process_types": ["PROCESS:0000027"],
+      "process_inputs": [["Genome"]]
+    },
+    {
+      "name": "DubSeq_Library",
+      "term": "DA:0000075",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000276",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000262",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome"
+        },
+        {
+          "name": "n_fragments",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        }
+      ],
+      "process_types": ["PROCESS:0000049"],
+      "process_inputs": [["Genome"]]
+    }  
+  ]
+  }
