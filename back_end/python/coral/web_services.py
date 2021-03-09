@@ -804,9 +804,11 @@ def _brick_to_csv(brick_id):
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
-    cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
-    sys.stderr.write('running '+cmd+'\n')
-    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
+    # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
+    # sys.stderr.write('running '+cmd+'\n')
+    print('RUNNING', cmd)
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=cns['_PROJECT_ROOT'] + '/bin')
     try:
         data = json.loads(output.stdout)
         return data
