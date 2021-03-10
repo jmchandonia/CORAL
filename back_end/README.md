@@ -31,10 +31,6 @@ pip3 install pandas pyArango dumper xarray diskcache
 apt-get install apache2
 ```
 
-```
-brew install apache2
-```
-
 This installation guide assumes you use SSL.  If on a public
 server, you can get a SSL certificate from letsencrypt.org.  If on
 a private development server, you can generate your own certificate
@@ -54,10 +50,10 @@ mv localhost.key ../private
 _(based on https://jupyterhub.readthedocs.io/en/stable/quickstart.html)_
 
 _install jupyter:_
-what 
+
 ```
 pip3 install jupyter
-````
+```
 
 _install jupyterhub and dependencies:_
 
@@ -357,7 +353,7 @@ so that the python library pygraphviz will install:
 
 ```
 apt-get install graphviz graphviz-dev
-``
+```
 
 _These run in a virtualenv, so install this first:_
 
