@@ -156,7 +156,10 @@ class ArangoService:
             return length(%s)
         ''' % core_type
         aql_bind = {}
-        return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]    
+        try:
+            return self.__db.AQLQuery(aql,  bindVars=aql_bind,  rawResults=True, batchSize=size)[0]
+        except Exception as e:
+            return 0
 
     # ignores ddt->ddt for now
     def get_process_type_count(self, filterCampaigns=False, filterPersonnel=False, size=100000):
