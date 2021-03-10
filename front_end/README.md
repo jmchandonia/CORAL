@@ -124,7 +124,7 @@ app.module
  - to encourage type safety, patterns that are commonly used throughout the app are stored as ES6 classes and can be found in
  `/src/app/shared/models`.
 
- ## Dependencies
+## Dependencies
 
  The following is a list of some of the core UI dependencies that our app depends on. It is not a comprehensive list but provides the most widely used 3rd party modules throughout the app.
 
