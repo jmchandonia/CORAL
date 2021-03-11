@@ -24,6 +24,7 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
+import pprint
 # from . import services
 # from .brick import Brick
 
@@ -700,6 +701,87 @@ def validate_upload():
     except Exception as e:
         return _err_response(e)
 
+@app.route('/coral/validate_upload_csv/<data_id>', methods=['GET'])
+def validate_upload_csv(data_id):
+    uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id)
+
+    with open(uds_file_name, 'r') as f:
+        brick_ds = json.loads(f.read())
+
+    try:
+        validated_data = {
+            'dims':[],
+            'data_vars': [],
+            'obj_refs': []
+        } 
+
+        res = {
+            'dims':[],
+            'data_vars': []
+        }
+
+        for dim in brick_ds['dim_context']:
+            res_dim_vars = []
+            res['dims'].append({
+                'dim_vars': res_dim_vars
+            })
+            validated_dim_vars = []
+            validated_data['dims'].append({
+                'dim_vars': validated_dim_vars
+            })
+            for dim_var in dim['typed_values']:
+                vtype_term_id = dim_var['value_type']['oterm_ref']
+                values = np.array(dim_var['values']['object_refs'], dtype='object')
+
+                errors = svs['value_validator'].cast_var_values(values, vtype_term_id, validated_data['obj_refs'])
+
+                total_count = values.size
+                invalid_count = len(errors)
+                res_dim_vars.append({
+                    'total_count': total_count,
+                    'valid_count': total_count - invalid_count,
+                    'invalid_count': invalid_count
+                })
+
+                validated_dim_vars.append({
+                    'values': values.tolist(),
+                    'errors': errors
+                })
+
+        for data_var in brick_ds['typed_values']:
+            vtype_term_id = data_var['value_type']['oterm_ref']
+            scalar_type = data_var['values']['scalar_type']
+            values = np.array(data_var['values'][scalar_type + '_values'], dtype='object')
+
+            errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
+
+            total_count = values.size
+            invalid_count = len(errors)
+            res['data_vars'].append({
+                'total_count': total_count,
+                'valid_count': total_count - invalid_count,
+                'invalid_count': invalid_count
+            })
+
+            validated_data['data_vars'].append({
+                'values': values.tolist(),
+                'errors': errors
+            })
+
+        # Save validated data 
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        with open(uvd_file_name, 'w') as f:
+            json.dump(validated_data, f, sort_keys=True, indent=4)
+
+        # Save validated report
+        uvr_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATION_REPORT_PREFIX + data_id )
+        with open(uvr_file_name, 'w') as f:
+            json.dump(res, f, sort_keys=True, indent=4)
+
+        return _ok_response(res) 
+
+    except Exception as e:
+        return _err_response(e)
 
 @app.route('/coral/upload', methods=['POST'])
 def upload_file():
@@ -769,6 +851,87 @@ def upload_file():
 @app.route('/coral/upload_tsv', methods=["POST"])
 def upload_tsv():
     f = request.files['files']
+    data_id = uuid.uuid4().hex
+
+    try:
+        udf_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_FILE_PREFIX + data_id + '_' + f.filename)
+        f.save( udf_file_name )
+
+        uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        brick_ds = json.loads(_csv_to_brick(udf_file_name, uds_file_name))
+        print(json.dumps(brick_ds, indent=4, sort_keys=True))
+
+
+        brick_response = {
+            'type': {
+                'id': brick_ds['data_type']['oterm_ref'],
+                'text': brick_ds['data_type']['oterm_name']
+            },
+            'name': brick_ds['name'],
+            'description': brick_ds['description'],
+            'data_id': data_id,
+            'dataValues': [],
+            'dimensions': [],
+            'properties': []
+        }
+
+        # map dimensions to front end brick format
+        for di, dim_ds in enumerate(brick_ds['dim_context']):
+            response_dim = {
+                'index': di,
+                'required': False,
+                'size': dim_ds['size'],
+                'type': {
+                    'id': dim_ds['data_type']['oterm_ref'],
+                    'text': dim_ds['data_type']['oterm_name']
+                }
+            }
+
+            variables = []
+            for dvi, dim_var_ds in enumerate(dim_ds['typed_values']):
+                variables.append({
+                    'type': {
+                        'id': dim_var_ds['value_type']['oterm_ref'],
+                        'text': dim_var_ds['value_type']['oterm_name']
+                    },
+                    'index': dvi,
+                    # TODO: actually use Ontology provider to get require mapping value
+                    'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
+                    'scalarType': dim_var_ds['values']['scalar_type']
+                })
+            response_dim['variables'] = variables
+            brick_response['dimensions'].append(response_dim)
+
+        for dti, data_var_ds in enumerate(brick_ds['typed_values']):
+            response_dv = {
+                'index': dti,
+                'required': False,
+                'scalarType': data_var_ds['values']['scalar_type'],
+                'type': {
+                    'id': data_var_ds['value_type']['oterm_ref'],
+                    'text': data_var_ds['value_type']['oterm_name']
+                }
+            }
+            brick_response['dataValues'].append(response_dv)
+
+        # add properties
+        for pi, property_ds in enumerate(brick_ds['array_context']):
+            brick_response['properties'].append({
+                'type': {
+                    'id': property_ds['value_type']['oterm_ref'],
+                    'text': property_ds['value_type']['oterm_name']
+                },
+                'value': property_ds['value']['string_value']
+            })
+
+        return _ok_response(brick_response)
+
+    except Exception as e:
+        return _err_response(e, traceback=True)
+
+            
+
+
 
     # TODO: handle uploading files
 
@@ -794,12 +957,30 @@ def _dim_var_example(vals, max_items=5):
 def _brick_to_csv(brick_id):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
-    cmd = '/home/coral/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
+    # cmd = '/home/coral/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_json + ' ' + file_name_csv
     cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
     cmdProcess.wait()
     with open(file_name_csv, 'r') as file:
         data = file.read()
     return data
+
+def _csv_to_brick(file_name_csv, file_name_json):
+    # for uploading CSVs as bricks, stored in /tmp directory
+
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_csv + ' ' + file_name_json
+    cmd_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
+    try:
+        cmd_process.wait()
+    except Exception as e:
+        print('Failed Brick To CSV: ' + str(cmd_process.stdout))
+        return _err_response({
+            'message': 'Failed To Upload CSV: ' + str(cmd_process.stdout)
+        })
+    with open(file_name_json, 'r') as file:
+        data = file.read()
+    return data
+
 
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)

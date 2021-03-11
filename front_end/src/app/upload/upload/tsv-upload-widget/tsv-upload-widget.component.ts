@@ -28,8 +28,7 @@ export class TSVUploadWidgetComponent implements OnInit {
     this.uploadError = false;
 
     this.file = files.item(0);
-
-    if (this.file?.type !== 'text/tab-separated-values') {
+    if (this.file?.type !== 'text/csv') {
       this.fileTypeError = true;
     } else {
       this.calculateFileSize();
@@ -42,7 +41,7 @@ export class TSVUploadWidgetComponent implements OnInit {
     this.uploadError = false;
 
     this.file = event.target?.files?.item(0)
-    if (this.file?.type !== 'text/tab-separated-values') {
+    if (this.file?.type !== 'text/csv') {
       this.fileTypeError = true;
     } else {
       this.calculateFileSize();
@@ -69,7 +68,7 @@ export class TSVUploadWidgetComponent implements OnInit {
     this.uploadService.uploadTSV(this.file)
       .then(data => {
         // navigate to create step
-        this.router.navigate(['/upload/preview'], {queryParams: {'tsvUpload': 'true'}});
+        this.router.navigate(['/upload/validate'], {queryParams: {'tsvUpload': 'true'}});
       })
       .catch(error => {
         this.fileTypeError = true;
