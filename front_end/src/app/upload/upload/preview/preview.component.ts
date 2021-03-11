@@ -29,17 +29,17 @@ export class PreviewComponent implements OnInit {
   ngOnInit() {
 
     this.route.queryParams.subscribe(queryParams => {
-      if (queryParams['tsvUpload']) {
-        this.brick = new Brick();
-        this.uploadService.brickBuilder = this.brick;
-        // TODO: implement method to load uploaded brick from server
-        this.csvUpload = true;
-      } else {
-        this.brick = this.uploadService.getBrickBuilder();
-      }
+      // if (queryParams['tsvUpload']) {
+      //   this.brick = new Brick();
+      //   this.uploadService.brickBuilder = this.brick;
+      //   // TODO: implement method to load uploaded brick from server
+      //   this.csvUpload = true;
+      // } else {
+      //   this.brick = this.uploadService.getBrickBuilder();
+      // }
     });
 
-    // this.brick = this.uploadService.getBrickBuilder();
+    this.brick = this.uploadService.getBrickBuilder();
     if (!this.brick || !this.brick.dataValues.length) {
       this.router.navigate(['/upload/type']);
     }
