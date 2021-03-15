@@ -69,7 +69,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
     if (this.csvUpload) {
       this.uploadService.getCSVValidationResults()
-        .subscribe(data => this.handleValidationResult(data));
+        .subscribe(data => {
+          this.handleValidationResult(data)
+        });
     } else {
       this.uploadService.getValidationResults()
         .subscribe(data => this.handleValidationResult(data));

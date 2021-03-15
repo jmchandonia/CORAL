@@ -20,14 +20,14 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   @Output() valueError: EventEmitter<any> = new EventEmitter();
   @Input() set property(prop: TypedProperty) {
     this.unitsData = prop.units ? [prop.units] : [];
-    this.valuesData = prop.value && prop.requireDropdownForVal
+    this.valuesData = prop.value && (prop.scalarType === 'oterm_ref' || prop.scalarType === 'object_ref')
       ? [prop.value] as Term[] : [];
 
     this._property = prop;
 
     if (prop.type) {
       const typeWithContext = Object.assign({}, prop.type);
-      prop.context.forEach(ctx => {
+      prop.context?.forEach(ctx => {
         typeWithContext.text += `, ${ctx.type.text}=${ctx.value.text ? ctx.value.text : ctx.value}`;
       });
       this.typesData = [typeWithContext];
@@ -36,13 +36,17 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     if (prop.units) {
       this.unitsItem = prop.units.id;
     }
-    if (prop.value && prop.requireDropdownForVal) {
+    if (prop.value && (prop.scalarType === 'oterm_ref' || prop.scalarType === 'object_ref')) {
       this.propValueItem = (prop.value as Term).id;
     }
 
     if (this.property.microType) {
       this.getPropertyUnits();
     }
+
+    if (this.property.scalarType === 'oterm_ref' || this.property.scalarType === 'object_ref') {
+      this.requiresDropdown = true
+    } 
   }
 
   get property() {
@@ -59,6 +63,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
    typesLoading = false;
    unitsLoading = false;
    valuesLoading = false;
+   requiresDropdown = false;
 
    modalRef: BsModalRef;
    errorSub = new Subscription();

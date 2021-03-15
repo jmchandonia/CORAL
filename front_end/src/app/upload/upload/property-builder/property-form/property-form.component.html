@@ -19,7 +19,7 @@
     <button
       class="btn select-custom-button"
       (click)="openContextModal()"
-      [tooltip]="'View Property context (' + property.context.length + ' items)'"
+      [tooltip]="'View Property context (' + property.context?.length + ' items)'"
       [delay]="750"
       [disabled]="!property.type"
       [class.button-error]="errors && !property.type"
@@ -31,7 +31,7 @@
   </div>
   <div class="col-3 value-container">
       <ng-select
-        *ngIf="property.type && property.requireDropdownForVal"
+        *ngIf="property.type && requiresDropdown"
         class="custom"
         [class.select-error]="errors && !property.value"
         [items]="valuesData"
@@ -44,7 +44,7 @@
         [clearable]="false"
       ></ng-select>
       <input
-        *ngIf="property.type && !property.requireDropdownForVal"
+        *ngIf="property.type && !requiresDropdown"
         class="form-control"
         [(ngModel)]="property.value"
         [ngModelOptions]="{standalone: true}" 
