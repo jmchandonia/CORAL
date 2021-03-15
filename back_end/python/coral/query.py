@@ -540,22 +540,10 @@ class Query:
                 # and outputs:
                 nInputs = 0
                 nOutputs = 0
-                hasDDT = False
                 for pi in ip_filters['processInputs']:
-                    if pi.startswith('DDT_'):
-                        if not hasDDT:
-                            hasDDT = True
-                            nInputs+=1
-                    else:
-                        nInputs+=1
-                hasDDT = False
+                    nInputs+=1
                 for pi in ip_filters['processOutputs']:
-                    if pi.startswith('DDT_'):
-                        if not hasDDT:
-                            hasDDT = True
-                            nOutputs+=1
-                    else:
-                        nOutputs+=1
+                    nOutputs+=1
                     
                 for pi in ip_filters['processInputs']:
                     d_var_name = self.__param_name('pr')

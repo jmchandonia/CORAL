@@ -67,6 +67,12 @@ gzip -d chebi.obo.gz
 wget https://raw.githubusercontent.com/EnvironmentOntology/envo/master/envo.obo
 ```
 
+** NCBI Taxon ontology:**
+
+```
+wget http://ontologies.berkeleybop.org/ncbitaxon.obo
+```
+
 
 ### Set up internal ontologies used by CORAL
 
