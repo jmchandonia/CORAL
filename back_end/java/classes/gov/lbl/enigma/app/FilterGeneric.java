@@ -76,11 +76,11 @@ public class FilterGeneric {
     final public static void main(String argv[]) {
         try {
             // load ontologies
-            GenericsUtilCommon ont = new GenericsUtilCommon(Arrays.asList("/home/clearinghouse/prod/data_import/ontologies/enigma_specific_ontology.obo",
-                                                                          "/home/clearinghouse/prod/data_import/ontologies/data_type_ontology.obo",
-                                                                          "/home/clearinghouse/prod/data_import/ontologies/context_measurement_ontology.obo",
-                                                                          "/home/clearinghouse/prod/data_import/ontologies/unit_standalone.obo",
-                                                                          "/home/clearinghouse/prod/data_import/ontologies/chebi.obo"));
+            GenericsUtilCommon ont = new GenericsUtilCommon(Arrays.asList("/home/coral/prod/data_import/ontologies/enigma_specific_ontology.obo",
+                                                                          "/home/coral/prod/data_import/ontologies/data_type_ontology.obo",
+                                                                          "/home/coral/prod/data_import/ontologies/context_measurement_ontology.obo",
+                                                                          "/home/coral/prod/data_import/ontologies/unit_standalone.obo",
+                                                                          "/home/coral/prod/data_import/ontologies/chebi.obo"));
             
             // read from JSON
             File f = new File(argv[0]);
