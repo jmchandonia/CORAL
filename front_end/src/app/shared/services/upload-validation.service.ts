@@ -23,7 +23,6 @@ export class UploadValidationService {
 
   constructor(private uploadService: UploadService) {
     this.brick = this.uploadService.getBrickBuilder();
-    console.log(this.brick);
    }
 
    validationErrors(step: string) {
@@ -137,6 +136,11 @@ export class UploadValidationService {
    }
 
    validateMappedData() {
+
+    if (this.brick === undefined) {
+      this.brick = this.uploadService.getBrickBuilder();
+    }
+
      // iterate through all dimensions
      for (const dimension of this.brick.dimensions) {
        for (const variable of dimension.variables) {
