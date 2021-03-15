@@ -2414,6 +2414,9 @@ def coral_type_graph():
         for td in type_defs:
             if not td.for_provenance:
                 continue
+            count = arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
+            if count==0:
+                continue
             nodes.append(
                 {
                     'index': index,
@@ -2421,7 +2424,7 @@ def coral_type_graph():
                     'name': td.name,
                     'dataModel': td.name,
                     'dataType': td.name,
-                    'count': arango_service.get_core_type_count( '%s%s' %(TYPE_CATEGORY_STATIC, td.name))
+                    'count': count
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')

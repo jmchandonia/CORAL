@@ -1,0 +1,164 @@
+{
+    "plot_types":[
+        {
+            "name":"Vertical Barchart",
+            "description": "1D Vertical Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">insert_chart</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "type": "bar"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ],
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": false
+                },
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": true
+                }
+            }
+        },
+        {
+            "name":"Horizontal Barchart",
+            "description": "1D Horizontal Barchart",
+            "image_tag": "<i class=\"material-icons dropdown-icon rotated\">insert_chart</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "type": "bar",
+                "orientation": "h"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ],
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": true
+                }, 
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": false
+                }
+            }
+        },
+        {
+            "name":"Line Plot",
+            "description": "1D Line Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">timeline</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "mode": "lines"
+            },
+            "plotly_layout": {},
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ],
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": true
+                },
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": true
+                }
+            }
+        },
+        {
+            "name":"Scatter Plot",
+            "description": "1D Scatter Plot",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">scatter_plot</i>",
+            "n_dimensions": 1,
+            "plotly_trace": {
+                "mode": "markers"
+            },
+            "plotly_layout": {},
+
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                }
+            ],
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": true
+                },
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": true
+                }
+            }
+        },
+        {
+            "name":"Heatmap",
+            "description": "2D Heatmap",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">gradient</i>",
+            "n_dimensions": 2,
+            "plotly_trace": {
+                "type": "heatmap"
+            },
+            "plotly_layout": {},
+            "axis_blocks": [
+                {
+                    "title": "X axis"
+                },
+                {
+                    "title": "Y axis"
+                },
+                {
+                    "title": "Z axis"
+                }                
+            ],
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": true
+                },
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": true
+                },
+                "z": {
+                    "title": "Series",
+                    "numeric_only": true
+                }
+            }
+        },
+        {
+            "name": "Map",
+            "description": "Map",
+            "n_dimensions": 1,
+            "image_tag": "<i class=\"material-icons dropdown-icon\">map</i>",
+            "map": true,
+            "plotly_trace": {},
+            "plotly_layout": {},
+            "axis_data": []
+        }
+    ]
+}
