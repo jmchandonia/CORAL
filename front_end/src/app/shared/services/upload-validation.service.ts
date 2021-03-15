@@ -23,6 +23,7 @@ export class UploadValidationService {
 
   constructor(private uploadService: UploadService) {
     this.brick = this.uploadService.getBrickBuilder();
+    console.log(this.brick);
    }
 
    validationErrors(step: string) {
@@ -75,7 +76,7 @@ export class UploadValidationService {
     const messages = [];
     for (const property of this.nonRequiredProperties) {
       // check if property has type, value, and units
-      if (!property.typeTerm || !property.value || property.units === undefined) {
+      if (!property.type || !property.value || property.units === undefined) {
         // this.errorSub.next(true);
         // return true;
         error = true;

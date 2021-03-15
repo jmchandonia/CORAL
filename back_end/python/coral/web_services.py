@@ -24,7 +24,6 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
-import pprint
 # from . import services
 # from .brick import Brick
 
@@ -218,7 +217,7 @@ def coral_refs_to_core_objects():
         # }]
         return _ok_response(res)
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 @app.route("/coral/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
@@ -731,7 +730,17 @@ def validate_upload_csv(data_id):
             })
             for dim_var in dim['typed_values']:
                 vtype_term_id = dim_var['value_type']['oterm_ref']
-                values = np.array(dim_var['values']['object_refs'], dtype='object')
+
+                if dim_var['values']['scalar_type'] in ['object_ref', 'oterm_ref']:
+                    if dim_var['values']['scalar_type'] == 'object_ref':
+                        dim_var_values = dim_var['values']['object_refs']
+                    else:
+                        dim_var_values = dim_var['values']['oterm_refs']
+                else:
+                    scalar_type = dim_var['values']['scalar_type']
+                    dim_var_values = dim_var['values'][scalar_type + '_values']
+
+                values = np.array(dim_var_values, dtype='object')
 
                 errors = svs['value_validator'].cast_var_values(values, vtype_term_id, validated_data['obj_refs'])
 
@@ -781,7 +790,7 @@ def validate_upload_csv(data_id):
         return _ok_response(res) 
 
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 @app.route('/coral/upload', methods=['POST'])
 def upload_file():
@@ -859,8 +868,6 @@ def upload_tsv():
 
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
         brick_ds = json.loads(_csv_to_brick(udf_file_name, uds_file_name))
-        print(json.dumps(brick_ds, indent=4, sort_keys=True))
-
 
         brick_response = {
             'type': {
@@ -916,12 +923,42 @@ def upload_tsv():
 
         # add properties
         for pi, property_ds in enumerate(brick_ds['array_context']):
+
+            microtypes = svs['ontology'].property_microtypes
+            prop_microtype = microtypes.find_id(property_ds['value_type']['oterm_ref'])
+
+            scalar_type = property_ds['value']['scalar_type']
+
+            require_mapping = property_ds['value']['scalar_type'] in ['object_ref', 'oterm_ref']
+
+            if require_mapping:
+                if property_ds['value']['scalar_type'] == 'object_ref':
+                    value = {
+                        'id': property_ds['value']['object_ref'],
+                        'text': property_ds['value']['string_value']
+                    }
+                else:
+                    value = {
+                        'id': property_ds['value']['oterm_ref'],
+                        'text': property_ds['value']['string_value']
+                    }
+            else:
+                value = property_ds['value'][str(scalar_type) + '_value']
+
             brick_response['properties'].append({
+                'scalarType': property_ds['value']['scalar_type'],
                 'type': {
                     'id': property_ds['value_type']['oterm_ref'],
                     'text': property_ds['value_type']['oterm_name']
                 },
-                'value': property_ds['value']['string_value']
+                'value': value,
+                'microType': {
+                    'valid_units': prop_microtype.microtype_valid_units,
+                    'valid_units_parents': prop_microtype.microtype_valid_units_parents,
+                    'fk': prop_microtype.microtype_fk,
+                    'valid_values_parent': prop_microtype.microtype_valid_values_parent
+                },
+                'require_mapping': require_mapping,
             })
 
         return _ok_response(brick_response)
@@ -988,7 +1025,6 @@ def _filter_brick(brick_id, query):
     # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
     # sys.stderr.write('running '+cmd+'\n')
-    print('RUNNING', cmd)
     output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=cns['_PROJECT_ROOT'] + '/bin')
     try:
         data = json.loads(output.stdout)
