@@ -44,11 +44,13 @@ export class UploadService {
 
   getBrickBuilder() {
     if (this.brickBuilder) {
+      console.log('non ls brick', this.brickBuilder)
       return this.brickBuilder;
     } else {
       const localStorageBrick = JSON.parse(localStorage.getItem('brickBuilder'));
       if (localStorageBrick !== null) {
         this.brickBuilder = BrickFactoryService.createUploadInstanceFromLS(localStorageBrick);
+        console.log('ls brick', this.brickBuilder)
         return this.brickBuilder;
       }
     }
@@ -209,6 +211,7 @@ export class UploadService {
   public getRefsToCoreObjects() {
     const formData: FormData = new FormData();
     formData.append('brick', this.brickBuilder.toJson());
+    console.log('brick builder', this.brickBuilder)
     return this.http.post<any>(`${environment.baseURL}/refs_to_core_objects`, formData);
   }
 
