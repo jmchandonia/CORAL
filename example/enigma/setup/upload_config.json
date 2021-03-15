@@ -1,0 +1,98 @@
+{
+    "version": 1,
+    "ontologies": [
+
+        {
+            "name": "chebi",
+            "file_name": "chebi.obo"
+        },
+        {
+            "name": "units",
+            "file_name": "unit_standalone.obo"
+        },
+        {
+            "name": "context_measurement",
+            "file_name": "context_measurement_ontology.obo"
+        },
+        {
+            "name": "continent",
+            "file_name": "continent.obo"
+        },
+        {
+            "name": "country",
+            "file_name": "country.obo"
+        },
+        {
+            "name": "dtype",
+            "description": "Data types",
+            "file_name": "data_type_ontology.obo"
+        },
+        {
+            "name": "enigma",
+            "description": "ENIGMA metadata",
+            "file_name": "enigma_specific_ontology.obo"
+        },
+        {
+            "name": "envo",
+            "file_name": "envo.obo"
+        },
+        {
+            "name": "mixs",
+            "file_name": "mixs.obo"
+        },
+        {
+            "name": "process",
+            "file_name": "process_ontology.obo"
+        },
+        {
+            "name": "taxonomy",
+            "file_name": "ncbitaxon.obo"
+        }
+    ],
+    "bricks": [
+        {
+            "file": "generic_otu_id_zhou_100ws.json"
+        }, {
+            "file": "generic_otu_count_zhou_100ws.json"
+        }
+    ],
+    "entities": [
+        {
+            "file": "wells_100ws.tsv",
+            "dtype": "Well"
+        }, {
+            "file": "samples_100ws.tsv",
+            "dtype": "Sample"
+        }, {
+            "file": "samples_filter_100ws.tsv",
+            "dtype": "Sample"
+        }, {
+            "file": "communities_filter_100ws.tsv",
+            "dtype": "Community"
+        }, {
+            "file": "taxa_zhou_100ws.tsv",
+            "dtype": "Taxon"
+        }, {
+            "file": "otus_zhou_100ws.tsv",
+            "dtype": "OTU"
+        }, {
+            "file": "reads_kbase_100ws.tsv",
+            "dtype": "Reads"
+        }
+    ],
+    "processes": [
+	{
+            "file": "process_sampling_100ws.tsv",
+            "ptype": "Sampling"
+        }, {
+            "file": "process_sequencing_100ws_16S.tsv",
+            "ptype": "16S Sequencing"
+        }, {
+            "file": "process_filter_100ws.tsv",
+            "ptype": "Filter"
+        }, {
+            "file": "process_otu_inference_zhou_100ws.tsv",
+            "ptype": "Classify OTUs"
+        }
+    ]    
+}

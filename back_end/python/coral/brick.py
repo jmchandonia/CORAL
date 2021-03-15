@@ -745,7 +745,7 @@ class Brick:
             #         var_values = var_json['values'][var_scalar_type + '_values']
 
 
-            if isinstance(truncate_variable_length, int):
+            if type(truncate_variable_length) is int:
                 dim_data['truncate_variable_length'] = dim.size > truncate_variable_length
 
             for var in dim.vars:
@@ -766,8 +766,10 @@ class Brick:
                 else:
                     value_key = var.scalar_type + '_values'
                     value_vals = list(var.values)
-                if isinstance(truncate_variable_length, int) and dim.size > truncate_variable_length:
+
+                if type(truncate_variable_length) is int and dim.size > truncate_variable_length:
                     value_vals = value_vals[:truncate_variable_length]
+                    
                 if not typed_values_property_name:
                     value_key = 'values'
 
