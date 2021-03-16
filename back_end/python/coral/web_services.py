@@ -896,20 +896,29 @@ def upload_tsv():
 
             variables = []
             for dvi, dim_var_ds in enumerate(dim_ds['typed_values']):
-                variables.append({
+                response_dim_var = {
                     'type': {
                         'id': dim_var_ds['value_type']['oterm_ref'],
                         'text': dim_var_ds['value_type']['oterm_name']
                     },
                     'index': dvi,
-                    # TODO: actually use Ontology provider to get require mapping value
                     'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
-                    'scalarType': dim_var_ds['values']['scalar_type']
-                })
+                    'scalarType': dim_var_ds['values']['scalar_type'],
+                }
+                if 'value_units' in dim_var_ds:
+                    response_dim_var['units'] = {
+                        'id': dim_var_ds['value_units']['oterm_ref'],
+                        'text': dim_var_ds['value_units']['oterm_name']
+                    }
+                else:
+                    response_dim_var['units'] = None
+                variables.append(response_dim_var)
             response_dim['variables'] = variables
             brick_response['dimensions'].append(response_dim)
 
         for dti, data_var_ds in enumerate(brick_ds['typed_values']):
+            # print('data var ds')
+            # print(json.dumps(data_var_ds, indent=2))
             response_dv = {
                 'index': dti,
                 'required': False,
@@ -919,10 +928,19 @@ def upload_tsv():
                     'text': data_var_ds['value_type']['oterm_name']
                 }
             }
+            if 'value_units' in response_dv:
+                response_dv['units'] = {
+                    'id': response_dv['value_units']['oterm_ref'],
+                    'text': response_dv['value_units']['oterm_name']
+                }
+            else:
+                response_dv['units'] = None
             brick_response['dataValues'].append(response_dv)
 
         # add properties
         for pi, property_ds in enumerate(brick_ds['array_context']):
+            print('property_ds')
+            print(json.dumps(property_ds, indent=2))
 
             microtypes = svs['ontology'].property_microtypes
             prop_microtype = microtypes.find_id(property_ds['value_type']['oterm_ref'])
@@ -945,7 +963,7 @@ def upload_tsv():
             else:
                 value = property_ds['value'][str(scalar_type) + '_value']
 
-            brick_response['properties'].append({
+            props_response = {
                 'scalarType': property_ds['value']['scalar_type'],
                 'type': {
                     'id': property_ds['value_type']['oterm_ref'],
@@ -959,7 +977,17 @@ def upload_tsv():
                     'valid_values_parent': prop_microtype.microtype_valid_values_parent
                 },
                 'require_mapping': require_mapping,
-            })
+            }
+
+            if 'value_units' in property_ds:
+                props_response['units'] = {
+                    'id': property_ds['value_units']['oterm_ref'],
+                    'text': property_ds['value_units']['oterm_name']
+                }
+            else:
+                props_response['units'] = None
+            
+            brick_response['properties'].append(props_response)
 
         return _ok_response(brick_response)
 
