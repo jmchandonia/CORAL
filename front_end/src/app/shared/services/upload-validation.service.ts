@@ -184,10 +184,18 @@ export class UploadValidationService {
    }
 
    validatePreview() {
+     if (this.brick === undefined) {
+       this.brick = this.uploadService.getBrickBuilder();
+     }
      return this.brick.coreObjectRefsError;
    }
 
    validateCreateStep() {
+
+    if (this.brick === undefined) {
+      this.brick = this.uploadService.getBrickBuilder();
+    }
+
      const messages = [];
      let startDateError = false;
      let endDateError = false;
