@@ -64,11 +64,11 @@ export class TSVUploadWidgetComponent implements OnInit {
     }
   }
 
-  uploadTSV() {
-    this.uploadService.uploadTSV(this.file)
+  uploadCSV() {
+    this.uploadService.uploadCSV(this.file)
       .then(data => {
         // navigate to create step
-        this.router.navigate(['/upload/validate'], {queryParams: {'tsvUpload': 'true'}});
+        this.router.navigate(['/upload/validate'], {queryParams: {'csvUpload': 'true'}});
       })
       .catch(error => {
         this.fileTypeError = true;

@@ -1,20 +1,19 @@
 <div class="container mb-4">
-      <!-- BEGIN tsv upload widget -->
   <div class="row justify-content-center">
     <div class="col-12">
       <div class="row">
         <div class="col-12">
-          <h5 style="float: left;" class="mt-2 mb-0">Upload a TSV</h5>
+          <h5 style="float: left;" class="mt-2 mb-0">Upload a CSV</h5>
         </div>
       </div>
       <div class="p-3 mb-3">
-        <span>If you have a preconfigured TSV, you can upload here without the configuration steps.</span>
+        <span>If you have a preconfigured CSV, you can upload here without the configuration steps.</span>
       </div>
     </div>
   </div>
   <div class="row justify-content-center" *ngIf="fileTypeError">
       <div class="alert alert-danger col-12">
-          Error: Only TSV files are supported for this method of uploading. Please double check that your file has the .tsv extension.
+          Error: Only CSV files are supported for this method of uploading. Please double check that your file has the .csv extension.
       </div>
   </div>
   <div class="row justify-content-center">
@@ -22,7 +21,7 @@
         <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
             <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="!file">
                 <div class="col-10 d-block">
-                    <h2>Drag and drop TSVs here</h2>
+                    <h2>Drag and drop CSVs here</h2>
                 </div>
                 <div class="col-10 d-block">
                     <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
@@ -38,7 +37,7 @@
                         </div>
                         <div class="col-4">
                             <div class="row mt-3">
-                                <button class="btn btn-primary col-6" *ngIf="readyToUpload" (click)="uploadTSV()">Upload</button>
+                                <button class="btn btn-primary col-6" *ngIf="readyToUpload" (click)="uploadCSV()">Upload</button>
                                 <button class="btn btn-secondary col-6" (click)="clearFile()">Clear</button>
                             </div>
                         </div>

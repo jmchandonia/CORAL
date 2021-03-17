@@ -499,7 +499,7 @@ def get_brick(brick_id):
         return_format = JSON
         if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'TSV':
+            if query is not None and 'format' in query and query['format'] == 'CSV':
                 return_format = CSV
 
         if return_format == JSON:
@@ -859,8 +859,8 @@ def upload_file():
     except Exception as e:
         return _err_response(e, traceback=True)
 
-@app.route('/coral/upload_tsv', methods=["POST"])
-def upload_tsv():
+@app.route('/coral/upload_csv', methods=["POST"])
+def upload_csv():
     f = request.files['files']
     data_id = uuid.uuid4().hex
 
@@ -1029,10 +1029,10 @@ def _dim_var_example(vals, max_items=5):
 def _brick_to_csv(brick_id):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
-    # cmd = '/home/coral/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_json + ' ' + file_name_csv
-    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
     cmdProcess.wait()
+    print(cmdProcess.stdout.read())
     with open(file_name_csv, 'r') as file:
         data = file.read()
     return data
@@ -1679,10 +1679,10 @@ def coral_search():
         s = pprint.pformat(search_data)
         sys.stderr.write('search_data = '+s+'\n')
 
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
-        if 'format' in search_data and search_data['format'] == 'TSV':
-            return_format = TSV
+        if 'format' in search_data and search_data['format'] == 'CSV':
+            return_format = CSV
 
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
@@ -3081,12 +3081,12 @@ def coral_core_type_props(obj_name):
 def coral_core_type_metadata(obj_id):
     obj_type = ''
     try:
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
         if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'TSV':
-                return_format = TSV
+            if query is not None and 'format' in query and query['format'] == 'CSV':
+                return_format = CSV
         
         sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)
