@@ -28,6 +28,7 @@ import subprocess
 # from .brick import Brick
 
 from .dataprovider import DataProvider
+from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
 from . import template 
@@ -606,6 +607,7 @@ def create_brick():
         return _ok_response(br.id)
 
     except Exception as e:
+        print(tb.print_exc())
         return _err_response(e, traceback=True)
 
 
@@ -868,6 +870,11 @@ def upload_tsv():
 
         uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
         brick_ds = json.loads(_csv_to_brick(udf_file_name, uds_file_name))
+
+
+        with open(uds_file_name, 'w') as f:
+            f.write(Brick.read_dict(data_id, brick_ds).to_json())
+            f.close()
 
         brick_response = {
             'type': {
