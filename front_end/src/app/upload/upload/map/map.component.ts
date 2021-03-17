@@ -39,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.route.queryParams.subscribe(queryParams => {
-      this.csvUpload = !!queryParams['tsvUpload'];
+      this.csvUpload = !!queryParams['csvUpload'];
     })
 
     this.brick = this.uploadService.getBrickBuilder();
