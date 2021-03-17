@@ -39,8 +39,8 @@ export class CreateComponent implements OnInit {
   ngOnInit() {
 
     this.route.queryParams.subscribe(queryParams => {
-      if (queryParams['tsvUpload']) {
-        // TODO: get tsv uploaded brick information from back end
+      if (queryParams['csvUpload']) {
+        // TODO: get csv uploaded brick information from back end
         this.brick = new Brick();
       } else {
         this.brick = this.uploadService.getBrickBuilder();

@@ -161,9 +161,9 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // download all core type search results as tsv
+  // download all core type search results as csv
   handleCoreTypeDownload() {
-    this.queryBuilder.getSearchResults('TSV')
+    this.queryBuilder.getSearchResults('CSV')
       .subscribe(data => {
         const filename = JSON.parse(localStorage.getItem('queryBuilder'))?.queryMatch?.dataType || 'core-type';
         this.download(data, filename + new Date().toISOString())
@@ -182,13 +182,13 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
         a.remove();
       } else {
         if (row.brick_id) {
-          // download dynamic type tsv
-          this.queryBuilder.downloadBrick(row.brick_id, 'TSV')
+          // download dynamic type csv
+          this.queryBuilder.downloadBrick(row.brick_id, 'CSV')
             .subscribe(data => {
               this.download(data.res, row.brick_name);
             });
         } else {
-          // download singular core type tsv
+          // download singular core type csv
           this.queryBuilder.downloadCoreType(row.id)
             .subscribe(data => {
               this.download(data.results.items, row.name);
@@ -198,11 +198,11 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   download(data, name) {
-    const blob = new Blob([data], {type: 'text/tsv'});
+    const blob = new Blob([data], {type: 'text/csv'});
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${name}.tsv`;
+    a.download = `${name}.csv`;
     a.setAttribute('display', 'none');
     document.body.appendChild(a);
     a.click();
