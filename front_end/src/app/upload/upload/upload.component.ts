@@ -33,7 +33,7 @@ export class UploadComponent implements OnInit, OnDestroy {
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.currentUrl = event.url.split('/').pop();
+        this.currentUrl = event.url.split('/').pop().split('?')[0];
         this.progressIndex = this.uploadSteps.indexOf(this.currentUrl);
         if (this.progressIndex < 0) {
           this.progressIndex = 0;

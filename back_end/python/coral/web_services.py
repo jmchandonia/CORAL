@@ -24,10 +24,12 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
+from pyArango.theExceptions import AQLQueryError
 # from . import services
 # from .brick import Brick
 
 from .dataprovider import DataProvider
+from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
 from . import template 
@@ -217,7 +219,7 @@ def coral_refs_to_core_objects():
         # }]
         return _ok_response(res)
     except Exception as e:
-        return _err_response(e)
+        return _err_response(e, traceback=True)
 
 @app.route("/coral/search_dimension_microtypes/<value>", methods=['GET'])
 def search_dimension_microtypes(value):
@@ -498,7 +500,7 @@ def get_brick(brick_id):
         return_format = JSON
         if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'TSV':
+            if query is not None and 'format' in query and query['format'] == 'CSV':
                 return_format = CSV
 
         if return_format == JSON:
@@ -589,7 +591,7 @@ def create_brick():
         uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
         brick_data = json.loads(open(uvd_file_name).read())
 
-        br = _create_brick(brick_ds, brick_data)        
+        br = _create_brick(brick_ds, brick_data)
 
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
@@ -605,7 +607,16 @@ def create_brick():
 
         return _ok_response(br.id)
 
+    except AQLQueryError as e:
+        print(tb.print_exc())
+        brick_ds = json.loads(request.form['brick'])
+        brick_name = brick_ds['name']
+        return _err_response(
+            'Brick with name "%s" already exists in system: please use another brick name' % brick_name
+        )
+
     except Exception as e:
+        print(tb.print_exc())
         return _err_response(e, traceback=True)
 
 
@@ -700,6 +711,97 @@ def validate_upload():
     except Exception as e:
         return _err_response(e)
 
+@app.route('/coral/validate_upload_csv/<data_id>', methods=['GET'])
+def validate_upload_csv(data_id):
+    uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id)
+
+    with open(uds_file_name, 'r') as f:
+        brick_ds = json.loads(f.read())
+
+    try:
+        validated_data = {
+            'dims':[],
+            'data_vars': [],
+            'obj_refs': []
+        } 
+
+        res = {
+            'dims':[],
+            'data_vars': []
+        }
+
+        for dim in brick_ds['dim_context']:
+            res_dim_vars = []
+            res['dims'].append({
+                'dim_vars': res_dim_vars
+            })
+            validated_dim_vars = []
+            validated_data['dims'].append({
+                'dim_vars': validated_dim_vars
+            })
+            for dim_var in dim['typed_values']:
+                vtype_term_id = dim_var['value_type']['oterm_ref']
+
+                if dim_var['values']['scalar_type'] in ['object_ref', 'oterm_ref']:
+                    if dim_var['values']['scalar_type'] == 'object_ref':
+                        dim_var_values = dim_var['values']['object_refs']
+                    else:
+                        dim_var_values = dim_var['values']['oterm_refs']
+                else:
+                    scalar_type = dim_var['values']['scalar_type']
+                    dim_var_values = dim_var['values'][scalar_type + '_values']
+
+                values = np.array(dim_var_values, dtype='object')
+
+                errors = svs['value_validator'].cast_var_values(values, vtype_term_id, validated_data['obj_refs'])
+
+                total_count = values.size
+                invalid_count = len(errors)
+                res_dim_vars.append({
+                    'total_count': total_count,
+                    'valid_count': total_count - invalid_count,
+                    'invalid_count': invalid_count
+                })
+
+                validated_dim_vars.append({
+                    'values': values.tolist(),
+                    'errors': errors
+                })
+
+        for data_var in brick_ds['typed_values']:
+            vtype_term_id = data_var['value_type']['oterm_ref']
+            scalar_type = data_var['values']['scalar_type']
+            values = np.array(data_var['values'][scalar_type + '_values'], dtype='object')
+
+            errors = svs['value_validator'].cast_var_values(values, vtype_term_id)
+
+            total_count = values.size
+            invalid_count = len(errors)
+            res['data_vars'].append({
+                'total_count': total_count,
+                'valid_count': total_count - invalid_count,
+                'invalid_count': invalid_count
+            })
+
+            validated_data['data_vars'].append({
+                'values': values.tolist(),
+                'errors': errors
+            })
+
+        # Save validated data 
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        with open(uvd_file_name, 'w') as f:
+            json.dump(validated_data, f, sort_keys=True, indent=4)
+
+        # Save validated report
+        uvr_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATION_REPORT_PREFIX + data_id )
+        with open(uvr_file_name, 'w') as f:
+            json.dump(res, f, sort_keys=True, indent=4)
+
+        return _ok_response(res) 
+
+    except Exception as e:
+        return _err_response(e, traceback=True)
 
 @app.route('/coral/upload', methods=['POST'])
 def upload_file():
@@ -766,6 +868,156 @@ def upload_file():
     except Exception as e:
         return _err_response(e, traceback=True)
 
+@app.route('/coral/upload_csv', methods=["POST"])
+def upload_csv():
+    f = request.files['files']
+    data_id = uuid.uuid4().hex
+
+    try:
+        udf_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_FILE_PREFIX + data_id + '_' + f.filename)
+        f.save( udf_file_name )
+
+        uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
+        brick_ds = json.loads(_csv_to_brick(udf_file_name, uds_file_name))
+
+
+        with open(uds_file_name, 'w') as f:
+            f.write(Brick.read_dict(data_id, brick_ds).to_json())
+            f.close()
+
+        brick_response = {
+            'type': {
+                'id': brick_ds['data_type']['oterm_ref'],
+                'text': brick_ds['data_type']['oterm_name']
+            },
+            'name': brick_ds['name'],
+            'description': brick_ds['description'],
+            'data_id': data_id,
+            'dataValues': [],
+            'dimensions': [],
+            'properties': []
+        }
+
+        # map dimensions to front end brick format
+        for di, dim_ds in enumerate(brick_ds['dim_context']):
+            response_dim = {
+                'index': di,
+                'required': False,
+                'size': dim_ds['size'],
+                'type': {
+                    'id': dim_ds['data_type']['oterm_ref'],
+                    'text': dim_ds['data_type']['oterm_name']
+                }
+            }
+
+            variables = []
+            for dvi, dim_var_ds in enumerate(dim_ds['typed_values']):
+                response_dim_var = {
+                    'type': {
+                        'id': dim_var_ds['value_type']['oterm_ref'],
+                        'text': dim_var_ds['value_type']['oterm_name']
+                    },
+                    'index': dvi,
+                    'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
+                    'scalarType': dim_var_ds['values']['scalar_type'],
+                }
+                if 'value_units' in dim_var_ds:
+                    response_dim_var['units'] = {
+                        'id': dim_var_ds['value_units']['oterm_ref'],
+                        'text': dim_var_ds['value_units']['oterm_name']
+                    }
+                else:
+                    response_dim_var['units'] = None
+                variables.append(response_dim_var)
+            response_dim['variables'] = variables
+            brick_response['dimensions'].append(response_dim)
+
+        for dti, data_var_ds in enumerate(brick_ds['typed_values']):
+            # print('data var ds')
+            # print(json.dumps(data_var_ds, indent=2))
+            response_dv = {
+                'index': dti,
+                'required': False,
+                'scalarType': data_var_ds['values']['scalar_type'],
+                'type': {
+                    'id': data_var_ds['value_type']['oterm_ref'],
+                    'text': data_var_ds['value_type']['oterm_name']
+                }
+            }
+            if 'value_units' in response_dv:
+                response_dv['units'] = {
+                    'id': response_dv['value_units']['oterm_ref'],
+                    'text': response_dv['value_units']['oterm_name']
+                }
+            else:
+                response_dv['units'] = None
+            brick_response['dataValues'].append(response_dv)
+
+        # add properties
+        for pi, property_ds in enumerate(brick_ds['array_context']):
+            print('property_ds')
+            print(json.dumps(property_ds, indent=2))
+
+            microtypes = svs['ontology'].property_microtypes
+            prop_microtype = microtypes.find_id(property_ds['value_type']['oterm_ref'])
+
+            scalar_type = property_ds['value']['scalar_type']
+
+            require_mapping = property_ds['value']['scalar_type'] in ['object_ref', 'oterm_ref']
+
+            if require_mapping:
+                if property_ds['value']['scalar_type'] == 'object_ref':
+                    value = {
+                        'id': property_ds['value']['object_ref'],
+                        'text': property_ds['value']['string_value']
+                    }
+                else:
+                    value = {
+                        'id': property_ds['value']['oterm_ref'],
+                        'text': property_ds['value']['string_value']
+                    }
+            else:
+                value = property_ds['value'][str(scalar_type) + '_value']
+
+            props_response = {
+                'scalarType': property_ds['value']['scalar_type'],
+                'type': {
+                    'id': property_ds['value_type']['oterm_ref'],
+                    'text': property_ds['value_type']['oterm_name']
+                },
+                'value': value,
+                'microType': {
+                    'valid_units': prop_microtype.microtype_valid_units,
+                    'valid_units_parents': prop_microtype.microtype_valid_units_parents,
+                    'fk': prop_microtype.microtype_fk,
+                    'valid_values_parent': prop_microtype.microtype_valid_values_parent
+                },
+                'require_mapping': require_mapping,
+            }
+
+            if 'value_units' in property_ds:
+                props_response['units'] = {
+                    'id': property_ds['value_units']['oterm_ref'],
+                    'text': property_ds['value_units']['oterm_name']
+                }
+            else:
+                props_response['units'] = None
+            
+            brick_response['properties'].append(props_response)
+
+        return _ok_response(brick_response)
+
+    except Exception as e:
+        return _err_response(e, traceback=True)
+
+            
+
+
+
+    # TODO: handle uploading files
+
+    return _ok_response({"test": 'test'})
+
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
     data = json.loads(data_json)
@@ -786,20 +1038,38 @@ def _dim_var_example(vals, max_items=5):
 def _brick_to_csv(brick_id):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
-    cmd = '/home/coral/prod/bin/ConvertGeneric.sh '+file_name_json+' '+file_name_csv
-    sys.stderr.write('running '+cmd+'\n')
-    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_json + ' ' + file_name_csv
+    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
     cmdProcess.wait()
+    print(cmdProcess.stdout.read())
     with open(file_name_csv, 'r') as file:
         data = file.read()
     return data
 
+def _csv_to_brick(file_name_csv, file_name_json):
+    # for uploading CSVs as bricks, stored in /tmp directory
+
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_csv + ' ' + file_name_json
+    cmd_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
+    try:
+        cmd_process.wait()
+    except Exception as e:
+        print('Failed Brick To CSV: ' + str(cmd_process.stdout))
+        return _err_response({
+            'message': 'Failed To Upload CSV: ' + str(cmd_process.stdout)
+        })
+    with open(file_name_json, 'r') as file:
+        data = file.read()
+    return data
+
+
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
-    cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
-    sys.stderr.write('running '+cmd+'\n')
-    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True)
+    # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
+    cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
+    # sys.stderr.write('running '+cmd+'\n')
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=cns['_PROJECT_ROOT'] + '/bin')
     try:
         data = json.loads(output.stdout)
         return data
@@ -912,7 +1182,7 @@ def login():
 	        }
 
             new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
-            return json.dumps({'success': True, 'token': new_jwt})
+            return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
         
         except Exception as e:
             return json.dumps({'success': False,
@@ -1418,10 +1688,10 @@ def coral_search():
         s = pprint.pformat(search_data)
         sys.stderr.write('search_data = '+s+'\n')
 
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
-        if 'format' in search_data and search_data['format'] == 'TSV':
-            return_format = TSV
+        if 'format' in search_data and search_data['format'] == 'CSV':
+            return_format = CSV
 
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
@@ -2820,12 +3090,12 @@ def coral_core_type_props(obj_name):
 def coral_core_type_metadata(obj_id):
     obj_type = ''
     try:
-        (JSON, TSV) = range(2)
+        (JSON, CSV) = range(2)
         return_format = JSON
         if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'TSV':
-                return_format = TSV
+            if query is not None and 'format' in query and query['format'] == 'CSV':
+                return_format = CSV
         
         sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)

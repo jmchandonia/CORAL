@@ -201,6 +201,11 @@ export class UploadService {
     return this.http.post<any>(`${environment.baseURL}/validate_upload`, body);
   }
 
+  public getCSVValidationResults() {
+    const { data_id } = this.getBrickBuilder();
+    return this.http.get<any>(`${environment.baseURL}/validate_upload_csv/${data_id}`)
+  }
+
   public getRefsToCoreObjects() {
     const formData: FormData = new FormData();
     formData.append('brick', this.brickBuilder.toJson());
@@ -241,6 +246,25 @@ export class UploadService {
         );
     });
     return returnResponse;
+  }
+
+  uploadCSV(file: File) {
+    const formData: FormData = new FormData();
+    formData.append('files', file, file.name);
+
+    return new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/upload_csv`, formData)
+        .pipe(tap((data: any) => {
+          localStorage.setItem('brickBuilder', JSON.stringify(data.results))
+        }))
+        .subscribe((res: any) => {
+          if (res.error) {
+            reject(res.error);
+          } else {
+            resolve(res);
+          }
+        })
+    });
   }
 
   setSuccessData(data: any) {

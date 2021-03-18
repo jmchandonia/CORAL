@@ -84,12 +84,12 @@ export class QueryBuilderService {
       this.queryBuilderObject = this.getQueryBuilderCache();
     }
     return this.http.post<any>(`${environment.baseURL}/search`, {...this.queryBuilderObject, format}, {
-      responseType: format === 'TSV' ? 'arraybuffer' as 'json' : 'json'
+      responseType: format === 'CSV' ? 'arraybuffer' as 'json' : 'json'
     });
   }
 
   downloadCoreType(id: string) {
-    return this.http.post<any>(`${environment.baseURL}/core_type_metadata/${id}`, {format: 'TSV'});
+    return this.http.post<any>(`${environment.baseURL}/core_type_metadata/${id}`, {format: 'CSV'});
   }
 
   downloadBrick(id: string, format: string) {

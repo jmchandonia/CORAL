@@ -24,11 +24,11 @@ public class ConvertGeneric {
     final public static void main(String argv[]) {
         try {
             // load ontologies
-            GenericsUtilCommon ont = new GenericsUtilCommon(Arrays.asList("/home/coral/prod/data_import/ontologies/enigma_specific_ontology.obo",
-                                                                          "/home/coral/prod/data_import/ontologies/data_type_ontology.obo",
-                                                                          "/home/coral/prod/data_import/ontologies/context_measurement_ontology.obo",
-                                                                          "/home/coral/prod/data_import/ontologies/unit_standalone.obo",
-                                                                          "/home/coral/prod/data_import/ontologies/chebi.obo"));
+            GenericsUtilCommon ont = new GenericsUtilCommon(Arrays.asList("../data_import/ontologies/enigma_specific_ontology.obo",
+                                                                          "../data_import/ontologies/data_type_ontology.obo",
+                                                                          "../data_import/ontologies/context_measurement_ontology.obo",
+                                                                          "../data_import/ontologies/unit_standalone.obo",
+                                                                          "../data_import/ontologies/chebi.obo"));
             
             ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
