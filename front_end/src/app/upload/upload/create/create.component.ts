@@ -92,7 +92,7 @@ export class CreateComponent implements OnInit {
   }
 
   submitBrick() {
-    const errors = this.validator.validateCreateStep()
+    const errors = this.validator.validateCreateStep(this.brick)
     this.errorMessages = errors.messages;
     if (!this.errorMessages.length) {
       this.loading = true;
