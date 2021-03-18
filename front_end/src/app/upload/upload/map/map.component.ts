@@ -6,6 +6,7 @@ import { UploadValidationService } from 'src/app/shared/services/upload-validati
 import { Subscription } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ValidationErrorItemComponent } from './validation-error-item/validation-error-item.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -24,16 +25,23 @@ export class MapComponent implements OnInit, OnDestroy {
   error = false;
   errorSub: Subscription;
   modalRef: BsModalRef;
+  csvUpload = false;
 
 
   constructor(
     private uploadService: UploadService,
     private spinner: NgxSpinnerService,
     private validator: UploadValidationService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private route: ActivatedRoute
     ) { }
 
   ngOnInit() {
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.csvUpload = !!queryParams['csvUpload'];
+    })
+
     this.brick = this.uploadService.getBrickBuilder();
     this.dataVars = this.brick.dataValues;
     this.properties = this.brick.properties;
@@ -54,38 +62,48 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
-
   getValidationResults() {
     this.dimVars.forEach((_, i) => { this.spinner.show('d' + i); });
     this.dataVars.forEach((_, i) => { this.spinner.show('v' + i); });
 
-    this.uploadService.getValidationResults()
-      .subscribe((data: any) => {
-        this.dimVars.forEach((_, i) => { this.spinner.hide('d' + i); });
-        this.dataVars.forEach((_, i) => { this.spinner.hide('v' + i); });
-        const { data_vars, dims } = data.results;
 
-        // assign counts to data vars
-        data_vars.forEach((dv, i) => {
-          const brickDv: DataValue = this.brick.dataValues[i];
-          brickDv.validCount = dv.valid_count;
-          brickDv.invalidCount = dv.invalid_count;
-          brickDv.totalCount = dv.total_count;
+    if (this.csvUpload) {
+      this.uploadService.getCSVValidationResults()
+        .subscribe(data => {
+          this.handleValidationResult(data)
         });
+    } else {
+      this.uploadService.getValidationResults()
+        .subscribe(data => this.handleValidationResult(data));
+    }
+  }
 
-        // assign counts to dim vars
-        dims.forEach((dim, i) => {
-          const brickDim: BrickDimension = this.brick.dimensions[i];
-          dim.dim_vars.forEach((dv, j) => {
-            const brickDimVar = brickDim.variables[j];
-            brickDimVar.validCount = dv.valid_count;
-            brickDimVar.invalidCount = dv.invalid_count;
-            brickDimVar.totalCount = dv.total_count;
-          });
-        });
+  handleValidationResult(data: any) {
+    this.dimVars.forEach((_, i) => { this.spinner.hide('d' + i); });
+    this.dataVars.forEach((_, i) => { this.spinner.hide('v' + i); });
+    const { data_vars, dims } = data.results;
 
-        this.mapped = true;
+    // assign counts to data vars
+    data_vars.forEach((dv, i) => {
+      const brickDv: DataValue = this.brick.dataValues[i];
+      brickDv.validCount = dv.valid_count;
+      brickDv.invalidCount = dv.invalid_count;
+      brickDv.totalCount = dv.total_count;
+    });
+
+    // assign counts to dim vars
+    dims.forEach((dim, i) => {
+      const brickDim: BrickDimension = this.brick.dimensions[i];
+      dim.dim_vars.forEach((dv, j) => {
+        const brickDimVar = brickDim.variables[j];
+        brickDimVar.validCount = dv.valid_count;
+        brickDimVar.invalidCount = dv.invalid_count;
+        brickDimVar.totalCount = dv.total_count;
       });
+    });
+
+    this.mapped = true;
+  // });
   }
   
   getMappedStatus(valid, total) {

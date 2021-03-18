@@ -42,7 +42,9 @@ __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
 _BRICK_TYPE_TEMPLATES_FILE = os.path.join(__PACKAGE_DIR, 'var/brick_type_templates.json')
 _UPLOAD_CONFIG_FILE = os.path.join(__PACKAGE_DIR, 'var/upload_config.json')
 
+
 _WEB_SERVICE = __CONFIG['WebService']
+_PROJECT_ROOT = __CONFIG['WebService']['project_root']
 _PLOT_TYPES_FILE = os.path.join(__PACKAGE_DIR, 'var/' + _WEB_SERVICE['plot_types_file'])
 
 arango_service = None
