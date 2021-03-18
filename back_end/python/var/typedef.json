@@ -34,10 +34,15 @@
           "constraint": "ENIGMA:0000002"
         },
         {
+          "name": "protocol",
+          "type_term": "ME:0000328",
+          "scalar_type": "text",
+          "FK": "Protocol.name"
+        },
+        {
           "name": "date_start",
           "type_term": "ME:0000009",
           "scalar_type": "text",
-          "required": true,
           "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
           "comment": "YYYY[-MM[-DD]]"
         },
@@ -45,7 +50,6 @@
           "name": "date_end",
           "type_term": "ME:0000009",
           "scalar_type": "text",
-          "required": true,
           "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
           "comment": "YYYY[-MM[-DD]]"
         },
@@ -279,7 +283,7 @@
     { 
       "name": "Condition",
       "term": "DA:0000045",
-      "used_for_provenance": true,
+      "used_for_provenance": false,
       "fields": [
         {
           "name": "id",
@@ -446,11 +450,10 @@
           "constraint": "ME:0000116"
         },
         {
-          "name": "kbase_link",
+          "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true,
-          "constraint": "https://narrative\\.kbase\\.us/#dataview/.*"
+          "required": true
         }
       ],
       "process_types": ["PROCESS:0000017"],
@@ -479,7 +482,6 @@
           "name": "strain",
           "type_term": "ME:0000044",
           "scalar_type": "text",
-          "required": true,
           "FK": "Strain.name"
         },
         {
@@ -490,15 +492,14 @@
           "units_term": "UO:0000189"
         },
         {
-          "name": "kbase_link",
+          "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true,
-          "constraint": "https://narrative\\.kbase\\.us/#dataview/.*"
+          "required": true
         }
       ],
-      "process_types": ["PROCESS:0000023"],
-      "process_inputs": [["Reads"]]
+      "process_types": ["PROCESS:0000023","PROCESS:0000024"],
+      "process_inputs": [["Reads"],["Reads"]]
     },
     {
       "name": "Genome",
@@ -523,7 +524,6 @@
           "name": "strain",
           "type_term": "ME:0000044",
           "scalar_type": "text",
-          "required": true,
           "FK": "Strain.name"
         },
         {
@@ -541,15 +541,14 @@
           "units_term": "UO:0000189"
         },
         {
-          "name": "kbase_link",
+          "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true,
-          "constraint": "https://narrative\\.kbase\\.us/#dataview/.*"
+          "required": true
         }
       ],
-      "process_types": ["PROCESS:0000034"],
-      "process_inputs": [["Assembly"]]
+      "process_types": ["PROCESS:0000034", "PROCESS:0000045"],
+      "process_inputs": [["Assembly"],["Bin"]]
     },
     {
       "name": "Gene",
@@ -618,7 +617,127 @@
         }
       ],
       "process_types": ["PROCESS:0000034"],
-      "process_inputs": [["Contigs"]]
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Bin",
+      "term": "DA:0000072",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000331",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000330",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "assembly",
+          "type_term": "ME:0000280",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Assembly"
+        },
+        {
+          "name": "contigs",
+          "type_term": "ME:0000240",
+          "scalar_type": "[text]",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000039"],
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Protocol",
+      "term": "DA:0000073",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000332",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000328",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text",
+          "constraint": "http.*"
+        }
+      ],
+      "process_types": ["PROCESS:0000044"],
+      "process_inputs": [["ENIGMA"]]
+    },
+    {
+      "name": "Image",
+      "term": "DA:0000074",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000356",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000355",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "ME:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "MIME type",
+          "type_term": "ME:0000357",
+          "scalar_type": "text"
+        },
+        {
+          "name": "size",
+          "type_term": "ME:0000128",
+          "scalar_type": "int",
+          "units_term": "UO:0000233"
+        },
+        {
+          "name": "dimensions",
+          "type_term": "ME:0000292",
+          "scalar_type": "text",
+          "units_term": "UO:0000236"
+        },
+        {
+          "name": "link",
+          "type_term": "ME:0000203",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000044"],
+      "process_inputs": [["ENIGMA"]]
     },
     {
       "name": "TnSeq_Library",
@@ -690,6 +809,42 @@
         }
       ],
       "process_types": ["PROCESS:0000027"],
+      "process_inputs": [["Genome"]]
+    },
+    {
+      "name": "DubSeq_Library",
+      "term": "DA:0000075",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "ME:0000276",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "ME:0000262",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "ME:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome"
+        },
+        {
+          "name": "n_fragments",
+          "type_term": "ME:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        }
+      ],
+      "process_types": ["PROCESS:0000049"],
       "process_inputs": [["Genome"]]
     }  
   ]
