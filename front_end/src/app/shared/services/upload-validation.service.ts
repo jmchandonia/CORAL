@@ -190,39 +190,64 @@ export class UploadValidationService {
      return this.brick.coreObjectRefsError;
    }
 
-   validateCreateStep() {
+   validateCreateStep(brick?: Brick) {
 
-    if (this.brick === undefined) {
-      this.brick = this.uploadService.getBrickBuilder();
-    }
+    // if (this.brick === undefined) {
+    //   this.brick = this.uploadService.getBrickBuilder();
+    // }
 
      const messages = [];
      let startDateError = false;
      let endDateError = false;
-     if (
-       !this.brick.name ||
-       !this.brick.campaign ||
-       !this.brick.personnel ||
-       !this.brick.start_date ||
-       !this.brick.end_date
-     ) {
-       messages.push(this.INCOMPLETE_FIELDS);
-     }
+    //  if (
+    //    !this.brick.name ||
+    //    !this.brick.campaign ||
+    //    !this.brick.personnel ||
+    //    !this.brick.start_date ||
+    //    !this.brick.end_date
+    //  ) {
+    //    messages.push(this.INCOMPLETE_FIELDS);
+    //  }
 
-     if (this.brick.start_date > new Date()) {
-       messages.push(this.INVALID_START_DATE);
-       startDateError = true;
-     }
+    if (
+      !brick.name ||
+      !brick.campaign ||
+      !brick.personnel ||
+      !brick.start_date ||
+      !brick.end_date
+    ) {
+      messages.push(this.INCOMPLETE_FIELDS);
+    }
 
-     if (this.brick.end_date > new Date()) {
-       messages.push(this.INVALID_END_DATE);
-       endDateError = true;
-     }
+    //  if (this.brick.start_date > new Date()) {
+    //    messages.push(this.INVALID_START_DATE);
+    //    startDateError = true;
+    //  }
 
-     if (this.brick.start_date > this.brick.end_date) {
-       messages.push(this.INVALID_DATE_RANGE);
-       startDateError = endDateError = true;
-     }
+    //  if (this.brick.end_date > new Date()) {
+    //    messages.push(this.INVALID_END_DATE);
+    //    endDateError = true;
+    //  }
+
+    //  if (this.brick.start_date > this.brick.end_date) {
+    //    messages.push(this.INVALID_DATE_RANGE);
+    //    startDateError = endDateError = true;
+    //  }
+
+    if (brick.start_date > new Date()) {
+      messages.push(this.INVALID_START_DATE);
+      startDateError = true;
+    }
+
+    if (brick.end_date > new Date()) {
+      messages.push(this.INVALID_END_DATE);
+      endDateError = true;
+    }
+
+    if (brick.start_date > this.brick.end_date) {
+      messages.push(this.INVALID_DATE_RANGE);
+      startDateError = endDateError = true;
+    }
 
      return {messages, startDateError, endDateError};
    }
