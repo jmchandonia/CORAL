@@ -24,6 +24,7 @@ import math
 import base64
 from contextlib import redirect_stdout
 import subprocess
+from pyArango.theExceptions import AQLQueryError
 # from . import services
 # from .brick import Brick
 
@@ -590,7 +591,7 @@ def create_brick():
         uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
         brick_data = json.loads(open(uvd_file_name).read())
 
-        br = _create_brick(brick_ds, brick_data)        
+        br = _create_brick(brick_ds, brick_data)
 
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
@@ -605,6 +606,14 @@ def create_brick():
         cache.clear()
 
         return _ok_response(br.id)
+
+    except AQLQueryError as e:
+        print(tb.print_exc())
+        brick_ds = json.loads(request.form['brick'])
+        brick_name = brick_ds['name']
+        return _err_response(
+            'Brick with name "%s" already exists in system: please use another brick name' % brick_name
+        )
 
     except Exception as e:
         print(tb.print_exc())
