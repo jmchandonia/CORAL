@@ -1182,7 +1182,7 @@ def login():
 	        }
 
             new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
-            return json.dumps({'success': True, 'token': new_jwt.decode('utf-8')})
+            return json.dumps({'success': True, 'token': new_jwt})
         
         except Exception as e:
             return json.dumps({'success': False,
