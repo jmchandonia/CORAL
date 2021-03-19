@@ -1,4 +1,4 @@
-from flask import Flask, request, json, jsonify, send_file
+from flask import Flask, request, json, jsonify, send_file, url_for
 from flask import Response
 from flask import request
 from flask_cors import CORS, cross_origin
@@ -27,6 +27,8 @@ import subprocess
 from pyArango.theExceptions import AQLQueryError
 # from . import services
 # from .brick import Brick
+from .auth import OAuthSignin
+import requests
 
 from .dataprovider import DataProvider
 from .brick import Brick
@@ -1162,6 +1164,56 @@ def _get_term(term_data):
 ########################################################################################
 ## NEW VERSION
 ##########################################################################################
+
+@app.route("/coral/google_auth_code_store", methods=["POST"])
+def handle_auth_code():
+
+    with open(cns['_GOOGLE_OAUTH2_CREDENTIALS']) as f:
+        client_credentials =  json.load(f)
+
+    result = requests.post('https://www.googleapis.com/oauth2/v4/token', {
+        'client_id': client_credentials['web']['client_id'],
+        'client_secret': client_credentials['web']['client_secret'],
+        'redirect_uri': 'postmessage',
+        'grant_type': 'authorization_code',
+        'code': request.json['authCode']
+    })
+
+    tokens = json.loads(result.content.decode('utf-8'))
+    access_token = tokens['access_token']
+    # refresh_token = tokens['refresh_token']
+    # TODO: store access_token and refresh_token ?
+
+    user = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
+
+    user_email = json.loads(user.content.decode('utf-8'))['email']
+
+    with open(cns['_USERS']) as user_file:
+        registered_users = json.load(user_file)
+
+    match_user = None
+    for registered_user in registered_users:
+        if registered_user['email'] == user_email:
+            match_user = registered_user
+
+    if match_user == None:
+        return _ok_response({
+            'success': False,
+            'message': 'User not registered in system'
+        })
+
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, milliseconds=0, microseconds=0, minutes=120),
+            'iat': datetime.datetime.utcnow(),
+            'sub': match_user['username']
+        }
+
+        new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+        return _ok_response({'success': True, 'token': new_jwt.decode('utf-8'), 'user': match_user})
+    except Exception as e:
+        return json.dumps({'success': False, 'message': 'Something went wrong.'})
+
 
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])

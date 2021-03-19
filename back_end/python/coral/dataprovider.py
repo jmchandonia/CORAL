@@ -52,7 +52,9 @@ class DataProvider:
             '_CACHE_DIR': services._CACHE_DIR,
             '_AUTH_SECRET': services._AUTH_SECRET,
             '_AUTH_PUBLIC': services._AUTH_PUBLIC,
-            '_PROJECT_ROOT': services._PROJECT_ROOT
+            '_PROJECT_ROOT': services._PROJECT_ROOT,
+            '_GOOGLE_OAUTH2_CREDENTIALS': services._GOOGLE_OAUTH2_CREDENTIALS,
+            '_USERS': services._USERS
         }
 
 class GenericsProvider:
