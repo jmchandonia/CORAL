@@ -36,10 +36,18 @@
                             <span class="d-block" *ngIf="readyToUpload">({{fileSize}})</span>
                         </div>
                         <div class="col-4">
-                            <div class="row mt-3">
+                            <div class="row mt-3" *ngIf="!loading">
                                 <button class="btn btn-primary col-6" *ngIf="readyToUpload" (click)="uploadCSV()">Upload</button>
                                 <button class="btn btn-secondary col-6" (click)="clearFile()">Clear</button>
                             </div>
+                            <ngx-spinner
+                              name="uploading-csv"
+                              bdColor="rgba(0,0,0,0)"
+                              color="#aaa"
+                              size="medium"
+                              type="ball-spin-fade-rotating"
+                              [fullScreen]="false">
+                            </ngx-spinner>
                         </div>
                     </div>
                 </div>

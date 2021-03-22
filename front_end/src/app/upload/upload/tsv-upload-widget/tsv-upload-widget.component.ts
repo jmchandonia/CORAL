@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner'; 
 
 @Component({
   selector: 'app-tsv-upload-widget',
@@ -11,7 +12,8 @@ export class TSVUploadWidgetComponent implements OnInit {
 
   constructor(
     private uploadService: UploadService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   fileTypeError = false;
@@ -19,6 +21,7 @@ export class TSVUploadWidgetComponent implements OnInit {
   file: File = null;
   fileSize: string;
   readyToUpload = false;
+  loading = false;
 
   ngOnInit(): void {
   }
@@ -65,9 +68,13 @@ export class TSVUploadWidgetComponent implements OnInit {
   }
 
   uploadCSV() {
+    this.spinner.show('uploading-csv');
+    this.loading = true;
     this.uploadService.uploadCSV(this.file)
       .then(data => {
         // navigate to create step
+        this.spinner.hide('uploading-csv');
+        this.loading = false;
         this.router.navigate(['/upload/validate'], {queryParams: {'csvUpload': 'true'}});
       })
       .catch(error => {
