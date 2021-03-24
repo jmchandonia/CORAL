@@ -170,6 +170,7 @@ export class SomeComponent implements afterViewInit {
 ```
 
 **NgSelect**
+
 [NgSelect](https://ng-select.github.io/ng-select#/data-sources) is used to create comboboxes that populate with data from our system. NgSelect elements can be rendered using a `<ng-select>` tag and take an input of `items`, where items is the data with will populate the dropdown and options take the congiguration for the dropdown. 
 
 The text value that the user will see can be configured via the `bindLabel` property, which can be any of the values of the object that you're feeding the data to. 
