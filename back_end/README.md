@@ -291,11 +291,36 @@ _Copy or move the files under "back_end/python" into the modules subdirectory._
 _symlink 'coral' and 'var' directories from modules into the 'notebooks' directory_
 
 
+### Authorized data access API
+
+CORAL allows access to some of the APIs (all methods in web_services.py
+with "@auth_ro_required" before the method definition) by clients with
+an authorized RSA public key.  A public/private RSA key pair must
+be generated, and the public key may be given out to developers who
+want to access CORAL data through the API.
+
+Sample code is in back_end/python/test/data_retrieval_test.py
+
+To generate a pair of keys, do:
+
+```
+ssh-keygen -t rsa -b 4096 -P "" -f coral.key
+```
+
+This will create a public key called "coral.key.pub" to give to
+application developers you want to have access to the CORAL API.
+We call this the "data access API public key."
+
+Keep the private key "coral.key" on the server, and install it
+using the config.json file below.  We call this the "data access
+API private key."
+
+
 ### Initial data, microtypes, and ontologies loading
 
 _load in the data from a jupyter notebook:_
 
-_rsync data_import, notebooks, images from server with data_
+_copy example data and ontologies into data import directory, or convert some real data into the same json format ast the examples__
 
 _define your process type and all other static types in /home/coral/prod/modules/var/typedef.json_
 
@@ -327,7 +352,10 @@ _make var/config.json based on the following template:_
     "https": true,
     "cert_pem": "PATH_TO_FULLCHAIN.PEM file",
     "key_pem": "PATH_TO_PRIVKEY.PEM file",
-    "plot_types_file": "plot_types.json"
+    "plot_types_file": "plot_types.json",
+    "auth_private": "PATH_TO_DATA_ACCESS_API_PRIVATE_KEY",
+    "auth_public": "PATH_TO_DATA_ACCESS_API_PUBLIC_KEY",
+    "project_root": "/home/coral/prod"
   }
 }
 
