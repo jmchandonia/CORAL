@@ -535,4 +535,4 @@ _NOTE: On MacOS, if the import fails with `[Errno 49] Can't assign requested add
 
 ### Install UI
 
-See README.md in front\_end direcotry
+See README.md in front\_end directory

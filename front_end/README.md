@@ -91,7 +91,7 @@ Specifying 'ChromeHeadless' will launch a headless instance of a chromium browse
 
 the `--watch=false` flag is not necessary for single runs, but is important for running automated testing as it will terminate once the tests have been run, rather than wait for changes as is the default behavior.
 
-**Important Note**: If you run into an issue where the test server disconnects, you can troubleshoot by inspecting the karma page and viewing the javascript console. There are occassionally errors that will not display in the command line that will log to the browser console.
+**Important Note**: If you run into an issue where the test server disconnects, you can troubleshoot by inspecting the karma page and viewing the javascript console. There are occasionally errors that will not display in the command line that will log to the browser console.
 
 ## Overview
 
@@ -130,10 +130,10 @@ app.module
 
  **PlotlyJS**
 
- [PlotlyJS](https://plot.ly/javascript/) is used to translate data bricks into data vizualizatoins that can be configured and viewed by
+ [PlotlyJS](https://plot.ly/javascript/) is used to translate data bricks into data visualizations that can be configured and viewed by
  the user. it is configured to work with angular using [angular-plotly](https://github.com/plotly/angular-plotly.js).
 
- Angular-plotly provides us with a simple to use `<plotly-plot>` component that takes a `data` and `layout` input. Server calls typically provide data and layout in sebarate objects in the response.
+ Angular-plotly provides us with a simple to use `<plotly-plot>` component that takes a `data` and `layout` input. Server calls typically provide data and layout in separate objects in the response.
 
  *Important:* We are currently running angular-plotly at version 1.3.2 to prevent an issue that breaks
  changes for angular versions below 8. see [here](https://github.com/plotly/angular-plotly.js/issues/79) for more details.
@@ -144,7 +144,7 @@ app.module
 
 **DataTables**
 
-[DataTables](https://datatables.net/) is used for rendering HTML tables with javascript to add search, filtering, and pagination to large tables. DataTables is currently implemented in coral-ui wihout an 
+[DataTables](https://datatables.net/) is used for rendering HTML tables with javascript to add search, filtering, and pagination to large tables. DataTables is currently implemented in coral-ui without an 
 angular wrapper, so `$` will need to be imported from jQuery in order to render a table as a DataTable.
 It is best to render a table in the AfterViewInit lifecycle hook with an ElementRef provided by angular 
 as shown below:
@@ -171,7 +171,7 @@ export class SomeComponent implements afterViewInit {
 
 **NgSelect**
 
-[NgSelect](https://ng-select.github.io/ng-select#/data-sources) is used to create comboboxes that populate with data from our system. NgSelect elements can be rendered using a `<ng-select>` tag and take an input of `items`, where items is the data with will populate the dropdown and options take the congiguration for the dropdown. 
+[NgSelect](https://ng-select.github.io/ng-select#/data-sources) is used to create comboboxes that populate with data from our system. NgSelect elements can be rendered using a `<ng-select>` tag and take an input of `items`, where items is the data with will populate the dropdown and options take the configuration for the dropdown. 
 
 The text value that the user will see can be configured via the `bindLabel` property, which can be any of the values of the object that you're feeding the data to. 
 
