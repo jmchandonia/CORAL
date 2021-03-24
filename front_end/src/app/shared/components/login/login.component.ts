@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { environment } from 'src/environments/environment';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { UserRegistrationComponent } from './user-registration/user-registration.component';
 declare var gapi: any;
 @Component({
   selector: 'app-login',
@@ -13,11 +15,13 @@ export class LoginComponent implements OnInit {
   private gapiSetup = false;
   // private googleAuthInstance: gapi.auth2.GoogleAuth;
   private googleAuthInstance: any;
+  modalRef: BsModalRef
 
   constructor(
     private auth: AuthService,
     private spinner: NgxSpinnerService,
-    private chRef: ChangeDetectorRef
+    private chRef: ChangeDetectorRef,
+    private modalService: BsModalService
   ) { }
   public displayLogin = true;
   public error = false;
@@ -81,5 +85,12 @@ export class LoginComponent implements OnInit {
         }
       })
   }
+
+  displayRegistrationForm() {
+    this.modalRef = this.modalService.show(UserRegistrationComponent, {
+      class: 'modal-lg'
+    })
+  }
+
 
 }

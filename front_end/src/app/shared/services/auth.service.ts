@@ -78,4 +78,8 @@ export class AuthService {
     // localStorage.clear();
   }
 
+  submitRegistrationRequest(firstName, lastName, email, token) {
+    return this.http.post(`${environment.baseURL}/request_registration`, {firstName, lastName, email, token});
+  }
+
 }

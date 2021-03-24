@@ -30,6 +30,9 @@ import { AgmCoreModule } from '@agm/core';
 import { environment }  from 'src/environments/environment';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { WarningComponent } from './shared/components/warning/warning.component';
+import { UserRegistrationComponent } from './shared/components/login/user-registration/user-registration.component';
+// import { RecaptchaModule } from 'ng-recaptcha';
+// import { NgxCaptchaModule } from 'ngx-captcha';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +45,7 @@ import { WarningComponent } from './shared/components/warning/warning.component'
     DashboardPlotComponent,
     ProvenanceGraphComponent,
     WarningComponent,
+    UserRegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +65,7 @@ import { WarningComponent } from './shared/components/warning/warning.component'
     AgmCoreModule.forRoot({
       apiKey: environment.GOOGLE_MAPS_API_KEY
     }),
-    NgxSliderModule
+    NgxSliderModule,
   ],
   providers: [
     {

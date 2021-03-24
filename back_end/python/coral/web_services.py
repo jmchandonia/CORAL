@@ -1245,7 +1245,20 @@ def login():
             return json.dumps({'success': False,
                                'message': 'Something went wrong.'
                                # 'message': 'Something went wrong: '+str(e)
-            })  
+            })
+
+# @cross_origin
+@app.route("/coral/request_registration", methods=['POST'])
+def process_registration_request():
+    recaptcha_token = request.json['token']
+    recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', {
+        'secret': cns['_GOOGLE_RECAPTCHA_SECRET'],
+        'response': recaptcha_token
+    })
+
+    recaptcha_result = json.loads(recaptcha_request.content.decode('utf-8'))
+
+    return _ok_response({'test': 'test'})
 
 
 @app.route("/coral/data_types", methods=['GET'])
