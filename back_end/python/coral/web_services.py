@@ -1446,7 +1446,7 @@ def coral_brick_plot_metadata(brick_id, limit):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
 
-    return br.to_json(exclude_data_values=False, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
+    return br.to_json(exclude_data_values=True, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
 
 @app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required
