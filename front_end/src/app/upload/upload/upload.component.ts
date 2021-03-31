@@ -28,6 +28,13 @@ export class UploadComponent implements OnInit, OnDestroy {
   progressIndex = 0;
   maxStep = 0;
 
+  advancedOption: 'brick' | 'coreType' = 'brick';
+
+  advancedDropdownOptions = [
+    {name: 'brick', text: 'Upload Brick CSV'},
+    {name: 'coreType', text: 'Upload Core Type TSV'}
+  ]
+
   public readonly user: User;
 
   constructor(

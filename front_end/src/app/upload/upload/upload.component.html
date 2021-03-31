@@ -49,5 +49,24 @@
       >Submit</button>
     </div>
   </div>
+<!-- </div> -->
+<div *ngIf="user.user_level > 0">
+  <div class="card mb-4">
+    <h5 class="card-header light-blue">
+      Advanced Options
+    </h5>
+    <div class="card-body">
+      <ng-select
+        [clearable]="false"
+        class="custom"
+        [items]="advancedDropdownOptions"
+        bindLabel="text"
+        bindValue="name"
+        [(ngModel)]="advancedOption"
+        [ngModelOptions]="{standalone: true}"></ng-select>
+    </div>
+  </div>
+  <app-tsv-upload-widget *ngIf="currentUrl === 'type' && advancedOption === 'brick'"></app-tsv-upload-widget>
+  <app-core-type-upload-widget *ngIf="currentUrl === 'type' && advancedOption === 'coreType'"></app-core-type-upload-widget>
 </div>
-<app-tsv-upload-widget *ngIf="currentUrl === 'type' && user.user_level > 0"></app-tsv-upload-widget>
+</div>

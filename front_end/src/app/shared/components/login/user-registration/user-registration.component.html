@@ -8,13 +8,13 @@
                         <label for="first-name">
                             First Name
                         </label>
-                        <input type="text" [(ngModel)]="firstName" class="form-control" id="first-name" name="first-name" />
+                        <input type="text" [(ngModel)]="firstName" class="form-control" id="first-name" name="first-name" [ngModelOptions]="{standalone: true}"/>
                     </div>
                     <div class="col-6">
                         <label for="last-name">
                             First Name
                         </label>
-                        <input type="text" [(ngModel)]="lastName" class="form-control" id="last-name" name="last-name" />
+                        <input type="text" [(ngModel)]="lastName" class="form-control" id="last-name" name="last-name" [ngModelOptions]="{standalone: true}"/>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -22,7 +22,7 @@
                         <label for="email">
                             Email Address
                         </label>
-                        <input type="email" [(ngModel)]="email" class="form-control" id="email" name="email" />
+                        <input type="email" [(ngModel)]="email" class="form-control" id="email" name="email" [ngModelOptions]="{standalone: true}"/>
                     </div>
                 </div>
                 <div class="row mt-4">

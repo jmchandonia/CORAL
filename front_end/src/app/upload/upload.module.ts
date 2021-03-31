@@ -28,6 +28,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ValidationErrorItemComponent } from './upload/map/validation-error-item/validation-error-item.component';
 import { TSVUploadWidgetComponent } from './upload/tsv-upload-widget/tsv-upload-widget.component';
+import { CoreTypeUploadWidgetComponent } from './upload/core-type-upload-widget/core-type-upload-widget.component';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
  
 @NgModule({
   declarations: [
@@ -49,7 +51,8 @@ import { TSVUploadWidgetComponent } from './upload/tsv-upload-widget/tsv-upload-
     ContextBuilderComponent,
     ContextFormComponent,
     ValidationErrorItemComponent,
-    TSVUploadWidgetComponent
+    TSVUploadWidgetComponent,
+    CoreTypeUploadWidgetComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +62,8 @@ import { TSVUploadWidgetComponent } from './upload/tsv-upload-widget/tsv-upload-
     FormsModule,
     BrowserAnimationsModule,
     TooltipModule,
-    NgSelectModule
+    NgSelectModule,
+    ProgressbarModule.forRoot()
   ],
   providers: [UploadService],
   bootstrap: [

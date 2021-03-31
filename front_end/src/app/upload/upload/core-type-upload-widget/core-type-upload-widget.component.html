@@ -1,0 +1,101 @@
+<div class="container mb-4">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12">
+            <h5 style="float: left;" class="mt-2 mb-0">Upload a Core Type TSV</h5>
+          </div>
+        </div>
+        <div class="p-3 mb-3">
+          <span>Drag or browse from your files to upload new core types or add existing core types to the system. Select the core type you want to upload from the dropdown menu.</span>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-12">
+            <ng-select
+                class="custom"
+                [class.select-error]="selectedTypeError"
+                [items]="user.allowed_upload_types"
+                [(ngModel)]="selectedType"
+                placeholder="Select a core type to upload"
+                (change)="clearSelectionError()"
+            ></ng-select>
+        </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="fileTypeError">
+        <div class="alert alert-danger col-12">
+            Error: Only TSV files are supported for this method of uploading. Please double check that your file has the .csv extension.
+        </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="selectedTypeError">
+        <div class="alert alert-danger col-12">
+            Error: Please select a core type from the dropdown for uploading.
+        </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12">
+          <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
+              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="!file && !loading">
+                  <div class="col-10 d-block">
+                      <h2>Drag and drop Core Type TSVs here</h2>
+                  </div>
+                  <div class="col-10 d-block">
+                      <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
+                      <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
+                  </div>
+              </div>
+              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="file && !loading">
+                  <div class="col-10">
+                      <div class="row">
+                          <div class="col-8">
+                              <h4 class="d-block">{{file.name}}</h4>
+                              <span class="d-block" *ngIf="readyToUpload">({{fileSize}})</span>
+                          </div>
+                          <div class="col-4">
+                              <div class="row mt-3" *ngIf="!loading">
+                                  <button class="btn btn-primary col-6" *ngIf="readyToUpload" (click)="upload()">Upload</button>
+                                  <button class="btn btn-secondary col-6" (click)="clearFile()">Clear</button>
+                              </div>
+                              <ngx-spinner
+                                name="uploading-csv"
+                                bdColor="rgba(0,0,0,0)"
+                                color="#aaa"
+                                size="medium"
+                                type="ball-spin-fade-rotating"
+                                [fullScreen]="false">
+                              </ngx-spinner>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="loading">
+                  <div class="col-12">
+                      <div class="row">
+                          <div class="col-10 offset-1">
+                              <h4>Uploading {{file.name}}...</h4>
+                          </div>
+                      </div>
+                      <div class="row justify-content-center">
+                        <div class="col-10">
+                            <progressbar max="100" [value]="progressPercentage"></progressbar>
+                        </div>
+                      </div>
+                      <div class="row mt-3 justify-content-center">
+                          <div class="alert alert-success col-3">
+                              {{nSuccesses}} Successful uploads
+                          </div>
+                          <div class="alert alert-warning col-3">
+                              {{nWarnings}} Warnings
+                          </div>
+                          <div class="alert alert-danger col-3">
+                              {{nErrors}} Errors
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+  </div>
+  

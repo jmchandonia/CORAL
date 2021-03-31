@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   Brick,
@@ -17,6 +17,7 @@ import { BrickFactoryService } from 'src/app/shared/services/brick-factory.servi
 import { Response } from 'src/app/shared/models/response';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { WarningComponent } from 'src/app/shared/components/warning/warning.component';
+import { SSE } from 'sse.js';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,8 @@ export class UploadService {
 
   constructor(
     private http: HttpClient,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private zone: NgZone
   ) {
     // get brick type templates once the user is in /upload
     this.getBrickTypeTemplates();
@@ -265,6 +267,41 @@ export class UploadService {
           }
         })
     });
+  }
+
+  uploadCoreTypeTSV(type: string, file: File) {
+
+    const formData: FormData = new FormData();
+    formData.append('type', type);
+    formData.append('file', file, file.name);
+
+    const token = localStorage.getItem('authToken');
+
+    return new Observable((subscriber) => {
+      const eventSource = new SSE(`${environment.baseURL}/upload_core_type_tsv`, {
+        method: 'POST',
+        payload: formData,
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      eventSource.stream();
+
+      eventSource.onmessage = (event) => {
+        this.zone.run(() => {
+          subscriber.next(event);
+        });
+
+        // TODO: implement eventSource.close()
+      }
+    });
+
+    // const formData: FormData = new FormData();
+    // formData.append('type', type);
+    // formData.append('file', file, file.name);
+
+    // return this.http.post(`${environment.baseURL}/upload_core_type_tsv`, formData, {
+    //   reportProgress: true,
+    //   observe: 'events'
+    // })
   }
 
   setSuccessData(data: any) {
