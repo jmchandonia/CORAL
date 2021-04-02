@@ -4,6 +4,7 @@ import dumper
 import sys
 from . import services
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM, TYPE_CATEGORY_STATIC
+from .descriptor import IndexDocument
 
 _COLLECTION_ID = 'ID'
 _COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
@@ -19,6 +20,8 @@ class ItemAlreadyExistsError(ValueError):
             self.old_data = kwargs['old_data']
         if kwargs['new_data'] is not None:
             self.new_data = kwargs['new_data']
+        if kwargs['data_holder'] is not None:
+            self.data_holder = kwargs['data_holder']
         
 
 class DataHolder:
@@ -211,11 +214,14 @@ class Workspace:
                     'pk_id': current_pk_id
                 }
 
+                new_data = IndexDocument.build_index_doc(data_holder)
+
                 result = self.__arango_service.find(aql, aql_bind)
                 raise ItemAlreadyExistsError(
                     'object %s already exists in system' % upk_id,
-                    new_data=data_holder,
-                    old_data={k: v for (k, v) in result[0].items() if not k.startswith('_')}
+                    new_data=new_data,
+                    old_data={k: v for (k, v) in result[0].items() if not k.startswith('_')},
+                    data_holder={k: v for (k, v) in data_holder.data.items() if not k.startswith('_')}
                 )
             # check for consistency
             # for now throw an error, although we may want to upsert instead

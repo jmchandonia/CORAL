@@ -627,6 +627,7 @@ def create_brick():
 
     
 @app.route('/coral/validate_upload', methods=['POST'])
+@auth_required
 def validate_upload():
     try:
         query = request.json
@@ -716,7 +717,9 @@ def validate_upload():
     except Exception as e:
         return _err_response(e)
 
+
 @app.route('/coral/validate_upload_csv/<data_id>', methods=['GET'])
+@auth_required
 def validate_upload_csv(data_id):
     uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id)
 
@@ -809,6 +812,7 @@ def validate_upload_csv(data_id):
         return _err_response(e, traceback=True)
 
 @app.route('/coral/upload', methods=['POST'])
+@auth_required
 def upload_file():
     try:
         data_id = uuid.uuid4().hex
@@ -874,6 +878,7 @@ def upload_file():
         return _err_response(e, traceback=True)
 
 @app.route('/coral/upload_csv', methods=["POST"])
+@auth_required
 def upload_csv():
     f = request.files['files']
     data_id = uuid.uuid4().hex
@@ -1021,6 +1026,7 @@ def upload_csv():
         return _err_response(e, traceback=True)
 
 @app.route('/coral/upload_core_type_tsv', methods=["POST"])
+@auth_required
 def upload_core_type_tsv():
 
     def upload_progress(df, batch_id):
@@ -1043,7 +1049,8 @@ def upload_core_type_tsv():
                 result_data['warnings'].append({
                     'message': ie.message,
                     'old_data': ie.old_data,
-                    'new_data': ie.new_data.data
+                    'new_data': ie.new_data,
+                    'data_holder': ie.data_holder
                 })
                 yield "data: warning-{}\n\n".format(ie.message)
 
@@ -1077,6 +1084,15 @@ def upload_core_type_tsv():
 
     df = pd.read_csv(upload_file, sep='\t')
     return Response(upload_progress(df, batch_id), mimetype='text/event-stream')
+
+
+@app.route('/coral/get_core_type_results/<batch_id>', methods=["GET"])
+@auth_required
+def get_core_type_results(batch_id):
+    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id) 
+    with open(upload_result_path) as f:
+        upload_result = json.loads(f.read())
+    return _ok_response(upload_result)
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()

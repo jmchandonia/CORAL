@@ -278,7 +278,7 @@ export class UploadService {
     const token = localStorage.getItem('authToken');
 
     return new Observable((subscriber) => {
-      const eventSource = new SSE(`${environment.baseURL}/upload_core_type_tsv`, {
+      const eventSource: SSE = new SSE(`${environment.baseURL}/upload_core_type_tsv`, {
         method: 'POST',
         payload: formData,
         headers: { Authorization: `Bearer ${token}` }
@@ -288,20 +288,16 @@ export class UploadService {
       eventSource.onmessage = (event) => {
         this.zone.run(() => {
           subscriber.next(event);
+          if (event.data.includes('complete-')) {
+            eventSource.close();
+          }
         });
-
-        // TODO: implement eventSource.close()
       }
     });
+  }
 
-    // const formData: FormData = new FormData();
-    // formData.append('type', type);
-    // formData.append('file', file, file.name);
-
-    // return this.http.post(`${environment.baseURL}/upload_core_type_tsv`, formData, {
-    //   reportProgress: true,
-    //   observe: 'events'
-    // })
+  getCoreTypeUploadResults(id: string) {
+    return this.http.get<Response<any>>(`${environment.baseURL}/get_core_type_results/${id}`);
   }
 
   setSuccessData(data: any) {

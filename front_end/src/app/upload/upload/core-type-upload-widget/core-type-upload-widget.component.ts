@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/app/shared/models/user';
 import { UploadService } from 'src/app/shared/services/upload.service';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-core-type-upload-widget',
@@ -13,7 +14,8 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private router: Router
   ) { }
 
   file: File = null;
@@ -31,6 +33,8 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   
   user: User;
   public selectedType: string;
+
+  uploadProgressStream: Subscription;
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
@@ -76,7 +80,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file)
+    this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file)
       .subscribe((event: any) => {
         if (event.data.includes('progress-')) {
           this.progressPercentage = +event.data.split('progress-')[1] * 100
@@ -86,6 +90,11 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
           this.nWarnings++;
         } else if (event.data.includes('error-')) {
           this.nErrors++;
+        } else if (event.data.includes('complete-')) {
+          //TODO: close SSE connection
+          const batchId = event.data.split('complete-')[1];
+          this.uploadProgressStream.unsubscribe();
+          this.router.navigate([`/core-type-result/${batchId}`]);
         }
       });
   }

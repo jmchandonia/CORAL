@@ -10,6 +10,7 @@ import { DataValuesComponent } from './upload/data-values/data-values.component'
 import { PreviewComponent } from './upload/preview/preview.component';
 import { CreateComponent } from './upload/create/create.component';
 import { MapComponent } from './upload/map/map.component';
+import { CoreTypeResultComponent } from './upload/core-type-result/core-type-result.component';
 
 const routes: Routes = [
     {path: 'upload', component: UploadComponent, canActivate: [AuthGuardService], children: [
@@ -22,7 +23,10 @@ const routes: Routes = [
         {path: 'preview', component: PreviewComponent},
         {path: 'create', component: CreateComponent},
         {path: 'validate', component: MapComponent}
-    ]}
+    ]},
+    {
+        path: 'core-type-result/:batchId', component: CoreTypeResultComponent
+    }
 ];
 
 @NgModule({
