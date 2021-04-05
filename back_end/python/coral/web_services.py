@@ -29,6 +29,7 @@ from pyArango.theExceptions import AQLQueryError
 from .auth import OAuthSignin
 import requests
 import time
+import smtplib, ssl
 
 from .workspace import EntityDataHolder
 from .dataprovider import DataProvider
@@ -1326,8 +1327,35 @@ def process_registration_request():
     })
 
     recaptcha_result = json.loads(recaptcha_request.content.decode('utf-8'))
+    print(recaptcha_result)
 
-    return _ok_response({'test': 'test'})
+    if 'success' in recaptcha_result:
+        first_name = request.json['firstName']
+        last_name = request.json['lastName']
+        email = request.json['email']
+
+        port = 465
+        pw = cns['_WEB_SERVICE']['project_email_password']
+        sender_email = cns['_WEB_SERVICE']['project_email']
+        receiver_email = cns['_WEB_SERVICE']['admin_email']
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(sender_email, pw)
+
+            message = """\
+                Subject: New User Registration
+
+                %s %s has requested access to your CORAL application, using the email address %s. To approve this user, add their information to the users.json file in your config.
+            """ % (first_name, last_name, email)
+
+            server.sendmail(sender_email, receiver_email, message)
+
+        return _ok_response({'success': True})
+            
+    
+    else:
+        return _err_response({'message': 'invalid captcha', 'success': False})
 
 
 @app.route("/coral/data_types", methods=['GET'])

@@ -35,6 +35,16 @@
                         </button>
                     </div>
                 </div>
+                <div class="row mt-2 justify-content-center" *ngIf="submitted">
+                    <div class="alert alert-info col-11">
+                        Your request has been sent to the CORAL admins. You will receive an email from one of our administrators if you are approved as a user.
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" *ngIf="error">
+                    <div class="alert alert-danger col-11">
+                        Were sorry, but we were unable to process this approval request. Please try the ReCaptcha again later.
+                    </div>
+                </div>
             </form>
         </div>
     </div>

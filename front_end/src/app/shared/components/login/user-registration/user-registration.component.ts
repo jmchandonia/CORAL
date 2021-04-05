@@ -29,6 +29,7 @@ export class UserRegistrationComponent implements OnInit {
   private successToken: string;
   widgetId: any;
   submitted = false;
+  error = false;
 
   @ViewChild('reCaptchaWidget') reCaptchaWidget: ElementRef;
 
@@ -59,12 +60,6 @@ export class UserRegistrationComponent implements OnInit {
   onSuccess(token: string) {
     this.zone.run(() => {
       this.successToken = token;
-      this.auth.submitRegistrationRequest(this.firstName, this.lastName, this.email, this.successToken)
-      .subscribe((res: any) => {
-        if (res.success) {
-          this.submitted = true;
-        }
-      });
     });
   }
 
@@ -81,9 +76,10 @@ export class UserRegistrationComponent implements OnInit {
   submitRegistrationRequest() {
     this.auth.submitRegistrationRequest(this.firstName, this.lastName, this.email, this.successToken)
       .subscribe((res: any) => {
-        if (res.success) {
+        if (res.results.success) {
           this.submitted = true;
         } else {
+          this.error = true;
         }
       });
   }
