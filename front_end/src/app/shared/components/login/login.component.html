@@ -1,33 +1,32 @@
 <div class="form-container form-container-sm" style="padding: 0px; background-color: white; border: 1px solid #aaa;">
   <div class="clearinghouse-header" style="padding-top: 85px;">
-    <h5 class="login-title">ENIGMA Data Clearinghouse</h5>
+    <h5 class="login-title">CORAL</h5>
   </div>
-  <div class="row justify-content-center mt-3">
-    <!-- <div class="col-10"> -->
-        <!-- <ul class="nav nav-tabs nav-fill">
-            <li class="nav-item">
-              <a 
-                [ngClass]="displayLogin ? 'active' : ''"
-                class="nav-link"
-                href="JavaScript:void(0)"
-                (click)="displayLogin = true;"
-              >Login</a>
-            </li>
-            <li class="nav-item">
-              <a
-                [ngClass]="!displayLogin ? 'active' : ''"
-                class="nav-link"
-                href="JavaScript:void(0)"  
-                (click)="displayLogin = false;"
-              >Sign Up</a>
-            </li>
-          </ul> -->
+  <!-- <div class="row justify-content-center mt-3">
           <span class="login-options" (click)="displayLogin = true;">Login |</span>
           <span class="login-options" (click)="displayLogin = false;"> &nbsp;Sign up</span>
-    <!-- </div> -->
-  </div>
+  </div> -->
   <div class="pl-4 pr-4" *ngIf="displayLogin">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="height: 300px; display: flex; flex-direction: row; align-items: center;">
+      <div class="col-10">
+        <div class="row">
+          <button class="btn btn-primary col-6 p-3" (click)="handleGoogleAuthSignIn()">
+            Sign in with Gmail
+          </button>
+          <button class="btn btn-secondary col-6 p-3" (click)="displayRegistrationForm()">
+            Register to be a part of CORAL
+          </button>
+        </div>
+        <div class="row" *ngIf="errorMessage.length">
+          <div class="col-12">
+            <div class="alert alert-danger mt-2">
+              Error: {{errorMessage}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row justify-content-center">
       <div class="col-9 loading-container" *ngIf="loading">
         <ngx-spinner
           bdColor="rgba(0,0,0,0)"
@@ -36,8 +35,8 @@
           type="ball-spin-fade-rotating"
           [fullScreen]="false"
         ></ngx-spinner>
-      </div>
-      <div class="col-9" *ngIf="!loading">
+      </div> -->
+      <!-- <div class="col-9" *ngIf="!loading">
           <div class="alert alert-danger mt-2" *ngIf="errorMessage.length">
             Error: {{errorMessage}}
           </div>
@@ -66,10 +65,10 @@
                 </button>
               </div>
             </form>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
   </div>
-  <div class="pl-4 pr-4" *ngIf="!displayLogin">
+  <!-- <div class="pl-4 pr-4" *ngIf="!displayLogin">
     <div class="row justify-content-center">
       <div class="col-9">
           <form class="form-group">
@@ -89,5 +88,5 @@
             </form>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
