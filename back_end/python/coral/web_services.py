@@ -900,6 +900,8 @@ def upload_csv():
             'properties': []
         }
 
+        data_var_count = 1
+
         # map dimensions to front end brick format
         for di, dim_ds in enumerate(brick_ds['dim_context']):
             response_dim = {
@@ -912,6 +914,7 @@ def upload_csv():
                 }
             }
 
+            data_var_count *= dim_ds['size']
             variables = []
             for dvi, dim_var_ds in enumerate(dim_ds['typed_values']):
                 response_dim_var = {
@@ -920,6 +923,7 @@ def upload_csv():
                         'text': dim_var_ds['value_type']['oterm_name']
                     },
                     'index': dvi,
+                    'totalCount': dim_ds['size'],
                     'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
                     'scalarType': dim_var_ds['values']['scalar_type'],
                 }
@@ -940,6 +944,7 @@ def upload_csv():
             response_dv = {
                 'index': dti,
                 'required': False,
+                'totalCount': data_var_count,
                 'scalarType': data_var_ds['values']['scalar_type'],
                 'type': {
                     'id': data_var_ds['value_type']['oterm_ref'],
