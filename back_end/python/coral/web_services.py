@@ -27,6 +27,8 @@ import subprocess
 from pyArango.theExceptions import AQLQueryError
 # from . import services
 # from .brick import Brick
+import requests
+import smtplib, ssl
 
 from .dataprovider import DataProvider
 from .brick import Brick
@@ -1162,6 +1164,95 @@ def _get_term(term_data):
 ########################################################################################
 ## NEW VERSION
 ##########################################################################################
+
+@app.route("/coral/google_auth_code_store", methods=["POST"])
+def handle_auth_code():
+
+    with open(cns['_GOOGLE_OAUTH2_CREDENTIALS']) as f:
+        client_credentials =  json.load(f)
+
+    result = requests.post('https://www.googleapis.com/oauth2/v4/token', {
+        'client_id': client_credentials['web']['client_id'],
+        'client_secret': client_credentials['web']['client_secret'],
+        'redirect_uri': 'postmessage',
+        'grant_type': 'authorization_code',
+        'code': request.json['authCode']
+    })
+
+    tokens = json.loads(result.content.decode('utf-8'))
+    access_token = tokens['access_token']
+    # refresh_token = tokens['refresh_token']
+    # TODO: store access_token and refresh_token ?
+
+    user = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
+
+    user_email = json.loads(user.content.decode('utf-8'))['email']
+
+    with open(cns['_USERS']) as user_file:
+        registered_users = json.load(user_file)
+
+    match_user = None
+    for registered_user in registered_users:
+        if registered_user['email'] == user_email:
+            match_user = registered_user
+
+    if match_user == None:
+        return _ok_response({
+            'success': False,
+            'message': 'User not registered in system'
+        })
+
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, milliseconds=0, microseconds=0, minutes=120),
+            'iat': datetime.datetime.utcnow(),
+            'sub': match_user['username']
+        }
+
+        new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+        return _ok_response({'success': True, 'token': new_jwt, 'user': match_user})
+    except Exception as e:
+        return json.dumps({'success': False, 'message': 'Something went wrong.'})
+
+
+@app.route("/coral/request_registration", methods=['POST'])
+def process_registration_request():
+    recaptcha_token = request.json['token']
+    recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', {
+        'secret': cns['_GOOGLE_RECAPTCHA_SECRET'],
+        'response': recaptcha_token
+    })
+
+    recaptcha_result = json.loads(recaptcha_request.content.decode('utf-8'))
+    print(recaptcha_result)
+
+    if 'success' in recaptcha_result:
+        first_name = request.json['firstName']
+        last_name = request.json['lastName']
+        email = request.json['email']
+
+        port = 465
+        pw = cns['_WEB_SERVICE']['project_email_password']
+        sender_email = cns['_WEB_SERVICE']['project_email']
+        receiver_email = cns['_WEB_SERVICE']['admin_email']
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(sender_email, pw)
+
+            message = """\
+                Subject: New User Registration
+
+                %s %s has requested access to your CORAL application, using the email address %s. To approve this user, add their information to the users.json file in your config.
+            """ % (first_name, last_name, email)
+
+            server.sendmail(sender_email, receiver_email, message)
+
+        return _ok_response({'success': True})
+            
+    
+    else:
+        return _err_response({'message': 'invalid captcha', 'success': False})
 
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])
