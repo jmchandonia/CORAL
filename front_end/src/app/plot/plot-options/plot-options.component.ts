@@ -35,6 +35,7 @@ export class PlotOptionsComponent implements OnInit {
   constrainableDimensions: DimensionContext[];
   public invalid = false;
   public tooManyTraces = false;
+  public plotTooLarge = false;
   public loading = true;
   private previousUrl: string;
 
@@ -256,18 +257,26 @@ export class PlotOptionsComponent implements OnInit {
       return;
     }
 
-    if (validator.tooManyTraces(this.plot.constraints)) {
+    const [tooManyTraces, requiresGL] = validator.validateSize(this.plot, this.metadata);
+
+    if (tooManyTraces) {
       this.tooManyTraces = true;
+      return;
+    }
+
+    if (requiresGL) {
+      // TODO: see if there is a way to use WebGL for different types of plots
+      this.plotTooLarge = true;
       return;
     }
 
     localStorage.setItem('plotlyBuilder', JSON.stringify(this.plot));
     if (this.coreTypePlot) {
       this.router.navigate(['/plot/result'], {queryParams: {
-        coreType: this.coreTypeName
+        coreType: this.coreTypeName,
       }});
     } else {
-        this.router.navigate([`plot/result/${this.objectId}`]);
+      this.router.navigate([`plot/result/${this.objectId}`]);
     } 
   }
 

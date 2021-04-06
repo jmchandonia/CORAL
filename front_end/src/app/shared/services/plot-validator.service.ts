@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PlotlyBuilder, Constraint, ConstraintVariable, AxisOption } from 'src/app/shared/models/plotly-builder';
+import { PlotlyBuilder, Constraint, ConstraintVariable, AxisOption, Axis } from 'src/app/shared/models/plotly-builder';
+import { ObjectMetadata } from '../models/object-metadata';
 import { PlotlyConfig } from '../models/plotly-config';
 
 @Injectable({
@@ -98,6 +99,25 @@ export class PlotValidatorService {
       .reduce<number>((acc, cv) => acc * cv.unique_values.length , 1);
 
     return allTraces > 1000;
+  }
+
+  // public static requiresGL(plot: PlotlyBuilder, metadata: ObjectMetadata) {
+  public static validateSize(plot: PlotlyBuilder, metadata: ObjectMetadata) {
+    // returns [condition for too many traces, condition that requires webGL]
+    let nDataPoints = 1;
+    Object.entries(plot.axes).forEach(([_, axis]) => {
+      if (axis.data?.data_variable === undefined) {
+        const i = axis.data.dimension;
+        nDataPoints *= metadata.dim_context[i].size;
+      }
+    });
+    const allTraces = plot.constraints
+      .map(constraint => constraint.variables)
+      .reduce((acc, cv) => acc.concat(cv))
+      .filter(constraint => constraint.type === 'series')
+      .reduce<number>((acc, cv) => acc * cv.unique_values.length, 1);
+
+    return [allTraces > 1000, nDataPoints * allTraces > 100_000]
   }
 
 }
