@@ -80,6 +80,9 @@
           "configurations": {
             "production": {
               "browserTarget": "coral-ui:build:production"
+            },
+            "development": {
+              "browserTarget": "coral-ui:build:development"
             }
           }
         },
