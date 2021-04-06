@@ -144,7 +144,8 @@
                 <h5>Create Success</h5>
               </div>
               <div class="card-body">
-                <p>Your Brick has been created successfully with brick ID <a id="success-link" href="/search/result/brick/{{successId}}">{{successId}}</a></p>
+                <!-- <p>Your Brick has been created successfully with brick ID <a id="success-link" href="/search/result/brick/{{successId}}">{{successId}}</a></p> -->
+                <p>Your Brick has been created successfully with brick ID <a id="success-link" [routerLink]="['/search/result/brick/' + successId]">{{successId}}</a></p>
               </div>
             </div>
           </div>
