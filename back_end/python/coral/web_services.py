@@ -25,15 +25,15 @@ import base64
 from contextlib import redirect_stdout
 import subprocess
 from pyArango.theExceptions import AQLQueryError
-# from . import services
-# from .brick import Brick
 import requests
 import smtplib, ssl
 
+# from .workspace import EntityDataHolder
 from .dataprovider import DataProvider
-from .brick import Brick
+# from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
+from .workspace import ItemAlreadyExistsError, EntityDataHolder
 from . import template 
 
 app = Flask(__name__)
@@ -63,6 +63,7 @@ _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
 _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
+_UPLOAD_CORE_DATA_PREFIX = 'ucd_'
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -1017,13 +1018,66 @@ def upload_csv():
     except Exception as e:
         return _err_response(e, traceback=True)
 
-            
 
+@app.route('/coral/upload_core_type_tsv', methods=["POST"])
+@auth_required
+def upload_core_type_tsv():
 
+    def upload_progress(df, batch_id):
+        n_rows = df.shape[0]
+        # TODO: update json file one at a time, not in memory
+        result_data = {
+            'success': [],
+            'errors': [],
+            'warnings': []
+        }
+        for ri, row in df.iterrows():
+            try:
+                data = row.to_dict()
+                data_holder = EntityDataHolder(type_name, data)
+                ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+                result_data['success'].append(data_holder.data)
+                yield "data: success-\n\n"
 
-    # TODO: handle uploading files
+            except ItemAlreadyExistsError as ie:
+                result_data['warnings'].append({
+                    'message': ie.message,
+                    'old_data': ie.old_data,
+                    'new_data': ie.new_data,
+                    'data_holder': ie.data_holder
+                })
+                yield "data: warning-{}\n\n".format(ie.message)
 
-    return _ok_response({"test": 'test'})
+            except ValueError as e:
+                result_data['errors'].append({
+                    'data': data_holder.data,
+                    'message': str(e)
+                })
+                yield "data: error-{}\n\n".format(e)
+
+            except Exception as e:
+                print('something went wrong', tb.print_exc())
+
+            yield "data: progress-{}\n\n".format((ri + 1) / n_rows)
+
+        with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
+            json.dump(result_data, f, indent=4)
+        yield "data: complete-{}\n\n".format(batch_id)
+
+    batch_id = uuid.uuid4().hex
+    tmp_batch_file = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
+
+    type_name = request.form['type']
+    upload_file = request.files['file']
+
+    indexdef = svs['indexdef']
+    ws = svs['workspace']
+
+    index_type_def = indexdef.get_type_def(type_name)
+    index_type_def._ensure_init_index()
+
+    df = pd.read_csv(upload_file, sep='\t')
+    return Response(upload_progress(df, batch_id), mimetype='text/event-stream')       
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
