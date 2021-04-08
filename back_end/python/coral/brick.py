@@ -838,18 +838,32 @@ class Brick:
         for vard in self.data_vars:
             value_key = ''
             value_vals = []
-            if vard.scalar_type == 'oterm_ref':
-                value_key = 'oterm_refs'
-                if typed_values_property_name:
-                    value_vals = [t.term_id for t in vard.values]
+            # if vard.scalar_type == 'oterm_ref':
+            #     value_key = 'oterm_refs'
+            #     if typed_values_property_name:
+            #         value_vals = [t.term_id for t in vard.values]
+            #     else:
+            #         value_vals = [t.term_name for t in vard.values]
+            # elif vard.scalar_type == 'object_ref':
+            #     value_key = 'object_refs'
+            #     value_vals = list(vard.values)
+            # else:
+            #     value_key = vard.scalar_type + '_values'
+            #     value_vals = list(vard.values)
+
+            if not exclude_data_values:
+                if vard.scalar_type == 'oterm_ref':
+                    value_key = 'oterm_refs'
+                    if typed_values_property_name:
+                        value_vals = [t.term_id for t in vard.values]
+                    else:
+                        value_vals = [t.term_name for t in vard.values]
+                elif vard.scalar_type == 'object_ref':
+                    value_key = 'object_refs'
+                    value_vals = list(vard.values)
                 else:
-                    value_vals = [t.term_name for t in vard.values]
-            elif vard.scalar_type == 'object_ref':
-                value_key = 'object_refs'
-                value_vals = list(vard.values)
-            else:
-                value_key = vard.scalar_type + '_values'
-                value_vals = list(vard.values)
+                    value_key = vard.scalar_type + '_values'
+                    value_vals = list(vard.values)
 
             if not typed_values_property_name:
                 value_key = 'values'
@@ -865,6 +879,10 @@ class Brick:
                 values_data['values'] = {
                     'scalar_type': vard.scalar_type,
                     value_key: value_vals
+                }
+            else:
+                values_data['values'] =  {
+                    'scalar_type': vard.scalar_type
                 }
 
             if not typed_values_property_name:

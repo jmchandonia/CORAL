@@ -3,10 +3,26 @@ import json
 import dumper
 import sys
 from . import services
-from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM
+from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_SYSTEM, TYPE_CATEGORY_STATIC
+from .descriptor import IndexDocument
 
 _COLLECTION_ID = 'ID'
 _COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
+
+class ItemAlreadyExistsError(ValueError):
+    def __init__(self, *args, **kwargs):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+
+        if kwargs['old_data'] is not None:
+            self.old_data = kwargs['old_data']
+        if kwargs['new_data'] is not None:
+            self.new_data = kwargs['new_data']
+        if kwargs['data_holder'] is not None:
+            self.data_holder = kwargs['data_holder']
+        
 
 class DataHolder:
     def __init__(self, type_name, data):
@@ -174,7 +190,7 @@ class Workspace:
         self._store_process(data_holder)
         self._index_process(data_holder)
 
-    def save_data_if_not_exists(self, data_holder):
+    def save_data_if_not_exists(self, data_holder, preserve_logs=False):
         upk_prop_name = data_holder.type_def.upk_property_def.name
         upk_id = data_holder.data[upk_prop_name]
         try:
@@ -185,6 +201,28 @@ class Workspace:
             self.save_data(data_holder)
         else:
             print('skipping %s due to older object' % upk_id)
+            if preserve_logs:
+                # validate new data with old id before raising ItemAlreadyExistsError
+                data_holder_2 = EntityDataHolder(data_holder.type_name, data_holder.data)
+                data_holder_2.set_id(current_pk_id)
+                self._validate_object(data_holder_2)
+
+                # if validation passes, get original data for comparison
+                aql = 'FOR x IN @@collection FILTER x.id == @pk_id RETURN x'
+                aql_bind = {
+                    '@collection': TYPE_CATEGORY_STATIC + data_holder.type_name,
+                    'pk_id': current_pk_id
+                }
+
+                new_data = IndexDocument.build_index_doc(data_holder)
+
+                result = self.__arango_service.find(aql, aql_bind)
+                raise ItemAlreadyExistsError(
+                    'object %s already exists in system' % upk_id,
+                    new_data=new_data,
+                    old_data={k: v for (k, v) in result[0].items() if not k.startswith('_')},
+                    data_holder={k: v for (k, v) in data_holder.data.items() if not k.startswith('_')}
+                )
             # check for consistency
             # for now throw an error, although we may want to upsert instead
             # data_holder_2 = EntityDataHolder(data_holder.type_name,

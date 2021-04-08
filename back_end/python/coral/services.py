@@ -33,6 +33,10 @@ _IMPORT_DIR_ONTOLOGY = __CONFIG['Import']['ontology_dir']
 _IMPORT_DIR_ENTITY = __CONFIG['Import']['entity_dir']
 _IMPORT_DIR_PROCESS = __CONFIG['Import']['process_dir']
 _IMPORT_DIR_BRICK = __CONFIG['Import']['brick_dir']
+_GOOGLE_OAUTH2_CREDENTIALS = __CONFIG['WebService']['google_auth_file']
+_GOOGLE_RECAPTCHA_SECRET = __CONFIG['WebService']['captcha_secret_key']
+_USERS = __CONFIG['WebService']['users']
+
 with open(__CONFIG['WebService']['auth_private'], 'rb') as authfile:
     _AUTH_SECRET = authfile.read()
 with open(__CONFIG['WebService']['auth_public'], 'rb') as authfile:

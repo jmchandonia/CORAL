@@ -355,7 +355,13 @@ _make var/config.json based on the following template:_
     "plot_types_file": "plot_types.json",
     "auth_private": "PATH_TO_DATA_ACCESS_API_PRIVATE_KEY",
     "auth_public": "PATH_TO_DATA_ACCESS_API_PUBLIC_KEY",
-    "project_root": "/home/coral/prod"
+    "project_root": "/home/coral/prod",
+    "users": "/path/to/users.json",
+    "google_auth_file": "/path/to/google_auth_file"
+    "captcha_secret_key": "YOUR_GOOGLE_RECAPTCHA_SECRET_KEY",
+    "project_email": "YOUR_PROJECT_EMAIL",
+    "project_email_password": "YOUR_PROJECT_EMAIL_PASSWORD",
+    "admin_email": YOUR_ADMINS_EMAIL"
   }
 }
 
@@ -373,6 +379,55 @@ toolx.init_system()
 
 _this will set up tables required for web services to start._
 
+
+### Set up Users and Auth
+
+In your `coral/back_end/python/var/` directory, create a file called `users.json`. This file will contain basic information about the user's permission levels and personal info. The structure of a user looks like the following:
+
+```json
+[
+  {
+    "username": "jsmith",
+    "email": "jsmith@example.com",
+    "user_level": 1,
+    "allowed_upload_types": [
+      "Well",
+      "Sample",
+      "OTU"
+    ]
+  }
+]
+```
+When `users.json` is created, you must specify the filepath location in the `WebService.users` field of your `config.json`.
+
+There can be any number of users added to the users.json array. `username`, `email` and `user_level` are all required. `user_level` indicates the amount of permissions a user has. A user with level 0 does not have access to Jupyter notebooks and certain more advanced features on the CORAL UI such as uploading of core types. User level 1 has all capabilities enabled.
+
+`allowed_upload_types` is only necessary if the user is set to user_level 1 and needs to upload specific core types to the system according to their expertise. It is an array of core types stored in the system by their term name. A user will have power to upload any types that are saved in their `allowed_upload_types`.
+
+#### Setting up Auth
+
+Once you have configured your users.json file, you will need to generate Google OAuth2 credentials for login.
+you can visit [developers.google.com](https://developers.google.com/adwords/api/docs/guides/authentication) for information on how to obtain these credentials.
+
+When you have your credentials, download them as a json file and store them in a secure place on your computer or linux machine and add the location of the credentials to the "WebService.google_auth_file" of your `config.json`:
+
+```
+  "WebService": {
+    ...
+    "google_auth_file": "path/to/your/google_auth.json"
+  }
+```
+
+You will also need to store the public key value on the client facing environment, under `front_end/src/app/environments/YOUR_ENVIRONMENT.ts`. the field must be stored with the key name "GOOGLE_OAUTH2_CLIENT_KEY".
+
+Once you have congigured this information properly, allowed users should be able to sign in to your CORAL app using gmail.
+#### Setting up User Registration
+
+Setting up User registration requires google reCaptcha V2 credentials, which can be obtained [here](https://www.google.com/recaptcha/about/). When you have received your google credentials, you will want to store your secret key in the `WebService.captcha_secret_key` field of your `config.json`. Since the public sitekey will be sent to the client side, you must add it as a string value to the "GOOGLE_CAPTCHA_SITE_KEY" field of your environment.ts.
+
+For sending automated emails when a user requests registration, it is recommended to set up a new gmail account with the "allow less secure apps to access this email" setting turned on ([More Info Here](https://support.google.com/accounts/answer/6010255?hl=en)). This will allow web_services.py to send an email to your admin's account when a user has successfully registered after validating that they're not a robot.
+
+Make sure to add your newly created email account to the `WebService.project_email` and the admin's email to the `WebService.admin_email` of your `config.json`.
 ### CORAL Web Services
 
 The back end relies on graphviz to draw graphs.  Version 2.42 or
