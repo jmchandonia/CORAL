@@ -1,0 +1,106 @@
+<div class="container">
+    <ngx-spinner
+        style="position: relative; top: 200px; left: 50%;"
+        #spinner        
+        [fullScreen]="false"
+        name="spinner"
+        bdColor="rgba(0,0,0,0)"
+        color="#aaa"
+        type="ball-spin-fade-rotating"
+    ></ngx-spinner>
+    <div class="row">
+        <div class="col-12" *ngIf="successResults?.length">
+            <h3>{{successResults.length}} Successful Uploads</h3>
+            <div class="alert alert-success">
+                The following items were successfully added to the system.
+            </div>
+            <ngx-datatable
+                style="width: 100%"
+                class="ngx-datatable bootstrap"
+                [rows]="successResults"
+                [columnMode]="columnMode.force"
+                [limit]="10"
+                rowHeight="auto"
+                [footerHeight]="40"
+                [scrollbarH]="true"
+            >
+                <ngx-datatable-column *ngFor="let field of successResultFields" [name]="field.name" [flexGrow]="1">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row[field.name]}}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div class="col-12" *ngIf="successResults && !successResults.length">
+            <div class="alert alert-danger">
+                0 items were upload successfully.
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="warningResults?.length">
+        <div class="col-12">
+            <h3>{{warningResults.length}} Warnings</h3>
+            <div class="alert alert-warning">
+                Items from your upload have duplicate IDs with some items that already exist in the system and have not yet been updated. Review the list below to see the changes in data and select items to overwrite existing system values. Red represents the original field values, green represents incoming changes.
+            </div>
+            <ngx-datatable
+                style="width: 100%"
+                class="ngx-datatable bootstrap"
+                [rows]="warningResults"
+                [columnMode]="columnMode.force"
+                [limit]="10"
+                rowHeight="auto"
+                [footerHeight]="40"
+                [scrollbarH]="true"
+            >
+            <!-- <ng-template let-row="row" ngx-datatable-cell-template></ng-template> -->
+            <ngx-datatable-column>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <tr>Old Data</tr>
+                    <tr>New Data</tr>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngFor="let field of warningResultFields" [name]="field.name" [flexGrow]="1">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <tr>
+                        <td [class.old-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.old_data[field.name]}}</td>
+                    </tr>
+                    <tr>
+                        <td [class.new-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.new_data[field.name]}}</td>
+                    </tr>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4" *ngIf="errorResults?.length">
+        <div class="col-12">
+            <h3>{{errorResults.length}} Errors</h3>
+            <div class="alert alert-danger">
+                The following items were not uploaded to the system due to malformed or missing required data. Review the error messages and edit your upload TSV to fix these errors.
+            </div>
+            <ngx-datatable
+                style="width: 100%"
+                class="ngx-datatable bootstrap"
+                [rows]="errorResults"
+                [columnMode]="columnMode.force"
+                [limit]="10"
+                rowHeight="auto"
+                [footerHeight]="40"
+                [scrollbarH]="true"
+            >
+                <ngx-datatable-column>
+                    <ng-template ngx-datatable-header-template>Message</ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template style="background: rgb(248, 215, 218); color: rgb(122,39,48)">
+                        <span style="color:red;">{{row.message}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngFor="let field of errorResultFields" [name]="field.name" [flexGrow]="1">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.data[field.name]}}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>

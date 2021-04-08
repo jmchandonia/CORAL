@@ -1077,7 +1077,21 @@ def upload_core_type_tsv():
     index_type_def._ensure_init_index()
 
     df = pd.read_csv(upload_file, sep='\t')
-    return Response(upload_progress(df, batch_id), mimetype='text/event-stream')       
+    return Response(upload_progress(df, batch_id), mimetype='text/event-stream')
+
+@app.route('/coral/get_core_type_results/<batch_id>', methods=["GET"])
+@auth_required
+def get_core_type_results(batch_id):
+    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id) 
+    with open(upload_result_path) as f:
+        upload_result = json.loads(f.read())
+    # strip NaN values from JSON
+    for error in upload_result['errors']:
+        print ('error -> ', error['data'])
+        print(json.dumps(error['data'], indent=2))
+        error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
+        print(json.dumps(error['data'], indent=2))
+    return _ok_response(upload_result)
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()

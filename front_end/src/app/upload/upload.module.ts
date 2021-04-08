@@ -30,6 +30,8 @@ import { ValidationErrorItemComponent } from './upload/map/validation-error-item
 import { TSVUploadWidgetComponent } from './upload/tsv-upload-widget/tsv-upload-widget.component';
 import { CoreTypeUploadWidgetComponent } from './upload/core-type-upload-widget/core-type-upload-widget.component';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { CoreTypeResultComponent } from './upload/core-type-result/core-type-result.component'
  
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
     ContextFormComponent,
     ValidationErrorItemComponent,
     TSVUploadWidgetComponent,
-    CoreTypeUploadWidgetComponent
+    CoreTypeUploadWidgetComponent,
+    CoreTypeResultComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +66,8 @@ import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
     BrowserAnimationsModule,
     TooltipModule,
     NgSelectModule,
-    ProgressbarModule.forRoot()
+    ProgressbarModule.forRoot(),
+    NgxDatatableModule
   ],
   providers: [UploadService],
   bootstrap: [
