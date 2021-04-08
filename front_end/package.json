@@ -40,6 +40,7 @@
     "ngx-spinner": "^9.0.2",
     "plotly.js": "^1.54.5",
     "rxjs": "~6.5.5",
+    "sse.js": "^0.5.0",
     "terser-webpack-plugin": "^2.3.7",
     "tslib": "^1.10.0",
     "vis-data": "^6.6.1",

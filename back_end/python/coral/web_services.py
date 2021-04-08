@@ -25,13 +25,15 @@ import base64
 from contextlib import redirect_stdout
 import subprocess
 from pyArango.theExceptions import AQLQueryError
-# from . import services
-# from .brick import Brick
+import requests
+import smtplib, ssl
 
+# from .workspace import EntityDataHolder
 from .dataprovider import DataProvider
-from .brick import Brick
+# from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
+from .workspace import ItemAlreadyExistsError, EntityDataHolder
 from . import template 
 
 app = Flask(__name__)
@@ -61,6 +63,7 @@ _UPLOAD_PROCESSED_DATA_PREFIX = 'udp_'
 _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
+_UPLOAD_CORE_DATA_PREFIX = 'ucd_'
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -898,6 +901,8 @@ def upload_csv():
             'properties': []
         }
 
+        data_var_count = 1
+
         # map dimensions to front end brick format
         for di, dim_ds in enumerate(brick_ds['dim_context']):
             response_dim = {
@@ -910,6 +915,7 @@ def upload_csv():
                 }
             }
 
+            data_var_count *= dim_ds['size']
             variables = []
             for dvi, dim_var_ds in enumerate(dim_ds['typed_values']):
                 response_dim_var = {
@@ -918,6 +924,7 @@ def upload_csv():
                         'text': dim_var_ds['value_type']['oterm_name']
                     },
                     'index': dvi,
+                    'totalCount': dim_ds['size'],
                     'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
                     'scalarType': dim_var_ds['values']['scalar_type'],
                 }
@@ -938,6 +945,7 @@ def upload_csv():
             response_dv = {
                 'index': dti,
                 'required': False,
+                'totalCount': data_var_count,
                 'scalarType': data_var_ds['values']['scalar_type'],
                 'type': {
                     'id': data_var_ds['value_type']['oterm_ref'],
@@ -1010,13 +1018,80 @@ def upload_csv():
     except Exception as e:
         return _err_response(e, traceback=True)
 
-            
 
+@app.route('/coral/upload_core_type_tsv', methods=["POST"])
+@auth_required
+def upload_core_type_tsv():
 
+    def upload_progress(df, batch_id):
+        n_rows = df.shape[0]
+        # TODO: update json file one at a time, not in memory
+        result_data = {
+            'success': [],
+            'errors': [],
+            'warnings': []
+        }
+        for ri, row in df.iterrows():
+            try:
+                data = row.to_dict()
+                data_holder = EntityDataHolder(type_name, data)
+                ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+                result_data['success'].append(data_holder.data)
+                yield "data: success-\n\n"
 
-    # TODO: handle uploading files
+            except ItemAlreadyExistsError as ie:
+                result_data['warnings'].append({
+                    'message': ie.message,
+                    'old_data': ie.old_data,
+                    'new_data': ie.new_data,
+                    'data_holder': ie.data_holder
+                })
+                yield "data: warning-{}\n\n".format(ie.message)
 
-    return _ok_response({"test": 'test'})
+            except ValueError as e:
+                result_data['errors'].append({
+                    'data': data_holder.data,
+                    'message': str(e)
+                })
+                yield "data: error-{}\n\n".format(e)
+
+            except Exception as e:
+                print('something went wrong', tb.print_exc())
+
+            yield "data: progress-{}\n\n".format((ri + 1) / n_rows)
+
+        with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
+            json.dump(result_data, f, indent=4)
+        yield "data: complete-{}\n\n".format(batch_id)
+
+    batch_id = uuid.uuid4().hex
+    tmp_batch_file = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
+
+    type_name = request.form['type']
+    upload_file = request.files['file']
+
+    indexdef = svs['indexdef']
+    ws = svs['workspace']
+
+    index_type_def = indexdef.get_type_def(type_name)
+    index_type_def._ensure_init_index()
+
+    df = pd.read_csv(upload_file, sep='\t')
+    return Response(upload_progress(df, batch_id), mimetype='text/event-stream')
+
+@app.route('/coral/get_core_type_results/<batch_id>', methods=["GET"])
+@auth_required
+def get_core_type_results(batch_id):
+    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id) 
+    with open(upload_result_path) as f:
+        upload_result = json.loads(f.read())
+    # strip NaN values from JSON
+    for error in upload_result['errors']:
+        print ('error -> ', error['data'])
+        print(json.dumps(error['data'], indent=2))
+        error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
+        print(json.dumps(error['data'], indent=2))
+    return _ok_response(upload_result)
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
@@ -1162,6 +1237,95 @@ def _get_term(term_data):
 ########################################################################################
 ## NEW VERSION
 ##########################################################################################
+
+@app.route("/coral/google_auth_code_store", methods=["POST"])
+def handle_auth_code():
+
+    with open(cns['_GOOGLE_OAUTH2_CREDENTIALS']) as f:
+        client_credentials =  json.load(f)
+
+    result = requests.post('https://www.googleapis.com/oauth2/v4/token', {
+        'client_id': client_credentials['web']['client_id'],
+        'client_secret': client_credentials['web']['client_secret'],
+        'redirect_uri': 'postmessage',
+        'grant_type': 'authorization_code',
+        'code': request.json['authCode']
+    })
+
+    tokens = json.loads(result.content.decode('utf-8'))
+    access_token = tokens['access_token']
+    # refresh_token = tokens['refresh_token']
+    # TODO: store access_token and refresh_token ?
+
+    user = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
+
+    user_email = json.loads(user.content.decode('utf-8'))['email']
+
+    with open(cns['_USERS']) as user_file:
+        registered_users = json.load(user_file)
+
+    match_user = None
+    for registered_user in registered_users:
+        if registered_user['email'] == user_email:
+            match_user = registered_user
+
+    if match_user == None:
+        return _ok_response({
+            'success': False,
+            'message': 'User not registered in system'
+        })
+
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=0, milliseconds=0, microseconds=0, minutes=120),
+            'iat': datetime.datetime.utcnow(),
+            'sub': match_user['username']
+        }
+
+        new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+        return _ok_response({'success': True, 'token': new_jwt, 'user': match_user})
+    except Exception as e:
+        return json.dumps({'success': False, 'message': 'Something went wrong.'})
+
+
+@app.route("/coral/request_registration", methods=['POST'])
+def process_registration_request():
+    recaptcha_token = request.json['token']
+    recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', {
+        'secret': cns['_GOOGLE_RECAPTCHA_SECRET'],
+        'response': recaptcha_token
+    })
+
+    recaptcha_result = json.loads(recaptcha_request.content.decode('utf-8'))
+    print(recaptcha_result)
+
+    if 'success' in recaptcha_result:
+        first_name = request.json['firstName']
+        last_name = request.json['lastName']
+        email = request.json['email']
+
+        port = 465
+        pw = cns['_WEB_SERVICE']['project_email_password']
+        sender_email = cns['_WEB_SERVICE']['project_email']
+        receiver_email = cns['_WEB_SERVICE']['admin_email']
+        context = ssl.create_default_context()
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
+            server.login(sender_email, pw)
+
+            message = """\
+                Subject: New User Registration
+
+                %s %s has requested access to your CORAL application, using the email address %s. To approve this user, add their information to the users.json file in your config.
+            """ % (first_name, last_name, email)
+
+            server.sendmail(sender_email, receiver_email, message)
+
+        return _ok_response({'success': True})
+            
+    
+    else:
+        return _err_response({'message': 'invalid captcha', 'success': False})
 
 @cross_origin
 @app.route("/coral/user_login", methods=['GET', 'POST'])
@@ -1376,7 +1540,7 @@ def coral_brick_plot_metadata(brick_id, limit):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
 
-    return br.to_json(exclude_data_values=False, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
+    return br.to_json(exclude_data_values=True, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
 
 @app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required

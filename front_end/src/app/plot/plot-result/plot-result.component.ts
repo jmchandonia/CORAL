@@ -32,6 +32,7 @@ export class PlotResultComponent implements OnInit {
   };
   plot: PlotlyBuilder;
   shareableLink = false;
+  requiresGL = false;
   @ViewChild(TooltipDirective) copyLink: TooltipDirective;
 
   ngOnInit() {
@@ -47,6 +48,9 @@ export class PlotResultComponent implements OnInit {
       if (queryParams['zip']) {
         this.shareableLink = true;
         this.plot = this.createPlotFromLink(decodeURIComponent(queryParams.zip));
+      }
+      if (queryParams['gl']) {
+        this.requiresGL = !!+queryParams.gl;
       }
     })
 
@@ -173,6 +177,10 @@ export class PlotResultComponent implements OnInit {
           }
           this.loading = false;
           this.spinner.hide();
+
+          if (this.requiresGL) {
+            this.data.type = 'scattergl'
+          }
         });
     } else {
       this.plotService.getCorePlot()
