@@ -91,7 +91,6 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
         } else if (event.data.includes('error-')) {
           this.nErrors++;
         } else if (event.data.includes('complete-')) {
-          //TODO: close SSE connection
           const batchId = event.data.split('complete-')[1];
           this.uploadProgressStream.unsubscribe();
           this.router.navigate([`/core-type-result/${batchId}`]);
