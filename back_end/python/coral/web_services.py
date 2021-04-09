@@ -33,7 +33,7 @@ from .dataprovider import DataProvider
 # from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
-from .workspace import ItemAlreadyExistsError, EntityDataHolder
+from .workspace import ItemAlreadyExistsException, EntityDataHolder
 from . import template 
 
 app = Flask(__name__)
@@ -1064,14 +1064,18 @@ def upload_core_type_tsv():
                 result_data['success'].append(data_holder.data)
                 yield "data: success--\n\n"
 
-            except ItemAlreadyExistsError as ie:
-                result_data['warnings'].append({
-                    'message': ie.message,
-                    'old_data': ie.old_data,
-                    'new_data': ie.new_data,
-                    'data_holder': ie.data_holder
-                })
-                yield "data: warning--{}\n\n".format(ie.message)
+            except ItemAlreadyExistsException as ie:
+                if ie.changed_data:
+                    result_data['warnings'].append({
+                        'message': ie.message,
+                        'old_data': ie.old_data,
+                        'new_data': ie.new_data,
+                        'data_holder': ie.data_holder
+                    })
+                    yield "data: warning--{}\n\n".format(ie.message)
+                else:
+                    result_data['success'].append(data_holder.data)
+                    yield "data: success--\n\n"
 
             except ValueError as e:
                 result_data['errors'].append({
@@ -1110,12 +1114,11 @@ def get_core_type_results(batch_id):
     upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id) 
     with open(upload_result_path) as f:
         upload_result = json.loads(f.read())
+
     # strip NaN values from JSON
     for error in upload_result['errors']:
-        print ('error -> ', error['data'])
-        print(json.dumps(error['data'], indent=2))
         error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
-        print(json.dumps(error['data'], indent=2))
+
     return _ok_response(upload_result)
 
 def _save_brick_proto(brick, file_name):

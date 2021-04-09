@@ -9,7 +9,7 @@ from .descriptor import IndexDocument
 _COLLECTION_ID = 'ID'
 _COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
 
-class ItemAlreadyExistsError(ValueError):
+class ItemAlreadyExistsException(ValueError):
     def __init__(self, *args, **kwargs):
         if args:
             self.message = args[0]
@@ -22,7 +22,12 @@ class ItemAlreadyExistsError(ValueError):
             self.new_data = kwargs['new_data']
         if kwargs['data_holder'] is not None:
             self.data_holder = kwargs['data_holder']
-        
+
+        # Compare old item with new item to see if any values are different
+        self.changed_data = False
+        for key, val in self.old_data.items():
+            if self.new_data[key] != val:
+                self.changed_data = True
 
 class DataHolder:
     def __init__(self, type_name, data):
@@ -217,7 +222,7 @@ class Workspace:
                 new_data = IndexDocument.build_index_doc(data_holder)
 
                 result = self.__arango_service.find(aql, aql_bind)
-                raise ItemAlreadyExistsError(
+                raise ItemAlreadyExistsException(
                     'object %s already exists in system' % upk_id,
                     new_data=new_data,
                     old_data={k: v for (k, v) in result[0].items() if not k.startswith('_')},
