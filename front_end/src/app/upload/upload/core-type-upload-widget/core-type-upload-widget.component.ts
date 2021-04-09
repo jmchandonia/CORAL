@@ -5,6 +5,13 @@ import { UploadService } from 'src/app/shared/services/upload.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+enum UploadMessageStream {
+  SUCCESS = 'success',
+  WARNING = 'warning',
+  PROGRESS = 'progress',
+  ERROR = 'error',
+  COMPLETE = 'complete'
+}
 @Component({
   selector: 'app-core-type-upload-widget',
   templateUrl: './core-type-upload-widget.component.html',
@@ -24,6 +31,8 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   uploadError = false; // 
   readyToUpload = false;
   selectedTypeError = false;
+  validationError = false;
+  validationErrorMessage: string;
   public loading = false;
   progressPercentage = 0;
 
@@ -35,6 +44,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   public selectedType: string;
 
   uploadProgressStream: Subscription;
+  
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
@@ -74,26 +84,44 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     }
   }
 
-  upload() {
+  async upload() {
     if (this.file && !this.selectedType) {
       this.selectedTypeError = true;
       return;
     }
+
+    try {
+      await this.uploadService.validateCoreTypeTSV(this.selectedType, this.file)
+      } catch(e) {
+        this.validationError = true;
+        this.validationErrorMessage = e.error;
+        return;
+      }
+
     this.loading = true;
     this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file)
-      .subscribe((event: any) => {
-        if (event.data.includes('progress-')) {
-          this.progressPercentage = +event.data.split('progress-')[1] * 100
-        } else if (event.data.includes('success-')) {
-          this.nSuccesses++;
-        } else if (event.data.includes('warning-')) {
-          this.nWarnings++;
-        } else if (event.data.includes('error-')) {
-          this.nErrors++;
-        } else if (event.data.includes('complete-')) {
-          const batchId = event.data.split('complete-')[1];
-          this.uploadProgressStream.unsubscribe();
-          this.router.navigate([`/core-type-result/${batchId}`]);
+      .subscribe((event: {data: string}) => {
+        const [eventType, eventMessage] = event.data.split('--');
+        switch (eventType) {
+          case UploadMessageStream.PROGRESS:
+            this.progressPercentage = +eventMessage * 100;
+            break;
+          case UploadMessageStream.SUCCESS:
+            this.nSuccesses++;
+            break;
+          case UploadMessageStream.WARNING:
+            this.nWarnings++;
+            break;
+          case UploadMessageStream.ERROR:
+            this.nErrors++;
+            break;
+          case UploadMessageStream.COMPLETE:
+            const batchId = eventMessage;
+            this.uploadProgressStream.unsubscribe();
+            this.router.navigate([`/core-type-result/${batchId}`])
+            break;
+          default:
+            console.error(`Error: Unsupported message type "${eventType}"`);
         }
       });
   }
@@ -103,6 +131,8 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     this.readyToUpload = false;
     this.fileTypeError = false;
     this.uploadError = false;
+    this.validationError = false;
+    delete this.validationErrorMessage;
   }
 
   clearSelectionError() {

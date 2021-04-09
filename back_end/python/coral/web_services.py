@@ -1019,6 +1019,31 @@ def upload_csv():
         return _err_response(e, traceback=True)
 
 
+@app.route('/coral/validate_core_tsv_headers', methods=["POST"])
+@auth_required
+def validate_core_tsv_headers():
+    # validate headers of TSV before uploading each item individually
+    # TODO: figure out if there is a way to send custom errors through SSE method that front end can consume
+
+    upload_file = request.files['file']
+    type_name = request.form['type']
+    df = pd.read_csv(upload_file, sep='\t')
+
+    typedef = svs['typedef'].get_type_def(type_name)
+
+    # Check that there are no missing required fields
+    for pname in typedef.property_names:
+        prop_def = typedef.property_def(pname)
+        if prop_def.required and pname not in df.columns.values and not prop_def.is_pk:
+            return 'Error: required property field "%s" is missing from TSV headers' % pname, 400
+
+    # Make sure there are no keys not defined in typedef
+    for value in df.columns.values:
+        if value not in typedef.property_names:
+            return 'Error: Unrecognized property "%s" for type %s' % (value, type_name), 400
+
+    return _ok_response({"message": "validated successfully"})
+
 @app.route('/coral/upload_core_type_tsv', methods=["POST"])
 @auth_required
 def upload_core_type_tsv():
@@ -1037,7 +1062,7 @@ def upload_core_type_tsv():
                 data_holder = EntityDataHolder(type_name, data)
                 ws.save_data_if_not_exists(data_holder, preserve_logs=True)
                 result_data['success'].append(data_holder.data)
-                yield "data: success-\n\n"
+                yield "data: success--\n\n"
 
             except ItemAlreadyExistsError as ie:
                 result_data['warnings'].append({
@@ -1046,23 +1071,23 @@ def upload_core_type_tsv():
                     'new_data': ie.new_data,
                     'data_holder': ie.data_holder
                 })
-                yield "data: warning-{}\n\n".format(ie.message)
+                yield "data: warning--{}\n\n".format(ie.message)
 
             except ValueError as e:
                 result_data['errors'].append({
                     'data': data_holder.data,
                     'message': str(e)
                 })
-                yield "data: error-{}\n\n".format(e)
+                yield "data: error--{}\n\n".format(e)
 
             except Exception as e:
                 print('something went wrong', tb.print_exc())
 
-            yield "data: progress-{}\n\n".format((ri + 1) / n_rows)
+            yield "data: progress--{}\n\n".format((ri + 1) / n_rows)
 
         with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
             json.dump(result_data, f, indent=4)
-        yield "data: complete-{}\n\n".format(batch_id)
+        yield "data: complete--{}\n\n".format(batch_id)
 
     batch_id = uuid.uuid4().hex
     tmp_batch_file = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)

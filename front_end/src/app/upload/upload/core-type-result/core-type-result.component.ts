@@ -55,7 +55,7 @@ export class CoreTypeResultComponent implements OnInit {
 
           this.spinner.hide('spinner');
           this.chRef.detectChanges();
-        }, e => console.log(e));
+        });
     });
   }
 
