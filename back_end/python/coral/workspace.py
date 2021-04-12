@@ -245,6 +245,10 @@ class Workspace:
         self._store_object(data_holder)
         self._index_object(data_holder)
 
+    def update_data(self, data_holder):
+        self._validate_object(data_holder)
+        self._update_object(data_holder)
+
     def _generate_id(self, data_holder):
         id = self.next_id(data_holder.type_name)
         data_holder.set_id(id)
@@ -262,6 +266,26 @@ class Workspace:
         for key, value in data_holder.data.items():
             if value != value:
                 data_holder.data[key] = None
+
+    def _update_object(self, data_holder):
+        # Currently used in UI when users confirm they want to overwrite existing data
+        # TODO: Figure out solution for upserting rather than erasing old data
+        if type(data_holder) is EntityDataHolder:
+            aql = """
+                FOR x IN @@collection
+                FILTER x.id == @pk_id
+                UPDATE x WITH @doc IN @@collection
+            """
+
+            aql_bind = {
+                '@collection': TYPE_CATEGORY_STATIC + data_holder.type_name,
+                'pk_id': data_holder.id,
+                'doc': data_holder.data
+            }
+            self.__arango_service.db.AQLQuery(aql, bindVars=aql_bind)
+        else:
+            # TODO: determine if we need to create an update method for non-core types
+            pass
 
     def _store_object(self, data_holder):
         type_name = data_holder.type_name
