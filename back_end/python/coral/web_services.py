@@ -1052,6 +1052,7 @@ def upload_core_type_tsv():
         n_rows = df.shape[0]
         # TODO: update json file one at a time, not in memory
         result_data = {
+            'type_name': type_name,
             'success': [],
             'errors': [],
             'warnings': []
@@ -1120,6 +1121,38 @@ def get_core_type_results(batch_id):
         error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
 
     return _ok_response(upload_result)
+
+@app.route('/coral/update_core_duplicates', methods=["POST"])
+@auth_required
+def update_core_duplicates():
+    # Overwrite existing uploads after prompting warning window to user
+    batch_id = request.json['batch_id']
+    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
+
+    with open(upload_result_path) as f:
+        upload_result = json.loads(f.read())
+        core_duplicates = upload_result['warnings']
+        type_name = upload_result['type_name']
+
+    ws = svs['workspace']
+    indexdef = svs['indexdef']
+    index_type_def = indexdef.get_type_def(type_name)
+    index_type_def._ensure_init_index()
+
+    update_results = []
+    for duplicate in core_duplicates:
+        try:
+            data_holder = EntityDataHolder(type_name, duplicate['data_holder'])
+            ws.update_data(data_holder)
+            update_results.append({'error': False, 'data': duplicate['new_data'], 'message': ''})
+        except Exception as e:
+            print(e)
+            tb.format_exc()
+            # add validation exception to response
+            update_results.append({'error': True, 'data': duplicate['new_data'], 'message': str(e)})
+    
+    return _ok_response(update_results)
+
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()

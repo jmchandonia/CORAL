@@ -38,17 +38,25 @@
         </div>
     </div>
     <div class="row mt-4" *ngIf="warningResults?.length">
-        <div class="col-12">
+        <div class="col-12" *ngIf="!updatingDuplicates && !duplicateResults">
             <h3>{{warningResults.length}} Warnings</h3>
-            <div class="alert alert-warning">
-                Items from your upload have duplicate IDs with some items that already exist in the system and have not yet been updated. Review the list below to see the changes in data and select items to overwrite existing system values. Red represents the original field values, green represents incoming changes.
+            <div class="row justify-content-center">
+                <div class="alert alert-warning col-9">
+                    Items from your upload have duplicate IDs with some items that already exist in the system and have not yet been updated. Review the list below to see the changes in the data and confirm that you want to overwrite these items to the system. Red represents the original field values, green represents incoming changes.
+                </div>
+                <div class="col-2 d-flex" style="align-items: center;">
+                    <button class="btn btn-secondary" (click)="displayModal(template)">Replace all Items</button>
+                </div>
             </div>
+            <!-- <div class="alert alert-warning">
+                Items from your upload have duplicate IDs with some items that already exist in the system and have not yet been updated. Review the list below to see the changes in data and select items to overwrite existing system values. Red represents the original field values, green represents incoming changes.
+            </div> -->
             <ngx-datatable
                 style="width: 100%"
                 class="ngx-datatable bootstrap"
                 [rows]="warningResults"
                 [columnMode]="columnMode.force"
-                [limit]="10"
+                [limit]="20"
                 rowHeight="auto"
                 [footerHeight]="40"
                 [scrollbarH]="true"
@@ -71,6 +79,49 @@
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
+        </div>
+        <div class="col-12" *ngIf="updatingDuplicates && !duplicateResults" style="height: 250px;">
+            <ngx-spinner
+                style="position: relative; top: 125px; left: 50%;"
+                #spinner        
+                [fullScreen]="false"
+                name="updatingDuplicates"
+                bdColor="rgba(0,0,0,0)"
+                color="#aaa"
+                type="ball-spin-fade-rotating"
+        ></ngx-spinner>
+        </div>
+        <div class="col-12" *ngIf="!updatingDuplicates && duplicateResults">
+            <div class="row">
+                <div class="alert alert-success col-12" *ngIf="duplicateUpdateErrors === 0">
+                    All duplicate items were successfully updated in the system.
+                </div>
+                <div class="alert alert-warning col-12" *ngIf="duplicateUpdateErrors > 0">
+                    {{duplicateResults.length - duplicateUpdateErrors}} results were successfully updated in the system; {{duplicateUpdateErrors}} items were improperly formatted and were not added due to an error. Please review the results below to check the error messages.
+                </div>
+            </div>
+            <ngx-datatable
+                style="width: 100%"
+                class="ngx-datatable bootstrap"
+                [rows]="duplicateResults"
+                [columnMode]="columnMode.force"
+                [limit]="20"
+                rowHeight="auto"
+                [footerHeight]="40"
+                [scrollbarH]="true"
+            >
+                <ngx-datatable-column>
+                    <ng-template ngx-datatable-header-template>Message</ng-template>
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span style="color: red;">{{row.message}}</span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngFor="let field of warningResultFields" [name]="field.name" [flexGrow]="1">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.data[field.name]}}
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
         </div>
     </div>
     <div class="row mt-4 mb-4" *ngIf="errorResults?.length">
@@ -104,3 +155,26 @@
         </div>
     </div>
 </div>
+<ng-template #template>
+    <div class="container pr-0 pl-0">
+        <div class="modal-header modal-header-warning">
+            <!-- <div class="alert alert-warning"> -->
+                <h3 style="float: left;">Confirm Overwrite</h3>
+                <span style="float: right;">
+                    <i class="material-icons">report_problem</i>
+                </span>
+            <!-- </div> -->
+        </div>
+        <div class="modal-body">
+            <span>This Action will overwrite {{warningResults.length}} items in the system. Are you sure you want to continue?</span>
+            <div class="row mt-4">
+                <div class="col-4">
+                    <button class="btn btn-primary" (click)="updateAllDuplicates()" style="width: 100%">Update {{warningResults.length}} items</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary" (click)="cancel()" style="width: 100%;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
