@@ -1091,7 +1091,7 @@ def upload_core_type_tsv():
             yield "data: progress--{}\n\n".format((ri + 1) / n_rows)
 
         with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
-            json.dump(result_data, f, indent=4)
+            json.dump(result_data, f, indent=4, sort_keys=False)
         yield "data: complete--{}\n\n".format(batch_id)
 
     batch_id = uuid.uuid4().hex
@@ -1120,7 +1120,7 @@ def get_core_type_results(batch_id):
     for error in upload_result['errors']:
         error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
 
-    return _ok_response(upload_result)
+    return _ok_response(upload_result, sort_keys=False)
 
 @app.route('/coral/update_core_duplicates', methods=["POST"])
 @auth_required
@@ -3435,12 +3435,12 @@ def generate_brick_template():
     except Exception as e:
         return _err_response(e, traceback=True)
 
-def _ok_response(res):
+def _ok_response(res, sort_keys=True):
     return  json.dumps( {
             'results': res, 
             'status': 'OK', 
             'error': ''
-        })
+        }, sort_keys=sort_keys)
 
 def _err_response(e, traceback=False):
     err = str(e)
