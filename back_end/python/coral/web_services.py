@@ -2949,7 +2949,7 @@ def coral_type_graph():
                 linkText += ', '
             linkText += str(num)+' '+to
 
-            if (intermed == 0):
+            if (intermed == 0 and fr in nodeMap):
                 intermed = nodeMap[fr]['index']
 
             e = {
