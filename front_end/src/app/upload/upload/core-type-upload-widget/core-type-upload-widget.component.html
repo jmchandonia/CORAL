@@ -33,6 +33,11 @@
             Error: Please select a core type from the dropdown for uploading.
         </div>
     </div>
+    <div class="row justify-content-center" *ngIf="validationError">
+        <div class="alert alert-danger col-12">
+            {{validationErrorMessage}}
+        </div>
+    </div>
     <div class="row justify-content-center">
       <div class="col-12">
           <div appUploadDragDrop class="drop-zone p-4" (fileDropped)="handleFileInput($event)">
