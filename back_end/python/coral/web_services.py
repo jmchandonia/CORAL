@@ -1090,6 +1090,20 @@ def upload_core_type_tsv():
 
             yield "data: progress--{}\n\n".format((ri + 1) / n_rows)
 
+        # Add units to display in result table UI, if applicable
+        ontology = svs['ontology']
+        prop_units = {}
+        type_def_service = svs['typedef']
+        type_def = type_def_service.get_type_def(type_name)
+
+        for prop_name in type_def.property_names:
+            prop_def = type_def.property_def(prop_name)
+            if prop_def.has_units_term_id():
+                term = ontology._get_term(prop_def.units_term_id)
+                prop_units[prop_name] = term.term_name
+
+        result_data['property_units'] = prop_units
+
         with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
             json.dump(result_data, f, indent=4, sort_keys=False)
         yield "data: complete--{}\n\n".format(batch_id)

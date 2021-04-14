@@ -23,6 +23,7 @@ export class CoreTypeResultComponent implements OnInit {
   public updatingDuplicates = false;
   public duplicateResults: any;
   public duplicateUpdateErrors: number;
+  public propertyUnits: any; // for displaying units of fields in UI
 
 
   private batchId: string;
@@ -62,6 +63,7 @@ export class CoreTypeResultComponent implements OnInit {
             this.warningResultFields = Object.keys(results['warnings'][0]['old_data']).map(d => ({prop: d, name: d}))
           }
 
+          this.propertyUnits = results['property_units'];
           this.spinner.hide('spinner');
           this.chRef.detectChanges();
         });
