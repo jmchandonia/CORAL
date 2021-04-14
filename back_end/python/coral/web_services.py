@@ -33,7 +33,7 @@ from .dataprovider import DataProvider
 # from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
 from .utils import to_object_type
-from .workspace import ItemAlreadyExistsError, EntityDataHolder
+from .workspace import ItemAlreadyExistsException, EntityDataHolder
 from . import template 
 
 app = Flask(__name__)
@@ -1019,6 +1019,31 @@ def upload_csv():
         return _err_response(e, traceback=True)
 
 
+@app.route('/coral/validate_core_tsv_headers', methods=["POST"])
+@auth_required
+def validate_core_tsv_headers():
+    # validate headers of TSV before uploading each item individually
+    # TODO: figure out if there is a way to send custom errors through SSE method that front end can consume
+
+    upload_file = request.files['file']
+    type_name = request.form['type']
+    df = pd.read_csv(upload_file, sep='\t')
+
+    typedef = svs['typedef'].get_type_def(type_name)
+
+    # Check that there are no missing required fields
+    for pname in typedef.property_names:
+        prop_def = typedef.property_def(pname)
+        if prop_def.required and pname not in df.columns.values and not prop_def.is_pk:
+            return 'Error: required property field "%s" is missing from TSV headers' % pname, 400
+
+    # Make sure there are no keys not defined in typedef
+    for value in df.columns.values:
+        if value not in typedef.property_names:
+            return 'Error: Unrecognized property "%s" for type %s' % (value, type_name), 400
+
+    return _ok_response({"message": "validated successfully"})
+
 @app.route('/coral/upload_core_type_tsv', methods=["POST"])
 @auth_required
 def upload_core_type_tsv():
@@ -1027,6 +1052,7 @@ def upload_core_type_tsv():
         n_rows = df.shape[0]
         # TODO: update json file one at a time, not in memory
         result_data = {
+            'type_name': type_name,
             'success': [],
             'errors': [],
             'warnings': []
@@ -1037,32 +1063,36 @@ def upload_core_type_tsv():
                 data_holder = EntityDataHolder(type_name, data)
                 ws.save_data_if_not_exists(data_holder, preserve_logs=True)
                 result_data['success'].append(data_holder.data)
-                yield "data: success-\n\n"
+                yield "data: success--\n\n"
 
-            except ItemAlreadyExistsError as ie:
-                result_data['warnings'].append({
-                    'message': ie.message,
-                    'old_data': ie.old_data,
-                    'new_data': ie.new_data,
-                    'data_holder': ie.data_holder
-                })
-                yield "data: warning-{}\n\n".format(ie.message)
+            except ItemAlreadyExistsException as ie:
+                if ie.changed_data:
+                    result_data['warnings'].append({
+                        'message': ie.message,
+                        'old_data': ie.old_data,
+                        'new_data': ie.new_data,
+                        'data_holder': ie.data_holder
+                    })
+                    yield "data: warning--{}\n\n".format(ie.message)
+                else:
+                    result_data['success'].append(data_holder.data)
+                    yield "data: success--\n\n"
 
             except ValueError as e:
                 result_data['errors'].append({
                     'data': data_holder.data,
                     'message': str(e)
                 })
-                yield "data: error-{}\n\n".format(e)
+                yield "data: error--{}\n\n".format(e)
 
             except Exception as e:
                 print('something went wrong', tb.print_exc())
 
-            yield "data: progress-{}\n\n".format((ri + 1) / n_rows)
+            yield "data: progress--{}\n\n".format((ri + 1) / n_rows)
 
         with open(os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id), 'w') as f:
-            json.dump(result_data, f, indent=4)
-        yield "data: complete-{}\n\n".format(batch_id)
+            json.dump(result_data, f, indent=4, sort_keys=False)
+        yield "data: complete--{}\n\n".format(batch_id)
 
     batch_id = uuid.uuid4().hex
     tmp_batch_file = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
@@ -1085,13 +1115,44 @@ def get_core_type_results(batch_id):
     upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id) 
     with open(upload_result_path) as f:
         upload_result = json.loads(f.read())
+
     # strip NaN values from JSON
     for error in upload_result['errors']:
-        print ('error -> ', error['data'])
-        print(json.dumps(error['data'], indent=2))
         error['data'] = {k: None if v != v else v for k, v in error['data'].items()}
-        print(json.dumps(error['data'], indent=2))
-    return _ok_response(upload_result)
+
+    return _ok_response(upload_result, sort_keys=False)
+
+@app.route('/coral/update_core_duplicates', methods=["POST"])
+@auth_required
+def update_core_duplicates():
+    # Overwrite existing uploads after prompting warning window to user
+    batch_id = request.json['batch_id']
+    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
+
+    with open(upload_result_path) as f:
+        upload_result = json.loads(f.read())
+        core_duplicates = upload_result['warnings']
+        type_name = upload_result['type_name']
+
+    ws = svs['workspace']
+    indexdef = svs['indexdef']
+    index_type_def = indexdef.get_type_def(type_name)
+    index_type_def._ensure_init_index()
+
+    update_results = []
+    for duplicate in core_duplicates:
+        try:
+            data_holder = EntityDataHolder(type_name, duplicate['data_holder'])
+            ws.update_data(data_holder)
+            update_results.append({'error': False, 'data': duplicate['new_data'], 'message': ''})
+        except Exception as e:
+            print(e)
+            tb.format_exc()
+            # add validation exception to response
+            update_results.append({'error': True, 'data': duplicate['new_data'], 'message': str(e)})
+    
+    return _ok_response(update_results)
+
 
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
@@ -3374,12 +3435,12 @@ def generate_brick_template():
     except Exception as e:
         return _err_response(e, traceback=True)
 
-def _ok_response(res):
+def _ok_response(res, sort_keys=True):
     return  json.dumps( {
             'results': res, 
             'status': 'OK', 
             'error': ''
-        })
+        }, sort_keys=sort_keys)
 
 def _err_response(e, traceback=False):
     err = str(e)

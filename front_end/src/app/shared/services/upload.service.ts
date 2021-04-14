@@ -269,6 +269,16 @@ export class UploadService {
     });
   }
 
+  validateCoreTypeTSV(type: string, file: File): Promise<void|string> {
+    const formData: FormData = new FormData();
+    formData.append('type', type)
+    formData.append('file', file)
+    return new Promise((resolve, reject) => {
+      this.http.post(`${environment.baseURL}/validate_core_tsv_headers`, formData)
+        .subscribe(data => resolve(), error => reject(error));
+    });
+  }
+
   uploadCoreTypeTSV(type: string, file: File) {
 
     const formData: FormData = new FormData();
@@ -294,6 +304,10 @@ export class UploadService {
         });
       }
     });
+  }
+
+  updateCoreTypeDuplicates(batchId: string) {
+    return this.http.post(`${environment.baseURL}/update_core_duplicates`, {batch_id: batchId});
   }
 
   getCoreTypeUploadResults(id: string) {
