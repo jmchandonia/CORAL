@@ -306,6 +306,10 @@ export class UploadService {
     });
   }
 
+  getCoreTypeNames() {
+    return this.http.get(`${environment.baseURL}/core_type_names`);
+  }
+
   updateCoreTypeDuplicates(batchId: string) {
     return this.http.post(`${environment.baseURL}/update_core_duplicates`, {batch_id: batchId});
   }
