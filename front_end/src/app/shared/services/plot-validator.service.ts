@@ -111,6 +111,11 @@ export class PlotValidatorService {
         nDataPoints *= metadata.dim_context[i].size;
       }
     });
+
+    if (plot.constraints.length === 0) {
+      return [false, nDataPoints > 100_000];
+    }
+
     const allTraces = plot.constraints
       .map(constraint => constraint.variables)
       .reduce((acc, cv) => acc.concat(cv))
