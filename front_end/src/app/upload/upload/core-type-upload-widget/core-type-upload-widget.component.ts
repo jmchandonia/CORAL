@@ -4,6 +4,7 @@ import { User } from 'src/app/shared/models/user';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Response } from 'src/app/shared/models/response';
 
 enum UploadMessageStream {
   SUCCESS = 'success',
@@ -42,12 +43,21 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   
   user: User;
   public selectedType: string;
+  allowedUploadTypes: string[];
 
   uploadProgressStream: Subscription;
   
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
+    if (this.user.allowed_upload_types === '*') {
+      this.uploadService.getCoreTypeNames()
+        .subscribe((data: any) => {
+          this.allowedUploadTypes = data.results;
+        })
+    } else {
+      this.allowedUploadTypes = this.user.allowed_upload_types as string[];
+    }
   }
 
   handleFileInput(files: FileList) {

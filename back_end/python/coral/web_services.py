@@ -1019,6 +1019,13 @@ def upload_csv():
         return _err_response(e, traceback=True)
 
 
+@app.route('/coral/core_type_names', methods=["GET"])
+@auth_required
+def get_core_type_names():
+    type_def_names = svs['typedef'].get_type_names()
+    return _ok_response([name for name in type_def_names if name != 'ENIGMA'])
+
+
 @app.route('/coral/validate_core_tsv_headers', methods=["POST"])
 @auth_required
 def validate_core_tsv_headers():

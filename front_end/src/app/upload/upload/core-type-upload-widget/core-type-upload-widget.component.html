@@ -16,7 +16,7 @@
             <ng-select
                 class="custom"
                 [class.select-error]="selectedTypeError"
-                [items]="user.allowed_upload_types"
+                [items]="allowedUploadTypes"
                 [(ngModel)]="selectedType"
                 placeholder="Select a core type to upload"
                 (change)="clearSelectionError()"
