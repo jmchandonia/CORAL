@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { QueryParam } from '../models/QueryBuilder';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
+import { Subject, EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ErrorComponent } from 'src/app/shared/components/error/error.component';
 @Injectable({
   providedIn: 'root'
 })
 export class HomeService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private modalService: BsModalService
+    ) { }
 
   provenanceGraphSub: Subject<any> = new Subject();
   provenanceLoadingSub: Subject<any> = new Subject();
@@ -46,6 +52,29 @@ export class HomeService {
 
   getProvenanceLoadingSub() {
     return this.provenanceLoadingSub.asObservable();
+  }
+
+  initBackendConnection() {
+    // test if back end is running
+    return this.http.get(environment.baseURL + '/', {
+      headers: new HttpHeaders({
+        'Content-Type': 'text/plain; charset=utf-8'
+      }),
+      responseType: 'text'
+    })
+      .pipe(
+        // warn user if backend connection fails
+        catchError(e => {
+          //  TODO: This should be thrown as an error, but throwing it adds stack trace info not useful to the user
+          this.modalService.show(ErrorComponent, {
+            class: 'modal-lg',
+            initialState: {
+              message: `Connection to API at ${environment.baseURL} failed. Please check your internet connection or contact your site administrator.`
+            }
+          })
+          return EMPTY;
+        })
+      ).toPromise();
   }
 
 }
