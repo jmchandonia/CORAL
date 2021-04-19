@@ -8,3 +8,8 @@
     color: #2969a5;
     cursor: pointer;
 }
+
+.requires-processes {
+    font-size: 0.8rem;
+    color: #888;
+}

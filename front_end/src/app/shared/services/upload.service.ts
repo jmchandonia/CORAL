@@ -269,6 +269,10 @@ export class UploadService {
     });
   }
 
+  checkProvenanceOf(typeName: string) {
+    return this.http.get(`${environment.baseURL}/get_provenance/${typeName}`);
+  }
+
   validateCoreTypeTSV(type: string, file: File): Promise<void|string> {
     const formData: FormData = new FormData();
     formData.append('type', type)

@@ -175,7 +175,14 @@ class TypeDef:
         #     for type_name in type_def_doc['process_inputs']:
         #         self.__process_input_type_names.append(type_name)
 
+
         self.__process_input_type_defs = []
+        if 'process_inputs' in type_def_doc:
+            for input_list in type_def_doc['process_inputs']:
+                process_inputs = []
+                for type_name in input_list:
+                    process_inputs.append(type_name)
+                self.__process_input_type_defs.append(process_inputs)
 
     def _repr_html_(self):
         rows = ['<b>' + self.__name + '</b>']
