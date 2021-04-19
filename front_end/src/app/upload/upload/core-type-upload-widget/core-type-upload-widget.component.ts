@@ -28,6 +28,9 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   file: File = null;
   fileSize: string;
+  processFile: File = null;
+  processFileSize: string;
+
   fileTypeError = false;
   uploadError = false; // 
   readyToUpload = false;
@@ -65,33 +68,42 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     this.fileTypeError = false;
     this.uploadError = false;
 
-    this.file = files.item(0);
-    if (this.file?.type !== 'text/tab-separated-values') {
-      this.fileTypeError = true;
+    if (this.requiresProcessTSV && this.file !== null) {
+      this.processFile = files.item(0);
     } else {
-      this.calculateFileSize();
-      this.readyToUpload = true;
+      this.file = files.item(0);
     }
+
+    if (
+      this.file?.type !== 'text/tab-separated-values' ||
+      this.requiresProcessTSV && this.processFile !== null && this.processFile?.type !== 'text/tab-separated-values'
+      ) {
+        this.fileTypeError = true;
+      } else {
+        this.calculateFileSize();
+        this.readyToUpload = true;
+      }
   }
 
   handleFileInputFromBrowse(event) {
-    this.fileTypeError = false;
-    this.uploadError = false;
-
-    this.file = event.target?.files?.item(0);
-    if (this.file?.type !== 'text/tab-separated-values') {
-      this.fileTypeError = true;
-    } else {
-      this.calculateFileSize();
-      this.readyToUpload = true;
-    }
+    event.preventDefault();
+    this.handleFileInput(event.target.files);
+    event.target.value = null;
   }
 
   calculateFileSize() {
-    if (this.file.size > 1000000) {
-      this.fileSize = `${this.file.size / 1000000} MB`;
+    if (this.file.size > 1_000_000) {
+      this.fileSize = `${this.file.size / 1_000_000} MB`;
     } else {
       this.fileSize = `${this.file.size / 1000} KB`;
+    }
+
+    if (this.processFile !== null) {
+      if (this.processFile.size > 1_000_000) {
+        this.fileSize = `${this.processFile.size / 1_000_000} MB`;
+      } else {
+        this.processFileSize = `${this.processFile.size / 1000} KB`;
+      }
     }
   }
 
@@ -139,6 +151,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   clearFile() {
     this.file = null;
+    this.processFile = null;
     this.readyToUpload = false;
     this.fileTypeError = false;
     this.uploadError = false;
@@ -148,10 +161,18 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   onTypeSelection() {
     this.selectedTypeError = false;
+    if (this.selectedType === null) return;
     this.uploadService.checkProvenanceOf(this.selectedType)
       .subscribe((data: any) => {
         this.requiresProcessTSV = data.results.requires_processes;
       })
+  }
+
+  get hasFiles() {
+    if (this.requiresProcessTSV) {
+      return this.file && this.processFile;
+    }
+    return this.file;
   }
 
 }
