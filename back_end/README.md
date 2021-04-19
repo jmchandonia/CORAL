@@ -404,6 +404,8 @@ There can be any number of users added to the users.json array. `username`, `ema
 
 `allowed_upload_types` is only necessary if the user is set to user_level 1 and needs to upload specific core types to the system according to their expertise. It is an array of core types stored in the system by their term name. A user will have power to upload any types that are saved in their `allowed_upload_types`.
 
+If you want to give upload privileges for all types in your system to a user, you can set the `allowed_upload_types` field to '*' rather than listing out all the types.
+
 #### Setting up Auth
 
 Once you have configured your users.json file, you will need to generate Google OAuth2 credentials for login.
