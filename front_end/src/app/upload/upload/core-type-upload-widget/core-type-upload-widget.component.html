@@ -19,7 +19,7 @@
                 [items]="allowedUploadTypes"
                 [(ngModel)]="selectedType"
                 placeholder="Select a core type to upload"
-                (change)="clearSelectionError()"
+                (change)="onTypeSelection()"
             ></ng-select>
         </div>
     </div>
@@ -48,6 +48,11 @@
                   <div class="col-10 d-block">
                       <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
                       <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
+                  </div>
+                  <div class="col-10 d-block" *ngIf="requiresProcessTSV">
+                      <span class="requires-processes">
+                          Uploading TSVs for {{selectedType}} also requires a TSV containing linking processes.
+                      </span>
                   </div>
               </div>
               <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="file && !loading">

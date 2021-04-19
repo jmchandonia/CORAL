@@ -36,6 +36,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   validationErrorMessage: string;
   public loading = false;
   progressPercentage = 0;
+  requiresProcessTSV = false;
 
   nSuccesses = 0;
   nWarnings = 0;
@@ -145,8 +146,12 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     delete this.validationErrorMessage;
   }
 
-  clearSelectionError() {
+  onTypeSelection() {
     this.selectedTypeError = false;
+    this.uploadService.checkProvenanceOf(this.selectedType)
+      .subscribe((data: any) => {
+        this.requiresProcessTSV = data.results.requires_processes;
+      })
   }
 
 }

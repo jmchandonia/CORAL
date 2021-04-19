@@ -1025,6 +1025,22 @@ def get_core_type_names():
     type_def_names = svs['typedef'].get_type_names()
     return _ok_response([name for name in type_def_names if name != 'ENIGMA'])
 
+@app.route('/coral/get_provenance/<type_name>')
+@auth_required
+def get_provenance(type_name):
+    type_def = svs['typedef'].get_type_def(type_name)
+
+    requires_processes = False
+    # check if entity is "top-level" and requires no input processes
+    # TODO: remove specific checks for 'ENIGMA' and create is_root property
+    for process_list in type_def.process_input_type_defs:
+        if requires_processes:
+            break
+        for process in process_list:
+            if process != 'ENIGMA':
+                requires_processes = True
+                break
+    return _ok_response({'requires_processes': requires_processes})
 
 @app.route('/coral/validate_core_tsv_headers', methods=["POST"])
 @auth_required
