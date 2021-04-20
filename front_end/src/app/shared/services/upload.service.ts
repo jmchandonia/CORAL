@@ -273,10 +273,13 @@ export class UploadService {
     return this.http.get(`${environment.baseURL}/get_provenance/${typeName}`);
   }
 
-  validateCoreTypeTSV(type: string, file: File): Promise<void|string> {
+  validateCoreTypeTSV(type: string, file: File, processFile?: File): Promise<void|string> {
     const formData: FormData = new FormData();
-    formData.append('type', type)
-    formData.append('file', file)
+    formData.append('type', type);
+    formData.append('file', file);
+    if (processFile) {
+      formData.append('process_file', processFile);
+    }
     return new Promise((resolve, reject) => {
       this.http.post(`${environment.baseURL}/validate_core_tsv_headers`, formData)
         .subscribe(data => resolve(), error => reject(error));
