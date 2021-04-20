@@ -23,6 +23,8 @@ Ontologies we defined:
 
 * enigma_specific_ontology = personnel and projects within ENIGMA
 
+* process_ontology = defined processes to create our static and dynamic objects
+
 Other prerequisite ontologies:
 
 * unit_standalone.obo = Units of measurement ontology (UO), from the Phenotype and Trait Ontology (PATO), [https://github.com/bio-ontology-research-group/unit-ontology/](https://github.com/bio-ontology-research-group/unit-ontology/).  Standalone means references to PATO have been stripped out.
@@ -145,5 +147,18 @@ Otherwise, make edits based on last version:
 ```
 ./txt2ont.pl measure ME enigma_specific_ontology.txt enigma_specific_ontology.obo > enigma_specific_ontology_new.obo
 mv enigma_specific_ontology_new.obo enigma_specific_ontology.obo
+```
+
+**Set up process ontology:**
+
+If starting from scratch:
+```
+./txt2ont.pl process PROCESS process_ontology.txt > process_ontology.obo
+```
+
+Otherwise, make edits based on last version:
+```
+./txt2ont.pl process PROCESS process_ontology.txt process_ontology.obo > process_ontology_new.obo
+mv process_ontology_new.obo process_ontology.obo
 ```
 

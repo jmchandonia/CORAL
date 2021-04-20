@@ -1,0 +1,50 @@
+Process
+  -Add Location
+  -Add Condition
+  -Add Taxon
+  -Add Protocol
+  -Sampling
+  Import Historic Data
+  -Assay
+    Assay Environment
+    Assay Geochemistry
+    Assay Growth
+    Assay Thermodynamics
+    Assay Cell Counts
+    Assay Metabolites
+    Assay Fitness
+    Assay Microbial Activity
+  -Computation
+  -Enrichment
+    -Filter
+    -BONCAT Enrichment
+    -DAPI Enrichment
+  -Isolation
+  -Add Strain
+  -Build Defined Community
+  -Sequencing
+    -18S Sequencing
+    -ITS Sequencing
+    16S Sequencing
+    Shotgun Sequencing
+      alias: WGS Sequencing
+      -Shotgun Sequencing and Assembly
+  -Reads Processing
+  Taxonomic Inference
+    Classify OTUs
+  -Assembly
+    -Genome Assembly
+    -Metagenome Assembly
+    -Refine Bin
+  -Annotation
+    -Genome Annotation
+    -Metagenome Annotation
+  -Functional Assignment
+  -Build TnSeq Library
+  -Build DubSeq Library
+  -Binning
+  -Profiling
+    Taxonomic Profiling
+    Functional Profiling
+    Functional and Taxonomic Profiling
+  -Image

@@ -1179,6 +1179,13 @@ namespace: enigma.ontology
 def: "Aifen Zhou." []
 is_a: ENIGMA:0000090 ! Zhou Lab
 
+[Term]
+id: ENIGMA:0000163
+name: Sara Gushgari-Doyle
+namespace: enigma.ontology
+def: "Sara Gushgari-Doyle." []
+is_a: ENIGMA:0000053 ! Chakraborty Lab
+
 [Typedef]
 id: is_a
 name: is_a
