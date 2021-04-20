@@ -1045,11 +1045,23 @@ def get_provenance(type_name):
 @app.route('/coral/validate_core_tsv_headers', methods=["POST"])
 @auth_required
 def validate_core_tsv_headers():
-    # validate headers of TSV before uploading each item individually
-    # TODO: figure out if there is a way to send custom errors through SSE method that front end can consume
+    # Validate headers of TSV before uploading each item individually
+    try:
+        # Check for headers against core typedef
+        type_name = request.form['type']
+        _validate_headers(request.files['file'], type_name)
 
-    upload_file = request.files['file']
-    type_name = request.form['type']
+        # Check process headers against process, if processes are required
+        if 'process_file' in request.files:
+            _validate_headers(request.files['process_file'], 'Process')
+
+        return _ok_response({'message': 'Validated successfully'})
+    
+    except Exception as e:
+        return str(e), 400
+
+
+def _validate_headers(upload_file, type_name) -> None:
     df = pd.read_csv(upload_file, sep='\t')
 
     typedef = svs['typedef'].get_type_def(type_name)
@@ -1058,14 +1070,12 @@ def validate_core_tsv_headers():
     for pname in typedef.property_names:
         prop_def = typedef.property_def(pname)
         if prop_def.required and pname not in df.columns.values and not prop_def.is_pk:
-            return 'Error: required property field "%s" is missing from TSV headers' % pname, 400
+            raise ValueError('Error: required property field "%s" is missing from %s TSV headers' % (pname, type_name))
 
     # Make sure there are no keys not defined in typedef
     for value in df.columns.values:
         if value not in typedef.property_names:
-            return 'Error: Unrecognized property "%s" for type %s' % (value, type_name), 400
-
-    return _ok_response({"message": "validated successfully"})
+            raise ValueError('Error: Unrecognized property "%s" for type %s' % (value, type_name))
 
 @app.route('/coral/upload_core_type_tsv', methods=["POST"])
 @auth_required

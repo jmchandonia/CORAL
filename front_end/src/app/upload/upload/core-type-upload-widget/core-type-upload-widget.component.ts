@@ -114,7 +114,11 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     }
 
     try {
-      await this.uploadService.validateCoreTypeTSV(this.selectedType, this.file)
+      await this.uploadService.validateCoreTypeTSV(
+        this.selectedType,
+        this.file,
+        this.requiresProcessTSV ? this.processFile : null
+        )
       } catch(e) {
         this.validationError = true;
         this.validationErrorMessage = e.error;
