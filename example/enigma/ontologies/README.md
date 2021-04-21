@@ -140,12 +140,12 @@ mv context_measurement_ontology_new.obo context_measurement_ontology.obo
 
 If starting from scratch:
 ```
-./txt2ont.pl measure ME enigma_specific_ontology.txt > enigma_specific_ontology.obo
+./txt2ont.pl enigma ENIGMA enigma_specific_ontology.txt > enigma_specific_ontology.obo
 ```
 
 Otherwise, make edits based on last version:
 ```
-./txt2ont.pl measure ME enigma_specific_ontology.txt enigma_specific_ontology.obo > enigma_specific_ontology_new.obo
+./txt2ont.pl enigma ENIGMA enigma_specific_ontology.txt enigma_specific_ontology.obo > enigma_specific_ontology_new.obo
 mv enigma_specific_ontology_new.obo enigma_specific_ontology.obo
 ```
 
