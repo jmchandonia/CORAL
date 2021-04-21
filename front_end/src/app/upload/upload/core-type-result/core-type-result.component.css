@@ -5,3 +5,8 @@
 .new-field{
     color: green;
 }
+
+.modal-header-warning{
+    color: #856404;
+    background-color: #fff3cd;
+}
