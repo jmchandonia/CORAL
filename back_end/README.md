@@ -22,7 +22,7 @@ pip3 install --upgrade pip
 ### Other Python prerequisites
 
 ```
-pip3 install pandas pyArango dumper xarray diskcache
+pip3 install pandas pyArango dumper xarray diskcache oauthenticator
 ```
 
 ### Apache installation
@@ -428,6 +428,64 @@ Setting up User registration requires google reCaptcha V2 credentials, which can
 For sending automated emails when a user requests registration, it is recommended to set up a new gmail account with the "allow less secure apps to access this email" setting turned on ([More Info Here](https://support.google.com/accounts/answer/6010255?hl=en)). This will allow web_services.py to send an email to your admin's account when a user has successfully registered after validating that they're not a robot.
 
 Make sure to add your newly created email account to the `WebService.project_email` and the admin's email to the `WebService.admin_email` of your `config.json`.
+
+### Setting up Authentication in JupyterHub
+
+To use the same Google Authentication system with jupyterhub, make sure you have the `oauthenticator` module installed. It has extensions of the jupyterhub authenticator base class that will allow you to log in with Google Oauth2 credentials.
+
+Once you have confirmed that it is installed, add the following code to your `/etc/jupyterhub/jupyterhub_config.py`:
+```python
+import json
+import re
+from oauthenticator.google import LocalGoogleOAuthenticator
+
+class UsernameAuthenticator(LocalGoogleAuthenticator):
+  def normalize_username(self, username):
+    with open('/path/to/your/users.json') as f:
+      registered_users = json.load(f)
+
+    email_regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+    if re.search(email_regex, username):
+      for user in registered_users:
+        if username == user['email']:
+          return username.lower().split('@')[0]
+    else:
+      for user in registered_users:
+        if username == user['username']:
+          return username
+    
+    raise ValueError('Username %s not allowed: please contact site administrator for approval' % username)
+```
+This will ensure that the user logging in with Google Oauth2 will validate using their unique email. It is important to check whether or not the username in `normalize_username` is an email, because upon restarting `jupyterhub.service`, the system will automatically validate all currently existing Unix users using this method. This ensures that restarting wont fail after validating the currently existing users.
+
+Once you have implemented this method, you need to set up the user authenticator configuration. Add the following code below, outside of the `UsernameAuthenticator` class:
+
+```python
+c.JupyterHub.authenticator_class = UsernameAuthenticator
+with open ('/path/to/your/google_auth.json') as authfile:
+  google_oauth = json.load(authfile)
+
+c.UsernameAuthenticator.client_id = google_oauth['web']['client_id']
+c.UsernameAuthenticator.client_secret = google_oauth['web']['client_secret']
+# Important: your Oauth2 callback url MUST match this pattern or else jupyterhub wont know how to validate the Oauth2 token
+c.UsernameAuthenticator.oauth_callback_url = 'https://<YOUR_DOMAIN>/jupyterhub/hub/oauth_callback'
+```
+
+Finally, if you would like to the system to automatically create a system user account without having to manually add one, you can configure the system so that when a new user is authenticated and validated through OAuth2 and `users.json`, it will automatically create a user in your system. To set this up, add the following commands:
+
+```python
+c.UsernameAuthenticator.create_system_users = True
+c.UsernameAuthenticator.add_user_cmd = ['useradd', '-m', '--home-dir', '/home/USERNAME', '-r', '-g', 'coral', '-s', '/sbin/nologin']
+```
+This enables system users that don't currently exist to be added via shell using the command provided in `c.UsernameAuthenticator.add_user_cmd`. Note that depending on your Unix/Linux distribution, this command may vary. Make sure you know the format of your system's add user command before adding it to the config. Make sure that the command adds the user to the `coral` group and sets their shell to `nologin`.
+
+This process may take some trial and error, and depending on your system it might be necessary to allow the `jupyterhub` user to run your useradd command in `etc/sudoers`.
+
+when adding the user with their username, jupyterhub_config automatically replaces any instance of 'USERNAME' in the add_user_cmd array with the username defined in `users.json`. 
+
+More information of the jupyterhub add_user_cmd can be found [here](https://jupyterhub.readthedocs.io/en/stable/api/auth.html)
+
+**Important:** Make sure that when adding users to `users.json`, every user has a unique username. Jupyterhub depends on the usernames defined in the file, and if there are 2 duplicate usernames then those users will share an account on the system.
 ### CORAL Web Services
 
 The back end relies on graphviz to draw graphs.  Version 2.42 or
