@@ -4189,6 +4189,41 @@ property_value: valid_units_parent "UO:0000190 UO:0000166 UO:0000187" xsd:string
 def: "Isotope Ratio." []
 is_a: ME:0000120 ! Measurement
 
+[Term]
+id: ME:0000404
+name: Geologic Zone
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Geologic Zone." []
+xref: ORef: ME:0000404
+is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000405
+name: Vadose Zone
+namespace: measure.ontology
+def: "Vadose Zone." []
+synonym: "Unsaturated Zone" EXACT []
+is_a: ME:0000404 ! Geologic Zone
+
+[Term]
+id: ME:0000406
+name: Variably Saturated Zone
+namespace: measure.ontology
+def: "Variably Saturated Zone." []
+is_a: ME:0000404 ! Geologic Zone
+
+[Term]
+id: ME:0000407
+name: Saturated Zone
+namespace: measure.ontology
+def: "Saturated Zone." []
+synonym: "Phreatic Zone" EXACT []
+is_a: ME:0000404 ! Geologic Zone
+
 [Typedef]
 id: data_type
 
