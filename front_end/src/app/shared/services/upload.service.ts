@@ -286,11 +286,14 @@ export class UploadService {
     });
   }
 
-  uploadCoreTypeTSV(type: string, file: File) {
+  uploadCoreTypeTSV(type: string, file: File, processFile?: File) {
 
     const formData: FormData = new FormData();
     formData.append('type', type);
     formData.append('file', file, file.name);
+    if (processFile) {
+      formData.append('process_file', processFile);
+    }
 
     const token = localStorage.getItem('authToken');
 

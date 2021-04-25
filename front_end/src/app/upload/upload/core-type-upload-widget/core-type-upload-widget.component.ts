@@ -126,7 +126,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
       }
 
     this.loading = true;
-    this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file)
+    this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file, this.processFile)
       .subscribe((event: {data: string}) => {
         const [eventType, eventMessage] = event.data.split('--');
         switch (eventType) {

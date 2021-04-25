@@ -31,9 +31,10 @@ import smtplib, ssl
 # from .workspace import EntityDataHolder
 from .dataprovider import DataProvider
 # from .brick import Brick
-from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC
+from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_NAME_PROCESS
 from .utils import to_object_type
-from .workspace import ItemAlreadyExistsException, EntityDataHolder
+from .descriptor import IndexDocument
+from .workspace import ItemAlreadyExistsException, EntityDataHolder, ProcessDataHolder, DataHolder
 from . import template 
 
 app = Flask(__name__)
@@ -1081,20 +1082,129 @@ def _validate_headers(upload_file, type_name) -> None:
 @auth_required
 def upload_core_type_tsv():
 
-    def upload_progress(df, batch_id):
+    def upload_progress(df, process_df, batch_id, type_name):
         n_rows = df.shape[0]
-        # TODO: update json file one at a time, not in memory
         result_data = {
             'type_name': type_name,
             'success': [],
             'errors': [],
-            'warnings': []
+            'warnings': [],
+            'process_errors': [],
+            'process_warnings': []
         }
+
+        type_def_service = svs['typedef']
+        type_def = type_def_service.get_type_def(type_name)
+
+        if process_df is not None:
+            process_typedef = svs['typedef'].get_type_def(TYPE_NAME_PROCESS)
+
         for ri, row in df.iterrows():
             try:
                 data = row.to_dict()
                 data_holder = EntityDataHolder(type_name, data)
-                ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+                if process_df is not None:
+                    # Ensure that there exactly 1 reference to core type in process TSV
+                    upk_id = data[type_def.upk_property_def.name]
+                    core_process_rows = process_df.loc[process_df['output_objects'].str.contains(upk_id)]
+
+                    if len(core_process_rows.index) != 1:
+                        if len(core_process_rows.index) == 0:
+                            result_data['process_errors'].append({
+                                'data': process_dataholder.data,
+                                'message': 'Link to %s with id "%s" not found in process file' % (type_name, upk_id)
+                            })
+                        else:
+                            result_data['process_errors'].append({
+                                'data': process_dataholder.data,
+                                'message': 'Conflicting input objects found in process file for %s with id "%s"' % (type_name, upk_id)
+                            })
+                        yield "data: error--\n\n"
+                        continue
+
+                    process_data = core_process_rows.iloc[0].to_dict()
+
+                    process_dataholder = ProcessDataHolder(process_data)
+
+                    # Validate if input objects exist and are correct
+                    # TODO: Check how to validate inputs based on typedef.json schema
+                    for input_object in process_dataholder.data['input_objects'].split(','):
+                        input_type_name, input_upk_id = process_dataholder.get_process_id(input_object)
+                        try:
+                            pk_id = ws._get_pk_id(input_type_name, input_upk_id)
+                        except ValueError as e:
+                            result_data['process_errors'].append({
+                                'data': process_dataholder.data,
+                                'message': 'Input object %s does not exist for process connecting to %s' % (input_upk_id, upk_id)
+                            })
+
+                    for output_object in process_dataholder.data['output_objects'].split(','):
+                        # try to find existing process from output ids
+                        output_type_name, output_upk_id = process_dataholder.get_process_id(output_object)
+
+                        pk_id = ws._get_pk_id_or_none(output_type_name, output_upk_id)
+
+                        if pk_id is not None:
+                            # find out if process exists and throw a warning if fields are different
+                            output_index_def = indexdef.get_type_def(output_type_name)
+                            saved_processes = svs['arango_service'].get_up_processes(output_index_def, pk_id)
+                            process_doc = IndexDocument.build_index_doc(process_dataholder)
+
+                            if len(saved_processes) == 0:
+                                continue
+
+                            # TODO: figure out if it needs to validate for multiple up processes
+                            saved_process = saved_processes[0]
+
+                            matches_saved_process = True
+
+                            for k, v in process_doc.items():
+                                if k.startswith('_') or k == 'input_objects' or k == 'output_objects':
+                                    continue
+
+                                if saved_process[k] != v:
+                                    matches_saved_process = False
+                                    break
+
+                            if not matches_saved_process:
+                                result_data['process_warnings'].append({
+                                    'message': 'Process id %s already exists with values differing from incoming upload' % saved_process['id'],
+                                    'old_data': process_doc,
+                                    'new_data': saved_process,
+                                    'data_holder': process_dataholder.data
+                                })
+                                yield "data: warning--\n\n"
+                                continue
+
+                    try:
+                        process_typedef.validate_data(process_dataholder.data, ignore_pk=True)
+                        # ws.validate_process_exists(process_dataholder)
+                    # except ItemAlreadyExistsException as ie:
+                    #     if ie.changed_data:
+                    #         result_data['process_warning'].append({
+                    #             'message': ie.message,
+                    #             'old_data': ie.old_data,
+                    #             'new_data': ie.new_data,
+                    #             'data_holder': ie.data_holder
+                    #         })
+                    #         yield "data: warning--{}\n\n".format(ie.message)
+                    #         continue
+
+                    except Exception as e:
+                        tb.print_exc()
+                        print ('bad process validation', str(e))
+                        result_data['process_errors'].append({
+                            'data': process_dataholder.data,
+                            'message': str(e)
+                        })
+                        yield "data: error--\n\n"
+                        continue
+                    # ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+                    # ws.save_process_if_not_exists(process_dataholder, preserve_logs=True)
+                    # ws.save_process(process_dataholder)
+                else:
+                    ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+
                 result_data['success'].append(data_holder.data)
                 yield "data: success--\n\n"
 
@@ -1126,8 +1236,8 @@ def upload_core_type_tsv():
         # Add units to display in result table UI, if applicable
         ontology = svs['ontology']
         prop_units = {}
-        type_def_service = svs['typedef']
-        type_def = type_def_service.get_type_def(type_name)
+        # type_def_service = svs['typedef']
+        # type_def = type_def_service.get_type_def(type_name)
 
         for prop_name in type_def.property_names:
             prop_def = type_def.property_def(prop_name)
@@ -1154,7 +1264,16 @@ def upload_core_type_tsv():
     index_type_def._ensure_init_index()
 
     df = pd.read_csv(upload_file, sep='\t')
-    return Response(upload_progress(df, batch_id), mimetype='text/event-stream')
+    df = df.replace({np.nan: None})
+
+    # get process upload file if it exists
+    process_df = None
+    if 'process_file' in request.files:
+        process_file = request.files['process_file']
+        process_df = pd.read_csv(process_file, sep='\t')
+        process_df = process_df.replace({np.nan: None})
+
+    return Response(upload_progress(df, process_df, batch_id, type_name), mimetype='text/event-stream')
 
 @app.route('/coral/get_core_type_results/<batch_id>', methods=["GET"])
 @auth_required
