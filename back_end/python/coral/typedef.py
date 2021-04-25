@@ -241,26 +241,24 @@ class TypeDef:
     def process_input_type_defs(self):
         return self.__process_input_type_defs
 
-    def validate_data(self, data):
+    def validate_data(self, data, ignore_pk=False):
         # check property values
 
         # print( len(self.__property_defs.items()) )
         for pname, pdef in self.__property_defs.items():
 
+            # statement to validate everything except for ids that havent been created yet
+            if ignore_pk and pdef.is_pk:
+                continue
+
             value = data.get(pname)
-            # print('[%s] = %s' % (pname, value) )
-            # print ('QQQ')
             if value is None or value == 'null'  or value != value:
-                # print ('QQQ1')
-                # print('%s  is None: %s' % (pname, value))
                 if pdef.required:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
                 else:
                     data[pname] = None
             else:
-                # print ('QQQ2')
-                # print('---------Validating %s ' % pname)
                 pdef.validate(value)
 
         # check that there are no undeclared properties
