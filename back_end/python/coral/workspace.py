@@ -207,11 +207,11 @@ class Workspace:
             doc = json.loads(f.read())
         return doc
 
-    def save_process(self, data_holder):
+    def save_process(self, data_holder, update_object_ids=False):
         self._generate_id(data_holder)
         self._validate_process(data_holder)
         self._store_process(data_holder)
-        self._index_process(data_holder)
+        self._index_process(data_holder, update_object_ids=update_object_ids)
 
     def save_data_if_not_exists(self, data_holder, preserve_logs=False):
         upk_prop_name = data_holder.type_def.upk_property_def.name
@@ -406,7 +406,11 @@ class Workspace:
         elif type(data_holder) is BrickDataHolder:
             services.arango_service.index_brick(data_holder)
 
-    def _index_process(self, data_holder):
+    def _index_process(self, data_holder, update_object_ids=False):
+
+        # Update object ids to DB ids (for processes being uploaded through GUI)
+        if update_object_ids:
+            data_holder.update_object_ids()
         
         # create a record in the SYS_Process table
         self.__arango_service.index_data(data_holder)
