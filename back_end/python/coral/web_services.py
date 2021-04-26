@@ -1169,8 +1169,8 @@ def upload_core_type_tsv():
                             if not matches_saved_process:
                                 result_data['process_warnings'].append({
                                     'message': 'Process id %s already exists with values differing from incoming upload' % saved_process['id'],
-                                    'old_data': process_doc,
-                                    'new_data': saved_process,
+                                    'old_data': saved_process,
+                                    'new_data': process_doc,
                                     'data_holder': process_dataholder.data
                                 })
                                 yield "data: warning--\n\n"
