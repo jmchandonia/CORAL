@@ -40,7 +40,13 @@ export class CoreTypeResultComponent implements OnInit {
   public successResultFields: any[] = [];
 
   public warningResults: any[];
-  warningResultFields: any[];
+  public warningResultFields: any[];
+
+  public processErrorResults: any[];
+  public processErrorResultFields: any[];
+
+  public processWarningResults: any[];
+  public processWarningResultFields: any[];
 
   ngOnInit(): void {
     this.spinner.show('spinner')
@@ -61,6 +67,18 @@ export class CoreTypeResultComponent implements OnInit {
           this.warningResults = results['warnings'];
           if (this.warningResults.length) {
             this.warningResultFields = Object.keys(results['warnings'][0]['old_data']).map(d => ({prop: d, name: d}))
+          }
+
+          this.processErrorResults = results['process_errors'];
+          if (this.processErrorResults.length) {
+            this.processErrorResultFields = Object.keys(results['process_errors'][0]['data']).map(d => ({prop: d, name: d}));
+          }
+
+          this.processWarningResults = results['process_warnings'];
+          if (this.processWarningResults.length) {
+            this.processWarningResultFields = Object.keys(results['process_warnings'][0]['old_data'])
+              .map(d => ({prop: d, name: d}))
+              .filter(d => !d.name.startsWith('_') && !d.name.includes('_objects'))
           }
 
           this.propertyUnits = results['property_units'];
