@@ -1199,9 +1199,9 @@ def upload_core_type_tsv():
                         })
                         yield "data: error--\n\n"
                         continue
-                    # ws.save_data_if_not_exists(data_holder, preserve_logs=True)
-                    # ws.save_process_if_not_exists(process_dataholder, preserve_logs=True)
-                    # ws.save_process(process_dataholder)
+
+                    ws.save_data_if_not_exists(data_holder, preserve_logs=True)
+                    ws.save_process(process_dataholder, update_object_ids=True)
                 else:
                     ws.save_data_if_not_exists(data_holder, preserve_logs=True)
 
@@ -1222,6 +1222,7 @@ def upload_core_type_tsv():
                     yield "data: success--\n\n"
 
             except ValueError as e:
+                tb.print_exc()
                 result_data['errors'].append({
                     'data': data_holder.data,
                     'message': str(e)
