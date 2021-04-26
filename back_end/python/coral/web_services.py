@@ -28,9 +28,8 @@ from pyArango.theExceptions import AQLQueryError
 import requests
 import smtplib, ssl
 
-# from .workspace import EntityDataHolder
 from .dataprovider import DataProvider
-# from .brick import Brick
+from .brick import Brick
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_NAME_PROCESS
 from .utils import to_object_type
 from .descriptor import IndexDocument
