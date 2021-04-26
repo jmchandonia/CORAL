@@ -1342,9 +1342,8 @@ def _brick_to_csv(brick_id):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_csv = os.path.join(TMP_DIR,brick_id+'.csv')
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_json + ' ' + file_name_csv
-    cmdProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
-    cmdProcess.wait()
-    print(cmdProcess.stdout.read())
+    sys.stderr.write('running '+cmd+'\n')
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'],'bin'))
     with open(file_name_csv, 'r') as file:
         data = file.read()
     return data
@@ -1353,31 +1352,25 @@ def _csv_to_brick(file_name_csv, file_name_json):
     # for uploading CSVs as bricks, stored in /tmp directory
 
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_csv + ' ' + file_name_json
-    cmd_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'], 'bin'))
-    try:
-        cmd_process.wait()
-    except Exception as e:
-        print('Failed Brick To CSV: ' + str(cmd_process.stdout))
-        return _err_response({
-            'message': 'Failed To Upload CSV: ' + str(cmd_process.stdout)
-        })
+    sys.stderr.write('running '+cmd+'\n')
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'],'bin'))
     with open(file_name_json, 'r') as file:
         data = file.read()
     return data
-
 
 def _filter_brick(brick_id, query):
     file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
     # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
-    # sys.stderr.write('running '+cmd+'\n')
-    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=cns['_PROJECT_ROOT'] + '/bin')
+    sys.stderr.write('running '+cmd+'\n')
+    output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'],'bin'))
     try:
         data = json.loads(output.stdout)
         return data
     except Exception as e:
         raise Exception('FAILED brick filter: '+str(output.stdout))
+
 def _create_brick(brick_ds, brick_data):
     # TODO: check "brick type" and "brick name"
     brick_dims = brick_ds['dimensions']
