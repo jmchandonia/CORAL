@@ -16,10 +16,10 @@
             <ng-select
                 class="custom"
                 [class.select-error]="selectedTypeError"
-                [items]="user.allowed_upload_types"
+                [items]="allowedUploadTypes"
                 [(ngModel)]="selectedType"
                 placeholder="Select a core type to upload"
-                (change)="clearSelectionError()"
+                (change)="onTypeSelection()"
             ></ng-select>
         </div>
     </div>
@@ -49,8 +49,29 @@
                       <label style="font-weight: bold" for="file" class="click-to-browse">Or click to Browse</label>
                       <input hidden type="file" id="file" (change)="handleFileInputFromBrowse($event)" />
                   </div>
+                  <div class="col-10 d-block" *ngIf="requiresProcessTSV">
+                      <span class="requires-processes">
+                          Uploading TSVs for {{selectedType}} also requires a TSV containing linking processes.
+                      </span>
+                  </div>
               </div>
-              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="file && !loading">
+              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="requiresProcessTSV && file && !processFile">
+                <!-- This should be happening under very specific circumstances. -->
+                <span class="col-10 d-block">
+                    <h2 style="float:left">Drag and drop Process TSVs here</h2>
+                    <button style="float:right" class="btn btn-secondary" (click)="clearFile()">Clear Core File</button>
+                </span> 
+                <div class="col-10 d-block">
+                    <label style="font-weight: bold;" for="processFile" class="click-to-browse">Or click to Browse</label>
+                    <input hidden type="file" id="processFile" (change)="handleFileInputFromBrowse($event)" />
+                </div>
+                <div class="col-10 d-block">
+                    <span class="requires-processes">
+                        {{file.name}} has been uploaded. In addition to a core type TSV, {{selectedType}} also requires a TSV of linking processes to be uploaded to the system.
+                    </span>
+                </div>
+              </div>
+              <div class="row justify-content-center" style="margin-top: 80px;" *ngIf="hasFiles && !loading">
                   <div class="col-10">
                       <div class="row">
                           <div class="col-8">
@@ -70,6 +91,12 @@
                                 type="ball-spin-fade-rotating"
                                 [fullScreen]="false">
                               </ngx-spinner>
+                          </div>
+                      </div>
+                      <div class="row" *ngIf="requiresProcessTSV">
+                          <div class="col-8">
+                              <h4 class="d-block">{{processFile.name}}</h4>
+                              <span class="d-block" *ngIf="readyToUpload">({{processFileSize}})</span>
                           </div>
                       </div>
                   </div>
