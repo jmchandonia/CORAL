@@ -168,31 +168,40 @@ def upload_processes(argv=None):
             continue
         try:
             process_type = file_def['ptype']
-            file_name = os.path.join(services._IMPORT_DIR_PROCESS, file_def['file'])
-
-            print('Doing %s: %s' % (process_type, file_name))
-            df = pd.read_csv(file_name, sep='\t')
-            i = 0
-            for _, row in df.iterrows():
-                try:
-                    i = i + 1
-                    if i % 50 == 0:
-                        print('.', end='', flush=True)
-                    if i % 500 == 0:
-                        print(i)
-
-                    data = row.to_dict()
-                    data_holder = ProcessDataHolder(data)
-                    data_holder.update_object_ids()
-                    ws.save_process(data_holder)
-                except Exception as e:
-                    print('Error:', e)
-                    traceback.print_exc()
+            file_name = file_def['file']
+            upload_process(process_type, file_name)
         except Exception as e:
             print('Error:', e)
             traceback.print_exc()
         print('Done!')
         print()
+
+def upload_process(process_type, file_name):
+    services._init_services()
+    ws = services.workspace
+    index_type_def = services.indexdef.get_type_def(TYPE_NAME_PROCESS)
+    index_type_def._ensure_init_index()
+
+    file_name = os.path.join(services._IMPORT_DIR_PROCESS, file_name)
+
+    print('Doing %s: %s' % (process_type, file_name))
+    df = pd.read_csv(file_name, sep='\t')
+    i = 0
+    for _, row in df.iterrows():
+        try:
+            i = i + 1
+            if i % 50 == 0:
+                print('.', end='', flush=True)
+            if i % 500 == 0:
+                print(i)
+
+            data = row.to_dict()
+            data_holder = ProcessDataHolder(data)
+            data_holder.update_object_ids()
+            ws.save_process(data_holder)
+        except Exception as e:
+            print('Error:', e)
+            traceback.print_exc()
 
 def delete_core(argv=None):
     services._init_services()
