@@ -118,6 +118,24 @@ class ProcessDataHolder(DataHolder):
         self.__update_object_ids('input_objects')
         self.__update_object_ids('output_objects')
 
+    def validate_output_objects(self):
+        for output_object in self.data['output_objects'].split(','):
+            type_name, upk_id = output_object.split(':')
+            type_name = type_name.strip()
+            upk_id = upk_id.strip()
+
+            typedef = services.typedef.get_type_def(type_name)
+            typedef.validate_data(dh.data)
+
+    def get_process_id(self, obj):
+        type_name, upk_id = obj.split(':')
+        type_name = type_name.strip()
+        upk_id = upk_id.strip()
+
+        return type_name, upk_id
+
+
+
 
 class BrickDataHolder(DataHolder):
     def __init__(self, brick):
@@ -189,11 +207,11 @@ class Workspace:
             doc = json.loads(f.read())
         return doc
 
-    def save_process(self, data_holder):
+    def save_process(self, data_holder, update_object_ids=False):
         self._generate_id(data_holder)
         self._validate_process(data_holder)
         self._store_process(data_holder)
-        self._index_process(data_holder)
+        self._index_process(data_holder, update_object_ids=update_object_ids)
 
     def save_data_if_not_exists(self, data_holder, preserve_logs=False):
         upk_prop_name = data_holder.type_def.upk_property_def.name
@@ -260,7 +278,7 @@ class Workspace:
             pass
 
     def _validate_process(self, data_holder):
-        # data_holder.type_def.validate_data(data_holder.data)
+        data_holder.type_def.validate_data(data_holder.data)
 
         # Check for NaN
         for key, value in data_holder.data.items():
@@ -351,6 +369,20 @@ class Workspace:
         res = res[0]
         return res['pk_id']
 
+    def _get_pk_id_or_none(self, type_name, upk_id):
+        aql = 'FOR x IN @@collection FILTER x.type_name == @type_name and x.upk_id == @upk_id return x'
+        aql_bind = {
+            '@collection': TYPE_CATEGORY_SYSTEM + _COLLECTION_OBJECT_TYPE_ID,
+            'type_name': type_name,
+            'upk_id': upk_id
+        }
+
+        res = self.__arango_service.find(aql, aql_bind)
+        if len(res) > 1:
+            raise ValueError('There is more than one pk_id for %s: %s' % (type_name, upk_id))
+
+        return res[0]['pk_id'] if len(res) else None
+
     def _store_object_type_ids(self, type_name, pk_id, upk_id):
         self.__arango_service.index_doc(
             {
@@ -374,7 +406,11 @@ class Workspace:
         elif type(data_holder) is BrickDataHolder:
             services.arango_service.index_brick(data_holder)
 
-    def _index_process(self, data_holder):
+    def _index_process(self, data_holder, update_object_ids=False):
+
+        # Update object ids to DB ids (for processes being uploaded through GUI)
+        if update_object_ids:
+            data_holder.update_object_ids()
         
         # create a record in the SYS_Process table
         self.__arango_service.index_data(data_holder)

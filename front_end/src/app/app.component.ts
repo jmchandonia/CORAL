@@ -3,6 +3,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
 import { PlotService } from 'src/app/shared/services/plot.service';
 import { QueryBuilderService } from 'src/app/shared/services/query-builder.service';
+import { HomeService } from 'src/app/shared/services/home.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
     private auth: AuthService,
     private plotService: PlotService,
     private queryBuilder: QueryBuilderService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private homeService: HomeService
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -35,7 +37,9 @@ export class AppComponent implements OnInit {
     });
    }
 
-   ngOnInit() {
+   async ngOnInit() {
+     // send ping to server to makse sure its running
+     await this.homeService.initBackendConnection();
    }
 
    logout() {

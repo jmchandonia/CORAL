@@ -4,6 +4,7 @@ import { User } from 'src/app/shared/models/user';
 import { UploadService } from 'src/app/shared/services/upload.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Response } from 'src/app/shared/models/response';
 
 enum UploadMessageStream {
   SUCCESS = 'success',
@@ -27,6 +28,9 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   file: File = null;
   fileSize: string;
+  processFile: File = null;
+  processFileSize: string;
+
   fileTypeError = false;
   uploadError = false; // 
   readyToUpload = false;
@@ -35,6 +39,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   validationErrorMessage: string;
   public loading = false;
   progressPercentage = 0;
+  requiresProcessTSV = false;
 
   nSuccesses = 0;
   nWarnings = 0;
@@ -42,45 +47,63 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
   
   user: User;
   public selectedType: string;
+  allowedUploadTypes: string[];
 
   uploadProgressStream: Subscription;
   
 
   ngOnInit(): void {
     this.user = this.userService.getUser();
+    if (this.user.allowed_upload_types === '*') {
+      this.uploadService.getCoreTypeNames()
+        .subscribe((data: any) => {
+          this.allowedUploadTypes = data.results;
+        })
+    } else {
+      this.allowedUploadTypes = this.user.allowed_upload_types as string[];
+    }
   }
 
   handleFileInput(files: FileList) {
     this.fileTypeError = false;
     this.uploadError = false;
 
-    this.file = files.item(0);
-    if (this.file?.type !== 'text/tab-separated-values') {
-      this.fileTypeError = true;
+    if (this.requiresProcessTSV && this.file !== null) {
+      this.processFile = files.item(0);
     } else {
-      this.calculateFileSize();
-      this.readyToUpload = true;
+      this.file = files.item(0);
     }
+
+    if (
+      this.file?.type !== 'text/tab-separated-values' ||
+      this.requiresProcessTSV && this.processFile !== null && this.processFile?.type !== 'text/tab-separated-values'
+      ) {
+        this.fileTypeError = true;
+      } else {
+        this.calculateFileSize();
+        this.readyToUpload = true;
+      }
   }
 
   handleFileInputFromBrowse(event) {
-    this.fileTypeError = false;
-    this.uploadError = false;
-
-    this.file = event.target?.files?.item(0);
-    if (this.file?.type !== 'text/tab-separated-values') {
-      this.fileTypeError = true;
-    } else {
-      this.calculateFileSize();
-      this.readyToUpload = true;
-    }
+    event.preventDefault();
+    this.handleFileInput(event.target.files);
+    event.target.value = null;
   }
 
   calculateFileSize() {
-    if (this.file.size > 1000000) {
-      this.fileSize = `${this.file.size / 1000000} MB`;
+    if (this.file.size > 1_000_000) {
+      this.fileSize = `${this.file.size / 1_000_000} MB`;
     } else {
       this.fileSize = `${this.file.size / 1000} KB`;
+    }
+
+    if (this.processFile !== null) {
+      if (this.processFile.size > 1_000_000) {
+        this.fileSize = `${this.processFile.size / 1_000_000} MB`;
+      } else {
+        this.processFileSize = `${this.processFile.size / 1000} KB`;
+      }
     }
   }
 
@@ -91,7 +114,11 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     }
 
     try {
-      await this.uploadService.validateCoreTypeTSV(this.selectedType, this.file)
+      await this.uploadService.validateCoreTypeTSV(
+        this.selectedType,
+        this.file,
+        this.requiresProcessTSV ? this.processFile : null
+        )
       } catch(e) {
         this.validationError = true;
         this.validationErrorMessage = e.error;
@@ -99,7 +126,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
       }
 
     this.loading = true;
-    this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file)
+    this.uploadProgressStream = this.uploadService.uploadCoreTypeTSV(this.selectedType, this.file, this.processFile)
       .subscribe((event: {data: string}) => {
         const [eventType, eventMessage] = event.data.split('--');
         switch (eventType) {
@@ -128,6 +155,7 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
 
   clearFile() {
     this.file = null;
+    this.processFile = null;
     this.readyToUpload = false;
     this.fileTypeError = false;
     this.uploadError = false;
@@ -135,8 +163,20 @@ export class CoreTypeUploadWidgetComponent implements OnInit {
     delete this.validationErrorMessage;
   }
 
-  clearSelectionError() {
+  onTypeSelection() {
     this.selectedTypeError = false;
+    if (this.selectedType === null) return;
+    this.uploadService.checkProvenanceOf(this.selectedType)
+      .subscribe((data: any) => {
+        this.requiresProcessTSV = data.results.requires_processes;
+      })
+  }
+
+  get hasFiles() {
+    if (this.requiresProcessTSV) {
+      return this.file && this.processFile;
+    }
+    return this.file;
   }
 
 }

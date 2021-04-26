@@ -175,7 +175,14 @@ class TypeDef:
         #     for type_name in type_def_doc['process_inputs']:
         #         self.__process_input_type_names.append(type_name)
 
+
         self.__process_input_type_defs = []
+        if 'process_inputs' in type_def_doc:
+            for input_list in type_def_doc['process_inputs']:
+                process_inputs = []
+                for type_name in input_list:
+                    process_inputs.append(type_name)
+                self.__process_input_type_defs.append(process_inputs)
 
     def _repr_html_(self):
         rows = ['<b>' + self.__name + '</b>']
@@ -234,26 +241,24 @@ class TypeDef:
     def process_input_type_defs(self):
         return self.__process_input_type_defs
 
-    def validate_data(self, data):
+    def validate_data(self, data, ignore_pk=False):
         # check property values
 
         # print( len(self.__property_defs.items()) )
         for pname, pdef in self.__property_defs.items():
 
+            # statement to validate everything except for ids that havent been created yet
+            if ignore_pk and pdef.is_pk:
+                continue
+
             value = data.get(pname)
-            # print('[%s] = %s' % (pname, value) )
-            # print ('QQQ')
             if value is None or value == 'null'  or value != value:
-                # print ('QQQ1')
-                # print('%s  is None: %s' % (pname, value))
                 if pdef.required:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
                 else:
                     data[pname] = None
             else:
-                # print ('QQQ2')
-                # print('---------Validating %s ' % pname)
                 pdef.validate(value)
 
         # check that there are no undeclared properties
