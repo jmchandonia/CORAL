@@ -1,4 +1,4 @@
-name	well	depth	elevation	date	time	timezone	material	env_package	description
+name	location	depth	elevation	date	time	timezone	material	env_package	description
 FW106-7-25-12	FW-106	12.2301	null	2012-07-25	null	null	ground water <ENVO:00002041>	water <MIxS:0000017>	null
 FW109-1-7-25-12	FW-109-40	11.708892	null	2012-07-25	null	null	ground water <ENVO:00002041>	water <MIxS:0000017>	null
 FW109-2-7-25-12	FW-109-35	10.209276	null	2012-07-25	15:10:00	UTC-4	ground water <ENVO:00002041>	water <MIxS:0000017>	null

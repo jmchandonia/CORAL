@@ -58,8 +58,8 @@
     ],
     "entities": [
         {
-            "file": "wells_100ws.tsv",
-            "dtype": "Well"
+            "file": "locations_100ws.tsv",
+            "dtype": "Location"
         }, {
             "file": "samples_100ws.tsv",
             "dtype": "Sample"

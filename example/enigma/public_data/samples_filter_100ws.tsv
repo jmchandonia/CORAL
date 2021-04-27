@@ -1,4 +1,4 @@
-name	well	depth	elevation	date	time	timezone	material	env_package	description
+name	location	depth	elevation	date	time	timezone	material	env_package	description
 FW511-7-26-12 0.2 micron filter	FW511	6.0579	null	2012-07-26	null	null	ground water <ENVO:00002041>	water <MIxS:0000017>	filtered groundwater
 DP16D-67-11-27-12 0.2 micron filter	DP16D	6.0152280000000005	null	2012-11-27	13:20:00	UTC-4	ground water <ENVO:00002041>	water <MIxS:0000017>	filtered groundwater
 GW056-87-1-8-13 10 micron filter	GW056	3.9928800000000004	null	2013-01-08	10:40:00	UTC-4	ground water <ENVO:00002041>	water <MIxS:0000017>	filtered groundwater
