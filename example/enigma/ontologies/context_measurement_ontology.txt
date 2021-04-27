@@ -87,7 +87,7 @@
     Phase (String)
     Image
       *Image ID (Ref: DA:0000074.Image.name)
-    Geologic Zone:
+    *Geologic Zone:
       Vadose Zone
         alias: Unsaturated Zone
       Variably Saturated Zone
