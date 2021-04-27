@@ -156,23 +156,29 @@ def hello():
     
 @app.route("/coral/test_brick_upload")
 def test_brick_upload():
-    data_id = 'c74928ccf2e14c87a51a03e7d879eaf5'
+    # data_id = 'b09ab2049836488fafb878acce379c44'
+    data_id = '4ddb39d26bf74a6c8669295d62ff9035'
     uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
     uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
     brick_ds = json.loads(open(uds_file_name).read())
     brick_ds['name'] = 'test4'
-    brick_data = json.loads(open(uvd_file_name).read())
+    brick_ds['description'] = 'test4 brick'
+    try:
+        brick_data = json.loads(open(uvd_file_name).read())
+    except Exception as e:
+        uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_PREFIX + data_id )
+        brick_data = json.loads(open(uvd_file_name).read())
 
     br = _create_brick(brick_ds, brick_data)        
 
-    process_term = _get_term(brick_ds['process'])
-    person_term = _get_term(brick_ds['personnel'])
-    campaign_term = _get_term(brick_ds['campaign'])
-    input_obj_ids = br.get_fk_refs(process_ufk=True)
+    # process_term = _get_term(brick_ds['process'])
+    # person_term = _get_term(brick_ds['personnel'])
+    # campaign_term = _get_term(brick_ds['campaign'])
+    # input_obj_ids = br.get_fk_refs(process_ufk=True)
 
-    # s = br.to_json()
-    # s = pprint.pformat(json.loads(s))
-    s = pprint.pformat(input_obj_ids)
+    s = br.to_json()
+    s = pprint.pformat(json.loads(s))
+    # s = pprint.pformat(input_obj_ids)
     return s
     
     br.save(process_term=process_term,
@@ -1484,8 +1490,11 @@ def _create_brick(brick_ds, brick_data):
     for data_var_index, data_var in enumerate(brick_data_vars):
         data_type_term = _get_term(data_var['type'])
         data_units_term = _get_term(data_var['units'])
-        v = br.add_data_var(data_type_term, data_units_term, 
-            brick_data['data_vars'][data_var_index]['values'],
+        values = brick_data['data_vars'][data_var_index]['values']
+        if data_type_term.microtype_value_scalar_type == 'oterm_ref':
+            for i, val in enumerate(values):
+                values[i] = _get_term(val)
+        v = br.add_data_var(data_type_term, data_units_term, values,
             scalar_type=data_type_term.microtype_value_scalar_type)
         if 'context' in data_var: 
             _add_var_context(v, data_var['context'])
