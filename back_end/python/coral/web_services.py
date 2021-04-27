@@ -828,6 +828,9 @@ def upload_file():
         brick_data = {}
         brick_data = template.parse_brick_data(brick_ds, udf_file_name)
 
+        # Format booleans in brick data
+        brick_data = _format_booleans(brick_data, brick_ds)
+
         # Save brick processed data
         upd_file_name = os.path.join(TMP_DIR, _UPLOAD_PROCESSED_DATA_PREFIX + data_id )
         with open(upd_file_name, 'w') as f:
@@ -870,6 +873,68 @@ def upload_file():
 
     except Exception as e:
         return _err_response(e, traceback=True)
+
+def _format_booleans(brick_data, brick_ds):
+    '''
+    method for converting conventional boolean formats (yes/no, true/false, etc.)
+    into format recognized by the system. Turns booleans in dim vars and data vars into ints.
+    '''
+
+    def _format_data_var_bools(data_vars):
+        for di, data_var in enumerate(data_vars):
+            if type(data_var) is list:
+                data_var = _format_data_var_bools(data_var)
+            else:
+                if data_var in true_values:
+                    data_vars[di] = 1
+                elif data_var in false_values:
+                    data_vars[di] = 0
+                else:
+                    raise ValueError(
+                        'Invalid boolean option "%s" - Please use "true/false", "yes/no", or 0/1' % data_var
+                )
+        return data_vars
+
+
+    true_values = {'yes', 'Yes', 'y', 'Y', 'true', 'True', 'TRUE', True, 1}
+    false_values = {'no', 'No', 'n', 'N', 'false', 'False', 'FALSE', False, 0}
+
+    # convert dimension variables
+    for di, dim in enumerate(brick_data['dims']):
+        for dvi, dim_var in enumerate(dim['dim_vars']):
+            if 'text' in brick_ds['dimensions'][di]['variables'][dvi]['scalarType']:
+                scalar_type = brick_ds['dimensions'][di]['variables'][dvi]['scalarType']['text']
+            else:
+                scalar_type = brick_ds['dimensions'][di]['variables'][dvi]['scalarType']
+            if scalar_type == 'boolean':
+            # if brick_ds['dimensions'][di]['variables'][dvi]['scalarType'] == 'boolean':
+                replaced_values = []
+                for val in dim_var['values']:
+                    if val in true_values:
+                        replaced_values.append(1)
+                    elif val in false_values:
+                        replaced_values.append(0)
+                    else:
+                        raise ValueError(
+                            'Invalid boolean options "%s" - Please use "true/false", "yes/no" or 0/1' % val
+                    )
+                dim_var['values'] = replaced_values
+
+        # brick_data['data_vars']['values'] = _format_data_var_bools(brick_data['data_vars']['values'])
+    for dvi, data_vars in enumerate(brick_data['data_vars']):
+        if 'text' in brick_ds['dataValues'][dvi]['scalarType']:
+            scalar_type = brick_ds['dataValues'][dvi]['scalarType']['text']
+        else:
+            scalar_type = brick_ds['dataValues'][dvi]['scalarType']
+        if scalar_type == 'boolean':
+            brick_data['data_vars'][dvi]['values'] = _format_data_var_bools(data_vars['values'])
+
+    return brick_data
+
+
+
+
+
 
 @app.route('/coral/upload_csv', methods=["POST"])
 def upload_csv():
