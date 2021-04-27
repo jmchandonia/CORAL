@@ -242,7 +242,7 @@ class ArangoService:
             '''
         aql_bind = {}
 
-        sys.stderr.write('aql = '+aql+'\n')
+        # sys.stderr.write('aql = '+aql+'\n')
         
         return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True, batchSize=size)
     

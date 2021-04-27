@@ -108,6 +108,8 @@ class ValueValidationService:
             errors = self.cast_values(values, float, 'float')
         elif scalar_type == 'string':
             errors = self.cast_values(values, str, 'string')
+        elif scalar_type == 'boolean':
+            errors = self.cast_values(values, bool, 'boolean')
         elif scalar_type == 'oterm_ref':
             errors = self.cast_oterm_values(values, var_term)
         elif scalar_type == 'object_ref':
@@ -119,7 +121,7 @@ class ValueValidationService:
 
     def __validate_values_type(self, values):
         if type(values) != np.ndarray:
-            raise ValueError('Wrond type: %s'% str(type(values)))
+            raise ValueError('Wrong type: %s'% str(type(values)))
         if values.dtype != 'object':
             raise ValueError('Type of array should be object, but it is %s'% str(values.dtype))    
 
