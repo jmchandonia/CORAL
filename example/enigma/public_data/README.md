@@ -15,7 +15,7 @@ C. Hazen; mBio May 2015, 6 (3) e00326-15; DOI: 10.1128/mBio.00326-15
 
 ## Static datasets:
 
-* wells_100ws.tsv = wells from the 100 Well Survey
+* locations_100ws.tsv = sampling locations (wells) from the 100 Well Survey
 
 * samples_100ws.tsv = original samples from the 100 Well Survey
 
