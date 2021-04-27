@@ -1452,7 +1452,7 @@ class BrickDimension:
         
         
         rows = [
-            _row2_header('<b>Dimnesion</b>'),
+            _row2_header('<b>Dimension</b>'),
             _row2('Name', self.name),
             _row2('Type', self.type_term),
             _row2('Size', self.size),
