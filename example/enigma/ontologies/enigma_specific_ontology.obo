@@ -1186,6 +1186,13 @@ namespace: enigma.ontology
 def: "Sara Gushgari-Doyle." []
 is_a: ENIGMA:0000053 ! Chakraborty Lab
 
+[Term]
+id: ENIGMA:0000164
+name: Kristopher Hunt
+namespace: enigma.ontology
+def: "Kristopher Hunt." []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
 [Typedef]
 id: is_a
 name: is_a
