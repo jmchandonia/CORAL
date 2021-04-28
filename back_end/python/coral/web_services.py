@@ -157,7 +157,8 @@ def hello():
 @app.route("/coral/test_brick_upload")
 def test_brick_upload():
     # data_id = 'b09ab2049836488fafb878acce379c44'
-    data_id = '4ddb39d26bf74a6c8669295d62ff9035'
+    # data_id = '4ddb39d26bf74a6c8669295d62ff9035'
+    data_id = 'd39d3ddb57ab456d841a093a62e615e8'
     uds_file_name = os.path.join(TMP_DIR, _UPLOAD_DATA_STRUCTURE_PREFIX + data_id )
     uvd_file_name = os.path.join(TMP_DIR, _UPLOAD_VALIDATED_DATA_2_PREFIX + data_id )
     brick_ds = json.loads(open(uds_file_name).read())
@@ -1499,6 +1500,13 @@ def _create_brick(brick_ds, brick_data):
         if 'context' in data_var: 
             _add_var_context(v, data_var['context'])
 
+    # special handling of "data variables type" for hndarrays
+    is_heterogeneous = (len(brick_data_vars)>1)
+    if is_heterogeneous:
+        # must have "data variables type"
+        brick_properties.append({'type':{'id':'ME:0000293'},
+                                 'units':None,
+                                 'value':brick_ds['type']})
 
     # add brick properties
     for prop in brick_properties:
