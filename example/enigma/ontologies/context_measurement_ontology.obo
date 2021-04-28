@@ -3053,11 +3053,13 @@ is_a: ME:0000018 ! Mathematical Context
 id: ME:0000293
 name: Data Variables Type
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Data Variables Type." []
+xref: ORef: DA:0000000
 is_a: ME:0000291 ! Variable Type
 
 [Term]
