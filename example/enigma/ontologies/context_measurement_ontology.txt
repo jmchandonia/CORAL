@@ -114,6 +114,7 @@
     Organic (Boolean)
     *Molecular Weight (Float, +dalton)
     Reference Compound
+    *Isotope (ORef: CHEBI:24431)
   Biological Context
     Cell
     Colony

@@ -4226,6 +4226,20 @@ def: "Saturated Zone." []
 synonym: "Phreatic Zone" EXACT []
 is_a: ME:0000404 ! Geologic Zone
 
+[Term]
+id: ME:0000408
+name: Isotope
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Isotope." []
+xref: ORef: CHEBI:24431
+is_a: ME:0000026 ! Chemical Context
+
 [Typedef]
 id: data_type
 
