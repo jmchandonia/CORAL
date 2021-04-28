@@ -158,6 +158,7 @@ ENIGMA
         is_a: ENIGMA:0000043
       Madelyn Shapiro
       Frederick von Netzer
+      Kristopher Hunt
     Siuzdak Lab
       Gary Siuzdak
       Paul Benton
