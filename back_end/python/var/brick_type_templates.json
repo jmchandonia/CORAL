@@ -648,10 +648,6 @@
                                     "units": {
                                         "id": "UO:0000027",
                                         "text": "degree Celsius"
-                                    },
-                                    "value": {
-                                        "id": null,
-                                        "text": null
                                     }
                                 }
                             ],
