@@ -903,8 +903,8 @@ def _format_booleans(brick_data, brick_ds):
         return data_vars
 
 
-    true_values = {'yes', 'Yes', 'y', 'Y', 'true', 'True', 'TRUE', True, 1}
-    false_values = {'no', 'No', 'n', 'N', 'false', 'False', 'FALSE', False, 0}
+    true_values = {'yes', 'Yes', 'y', 'Y', 'true', 'True', 'TRUE', True, 1, '1'}
+    false_values = {'no', 'No', 'n', 'N', 'false', 'False', 'FALSE', False, 0, '0'}
 
     # convert dimension variables
     for di, dim in enumerate(brick_data['dims']):
@@ -935,6 +935,40 @@ def _format_booleans(brick_data, brick_ds):
             scalar_type = brick_ds['dataValues'][dvi]['scalarType']
         if scalar_type == 'boolean':
             brick_data['data_vars'][dvi]['values'] = _format_data_var_bools(data_vars['values'])
+
+    # Do context for data vars
+    for data_var in brick_ds['dataValues']:
+        if len(data_var['context']):
+            for ctx in data_var['context']:
+                ctx_type_id = ctx['type']['id']
+                ctx_type_term = svs['ontology'].all.find_id(ctx_type_id)
+                if ctx_type_term.microtype_value_scalar_type == 'boolean':
+                    ctx_value = ctx['value']['text'] if type(ctx['value']) is dict else ctx['value']
+                    if ctx_value in true_values:
+                        ctx['value'] = 1
+                    elif ctx_value in false_values:
+                        ctx['value'] = 0
+                    else:
+                        # TODO: this is a hack to fix some types that have incorrectly formatted boolean values
+                        # an error should be thrown here but brick_type_templates has come context items with bad boolean values
+                        # See brick_type_templates.json line 4275 for an example
+                        ctx['value'] = int(bool(ctx_value))
+
+    # Do context for dim vars
+    for dim in brick_ds['dimensions']:
+        for dim_var in dim['variables']:
+            if len(dim_var['context']):
+                for ctx in dim_var['context']:
+                    ctx_type_id = ctx['type']['id']
+                    ctx_type_term = svs['ontology'].all.find_id(ctx_type_id)
+                    if ctx_type_term.microtype_value_scalar_type == 'boolean':
+                        ctx_value = ctx['value']['text'] if type(ctx['value']) is dict else ctx['value']
+                        if ctx_value in true_values:
+                            ctx['value'] = 1
+                        elif ctx_value in false_values:
+                            ctx['value'] = 0
+                        else:
+                            ctx['value'] = int(bool(ctx_value))
 
     return brick_data
 
