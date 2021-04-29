@@ -140,7 +140,10 @@ def _get_contexted_var_name(dvar):
     items = []
     if 'context' in dvar:
         for ce in dvar['context']:
-            item = '%s=%s' % (ce['type']['text'], ce['value']['text'])
+            # hack for generated context fields vs. context fields in templates
+            value_text = ce['value']['text'] if type(ce['value']) is dict else ce['value']
+            # item = '%s=%s' % (ce['type']['text'], ce['value']['text'])
+            item = '%s=%s' % (ce['type']['text'], value_text)
             if 'units' in ce and ce['units'] and ce['units']['text']:
                 item += ' (%s)' % ce['units']['text']
             items.append(item)
