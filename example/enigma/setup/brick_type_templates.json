@@ -1078,7 +1078,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "1"
                                     }
                                 }
                             ],
@@ -1140,7 +1140,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "0"
                                     }
                                 }
                             ],
@@ -4270,11 +4270,11 @@
                                     "required": true,
                                     "units": {
                                         "id": "",
-                                        "text": "0"
+                                        "text": ""
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "0"
                                     }
                                 }
                             ],
@@ -5260,7 +5260,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "1"
                                     }
                                 }
                             ],
@@ -5322,7 +5322,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "0"
                                     }
                                 }
                             ],
