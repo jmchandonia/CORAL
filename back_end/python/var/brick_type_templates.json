@@ -181,24 +181,7 @@
                         "id": "PROCESS:0000005",
                         "text": "Assay Geochemistry"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Anion/Cation/Organic Acids Measurements <Environmental Sample, Molecule>"
                 },
                 {
@@ -304,24 +287,7 @@
                         "id": "PROCESS:0000005",
                         "text": "Assay Geochemistry"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Chakraborty Lab Anion Measurements <Environmental Sample, Molecule>"
                 },
                 {
@@ -2864,7 +2830,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "1"
                                     }
                                 }
                             ],
@@ -2943,7 +2909,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "1"
                                     }
                                 }
                             ],
@@ -3024,24 +2990,7 @@
                         "id": "PROCESS:0000004",
                         "text": "Assay Environment"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Hazen field measurements in post-100 Well Survey spreadsheet <Environmental Sample>"
                 },
                 {
@@ -3171,24 +3120,8 @@
                                 "id": null,
                                 "text": "Hach Kit"
                             }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000259",
-                                "text": "Environmental Measurement"
-                            }
                         }
-                    ],
+		    ],
                     "text": "Hach Kit measurements <Environmental Sample>"
                 },
                 {
@@ -3491,24 +3424,8 @@
                                 "id": null,
                                 "text": "Th and Ba was normalized by NIST #2710 Standard"
                             }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
                         }
-                    ],
+		    ],
                     "text": "XRF Trace Elements Measurement <Environmental Sample, Molecule>"
                 },
                 {
@@ -3745,24 +3662,8 @@
                                 "id": null,
                                 "text": "Non-certified value of NIST 2710 High, uranium 25.0 mg/kg"
                             }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
                         }
-                    ],
+		    ],
                     "text": "XRF Uranium Measurement <Environmental Sample>"
                 }
             ],
@@ -3879,7 +3780,7 @@
                                     },
                                     "value": {
                                         "id": null,
-                                        "text": null
+                                        "text": "1"
                                     }
                                 }
                             ],
@@ -4114,24 +4015,7 @@
                         "id": "PROCESS:0000005",
                         "text": "Assay Geochemistry"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "C/N/Moisture measurements for soil samples <Environmental Sample>"
                 },
                 {
@@ -4417,24 +4301,7 @@
                         "id": "PROCESS:0000005",
                         "text": "Assay Geochemistry"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "C/N measurements for water samples <Environmental Sample>"
                 },
                 {
@@ -11077,24 +10944,7 @@
                         "id": "PROCESS:0000004",
                         "text": "Assay Environment"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000103",
-                                "text": "Environmental Parameter"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Hazen 100 Well Survey field measurements <Environmental Sample>"
                 },
                 {
@@ -11253,24 +11103,7 @@
                         "id": "PROCESS:0000004",
                         "text": "Assay Environment"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000259",
-                                "text": "Environmental Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Environmental Measurement <Environmental Sample>"
                 }
             ],
@@ -11736,24 +11569,7 @@
                         "id": "PROCESS:0000008",
                         "text": "Assay Cell Counts"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000146",
-                                "text": "Statistic"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "BONCAT data (average, standard deviation) <Community>"
                 },
                 {
@@ -11853,24 +11669,7 @@
                         "id": "PROCESS:0000008",
                         "text": "Assay Cell Counts"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000146",
-                                "text": "Statistic"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "DAPI data (average, standard deviation) <Community>"
                 },
                 {
@@ -13151,24 +12950,7 @@
                         "id": "PROCESS:0000048",
                         "text": "Assay Microbial Activity"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Acetylene Block Assay <Environmental Sample, Condition, Replicate Series, Molecule, Time Series>"
                 },
                 {
@@ -13337,24 +13119,7 @@
                         "id": "PROCESS:0000048",
                         "text": "Assay Microbial Activity"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "ME:0000120",
-                                "text": "Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Sulfide Production Assay <Environmental Sample, Replicate Series, Condition, Time Series>"
                 }
             ],
@@ -14422,22 +14187,6 @@
                                 "id": null,
                                 "text": "Aqua TROLL 600"
                             }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
                         }
                     ],
                     "text": "Continuous Monitoring (Aqua TROLL 600) <Time Series>"
@@ -14768,22 +14517,6 @@
                                 "id": null,
                                 "text": "Level TROLL 400"
                             }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
                         }
                     ],
                     "text": "Continuous Monitoring (Level TROLL 400) <Time Series>"
@@ -14913,24 +14646,7 @@
                         "id": "PROCESS:0000004",
                         "text": "Assay Environment"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "pH/Conductivity measurements <Environmental Sample>"
                 },
                 {
@@ -15100,22 +14816,6 @@
                             "value": {
                                 "id": null,
                                 "text": "WS1"
-                            }
-                        },
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000004",
-                                "text": "Environmental Measurement"
                             }
                         }
                     ],
@@ -16696,24 +16396,7 @@
                         "id": "PROCESS:0000046",
                         "text": "Import Historic Data"
                     },
-                    "properties": [
-                        {
-                            "hidden": true,
-                            "property": {
-                                "id": "ME:0000293",
-                                "text": "Data Variables Type"
-                            },
-                            "required": true,
-                            "units": {
-                                "id": "",
-                                "text": ""
-                            },
-                            "value": {
-                                "id": "DA:0000002",
-                                "text": "Physical Measurement"
-                            }
-                        }
-                    ],
+                    "properties": [],
                     "text": "Import Oak Ridge Well Construction Data"
                 }
             ],
