@@ -162,7 +162,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -268,7 +268,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -388,7 +388,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -415,7 +415,7 @@
                                         {
                                             "property": {
                                                 "id": "ME:0000381",
-                                                "text": "ChEBI Molecule"
+                                                "text": "Molecule from list"
                                             },
                                             "required": true,
                                             "units": {
@@ -508,7 +508,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -648,6 +648,10 @@
                                     "units": {
                                         "id": "UO:0000027",
                                         "text": "degree Celsius"
+                                    },
+                                    "value": {
+                                        "id": null,
+                                        "text": null
                                     }
                                 }
                             ],
@@ -685,7 +689,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -794,7 +798,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -841,7 +845,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -873,7 +877,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -905,7 +909,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -937,7 +941,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -969,7 +973,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1001,7 +1005,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1063,7 +1067,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1125,7 +1129,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1157,7 +1161,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1189,7 +1193,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1221,7 +1225,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1253,7 +1257,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1285,7 +1289,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1317,7 +1321,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1349,7 +1353,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1381,7 +1385,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1413,7 +1417,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1445,7 +1449,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1477,7 +1481,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1509,7 +1513,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1541,7 +1545,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1573,7 +1577,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1605,7 +1609,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1637,7 +1641,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1669,7 +1673,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1701,7 +1705,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1733,7 +1737,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1765,7 +1769,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1797,7 +1801,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1829,7 +1833,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1861,7 +1865,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1893,7 +1897,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1925,7 +1929,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1957,7 +1961,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -1989,7 +1993,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2021,7 +2025,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2053,7 +2057,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2147,7 +2151,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2179,7 +2183,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2211,7 +2215,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2243,7 +2247,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2275,7 +2279,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2307,7 +2311,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2339,7 +2343,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2371,7 +2375,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2403,7 +2407,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2435,7 +2439,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2467,7 +2471,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2499,7 +2503,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2531,7 +2535,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2563,7 +2567,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2595,7 +2599,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2627,7 +2631,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2659,7 +2663,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2691,7 +2695,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2723,7 +2727,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2755,7 +2759,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2787,7 +2791,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2849,7 +2853,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2881,7 +2885,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2928,7 +2932,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -2996,7 +3000,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3028,7 +3032,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3117,8 +3121,391 @@
                                 "text": "Hach Kit"
                             }
                         }
-		    ],
+                    ],
                     "text": "Hach Kit measurements <Environmental Sample>"
+                },
+                {
+                    "data_vars": [
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:17632",
+                                        "text": "nitrate"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000129",
+                                "text": "Concentration"
+                            },
+                            "units": {
+                                "id": "UO:0000064",
+                                "text": "micromolar"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:17632",
+                                        "text": "nitrate"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:36934",
+                                        "text": "nitrogen-15 atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:17632",
+                                        "text": "nitrate"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:33815",
+                                        "text": "oxygen-18 atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:16301",
+                                        "text": "nitrite"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000129",
+                                "text": "Concentration"
+                            },
+                            "units": {
+                                "id": "UO:0000064",
+                                "text": "micromolar"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:16301",
+                                        "text": "nitrite"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:36934",
+                                        "text": "nitrogen-15 atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:16301",
+                                        "text": "nitrite"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:33815",
+                                        "text": "oxygen-18 atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:15377",
+                                        "text": "water"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:29237",
+                                        "text": "deuterium atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        },
+                        {
+                            "context": [
+                                {
+                                    "property": {
+                                        "id": "ME:0000381",
+                                        "text": "Molecule from list"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:15377",
+                                        "text": "water"
+                                    }
+                                },
+                                {
+                                    "property": {
+                                        "id": "ME:0000408",
+                                        "text": "Isotope"
+                                    },
+                                    "required": true,
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    },
+                                    "value": {
+                                        "id": "CHEBI:33815",
+                                        "text": "oxygen-18 atom"
+                                    }
+                                }
+                            ],
+                            "required": true,
+                            "scalar_type": {
+                                "id": "float",
+                                "text": "float"
+                            },
+                            "type": {
+                                "id": "ME:0000403",
+                                "text": "Isotope Ratio"
+                            },
+                            "units": {
+                                "id": "UO:0000168",
+                                "text": "parts per thousand"
+                            }
+                        }
+                    ],
+                    "dims": [
+                        {
+                            "dim_vars": [
+                                {
+                                    "context": [],
+                                    "required": true,
+                                    "scalar_type": {
+                                        "id": "object_ref",
+                                        "text": "object_ref"
+                                    },
+                                    "type": {
+                                        "id": "ME:0000102",
+                                        "text": "Environmental Sample ID"
+                                    },
+                                    "units": {
+                                        "id": "",
+                                        "text": ""
+                                    }
+                                }
+                            ],
+                            "type": {
+                                "id": "ME:0000100",
+                                "text": "Environmental Sample"
+                            }
+                        }
+                    ],
+                    "id": "T5b",
+                    "process": {
+                        "id": "PROCESS:0000005",
+                        "text": "Assay Geochemistry"
+                    },
+                    "properties": [],
+                    "text": "Stable Isotope Measurements <Environmental Sample>"
                 },
                 {
                     "data_vars": [
@@ -3204,7 +3591,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -3372,7 +3759,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -3421,7 +3808,7 @@
                                 "text": "Th and Ba was normalized by NIST #2710 Standard"
                             }
                         }
-		    ],
+                    ],
                     "text": "XRF Trace Elements Measurement <Environmental Sample, Molecule>"
                 },
                 {
@@ -3431,7 +3818,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3659,7 +4046,7 @@
                                 "text": "Non-certified value of NIST 2710 High, uranium 25.0 mg/kg"
                             }
                         }
-		    ],
+                    ],
                     "text": "XRF Uranium Measurement <Environmental Sample>"
                 }
             ],
@@ -3675,7 +4062,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3722,7 +4109,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3799,7 +4186,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3861,7 +4248,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -3923,7 +4310,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4021,7 +4408,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4053,7 +4440,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4115,7 +4502,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4177,7 +4564,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4209,7 +4596,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4674,7 +5061,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4721,7 +5108,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4768,7 +5155,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4815,7 +5202,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4862,7 +5249,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -4909,7 +5296,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5084,7 +5471,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5146,7 +5533,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5272,7 +5659,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5304,7 +5691,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5336,7 +5723,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5368,7 +5755,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5400,7 +5787,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5496,7 +5883,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5592,7 +5979,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5688,7 +6075,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5752,7 +6139,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5848,7 +6235,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -5944,7 +6331,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6008,7 +6395,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6104,7 +6491,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6168,7 +6555,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6360,7 +6747,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6456,7 +6843,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6552,7 +6939,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6616,7 +7003,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6680,7 +7067,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6776,7 +7163,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6840,7 +7227,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6904,7 +7291,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -6968,7 +7355,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7032,7 +7419,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7128,7 +7515,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7224,7 +7611,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7288,7 +7675,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7352,7 +7739,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7576,7 +7963,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -7751,7 +8138,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -9174,7 +9561,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -9221,7 +9608,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -9426,7 +9813,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -9970,7 +10357,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10017,7 +10404,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10064,7 +10451,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10111,7 +10498,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10158,7 +10545,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10205,7 +10592,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10252,7 +10639,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10299,7 +10686,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10346,7 +10733,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10393,7 +10780,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10440,7 +10827,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10487,7 +10874,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10534,7 +10921,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10581,7 +10968,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10628,7 +11015,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10675,7 +11062,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -10965,7 +11352,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -11293,7 +11680,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -12904,7 +13291,7 @@
                                     },
                                     "type": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "units": {
                                         "id": "",
@@ -12956,7 +13343,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -13751,7 +14138,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -13798,7 +14185,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -13845,7 +14232,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -13922,7 +14309,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
@@ -14031,7 +14418,7 @@
                                 {
                                     "property": {
                                         "id": "ME:0000381",
-                                        "text": "ChEBI Molecule"
+                                        "text": "Molecule from list"
                                     },
                                     "required": true,
                                     "units": {
