@@ -30,7 +30,7 @@ import smtplib, ssl
 
 from .dataprovider import DataProvider
 from .brick import Brick
-from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_NAME_PROCESS
+from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_NAME_PROCESS, TYPE_CATEGORY_SYSTEM
 from .utils import to_object_type
 from .descriptor import IndexDocument
 from .workspace import ItemAlreadyExistsException, EntityDataHolder, ProcessDataHolder, DataHolder
@@ -526,7 +526,83 @@ def get_brick(brick_id):
         } )
     
     except Exception as e:
-        return _err_response(e)        
+        return _err_response(e)
+
+@app.route("/coral/process/<process_id>", methods=["GET", "POST"])
+@auth_ro_required
+def get_process(process_id):
+    try:
+        (JSON, CSV) = range(2)
+        return_format = JSON
+        if request.method == "POST":
+            query = request.json
+            if query is not None and 'format' in query and query['format'] == 'CSV':
+                return_format = CSV
+
+        aql = 'FOR x IN @@collection FILTER x.id == @id RETURN x'
+        aql_bind = {
+            '@collection': TYPE_CATEGORY_SYSTEM + TYPE_NAME_PROCESS,
+            'id': process_id
+        }
+
+        result = svs['arango_service'].find(aql, aql_bind)[0]
+
+        if return_format == JSON:
+            response = {k: v for k, v in result.items() if not k.startswith('_')}
+            return _ok_response(response)
+        else:
+            # Convert separate term fields into combined format (term_name <term_id>)
+            formatted_data = []
+            formatted_headers = []
+            term_ids = {k: v for k, v in result.items() if k.endswith('_term_id')}
+            term_names = {k: v for k, v in result.items() if k.endswith('_term_name')}
+
+            for i, (k, v) in enumerate(term_ids.items()):
+                pname = k[:-len('_term_id')]
+                formatted_headers.append(pname)
+                formatted_data.append('%s <%s>' % (term_names[pname + '_term_name'], v))
+
+            for k, v in result.items():
+                if k.endswith('_term_id') or k.endswith('_term_name') or k.startswith('_'):
+                    continue
+                formatted_headers.append(k)
+                if k == 'output_objects' or k == 'input_objects':
+                    # Get UPK ID for TSV
+                    upk_objects = []
+                    for i, item in enumerate(v):
+                        (type_name, pk_id) = item.split(':')
+
+                        type_name = type_name.strip()
+                        pk_id = pk_id.strip()
+
+                        if type_name.startswith('Brick'):
+                            br = svs['workspace'].get_brick_data(pk_id)
+                            upk_objects.append('Brick: %s' % br['name'])
+                            continue
+
+                        typedef = svs['typedef'].get_type_def(type_name)
+                        upk_name = typedef.upk_property_name
+
+                        aql = 'FOR x IN @@collection FILTER x.id == @id RETURN x'
+                        aql_bind = {
+                            '@collection': TYPE_CATEGORY_STATIC + type_name,
+                            'id': pk_id
+                        }
+                        obj = svs['arango_service'].find(aql, aql_bind)[0]
+                        upk_objects.append('%s: %s' % (type_name, obj[upk_name]))
+                    formatted_data.append(','.join(upk_objects))
+                elif v is None:
+                    formatted_data.append('null')
+                else:
+                    formatted_data.append(v)
+
+            return_data = '\t'.join(formatted_headers) + '\n' + '\t'.join(formatted_data)
+            return _ok_response(return_data)
+    except Exception as e:
+        tb.print_exc()
+        print(e)
+        return _err_response(e)
+
 
 @app.route("/coral/filter_brick/<brick_id>", methods=['POST'])
 @auth_ro_required

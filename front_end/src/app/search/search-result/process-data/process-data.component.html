@@ -41,15 +41,22 @@
               </div>
             </div>
             <hr class="my-6" />
-            <div class="row" *ngIf="processesUp && processesUp[0].docs.length > 1">
+            <!-- <div class="row" *ngIf="processesUp && processesUp[0].docs.length > 1"> -->
+            <div class="row">
               <div class="col-12">
-                  <button class="btn btn-primary" (click)="hideProcessInputs = !hideProcessInputs">
+                  <button class="btn btn-primary float-left" (click)="hideProcessInputs = !hideProcessInputs" *ngIf="processesUp && processesUp[0].docs.length > 1">
                       {{
                         hideProcessInputs 
                           ? 'View Input Objects (' + processesUp[0].docs.length + ')' 
                           : 'Hide Input Objects'
                         }}
                     </button>
+                    <button
+                      class="btn btn-secondary float-right"
+                      (click)="downloadProcess(processesUp[0].process)"
+                    >
+                    Download Process
+                  </button>
               </div>
             </div>
           </div>
@@ -153,9 +160,10 @@
               <hr class="my-6" />
               <div class="row" *ngIf="p.docs.length && p.docs.length > 1">
                 <div class="col-12">
-                    <button class="btn btn-primary" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
+                    <button class="btn btn-primary float-left" (click)="hideProcessOutputs[i] = !hideProcessOutputs[i]">
                         {{hideProcessOutputs[i] ? 'View Output Objects (' + p.docs.length + ')' : 'Hide Output Objects'}}
                       </button>
+                    <button class="btn btn-secondary float-right" (click)="downloadProcess(p.process)">Download Process</button>
                 </div>
               </div>
             </div>
