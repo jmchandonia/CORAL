@@ -278,7 +278,7 @@ class Workspace:
             pass
 
     def _validate_process(self, data_holder):
-        data_holder.type_def.validate_data(data_holder.data)
+        # data_holder.type_def.validate_data(data_holder.data)
 
         # Check for NaN
         for key, value in data_holder.data.items():

@@ -270,7 +270,7 @@ class Brick:
             else:
                 data = values_json['values'][value_scalar_type + '_values']
 
-            np.reshape(data, dim_sizes)
+            data = np.reshape(data, dim_sizes)
             
             # da = xr.DataArray(np.random.rand(dim1_size, dim2_size, dim3_size), dims=(dim1,dim2, dim3))
             # da.attrs['__type_term'] = Term('AA:154', 'Optical Density')
