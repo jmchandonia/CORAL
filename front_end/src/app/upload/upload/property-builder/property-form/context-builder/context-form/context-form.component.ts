@@ -40,7 +40,6 @@ export class ContextFormComponent implements OnInit, OnDestroy {
         // it is here to prevent fields from not being able to load units
         this.uploadService.searchPropertyMicroTypes(this.context.typeTerm.text)
           .subscribe((data: any) => {
-
             // get results from API call and find microtype from there
             const typeData = data.results.find(item => item.id === this.context.typeTerm.id);
 
@@ -49,6 +48,15 @@ export class ContextFormComponent implements OnInit, OnDestroy {
               this.context.units = null as Term;
             } else {
               this.context.microType = typeData.microtype;
+
+              // set context scalarType based on scalarType from microtype
+              this.context.scalarType = typeData.microtype.value_scalar_type;
+              if (this.context.value && this.context.requireDropdownForVal) {
+                this.valuesData = [this.context.value]
+                this.valueItem = (this.context.value as Term).id;
+              }
+
+              // get units with microtype data
               this.getUnits();
             }
           });
