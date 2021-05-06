@@ -67,7 +67,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
 
    modalRef: BsModalRef;
    errorSub = new Subscription();
-   modalHiddenSub = new Subscription();
    propTypeItem: string;
    propValueItem: string;
    unitsItem: string;
@@ -156,17 +155,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       ignoreBackdropClick: true
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, config);
-    this.modalHiddenSub = this.modalService.onHidden
-    .subscribe(() => {
-      // emit new instance of value
-      // originally was for select2 bug, can be refactored
-      const { type, index, required }  = this.property;
-      const newProperty = Object.assign(
-        new TypedProperty(index, required, type), this.property
-        ) as TypedProperty;
-      this.typeReselected.emit(newProperty);
-      this.modalHiddenSub.unsubscribe();
-    });
   }
 
   setPropertyType(event: Term) {

@@ -149,15 +149,6 @@ export class DimensionVariableFormComponent implements OnInit, OnDestroy {
       ignoreBackdropClick: true
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, config);
-    const modalSub = this.modalService.onHidden.subscribe(() => {
-      const newDimVar = Object.assign(
-        new DimensionVariable(this.dimVar.dimension, this.dimVar.index, this.dimVar.required),
-        this.dimVar
-      ) as DimensionVariable;
-      newDimVar.unitOptions = this.unitsData
-      this.reset.emit(newDimVar);
-      modalSub.unsubscribe();
-    });
   }
 
 }
