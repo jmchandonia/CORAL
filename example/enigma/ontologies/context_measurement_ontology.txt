@@ -217,8 +217,8 @@
         alias: Well
         alias: Core
         alias: Borehole
-        *-Environmental Sample Location ID (Ref: DA:0000041.Well.name)
-          alias: Well ID
+        *-Environmental Sample Location ID (Ref: DA:0000041.Location.name)
+          alias: Location ID
       *Environmental Sample
         *Environmental Sample Name (String)
         *-Environmental Sample ID (Ref: DA:0000042.Sample.name)
@@ -372,7 +372,7 @@
 
 -Internal ID:
   is_a: ME:0000001
-  -Internal Well ID (Ref: DA:0000041.Well.id)
+  -Internal Location ID (Ref: DA:0000041.Location.id)
   -Internal Sample ID (Ref: DA:0000042.Sample.id)
   -Internal Taxon ID (Ref: DA:0000037.Taxon.id)
   -Internal OTU ID (Ref: DA:0000063.OTU.id)

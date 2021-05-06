@@ -1,7 +1,9 @@
 Process
   -Add Location
   -Add Condition
+  -Add Genome
   -Add Taxon
+  -Add Strain
   -Add Protocol
   -Sampling
   Import Historic Data
@@ -20,7 +22,6 @@ Process
     -BONCAT Enrichment
     -DAPI Enrichment
   -Isolation
-  -Add Strain
   -Build Defined Community
   -Sequencing
     -18S Sequencing
