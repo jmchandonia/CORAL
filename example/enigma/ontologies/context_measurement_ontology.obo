@@ -2363,7 +2363,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Well, borehole, or other defined ENIGMA location." []
 synonym: "Well ID" EXACT []
-xref: Ref: DA:0000041.Well.name
+xref: Ref: DA:0000041.Location.name
 is_a: ME:0000099 ! Environmental Sample Location
 
 [Term]
@@ -2737,15 +2737,15 @@ is_a: ME:0000001 ! Context
 
 [Term]
 id: ME:0000266
-name: Internal Well ID
+name: Internal Location ID
 namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_hidden "true" xsd:boolean
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Internal Well ID." []
-xref: Ref: DA:0000041.Well.id
+def: "Internal Location ID." []
+xref: Ref: DA:0000041.Location.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
