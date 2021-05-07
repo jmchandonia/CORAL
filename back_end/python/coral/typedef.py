@@ -223,6 +223,12 @@ class TypeDef:
         return self.__upk_property_def
 
     @property
+    def upk_property_name(self):
+        for pname, pdef in self.__property_defs.items():
+            if pdef.is_upk:
+                return pname
+
+    @property
     def fk_property_defs(self):
         return self.__fk_property_defs
 
@@ -240,6 +246,7 @@ class TypeDef:
     @property
     def process_input_type_defs(self):
         return self.__process_input_type_defs
+
 
     def validate_data(self, data, ignore_pk=False):
         # check property values
