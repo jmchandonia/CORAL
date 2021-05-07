@@ -151,13 +151,6 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
       ignoreBackdropClick: true
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, config);
-    const modalSub = this.modalService.onHidden.subscribe(() => {
-      const newDataVar = Object.assign(
-        new DataValue(this.dataValue.index, this.dataValue.required), this.dataValue
-        ) as DataValue;
-      this.reset.emit(newDataVar);
-      modalSub.unsubscribe();
-    });
   }
 
 }

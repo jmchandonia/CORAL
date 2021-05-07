@@ -96,6 +96,10 @@ export class QueryBuilderService {
     return this.http.post<any>(`${environment.baseURL}/brick/${id}`, {format});
   }
 
+  downloadProcess(id: string) {
+    return this.http.post<any>(`${environment.baseURL}/process/${id}`, {format: 'CSV'})
+  }
+
   getObjectMetadata(id) {
     return this.http.get(`${environment.baseURL}/brick_metadata/${id}`);
   }

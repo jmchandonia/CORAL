@@ -68,6 +68,7 @@ export class TSVUploadWidgetComponent implements OnInit {
   }
 
   uploadCSV() {
+    this.uploadService.clearCache();
     this.spinner.show('uploading-csv');
     this.loading = true;
     this.uploadService.uploadCSV(this.file)

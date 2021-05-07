@@ -65,4 +65,24 @@ export class ProcessDataComponent implements OnInit {
     return Object.keys(n).filter(o => n[o] !== null);
   }
 
+  downloadProcess(process) {
+    this.queryBuilder.downloadProcess(process.id)
+      .subscribe(data => {
+        this.download(data.results, `${process.process}.tsv`)
+      })
+  }
+
+  download(data, name) {
+    const blob = new Blob([data], {type: 'text/csv'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${name}.csv`;
+    a.setAttribute('display', 'none');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
 }

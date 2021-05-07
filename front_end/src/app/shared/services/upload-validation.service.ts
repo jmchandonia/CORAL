@@ -253,6 +253,7 @@ export class UploadValidationService {
    }
 
   public validScalarType(scalarType: string, value): boolean {
+    if (value === undefined) return false;
     const val = value.text ? value.text : value;
     switch (scalarType) {
       case 'int':
