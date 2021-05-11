@@ -1319,7 +1319,11 @@ def upload_core_type_tsv():
                                 'message': 'Input object %s does not exist for process connecting to %s' % (input_upk_id, upk_id)
                             })
 
-                    for output_object in process_dataholder.data['output_objects'].split(','):
+                    # Only save process if core type is the last in the list of output objects (prevents errors from saving process too early)
+                    last_output_object = False
+                    output_objects = process_dataholder.data['output_objects'].split(',')
+
+                    for output_idx, output_object in enumerate(output_objects):
                         # try to find existing process from output ids
                         output_type_name, output_upk_id = process_dataholder.get_process_id(output_object)
 
@@ -1357,19 +1361,11 @@ def upload_core_type_tsv():
                                 yield "data: warning--\n\n"
                                 continue
 
+                        if output_idx == len(output_objects) - 1 and output_upk_id == upk_id:
+                            last_output_object = True
+
                     try:
                         process_typedef.validate_data(process_dataholder.data, ignore_pk=True)
-                        # ws.validate_process_exists(process_dataholder)
-                    # except ItemAlreadyExistsException as ie:
-                    #     if ie.changed_data:
-                    #         result_data['process_warning'].append({
-                    #             'message': ie.message,
-                    #             'old_data': ie.old_data,
-                    #             'new_data': ie.new_data,
-                    #             'data_holder': ie.data_holder
-                    #         })
-                    #         yield "data: warning--{}\n\n".format(ie.message)
-                    #         continue
 
                     except Exception as e:
                         tb.print_exc()
@@ -1382,7 +1378,8 @@ def upload_core_type_tsv():
                         continue
 
                     ws.save_data_if_not_exists(data_holder, preserve_logs=True)
-                    ws.save_process(process_dataholder, update_object_ids=True)
+                    if last_output_object:
+                        ws.save_process(process_dataholder, update_object_ids=True)
                 else:
                     ws.save_data_if_not_exists(data_holder, preserve_logs=True)
 
