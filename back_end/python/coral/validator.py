@@ -109,7 +109,7 @@ class ValueValidationService:
         elif scalar_type == 'string':
             errors = self.cast_values(values, str, 'string')
         elif scalar_type == 'boolean':
-            errors = self.cast_values(values, bool, 'boolean')
+            errors = self.cast_values(values, lambda x : int(bool(x)), 'boolean')
         elif scalar_type == 'oterm_ref':
             errors = self.cast_oterm_values(values, var_term)
         elif scalar_type == 'object_ref':
