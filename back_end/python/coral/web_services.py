@@ -1134,13 +1134,14 @@ def upload_csv():
                     'text': data_var_ds['value_type']['oterm_name']
                 }
             }
-            if 'value_units' in response_dv:
+            if 'value_units' in data_var_ds:
                 response_dv['units'] = {
-                    'id': response_dv['value_units']['oterm_ref'],
-                    'text': response_dv['value_units']['oterm_name']
+                    'id': data_var_ds['value_units']['oterm_ref'],
+                    'text': data_var_ds['value_units']['oterm_name']
                 }
             else:
                 response_dv['units'] = None
+
             brick_response['dataValues'].append(response_dv)
 
         # add properties
