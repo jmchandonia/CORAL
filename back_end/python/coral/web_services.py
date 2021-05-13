@@ -1147,6 +1147,11 @@ def upload_csv():
                                 'id': '',
                                 'text': str(ctx['value'][scalar + '_value'])
                             }
+                        if 'value_units' in ctx:
+                            new_ctx['units'] = {
+                                'id': ctx['value_units']['oterm_ref'],
+                                'text': ctx['value_units']['oterm_name']
+                            }
                         response_dim_var['context'].append(new_ctx)
 
                 variables.append(response_dim_var)
@@ -1199,6 +1204,11 @@ def upload_csv():
                             'id': '',
                             'text': str(ctx['value'][scalar + '_value'])
                         }
+                    if 'value_units' in ctx:
+                        new_ctx['units'] = {
+                            'id': ctx['value_units']['oterm_ref'],
+                            'text': ctx['value_units']['oterm_name']
+                        }
                     response_dv['context'].append(new_ctx)
 
             brick_response['dataValues'].append(response_dv)
@@ -1247,6 +1257,9 @@ def upload_csv():
                     'id': property_ds['value_units']['oterm_ref'],
                     'text': property_ds['value_units']['oterm_name']
                 }
+            else:
+                props_response['units'] = None
+
             props_response['context'] = []
             if 'value_context' in property_ds:
                 for ctx in property_ds['value_context']:
@@ -1274,9 +1287,12 @@ def upload_csv():
                             'id': '',
                             'text': str(ctx['value'][scalar + '_value'])
                         }
+                    if 'value_units' in ctx:
+                        new_ctx['value'] = {
+                            'id': ctx['value_units']['oterm_ref'],
+                            'text': ctx['value_units']['oterm_name']
+                        }
                     props_response['context'].append(new_ctx)
-            else:
-                props_response['units'] = None
             
             brick_response['properties'].append(props_response)
 
