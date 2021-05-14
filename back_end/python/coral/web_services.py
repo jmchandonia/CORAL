@@ -1109,6 +1109,7 @@ def upload_csv():
                     'totalCount': dim_ds['size'],
                     'require_mapping': dim_var_ds['values']['scalar_type'] in ['object_ref', 'oterm_ref'],
                     'scalarType': dim_var_ds['values']['scalar_type'],
+                    'context': []
                 }
                 if 'value_units' in dim_var_ds:
                     response_dim_var['units'] = {
@@ -1117,13 +1118,47 @@ def upload_csv():
                     }
                 else:
                     response_dim_var['units'] = None
+
+                response_dim_var['context'] = []
+                if 'value_context' in dim_var_ds:
+                    for ctx in dim_var_ds['value_context']:
+                        new_ctx = {
+                            'required': False
+                        }
+                        new_ctx['type'] = {
+                            'id': ctx['value_type']['oterm_ref'],
+                            'text': ctx['value_type']['oterm_name']
+                        }
+
+                        if ctx['value']['scalar_type'] == 'oterm_ref':
+                            ctx_term = svs['ontology'].all.find_id(ctx['value']['oterm_ref'])
+                            new_ctx['value'] = {
+                                'id': ctx['value']['oterm_ref'],
+                                'text': ctx_term.term_name
+                            }
+                        elif ctx['value']['scalar_type'] == 'object_ref':
+                            new_ctx['value'] = {
+                                'id': '',
+                                'text': ctx['value']['object_ref']
+                            }
+                        else:
+                            scalar = ctx['value']['scalar_type']
+                            new_ctx['value'] = {
+                                'id': '',
+                                'text': str(ctx['value'][scalar + '_value'])
+                            }
+                        if 'value_units' in ctx:
+                            new_ctx['units'] = {
+                                'id': ctx['value_units']['oterm_ref'],
+                                'text': ctx['value_units']['oterm_name']
+                            }
+                        response_dim_var['context'].append(new_ctx)
+
                 variables.append(response_dim_var)
             response_dim['variables'] = variables
             brick_response['dimensions'].append(response_dim)
 
         for dti, data_var_ds in enumerate(brick_ds['typed_values']):
-            # print('data var ds')
-            # print(json.dumps(data_var_ds, indent=2))
             response_dv = {
                 'index': dti,
                 'required': False,
@@ -1142,13 +1177,44 @@ def upload_csv():
             else:
                 response_dv['units'] = None
 
+            response_dv['context'] = []
+            if 'value_context' in data_var_ds:
+                for ctx in data_var_ds['value_context']:
+                    new_ctx = {
+                        'required': False
+                    }
+                    new_ctx['type'] = {
+                        'id': ctx['value_type']['oterm_ref'],
+                        'text': ctx['value_type']['oterm_name']
+                    }
+                    if ctx['value']['scalar_type'] == 'oterm_ref':
+                        ctx_term = svs['ontology'].all.find_id(ctx['value']['oterm_ref'])
+                        new_ctx['value'] = {
+                            'id': ctx['value']['oterm_ref'],
+                            'text': ctx_term.term_name
+                        }
+                    elif ctx['value']['scalar_type'] == 'object_ref':
+                        new_ctx['value'] = {
+                            'id': '',
+                            'text': ctx['value']['object_ref']
+                        }
+                    else:
+                        scalar = ctx['value']['scalar_type']
+                        new_ctx['value'] = {
+                            'id': '',
+                            'text': str(ctx['value'][scalar + '_value'])
+                        }
+                    if 'value_units' in ctx:
+                        new_ctx['units'] = {
+                            'id': ctx['value_units']['oterm_ref'],
+                            'text': ctx['value_units']['oterm_name']
+                        }
+                    response_dv['context'].append(new_ctx)
+
             brick_response['dataValues'].append(response_dv)
 
         # add properties
         for pi, property_ds in enumerate(brick_ds['array_context']):
-            print('property_ds')
-            print(json.dumps(property_ds, indent=2))
-
             microtypes = svs['ontology'].property_microtypes
             prop_microtype = microtypes.find_id(property_ds['value_type']['oterm_ref'])
 
@@ -1193,6 +1259,40 @@ def upload_csv():
                 }
             else:
                 props_response['units'] = None
+
+            props_response['context'] = []
+            if 'value_context' in property_ds:
+                for ctx in property_ds['value_context']:
+                    new_ctx = {
+                        'required': False
+                    }
+                    new_ctx['type'] = {
+                        'id': ctx['value_type']['oterm_ref'],
+                        'text': ctx['value_type']['oterm_name']
+                    }
+                    if ctx['value']['scalar_type'] == 'oterm_ref':
+                        ctx_term = svs['ontology'].all.find_id(ctx['value']['oterm_ref'])
+                        new_ctx['value'] = {
+                            'id': ctx['value']['oterm_ref'],
+                            'text': ctx_term.term_name
+                        }
+                    elif ctx['value']['scalar_type'] == 'object_ref':
+                        new_ctx['value'] = {
+                            'id': '',
+                            'text': ctx['value']['object_ref']
+                        }
+                    else:
+                        scalar = ctx['value']['scalar_type']
+                        new_ctx['value'] = {
+                            'id': '',
+                            'text': str(ctx['value'][scalar + '_value'])
+                        }
+                    if 'value_units' in ctx:
+                        new_ctx['value'] = {
+                            'id': ctx['value_units']['oterm_ref'],
+                            'text': ctx['value_units']['oterm_name']
+                        }
+                    props_response['context'].append(new_ctx)
             
             brick_response['properties'].append(props_response)
 
