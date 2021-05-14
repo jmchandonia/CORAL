@@ -82,6 +82,8 @@ class PropertyValue:
         else:
             units_term = None
 
+        # sys.stderr.write('term = '+str(type_term)+', value = '+str(value)+', units = '+str(units_term)+'\n')
+
         return PropertyValue( type_term=type_term, units_term=units_term, scalar_type=value_type, value=value )
 
 
@@ -297,6 +299,7 @@ class Brick:
                         da.attrs['__attr_count'] += 1
                         attr_name = '__attr%s' % da.attrs['__attr_count'] 
                         da.attrs[attr_name] = pv
+                        # sys.stderr.write('pv = '+str(pv)+'\n')
                     except Exception as e:
                         print('Error: can not read property', e, attr_json)
 
@@ -811,7 +814,7 @@ class Brick:
                     if not typed_values_property_name:
                         value_key = 'value'
 
-                    var_data['value_context'].append({
+                    context = {
                         'value_type':{
                             'oterm_ref': attr.type_term.term_id,
                             'oterm_name': attr.type_term.term_name
@@ -820,7 +823,19 @@ class Brick:
                             'scalar_type': attr.scalar_type,
                             value_key : value_val
                         }
-                    })
+                    }
+
+                    if attr.units_term is not None:
+                        # sys.stderr.write('units = '+str(attr.units_term)+'\n')
+                        context['value_units'] = {
+                            'oterm_ref': attr.units_term.term_id,
+                            'oterm_name': attr.units_term.term_name
+                        }
+                        if not typed_values_property_name:
+                            context['value_with_units'] = str(value_val)+' ('+attr.units_term.term_name+')'
+                
+
+                    var_data['value_context'].append(context)
 
                     if not typed_values_property_name:
                         var_data['value_with_units'] += ', '+attr.type_term.term_name+'='+value_val
@@ -911,7 +926,7 @@ class Brick:
                 if not typed_values_property_name:
                     value_key = 'value'
 
-                values_data['value_context'].append({
+                context = {
                     'value_type':{
                         'oterm_ref': attr.type_term.term_id,
                         'oterm_name': attr.type_term.term_name
@@ -920,7 +935,19 @@ class Brick:
                         'scalar_type': attr.scalar_type,
                         value_key : value_val
                     }
-                })
+                }
+
+                if attr.units_term is not None:
+                    # sys.stderr.write('units = '+str(attr.units_term)+'\n')
+                    context['value_units'] = {
+                        'oterm_ref': attr.units_term.term_id,
+                        'oterm_name': attr.units_term.term_name
+                    }
+                    if not typed_values_property_name:
+                        context['value_with_units'] = str(value_val)+' ('+attr.units_term.term_name+')'
+                
+
+                values_data['value_context'].append(context)
 
                 if not typed_values_property_name:
                     values_data['value_with_units'] += ', '+attr.type_term.term_name+'='+str(value_val)
@@ -1519,12 +1546,16 @@ class BrickVariable:
         items = []
         items.append(self.type_term.term_name)
         if self.has_attrs():
-            items.append('of')
+            items.append(':')
             for attr in self.attrs:
-                val  = attr.value
+                items.append(attr.type_term.term_name)
+                items.append('=')
+                val = attr.value
                 if type(val) is Term:
                     val = val.term_name
-                items.append(val)
+                items.append(str(val))
+                if attr.units_term is not None:
+                    items.append(attr.units_term.term_name)
 
         if self.has_units():
             items.append( '(%s)' % self.units_term.term_name )
@@ -1536,9 +1567,9 @@ class BrickVariable:
         items = []
         items.append(self.type_term.term_name)
         if self.has_attrs():
-            items.append('of')
+            items.append(':')
             for attr in self.attrs:
-                val  = attr.value
+                val = attr.value
                 if type(val) is Term:
                     val = val.term_name
                 items.append(str(val))
@@ -1639,10 +1670,10 @@ class BrickVariable:
             rows.append(_row2_header('<i>Attributes:</i>'))
             for attr in self.attrs:
                 name = attr.type_term.term_name
-                val = attr.value
+                val = str(attr.value)
                 if attr.units_term is not None:
                     val += ' (%s)' % attr.units_term.term_name
-                rows.append( _row2(name, val) )        
+                rows.append( _row2(name, val) )
         
         return '<table>%s</table>' % ''.join(rows) 
 

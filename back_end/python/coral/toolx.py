@@ -81,9 +81,26 @@ def _get_upload_config_doc():
         doc = json.loads(f.read())
     return doc
 
+def upload_brick(file_name):
+    try:
+        if file_name is None:
+            print('Error: must specify file name')
+            return None
+
+        services._init_services()
+        ws = services.workspace
+
+        file_name = os.path.join(services._IMPORT_DIR_BRICK, file_name)
+        print('Doing %s: %s' % ('Brick', file_name))
+        brick = Brick.read_json(None, file_name)
+        data_holder = BrickDataHolder(brick)
+        ws.save_data(data_holder)
+    except Exception as e:
+        print('Error: ', e)
+        traceback.print_exc()
+
 def upload_bricks(argv=None):
     services._init_services()
-    ws = services.workspace
 
     itd = services.indexdef.get_type_def(TYPE_NAME_BRICK)
     itd._ensure_init_index()
@@ -91,15 +108,7 @@ def upload_bricks(argv=None):
     doc = _get_upload_config_doc()
     for file_def in doc['bricks']:
         if 'ignore' in file_def: continue
-        try:
-            file_name = os.path.join(services._IMPORT_DIR_BRICK, file_def['file'])
-            print('Doing %s: %s' % ('Brick', file_name))
-            brick = Brick.read_json(None, file_name)
-            data_holder = BrickDataHolder(brick)
-            ws.save_data(data_holder)
-        except Exception as e:
-            print('Error: ', e)
-            traceback.print_exc()
+        upload_brick(file_def['file'])
 
 def update_core(file_name, type_name):
     try:
