@@ -102,6 +102,7 @@ export class DataValue {
     validCount: number;
     invalidCount: number;
     require_mapping: boolean;
+    unitOptions?: Term[];
 
     type: Term;
 
@@ -239,6 +240,7 @@ export class TypedProperty {
     totalCount = 1;
     mappedCount: number;
     scalarType: string;
+    unitOptions?: Term[];
 
     type: Term;
 
