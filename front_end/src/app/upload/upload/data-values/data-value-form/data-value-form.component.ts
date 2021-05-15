@@ -32,7 +32,12 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     }
 
     if (d.microType) {
-      this.getUnits();
+      // set units that were already there to prevent unneccessary reloading
+      if (d.unitOptions !== undefined) {
+        this.unitsValues = d.unitOptions;
+      } else {
+        this.getUnits();
+      }
     }
   }
 
@@ -44,8 +49,8 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line:variable-name
   private _dataValue: DataValue;
 
-  typeValues: Array<{id: string, text: string}> = [];
-  unitsValues: Array<{id: string, text: string}> = [];
+  typeValues: Term[] = [];
+  unitsValues: Term[] = [];
 
   typeValuesItem: string;
   unitsItem: string;
@@ -58,7 +63,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
   constructor(
     private uploadService: UploadService,
     private validator: UploadValidationService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
   ) { }
 
   ngOnInit() {
@@ -151,6 +156,14 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
       ignoreBackdropClick: true
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, config);
+    const modalSub = this.modalService.onHidden.subscribe(() => {
+      const newDataVar = Object.assign(
+        new DataValue(this.dataValue.index, this.dataValue.required), this.dataValue
+      ) as DataValue;
+      newDataVar.unitOptions = this.unitsValues;
+      this.reset.emit(newDataVar)
+      modalSub.unsubscribe();
+    });
   }
 
 }
