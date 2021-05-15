@@ -41,7 +41,11 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.property.microType) {
-      this.getPropertyUnits();
+      if (prop.unitOptions !== undefined) {
+        this.unitsData = prop.unitOptions;
+      } else {
+        this.getPropertyUnits();
+      }
     }
 
     if (this.property.scalarType === 'oterm_ref' || this.property.scalarType === 'object_ref') {
@@ -155,6 +159,14 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       ignoreBackdropClick: true
     };
     this.modalRef = this.modalService.show(ContextBuilderComponent, config);
+    const modalSub = this.modalService.onHidden.subscribe(() => {
+      const {type, index, required} = this.property;
+      const newProperty = Object.assign(
+        new TypedProperty(index, required, type), this.property
+      ) as TypedProperty;
+      newProperty.unitOptions = this.unitsData;
+      this.typeReselected.emit(newProperty)
+    })
   }
 
   setPropertyType(event: Term) {
