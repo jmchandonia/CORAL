@@ -75,7 +75,7 @@
             <ngx-datatable-column *ngFor="let field of warningResultFields" [name]="field.name" [flexGrow]="1">
                 <ng-template let-row="row" ngx-datatable-header-template>
                     {{field.name}}
-                    <span *ngIf="propertyUnits[field.name]">({{propertyUnits[field.name]}})</span>
+                    <span *ngIf="propertyUnits && propertyUnits[field.name]">({{propertyUnits[field.name]}})</span>
                 </ng-template>
                 <ng-template let-row="row" ngx-datatable-cell-template>
                     <tr>
@@ -203,9 +203,17 @@
     <div class="row mt-4 mb-4" *ngIf="processWarningResults?.length">
         <div class="col-12">
             <h3>{{processWarningResults.length}} Process Warnings</h3>
-            <div class="row justify-content-center">
-                <div class="alert alert-warning">
+            <div class="row">
+                <div class="alert alert-warning col-8">
                     Processes from your upload have duplicate IDs with some processes that already exist in the system and have not been updated. Core uploads associated with the processes have not been updated. Review the list below to see the changes and update your process file if any data is entered incorrectly.
+                </div>
+                <div class="col-4">
+                    <div class="row justify-content-center mt-3">
+                        <button class="btn btn-primary col-10" (click)="saveWithoutUpdatingProcesses()">Add items to existing processes</button>
+                    </div>
+                    <div class="row justify-content-center mt-2">
+                        <button class="btn btn-secondary col-10" (click)="saveAndUpdateProcesses()">Update Processes</button>
+                    </div>
                 </div>
             </div>
             <!-- TODO: update processes in system and then core types (button should go here) -->
