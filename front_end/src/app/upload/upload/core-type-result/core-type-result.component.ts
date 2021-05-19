@@ -23,6 +23,7 @@ export class CoreTypeResultComponent implements OnInit {
   public updatingDuplicates = false;
   public duplicateResults: any;
   public duplicateUpdateErrors: number;
+  public processDuplicateResults: any;
   public propertyUnits: any; // for displaying units of fields in UI
 
 
@@ -113,8 +114,18 @@ export class CoreTypeResultComponent implements OnInit {
           this.duplicateUpdateErrors = this.duplicateResults.reduce((a, c) => c.error ? a + 1 : a, 0)
         })
     })
+  }
 
+  saveWithoutUpdatingProcesses() {
+    this.uploadService.updateProcessDuplicates(this.batchId, false)
+      .subscribe((data: Response<any>) => {
+      });
+  }
 
+  saveAndUpdateProcesses() {
+    this.uploadService.updateProcessDuplicates(this.batchId, true)
+      .subscribe((data: Response<any>) => {
+      })
   }
 
 }
