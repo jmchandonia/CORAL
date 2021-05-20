@@ -1193,6 +1193,14 @@ namespace: enigma.ontology
 def: "Kristopher Hunt." []
 is_a: ENIGMA:0000081 ! Stahl Lab
 
+[Term]
+id: ENIGMA:0000165
+name: Cone Penetrometer Survey
+namespace: enigma.ontology
+def: "Cone Penetrometer Survey." []
+synonym: "CPT" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
 [Typedef]
 id: is_a
 name: is_a
