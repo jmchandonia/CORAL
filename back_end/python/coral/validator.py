@@ -165,12 +165,17 @@ class ValueValidationService:
         ont = services.ontology
         for term_id_name in terms.keys():
             try:
-                term = ont._get_term(term_id_name)
+                if ':' in term_id_name:
+                    term = ont._get_term(term_id_name)
+                else:
+                    # should look only under valid_values_parent
+                    term = ont.all.find_name_case_insensitive(term_id_name)
                 if var_term.microtype_valid_values_parent in term.parent_path_ids:
                     terms[term_id_name]['term'] = term                
                 else:
                     terms[term_id_name]['error'] = 'Term %s does not have a valid parent (%s) defined in  %s' % (str(term), var_term.microtype_valid_values_parent, str(var_term) )    
-            except:
+            except Exception as e:
+                # sys.stderr.write('error: '+str(e)+'\n')
                 terms[term_id_name]['error'] = 'Can not find term: %s' % term_id_name
 
         # cast values
