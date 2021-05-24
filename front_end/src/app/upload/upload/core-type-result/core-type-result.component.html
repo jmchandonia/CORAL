@@ -132,6 +132,47 @@
             </ngx-datatable>
         </div>
     </div>
+    <div class="row mt-4 mb-4" *ngIf="processWarningResults?.length">
+        <div class="col-12">
+            <h3>{{processWarningResults.length}} Process Warnings</h3>
+            <div class="row">
+                <div class="alert alert-warning col-12">
+                    Processes from your upload have duplicate IDs with some processes that already exist in the system and have not been updated. Core uploads associated with the processes have not been updated. Review the list below to see the changes and update your process file if any data is entered incorrectly.
+                </div>
+            </div>
+        </div>
+        <ngx-datatable
+            style="width: 100%"
+            class="ngx-datatable bootstrap"
+            [rows]="processWarningResults"
+            [columnMode]="columnMode.force"
+            [limit]="20"
+            rowHeight="auto"
+            [footerHeight]="40"
+            [scrollbarH]="true"
+        >
+            <ngx-datatable-column>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <tr>Old Data</tr>
+                    <tr>New Data</tr> 
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column *ngFor="let field of processWarningResultFields" [name]="field.name" [flexGrow]="1">
+                <ng-template let-row="row" ngx-datatable-header-template>
+                    {{field.name}}
+                </ng-template>
+                <!-- TODO: Add units for processes -->
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <tr>
+                        <td [class.old-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.old_data[field.name]}}</td>
+                    </tr>
+                    <tr>
+                        <td [class.new-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.new_data[field.name]}}</td>
+                    </tr>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
     <div class="row mt-4 mb-4" *ngIf="errorResults?.length">
         <div class="col-12">
             <h3>{{errorResults.length}} Errors</h3>
@@ -199,47 +240,6 @@
                 </ngx-datatable-column>
             </ngx-datatable>
         </div>
-    </div>
-    <div class="row mt-4 mb-4" *ngIf="processWarningResults?.length">
-        <div class="col-12">
-            <h3>{{processWarningResults.length}} Process Warnings</h3>
-            <div class="row">
-                <div class="alert alert-warning col-12">
-                    Processes from your upload have duplicate IDs with some processes that already exist in the system and have not been updated. Core uploads associated with the processes have not been updated. Review the list below to see the changes and update your process file if any data is entered incorrectly.
-                </div>
-            </div>
-        </div>
-        <ngx-datatable
-            style="width: 100%"
-            class="ngx-datatable bootstrap"
-            [rows]="processWarningResults"
-            [columnMode]="columnMode.force"
-            [limit]="20"
-            rowHeight="auto"
-            [footerHeight]="40"
-            [scrollbarH]="true"
-        >
-            <ngx-datatable-column>
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    <tr>Old Data</tr>
-                    <tr>New Data</tr> 
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column *ngFor="let field of processWarningResultFields" [name]="field.name" [flexGrow]="1">
-                <ng-template let-row="row" ngx-datatable-header-template>
-                    {{field.name}}
-                </ng-template>
-                <!-- TODO: Add units for processes -->
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    <tr>
-                        <td [class.old-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.old_data[field.name]}}</td>
-                    </tr>
-                    <tr>
-                        <td [class.new-field]="row.new_data[field.name] !== row.old_data[field.name]">{{row.new_data[field.name]}}</td>
-                    </tr>
-                </ng-template>
-            </ngx-datatable-column>
-        </ngx-datatable>
     </div>
     <ng-template #template>
         <div class="container pr-0 pl-0">

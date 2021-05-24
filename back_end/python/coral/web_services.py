@@ -1397,48 +1397,6 @@ def update_core_duplicates():
     web_uploader = EntityDataWebUploader.from_file(batch_id)
     return Response(web_uploader.overwrite_existing_data(), mimetype='text/event-stream')
 
-    batch_id = request.json['batch_id']
-    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
-
-    update_results = []
-    for duplicate in core_duplicates:
-        try:
-            data_holder = EntityDataHolder(type_name, duplicate['data_holder'])
-            ws.update_data(data_holder)
-            update_results.append({'error': False, 'data': duplicate['new_data'], 'message': ''})
-        except Exception as e:
-            print(e)
-            tb.format_exc()
-            # add validation exception to response
-            update_results.append({'error': True, 'data': duplicate['new_data'], 'message': str(e)})
-    
-    return _ok_response(update_results)
-
-
-@app.route('/coral/update_core_process_duplicates', methods=["POST"])
-@auth_required
-def update_core_process_duplicates():
-    batch_id = request.json['batch_id']
-    overwrite_processes = request.json['overwrite']
-    
-    upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
-
-    with open(upload_result_path) as f:
-        upload_result = json.loads(f.read())
-        process_duplicates = upload_result['process_warnings']
-
-    ws = svs['workspace']
-    indexdef = svs['indexdef']
-
-    index_type_def = indexdef.get_type_def(TYPE_NAME_PROCESS)
-    index_type_def._ensure_init_index()
-
-    # update_results = []
-    # for duplicate in process_duplicates:
-
-    return _ok_response({'test': 'test'})
-
-
 def _save_brick_proto(brick, file_name):
     data_json = brick.to_json()
     data = json.loads(data_json)
