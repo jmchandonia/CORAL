@@ -291,6 +291,7 @@ class Workspace:
     def _update_object(self, data_holder):
         # Currently used in UI when users confirm they want to overwrite existing data
         # TODO: Figure out solution for upserting rather than erasing old data
+        doc = IndexDocument.build_index_doc(data_holder)
         if type(data_holder) is EntityDataHolder:
             aql = """
                 FOR x IN @@collection
@@ -300,8 +301,8 @@ class Workspace:
 
             aql_bind = {
                 '@collection': TYPE_CATEGORY_STATIC + data_holder.type_name,
-                'pk_id': data_holder.id,
-                'doc': data_holder.data
+                'pk_id': data_holder.data['id'],
+                'doc': doc
             }
             self.__arango_service.db.AQLQuery(aql, bindVars=aql_bind)
         else:
@@ -359,7 +360,6 @@ class Workspace:
             'type_name': type_name,
             'upk_id': upk_id
         }
-        # print(str(aql_bind))
 
         res = self.__arango_service.find(aql,aql_bind)
         if len(res) == 0:
@@ -455,7 +455,7 @@ class Workspace:
 class EntityDataWebUploader:
 
 
-    def __init__(self, data_id, type_name, core_tsv, process_tsv=None):
+    def __init__(self, data_id, type_name, core_tsv, process_tsv=None, warnings=None, process_warnings=None):
         # hash table for core types with errors
         self.__error_items = {}
         self.results = {
@@ -470,10 +470,45 @@ class EntityDataWebUploader:
         self.__type_def = services.typedef.get_type_def(self.__type_name)
         self.__upk_property_name = self.__type_def.upk_property_name
         self.__data_id = data_id
+        self.__warnings = None
+        self.__process_warnings = None
 
-        self.__core_df = pd.read_csv(core_tsv, sep='\t').replace({np.nan: None})
+        if core_tsv is not None:
+            self.__core_df = pd.read_csv(core_tsv, sep='\t').replace({np.nan: None})
         if process_tsv is not None:
             self.__process_df = pd.read_csv(process_tsv, sep='\t').replace({np.nan: None})
+        else:
+            self.__process_df = None
+
+        # add warnings for core types that were attempted to be uploaded (for overwriting)
+        if warnings is not None:
+            self.__warnings = warnings
+
+        if process_warnings is not None:
+            self.__process_warnings = process_warnings
+
+
+    @staticmethod
+    def from_file(data_id):
+        _UPLOAD_CORE_DATA_PREFIX = 'ucd_'
+        _UPLOAD_CORE_FILE_PREFIX = 'ucf_'
+        _UPLOAD_PROCESS_FILE_PREFIX = 'upf_'
+        TMP_DIR = os.path.join(services._DATA_DIR, 'tmp')
+
+        # get type name
+        tmp_results = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + data_id)
+        with open(tmp_results, 'r') as f:
+            results = json.load(f)
+            type_name = results['type_name']
+            warning_results = results['warnings']
+            process_warning_results = results['process_warnings']
+
+        return EntityDataWebUploader(data_id,
+                                    type_name,
+                                    None,
+                                    None,
+                                    warnings=warning_results,
+                                    process_warnings=process_warning_results)
 
     def upload_standalone_core_types(self):
         # upload core types that do not require connecting upstream processes
@@ -498,7 +533,7 @@ class EntityDataWebUploader:
                     yield 'data: warning--{}\n\n'.format(ie.message)
                 else:
                     self.results['success'].append(dh.data)
-                    yield 'data: succeess--\n\n'
+                    yield 'data: success--\n\n'
 
             except ValueError as e:
                 self.results['errors'].append({
@@ -515,8 +550,9 @@ class EntityDataWebUploader:
     def upload_core_types_with_processes(self):
 
         self._validate_core_items()
-        # n_rows = self.__core_df.shape[0] + self.__process_df.shape[0]
-        n_rows = self.__core_df.shape[0]
+
+        n_rows = self.__process_df['output_objects'].str.count(',').add(2).sum()
+        completed_rows = 0
 
         for ri, row in self.__process_df.iterrows():
             yield "data: progress--{}\n\n".format(ri / n_rows)
@@ -613,7 +649,8 @@ class EntityDataWebUploader:
                     'old_data': process_warning['old_data'],
                     'new_data': process_warning['new_data'],
                     'dataholder': pdh.data,
-                    'output_data_holders': [dh.data for dh in ok_outputs]
+                    # 'output_data_holders': [dh.data for dh in ok_outputs]
+                    'output_data_holders': self._get_output_data_holders(pdh, output_objects)
                 })
                 has_warnings = True
 
@@ -634,21 +671,24 @@ class EntityDataWebUploader:
                     self.results['process_warnings'].append({
                         'message': 'The process was fine but the outputs have warnings',
                         'old_data': pdh.data,
-                        'new_data': pdh.data
+                        'new_data': pdh.data,
+                        'dataholder': pdh.data,
+                        'output_data_holders': self._get_output_data_holders(pdh, output_objects)
                     })
                     yield "data: warning--\n\n"
                 continue
 
             for output in ok_outputs:
-                if not output.data['id']:
+                if 'id' not in output.data:
                     services.workspace.save_data(output)
                 self.results['success'].append(output.data)
                 yield "data: success--\n\n"
 
-            if not pdh.data['id']:
+            if 'id' not in pdh.data:
                 services.workspace.save_process(pdh, update_object_ids=True)
 
-            # yield "data: progress--{}\n\n".format((ri + 1 + len(ok_outputs)) / n_rows)
+            completed_rows += len(output_objects) + 1
+            yield "data: progress--{}\n\n".format(completed_rows / n_rows)
 
         self._save_tmp_file()
         yield "data: complete--{}\n\n".format(self.__data_id)
@@ -657,6 +697,17 @@ class EntityDataWebUploader:
         for input_object in input_objects:
             input_type_name, input_upk_id = pdh.get_process_id(input_object)
             services.workspace._get_pk_id(input_type_name, input_upk_id)
+
+    def _get_output_data_holders(self, pdh, output_objects):
+        output_data_holders = []
+        for output_object in output_objects:
+            _, oid = pdh.get_process_id(output_object)
+            data = self._get_data(oid)
+            pk_id = services.workspace._get_pk_id_or_none(self.__type_name, oid)
+            if pk_id is not None:
+                data['id'] = pk_id
+            output_data_holders.append(data)
+        return output_data_holders
 
     def _get_output_errors(self, pdh, output_objects):
         output_errors = {}
@@ -774,25 +825,24 @@ class EntityDataWebUploader:
                 items_match = False
 
         # match upstream objects
-        for ii, input_db_object in enumerate(saved_process['input_objects']):
-            try:
+        if len(saved_process['input_objects']) != len(input_objects):
+            items_match = False
+        else:
+            for ii, input_db_object in enumerate(saved_process['input_objects']):
                 db_upk = self._get_upk_id(input_db_object)
                 input_upk_fmt = '%s:%s' % db_upk
                 if input_upk_fmt != '%s:%s' % input_objects[ii]:
                     items_match = False
-            except IndexError:
-                # if the number of items in array dont match then its automatically false
-                items_match = False
 
         # match downstream objects
-        for oi, output_db_object in enumerate(saved_process['output_objects']):
-            try:
+        if len(saved_process['output_objects']) != len(output_objects):
+            items_match = False
+        else:
+            for oi, output_db_object in enumerate(saved_process['output_objects']):
                 db_upk = self._get_upk_id(output_db_object)
                 output_upk_fmt = '%s:%s' % db_upk
                 if output_upk_fmt != '%s:%s' % output_objects[oi]:
                     items_match = False
-            except IndexError:
-                items_match = False
 
         if items_match:
             return None, None
@@ -862,10 +912,106 @@ class EntityDataWebUploader:
                     'message': str(e)
                 }
 
-    def _save_tmp_file(self):
+    def overwrite_existing_data(self):
+        if len(self.__process_warnings) == 0:
+            return self.overwrite_standalone_core_types()
+
+        n_rows = 0
+        for process_warning in self.__process_warnings:
+            n_rows += (1 + len(process_warning['output_data_holders']))
+        completed_rows = 0
+        for process_warning in self.__process_warnings:
+            # overwrite outputs first
+            pdh = ProcessDataHolder(process_warning['dataholder'])
+            existing_processes = []
+            for output in process_warning['output_data_holders']:
+                output_dh = EntityDataHolder(self.__type_name, output)
+                # check if ID exists
+                if 'id' in output_dh.data:
+                    services.workspace.update_data(output_dh)
+                    # check to see if theres an upstream process already (for seeing if theres more than 1)
+                    index_def = services.indexdef.get_type_def(self.__type_name)
+                    saved_processes = services.arango_service.get_up_processes(index_def, output_dh.data['id'])
+                    if len(saved_processes) == 0:
+                        # in case processes were already deleted from a previous update
+                        continue
+                    saved_process = saved_processes[0]
+                    process_id = saved_process['id']
+                    if process_id not in existing_processes:
+                        existing_processes.append(process_id)
+                else:
+                    services.workspace.save_data(output_dh)
+
+            # delete existing processes and save new one
+            for existing_process in existing_processes:
+                self._delete_process(existing_process)
+
+            services.workspace.save_process(pdh, update_object_ids=True)
+            completed_rows += (1 + len(process_warning['output_data_holders']))
+            yield 'data: progress--{}\n\n'.format(completed_rows / n_rows)
+
+        self._update_tmp_file()
+        yield 'data: complete--\n\n'
+
+    def overwrite_standalone_core_types(self):
+        n_rows = len(self.__warnings)
+        for i, warning in enumerate(self.__warnings):
+            dataholder = EntityDataHolder(self.__type_name, warning['new_data'])
+            services.workspace.update_data(dataholder)
+            yield "data: progress--{}\n\n".format((i + 1) / n_rows)
+        yield "data: complete--\n\n"
+
+    def _delete_process(self, process_id):
+        # delete system process inputs(s)
+        aql_bind = {
+            'id': 'SYS_Process/%s' % process_id
+            }
+        aql = "FOR pi IN SYS_ProcessInput FILTER pi._to == @id REMOVE pi IN SYS_ProcessInput"
+        services.arango_service.db.AQLQuery(aql, bindVars=aql_bind)
+
+        # delete input object
+        aql = "FOR po in SYS_ProcessOutput FILTER po._from == @id REMOVE po IN SYS_ProcessOutput"
+        services.arango_service.db.AQLQuery(aql, bindVars=aql_bind)
+
+        # delete actual process
+        aql = "FOR x in SYS_Process FILTER x._id == @id REMOVE x IN SYS_Process"
+        services.arango_service.db.AQLQuery(aql, bindVars=aql_bind)
+
+    def _update_process_output(type_name, output_id, process_id):
+        aql = '''
+            FOR po IN SYS_ProcessOutput
+            FILTER po._to == @output
+            UPDATE { _from: @process } IN SYS_ProcessOutput
+        '''
+        aql_bind = {
+            'output': 'SDT_%s/%s' % (type_name, output_id),
+            'process': 'SYS_Process/%s' % process_id
+        }
+        services.arango_service.AQLQuery(aql, aql_bind)
+
+    def _update_tmp_file(self):
+        # update results to move warnings to success columns after overwriting
         _UPLOAD_CORE_DATA_PREFIX = 'ucd_'
         TMP_DIR = os.path.join(services._DATA_DIR, 'tmp')
 
-        tmp_batch_file = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + self.__data_id)
-        with open(tmp_batch_file, 'w') as f:
+        tmp_results = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + self.__data_id)
+
+        with open(tmp_results, 'r') as f:
+            data = json.load(f)
+
+        data['success'].extend(data['warnings'])
+        data['warnings'].clear()
+        data['process_warnings'].clear()
+
+        with open(tmp_results, 'w') as f:
+            json.dump(data, f, indent=4, sort_keys=False)
+
+    def _save_tmp_file(self):
+        _UPLOAD_CORE_DATA_PREFIX = 'ucd_'
+        _UPLOAD_CORE_FILE_PREFIX = 'ucf_'
+        _UPLOAD_PROCESS_FILE_PREFIX = 'upf_'
+        TMP_DIR = os.path.join(services._DATA_DIR, 'tmp')
+
+        tmp_results = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + self.__data_id)
+        with open(tmp_results, 'w') as f:
             json.dump(self.results, f, indent=4, sort_keys=False)
