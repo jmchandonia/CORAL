@@ -322,11 +322,27 @@ export class UploadService {
   }
 
   updateCoreTypeDuplicates(batchId: string) {
-    return this.http.post(`${environment.baseURL}/update_core_duplicates`, {batch_id: batchId});
-  }
+    const formData: FormData = new FormData()
+    formData.append('batch_id', batchId)
 
-  updateProcessDuplicates(batchId: string, overwrite: boolean) {
-    return this.http.post(`${environment.baseURL}/update_core_process_duplicates`, {batch_id: batchId, overwrite})
+    return new Observable((subscriber) => {
+      const token = localStorage.getItem('authToken');
+      const eventSource: SSE = new SSE(`${environment.baseURL}/update_core_duplicates`, {
+        method: 'POST',
+        payload: formData,
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      eventSource.stream();
+  
+      eventSource.onmessage = (event) => {
+        this.zone.run(() => {
+          subscriber.next(event);
+          if (event.data.includes('complete--')) {
+            eventSource.close();
+          }
+        })
+      }
+    })
   }
 
   getCoreTypeUploadResults(id: string) {

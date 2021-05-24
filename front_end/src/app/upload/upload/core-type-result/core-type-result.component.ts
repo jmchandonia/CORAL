@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import { Response } from 'src/app/shared/models/response';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-core-type-result',
   templateUrl: './core-type-result.component.html',
@@ -20,7 +21,9 @@ export class CoreTypeResultComponent implements OnInit {
     private modalService: BsModalService
   ) { }
 
+  public updateProgressStream: Subscription;
   public updatingDuplicates = false;
+  public updateProgress = 0;
   public duplicateResults: any;
   public duplicateUpdateErrors: number;
   public processDuplicateResults: any;
@@ -50,6 +53,10 @@ export class CoreTypeResultComponent implements OnInit {
   public processWarningResultFields: any[];
 
   ngOnInit(): void {
+    this.getResults();
+  }
+
+  getResults() {
     this.spinner.show('spinner')
     this.route.params.subscribe(params => {
       this.batchId = params['batchId'];
@@ -99,32 +106,21 @@ export class CoreTypeResultComponent implements OnInit {
   }
 
   updateAllDuplicates() {
-    this.modalRef.hide();
+    this.updatingDuplicates = true;
+    this.updateProgressStream = this.uploadService.updateCoreTypeDuplicates(this.batchId)
+      .subscribe((event: {data: string}) => {
+        const [eventType, message] = event.data.split('--');
 
-    this.modalService.onHidden.subscribe(() => {
-      this.updatingDuplicates = true;
-      this.spinner.show('updatingDuplicates');
-      this.uploadService.updateCoreTypeDuplicates(this.batchId)
-        .subscribe((data: Response<any>) => {
-          this.duplicateResults = data.results;
-          this.updatingDuplicates = false;
-          this.spinner.hide('updatingDuplicates');
+        if (eventType === 'progress') {
+          this.updateProgress = (+message * 100);
+        } else if (eventType === 'complete') {
+          this.updateProgressStream.unsubscribe();
+          this.modalRef.hide();
+          this.getResults();
+        }
 
-          // get number of successful uploads for UI
-          this.duplicateUpdateErrors = this.duplicateResults.reduce((a, c) => c.error ? a + 1 : a, 0)
-        })
-    })
-  }
-
-  saveWithoutUpdatingProcesses() {
-    this.uploadService.updateProcessDuplicates(this.batchId, false)
-      .subscribe((data: Response<any>) => {
-      });
-  }
-
-  saveAndUpdateProcesses() {
-    this.uploadService.updateProcessDuplicates(this.batchId, true)
-      .subscribe((data: Response<any>) => {
+        // get number of successful uploads for UI
+        // this.duplicateUpdateErrors = this.duplicateResults.reduce((a, c) => c.error ? a + 1 : a, 0)
       })
   }
 

@@ -1393,18 +1393,12 @@ def get_core_type_results(batch_id):
 @auth_required
 def update_core_duplicates():
     # Overwrite existing uploads after prompting warning window to user
+    batch_id = request.form['batch_id']
+    web_uploader = EntityDataWebUploader.from_file(batch_id)
+    return Response(web_uploader.overwrite_existing_data(), mimetype='text/event-stream')
+
     batch_id = request.json['batch_id']
     upload_result_path = os.path.join(TMP_DIR, _UPLOAD_CORE_DATA_PREFIX + batch_id)
-
-    with open(upload_result_path) as f:
-        upload_result = json.loads(f.read())
-        core_duplicates = upload_result['warnings']
-        type_name = upload_result['type_name']
-
-    ws = svs['workspace']
-    indexdef = svs['indexdef']
-    index_type_def = indexdef.get_type_def(type_name)
-    index_type_def._ensure_init_index()
 
     update_results = []
     for duplicate in core_duplicates:

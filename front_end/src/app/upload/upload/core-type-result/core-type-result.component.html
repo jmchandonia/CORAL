@@ -204,19 +204,10 @@
         <div class="col-12">
             <h3>{{processWarningResults.length}} Process Warnings</h3>
             <div class="row">
-                <div class="alert alert-warning col-8">
+                <div class="alert alert-warning col-12">
                     Processes from your upload have duplicate IDs with some processes that already exist in the system and have not been updated. Core uploads associated with the processes have not been updated. Review the list below to see the changes and update your process file if any data is entered incorrectly.
                 </div>
-                <div class="col-4">
-                    <div class="row justify-content-center mt-3">
-                        <button class="btn btn-primary col-10" (click)="saveWithoutUpdatingProcesses()">Add items to existing processes</button>
-                    </div>
-                    <div class="row justify-content-center mt-2">
-                        <button class="btn btn-secondary col-10" (click)="saveAndUpdateProcesses()">Update Processes</button>
-                    </div>
-                </div>
             </div>
-            <!-- TODO: update processes in system and then core types (button should go here) -->
         </div>
         <ngx-datatable
             style="width: 100%"
@@ -250,3 +241,34 @@
             </ngx-datatable-column>
         </ngx-datatable>
     </div>
+    <ng-template #template>
+        <div class="container pr-0 pl-0">
+            <div class="modal-header modal-header-warning">
+                <h3 style="float: left; margin-bottom:0">Confirm Overwrite</h3>
+                <span style="float: right;">
+                    <i class="material-icons" style="font-size: 1.75rem;">report_problem</i>
+                </span>
+            </div>
+            <div class="modal-body">
+                <span>
+                    This action will overwrite {{warningResults.length}} items
+                    <ng-container *ngIf="processWarningResults?.length">
+                         and {{processWarningResults.length}} processes
+                    </ng-container> in the system. Do you want to continue?
+                </span>
+                <div class="row mt-2" *ngIf="updatingDuplicates">
+                    <div class="col-12">
+                        <progressbar max="100" value="updateProgress"></progressbar>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-4">
+                        <button class="btn btn-primary" (click)="updateAllDuplicates()" style="width: 100%">Update Items</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-secondary" (click)="cancel()" style="width: 100%;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
