@@ -824,24 +824,28 @@ class EntityDataWebUploader:
             if saved_process[k] != v:
                 items_match = False
 
-        # match upstream objects
+        # Format input and output objects to upk id for comparison with incoming data
+        # change formats to upk id for displaying comparison results in UI
+        saved_process['input_objects'] = ['%s:%s' % self._get_upk_id(i) for i in saved_process['input_objects']]
+        process_doc['input_objects'] = ['%s:%s' % i for i in input_objects]
+
+        saved_process['output_objects'] = ['%s:%s' % self._get_upk_id(o) for o in saved_process['output_objects']]
+        process_doc['output_objects'] = ['%s:%s' % o for o in output_objects]
+
+        # compare upstream objects
         if len(saved_process['input_objects']) != len(input_objects):
-            items_match = False
+            items_match = false
         else:
-            for ii, input_db_object in enumerate(saved_process['input_objects']):
-                db_upk = self._get_upk_id(input_db_object)
-                input_upk_fmt = '%s:%s' % db_upk
-                if input_upk_fmt != '%s:%s' % input_objects[ii]:
+            for ii, input_object in enumerate(saved_process['input_objects']):
+                if input_object != process_doc['input_objects'][ii]:
                     items_match = False
 
-        # match downstream objects
+        # compare downstream objects
         if len(saved_process['output_objects']) != len(output_objects):
             items_match = False
         else:
-            for oi, output_db_object in enumerate(saved_process['output_objects']):
-                db_upk = self._get_upk_id(output_db_object)
-                output_upk_fmt = '%s:%s' % db_upk
-                if output_upk_fmt != '%s:%s' % output_objects[oi]:
+            for oi, output_object in enumerate(saved_process['output_objects']):
+                if output_object != process_doc['output_objects'][oi]:
                     items_match = False
 
         if items_match:
@@ -999,7 +1003,7 @@ class EntityDataWebUploader:
         with open(tmp_results, 'r') as f:
             data = json.load(f)
 
-        data['success'].extend(data['warnings'])
+        data['success'].extend([d['new_data'] for d in data['warnings']])
         data['warnings'].clear()
         data['process_warnings'].clear()
 

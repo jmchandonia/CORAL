@@ -86,7 +86,7 @@ export class CoreTypeResultComponent implements OnInit {
           if (this.processWarningResults.length) {
             this.processWarningResultFields = Object.keys(results['process_warnings'][0]['old_data'])
               .map(d => ({prop: d, name: d}))
-              .filter(d => !d.name.startsWith('_') && !d.name.includes('_objects'))
+              .filter(d => !d.name.startsWith('_'))
           }
 
           this.propertyUnits = results['property_units'];
