@@ -76,7 +76,7 @@
       "fields": []
     },
     {
-      "name": "Well",
+      "name": "Location",
       "term": "DA:0000041",
       "used_for_provenance": true,
       "fields": [
@@ -168,11 +168,11 @@
           "UPK": true
         },
         {
-          "name": "well",
+          "name": "location",
           "type_term": "ME:0000228",
           "scalar_type": "text",
           "required": true,
-          "FK": "Well.name"
+          "FK": "Location.name"
         },
         {
           "name": "depth",
@@ -200,7 +200,7 @@
           "name": "time",
           "type_term": "ME:0000010",
           "scalar_type": "text",
-          "constraint": "\\d\\d(:\\d\\d(:\\d\\d)?)?\\s*([apAP][mM])?",
+          "constraint": "\\d(\\d)?(:\\d\\d(:\\d\\d)?)?\\s*([apAP][mM])?",
           "comment": "HH[:MM[:SS]] [AM|PM]"
         },
         {
@@ -229,7 +229,7 @@
         }
       ],
       "process_types": ["PROCESS:0000002"],
-      "process_inputs": [["Well"]]
+      "process_inputs": [["Location"]]
     },
     {
       "name": "Taxon",

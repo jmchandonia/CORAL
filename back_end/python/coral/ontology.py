@@ -377,8 +377,8 @@ class Ontology:
         else:
             aql = 'FOR x IN %s FILTER %s RETURN x' % (aql_fulltext, aql_filter )
         
-        # print('aql=%s' % aql)
-        # print('aql_bind:', aql_bind)
+        # sys.stderr.write('aql: '+str(aql)+'\n')
+        # sys.stderr.write('aql_bind:'+str(aql_bind)+'\n')
         result_set =  self.__arango_service.find(aql, aql_bind, size)
 
         return self.__build_terms(result_set)
@@ -411,9 +411,15 @@ class Ontology:
         return terms
 
 
+    # finds first matching term
     def __find_term(self, aql_filter, aql_bind):
         terms = self.__find_terms(aql_filter, aql_bind)
         return terms[0] if len(terms) > 0 else None
+
+    # finds matching term if unambiguous; otherwise, None
+    def __find_term_unambiguous(self, aql_filter, aql_bind):
+        terms = self.__find_terms(aql_filter, aql_bind)
+        return terms[0] if len(terms) == 1 else None
 
     def __find_terms_hash(self, aql_filter, aql_bind):
         terms_hash = {}
@@ -485,6 +491,14 @@ class Ontology:
     def find_name(self, term_name, parent_term_id=None):
         aql_bind = {'term_name': term_name }
         aql_filter = 'x.term_name == @term_name'
+        if parent_term_id is not None and parent_term_id != '':
+            aql_bind['parent_term_id'] = parent_term_id
+            aql_filter += ' and @parent_term_id in x.parent_path_term_ids'
+        return self.__find_term(aql_filter, aql_bind)
+
+    def find_name_case_insensitive(self, term_name, parent_term_id=None):
+        aql_bind = {'term_name': term_name.lower() }
+        aql_filter = 'LOWER(x.term_name) == @term_name'
         if parent_term_id is not None and parent_term_id != '':
             aql_bind['parent_term_id'] = parent_term_id
             aql_filter += ' and @parent_term_id in x.parent_path_term_ids'
