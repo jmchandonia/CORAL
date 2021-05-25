@@ -1313,6 +1313,9 @@ def get_core_type_names():
 def get_provenance(type_name):
     type_def = svs['typedef'].get_type_def(type_name)
 
+    if not type_def.for_provenance:
+        return _ok_response({'requires_processes': False})
+
     requires_processes = False
     # check if entity is "top-level" and requires no input processes
     # TODO: remove specific checks for 'ENIGMA' and create is_root property
