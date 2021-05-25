@@ -48,6 +48,8 @@ ENIGMA
     Spring 2019 Integrated Sampling
       alias: GeoDD
       alias: Geochemistry/Geophysics Deep Dive
+    Cone Penetrometer Survey
+      alias: CPT
   ENIGMA Labs and Personnel:
     alias: ENIGMA PI
     Adams Lab
