@@ -258,7 +258,7 @@
                 </span>
                 <div class="row mt-2" *ngIf="updatingDuplicates">
                     <div class="col-12">
-                        <progressbar max="100" value="updateProgress"></progressbar>
+                        <progressbar max="100" [value]="updateProgress"></progressbar>
                     </div>
                 </div>
                 <div class="row mt-4">

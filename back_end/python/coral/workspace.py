@@ -519,7 +519,7 @@ class EntityDataWebUploader:
                 data = row.to_dict()
                 dh = EntityDataHolder(self.__type_name, data)
                 services.workspace.save_data_if_not_exists(dh, preserve_logs=True)
-                result_data['success'].append(dh.data)
+                self.results['success'].append(dh.data)
                 yield "data: success--\n\n"
 
             except ItemAlreadyExistsException as ie:
@@ -918,7 +918,13 @@ class EntityDataWebUploader:
 
     def overwrite_existing_data(self):
         if len(self.__process_warnings) == 0:
-            return self.overwrite_standalone_core_types()
+            n_rows = len(self.__warnings)
+            for i, warning in enumerate(self.__warnings):
+                dataholder = EntityDataHolder(self.__type_name, warning['data_holder'])
+                services.workspace.update_data(dataholder)
+                yield "data: progress--{}\n\n".format((i + 1) / n_rows)
+            yield "data: complete--\n\n"
+            return
 
         n_rows = 0
         for process_warning in self.__process_warnings:
@@ -956,14 +962,6 @@ class EntityDataWebUploader:
 
         self._update_tmp_file()
         yield 'data: complete--\n\n'
-
-    def overwrite_standalone_core_types(self):
-        n_rows = len(self.__warnings)
-        for i, warning in enumerate(self.__warnings):
-            dataholder = EntityDataHolder(self.__type_name, warning['new_data'])
-            services.workspace.update_data(dataholder)
-            yield "data: progress--{}\n\n".format((i + 1) / n_rows)
-        yield "data: complete--\n\n"
 
     def _delete_process(self, process_id):
         # delete system process inputs(s)
