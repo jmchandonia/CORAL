@@ -519,7 +519,7 @@ class EntityDataWebUploader:
                 data = row.to_dict()
                 dh = EntityDataHolder(self.__type_name, data)
                 services.workspace.save_data_if_not_exists(dh, preserve_logs=True)
-                result_data['success'].append(dh.data)
+                self.results['success'].append(dh.data)
                 yield "data: success--\n\n"
 
             except ItemAlreadyExistsException as ie:
@@ -587,14 +587,14 @@ class EntityDataWebUploader:
                     self.results['process_errors'].append({
                         'data': pdh.data,
                         # TODO: give real error messages
-                        'message': 'process was fine but at least 1 core type was bad'
+                        'message': 'At least one core type connected to this process was malformed'
                     })
             except ValueError as e:
                 has_errors = True
                 self.results['process_errors'].append({
                     'data': pdh.data,
                     # TODO: remove something was wrong bit
-                    'message': 'something was wrong with the process: %s' % str(e)
+                    'message': str(e)
                 })
 
             # add errors for core types if theyre not good
@@ -609,8 +609,7 @@ class EntityDataWebUploader:
                         try:
                             output_data = self._get_data(output_upk_id)
                             self.results['errors'].append({
-                                # TODO: add better error message
-                                'message': 'this item was fine but something else connected to it wasnt',
+                                'message': 'At least one parent process or sibling item was malformed',
                                 'data': output_data
                             })
                         except Exception as e:
@@ -661,7 +660,7 @@ class EntityDataWebUploader:
                 # TODO: figure out formatting for error result schema, It might need to be different than whats added here
                 for ok_output in ok_outputs:
                     self.results['warnings'].append({
-                        'message': 'This object was fine but sibling objects had warnings',
+                        'message': 'At least one parent process or sibling object related to this item has a conflict in the system.',
                         'old_data': ok_output.data,
                         'new_data': ok_output.data
                     })
@@ -669,7 +668,7 @@ class EntityDataWebUploader:
 
                 if process_warning is None:
                     self.results['process_warnings'].append({
-                        'message': 'The process was fine but the outputs have warnings',
+                        'message': 'At least one output object from this process has a conflict with an existing object in the system',
                         'old_data': pdh.data,
                         'new_data': pdh.data,
                         'dataholder': pdh.data,
@@ -918,7 +917,13 @@ class EntityDataWebUploader:
 
     def overwrite_existing_data(self):
         if len(self.__process_warnings) == 0:
-            return self.overwrite_standalone_core_types()
+            n_rows = len(self.__warnings)
+            for i, warning in enumerate(self.__warnings):
+                dataholder = EntityDataHolder(self.__type_name, warning['data_holder'])
+                services.workspace.update_data(dataholder)
+                yield "data: progress--{}\n\n".format((i + 1) / n_rows)
+            yield "data: complete--\n\n"
+            return
 
         n_rows = 0
         for process_warning in self.__process_warnings:
@@ -956,14 +961,6 @@ class EntityDataWebUploader:
 
         self._update_tmp_file()
         yield 'data: complete--\n\n'
-
-    def overwrite_standalone_core_types(self):
-        n_rows = len(self.__warnings)
-        for i, warning in enumerate(self.__warnings):
-            dataholder = EntityDataHolder(self.__type_name, warning['new_data'])
-            services.workspace.update_data(dataholder)
-            yield "data: progress--{}\n\n".format((i + 1) / n_rows)
-        yield "data: complete--\n\n"
 
     def _delete_process(self, process_id):
         # delete system process inputs(s)
