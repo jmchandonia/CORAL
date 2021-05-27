@@ -103,7 +103,7 @@ class OntologyService:
             try:
                 self.__arango_service.index_doc(doc, OTERM_TYPE, TYPE_CATEGORY_ONTOLOGY)
             except Exception as e:
-                print('ERROR: can not index term: %s - %s' % (doc['term_id'],doc['term_name']), e )
+                print('ERROR: cannot index term: %s - %s' % (doc['term_id'],doc['term_name']), e )
 
     def _get_term(self, term_id_name):
         return Term.get_term(term_id_name)
@@ -1010,6 +1010,17 @@ class Term:
     @property
     def _parent_terms(self):
         return self.__parent_terms
+
+    def find_ufk_value(self, value):
+        aql = 'FOR x IN @@collection FILTER x.@prop_name == @prop_value RETURN x'
+        category_name = services.typedef.get_type_category_name(self.microtype_fk_core_type)
+        aql_bind = {
+            '@collection': category_name + self.microtype_fk_core_type,
+            'prop_name': self.microtype_fk_core_prop_name,
+            'prop_value': value
+        }
+        result = services.arango_service.find(aql, aql_bind)
+        return result[0] if len(result) else None
 
     def _update_parents(self, terms):
         self.__parent_terms = []
