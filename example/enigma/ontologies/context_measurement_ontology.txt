@@ -17,6 +17,7 @@
       MIME type
     *Description (String)
     Link (String)
+    Experimental Process (ORef: PROCESS:0000001)
     +Person
     +Campaign
     +Input
