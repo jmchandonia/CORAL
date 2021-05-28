@@ -9,7 +9,7 @@
         type="ball-spin-fade-rotating"
     ></ngx-spinner>
     <div class="row">
-        <div class="col-12" *ngIf="successResults?.length">
+        <!-- <div class="col-12" *ngIf="successResults?.length">
             <h3>{{successResults.length}} Successful Uploads</h3>
             <div class="alert alert-success">
                 The following items were successfully added to the system, or were skipped because they already existed in the system with the same values.
@@ -34,10 +34,16 @@
                     </ng-template>
                 </ngx-datatable-column>
             </ngx-datatable>
+        </div> -->
+        <div class="col-12" *ngIf="successResults > 0">
+            <div class="alert alert-success">
+                {{successResults}} items were successfully added to the system, or were skipped because they already existed in the system with the same values.
+            </div>
         </div>
-        <div class="col-12" *ngIf="successResults && !successResults.length">
+        <!-- <div class="col-12" *ngIf="successResults && !successResults.length"> -->
+        <div class="col-12" *ngIf="successResults === 0">
             <div class="alert alert-danger">
-                0 items were upload successfully.
+                0 items were uploaded successfully.
             </div>
         </div>
     </div>
