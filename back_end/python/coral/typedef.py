@@ -1,9 +1,7 @@
 import re
 import json
 from .ontology import Term
-
-# TODO
-# from . import services
+from . import services
 
 TYPE_CATEGORY_STATIC   = 'SDT_'
 TYPE_CATEGORY_DYNAMIC  = 'DDT_'
@@ -268,6 +266,10 @@ class TypeDef:
             else:
                 pdef.validate(value)
 
+            # validate that FKs exist
+            if value is not None and pdef.has_term_id:
+                pdef.validate_ufk_property_def(value)
+
         # check that there are no undeclared properties
         for pname in data:
             if pname not in self.__property_defs:
@@ -277,7 +279,6 @@ class TypeDef:
 
 class PropertyDef:
     def __init__(self, type_def, pdef_doc):
-
         # print('Doing property:', pdef_doc['name'])
         self.__type_def = type_def
         self.__name = pdef_doc['name']
@@ -288,7 +289,7 @@ class PropertyDef:
         self.__pk = 'PK' in pdef_doc and pdef_doc['PK'] == True
         self.__fk = 'FK' in pdef_doc and pdef_doc['FK'] == True
         self.__upk = 'UPK' in pdef_doc and pdef_doc['UPK'] == True
-        self.__term_id = pdef_doc['type_term'] if 'type_term' in pdef_doc else False
+        self.__term_id = pdef_doc['type_term'] if 'type_term' in pdef_doc else None
         self.__units_term_id = pdef_doc['units_term'] if 'units_term' in pdef_doc else None
 
         self.__property_validator = _PROPERTY_VALIDATORS[self.__type](
@@ -359,9 +360,22 @@ class PropertyDef:
     def validate(self, value):
         self.__property_validator.validate(self.__name, value)
 
-    # TODO
-    # validate FK format
-    # validate_entity_process(self, entity_type, process_type, process_data):
+    def validate_ufk_property_def(self, value):
+        # upks won't exist yet because theyre being validated
+        if self.is_upk:
+            return
+        # ensure property_microtype has an item that already exists with value
+        try:
+            term = services.term_provider.get_term(self.term_id)
+        except:
+            # TODO: remove this try/catch after fixing bug with process term id
+            return
+
+        if term.is_ufk:
+            result = term.find_ufk_value(value)
+            if result is None:
+                raise ValueError('No %s with %s "%s" found in the system'
+                    % (self.name, term.term_name, value))
 
 
 class TypeDefService:
@@ -400,6 +414,14 @@ class TypeDefService:
                     term_props.append(prop_def)
 
         # self.__type_defs[TYPE_NAME_BRICK] = None
+
+    def get_type_category_name(self, type_name):
+        if type_name == 'Brick' or type_name == 'Generic':
+            return TYPE_CATEGORY_DYNAMIC
+        try:
+            return self.__type_defs[type_name].category
+        except:
+            raise ValueError('Type name %s not found in property categories')
 
     def get_type_names(self, category=None):
         names = []
