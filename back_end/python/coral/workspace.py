@@ -463,7 +463,8 @@ class EntityDataWebUploader:
             'warnings': [],
             'process_errors': [],
             'process_warnings': [],
-            'success': [],
+            # 'success': [],
+            'successful_uploads': 0,
             'type_name': type_name # TODO: figure out best way to save type name when youre done
         }
         self.__type_name = type_name
@@ -519,7 +520,8 @@ class EntityDataWebUploader:
                 data = row.to_dict()
                 dh = EntityDataHolder(self.__type_name, data)
                 services.workspace.save_data_if_not_exists(dh, preserve_logs=True)
-                self.results['success'].append(dh.data)
+                # self.results['success'].append(dh.data)
+                self.results['successful_uploads'] += 1
                 yield "data: success--\n\n"
 
             except ItemAlreadyExistsException as ie:
@@ -532,7 +534,8 @@ class EntityDataWebUploader:
                     })
                     yield 'data: warning--{}\n\n'.format(ie.message)
                 else:
-                    self.results['success'].append(dh.data)
+                    # self.results['success'].append(dh.data)
+                    self.results['successful_uploads'] += 1
                     yield 'data: success--\n\n'
 
             except ValueError as e:
@@ -680,7 +683,8 @@ class EntityDataWebUploader:
             for output in ok_outputs:
                 if 'id' not in output.data:
                     services.workspace.save_data(output)
-                self.results['success'].append(output.data)
+                # self.results['success'].append(output.data)
+                self.results['successful_uploads'] += 1
                 yield "data: success--\n\n"
 
             if 'id' not in pdh.data:
@@ -1000,7 +1004,8 @@ class EntityDataWebUploader:
         with open(tmp_results, 'r') as f:
             data = json.load(f)
 
-        data['success'].extend([d['new_data'] for d in data['warnings']])
+        # data['success'].extend([d['new_data'] for d in data['warnings']])
+        data['successful_uploads'] += len(data['warnings'])
         data['warnings'].clear()
         data['process_warnings'].clear()
 
