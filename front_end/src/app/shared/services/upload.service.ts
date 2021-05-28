@@ -298,7 +298,8 @@ export class UploadService {
     const token = localStorage.getItem('authToken');
 
     return new Observable((subscriber) => {
-      const eventSource: SSE = new SSE(`${environment.baseURL}/upload_core_type_tsv`, {
+      // const eventSource: SSE = new SSE(`${environment.baseURL}/upload_core_type_tsv`, {
+      const eventSource: SSE = new SSE(`${environment.baseURL}/upload_core_types`, {
         method: 'POST',
         payload: formData,
         headers: { Authorization: `Bearer ${token}` }
@@ -321,7 +322,27 @@ export class UploadService {
   }
 
   updateCoreTypeDuplicates(batchId: string) {
-    return this.http.post(`${environment.baseURL}/update_core_duplicates`, {batch_id: batchId});
+    const formData: FormData = new FormData()
+    formData.append('batch_id', batchId)
+
+    return new Observable((subscriber) => {
+      const token = localStorage.getItem('authToken');
+      const eventSource: SSE = new SSE(`${environment.baseURL}/update_core_duplicates`, {
+        method: 'POST',
+        payload: formData,
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      eventSource.stream();
+  
+      eventSource.onmessage = (event) => {
+        this.zone.run(() => {
+          subscriber.next(event);
+          if (event.data.includes('complete--')) {
+            eventSource.close();
+          }
+        })
+      }
+    })
   }
 
   getCoreTypeUploadResults(id: string) {
