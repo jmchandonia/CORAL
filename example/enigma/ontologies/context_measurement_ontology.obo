@@ -2097,6 +2097,18 @@ def: "Link to other data, e.g., a DOI or URL." []
 is_a: ME:0000002 ! Experimental Context
 
 [Term]
+id: ME:0000204
+name: Experimental Process
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Category of experimental process used to create a dataset." []
+xref: ORef: PROCESS:0000001
+is_a: ME:0000002 ! Experimental Context
+
+[Term]
 id: ME:0000205
 name: Person
 namespace: measure.ontology
@@ -2362,7 +2374,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Well, borehole, or other defined ENIGMA location." []
-synonym: "Well ID" EXACT []
+synonym: "Location ID" EXACT []
 xref: Ref: DA:0000041.Location.name
 is_a: ME:0000099 ! Environmental Sample Location
 
