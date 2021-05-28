@@ -361,6 +361,9 @@ class PropertyDef:
         self.__property_validator.validate(self.__name, value)
 
     def validate_ufk_property_def(self, value):
+        # upks won't exist yet because theyre being validated
+        if self.is_upk:
+            return
         # ensure property_microtype has an item that already exists with value
         try:
             term = services.term_provider.get_term(self.term_id)
