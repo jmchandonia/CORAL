@@ -40,8 +40,10 @@ export class CoreTypeResultComponent implements OnInit {
   public errorResults: any[];
   public errorResultFields: any[];
 
-  public successResults: any[];
-  public successResultFields: any[] = [];
+  // public successResults: any[];
+  // public successResultFields: any[] = [];
+
+  public successResults: number;
 
   public warningResults: any[];
   public warningResultFields: any[];
@@ -67,10 +69,12 @@ export class CoreTypeResultComponent implements OnInit {
             this.errorResultFields = Object.keys(results['errors'][0]['data']).map(d => ({prop: d, name: d}));
           }
 
-          this.successResults = results['success'];
-          if (this.successResults.length) {
-            this.successResultFields = Object.keys(results['success'][0]).map(d => ({prop: d, name: d}))
-          }
+          // this.successResults = results['success'];
+          // if (this.successResults.length) {
+          //   this.successResultFields = Object.keys(results['success'][0]).map(d => ({prop: d, name: d}))
+          // }
+
+          this.successResults = results['successful_uploads'];
 
           this.warningResults = results['warnings'];
           if (this.warningResults.length) {
