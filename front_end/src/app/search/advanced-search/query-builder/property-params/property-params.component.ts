@@ -31,10 +31,10 @@ export class PropertyParamsComponent implements OnInit {
 
   ngOnInit() {
     this.selectedMatchType = this.queryParam.matchType;
-    this.matchTypes = this.queryBuilder.getOperators();
     const attributes = this.queryBuilder.getAttributes(this.dataType);
     if (this.queryParam.attribute) {
       this.selectedAttribute = this.queryParam.attribute;
+      this.setOperators();
     }
     this.propertyTypes = [...attributes];
    }
@@ -46,6 +46,11 @@ export class PropertyParamsComponent implements OnInit {
   setAttribute(event) {
     this.queryParam.attribute = event.name;
     this.queryParam.scalarType = event.scalar_type
+    this.setOperators();
+  }
+
+  setOperators() {
+    this.matchTypes = this.queryBuilder.getOperators(this.queryParam.scalarType);
   }
 
   setMatchType(event) {
