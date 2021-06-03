@@ -124,6 +124,9 @@ export class LoadComponent implements OnInit, OnDestroy {
     const a = document.createElement('a');
     document.body.appendChild(a);
     a.setAttribute('style', 'display: none');
+    const titleFormat = this.brick.type.text.replace(/ /g, '_');
+    const dateFormat = new Date().toLocaleDateString().replace(/\//g, '_');
+    a.download = `${titleFormat}_${dateFormat}_template.xlsx`;
     a.href = url;
     a.click();
     window.URL.revokeObjectURL(url);
