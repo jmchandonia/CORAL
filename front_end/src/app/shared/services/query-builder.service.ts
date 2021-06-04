@@ -133,9 +133,9 @@ export class QueryBuilderService {
     return this.http.get(`${environment.baseURL}/data_models`);
   }
 
-  getOperators(scalarType: string): string[] {
+  getOperators({scalarType, attribute}): string[] {
     // filter appropriate operators depending on scalar type
-    if (['term', 'text', 'ref', 'object_ref'].includes(scalarType)) {
+    if (['term', 'text', 'ref', 'object_ref'].includes(scalarType) && attribute !== 'date') {
       // text-like operators
       return this.operators.filter(operator => ['=', 'like'].includes(operator));
     } else {
