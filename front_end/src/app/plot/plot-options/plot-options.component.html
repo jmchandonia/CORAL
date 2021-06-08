@@ -74,6 +74,7 @@
   ></app-axis-option>
   <app-axis-option
     id="y-axis"
+    [hideLogScaleOption]="plot.plot_type.name === '1D Heatmap'"
     [axisValidation]="plot.plot_type.axis_data.y"
     [axis]="plot.axes.y"
     [options]="axisOptions"
