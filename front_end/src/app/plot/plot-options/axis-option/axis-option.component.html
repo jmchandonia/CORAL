@@ -42,7 +42,7 @@
                     <label class="form-check-label p-0">Show margins of error (if applicable)</label>
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-6" *ngIf="!hideLogScaleOption">
                   <div class="form-check ml-4">
                     <input type="checkbox" class="form-check-input" [(ngModel)]="axis.logarithmic" [ngModelOptions]="{standalone: true}" />
                     <label class="form-check-label p-0">Display axis logarithmically</label>
