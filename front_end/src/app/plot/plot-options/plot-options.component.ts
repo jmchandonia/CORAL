@@ -177,7 +177,12 @@ export class PlotOptionsComponent implements OnInit {
     if (event.axis_data.z) {
       this.plot.axes.z = new Axis();
     } else {
-      delete this.plot.axes.z;
+      // set data vars to be plotted on y axis instead of z axis
+      if (this.plot.axes?.z) {
+        this.plot.axes.y = this.plot.axes.z;
+        this.setConstrainableDimensions();
+        delete this.plot.axes.z;
+      }
     }
     if (!this.coreTypePlot && !validator.validPlot(this.plot)) {
       this.setConstrainableDimensions();
