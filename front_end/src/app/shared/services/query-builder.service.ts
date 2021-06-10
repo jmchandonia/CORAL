@@ -106,7 +106,7 @@ export class QueryBuilderService {
   }
 
   getCoreTypeMetadata(id) {
-    return this.http.get(`${environment.baseURL}/core_type_metadata/${id}`);
+    return this.http.get(`${environment.baseURL}/core_type_metadata/${id}?include_units=1`);
   }
 
   getCoreTypeProps(name: string) {
