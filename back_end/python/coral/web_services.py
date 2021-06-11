@@ -2942,7 +2942,8 @@ def coral_type_graph():
                     'name': td.name,
                     'dataModel': td.name,
                     'dataType': td.name,
-                    'count': count
+                    'count': count,
+                    '_updated_position': False
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')
@@ -3374,13 +3375,32 @@ def coral_type_graph():
     # combine everything and return graph
     res = {
         'nodes' : nodes,
-        'links' : edges
+        'links' : edges,
+        'cacheKey': cacheKey
     }
 
     # s = pprint.pformat(res,width=999)
     # return s
     cache[cacheKey] = res
     return  _ok_response(res)
+
+@app.route('/coral/set_node_position_cache', methods=['POST'])
+# TODO: this method stores cache only temporarily, work needs to be done in the types_graph method to
+# get the cached positioning to work without recalculating it
+def set_node_position_cache():
+    x = request.json['x']
+    y = request.json['y']
+    cacheKey = request.json['cacheKey']
+    index = request.json['id']
+
+    cache_item = cache[cacheKey]
+    # TODO: not sure why the values need to be transposed like this
+    cache_item['nodes'][index]['x'] = y
+    cache_item['nodes'][index]['y'] = x
+    cache_item['nodes'][index]['_updated_position'] = True
+    cache.set(cacheKey, cache_item)
+
+    return _ok_response({'success': True})
 
 
 @app.route('/coral/dn_process_docs/<obj_id>', methods=['GET'])
