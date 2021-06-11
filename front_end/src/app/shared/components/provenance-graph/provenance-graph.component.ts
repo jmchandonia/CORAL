@@ -19,6 +19,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   clusterNodes: INodeData[] = [];
   @Output() querySelected: EventEmitter<{query: QueryMatch, process?: Process}> = new EventEmitter();
 
+  private cacheKey: string;
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
@@ -113,6 +114,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
+    // set cache key (for repositioning nodes in cache)
+    this.cacheKey = data.cacheKey;
+
     this.calculateScale(data.nodes, data.links);
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
@@ -153,7 +157,12 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
     // add click event to expand cluster nodes
-    this.network.on('release', ({nodes}) => {
+    this.network.on('release', ({nodes, pointer}) => {
+      if (!nodes.length) return;
+
+      // send node position to cache if its been updated by user
+      this.setNodePositionCache(pointer.canvas, nodes[0])
+
       if (!this.isDragging) {
         // if the id in nodes is a string and starts with cluster, open network cluster from id
         if (typeof nodes[0] === 'string' && nodes[0].includes('cluster')) {
@@ -211,6 +220,14 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         this.handleZoomForLargeGraphs(data.nodes);
       }
     });
+}
+
+async setNodePositionCache({x, y}, id) {
+  // TODO: caching new position doesnt account for where mouse is relative to node box
+  await this.homeService.setNodePositionCache(this.cacheKey, id, {
+    x: x / this.xScale,
+    y: y / this.yScale
+  });
 }
 
 handleZoomForLargeGraphs(nodes: INodeData[]) {
