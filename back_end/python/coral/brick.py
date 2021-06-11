@@ -1389,7 +1389,10 @@ class BrickDimension:
         # Build variable
         # type_term = Term(prop_def.term_id, refresh=True)
         type_term = services.term_provider.get_term(prop_def.term_id) 
-        units_term = None
+        if prop_def.has_units_term_id():
+            units_term = services.term_provider.get_term(prop_def.units_term_id)
+        else:
+            units_term = None
         scalar_type = prop_def.type
 
         var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
