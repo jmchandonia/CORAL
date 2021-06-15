@@ -61,6 +61,7 @@
 </div> 
 <div *ngIf="plot.plot_type && !isMap && axisOptions">
   <app-axis-option
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     id="x-axis"
     [axis]="plot.axes.x"
     [axisValidation]="plot.plot_type.axis_data.x"
@@ -74,7 +75,7 @@
   ></app-axis-option>
   <app-axis-option
     id="y-axis"
-    [hideLogScaleOption]="plot.plot_type?.name === '1D Heatmap'"
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     [axisValidation]="plot.plot_type.axis_data.y"
     [axis]="plot.axes.y"
     [options]="axisOptions"
@@ -87,6 +88,7 @@
   ></app-axis-option>
   <app-axis-option
     id="z-axis"
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     *ngIf="plot.plot_type.axis_data.z"
     [axisValidation]="plot.plot_type.axis_data.z"
     [axis]="plot.axes.z"
