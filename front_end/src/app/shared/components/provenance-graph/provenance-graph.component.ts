@@ -223,6 +223,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 }
 
 async setNodePositionCache({x, y}, id) {
+  if (this.clusterNodes.map(node => node.index).includes(id) || typeof id === 'string') {
+    return;
+  }
   // TODO: caching new position doesnt account for where mouse is relative to node box
   await this.homeService.setNodePositionCache(this.cacheKey, id, {
     x: x / this.xScale,
