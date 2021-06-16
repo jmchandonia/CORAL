@@ -2943,7 +2943,6 @@ def coral_type_graph():
                     'dataModel': td.name,
                     'dataType': td.name,
                     'count': count,
-                    '_updated_position': False
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')
@@ -3392,9 +3391,10 @@ def set_node_position_cache():
     index = request.json['id']
 
     cache_item = cache[cacheKey]
-    cache_item['nodes'][index]['x'] = x
-    cache_item['nodes'][index]['y'] = y
-    cache_item['nodes'][index]['_updated_position'] = True
+    for i in range(len(cache_item['nodes'])):
+        if cache_item['nodes'][i]['index'] == index:
+            cache_item['nodes'][i]['x'] = x
+            cache_item['nodes'][i]['y'] = y
     cache.set(cacheKey, cache_item)
 
     return _ok_response({'success': True})
