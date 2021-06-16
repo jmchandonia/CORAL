@@ -7,6 +7,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { INodeData, HomepageNode, HomepageNodeFactory as NodeFactory } from 'src/app/shared/models/provenance-graph/homepage-node';
 import { IEdgeData, HomepageEdgeFactory as EdgeFactory } from 'src/app/shared/models/provenance-graph/homepage-edge';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/models/user';
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
@@ -29,6 +31,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   canvasHeight = 0;
   xScale = 1;
   yScale = 1;
+  user: User;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -57,9 +60,11 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   constructor(
     private homeService: HomeService,
     private spinner: NgxSpinnerService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
+    this.user = this.userService.getUser();
     this.spinner.show('pgraph-loading');
     this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
     .subscribe(() => {
@@ -223,6 +228,11 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 }
 
 async setNodePositionCache({x, y}, id) {
+  // dont cache non-cluster nodes that are outside of the min max bounds
+  const nodesInCluster = this.nodes.get({filter: n => n.cid !== undefined}).map(n => n.id);
+  // non-cluster nodes can always be cached because they dont force the network to zoom out
+  if (!nodesInCluster.includes(id) && this.outsideBounds(x, y)) return;
+
   if (typeof id === 'string') {
     // hack to fix cluster nodes with IDs that are assigned by VisJS library
     const [root] = this.network
@@ -239,6 +249,27 @@ async setNodePositionCache({x, y}, id) {
     x: x / this.xScale,
     y: y / this.yScale
   });
+}
+
+async clearNodePositionCache() {
+  await this.homeService.deleteNodePositionCache(this.cacheKey);
+}
+
+private outsideBounds(x, y) {
+  // get highest and lowest node coords
+  const nodes = this.nodes.map(n => n);
+  const [xMax, xMin] = nodes.reduce(([max, min], c) => {
+    if (c.x > max) return [c.x, min];
+    if (c.x < min) return [max, c.x];
+    return [max, min]
+  }, [-Infinity, Infinity])
+
+  const [yMax, yMin] = nodes.reduce(([max, min], c) => {
+    if (c.y > max) return [c.y, min];
+    if (c.y < min) return [max, c.y];
+    return [max, min];
+  }, [-Infinity, Infinity]);
+  return x > xMax || x < xMin || y > yMax || y < yMin;
 }
 
 handleZoomForLargeGraphs(nodes: INodeData[]) {
