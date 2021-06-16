@@ -123,6 +123,30 @@ class EntityDescriptor(DataDescriptor):
     def provenance(self):
         return self.__provenance
 
+    @property
+    def formatted_properties(self):
+        # merge terms in descriptor into "term_name <term_id>" format
+        # used for displaying search results and downloading bricks in appropriate TSV format
+        items = {}
+        for key, val in self.__dict__.items():
+            if key.startswith('_'):
+                continue
+            elif key.endswith('_term_id'):
+                prop_name = key.split('_term_id')[0]
+                if prop_name + '_term_name' in self.__dict__:
+                    items[prop_name] = '%s <%s>' % (self.__dict__[prop_name + '_term_name'], val)
+                else:
+                    items[key] = val
+
+            elif key.endswith('_term_name'):
+                prop_name = key.split('_term_name')[0]
+                if prop_name + '_term_id' not in self.__dict__:
+                    items[key] = val
+
+            else:
+                items[key] = val
+        return items
+
 
 class DataDescriptorProvenance:
     def __init__(self, data_descriptor):

@@ -2909,11 +2909,11 @@ def coral_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    # if cacheKey in cache:
-    #    sys.stderr.write('cache hit '+cacheKey+'\n')
-    #    return  _ok_response(cache[cacheKey])
-    #else:
-    #    sys.stderr.write('cache miss '+cacheKey+'\n')
+    if cacheKey in cache:
+       sys.stderr.write('cache hit '+cacheKey+'\n')
+       return  _ok_response(cache[cacheKey])
+    else:
+       sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
@@ -2942,7 +2942,7 @@ def coral_type_graph():
                     'name': td.name,
                     'dataModel': td.name,
                     'dataType': td.name,
-                    'count': count
+                    'count': count,
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')
@@ -3374,13 +3374,39 @@ def coral_type_graph():
     # combine everything and return graph
     res = {
         'nodes' : nodes,
-        'links' : edges
+        'links' : edges,
+        'cacheKey': cacheKey
     }
 
     # s = pprint.pformat(res,width=999)
     # return s
     cache[cacheKey] = res
     return  _ok_response(res)
+
+@app.route('/coral/set_node_position_cache', methods=['POST'])
+def set_node_position_cache():
+    x = request.json['x']
+    y = request.json['y']
+    cacheKey = request.json['cacheKey']
+    index = request.json['id']
+    cache_item = cache[cacheKey]
+
+    for node in cache_item['nodes']:
+        if node['index'] == index:
+            node['x'] = x
+            node['y'] = y
+
+    cache.set(cacheKey, cache_item)
+
+    return _ok_response({'success': True})
+
+@app.route('/coral/delete_node_position_cache', methods=['POST'])
+def delete_node_position_cache():
+    cache_key = request.json['cacheKey']
+    if cache_key in cache:
+        del cache[cache_key]
+
+    return _ok_response({'success': True})
 
 
 @app.route('/coral/dn_process_docs/<obj_id>', methods=['GET'])
@@ -3562,6 +3588,9 @@ def coral_core_type_props(obj_name):
 @app.route('/coral/core_type_metadata/<obj_id>', methods=['GET','POST'])
 @auth_ro_required
 def coral_core_type_metadata(obj_id):
+    # optionally display units in string value (/core_type_metadata?include_units=1)
+    include_units = 'include_units' in request.args
+
     obj_type = ''
     try:
         (JSON, CSV) = range(2)
@@ -3573,25 +3602,40 @@ def coral_core_type_metadata(obj_id):
         
         sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)
+        typedef = svs['typedef'].get_type_def(obj_type)
         doc = dp.core_types[obj_type].find_one({'id':obj_id})
         if return_format == JSON:
             res = []
-            for prop in doc.properties:
-                if prop.startswith('_'): continue
-                res.append(
-                    {
-                        'property': prop,
-                        'value': doc[prop]
-                    }
-                )
+            # for prop in doc.properties:
+            #     if prop.startswith('_'): continue
+            #     res.append(
+            #         {
+            #             'property': prop,
+            #             'value': doc[prop]
+            #         }
+            #     )
+            for k, v in doc.formatted_properties.items():
+                if include_units and typedef.property_def(k).has_units_term_id() and v is not None:
+                    term_id = typedef.property_def(k).units_term_id
+                    term = svs['term_provider'].get_term(term_id)
+                    res.append({
+                        'property': k,
+                        'value': str(v) + ' (%s)' % term.term_name
+                    })
+                else:
+                    res.append({'property': k, 'value': v})
         else: # TSV
             props = []
             values = []
-            for prop in doc.properties:
-                if prop.startswith('_'): continue
-                props.append(str(prop))
-                values.append(str(doc[prop]))
-            res = '\t'.join(props)+'\n'+'\t'.join(values)
+            # for prop in doc.properties:
+            #     if prop.startswith('_'): continue
+            #     props.append(str(prop))
+            #     values.append(str(doc[prop]))
+            # res = '\t'.join(props)+'\n'+'\t'.join(values)
+            for k, v in doc.formatted_properties.items():
+                props.append(str(k))
+                values.append(str(v))
+            res = '\t'.join(props) + '\n' + '\t'.join(values)
         return  _ok_response({ "items": res, "type": obj_type  })
        
     except Exception as e:

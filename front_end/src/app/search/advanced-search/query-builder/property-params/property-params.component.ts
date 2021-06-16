@@ -7,6 +7,7 @@ import {
  } from '@angular/core';
 import { QueryParam } from '../../../../shared/models/QueryBuilder';
 import { QueryBuilderService } from '../../../../shared/services/query-builder.service';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-property-params',
@@ -29,12 +30,17 @@ export class PropertyParamsComponent implements OnInit {
   ) {
   }
 
+  datepickerConfig: Partial<BsDatepickerConfig> = {
+    containerClass: 'theme-dark-blue',
+    useUtc: true
+  };
+
   ngOnInit() {
     this.selectedMatchType = this.queryParam.matchType;
-    this.matchTypes = this.queryBuilder.getOperators();
     const attributes = this.queryBuilder.getAttributes(this.dataType);
     if (this.queryParam.attribute) {
       this.selectedAttribute = this.queryParam.attribute;
+      this.setOperators();
     }
     this.propertyTypes = [...attributes];
    }
@@ -46,10 +52,20 @@ export class PropertyParamsComponent implements OnInit {
   setAttribute(event) {
     this.queryParam.attribute = event.name;
     this.queryParam.scalarType = event.scalar_type
+    this.setOperators();
+  }
+
+  setOperators() {
+    this.matchTypes = this.queryBuilder.getOperators(this.queryParam);
   }
 
   setMatchType(event) {
     this.queryParam.matchType = event
+  }
+
+  handleDateSelected(event: Date) {
+    if (!event) return;
+    this.queryParam.keyword = event.toISOString().split('T')[0];
   }
 
 }

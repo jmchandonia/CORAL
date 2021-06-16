@@ -292,13 +292,22 @@ class Query:
                         aql_filter.append( '@%s IN %s.%s' %(pname, var_name, ft['name']) )
 
             elif filter_type == FILTER_FULLTEXT:
+                collection_name = self.__index_type_def.collection_name
+                collection = services.arango_service.db[collection_name]
+                fulltext_sources = []
                 for ft in filters:
                     pname = self.__param_name()
                     pval = self.__param_name()
-                    aql_source = 'FULLTEXT(@%s, @%s, @%s)' %(cname, pname, pval)
+                    collection.ensureFulltextIndex([ft['name']], minLength=1)
+                    fulltext_sources.append('FULLTEXT(@%s, @%s, @%s)' % (cname, pname, pval))
                     aql_bind[ cname ] = index_type_def.collection_name
                     aql_bind[ pname ] = ft['name']
                     aql_bind[ pval  ] = ft['value']
+
+                if len(fulltext_sources) == 1:
+                    aql_source = fulltext_sources[0]
+                else:
+                    aql_source = 'UNION_DISTINCT(%s)' % ','.join(fulltext_sources)
         
         return (aql_source, aql_filter, aql_bind)
 

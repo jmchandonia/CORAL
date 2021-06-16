@@ -73,6 +73,11 @@ export class Term {
     id: string;
     text: string;
     has_units: boolean;
+    definition?: string;
+    is_hidden?: boolean;
+    microtype?: any;
+    require_mapping?: boolean;
+    scalar_type?: string;
 }
 
 export class ORef {
@@ -108,6 +113,8 @@ export class DataValue {
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
+        this.type.scalar_type = t.scalar_type;
+        this.type.definition = t.definition;
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
         this.scalarType = t.scalar_type;
@@ -142,6 +149,8 @@ export class Context {
     get typeTerm() { return this.type; }
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
+        this.type.definition = t.definition;
+        this.type.scalar_type = t.scalar_type;
         this.microType = t.microtype;
         this.scalarType = t.scalar_type;
     }
@@ -206,6 +215,8 @@ export class DimensionVariable {
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
+        this.type.definition = t.definition;
+        this.type.scalar_type = t.scalar_type
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
         this.scalarType = t.scalar_type;
@@ -246,6 +257,8 @@ export class TypedProperty {
 
     set typeTerm(t: any) {
         this.type = new Term(t.id, t.text, t.has_units);
+        this.type.definition = t.definition;
+        this.type.scalar_type = t.scalar_type;
         this.microType = t.microtype;
         this.require_mapping = t.require_mapping;
         this.scalarType = t.scalar_type;

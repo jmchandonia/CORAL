@@ -23,8 +23,20 @@
       ></ng-select>
     </div>
   </div>
-  <div class="col-4">
+  <div class="col-4" *ngIf="queryParam.attribute !== 'date'">
     <input class="form-control" [(ngModel)]="queryParam.keyword" />
+  </div>
+  <div class="col-4" *ngIf="queryParam.attribute === 'date'">
+    <input
+      class="form-control"
+      id="datepicker"
+      type="text"
+      placeholder="dd/mm/yyyy"
+      bsDatepicker
+      placement="top"
+      [bsConfig]="datepickerConfig"
+      (bsValueChange)="handleDateSelected($event)"
+    >
   </div>
   <div class="col-2">
     <button class="btn btn-link" (click)="removeParam()">Delete</button>

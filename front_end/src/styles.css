@@ -183,6 +183,10 @@ modal-container.modal {
     color: white;
 }
 
+.datatable-body-cell {
+    overflow-wrap: break-word;
+}
+
 .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled).active a,
 .ngx-datatable.bootstrap .datatable-footer .datatable-pager ul li:not(.disabled):hover a {
     background-color: rgb(0, 99, 212);
