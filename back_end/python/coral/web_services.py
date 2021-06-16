@@ -3400,6 +3400,14 @@ def set_node_position_cache():
 
     return _ok_response({'success': True})
 
+@app.route('/coral/delete_node_position_cache', methods=['POST'])
+def delete_node_position_cache():
+    cache_key = request.json['cacheKey']
+    if cache_key in cache:
+        del cache[cache_key]
+
+    return _ok_response({'success': True})
+
 
 @app.route('/coral/dn_process_docs/<obj_id>', methods=['GET'])
 @auth_required
