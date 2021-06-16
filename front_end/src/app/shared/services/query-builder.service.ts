@@ -28,6 +28,7 @@ export class QueryBuilderService {
   ) { }
 
   getDataTypesandModels() {
+    // TODO: create API endpoint that gives both data type and data model
     this.http.get(`${environment.baseURL}/data_models`)
     .subscribe((models: any) => {
       this.dataModels = models.results;
@@ -105,7 +106,7 @@ export class QueryBuilderService {
   }
 
   getCoreTypeMetadata(id) {
-    return this.http.get(`${environment.baseURL}/core_type_metadata/${id}`);
+    return this.http.get(`${environment.baseURL}/core_type_metadata/${id}?include_units=1`);
   }
 
   getCoreTypeProps(name: string) {
@@ -132,8 +133,15 @@ export class QueryBuilderService {
     return this.http.get(`${environment.baseURL}/data_models`);
   }
 
-  getOperators() {
-    return this.operators;
+  getOperators({scalarType, attribute}): string[] {
+    // filter appropriate operators depending on scalar type
+    if (['term', 'text', 'ref', 'object_ref'].includes(scalarType) && attribute !== 'date') {
+      // text-like operators
+      return this.operators.filter(operator => ['=', 'like'].includes(operator));
+    } else {
+      // numeric operators
+      return this.operators.filter(operator => operator !== 'like')
+    }
   }
 
   getOperatorValue(item) {

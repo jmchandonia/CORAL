@@ -54,6 +54,14 @@ export class HomeService {
     return this.provenanceLoadingSub.asObservable();
   }
 
+  setNodePositionCache(cacheKey: string, id: number, {x, y}) {
+    return this.http.post(`${environment.baseURL}/set_node_position_cache`, {x, y, cacheKey, id}).toPromise();
+  }
+
+  deleteNodePositionCache(cacheKey: string) {
+    return this.http.post(`${environment.baseURL}/delete_node_position_cache`, {cacheKey}).toPromise();
+  }
+
   initBackendConnection() {
     // test if back end is running
     return this.http.get(environment.baseURL + '/', {
