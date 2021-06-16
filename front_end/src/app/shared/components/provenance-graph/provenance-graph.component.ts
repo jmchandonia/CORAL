@@ -223,10 +223,18 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
 }
 
 async setNodePositionCache({x, y}, id) {
-  if (this.clusterNodes.map(node => node.index).includes(id) || typeof id === 'string') {
-    return;
+  if (typeof id === 'string') {
+    // hack to fix cluster nodes with IDs that are assigned by VisJS library
+    const [root] = this.network
+      .getNodesInCluster(id)
+      .map(n => this.nodes.get(n))
+      .filter(n => n.cid === undefined); // node with no cid is the parent node
+        await this.homeService.setNodePositionCache(this.cacheKey, <number>root.id, {
+          x: x / this.xScale,
+          y: y / this.yScale
+        })
+      return;
   }
-  // TODO: caching new position doesnt account for where mouse is relative to node box
   await this.homeService.setNodePositionCache(this.cacheKey, id, {
     x: x / this.xScale,
     y: y / this.yScale
