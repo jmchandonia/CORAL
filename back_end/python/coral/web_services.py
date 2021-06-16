@@ -3389,12 +3389,13 @@ def set_node_position_cache():
     y = request.json['y']
     cacheKey = request.json['cacheKey']
     index = request.json['id']
-
     cache_item = cache[cacheKey]
-    for i in range(len(cache_item['nodes'])):
-        if cache_item['nodes'][i]['index'] == index:
-            cache_item['nodes'][i]['x'] = x
-            cache_item['nodes'][i]['y'] = y
+
+    for node in cache_item['nodes']:
+        if node['index'] == index:
+            node['x'] = x
+            node['y'] = y
+
     cache.set(cacheKey, cache_item)
 
     return _ok_response({'success': True})
