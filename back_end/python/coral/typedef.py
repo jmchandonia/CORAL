@@ -441,7 +441,15 @@ class TypeDefService:
         for type_def in self.__type_defs.values():
             if all(p in type_def.property_names for p in props):
                 results.append(type_def)
-        return results 
+        return results
+
+    def get_type_def_with_upk_id(self, term_id):
+        for type_def in self.__type_defs.values():
+            if type_def.upk_property_def is None:
+                continue
+            if type_def.upk_property_def.term_id == term_id:
+                return type_def
+        raise ValueError('No typedef found with UPK ID "%s"' % term_id)
 
     def has_term_pk(self, term_id):
         prop_defs = self.__term_2_prop_defs.get(term_id)
