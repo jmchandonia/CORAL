@@ -124,10 +124,14 @@ class IndexTypeDefService:
         
         return names
     
-    def get_type_defs(self, category=None):
+    def get_type_defs(self, category=None, props=None):
         type_defs = []
         for type_def in self.__type_defs:
             if category is not None and type_def.category != category:
+                continue
+
+            # filter out type_defs that dont include list of properties
+            if props is not None and not all(p in type_def.property_names for p in props):
                 continue
             
             type_defs.append(type_def)

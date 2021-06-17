@@ -163,6 +163,19 @@ class Query:
         self.__add_filters(criterion, self.__output_of_process_filters, index_type_def)
         return self
 
+    def linked_up_to_item_with_properties(self, props):
+        # get list of typedefs that have all props in argument
+        index_type_defs = services.indexdef.get_type_defs(props=props)
+        if len(index_type_defs) == 0:
+            raise ValueError('No type definitions found with properties "%s"' % ', '.join(props))
+
+        for index_type_def in index_type_defs:
+            self.__linked_up_filters.append({
+                'index_type_def': index_type_def,
+                'filters': {} # TODO: do we need to add criterion filters here
+            })
+        return self
+
     def linked_up_to(self, type_name, criterion):
         index_type_def = services.indexdef.get_type_def(type_name)
         filters = {}
