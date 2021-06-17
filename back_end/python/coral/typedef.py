@@ -436,6 +436,13 @@ class TypeDefService:
     def get_type_def(self, type_name):
         return self.__type_defs[type_name]
 
+    def get_type_defs_with_properties(self, props: list):
+        results = []
+        for type_def in self.__type_defs.values():
+            if all(p in type_def.property_names for p in props):
+                results.append(type_def)
+        return results 
+
     def has_term_pk(self, term_id):
         prop_defs = self.__term_2_prop_defs.get(term_id)
         if prop_defs is None:
