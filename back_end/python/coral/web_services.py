@@ -2911,6 +2911,10 @@ def coral_type_graph():
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
     if cacheKey in cache:
        sys.stderr.write('cache hit '+cacheKey+'\n')
+       pprint.pprint(cache[cacheKey])
+       # add cachekey to cache for front end if it doesn't already exist
+       if 'cacheKey' not in cache[cacheKey]:
+           cache.set(cacheKey, {**cache[cacheKey], 'cacheKey': cacheKey})
        return  _ok_response(cache[cacheKey])
     else:
        sys.stderr.write('cache miss '+cacheKey+'\n')
