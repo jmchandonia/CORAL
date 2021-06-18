@@ -45,6 +45,7 @@ dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
 
+COORDS_CRITERIA = cns['_COORDS_CRITERIA']
 CACHE_DIR =  cns['_CACHE_DIR']
 cache = Cache(CACHE_DIR)
 
@@ -1850,7 +1851,11 @@ def coral_brick_plot_metadata(brick_id, limit):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
 
-    return br.to_json(exclude_data_values=True, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
+    return br.to_json(exclude_data_values=True,
+                      typed_values_property_name=False,
+                      truncate_variable_length=int(limit),
+                      show_unique_indices=True,
+                      up_properties=COORDS_CRITERIA)
 
 @app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required

@@ -613,16 +613,27 @@ class Brick:
             pk_upks = query._find_upks([ufk_values])
             return pk_upks[0]['pk'] if len(pk_upks) == 1 else None
 
-    def to_json(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False, show_unique_indices=False):
+    def to_json(self,
+                exclude_data_values=False,
+                typed_values_property_name=True,
+                truncate_variable_length=False,
+                show_unique_indices=False,
+                up_properties=None):
         return json.dumps(
             self.to_dict(exclude_data_values=exclude_data_values,
                 typed_values_property_name=typed_values_property_name,
                 truncate_variable_length=truncate_variable_length,
-                show_unique_indices=show_unique_indices
+                show_unique_indices=show_unique_indices,
+                up_properties=up_properties
             ),
             cls=NPEncoder)
 
-    def to_dict(self, exclude_data_values=False, typed_values_property_name=True, truncate_variable_length=False, show_unique_indices=False):
+    def to_dict(self,
+                exclude_data_values=False, 
+                typed_values_property_name=True, 
+                truncate_variable_length=False, 
+                show_unique_indices=False,
+                up_properties=None):
         data = {}
 
         # ds.attrs['__id'] = brick_id
@@ -963,7 +974,28 @@ class Brick:
                     values_data['value_with_units'] += ' ('+vard.units_term.term_name+')'
 
             data['typed_values'].append(values_data)
+
+            # check if brick maps up to object with specified properties
+            if up_properties is not None:
+                connects_to_properties = self.connects_to_properties(up_properties)
+                data['connects_to_properties'] = {
+                    'properties': up_properties,
+                    'value': connects_to_properties
+                }
         return data
+
+    def connects_to_properties(self, properties):
+        # method to check whether a variable in brick connects up to a static type with a given list of properties
+        for dim in self.dims:
+            for dim_var in dim.vars:
+                if dim_var.scalar_type == 'object_ref':
+                    term_id = dim_var.type_term.term_id
+                    type_def = services.typedef.get_type_def_with_upk_id(term_id)
+                    index_def = services.indexdef.get_type_def(type_def.name)
+                    query = Query(index_def)
+                    query.linked_up_to_item_with_properties(properties)
+                    return query.find().size > 0
+            return False
 
     @property
     def full_type(self):
