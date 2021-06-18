@@ -55,7 +55,8 @@ class DataProvider:
             '_PROJECT_ROOT': services._PROJECT_ROOT,
             '_GOOGLE_OAUTH2_CREDENTIALS': services._GOOGLE_OAUTH2_CREDENTIALS,
             '_USERS': services._USERS,
-            '_GOOGLE_RECAPTCHA_SECRET': services._GOOGLE_RECAPTCHA_SECRET
+            '_GOOGLE_RECAPTCHA_SECRET': services._GOOGLE_RECAPTCHA_SECRET,
+            '_COORDS_CRITERIA': services._COORDS_CRITERIA
         }
 
 class GenericsProvider:
