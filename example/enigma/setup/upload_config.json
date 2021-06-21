@@ -24,12 +24,10 @@
         },
         {
             "name": "dtype",
-            "description": "Data types",
             "file_name": "data_type_ontology.obo"
         },
         {
             "name": "enigma",
-            "description": "ENIGMA metadata",
             "file_name": "enigma_specific_ontology.obo"
         },
         {
