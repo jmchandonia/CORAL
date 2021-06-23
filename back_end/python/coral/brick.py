@@ -989,13 +989,16 @@ class Brick:
         for dim in self.dims:
             for dim_var in dim.vars:
                 if dim_var.scalar_type == 'object_ref':
-                    term_id = dim_var.type_term.term_id
-                    type_def = services.typedef.get_type_def_with_upk_id(term_id)
-                    index_def = services.indexdef.get_type_def(type_def.name)
-                    query = Query(index_def)
-                    query.linked_up_to_item_with_properties(properties)
-                    return query.find().size > 0
+                    if dim_var.linked_up_to_properties(properties):
+                        return True
             return False
+
+    def merge_up_to_properties(self, properties):
+        # merge brick object refs to static types and get properties via provenance
+        if not self.connects_to_properties(properties):
+            raise ValueError('No objects in Brick connect up to properties "%s"' % (','.join(properties)))
+        for dim in self.dims:
+            dim.add_up_property_vars(properties)
 
     @property
     def full_type(self):
@@ -1366,8 +1369,6 @@ class BrickDimension:
         return self.vars_df.head(10)
 
 
-
-
     def add_core_type_var(self, core_type, core_prop_name):
         type_def = services.typedef.get_type_def(core_type)
         if type_def is None:
@@ -1493,6 +1494,86 @@ class BrickDimension:
             'var_name:%s' % dim_var.name])
 
         self.__brick.session_provenance.provenance_items.append(prov)
+
+        return self.vars_df.head(10)
+
+    def _has_dim_vars(self, properties):
+        all_var_names = [var.name.lower() for var in self.vars]
+        return all(prop in all_var_names for prop in properties)
+
+    def add_up_property_vars(self, properties, type_name=None):
+        # add properties from upstream core types via provenance graph
+        for dim_var in self.vars:
+            if self._has_dim_vars(properties):
+                break
+            if dim_var.scalar_type == 'object_ref' and dim_var.linked_up_to_properties(properties):
+                type_def = services.typedef.get_type_def_with_upk_id(dim_var.type_term.term_id)
+                type_def_pk = type_def.pk_property_def.name
+
+                # add internal pk_id
+                dim_var.map_to_core_type(type_def.name, type_def.upk_property_def.name)
+                pk_var = self.vars[-1]
+                pk_name = pk_var.type_term.microtype_fk_core_prop_name
+
+                # get data frame of type def records with fields added via provenance
+                index_def = services.indexdef.get_type_def(type_def.name)
+                query = Query(index_def)
+                query.linked_up_to_item_with_properties(properties, add_properties=True)
+                rs = query.find().to_df()
+
+                # create hash of all new variables to be added
+                props_hash = {p: [] for p in properties}
+                for value in pk_var.values:
+                    row = rs.loc[rs[pk_name] == value]
+                    for prop in properties:
+                        if row[prop].values.size == 0:
+                            props_hash[prop].append(None)
+                            continue
+                        value = row[prop].values[0]
+                        if value is None or value != value:
+                            props_hash[prop].append(None)
+                        else:
+                            props_hash[prop].append(value)
+
+                # get type_term for linked index def
+                linked_idefs = services.indexdef.get_type_defs(props=properties, name=type_name)
+                linked_idef = linked_idefs[0]
+                linked_tdef = services.typedef.get_type_def(linked_idef.name)
+
+                # add new dim var for each item in props hash
+                for pname, pvals in props_hash.items():
+                    prop_def = linked_tdef.property_def(pname)
+                    prop_type_term = services.term_provider.get_term(prop_def.term_id)
+
+                    # add units
+                    if prop_def.has_units_term_id():
+                        units_term = services.term_provider.get_term(prop_def.units_term_id)
+                    else:
+                        units_term = None
+
+                    # set scalar type
+                    scalar_type = prop_def.type
+
+                    var = Brick._xds_build_var(self.__brick,
+                                               self,
+                                               self.__xds,
+                                               self.__dim_prefix,
+                                               self.__dim_prefix,
+                                               prop_type_term,
+                                               units_term,
+                                               pvals,
+                                               scalar_type)
+
+                    self.__vars.append(var)
+                    self.__inflate_vars()
+
+                    prov = BrickProvenance('add_upstream_property',
+                        ['core_type:%s' % linked_tdef.name,
+                        'core_prop_name:%s' % pname,
+                        'dim_index:%s' % self.dim_index,
+                        'dim_name:%s' % self.name])
+
+                    self.__brick.session_provenance.provenance_items.append(prov)
 
         return self.vars_df.head(10)
 
@@ -1636,8 +1717,13 @@ class BrickVariable:
         self.__set_attr('__attr%s' % attr_count, pv)
         self.__set_attr('__attr_count', attr_count)
 
-    # def data_df(self):
-    #     return pd.DataFrame(self.data, columns=[self.name])
+    def linked_up_to_properties(self, properties):
+        term_id = self.type_term.term_id
+        type_def = services.typedef.get_type_def_with_upk_id(term_id)
+        index_def = services.indexdef.get_type_def(type_def.name)
+        query = Query(index_def)
+        query.linked_up_to_item_with_properties(properties)
+        return query.find().size > 0
         
     def __eq__(self,val):
         bool_array = (self.__xds[self.__var_prefix] == val).data
