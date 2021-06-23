@@ -245,6 +245,9 @@ class TypeDef:
     def process_input_type_defs(self):
         return self.__process_input_type_defs
 
+    def has_property_defs(self, properties):
+        return all(p in self.property_names for p in properties)
+
 
     def validate_data(self, data, ignore_pk=False):
         # check property values
@@ -356,6 +359,7 @@ class PropertyDef:
     @property
     def is_upk(self):
         return self.__upk
+
 
     def validate(self, value):
         self.__property_validator.validate(self.__name, value)

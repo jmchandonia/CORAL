@@ -163,17 +163,23 @@ class Query:
         self.__add_filters(criterion, self.__output_of_process_filters, index_type_def)
         return self
 
-    def linked_up_to_item_with_properties(self, props):
+    def linked_up_to_item_with_properties(self, props, add_properties=False, name=None):
         # get list of typedefs that have all props in argument
-        index_type_defs = services.indexdef.get_type_defs(props=props)
+        index_type_defs = services.indexdef.get_type_defs(props=props, name=name)
         if len(index_type_defs) == 0:
             raise ValueError('No type definitions found with properties "%s"' % ', '.join(props))
 
-        for index_type_def in index_type_defs:
-            self.__linked_up_filters.append({
-                'index_type_def': index_type_def,
-                'filters': {} # TODO: do we need to add criterion filters here
-            })
+        # if specific value isnt specified add the first item with properties
+        index_type_def = index_type_defs[0]
+
+        linked_up_filter = {
+            'index_type_def': index_type_def,
+            'filters': {} # TODO: do we need to add criterion filters here
+        }
+
+        if add_properties:
+            linked_up_filter['add_properties'] = props
+        self.__linked_up_filters.append(linked_up_filter)
         return self
 
     def linked_up_to(self, type_name, criterion):
@@ -507,7 +513,7 @@ class Query:
                     var_name,
                     ' and '.join(_aql_filter),
                     ' '.join(pr_aqls),
-                    var_name)
+                    var_name if 'add_properties' not in up_filters else self.__get_merge_row_fmt(up_filters['add_properties'], var_name, u_var_name))
                 
                 aql_var = self.__param_name('a')
                 var_aqls.append({
@@ -673,4 +679,10 @@ class Query:
         if ddc.size > 0:
             return ddc[0]
         return None
+
+    def __get_merge_row_fmt(self, props, var_name, u_var_name):
+        u_prop_fields = []
+        for prop in props:
+            u_prop_fields.append(f'"{prop}": {u_var_name}.{prop}')
+        return 'MERGE(%s, {%s})' % (var_name, ','.join(u_prop_fields))
 
