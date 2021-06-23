@@ -1,7 +1,8 @@
 # CORAL
 
-CORAL is a framework for rigorous self-validated data modeling
-and integrative, reproducible data analysis.
+CORAL (Contextual Ontology-based Repository Analysis Library) is a
+framework for rigorous self-validated data modeling and integrative,
+reproducible data analysis.
 
 This software was developed at the Berkeley Lab by Pavel S. Novichkov,
 John-Marc Chandonia, Charles Trenholm, and Adam P. Arkin.
