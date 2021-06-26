@@ -8,6 +8,10 @@ export class ObjectMetadata {
     public description: string;
     public dim_context: DimensionContext[]; // dimension and dimension variable data
     public typed_values: TypedValue[]; // measurement values and data
+    public connects_to_properties: {
+        properties: string[],
+        value: boolean;
+    }
 }
 
 export class DimensionContext {

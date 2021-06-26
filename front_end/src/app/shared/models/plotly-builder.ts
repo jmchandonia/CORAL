@@ -183,6 +183,7 @@ export class Constraint {
         this.has_unique_indices = dimension.has_unique_indices;
         this.disabled = disabled;
 
+        // check if there is at least one variable in dimension with all unique values
         let correspondsToOneVar = this.dimension.typed_values
             .map(typedValue => {
                 return typedValue.values.values.reduce((acc, value) => acc.includes(value) && value !== null ? acc : [...acc, value], []);

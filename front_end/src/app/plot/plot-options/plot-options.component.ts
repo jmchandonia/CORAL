@@ -22,6 +22,7 @@ export class PlotOptionsComponent implements OnInit {
   public plotTypeData: PlotlyConfig[]; // plotTypeData displayed depending on dimensionality
   public selectedPlotType: PlotlyConfig;
   public objectId: string;
+  private tempObjectId: string; // temporary object ID for bricks with extended properties to include lat long
   public coreTypePlot = false;
   public numberOfAxes = 2; // currently just for core types
   private coreTypeName: string;
@@ -48,7 +49,6 @@ export class PlotOptionsComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-
     this.spinner.show();
 
     this.previousUrl = this.queryBuilder.getPreviousUrl();
@@ -74,7 +74,12 @@ export class PlotOptionsComponent implements OnInit {
 
     const mapBuilder = JSON.parse(localStorage.getItem('mapBuilder'));
     if (mapBuilder) {
-      this.mapBuilder = Object.assign(new MapBuilder(this.coreTypePlot),mapBuilder);
+      if (!mapBuilder.tempObjectId) {
+        this.mapBuilder = Object.assign(new MapBuilder(this.coreTypePlot),mapBuilder);
+      } else {
+        // clear the plot options if theres a temp object id to load regular brick
+        delete this.plot.plot_type;
+      }
     }
     if (this.mapBuilder) {
       this.isMap = true;
@@ -94,6 +99,7 @@ export class PlotOptionsComponent implements OnInit {
       // TODO: needs to be formatted like this on the backend
       this.plotService.getObjectPlotMetadata(this.objectId)
         .subscribe(({result, axisOptions}: {result: ObjectMetadata, axisOptions: AxisOption[]}) => {
+          this.loading = false;
           this.spinner.hide();
           this.metadata = result;
 
@@ -133,9 +139,16 @@ export class PlotOptionsComponent implements OnInit {
       .subscribe((data: Response<PlotlyConfig>) => {
 
         // add map option to plots if the variables include lat and long
-        const includeMap = this.axisOptions.filter(option => {
+        // TODO: use results from JSON connect_to_properties method
+        let includeMap = this.axisOptions
+        .filter(option => {
           return option.name.toLowerCase() === 'latitude' || option.name.toLowerCase() === 'longitude'
         }).length === 2;
+
+        // items are mappable if they can be connected to an upstream item with lat long data
+        if (this.metadata.connects_to_properties.value) {
+          includeMap = true;
+        }
 
         if (!this.coreTypePlot) {
           // this.plotTypeData = this.validateAxes(data.results, includeMap);
@@ -167,8 +180,26 @@ export class PlotOptionsComponent implements OnInit {
       if (this.coreTypePlot) {
         this.mapBuilder.query = this.plot.query;
       } else {
-        this.mapBuilder.brickId = this.objectId;
-        this.mapBuilder.setLatLongDimension(this._axisOptions);
+        if (!validator.hasCoordsInDimensions(this.metadata)) {
+          // brick needs to merge with upstream data to get coordinates; get temporary extended brick
+          this.loading = true;
+          this.spinner.show();
+          this.plotService.getMergedBrickWithCoords(this.objectId)
+            .subscribe(({tempId, metadata, axisOptions}) => {
+              this.metadata = metadata;
+              this._axisOptions = [...axisOptions];
+              this.axisOptions = [...axisOptions];
+              this.loading = false;
+              this.mapBuilder.setLatLongDimension(this._axisOptions);
+              this.mapBuilder.tempObjectId = tempId;
+              this.mapBuilder.brickId = this.objectId;
+              this.spinner.hide();
+            })
+        } else {
+          // brick has coords without needing to be merged; can use same brick
+          this.mapBuilder.brickId = this.objectId;
+          this.mapBuilder.setLatLongDimension(this._axisOptions);
+        }
       }
     } else {
       delete this.mapBuilder;
