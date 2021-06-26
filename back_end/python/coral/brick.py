@@ -40,7 +40,7 @@ def _collect_all_term_values(term_id_2_values, term_id, data_values):
     
     
 DATA_EXAMPLE_SIZE = 5
-    
+
 class PropertyValue:
     def __init__(self, name=None, type_term=None, units_term=None, scalar_type='string', value=None):
         if type_term is None:
@@ -788,7 +788,6 @@ class Brick:
 
                 if type(truncate_variable_length) is int and dim.size > truncate_variable_length:
                     value_vals = value_vals[:truncate_variable_length]
-                    
                 if not typed_values_property_name:
                     value_key = 'values'
 
@@ -1232,7 +1231,7 @@ class Brick:
             'input_objects': input_obj_ids,
             'output_objects': ['%s:%s' % ( TYPE_NAME_BRICK+'-'+str(self.type_term.term_id)[3:], brick_data_holder.id)]
         }
-        services.workspace.save_process(ProcessDataHolder(process_data)) 
+        services.workspace.save_process(ProcessDataHolder(process_data))
 
 
         
@@ -1478,7 +1477,8 @@ class BrickDimension:
         # type_term = Term(type_def.pk_property_def.term_id, refresh=True)
         type_term = services.term_provider.get_term(type_def.pk_property_def.term_id)
         units_term = None
-        scalar_type = type_def.pk_property_def.type
+        scalar_type= type_term.microtype_value_scalar_type
+        # scalar_type = type_def.pk_property_def.type
 
         var = Brick._xds_build_var(self.__brick, self, self.__xds, self.__dim_prefix, self.__dim_prefix, 
             type_term, units_term, data, scalar_type)
@@ -1552,7 +1552,8 @@ class BrickDimension:
                         units_term = None
 
                     # set scalar type
-                    scalar_type = prop_def.type
+                    # scalar_type = prop_def.type
+                    scalar_type = prop_type_term.microtype_value_scalar_type
 
                     var = Brick._xds_build_var(self.__brick,
                                                self,
