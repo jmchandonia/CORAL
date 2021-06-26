@@ -65,6 +65,7 @@ _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 _UPLOAD_CORE_DATA_PREFIX = 'ucd_'
+_MERGED_TMP_BRICK_PREFIX = 'mtb_'
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -618,7 +619,21 @@ def filter_brick(brick_id):
         } )
     
     except Exception as e:
-        return _err_response(e)        
+        return _err_response(e)
+
+@app.route("/coral/filter_tmp_brick/<brick_tmp_id>", methods=['POST'])
+@auth_ro_required
+def filter_tmp_brick(brick_tmp_id):
+    try:
+        query = request.json
+        res = _filter_brick(brick_tmp_id, query, tmp_dir=True)
+
+        return json.dumps({
+            'status': 'success',
+            'res': res
+        })
+    except Exception as e:
+        return _err_response(e)
     
 @app.route("/coral/do_report/<value>", methods=['GET'])
 def do_report(value):
@@ -1438,8 +1453,11 @@ def _csv_to_brick(file_name_csv, file_name_json):
         data = file.read()
     return data
 
-def _filter_brick(brick_id, query):
-    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+def _filter_brick(brick_id, query, tmp_dir=False):
+    if not tmp_dir:
+        file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    else:
+        file_name_json = os.path.join(TMP_DIR, _MERGED_TMP_BRICK_PREFIX + brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
     # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
@@ -1856,6 +1874,32 @@ def coral_brick_plot_metadata(brick_id, limit):
                       truncate_variable_length=int(limit),
                       show_unique_indices=True,
                       up_properties=COORDS_CRITERIA)
+
+@app.route('/coral/brick_merged_coords/<brick_id>/<limit>', methods=['GET'])
+@auth_required
+def coral_brick_merged_with_coords(brick_id, limit):
+    # get temporary brick for front end that uplinks dim var data with lat long static properties
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    temp_id = uuid.uuid4().hex
+
+    br.merge_up_to_properties(COORDS_CRITERIA)
+    tmp_json = br.to_json()
+    response_json = br.to_json(exclude_data_values=False,
+                               typed_values_property_name=False,
+                               truncate_variable_length=int(limit),
+                               show_unique_indices=True,
+                               up_properties=COORDS_CRITERIA)
+
+    # store new brick in tmp folder
+    mtb_filename = os.path.join(TMP_DIR, _MERGED_TMP_BRICK_PREFIX + temp_id)
+    with open(mtb_filename, 'w') as f:
+        json.dump(json.loads(tmp_json), f)
+
+    return _ok_response({
+        'temp_id': temp_id,
+        'data': json.loads(response_json)
+    })
 
 @app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required

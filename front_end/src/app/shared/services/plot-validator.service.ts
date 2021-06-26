@@ -125,4 +125,17 @@ export class PlotValidatorService {
     return [allTraces > 1000, nDataPoints * allTraces > 100_000]
   }
 
+  public static hasCoordsInDimensions(metadata: ObjectMetadata) {
+    const coordProperties = metadata.connects_to_properties.properties;
+    // flatten dimensions to check list of dim vars for coord properties
+    const allDimVars = metadata.dim_context.reduce((acc, dim) => {
+      return [...acc, ...dim.typed_values];
+    } , [])
+    // check every properties in list of coord properties to make sure there is a dim var with the same value
+    const includesCoords = coordProperties.map(propertyName => {
+      return allDimVars.filter(d => d.value_type.oterm_name.toLowerCase() === propertyName.toLowerCase()).length > 0;
+    })
+    return includesCoords.every(x => x === true);
+  }
+
 }

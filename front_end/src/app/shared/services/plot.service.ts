@@ -68,6 +68,18 @@ export class PlotService {
       }))
   }
 
+  getMergedBrickWithCoords(id: string) {
+    // get temporary brick that includes uplinked references to items with lat and long
+    return this.http.get<Response<any>>(`${environment.baseURL}/brick_merged_coords/${id}/100`)
+      .pipe(map(({results}) => {
+        return {
+          metadata: results['data'],
+          axisOptions: PlotService.mapBrickPropertiesToAxisOptions(results['data']),
+          tempId: results['temp_id']
+        };
+      }))
+  }
+
   getBrickDimVarValues(id: string, dimIdx: number, dvIdx: number, keyword: string) {
     return this.http.get(`${environment.baseURL}/brick_dim_var_values/${id}/${dimIdx}/${dvIdx}/${keyword}`).pipe(delay(500));
   }
@@ -126,6 +138,23 @@ export class PlotService {
             label_text: response['point-labels'][i],
             hover: false
           }))
+      }))
+  }
+
+  getTempDynamicMap(tempId: string, mapBuilder: MapBuilder) {
+    // get temporary stored map with lat long data that was generated on the fly
+    return this.http.post(`${environment.baseURL}/filter_tmp_brick/${tempId}`, mapBuilder.createPostData())
+      .pipe(map((data: any) => {
+        const response = data.res[0];
+        return Array(response.x.length)
+          .fill(null)
+          .map((_, i) => ({
+            latitude: response.x[i],
+            longitude: response.y[i],
+            color: response.z[i],
+            label_text: response['point-labels'][i],
+            hover: false
+          }));
       }))
   }
 
