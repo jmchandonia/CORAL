@@ -997,7 +997,9 @@ class Brick:
         if not self.connects_to_properties(properties):
             raise ValueError('No objects in Brick connect up to properties "%s"' % (','.join(properties)))
         for dim in self.dims:
+            # TODO: add_upstream_dim_vars allows for intermediate keys but needs debugging
             dim.add_up_property_vars(properties)
+            # dim.add_upstream_dim_vars(properties)
 
     @property
     def full_type(self):
@@ -1500,6 +1502,124 @@ class BrickDimension:
     def _has_dim_vars(self, properties):
         all_var_names = [var.name.lower() for var in self.vars]
         return all(prop in all_var_names for prop in properties)
+
+    def add_upstream_dim_vars(self, properties):
+        # TODO: method not correctly identifying typedef pk term id
+        if self._has_dim_vars(properties):
+            return
+
+        for dim_var in self.vars:
+            if dim_var.scalar_type == 'object_ref' and dim_var.linked_up_to_properties(properties):
+                type_def = services.typedef.get_type_def_with_upk_id(dim_var.type_term.term_id)
+                type_def_pk = type_def.pk_property_def.name
+
+                # add internal pk id of object ref
+                dim_var.map_to_core_type(type_def.name, type_def.upk_property_def.name)
+                pk_var = self.vars[-1]
+                pk_name = pk_var.type_term.microtype_fk_core_prop_name
+
+                # get data from arango service
+                rs = services.arango_service.get_upstream_core_props(type_def, properties)
+
+                # get each upk type to add to dimension
+                upk_types = {}
+                for keys in rs['intermediate_keys'].values:
+                    for key in keys:
+                        type_name = key['_id'].split('/')[0][4:]
+                        if type_name not in upk_types:
+                            # all_keys.add(collection_name)
+                            upk_types[type_name] = services.typedef.get_type_def(type_name)
+
+                upks_hash = {t: [] for t in upk_types.keys()}
+
+                props_hash = {p: [] for p in properties}
+                for value in pk_var.values:
+                    row = rs.loc[rs[pk_name] == value]
+                    for prop in properties:
+                        if row[prop].values.size == 0:
+                            props_hash[prop].append(None)
+                            continue
+                        value = row[prop].values[0]
+                        if value is None or value != value:
+                            props_hash[prop].append(None)
+                        else:
+                            props_hash[prop].append(value)
+
+                    ikeys = row['intermediate_keys'].values
+                    for key, val in upk_types.items():
+                        item = next((i for i in ikeys if i['_id'].split('/')[0][4:] == key), None)
+                        if item is None:
+                            upks_hash[key].append(None)
+                        else:
+                            pname = val.upk_property_name
+                            upks_hash[key].append(row[pname].values[0])
+
+                for kname, kvals in upks_hash.items():
+                    up_type_def = upk_types[kname]
+                    term_id = up_type_def.upk_property_def.term_id
+                    type_term = services.term_provider.get_term(term_id)
+
+                    scalar_type = type_term.microtype_value_scalar_type
+                    var = Brick._xds_build_var(self.__brick,
+                                                self,
+                                                self.__xds,
+                                                self.__dim_prefix,
+                                                self.__dim_prefix,
+                                                type_term,
+                                                None,
+                                                kvals,
+                                                scalar_type)
+
+                    self.__vars.append(var)
+                    self.__inflate_vars()
+
+                    prov = BrickProvenance('add_upstream_property',
+                        ['core_type:%s' % up_type_def.name,
+                        'core_prop_name:%s' % kname,
+                        'dim_index:%s' % self.dim_index,
+                        'dim_name:%s' % self.name])
+
+                self.__brick.session_provenance.provenance_items.append(prov)
+
+                # get type_term for linked index def
+                linked_idefs = services.indexdef.get_type_defs(props=properties, name=type_name)
+                linked_idef = linked_idefs[0]
+                linked_tdef = services.typedef.get_type_def(linked_idef.name)
+
+                for pname, pvals in props_hash.items():
+                    prop_def = linked_tdef.property_def(pname)
+                    prop_type_term = services.term_provider.get_term(prop_def.term_id)
+
+                    # add units
+                    if prop_def.has_units_term_id():
+                        units_term = services.term_provider.get_term(prop_def.units_term_id)
+                    else:
+                        units_term = None
+
+                    # set scalar type
+                    scalar_type = prop_type_term.microtype_value_scalar_type
+
+                    var = Brick._xds_build_var(self.__brick,
+                                            self,
+                                            self.__xds,
+                                            self.__dim_prefix,
+                                            self.__dim_prefix,
+                                            prop_type_term,
+                                            units_term,
+                                            pvals,
+                                            scalar_type)
+
+                    self.__vars.append(var)
+                    self.__inflate_vars()
+
+                    prov = BrickProvenance('add_upstream_property',
+                        ['core_type:%s' % linked_tdef.name,
+                        'core_prop_name:%s' % pname,
+                        'dim_index:%s' % self.dim_index,
+                        'dim_name:%s' % self.name])
+
+                    self.__brick.session_provenance.provenance_items.append(prov)
+
 
     def add_up_property_vars(self, properties, type_name=None):
         # add properties from upstream core types via provenance graph
