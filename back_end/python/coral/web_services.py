@@ -2298,11 +2298,37 @@ def coral_search():
             # return result as json table
             res = res_df.to_json(orient="table", index=False)
         else: # TSV
-            res = res_df.to_csv(sep='\t')
+            # res = res_df.to_csv(sep='\t')
+            _fmt_download_df(res_df)
+            res = res_df.to_csv(sep='\t', index=False)
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
         return _err_response(e,traceback=True)
+
+def _fmt_download_df(df):
+    # formats Core TSVs into format that can be uploaded again
+    # converts x_term_name and x_term_id fields into 'x' with format 'term_name <term_id>'
+
+    # drop internal ID column
+    df.drop('id', axis=1, inplace=True)
+
+    # get term_name term_id pairs
+    merge_columns = []
+    for col in df.columns:
+        if col.endswith('term_name'):
+            type_name = col.split('term_name')[0]
+            id_col = type_name + 'term_id'
+            if id_col in df.columns:
+                merge_columns.append((col, id_col))
+
+    # combine each column with term_name <term_id> format
+    for term_name, term_id in merge_columns:
+        new_col_name = term_name.split('_term_name')[0]
+        df[new_col_name] = df[[term_name, term_id]].apply(lambda x: '%s <%s>' % (x[0], x[1]), axis=1)
+
+        # drop old columns
+        df.drop(columns=[term_name, term_id], axis=1, inplace=True)
 
 @app.route("/coral/search_operations", methods=['GET'])
 @auth_required
