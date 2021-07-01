@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Output,
   EventEmitter,
@@ -8,13 +9,14 @@ import {
 import { QueryParam } from '../../../../shared/models/QueryBuilder';
 import { QueryBuilderService } from '../../../../shared/services/query-builder.service';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-property-params',
   templateUrl: './property-params.component.html',
   styleUrls: ['./property-params.component.css'],
 })
-export class PropertyParamsComponent implements OnInit {
+export class PropertyParamsComponent implements OnInit, OnDestroy {
 
   @Output() removed: EventEmitter<any> = new EventEmitter();
   @Input() queryParam: QueryParam;
@@ -24,6 +26,8 @@ export class PropertyParamsComponent implements OnInit {
   matchTypes: string[];
   selectedMatchType: string;
   selectedAttribute: string;
+  private invalidQuerySub: Subscription;
+  public valid = true;
 
   constructor(
     private queryBuilder: QueryBuilderService
@@ -43,7 +47,15 @@ export class PropertyParamsComponent implements OnInit {
       this.setOperators();
     }
     this.propertyTypes = [...attributes];
+    this.invalidQuerySub = this.queryBuilder.getValidationSub()
+      .subscribe((valid) => this.valid = valid);
    }
+
+  ngOnDestroy() {
+    if (this.invalidQuerySub) {
+      this.invalidQuerySub.unsubscribe();
+    }
+  }
 
   removeParam() {
     this.removed.emit();
@@ -66,6 +78,14 @@ export class PropertyParamsComponent implements OnInit {
   handleDateSelected(event: Date) {
     if (!event) return;
     this.queryParam.keyword = event.toISOString().split('T')[0];
+  }
+
+  get invalidKeyword() {
+    if (!this.queryParam.keyword?.length) return true;
+    if (this.queryParam.scalarType === 'int' || this.queryParam.scalarType === 'float') {
+      return isNaN(parseInt(this.queryParam.keyword));
+    }
+    return false;
   }
 
 }
