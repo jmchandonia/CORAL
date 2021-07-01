@@ -13,7 +13,8 @@ export class QueryBuilderService {
 
   public queryBuilderObject: QueryBuilder = new QueryBuilder();
   // public queryBuilderSub = new Subject<QueryBuilder>();
-  dataTypeSub: Subject<any> = new Subject();
+  private dataTypeSub: Subject<any> = new Subject();
+  private invalidQuerySub: Subject<boolean> = new Subject();
   searchType: string;
   dataTypes: any[];
   dataModels: any[];
@@ -76,8 +77,18 @@ export class QueryBuilderService {
     this.queryBuilderObject = new QueryBuilder();
   }
 
+  getValidationSub() {
+    return this.invalidQuerySub.asObservable();
+  }
+
   validSearchQuery() {
-    return this.queryBuilderObject.isValid;
+    const isValid = this.queryBuilderObject.isValid;
+    if (isValid) {
+      this.invalidQuerySub.next(true);
+      return true;
+    }
+    this.invalidQuerySub.next(false);
+    return false;
   }
 
   getSearchResults(format = 'JSON') {
