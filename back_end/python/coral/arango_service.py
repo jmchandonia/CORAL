@@ -245,6 +245,41 @@ class ArangoService:
         # sys.stderr.write('aql = '+aql+'\n')
         
         return self.__db.AQLQuery(aql, bindVars=aql_bind, rawResults=True, batchSize=size)
+
+    def get_upstream_core_props(self, type_def, props, intermediate_pks=True):
+
+
+        prop_query_fmt = ' AND '.join(['HAS(x, "%s")' % p for p in props])
+        prop_key_fmt = ','.join(['"%s": x.%s' % (p, p) for p in props])
+        props_query = f'''
+            LET properties = UNIQUE(
+                FOR x in 1..100 INBOUND t SYS_ProcessOutput, SYS_ProcessInput
+                FILTER {prop_query_fmt}
+                RETURN {{{prop_key_fmt}}}
+            )
+        '''
+
+        if intermediate_pks:
+            keys_query = '''
+                LET all_vertex_ids = UNIQUE(
+                    FOR x in 1..100 INBOUND t SYS_ProcessOutput, SYS_ProcessInput
+                    FILTER NOT IS_SAME_COLLECTION(x, SYS_Process)
+                    return x
+                )
+            '''
+
+            queries = props_query + keys_query
+            document = '{"keys": all_vertex_ids, "properties": properties[0]}'
+        else:
+            queries = props_query
+            document = 'MERGE(t, properties[0])'
+
+        queries = props_query + keys_query if intermediate_pks else props_query
+        document = 'MERGE(t, properties[0], {"intermediate_keys": all_vertex_ids})'
+
+        rs = self.__db.AQLQuery(aql, rawResults=True)
+        return pd.DataFrame(list(rs))
+
     
     def __to_type2objects(self, aql_rs):
         type2objects = {}

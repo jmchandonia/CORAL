@@ -161,12 +161,15 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // add double click event listener to submit search query on nodes
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
+    // send node position to cache if its been updated by user
+    this.network.on('dragEnd', ({nodes, pointer}) => {
+      if (!nodes.length) return;
+      this.setNodePositionCache(pointer.canvas, nodes[0]);
+    })
+
     // add click event to expand cluster nodes
     this.network.on('release', ({nodes, pointer}) => {
       if (!nodes.length) return;
-
-      // send node position to cache if its been updated by user
-      this.setNodePositionCache(pointer.canvas, nodes[0])
 
       if (!this.isDragging) {
         // if the id in nodes is a string and starts with cluster, open network cluster from id

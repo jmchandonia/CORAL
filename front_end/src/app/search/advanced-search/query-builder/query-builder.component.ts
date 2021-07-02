@@ -19,7 +19,9 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
   dataTypes: any;
   operators: string[] = [];
   selectedDataType: QueryMatchData;
-  dataTypeSub = new Subscription();
+  private dataTypeSub = new Subscription();
+  private invalidQuerySub = new Subscription();
+  public valid = true;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -38,11 +40,18 @@ export class QueryBuilderComponent implements OnInit, OnDestroy {
         this.dataTypes = dataTypes;
       });
     }
+
+    this.invalidQuerySub = this.queryBuilder.getValidationSub()
+      .subscribe((valid) => this.valid = valid);
 }
 
   ngOnDestroy() {
     if (this.dataTypeSub) {
       this.dataTypeSub.unsubscribe();
+    }
+
+    if (this.invalidQuerySub) {
+      this.invalidQuerySub.unsubscribe();
     }
   }
 

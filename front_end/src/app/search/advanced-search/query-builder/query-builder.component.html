@@ -8,6 +8,7 @@
         <label for="data-type">Data Type</label>
         <ng-select
           class="custom"
+          [class.select-error]="!valid && queryMatch && queryMatch.isEmpty"
           [items]="dataTypes"
           placeholder="Select a data type"
           bindLabel="dataType"

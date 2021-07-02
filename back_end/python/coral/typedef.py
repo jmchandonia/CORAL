@@ -59,8 +59,33 @@ class PropertyTextValidator(PropertyValidator):
                     'The value (%s) of the "%s" property does not follow the property constraint'
                     % (property_value, property_name))
 
+class PropertyTextListValidator(PropertyValidator):
+    def __init__(self, reg_expression_constraint):
+        super().__init__(reg_expression_constraint)
 
-class PropertyFloatValidator(PropertyValidator):
+        self.__pattern = None
+        if self.validatable:
+            self.__pattern = re.compile(reg_expression_constraint)
+
+    def validate_type(self, property_name, property_values):
+        try:
+            property_values = property_values.split(',')
+        except AttributeError:
+            raise ValueError(
+                'The Value(s) (%s) of the "%s" property must be either a single text item or a comma separated list'
+                    % (property_values, property_name)
+            )
+
+    def validate_value(self, property_name, property_values):
+        property_values = property_values.split(',')
+        for property_value in property_values:
+            if not self.__pattern.match(property_value):
+                raise ValueError(
+                    'The value (%s) of the "%s" property does not follow the property constraint'
+                        % (property_value, property_name)
+                )
+
+class PropertyNumericValidator(PropertyValidator):
     def __init__(self, min_max_validator):
         super().__init__(min_max_validator)
 
@@ -73,7 +98,7 @@ class PropertyFloatValidator(PropertyValidator):
     def validate_type(self, property_name, property_value):
         if type(property_value) is not float and type(property_value) is not int:
             raise ValueError(
-                'Wrong property type: the value of "%s" property is not float (%s)'
+                'Wrong property type: the value of "%s" property is not numeric (%s)'
                 % (property_name, property_value))
 
     def validate_value(self, property_name, property_value):
@@ -82,7 +107,6 @@ class PropertyFloatValidator(PropertyValidator):
                 raise ValueError(
                     'The value (%s) of the "%s" property is not in the range [%s, %s]'
                     % (property_value, property_name, self.__min_value, self.__max_value))
-
 
 class PropertyTermValidator(PropertyValidator):
     def __init__(self, root_term_id_validator):
@@ -120,11 +144,11 @@ class PropertyTermValidator(PropertyValidator):
 
 _PROPERTY_VALIDATORS = {
     'text': PropertyTextValidator,
-    'float': PropertyFloatValidator,
+    'float': PropertyNumericValidator,
     'term': PropertyTermValidator,
-    'int': PropertyValidator,
+    'int': PropertyNumericValidator,
     '[ref]': PropertyValidator,
-    '[text]': PropertyValidator
+    '[text]': PropertyTextListValidator
 }
 
 
@@ -245,6 +269,9 @@ class TypeDef:
     def process_input_type_defs(self):
         return self.__process_input_type_defs
 
+    def has_property_defs(self, properties):
+        return all(p in self.property_names for p in properties)
+
 
     def validate_data(self, data, ignore_pk=False):
         # check property values
@@ -357,6 +384,7 @@ class PropertyDef:
     def is_upk(self):
         return self.__upk
 
+
     def validate(self, value):
         self.__property_validator.validate(self.__name, value)
 
@@ -435,6 +463,21 @@ class TypeDefService:
 
     def get_type_def(self, type_name):
         return self.__type_defs[type_name]
+
+    def get_type_defs_with_properties(self, props: list):
+        results = []
+        for type_def in self.__type_defs.values():
+            if all(p in type_def.property_names for p in props):
+                results.append(type_def)
+        return results
+
+    def get_type_def_with_upk_id(self, term_id):
+        for type_def in self.__type_defs.values():
+            if type_def.upk_property_def is None:
+                continue
+            if type_def.upk_property_def.term_id == term_id:
+                return type_def
+        raise ValueError('No typedef found with UPK ID "%s"' % term_id)
 
     def has_term_pk(self, term_id):
         prop_defs = self.__term_2_prop_defs.get(term_id)
