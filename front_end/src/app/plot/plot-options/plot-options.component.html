@@ -42,6 +42,7 @@
                         <ng-template ng-option-tmp let-item="item">
                           <span [innerHTML]="item.image_tag | safeHtml"></span>
                           <span style="margin-left: 10px">{{item.name}}</span>
+                          <span *ngIf="item.map && requiresMergeForMapping"> (Requires merging upstream data)</span> 
                         </ng-template>
                     </ng-select>
                   </div>

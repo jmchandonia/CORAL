@@ -28,6 +28,7 @@ export class PlotOptionsComponent implements OnInit {
   private coreTypeName: string;
   public isMap = false; // determines if we should use UI for map config
   public mapBuilder: MapBuilder;
+  public requiresMergeForMapping = false;
   public axisOptions: AxisOption[]; // user facing options that displays options based on what can be plotted
   private _axisOptions: AxisOption[]; // stores all axis options regardless of if theyre allowed to be displayed
   public plot: PlotlyBuilder;
@@ -128,7 +129,9 @@ export class PlotOptionsComponent implements OnInit {
           if (this.mapBuilder && this.mapBuilder.dimWithCoords === undefined) {
             this.mapBuilder.setLatLongDimension(this.axisOptions);
           }
-          // this.spinner.hide();
+
+          // check if brick has lat and long data in its dimensions for UI notification
+          this.requiresMergeForMapping = !validator.hasCoordsInDimensions(this.metadata);
         });
     }
   }
@@ -151,7 +154,6 @@ export class PlotOptionsComponent implements OnInit {
         }
 
         if (!this.coreTypePlot) {
-          // this.plotTypeData = this.validateAxes(data.results, includeMap);
           this.plotTypeData = validator.getValidPlotTypes(data.results, this.axisOptions, includeMap, this.metadata.dim_context.length);
         } else {
           // dont show map options if there is no google maps api key in env
@@ -180,7 +182,7 @@ export class PlotOptionsComponent implements OnInit {
       if (this.coreTypePlot) {
         this.mapBuilder.query = this.plot.query;
       } else {
-        if (!validator.hasCoordsInDimensions(this.metadata)) {
+        if (this.requiresMergeForMapping) {
           // brick needs to merge with upstream data to get coordinates; get temporary extended brick
           this.loading = true;
           this.spinner.show();
