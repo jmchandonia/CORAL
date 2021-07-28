@@ -362,6 +362,9 @@ _make var/config.json based on the following template:_
     "project_email": "YOUR_PROJECT_EMAIL",
     "project_email_password": "YOUR_PROJECT_EMAIL_PASSWORD",
     "admin_email": YOUR_ADMINS_EMAIL"
+    "upstream_connection_criteria": {
+        "coords": ["latitude", "longitude"]
+    }
   }
 }
 
