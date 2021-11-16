@@ -198,11 +198,11 @@ export class SearchResultComponent implements OnInit, AfterViewInit {
   }
 
   download(data, name) {
-    const blob = new Blob([data], {type: 'text/csv'});
+    const blob = new Blob([data], {type: 'text/tab-separated-values'});
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${name}.csv`;
+    a.download = `${name}.tsv`;
     a.setAttribute('display', 'none');
     document.body.appendChild(a);
     a.click();

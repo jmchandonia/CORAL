@@ -16,6 +16,7 @@ export class AdvancedSearchComponent implements OnInit {
   processes = [];
   public dataTypes;
   public dataModels;
+  public displayErrorMessage = false;
 
   constructor(
     private queryBuilder: QueryBuilderService,
@@ -51,6 +52,10 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   onSubmit() {
+    if (!this.queryBuilder.validSearchQuery()) {
+      this.displayErrorMessage = true;
+      return;
+    }
     this.router.navigate(['../result'], {
       relativeTo: this.route,
       queryParams: {

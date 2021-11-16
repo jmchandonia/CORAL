@@ -8,6 +8,7 @@ export class MapBuilder {
         this.isCoreType = isCoreType;
     }
 
+    tempObjectId: string // for temporary stored bricks merged with upstream properties
     query: QueryBuilder;
     colorField: AxisOption;
     labelField: AxisOption;

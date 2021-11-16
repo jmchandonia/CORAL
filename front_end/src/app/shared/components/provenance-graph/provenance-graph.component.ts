@@ -7,6 +7,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { INodeData, HomepageNode, HomepageNodeFactory as NodeFactory } from 'src/app/shared/models/provenance-graph/homepage-node';
 import { IEdgeData, HomepageEdgeFactory as EdgeFactory } from 'src/app/shared/models/provenance-graph/homepage-edge';
+import { UserService } from 'src/app/shared/services/user.service';
+import { User } from 'src/app/shared/models/user';
 @Component({
   selector: 'app-provenance-graph',
   templateUrl: './provenance-graph.component.html',
@@ -19,6 +21,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   clusterNodes: INodeData[] = [];
   @Output() querySelected: EventEmitter<{query: QueryMatch, process?: Process}> = new EventEmitter();
 
+  private cacheKey: string;
   provenanceLoadingSub: Subscription;
   provenanceGraphSub: Subscription;
   noResults = false;
@@ -28,6 +31,7 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   canvasHeight = 0;
   xScale = 1;
   yScale = 1;
+  user: User;
 
   @ViewChild('pGraph') pGraph: ElementRef;
 
@@ -56,9 +60,11 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   constructor(
     private homeService: HomeService,
     private spinner: NgxSpinnerService,
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
+    this.user = this.userService.getUser();
     this.spinner.show('pgraph-loading');
     this.provenanceLoadingSub = this.homeService.getProvenanceLoadingSub()
     .subscribe(() => {
@@ -113,6 +119,9 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
   }
 
   initNetworkGraph(data) {
+    // set cache key (for repositioning nodes in cache)
+    this.cacheKey = data.cacheKey;
+
     this.calculateScale(data.nodes, data.links);
     const [coreTypes, dynamicTypes] = partition(data.nodes, node => node.category !== 'DDT_');
 
@@ -152,8 +161,16 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
     // add double click event listener to submit search query on nodes
     this.network.on('doubleClick', ({nodes}) => this.submitSearchQuery(nodes));
 
+    // send node position to cache if its been updated by user
+    this.network.on('dragEnd', ({nodes, pointer}) => {
+      if (!nodes.length) return;
+      this.setNodePositionCache(pointer.canvas, nodes[0]);
+    })
+
     // add click event to expand cluster nodes
-    this.network.on('release', ({nodes}) => {
+    this.network.on('release', ({nodes, pointer}) => {
+      if (!nodes.length) return;
+
       if (!this.isDragging) {
         // if the id in nodes is a string and starts with cluster, open network cluster from id
         if (typeof nodes[0] === 'string' && nodes[0].includes('cluster')) {
@@ -211,6 +228,51 @@ export class ProvenanceGraphComponent implements OnInit, OnDestroy {
         this.handleZoomForLargeGraphs(data.nodes);
       }
     });
+}
+
+async setNodePositionCache({x, y}, id) {
+  // dont cache non-cluster nodes that are outside of the min max bounds
+  const nodesInCluster = this.nodes.get({filter: n => n.cid !== undefined}).map(n => n.id);
+  // non-cluster nodes can always be cached because they dont force the network to zoom out
+  if (!nodesInCluster.includes(id) && this.outsideBounds(x, y)) return;
+
+  if (typeof id === 'string') {
+    // hack to fix cluster nodes with IDs that are assigned by VisJS library
+    const [root] = this.network
+      .getNodesInCluster(id)
+      .map(n => this.nodes.get(n))
+      .filter(n => n.cid === undefined); // node with no cid is the parent node
+        await this.homeService.setNodePositionCache(this.cacheKey, <number>root.id, {
+          x: x / this.xScale,
+          y: y / this.yScale
+        })
+      return;
+  }
+  await this.homeService.setNodePositionCache(this.cacheKey, id, {
+    x: x / this.xScale,
+    y: y / this.yScale
+  });
+}
+
+async clearNodePositionCache() {
+  await this.homeService.deleteNodePositionCache(this.cacheKey);
+}
+
+private outsideBounds(x, y) {
+  // get highest and lowest node coords
+  const nodes = this.nodes.map(n => n);
+  const [xMax, xMin] = nodes.reduce(([max, min], c) => {
+    if (c.x > max) return [c.x, min];
+    if (c.x < min) return [max, c.x];
+    return [max, min]
+  }, [-Infinity, Infinity])
+
+  const [yMax, yMin] = nodes.reduce(([max, min], c) => {
+    if (c.y > max) return [c.y, min];
+    if (c.y < min) return [max, c.y];
+    return [max, min];
+  }, [-Infinity, Infinity]);
+  return x > xMax || x < xMin || y > yMax || y < yMin;
 }
 
 handleZoomForLargeGraphs(nodes: INodeData[]) {

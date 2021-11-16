@@ -35,6 +35,7 @@ _IMPORT_DIR_PROCESS = __CONFIG['Import']['process_dir']
 _IMPORT_DIR_BRICK = __CONFIG['Import']['brick_dir']
 _GOOGLE_OAUTH2_CREDENTIALS = __CONFIG['WebService']['google_auth_file']
 _GOOGLE_RECAPTCHA_SECRET = __CONFIG['WebService']['captcha_secret_key']
+_COORDS_CRITERIA = __CONFIG['WebService']['upstream_connection_criteria']['coords']
 _USERS = __CONFIG['WebService']['users']
 
 with open(__CONFIG['WebService']['auth_private'], 'rb') as authfile:
@@ -45,7 +46,6 @@ with open(__CONFIG['WebService']['auth_public'], 'rb') as authfile:
 __TYPEDEF_FILE = os.path.join(__PACKAGE_DIR, 'var/typedef.json')
 _BRICK_TYPE_TEMPLATES_FILE = os.path.join(__PACKAGE_DIR, 'var/brick_type_templates.json')
 _UPLOAD_CONFIG_FILE = os.path.join(__PACKAGE_DIR, 'var/upload_config.json')
-
 
 _WEB_SERVICE = __CONFIG['WebService']
 _PROJECT_ROOT = __CONFIG['WebService']['project_root']

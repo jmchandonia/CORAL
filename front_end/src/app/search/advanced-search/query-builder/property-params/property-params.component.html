@@ -3,6 +3,7 @@
     <div>
       <ng-select
           class="custom"
+          [class.select-error]="!valid && !queryParam.attribute"
           bindLabel="name"
           [items]="propertyTypes"
           [(ngModel)]="selectedAttribute"
@@ -16,6 +17,7 @@
     <div>
       <ng-select
           class="custom"
+          [class.select-error]="!valid && !queryParam.matchType"
           [items]="matchTypes"
           [(ngModel)]="selectedMatchType"
           (change)="setMatchType($event)"
@@ -23,8 +25,21 @@
       ></ng-select>
     </div>
   </div>
-  <div class="col-4">
-    <input class="form-control" [(ngModel)]="queryParam.keyword" />
+  <div class="col-4" *ngIf="queryParam.attribute !== 'date'">
+    <input class="form-control" [class.button-error]="!valid && invalidKeyword" [(ngModel)]="queryParam.keyword" />
+  </div>
+  <div class="col-4" *ngIf="queryParam.attribute === 'date'">
+    <input
+      class="form-control"
+      [class.button-error]="!valid && invalidKeyword"
+      id="datepicker"
+      type="text"
+      placeholder="dd/mm/yyyy"
+      bsDatepicker
+      placement="top"
+      [bsConfig]="datepickerConfig"
+      (bsValueChange)="handleDateSelected($event)"
+    >
   </div>
   <div class="col-2">
     <button class="btn btn-link" (click)="removeParam()">Delete</button>

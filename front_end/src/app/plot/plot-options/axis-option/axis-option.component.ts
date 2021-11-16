@@ -14,6 +14,7 @@ export class AxisOptionComponent implements OnInit, OnChanges {
   @Input() axis: Axis;
   @Input() axisValidation: AxisData;
   @Input() public dimContext: DimensionContext;
+  @Input() hideLogScaleOption = false;
   @Input() invalid = false;
   
   public validOptions: AxisOption[];
