@@ -1555,7 +1555,12 @@ def _add_var_context(brick_var, context_elems):
         type_term = _get_term(ce.get('type'))
         units_term = _get_term(ce.get('units'))
         scalar_type = type_term.microtype_value_scalar_type        
-        value = _get_term(ce.get('value')) if  scalar_type == 'oterm_ref' else ce.get('value')['text']
+        scalar_type = type_term.microtype_value_scalar_type
+        value = ce.get('value')
+        if (scalar_type == 'oterm_ref'):
+            value = _get_term(value)
+        if (scalar_type == 'object_ref'):
+            value = value['text']
         brick_var.add_attr(type_term=type_term, units_term=units_term, 
             scalar_type=scalar_type, value=value)
 
