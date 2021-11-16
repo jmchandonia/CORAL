@@ -18,7 +18,7 @@ export class QueryBuilder {
 
     get isValid() {
         if (this.isEmpty) { return false; }
-        if (this.queryMatch.isValid) { return false; }
+        if (!this.queryMatch.isValid) { return false; }
         if (this.connectsUpTo && !this.connectsUpTo.isValid) { return false; }
         if (this.connectsDownTo && !this.connectsDownTo.isValid) { return false; }
         for (const processUp of this.processesUp) {
@@ -56,7 +56,7 @@ export class QueryMatch {
         }
     }
 
-    isValid() {
+    get isValid() {
         if (this.isEmpty) { return false; }
         for (const param of this.params) {
             if (!param.isValid) { return false; }
@@ -98,6 +98,9 @@ export class QueryParam {
         ) {
             return false;
          }
+        if (this.scalarType === 'float' || this.scalarType === 'int') {
+            return !isNaN(parseInt(this.keyword));
+        }
         return true;
     }
  

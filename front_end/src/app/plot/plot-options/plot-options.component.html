@@ -42,6 +42,7 @@
                         <ng-template ng-option-tmp let-item="item">
                           <span [innerHTML]="item.image_tag | safeHtml"></span>
                           <span style="margin-left: 10px">{{item.name}}</span>
+                          <span *ngIf="item.map && requiresMergeForMapping"> (Requires merging upstream data)</span> 
                         </ng-template>
                     </ng-select>
                   </div>
@@ -61,6 +62,7 @@
 </div> 
 <div *ngIf="plot.plot_type && !isMap && axisOptions">
   <app-axis-option
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     id="x-axis"
     [axis]="plot.axes.x"
     [axisValidation]="plot.plot_type.axis_data.x"
@@ -74,6 +76,7 @@
   ></app-axis-option>
   <app-axis-option
     id="y-axis"
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     [axisValidation]="plot.plot_type.axis_data.y"
     [axis]="plot.axes.y"
     [options]="axisOptions"
@@ -86,6 +89,7 @@
   ></app-axis-option>
   <app-axis-option
     id="z-axis"
+    [hideLogScaleOption]="plot.plot_type?.name.includes('Heatmap')"
     *ngIf="plot.plot_type.axis_data.z"
     [axisValidation]="plot.plot_type.axis_data.z"
     [axis]="plot.axes.z"
@@ -116,7 +120,7 @@
   </div>  
 </div>
 <app-map-options
-  *ngIf="mapBuilder && isMap && axisOptions"
+  *ngIf="mapBuilder && isMap && axisOptions && !loading"
   [mapBuilder]="mapBuilder"
   [options]="_axisOptions"
   [dimensions]="metadata?.dim_context"

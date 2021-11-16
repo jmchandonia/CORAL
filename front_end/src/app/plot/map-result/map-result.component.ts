@@ -21,6 +21,7 @@ export class MapResultComponent implements OnInit {
   ) { }
 
   mapBuilder: MapBuilder;
+  tempObjectId: string;
   results: any[];
   _results: any[]; // contains all results including results that are hidden
   lowestScale: number;
@@ -49,8 +50,13 @@ export class MapResultComponent implements OnInit {
     if (this.mapBuilder.isCoreType) {
       this.plotService.getStaticMap(this.mapBuilder).subscribe(res => this.initMap(res));
     } else {
-      this.plotService.testDynamicMap(this.mapBuilder.brickId, this.mapBuilder)
+      if (!this.mapBuilder.tempObjectId) {
+        this.plotService.testDynamicMap(this.mapBuilder.brickId, this.mapBuilder)
         .subscribe(data => this.initMap(data))
+      } else {
+        this.plotService.getTempDynamicMap(this.mapBuilder.tempObjectId, this.mapBuilder)
+          .subscribe(data => this.initMap(data));
+      }
     }
   }
 

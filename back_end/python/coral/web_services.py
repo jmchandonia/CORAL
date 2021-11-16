@@ -45,6 +45,7 @@ dp = DataProvider()
 svs = dp._get_services()
 cns = dp._get_constants()
 
+COORDS_CRITERIA = cns['_COORDS_CRITERIA']
 CACHE_DIR =  cns['_CACHE_DIR']
 cache = Cache(CACHE_DIR)
 
@@ -64,6 +65,7 @@ _UPLOAD_VALIDATED_DATA_PREFIX = 'uvd_'
 _UPLOAD_VALIDATED_DATA_2_PREFIX = 'uvd2_'
 _UPLOAD_VALIDATION_REPORT_PREFIX = 'uvr_'
 _UPLOAD_CORE_DATA_PREFIX = 'ucd_'
+_MERGED_TMP_BRICK_PREFIX = 'mtb_'
 
 # for methods that only a logged in user can use
 def auth_required(func):
@@ -617,7 +619,21 @@ def filter_brick(brick_id):
         } )
     
     except Exception as e:
-        return _err_response(e)        
+        return _err_response(e)
+
+@app.route("/coral/filter_tmp_brick/<brick_tmp_id>", methods=['POST'])
+@auth_ro_required
+def filter_tmp_brick(brick_tmp_id):
+    try:
+        query = request.json
+        res = _filter_brick(brick_tmp_id, query, tmp_dir=True)
+
+        return json.dumps({
+            'status': 'success',
+            'res': res
+        })
+    except Exception as e:
+        return _err_response(e)
     
 @app.route("/coral/do_report/<value>", methods=['GET'])
 def do_report(value):
@@ -1437,8 +1453,11 @@ def _csv_to_brick(file_name_csv, file_name_json):
         data = file.read()
     return data
 
-def _filter_brick(brick_id, query):
-    file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+def _filter_brick(brick_id, query, tmp_dir=False):
+    if not tmp_dir:
+        file_name_json = os.path.join(cns['_DATA_DIR'],brick_id)
+    else:
+        file_name_json = os.path.join(TMP_DIR, _MERGED_TMP_BRICK_PREFIX + brick_id)
     file_name_out = os.path.join(TMP_DIR,brick_id+'_filtered.json')
     # cmd = '/home/coral/prod/bin/FilterGeneric.sh '+file_name_json+' \''+json.dumps(query)+'\''
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'FilterGeneric.sh') + ' ' + file_name_json + ' \'' + json.dumps(query) + '\'' 
@@ -1850,7 +1869,37 @@ def coral_brick_plot_metadata(brick_id, limit):
     bp = dp._get_type_provider('Brick')
     br = bp.load(brick_id)
 
-    return br.to_json(exclude_data_values=True, typed_values_property_name=False, truncate_variable_length=int(limit), show_unique_indices=True)
+    return br.to_json(exclude_data_values=True,
+                      typed_values_property_name=False,
+                      truncate_variable_length=int(limit),
+                      show_unique_indices=True,
+                      up_properties=COORDS_CRITERIA)
+
+@app.route('/coral/brick_merged_coords/<brick_id>/<limit>', methods=['GET'])
+@auth_required
+def coral_brick_merged_with_coords(brick_id, limit):
+    # get temporary brick for front end that uplinks dim var data with lat long static properties
+    bp = dp._get_type_provider('Brick')
+    br = bp.load(brick_id)
+    temp_id = uuid.uuid4().hex
+
+    br.merge_up_to_properties(COORDS_CRITERIA)
+    tmp_json = br.to_json()
+    response_json = br.to_json(exclude_data_values=False,
+                               typed_values_property_name=False,
+                               truncate_variable_length=int(limit),
+                               show_unique_indices=True,
+                               up_properties=COORDS_CRITERIA)
+
+    # store new brick in tmp folder
+    mtb_filename = os.path.join(TMP_DIR, _MERGED_TMP_BRICK_PREFIX + temp_id)
+    with open(mtb_filename, 'w') as f:
+        json.dump(json.loads(tmp_json), f)
+
+    return _ok_response({
+        'temp_id': temp_id,
+        'data': json.loads(response_json)
+    })
 
 @app.route('/coral/brick_dim_var_values/<brick_id>/<dim_idx>/<dv_idx>/<keyword>', methods=['GET'])
 @auth_required
@@ -2249,11 +2298,37 @@ def coral_search():
             # return result as json table
             res = res_df.to_json(orient="table", index=False)
         else: # TSV
-            res = res_df.to_csv(sep='\t')
+            # res = res_df.to_csv(sep='\t')
+            _fmt_download_df(res_df)
+            res = res_df.to_csv(sep='\t', index=False)
         # return  json.dumps( {'res': res} )
         return res
     except Exception as e:
         return _err_response(e,traceback=True)
+
+def _fmt_download_df(df):
+    # formats Core TSVs into format that can be uploaded again
+    # converts x_term_name and x_term_id fields into 'x' with format 'term_name <term_id>'
+
+    # drop internal ID column
+    df.drop('id', axis=1, inplace=True)
+
+    # get term_name term_id pairs
+    merge_columns = []
+    for col in df.columns:
+        if col.endswith('term_name'):
+            type_name = col.split('term_name')[0]
+            id_col = type_name + 'term_id'
+            if id_col in df.columns:
+                merge_columns.append((col, id_col))
+
+    # combine each column with term_name <term_id> format
+    for term_name, term_id in merge_columns:
+        new_col_name = term_name.split('_term_name')[0]
+        df[new_col_name] = df[[term_name, term_id]].apply(lambda x: '%s <%s>' % (x[0], x[1]), axis=1)
+
+        # drop old columns
+        df.drop(columns=[term_name, term_id], axis=1, inplace=True)
 
 @app.route("/coral/search_operations", methods=['GET'])
 @auth_required
@@ -2909,11 +2984,14 @@ def coral_type_graph():
                 return _err_response('unparseable query '+s)
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
-    # if cacheKey in cache:
-    #    sys.stderr.write('cache hit '+cacheKey+'\n')
-    #    return  _ok_response(cache[cacheKey])
-    #else:
-    #    sys.stderr.write('cache miss '+cacheKey+'\n')
+    if cacheKey in cache:
+       sys.stderr.write('cache hit '+cacheKey+'\n')
+       # add cachekey to cache for front end if it doesn't already exist
+       if 'cacheKey' not in cache[cacheKey]:
+           cache.set(cacheKey, {**cache[cacheKey], 'cacheKey': cacheKey})
+       return  _ok_response(cache[cacheKey])
+    else:
+       sys.stderr.write('cache miss '+cacheKey+'\n')
 
     # s = pprint.pformat(filterCampaigns)
     # sys.stderr.write('campaigns = '+s+'\n')
@@ -2942,7 +3020,7 @@ def coral_type_graph():
                     'name': td.name,
                     'dataModel': td.name,
                     'dataType': td.name,
-                    'count': count
+                    'count': count,
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')
@@ -3374,13 +3452,39 @@ def coral_type_graph():
     # combine everything and return graph
     res = {
         'nodes' : nodes,
-        'links' : edges
+        'links' : edges,
+        'cacheKey': cacheKey
     }
 
     # s = pprint.pformat(res,width=999)
     # return s
     cache[cacheKey] = res
     return  _ok_response(res)
+
+@app.route('/coral/set_node_position_cache', methods=['POST'])
+def set_node_position_cache():
+    x = request.json['x']
+    y = request.json['y']
+    cacheKey = request.json['cacheKey']
+    index = request.json['id']
+    cache_item = cache[cacheKey]
+
+    for node in cache_item['nodes']:
+        if node['index'] == index:
+            node['x'] = x
+            node['y'] = y
+
+    cache.set(cacheKey, cache_item)
+
+    return _ok_response({'success': True})
+
+@app.route('/coral/delete_node_position_cache', methods=['POST'])
+def delete_node_position_cache():
+    cache_key = request.json['cacheKey']
+    if cache_key in cache:
+        del cache[cache_key]
+
+    return _ok_response({'success': True})
 
 
 @app.route('/coral/dn_process_docs/<obj_id>', methods=['GET'])
@@ -3562,6 +3666,9 @@ def coral_core_type_props(obj_name):
 @app.route('/coral/core_type_metadata/<obj_id>', methods=['GET','POST'])
 @auth_ro_required
 def coral_core_type_metadata(obj_id):
+    # optionally display units in string value (/core_type_metadata?include_units=1)
+    include_units = 'include_units' in request.args
+
     obj_type = ''
     try:
         (JSON, CSV) = range(2)
@@ -3573,25 +3680,40 @@ def coral_core_type_metadata(obj_id):
         
         sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)
+        typedef = svs['typedef'].get_type_def(obj_type)
         doc = dp.core_types[obj_type].find_one({'id':obj_id})
         if return_format == JSON:
             res = []
-            for prop in doc.properties:
-                if prop.startswith('_'): continue
-                res.append(
-                    {
-                        'property': prop,
-                        'value': doc[prop]
-                    }
-                )
+            # for prop in doc.properties:
+            #     if prop.startswith('_'): continue
+            #     res.append(
+            #         {
+            #             'property': prop,
+            #             'value': doc[prop]
+            #         }
+            #     )
+            for k, v in doc.formatted_properties.items():
+                if include_units and typedef.property_def(k).has_units_term_id() and v is not None:
+                    term_id = typedef.property_def(k).units_term_id
+                    term = svs['term_provider'].get_term(term_id)
+                    res.append({
+                        'property': k,
+                        'value': str(v) + ' (%s)' % term.term_name
+                    })
+                else:
+                    res.append({'property': k, 'value': v})
         else: # TSV
             props = []
             values = []
-            for prop in doc.properties:
-                if prop.startswith('_'): continue
-                props.append(str(prop))
-                values.append(str(doc[prop]))
-            res = '\t'.join(props)+'\n'+'\t'.join(values)
+            # for prop in doc.properties:
+            #     if prop.startswith('_'): continue
+            #     props.append(str(prop))
+            #     values.append(str(doc[prop]))
+            # res = '\t'.join(props)+'\n'+'\t'.join(values)
+            for k, v in doc.formatted_properties.items():
+                props.append(str(k))
+                values.append(str(v))
+            res = '\t'.join(props) + '\n' + '\t'.join(values)
         return  _ok_response({ "items": res, "type": obj_type  })
        
     except Exception as e:

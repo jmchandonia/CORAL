@@ -113,9 +113,7 @@ export class DataValueFormComponent implements OnInit, OnDestroy {
     this.validate();
   }
 
-  updateType(event) {
-    // const type = event.data[0];
-    const type = event;
+  updateType(type) {
     this.dataValue.typeTerm = type;
     if (!type.has_units) {
       this.dataValue.units = null;
