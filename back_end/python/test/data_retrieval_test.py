@@ -31,6 +31,7 @@ class dataRetrievalTest(unittest.TestCase):
         host = "localhost"
         port = cls.cns['_WEB_SERVICE']['port']
         https = cls.cns['_WEB_SERVICE']['https']
+
         if https:
             cls.url = "https://"+host+':'+str(port)+'/coral/'
         else:
@@ -58,7 +59,7 @@ class dataRetrievalTest(unittest.TestCase):
 
         new_jwt = jwt.encode(payload, 'data clearinghouse', headers={'secret':b64.decode('utf-8')}, algorithm='HS256')
 
-        headers = {'Authorization': 'JwToken' + ' ' + new_jwt.decode(), 'content-type': 'application/json'}
+        headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
         return headers
     
         
@@ -111,7 +112,7 @@ class dataRetrievalTest(unittest.TestCase):
         headers = self.get_authorized_headers()
         
         # this method is @auth_ro_required, so should work
-        query = {'format': 'TSV'}
+        query = {'format': 'CSV'}
         r = requests.post(self.url+'brick/Brick0000001', headers=headers, json=query, verify=False)
         # print (r.text)
         self.assertEqual(r.status_code,200)
@@ -168,6 +169,7 @@ class dataRetrievalTest(unittest.TestCase):
         self.assertTrue('"error_y": [0.0015' in r.text)
 
     # get brick metadata, limit variables for plotting
+    @unittest.skip("this test refers to the wrong brick")
     def test_get_brick_plot_metadata(self):
         headers = self.get_authorized_headers()
 

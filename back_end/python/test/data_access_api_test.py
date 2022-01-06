@@ -29,9 +29,9 @@ class dataAccessAPITest(unittest.TestCase):
     
         # default url for web services
         host = "localhost"
-        # host = "psnov1.lbl.gov"
         port = cls.cns['_WEB_SERVICE']['port']
         https = cls.cns['_WEB_SERVICE']['https']
+
         if https:
             cls.url = "https://"+host+':'+str(port)+'/coral/'
         else:
@@ -76,7 +76,7 @@ class dataAccessAPITest(unittest.TestCase):
         secret = self.get_key_data_secret()
         new_jwt = jwt.encode(payload, secret, algorithm='HS256')
 
-        headers = {'Authorization': 'JwToken' + ' ' + new_jwt.decode(), 'content-type': 'application/json'}
+        headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
 
         # this method is @auth_required
         r = requests.get(self.url+'data_types', headers=headers, verify=False)
@@ -94,7 +94,7 @@ class dataAccessAPITest(unittest.TestCase):
         secret = self.get_key_data_secret()
         new_jwt = jwt.encode(payload, secret, algorithm='HS256')
 
-        headers = {'Authorization': 'JwToken' + ' ' + new_jwt.decode(), 'content-type': 'application/json'}
+        headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
 
         # wait for token to expire
         time.sleep(2)
@@ -117,7 +117,7 @@ class dataAccessAPITest(unittest.TestCase):
 
         new_jwt = jwt.encode(payload, 'data clearinghouse', headers={'secret':b64.decode('utf-8')}, algorithm='HS256')
 
-        headers = {'Authorization': 'JwToken' + ' ' + new_jwt.decode(), 'content-type': 'application/json'}
+        headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
 
         # this method is @auth_required, so should fail
         r = requests.get(self.url+'data_types', headers=headers, verify=False)
@@ -139,7 +139,7 @@ class dataAccessAPITest(unittest.TestCase):
 
         new_jwt = jwt.encode(payload, 'data clearinghouse', headers={'secret':b64.decode('utf-8')}, algorithm='HS256')
 
-        headers = {'Authorization': 'JwToken' + ' ' + new_jwt.decode(), 'content-type': 'application/json'}
+        headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
 
         # this method is @auth_ro_required, so should work
         r = requests.post(self.url+'types_graph', headers=headers, json='', verify=False)
