@@ -36,6 +36,20 @@ from .descriptor import IndexDocument
 from .workspace import EntityDataWebUploader
 from . import template 
 
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.int64):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NpEncoder, self).default(obj)
+
+
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 CORS(app)
@@ -525,7 +539,7 @@ def get_brick(brick_id):
         return json.dumps( {
             'status': 'success',
             'res': res
-        } )
+        }, cls=NpEncoder )
     
     except Exception as e:
         return _err_response(e)
