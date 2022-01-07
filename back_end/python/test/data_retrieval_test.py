@@ -186,3 +186,26 @@ class dataRetrievalTest(unittest.TestCase):
 
         self.assertEqual(dim_length_0, 100)
         self.assertEqual(dim_length_1, 42)
+
+    # search by campaign
+    def test_search_brick_by_campaign(self):
+        headers = self.get_authorized_headers()
+        # query for all bricks related to the 100WS campaign
+        query = {'format': 'CSV',
+                 'queryMatch': {'category': 'DDT_',
+                                'dataModel': 'Brick',
+                                'dataType': 'NDArray',
+                                'params': []},
+                 'processesUp': [
+                     {
+                         'keyword': '100 Well Survey',
+                         'attribute': 'campaign',
+                         'matchType': '=',
+                         'scalarType': 'string'
+                     }
+                 ]
+                 }
+        r = requests.post(self.url+'search', headers=headers, json=query, verify=False)
+        # print (r.text)
+        self.assertEqual(r.status_code,200)
+        self.assertTrue('Brick0000001' in r.text)
