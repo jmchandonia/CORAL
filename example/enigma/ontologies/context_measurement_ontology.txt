@@ -37,6 +37,10 @@
       Positive Polarity
       Negative Polarity
     *Barcode (String)
+    **Microplate
+      Microplate Name (String)
+      **Microplate Well
+        Microplate Well Name (String)
   Mathematical Context
     Normalized
     +Relative
@@ -82,8 +86,9 @@
     *Weight (Float, mass unit)
     *Volume (Float, volume unit)
     Homogenized
-    Anaerobic
-    Aerobic
+    Anaerobic (Boolean)
+    Aerobic (Boolean)
+    Aphotic (Boolean)
     Undisturbed
     Phase (String)
     Image
@@ -447,6 +452,8 @@
   base pairs
     alias: bases
     is_a: UO:0000189
+  fold concentration
+    is_a: UO:0000051
 
 -Molecules not in ChEBI:
   is_a: CHEBI:24431
@@ -461,3 +468,4 @@
   nickel(II) oxide
     alias: NiO
   1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine
+  adenine hydrochloride hydrate
