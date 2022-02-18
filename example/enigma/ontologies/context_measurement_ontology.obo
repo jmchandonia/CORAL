@@ -192,6 +192,10 @@ is_a: ME:0000209 ! Physical Context
 id: ME:0000015
 name: Anaerobic
 namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
 def: "Anaerobic." []
 is_a: ME:0000002 ! Experimental Context
 is_a: ME:0000209 ! Physical Context
@@ -200,6 +204,10 @@ is_a: ME:0000209 ! Physical Context
 id: ME:0000016
 name: Aerobic
 namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
 def: "Aerobic." []
 is_a: ME:0000002 ! Experimental Context
 is_a: ME:0000209 ! Physical Context
@@ -4253,6 +4261,76 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Isotope." []
 xref: ORef: CHEBI:24431
 is_a: ME:0000026 ! Chemical Context
+
+[Term]
+id: ME:0000409
+name: Microplate Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microplate Name." []
+is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000411 ! Microplate
+
+[Term]
+id: ME:0000410
+name: Microplate Well Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microplate Well Name." []
+is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000412 ! Microplate Well
+
+[Term]
+id: ME:0000411
+name: Microplate
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Microplate." []
+is_a: ME:0000002 ! Experimental Context
+
+[Term]
+id: ME:0000412
+name: Microplate Well
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Microplate Well." []
+is_a: ME:0000411 ! Microplate
+
+[Term]
+id: ME:0000413
+name: fold concentration
+namespace: measure.ontology
+def: "fold concentration." []
+is_a: ME:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: ME:0000414
+name: adenine hydrochloride hydrate
+namespace: measure.ontology
+def: "adenine hydrochloride hydrate." []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: ME:0000415
+name: Aphotic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Aphotic." []
+is_a: ME:0000209 ! Physical Context
 
 [Typedef]
 id: data_type
