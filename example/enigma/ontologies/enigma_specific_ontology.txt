@@ -50,6 +50,9 @@ ENIGMA
       alias: Geochemistry/Geophysics Deep Dive
     Cone Penetrometer Survey
       alias: CPT
+    Subsurface Observatory
+      alias: SSO
+    Environmental Atlas
   ENIGMA Labs and Personnel:
     alias: ENIGMA PI
     Adams Lab

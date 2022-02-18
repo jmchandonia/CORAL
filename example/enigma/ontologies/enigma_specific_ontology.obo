@@ -1201,6 +1201,21 @@ def: "Cone Penetrometer Survey." []
 synonym: "CPT" EXACT []
 is_a: ENIGMA:0000002 ! ENIGMA Campaign
 
+[Term]
+id: ENIGMA:0000166
+name: Subsurface Observatory
+namespace: enigma.ontology
+def: "Subsurface Observatory." []
+synonym: "SSO" EXACT []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000167
+name: Environmental Atlas
+namespace: enigma.ontology
+def: "Environmental Atlas." []
+is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
 [Typedef]
 id: is_a
 name: is_a
