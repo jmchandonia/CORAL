@@ -453,6 +453,7 @@ def brick_type_templates():
     except Exception as e:
         return _err_response(e, traceback=True)
 
+# not used?
 @app.route("/coral/core_types", methods=['GET'])
 def core_types():
     try:
@@ -649,6 +650,7 @@ def filter_tmp_brick(brick_tmp_id):
     except Exception as e:
         return _err_response(e)
     
+# unused?
 @app.route("/coral/do_report/<value>", methods=['GET'])
 def do_report(value):
     report = getattr(svs['reports'], value)
@@ -1333,7 +1335,7 @@ def upload_csv():
 
 
 @app.route('/coral/core_type_names', methods=["GET"])
-@auth_required
+@auth_ro_required
 def get_core_type_names():
     type_def_names = svs['typedef'].get_type_names()
     return _ok_response([name for name in type_def_names if name != 'ENIGMA'])
@@ -1704,7 +1706,7 @@ def login():
 
 
 @app.route("/coral/data_types", methods=['GET'])
-@auth_required
+@auth_ro_required
 def coral_data_types():
     res = []
     
@@ -1737,7 +1739,7 @@ def coral_data_types():
     return  json.dumps({'results': res})
 
 @app.route("/coral/data_models", methods=['GET'])
-@auth_required
+@auth_ro_required
 def coral_data_models():
     res = {}
 
