@@ -435,7 +435,12 @@ is_a: ME:0000026 ! Chemical Context
 id: ME:0000039
 name: Biological Context
 namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
 def: "Biological Context." []
+xref: ORef: ME:0000039
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -4331,6 +4336,53 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Aphotic." []
 is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000416
+name: Growth Stage
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Growth Stage." []
+xref: ORef: ME:0000416
+is_a: ME:0000039 ! Biological Context
+
+[Term]
+id: ME:0000417
+name: Preincubation
+namespace: measure.ontology
+def: "Preincubation." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000418
+name: Inoculation
+namespace: measure.ontology
+def: "Inoculation." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000419
+name: Lag Phase
+namespace: measure.ontology
+def: "Lag Phase." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000420
+name: Exponential Phase
+namespace: measure.ontology
+def: "Exponential Phase." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000421
+name: Stationary Phase
+namespace: measure.ontology
+def: "Stationary Phase." []
+is_a: ME:0000416 ! Growth Stage
 
 [Typedef]
 id: data_type
