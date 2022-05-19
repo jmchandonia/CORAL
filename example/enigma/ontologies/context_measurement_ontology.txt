@@ -121,7 +121,7 @@
     *Molecular Weight (Float, +dalton)
     Reference Compound
     *Isotope (ORef: CHEBI:24431)
-  Biological Context
+  Biological Context:
     Cell
     Colony
     **Strain
@@ -183,6 +183,12 @@
       Doubling Time (Float, time unit)
       *Time Since Inoculation (Float, time unit)
       Growth Efficiency
+    Growth Stage:
+      Preincubation
+      Inoculation
+      Lag Phase
+      Exponential Phase
+      Stationary Phase
     Gene Regulation
       Up-regulated
       Down-regulated
