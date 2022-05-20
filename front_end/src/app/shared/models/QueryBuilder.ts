@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 // tslint:disable:no-use-before-declare
 export class QueryBuilder {

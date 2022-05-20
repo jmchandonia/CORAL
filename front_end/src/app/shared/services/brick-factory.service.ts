@@ -9,7 +9,7 @@ import {
   Term,
   MicroType
 } from 'src/app/shared/models/brick';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 @Injectable({
   providedIn: 'root'

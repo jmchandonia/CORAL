@@ -8,7 +8,6 @@ import { QueryBuilder } from 'src/app/shared/models/QueryBuilder';
 import { PropertyParamsComponent } from './query-builder/property-params/property-params.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { isEqual } from 'lodash';
 
 describe('AdvancedSearchComponent', () => {
 
