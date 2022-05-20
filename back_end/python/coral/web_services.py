@@ -1602,10 +1602,18 @@ def handle_auth_code():
         'code': request.json['authCode']
     })
 
-    tokens = json.loads(result.content.decode('utf-8'))
-    access_token = tokens['access_token']
-    # refresh_token = tokens['refresh_token']
-    # TODO: store access_token and refresh_token ?
+    try:
+        tokens = json.loads(result.content.decode('utf-8'))
+        access_token = tokens['access_token']
+        # refresh_token = tokens['refresh_token']
+        # TODO: store access_token and refresh_token ?
+    except KeyError as e:
+        return _err_response({
+            'success': False,
+            'message': "An error occurred when attempting to contact Google's auth service.",
+            # 'tokens' in this case is actually a JSON error message
+            'context': tokens
+        })
 
     user = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + access_token)
 
