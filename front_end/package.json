@@ -37,6 +37,7 @@
     "datatables.net": "^1.10.22",
     "datatables.net-bs4": "^1.10.22",
     "jquery": "^3.5.1",
+    "lodash-es": "^4.17.21",
     "ngx-bootstrap": "^5.6.1",
     "ngx-spinner": "^11.0.1",
     "plotly.js": "^1.54.5",

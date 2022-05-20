@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { QueryParam, QueryMatch, QueryBuilder, Process } from '../../models/QueryBuilder';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
 import { Router } from '@angular/router';
