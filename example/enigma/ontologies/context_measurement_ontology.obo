@@ -4384,6 +4384,28 @@ namespace: measure.ontology
 def: "Stationary Phase." []
 is_a: ME:0000416 ! Growth Stage
 
+[Term]
+id: ME:0000422
+name: humic acid
+namespace: measure.ontology
+def: "humic acid." []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: ME:0000423
+name: fulvic acid
+namespace: measure.ontology
+def: "fulvic acid." []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: ME:0000424
+name: anthrahydroxyquinone-2,6-disulfonate
+namespace: measure.ontology
+def: "anthrahydroxyquinone-2,6-disulfonate." []
+synonym: "AHDS" EXACT []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
 [Typedef]
 id: data_type
 
