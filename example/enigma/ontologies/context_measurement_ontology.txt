@@ -475,3 +475,7 @@
     alias: NiO
   1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine
   adenine hydrochloride hydrate
+  humic acid
+  fulvic acid
+  anthrahydroxyquinone-2,6-disulfonate
+    alias: AHDS
