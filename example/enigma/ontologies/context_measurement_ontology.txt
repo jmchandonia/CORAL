@@ -479,3 +479,6 @@
   fulvic acid
   anthrahydroxyquinone-2,6-disulfonate
     alias: AHDS
+  citric-disodium phosphate
+  natural organic matter
+    alias: NOM

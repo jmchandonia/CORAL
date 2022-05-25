@@ -4406,6 +4406,21 @@ def: "anthrahydroxyquinone-2,6-disulfonate." []
 synonym: "AHDS" EXACT []
 is_a: ME:0000365 ! Molecules not in ChEBI
 
+[Term]
+id: ME:0000425
+name: citric-disodium phosphate
+namespace: measure.ontology
+def: "citric-disodium phosphate." []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: ME:0000426
+name: natural organic matter
+namespace: measure.ontology
+def: "natural organic matter." []
+synonym: "NOM" EXACT []
+is_a: ME:0000365 ! Molecules not in ChEBI
+
 [Typedef]
 id: data_type
 
