@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Network, DataSet, Node, Edge, NodeChosen, BoundingBox, IdType } from 'vis-network/standalone';
 import { QueryMatch, Process } from 'src/app/shared/models/QueryBuilder';
-import { partition } from 'lodash';
+import { partition } from 'lodash-es';
 import { HomeService } from 'src/app/shared/services/home.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
