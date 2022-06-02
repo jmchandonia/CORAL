@@ -12,7 +12,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { Subject, Observable } from 'rxjs';
 import { delay, tap, publish, refCount, finalize } from 'rxjs/operators';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { BrickFactoryService } from 'src/app/shared/services/brick-factory.service';
 import { Response } from 'src/app/shared/models/response';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';

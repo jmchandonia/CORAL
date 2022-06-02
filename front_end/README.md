@@ -6,17 +6,19 @@ on our system that can be challenging for data producers and data consumers alik
 ## Installation
 
 To get started, make sure you have npm and Angular installed. This app is built with Angular version
-9.1.11.
+11.2.9.
 
 `npm install -g @angular/cli`
 
-Fork and clone a repo and then install all the necessary dependencies in package.json.
+Fork and clone a repo and then install all the necessary dependencies in package.json. The command `npm ci` is recommended over `npm install`, as `install` will make updates to the package-lock.json file and may cause complications with conflicting files. `npm install` should only be used if a new dependency needs to be added to the repo.
 
-`npm install`
+If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular version 11.2.9. It is also important to note that you must use a version of node earlier than v17 to successfully build the application, or you will get an error when attempting to run any npm/node commands.
 
-If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular version 9.1.11.
+To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200. To use a specific environment (e.g. production, development) with which to serve the app, you can pass the `configuration` flag to the serve command like so:
 
-To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200
+`ng serve --configuration=development`
+
+This will tell your application to look at your `environment.dev.ts` file for environment variables. You can use the short form `--prod` instead of `--configuration=production` for serving the prod example.
 
 ## Environment
 
@@ -28,7 +30,11 @@ Once the program is installed, you will need to configure environment variables 
 
 `GOOGLE_MAPS_API_KEY` - Required for plotting maps of items with geographic data. You will need to create a Google Maps API key using the Google developer console. [Click here](https://developers.google.com/maps/documentation/embed/get-api-key) for more information on how to generate a key. If you do not have access to a Google Maps API key, you can simply leave the GOOGLE_MAPS_API_KEY as an empty string `''` and map options will not be loaded as a part of the UI.
 
-Please note that without these variables, the application will fail to compile.
+`GOOGLE_OAUTH2_CLIENT_KEY` - Required for authentication - The token provided by the google developer API that allows you to use their OAuth2 services. See the back_end folder's README for more detalis on configuring authentication across the application; it requires steps within the front and the back end.
+
+`GOOGLE_CAPTCHA_SITE_KEY` - Required for setting up user registration. Generates a captcha for preventing site abuse. This option is not required, if you prefer to not use the user registration feature, you must leave this option as an empty string `''`. This will simply prevent the captcha from loading, so if you do have the backend configured with an email for user registration, it would be wise to deconfigure it.
+
+Please note that without these variables declared as keys within your `environment.*.ts` file(s), the application will fail to compile. The `environment.ts` that lives in the repo is built so that the app won't fail at the compilation step, but will still require the fields to be populated with a valid value, notably the `baseURL` and the `GOOGL_OAUTH2_CLIENT_KEY` variables.
 
 
 ## Deployment
