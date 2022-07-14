@@ -4421,6 +4421,29 @@ def: "natural organic matter." []
 synonym: "NOM" EXACT []
 is_a: ME:0000365 ! Molecules not in ChEBI
 
+[Term]
+id: ME:0000427
+name: Minimal Media
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Minimal Media." []
+is_a: ME:0000048 ! Media
+
+[Term]
+id: ME:0000428
+name: CAS Registry Number
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "CAS Registry Number." []
+is_a: ME:0000027 ! Molecule
+
 [Typedef]
 id: data_type
 

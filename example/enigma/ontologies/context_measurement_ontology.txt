@@ -105,6 +105,7 @@
       *-PubChem Molecule Name (String)
       *-Molecular Formula (String)
       *-InChIKey (String)
+      *-CAS Registry Number (String)
     Reagent
     *Reaction (String)
     *Surface Type (String)
@@ -145,6 +146,7 @@
       Media Name (String)
       Media Composition (String)
       *Media Addition (String)
+      Minimal Media (Boolean)
     Metabolite
       is_a: ME:0000027
     Substrate
