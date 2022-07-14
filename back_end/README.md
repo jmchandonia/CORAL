@@ -411,8 +411,7 @@ If you want to give upload privileges for all types in your system to a user, yo
 
 #### Setting up Auth
 
-Once you have configured your users.json file, you will need to generate Google OAuth2 credentials for login.
-you can visit [developers.google.com](https://developers.google.com/adwords/api/docs/guides/authentication) for information on how to obtain these credentials.
+Once you have configured your users.json file, you will need to generate Google OAuth2 credentials for login. Read the section below for information on how to obtain and configure your google OAuth credentials.
 
 When you have your credentials, download them as a json file and store them in a secure place on your computer or linux machine and add the location of the credentials to the "WebService.google_auth_file" of your `config.json`:
 
@@ -426,6 +425,39 @@ When you have your credentials, download them as a json file and store them in a
 You will also need to store the public key value on the client facing environment, under `front_end/src/app/environments/YOUR_ENVIRONMENT.ts`. the field must be stored with the key name "GOOGLE_OAUTH2_CLIENT_KEY".
 
 Once you have congigured this information properly, allowed users should be able to sign in to your CORAL app using gmail.
+
+#### Setting up Authentication with Google
+
+CORAL supports authentication both with OAuth2 and with SimplePam. The default and recommended behavior is to set up OAuth2 using Google's OAuth2 services. You can find more information about how Google's OAuth2 flow works [here](https://developers.google.com/workspace/guides/auth-overview). Visit [here](https://developers.google.com/adwords/api/docs/guides/authentication) for Google's more detailed instructions for getting started.
+
+Once you have created a Google Developer account and have set up a profile, begin by going to the [Google Cloud Console](https://console.cloud.google.com) to get started with creating authentication. In the top left corner next to "Google Cloud Platform", click select a project. A modal window will pop up and you can click "NEW PROJECT" in the top right. After naming you project, you will be redirected to the dashboard where you can manage many google tools including authentication.
+
+Next, click "APIs & Services" on the side panel - once that has loaded, you should see a new side panel that has "Credentials" within it. Click on "Credentials". You will need to first configure the Consent screen before creating the credentials. The "Configure Consent Screen" button will ask for consent, then take you to where you go to set up your credentials. You need to have a google workspace account if you want to set up internal only credentials.
+
+_Note: As google changes their documentation frequently, these instructions are prone to change. It is important to have bookmarked the right information needed and make note of things as they change. It is recommended that you check up on your google developer console frequently to make sure that there are no issues and that things are still located where they are expected to be._
+#### Setting up The credentials
+
+Once you have granted consent, you will automatically be redirected to the page where you set up important information about which domains are allowed to access you developer token. You will need to provide the domain that the site will be hosted at (you can also use `localhost` with no port numbers for development), as well as the user support email and contact information.
+
+When you have moved on, It will ask you for Authorized JavaScript origins as well as Authorized redirect URIs. You can add as many or as few as you like. JavaScript Origins will be the domains that your client will visit, and Authorized Redirect URIs are the callback that Google will use when they have finished authenticating. Note that for development you can add `localhost` (with or without port numbers) to either category, but they must be prefixed in this case with `http://` or `https://`.
+
+For Authorized Redirect URIs, for each domain that you want to host CORAL on, you will need 2 URLs: 1 for the web service and one for the jupyterhub. the web service url is `https://<YOUR_DOMAIN>/coral/google_auth_code_store` and the jupyterhub endpoint is `https://<YOUR_DOMAIN>/jupyterhub/hub/oauth_callback`. Make sure that you do not end either endpoint with a trailing slash.
+
+_Tip: If you ever find yourself in a part of the developer portal where you can't find the Credentials page, Click the hamburger menu on the top left and make sure the selected option is "APIs & Services"._
+#### Adding Auth to web services
+
+Once you have configured your settings correctly, you can download a json file containing all the important information needed for google to authenticate. The 2 most important fields are the Client ID and the Client secret. It should go without saying that you should never share these insecurely or incorporate them into the codebase directly.
+
+Add this file to any directory you like where your web services are hosted, and edit your config.json's `WebService.google_auth_file` to the full path to the oauth json file. You will need to restart the server once you have added the file and edited the config to pick up the new auth info.
+
+When you have finished editing the server portion, you will need to provide the client side with the Client ID as well. Inside of the front end's `src/environments` file, edit the relevant `environment.*.ts` files with the provided client id under the field called `GOOGLE_OAUTH2_CLIENT_KEY`. Remember that you want to provide the Client ID, NOT the client secret! The client ID always ends with `.apps.googleusercontent.com`.
+
+#### Troubleshooting Google Auth issues
+
+There are 2 main kinds of failures that can happen with Google auth. The first type is when google sends back a response (which will be forwarded to the client) that says "unauthorized_user". This message typically means that the redirect URI you have sent Google is not whitelisted or that you are using stale credentials. Double check your list of approved redirect URIs in the developer console and make sure that your client credentials file stored on the server is up to date with what you see in the developer console.
+
+The other main issue that can happen is that the front end will receive an error message saying "Client at <<domain>> is not authorized to access Client ID <<client_id>>". This typically happens when the domain you are logging in from is not on the list of Authorized JavaScript origins. Add the domain you are using to the origin list. Note that this operation usually takes up to a day to carry out.
+
 #### Setting up User Registration
 
 Setting up User registration requires google reCaptcha V2 credentials, which can be obtained [here](https://www.google.com/recaptcha/about/). When you have received your google credentials, you will want to store your secret key in the `WebService.captcha_secret_key` field of your `config.json`. Since the public sitekey will be sent to the client side, you must add it as a string value to the "GOOGLE_CAPTCHA_SITE_KEY" field of your environment.ts.
@@ -678,7 +710,6 @@ toolx.init_system()
 _NOTE: On MacOS, if the import fails with `[Errno 49] Can't assign requested address`, check in /etc/hosts to make sure that 127.0.0.1 is set to localhost. If you are still getting this error, restarting your computer should fix the issue. This is a bug with MacOS._
 
 - Once the data import has completed, you can visit localhost:8529 to view the database and make sure everything has imported properly. You can also view the imported data via the Arango Shell.
-
 ### Install UI
 
 See README.md in front\_end directory
