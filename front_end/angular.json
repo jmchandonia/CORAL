@@ -16,6 +16,7 @@
             "aot": true,
             "outputPath": "/var/www/html/coral-ui/",
             "index": "src/index.html",
+            "allowedCommonJsDependencies": ["lodash"],
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
