@@ -8,6 +8,7 @@ from .descriptor import IndexDocument
 import pandas as pd
 import traceback as tb
 import os
+import csv
 
 _COLLECTION_ID = 'ID'
 _COLLECTION_OBJECT_TYPE_ID = 'ObjectTypeID'
@@ -88,8 +89,9 @@ class ProcessDataHolder(DataHolder):
     def __update_object_ids(self, ids_prop_name):
         obj_ids = []
 
-        for _, input_object in enumerate(self.data[ids_prop_name].split(',')):
-            type_name, upk_id = input_object.split(':')
+        for _, input_object in enumerate(list(csv.reader([self.data[ids_prop_name]], delimiter=',', quotechar='"',skipinitialspace=True))[0]):
+            # was: self.data[ids_prop_name].split(',')):
+            type_name, upk_id = input_object.split(':',1)
             type_name = type_name.strip()
             upk_id = upk_id.strip()
 
@@ -122,8 +124,9 @@ class ProcessDataHolder(DataHolder):
         self.__update_object_ids('output_objects')
 
     def validate_output_objects(self):
-        for output_object in self.data['output_objects'].split(','):
-            type_name, upk_id = output_object.split(':')
+        for output_object in list(csv.reader([self.data['output_objects']], delimiter=',', quotechar='"',skipinitialspace=True))[0]:
+            # was: self.data['output_objects'].split(','):
+            type_name, upk_id = output_object.split(':',1)
             type_name = type_name.strip()
             upk_id = upk_id.strip()
 
@@ -424,7 +427,7 @@ class Workspace:
         
         # Do input objects
         for input_object in process['input_objects']:
-            type_name, obj_id = input_object.split(':')
+            type_name, obj_id = input_object.split(':',1)
             if type_name.startswith('Brick-'):
                 type_name = 'Brick'
             type_def = services.indexdef.get_type_def(type_name)
@@ -439,7 +442,7 @@ class Workspace:
 
         # Do output objects
         for output_object in process['output_objects']:
-            type_name, obj_id = output_object.split(':')
+            type_name, obj_id = output_object.split(':',1)
             if type_name.startswith('Brick-'):
                 type_name = 'Brick'
             type_def = services.indexdef.get_type_def(type_name)
@@ -565,8 +568,10 @@ class EntityDataWebUploader:
 
             process_data = row.to_dict()
             pdh = ProcessDataHolder(process_data)
-            output_objects = pdh.data['output_objects'].split(',')
-            input_objects = pdh.data['input_objects'].split(',')
+            # output_objects = pdh.data['output_objects'].split(',')
+            output_objects = list(csv.reader([pdh.data['output_objects']], delimiter=',', quotechar='"',skipinitialspace=True))[0]
+            # input_objects = pdh.data['input_objects'].split(',')
+            input_objects = list(csv.reader([pdh.data['input_objects']], delimiter=',', quotechar='"',skipinitialspace=True))[0]
 
             # check if there are errors from the core types connected to process
             output_errors, missing_id_errors = self._get_output_errors(pdh, output_objects)
@@ -776,11 +781,13 @@ class EntityDataWebUploader:
 
     def _get_process_warning(self, pdh):
         outputs = pdh.data['output_objects']
-        output_objects = [pdh.get_process_id(o) for o in outputs.split(',')]
+        # output_objects = [pdh.get_process_id(o) for o in outputs.split(',')]
+        output_objects = [pdh.get_process_id(o) for o in list(csv.reader([outputs], delimiter=',', quotechar='"',skipinitialspace=True))[0]]
         output_ids = [oid for _, oid in output_objects]
 
         inputs = pdh.data['input_objects']
-        input_objects = [pdh.get_process_id(i) for i in inputs.split(',')]
+        # input_objects = [pdh.get_process_id(i) for i in inputs.split(',')]
+        input_objects = [pdh.get_process_id(i) for i in list(csv.reader([inputs], delimiter=',', quotechar='"',skipinitialspace=True))[0]]
         input_ids = [iid for _, iid in input_objects]
 
         process_duplicate_error = False ###
@@ -872,7 +879,7 @@ class EntityDataWebUploader:
 
 
     def _get_upk_id(self, db_object):
-        type_name, db_pk_id = db_object.split(':')
+        type_name, db_pk_id = db_object.split(':',1)
         type_def = services.typedef.get_type_def(type_name)
 
         type_name = type_name.strip()
