@@ -9,7 +9,7 @@ from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_STATIC
 from .brick import Brick
-
+import csv
 
 def init_system(argv=None):
     services._init_db_connection()    
@@ -194,7 +194,7 @@ def upload_process(process_type, file_name):
     file_name = os.path.join(services._IMPORT_DIR_PROCESS, file_name)
 
     print('Doing %s: %s' % (process_type, file_name))
-    df = pd.read_csv(file_name, sep='\t')
+    df = pd.read_csv(file_name, sep='\t', quotechar=None, quoting=csv.QUOTE_NONE)
     i = 0
     for _, row in df.iterrows():
         try:
