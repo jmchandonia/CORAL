@@ -284,7 +284,7 @@ class TypeDef:
                 continue
 
             value = data.get(pname)
-            if value is None or value == 'null'  or value != value:
+            if value is None or value == 'null' or value != value:
                 if pdef.required:
                     raise ValueError(
                         'The required property "%s" is absent' % pname)
@@ -294,7 +294,7 @@ class TypeDef:
                 pdef.validate(value)
 
             # validate that FKs exist
-            if value is not None and pdef.has_term_id:
+            if value is not None and value == value and pdef.has_term_id:
                 pdef.validate_ufk_property_def(value)
 
         # check that there are no undeclared properties
