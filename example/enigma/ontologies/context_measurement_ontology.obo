@@ -4444,6 +4444,32 @@ property_value: is_valid_property "true" xsd:boolean
 def: "CAS Registry Number." []
 is_a: ME:0000027 ! Molecule
 
+[Term]
+id: ME:0000429
+name: Sequence Identity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence Identity." []
+is_a: ME:0000120 ! Measurement
+
+[Term]
+id: ME:0000430
+name: Sequence Similarity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence Similarity." []
+is_a: ME:0000120 ! Measurement
+
 [Typedef]
 id: data_type
 

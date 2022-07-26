@@ -340,6 +340,8 @@
   *Wind Direction (Float, degree)
   *Relative Humidity (Float, ratio)
   *Error Range (Float)
+  *Sequence Identity (Float)
+  *Sequence Similarity (Float)
 
 *Statistic:
   is_a: ME:0000001
