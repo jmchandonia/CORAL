@@ -1,6 +1,6 @@
 ENIGMA
   is_a: ME:0000001
-  ENIGMA Campaign:
+  *ENIGMA Campaign:
     27 Well Survey
     100 Well Survey
     ENIGMA Microbial Isolation Characterization
@@ -53,7 +53,7 @@ ENIGMA
     Subsurface Observatory
       alias: SSO
     Environmental Atlas
-  ENIGMA Labs and Personnel:
+  *ENIGMA Labs and Personnel:
     alias: ENIGMA PI
     Adams Lab
       Mike Adams

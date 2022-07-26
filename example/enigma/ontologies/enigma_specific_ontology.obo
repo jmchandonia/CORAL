@@ -25,6 +25,8 @@ namespace: enigma.ontology
 property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "ENIGMA Campaign." []
 xref: ORef: ENIGMA:0000002
@@ -231,6 +233,8 @@ namespace: enigma.ontology
 property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "ENIGMA Labs and Personnel." []
 synonym: "ENIGMA PI" EXACT []
