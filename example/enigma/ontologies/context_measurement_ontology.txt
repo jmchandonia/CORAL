@@ -320,6 +320,7 @@
   *Relative Abundance (Float, ratio)
   *Amount (Float, substance unit)
   *Ion Intensity (Float, +relative luminescence unit)
+  *Relative Evolutionary Divergence (Float, +dimensionless unit)
   Binary (Boolean)
     *Growth
     *Activity
