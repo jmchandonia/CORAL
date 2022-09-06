@@ -4487,6 +4487,46 @@ property_value: valid_units_parent "UO:0000186" xsd:string
 def: "Relative Evolutionary Divergence." []
 is_a: ME:0000120 ! Measurement
 
+[Term]
+id: ME:0000432
+name: Publication
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Publication." []
+is_a: ME:0000002 ! Experimental Context
+
+[Term]
+id: ME:0000433
+name: PubMed ID
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+property_value: valid_units_parent "UO:0000186" xsd:string
+def: "PubMed ID." []
+synonym: "PMID" EXACT []
+is_a: ME:0000432 ! Publication
+
+[Term]
+id: ME:0000434
+name: PubMed Central ID
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "PubMed Central ID." []
+synonym: "PMCID" EXACT []
+is_a: ME:0000432 ! Publication
+
 [Typedef]
 id: data_type
 
