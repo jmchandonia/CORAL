@@ -41,6 +41,11 @@
       Microplate Name (String)
       **Microplate Well
         Microplate Well Name (String)
+    **Publication (String)
+      *-PubMed ID (Int, +dimensionless unit)
+        alias: PMID
+      *-PubMed Central ID (String)
+        alias: PMCID
   Mathematical Context
     Normalized
     +Relative
