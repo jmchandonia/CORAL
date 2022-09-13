@@ -195,6 +195,8 @@ namespace: measure.ontology
 property_value: data_type "boolean" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Anaerobic." []
 is_a: ME:0000002 ! Experimental Context
@@ -544,6 +546,8 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Media name." []
 is_a: ME:0000048 ! Media
@@ -1312,7 +1316,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units "UO:0000187 UO:0000322" xsd:string
 property_value: valid_units_parent "UO:0000051 UO:0000052 UO:0000166 UO:0000187" xsd:string
 def: "Concentration." []
 is_a: ME:0000120 ! Measurement
@@ -4335,6 +4339,8 @@ namespace: measure.ontology
 property_value: data_type "boolean" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Aphotic." []
 is_a: ME:0000209 ! Physical Context
