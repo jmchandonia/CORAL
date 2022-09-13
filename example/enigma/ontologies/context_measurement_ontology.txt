@@ -91,9 +91,9 @@
     *Weight (Float, mass unit)
     *Volume (Float, volume unit)
     Homogenized
-    Anaerobic (Boolean)
+    *Anaerobic (Boolean)
     Aerobic (Boolean)
-    Aphotic (Boolean)
+    *Aphotic (Boolean)
     Undisturbed
     Phase (String)
     Image
@@ -148,7 +148,7 @@
       *-Taxon ID (Ref: DA:0000037.Taxon.name)
       *NCBI Taxon ID (ORef: NCBITaxon:1)
     **Media
-      Media Name (String)
+      *Media Name (String)
       Media Composition (String)
       *Media Addition (String)
       Minimal Media (Boolean)
@@ -310,7 +310,7 @@
   *Optical Density (Float, +dimensionless unit)
   *Density (Float, density unit)
   Size (Float, volume unit, length unit)
-  *Concentration (Float, concentration unit, mass density unit, parts per notation unit, +percent)
+  *Concentration (Float, concentration unit, mass density unit, parts per notation unit, +percent, +fold dilution)
   Hybridization Intensity (Float)
   Expression Level (Float)
   *Charge (Float, electric potential difference unit, +percent)
