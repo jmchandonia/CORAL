@@ -662,8 +662,8 @@ class Query:
             )
 
         
-        sys.stderr.write('aql = '+aql+'\n')
-        sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
+        # sys.stderr.write('aql = '+aql+'\n')
+        # sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
 
         data_descriptors = []
         rs = services.arango_service.find(aql, aql_bind, size)
