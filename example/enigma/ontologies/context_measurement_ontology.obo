@@ -4533,6 +4533,17 @@ def: "PubMed Central ID." []
 synonym: "PMCID" EXACT []
 is_a: ME:0000432 ! Publication
 
+[Term]
+id: ME:0000435
+name: Database
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Database." []
+is_a: ME:0000002 ! Experimental Context
+
 [Typedef]
 id: data_type
 
