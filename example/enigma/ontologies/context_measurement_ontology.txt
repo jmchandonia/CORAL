@@ -133,7 +133,7 @@
     Colony
     **Strain
       alias: Isolate
-      Strain Name (String)
+      *-Strain Name (String)
       *-Strain ID (Ref: DA:0000062.Strain.name)
         alias: Isolate ID
     **OTU
