@@ -4558,6 +4558,27 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Obsolete." []
 is_a: ME:0000002 ! Experimental Context
 
+[Term]
+id: ME:0000437
+name: Redox
+namespace: measure.ontology
+def: "Redox." []
+is_a: ME:0000026 ! Chemical Context
+
+[Term]
+id: ME:0000438
+name: Reduction
+namespace: measure.ontology
+def: "Reduction." []
+is_a: ME:0000437 ! Redox
+
+[Term]
+id: ME:0000439
+name: Oxidation
+namespace: measure.ontology
+def: "Oxidation." []
+is_a: ME:0000437 ! Redox
+
 [Typedef]
 id: data_type
 
