@@ -129,6 +129,9 @@
     *Molecular Weight (Float, +dalton)
     Reference Compound
     *Isotope (ORef: CHEBI:24431)
+    Redox
+      Reduction
+      Oxidation
   Biological Context:
     Cell
     Colony
