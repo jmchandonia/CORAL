@@ -86,6 +86,9 @@
       +Bottom
     *Distance (Float, length unit)
     *Depth (Float, length unit)
+    *Height (Float, length unit)
+    *Length (Float, length unit)
+    *Width (Float, length unit)
     *Diameter (Float, length unit)
       *Inner Diameter
       *Outer Diameter
@@ -134,6 +137,25 @@
       Oxidation
   Biological Context:
     Cell
+      Cell Morphology
+        Cell Structure
+          Cellular Appendage
+            Flagella
+              *Flagellar Arrangement:
+                Monotrichous
+                Amphitrichous
+                Lophotrichous
+                Peritrichous
+          Vessicle
+          S-layer
+          Cell Membrane
+        *Cell Shape:
+          Rod
+          Rod-vibrio
+          Oval
+          Irregular Oval
+          Spherical
+          Pleomorphic
     Colony
     **Strain
       alias: Isolate
@@ -338,6 +360,7 @@
     *Essentiality
     *Above
     *Below
+    *Observed
   *Pressure (Float, pressure unit)
     *Partial Pressure
     *Air Pressure

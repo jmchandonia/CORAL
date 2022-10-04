@@ -4579,6 +4579,208 @@ namespace: measure.ontology
 def: "Oxidation." []
 is_a: ME:0000437 ! Redox
 
+[Term]
+id: ME:0000440
+name: Height
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Height." []
+is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000441
+name: Length
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Length." []
+is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000442
+name: Width
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Width." []
+is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000443
+name: Cell Morphology
+namespace: measure.ontology
+def: "Cell Morphology." []
+is_a: ME:0000040 ! Cell
+
+[Term]
+id: ME:0000444
+name: Cell Structure
+namespace: measure.ontology
+def: "Cell Structure." []
+is_a: ME:0000443 ! Cell Morphology
+
+[Term]
+id: ME:0000445
+name: Cellular Appendage
+namespace: measure.ontology
+def: "Cellular Appendage." []
+is_a: ME:0000444 ! Cell Structure
+
+[Term]
+id: ME:0000446
+name: Flagella
+namespace: measure.ontology
+def: "Flagella." []
+is_a: ME:0000445 ! Cellular Appendage
+
+[Term]
+id: ME:0000447
+name: Flagellar Arrangement
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Flagellar Arrangement." []
+xref: ORef: ME:0000447
+is_a: ME:0000446 ! Flagella
+
+[Term]
+id: ME:0000448
+name: Monotrichous
+namespace: measure.ontology
+def: "A single flagellum extending from one end of the cell." []
+is_a: ME:0000447 ! Flagellar Arrangement
+
+[Term]
+id: ME:0000449
+name: Amphitrichous
+namespace: measure.ontology
+def: "Single or multiple flagella extending from both ends of the cell." []
+is_a: ME:0000447 ! Flagellar Arrangement
+
+[Term]
+id: ME:0000450
+name: Lophotrichous
+namespace: measure.ontology
+def: "Tuft of flagella extending from one end or both ends of the cell." []
+is_a: ME:0000447 ! Flagellar Arrangement
+
+[Term]
+id: ME:0000451
+name: Peritrichous
+namespace: measure.ontology
+def: "Multiple flagella distributed over the entire cell." []
+is_a: ME:0000447 ! Flagellar Arrangement
+
+[Term]
+id: ME:0000452
+name: Vessicle
+namespace: measure.ontology
+def: "Vessicle." []
+is_a: ME:0000444 ! Cell Structure
+
+[Term]
+id: ME:0000453
+name: S-layer
+namespace: measure.ontology
+def: "S-layer." []
+is_a: ME:0000444 ! Cell Structure
+
+[Term]
+id: ME:0000454
+name: Cell Membrane
+namespace: measure.ontology
+def: "Cell Membrane." []
+is_a: ME:0000444 ! Cell Structure
+
+[Term]
+id: ME:0000455
+name: Cell Shape
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Cell Shape." []
+xref: ORef: ME:0000455
+is_a: ME:0000443 ! Cell Morphology
+
+[Term]
+id: ME:0000456
+name: Rod
+namespace: measure.ontology
+def: "Rod." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000457
+name: Rod-vibrio
+namespace: measure.ontology
+def: "Rod-vibrio." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000458
+name: Oval
+namespace: measure.ontology
+def: "Oval." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000459
+name: Irregular Oval
+namespace: measure.ontology
+def: "Irregular Oval." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000460
+name: Spherical
+namespace: measure.ontology
+def: "Spherical." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000461
+name: Pleomorphic
+namespace: measure.ontology
+def: "Pleomorphic." []
+is_a: ME:0000455 ! Cell Shape
+
+[Term]
+id: ME:0000462
+name: Observed
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Observed." []
+is_a: ME:0000141 ! Binary
+
 [Typedef]
 id: data_type
 
