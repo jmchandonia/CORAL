@@ -5,9 +5,9 @@ framework for rigorous self-validated data modeling and integrative,
 reproducible data analysis.
 
 This software was developed at the Berkeley Lab by Pavel S. Novichkov,
-John-Marc Chandonia, Charles Trenholm, and Adam P. Arkin.
+John-Marc Chandonia, Charles DeVilholm, and Adam P. Arkin.
 
-CORAL Prototype Implementation (CORAL) Copyright (c) 2021, The Regents
+CORAL Prototype Implementation (CORAL) Copyright (c) 2021-2023, The Regents
 of the University of California, through Lawrence Berkeley National
 Laboratory (subject to receipt of any required approvals from the
 U.S. Dept. of Energy).  All rights reserved.
@@ -39,6 +39,14 @@ Program at Lawrence Berkeley National Laboratory, is based upon work
 supported by the U.S. Department of Energy, Office of Science, Office
 of Biological and Environmental Research, under contract number
 DE-AC02-05CH11231.
+
+## Citation
+
+Novichkov PS<sup>\*</sup>, Chandonia JM<sup>\*</sup>, Arkin AP. 2022. CORAL: A framework for rigorous self-validated data modeling and integrative, reproducible data analysis. <a href="https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giac089/6762021"><i>Gigascience</i> 2022 Oct 17;11:giac089</a>. [<a href="https://www.ncbi.nlm.nih.gov/pubmed/36251274/">PubMed</a>]|[<a href="https://www.strgen.org/~jmc//chandonia-2022-gigascience-coral.pdf">PDF</a>]
+
+<sup>*</sup> Joint first authors
+
+Note that a lot of documentation, including an overview of the software, is in the <a href="https://www.strgen.org/~jmc//chandonia-2022-gigascience-coral.supinfo.pdf">Supplemental PDF</a>, also called "giac089_Supplemental\_File" on the <a href="https://academic.oup.com/gigascience/article/doi/10.1093/gigascience/giac089/6762021?searchresult=1#supplementary-data">journal's website</a>.
 
 ## Installation
 

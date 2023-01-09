@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use CORAL, please cite the Gigascience publication, from 'preferred-citation'"
+repository-code: "https://github.com/jmchandonia/CORAL"
+title: "CORAL: A framework for rigorous self-validated data modeling and integrative, reproducible data analysis"
+authors:
+  -
+    given-names: "Pavel S"
+    family-names: "Novichkov"
+    affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA"
+    orcid: https://orcid.org/0000-0002-1102-007X
+  -
+    given-names: "John-Marc"
+    family-names: "Chandonia"
+    affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA"
+    orcid: https://orcid.org/0000-0002-5153-9079
+  -
+    given-names: "Charles"
+    family-names: "DeVilholm"
+    affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA"
+  -
+    given-names: "Adam P"
+    family-names: "Arkin"
+    affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA and Department of Bioengineering, University of California, Berkeley, CA 94720, USA"
+    orcid: https://orcid.org/0000-0002-4999-2931
+preferred-citation:
+  title: "CORAL: A framework for rigorous self-validated data modeling and integrative, reproducible data analysis"
+  journal: "Gigascience"
+  doi: "10.1093/gigascience/giac089"
+  year: 2022
+  type: article
+  notes: "Pavel S. Novichkov and John-Marc Chandonia are joint first authors; John-Marc Chandonia and Adam P. Arkin are corresponding authors"
+  authors:
+    -
+      given-names: "Pavel S"
+      family-names: "Novichkov"
+      affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA"
+      orcid: https://orcid.org/0000-0002-1102-007X
+    -
+      given-names: "John-Marc"
+      family-names: "Chandonia"
+      affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA"
+      orcid: https://orcid.org/0000-0002-5153-9079
+      email: JMChandonia@lbl.gov
+    -
+      given-names: "Adam P"
+      family-names: "Arkin"
+      affiliation: "Environmental Genomics and Systems Biology Division, Lawrence Berkeley National Laboratory, Berkeley, CA 94720, USA and Department of Bioengineering, University of California, Berkeley, CA 94720, USA"
+      orcid: https://orcid.org/0000-0002-4999-2931
+      email: APArkin@lbl.gov
