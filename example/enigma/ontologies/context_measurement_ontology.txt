@@ -376,6 +376,11 @@
   *Error Range (Float)
   *Sequence Identity (Float)
   *Sequence Similarity (Float)
+  Genome Quality
+    *Genome Completeness (Float, +percent)
+    *Genome Contamination (Float, +percent)
+    *Genome N50 (Int, +count unit)
+    *Read Coverage (Float, +count unit)
 
 *Statistic:
   is_a: ME:0000001
