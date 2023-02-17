@@ -4781,6 +4781,73 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Observed." []
 is_a: ME:0000141 ! Binary
 
+[Term]
+id: ME:0000463
+name: Genome Quality
+namespace: measure.ontology
+def: "Genome Quality." []
+is_a: ME:0000120 ! Measurement
+
+[Term]
+id: ME:0000464
+name: Genome Completeness
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000187" xsd:string
+def: "Genome Completeness." []
+is_a: ME:0000463 ! Genome Quality
+
+[Term]
+id: ME:0000465
+name: Genome Contamination
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000187" xsd:string
+def: "Genome Contamination." []
+is_a: ME:0000463 ! Genome Quality
+
+[Term]
+id: ME:0000466
+name: Genome N50
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Genome N50." []
+is_a: ME:0000463 ! Genome Quality
+
+[Term]
+id: ME:0000467
+name: Read Coverage
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Read Coverage." []
+is_a: ME:0000463 ! Genome Quality
+
 [Typedef]
 id: data_type
 
