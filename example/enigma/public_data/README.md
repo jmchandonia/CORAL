@@ -45,4 +45,6 @@ C. Hazen; mBio May 2015, 6 (3) e00326-15; DOI: 10.1128/mBio.00326-15
 
 * process_otu_inference_zhou_100ws.tsv = provenance of OTU calling and classification
 
+## SETUP:
 
+* all the above files should be copied to /home/coral/prod/data_import/data/ (or whatever directories you chose for "entity_dir", "process_dir", and "brick_dir" in config.json) before running your reload data notebook.

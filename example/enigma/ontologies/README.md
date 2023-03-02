@@ -162,3 +162,7 @@ Otherwise, make edits based on last version:
 mv process_ontology_new.obo process_ontology.obo
 ```
 
+## SETUP:
+
+* all the obo files should be copied to /home/coral/prod/data_import/ontologies/ (or whatever directory you chose for "ontology_dir" in config.json) before running your reload data notebook.
+
