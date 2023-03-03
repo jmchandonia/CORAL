@@ -65,8 +65,10 @@ gzip -d chebi.obo.gz
 
 ** ENVO ontology:**
 
+This is a particular version that I know works, since there are newer versions that won't load due to references to other ontologies not loaded in CORAL.
+
 ```
-wget https://raw.githubusercontent.com/EnvironmentOntology/envo/master/envo.obo
+wget "https://github.com/EnvironmentOntology/envo/blob/v2020-06-10/envo.obo?raw=true" -O envo.obo
 ```
 
 ** NCBI Taxon ontology:**
