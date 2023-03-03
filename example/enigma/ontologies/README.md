@@ -168,3 +168,4 @@ mv process_ontology_new.obo process_ontology.obo
 
 * all the obo files should be copied to /home/coral/prod/data_import/ontologies/ (or whatever directory you chose for "ontology_dir" in config.json) before running your reload data notebook.
 
+* the larger ontologies (NCBI Taxon, ENVO, ChEBI) can take hours to load.  If you are re-running the reload data notebook and these are already loaded, add '"ignore": true' in /home/coral/prod/modules/var/upload_config.json next to those you don't want to reload.
