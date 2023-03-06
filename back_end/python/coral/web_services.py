@@ -27,6 +27,7 @@ import subprocess
 from pyArango.theExceptions import AQLQueryError
 import requests
 import smtplib, ssl
+import hashlib
 
 from .dataprovider import DataProvider
 from .brick import Brick
@@ -136,7 +137,9 @@ def decrypt_token(auth_token, secret):
 
 def valid_jwt(auth_token):
     try:
-        payload = decrypt_token(auth_token, cns['_AUTH_SECRET'])
+        secret = hashlib.md5(cns['_AUTH_SECRET']).hexdigest()
+        
+        payload = decrypt_token(auth_token, secret)
         
         return True
     except Exception as e:
@@ -1640,7 +1643,10 @@ def handle_auth_code():
             'sub': match_user['username']
         }
 
-        new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+        secret = hashlib.md5(cns['_AUTH_SECRET']).hexdigest()
+
+        new_jwt = jwt.encode(payload, secret, algorithm='HS256')
+
         return _ok_response({'success': True, 'token': new_jwt, 'user': match_user})
     except Exception as e:
         return json.dumps({'success': False, 'message': 'Something went wrong.'})
@@ -1703,7 +1709,10 @@ def login():
 		        'sub': login['username']
 	        }
 
-            new_jwt = jwt.encode(payload, cns['_AUTH_SECRET'], algorithm='HS256')
+            secret = hashlib.md5(cns['_AUTH_SECRET']).hexdigest()
+
+            new_jwt = jwt.encode(payload, secret, algorithm='HS256')
+            
             return json.dumps({'success': True, 'token': new_jwt})
         
         except Exception as e:
