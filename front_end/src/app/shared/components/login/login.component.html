@@ -1,6 +1,7 @@
 <div class="form-container form-container-sm" style="padding: 0px; background-color: white; border: 1px solid #aaa;">
   <div class="clearinghouse-header" style="padding-top: 85px;">
     <h5 class="login-title">CORAL</h5>
+    <h5 class="login-title" *ngIf="demoMode">Demo Mode; use any account to log in.</h5>
   </div>
   <!-- <div class="row justify-content-center mt-3">
           <span class="login-options" (click)="displayLogin = true;">Login |</span>
@@ -13,7 +14,7 @@
           <button class="btn btn-primary col-6 p-3" (click)="handleGoogleAuthSignIn()">
             Sign in with Google Account
           </button>
-          <button class="btn btn-secondary col-6 p-3" (click)="displayRegistrationForm()">
+          <button class="btn btn-secondary col-6 p-3" (click)="displayRegistrationForm()" *ngIf="displayReg">>
             Register to access CORAL
           </button>
         </div>

@@ -19,7 +19,7 @@ const MockHomeService = {
   getFilterValues: () => of({
     results: [
       {
-        categoryName: 'ENIGMA Campaigns',
+        categoryName: 'Campaigns',
         items: [
           {
             name: 'test campaign 1',
@@ -37,7 +37,7 @@ const MockHomeService = {
         ]
       },
       {
-        categoryName: 'ENIGMA Personnel',
+        categoryName: 'Personnel',
         items: [
           {
             name: 'test personnel 1',
@@ -83,7 +83,7 @@ describe('HomeComponent', () => {
 
     expect(spectator.queryAll('.filter-box > ul > li')).toHaveLength(2);
     expect(spectator.queryAll('.checkbox-container > input')).toHaveLength(4);
-    expect(spectator.query('.filter-box > ul > li > span')).toHaveText('ENIGMA Campaigns');
+    expect(spectator.query('.filter-box > ul > li > span')).toHaveText('Campaigns');
     expect(spectator.query('.checkbox-container > label')).toHaveText('test campaign 1');
     expect(spectator.query('.checkbox-container > input')).toHaveId('0_0');
   });

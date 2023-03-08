@@ -4,6 +4,7 @@ import { isEqual } from 'lodash-es';
 import { HomeService } from '../../services/home.service';
 import { QueryBuilderService } from '../../services/query-builder.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public coreTypes: any;
   public dynamicTypes: any;
   navigateToResults = false;
+  public demoMode = false;
 
   query: QueryBuilder;
 
@@ -30,6 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.query.searchAllProcessesDown = true;
     this.query.searchAllProcessesUp = true;
     this.homeService.getProvenanceGraphData(this.query.processesUp);
+
+    if (environment.DEMO_MODE) {
+       this.demoMode = true;
+    }         
 
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
