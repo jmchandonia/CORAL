@@ -24,13 +24,19 @@ export class LoginComponent implements OnInit {
     private modalService: BsModalService
   ) { }
   public displayLogin = true;
+  public displayReg = true;
+  public demoMode = false;
   public error = false;
   public loading = false;
   public errorMessage = '';
   username = '';
   password = '';
 
-  ngOnInit() {
+  ngOnInit(): void {
+    if (environment.DEMO_MODE) {
+       this.displayReg = false;
+       this.demoMode = true;
+    }	      
   }
 
   login() {
