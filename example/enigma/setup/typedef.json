@@ -244,14 +244,14 @@
         },
         {
           "name": "name",
-          "type_term": "ME:0000046",
+          "type_term": "ME:0000047",
           "scalar_type": "text",
           "required": true,
           "UPK": true
         },
         {
           "name": "ncbi_taxid",
-          "type_term": "ME:0000047",
+          "type_term": "ME:0000223",
           "scalar_type": "text"
         }
       ],
@@ -271,7 +271,7 @@
         },
         {
           "name": "name",
-          "type_term": "ME:0000221",
+          "type_term": "ME:0000222",
           "scalar_type": "text",
           "required": true,
           "UPK": true
