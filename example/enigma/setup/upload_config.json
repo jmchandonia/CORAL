@@ -68,6 +68,9 @@
             "file": "samples_100ws.tsv",
             "dtype": "Sample"
         }, {
+            "file": "samples_filter_100ws.tsv",
+            "dtype": "Sample"
+        }, {
             "file": "communities_filter_100ws.tsv",
             "dtype": "Community"
         }, {
