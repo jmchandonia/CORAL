@@ -719,6 +719,9 @@ def create_brick():
         campaign_term = _get_term(brick_ds['campaign'])
         input_obj_ids = br.get_fk_refs(process_ufk=True)
 
+        if (cns['_DEMO_MODE']):
+            return _err_response({'message': 'demo mode; you cannot upload new data', 'success': False})
+
         br.save(process_term=process_term, 
             person_term=person_term, 
             campaign_term=campaign_term,
@@ -1630,11 +1633,16 @@ def handle_auth_code():
         if registered_user['email'] == user_email:
             match_user = registered_user
 
+    if ((match_user == None) and (cns['_DEMO_MODE'])):
+        match_user = {'username':'demo', 'email':'none', 'user_level': 0}
+
     if match_user == None:
         return _ok_response({
             'success': False,
             'message': 'User not registered in system'
         })
+
+    sys.stderr.write('CORAL login by '+user_email+' username '+match_user['username']+'\n')
 
     try:
         payload = {
@@ -1654,6 +1662,10 @@ def handle_auth_code():
 
 @app.route("/coral/request_registration", methods=['POST'])
 def process_registration_request():
+
+    if (cns['_DEMO_MODE']):
+        return _err_response({'message': 'demo mode; you can log in with any Google account', 'success': False})
+
     recaptcha_token = request.json['token']
     recaptcha_request = requests.post('https://www.google.com/recaptcha/api/siteverify', {
         'secret': cns['_GOOGLE_RECAPTCHA_SECRET'],
@@ -2246,8 +2258,8 @@ def coral_search():
         provider = dp._get_type_provider(query_match['dataModel'])
         q = provider.query()
 
-        s = pprint.pformat(search_data)
-        sys.stderr.write('search_data = '+s+'\n')
+        # s = pprint.pformat(search_data)
+        # sys.stderr.write('search_data = '+s+'\n')
 
         (JSON, CSV) = range(2)
         return_format = JSON
@@ -2624,7 +2636,7 @@ def line_thickness(n):
 # assign x, y to all static and intermediate nodes.
 # just assign y to dynamic nodes, and don't process any of their children
 def assign_xy_static(nodes, usedPos, i, x, y):
-    sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
+    # sys.stderr.write('axys '+str(i)+' '+str(x)+' '+str(y)+' '+str(nodes[i]['name'])+' '+str(nodes[i]['category'])+'\n')
     # skip if already done
     if 'y' in nodes[i]:
         # sys.stderr.write('already assigned y to '+str(nodes[i]['name'])+'\n')
@@ -2676,7 +2688,7 @@ def reposition_static(nodes, edges, usedPos):
                 c = nodes[j]
                 if 'x' not in c or b['index'] == c['index']:
                     continue
-                sys.stderr.write('checking '+str(a['name'])+' '+str(b['name'])+' '+str(c['name'])+'\n')
+                # sys.stderr.write('checking '+str(a['name'])+' '+str(b['name'])+' '+str(c['name'])+'\n')
                 for e in edges:
                     # look for A->C edge
                     if e['source']==a['index'] and e['target']==c['index']:
@@ -3001,8 +3013,8 @@ def coral_type_graph():
 
     # load filters
     query = request.json
-    s = pprint.pformat(query)
-    sys.stderr.write('query = '+s+'\n')
+    # s = pprint.pformat(query)
+    # sys.stderr.write('query = '+s+'\n')
     filterCampaigns = set()
     filterPersonnel = set()
     filtering = False
@@ -3023,7 +3035,7 @@ def coral_type_graph():
 
     cacheKey = "types_graph_"+str(filterCampaigns)+str(filterPersonnel)
     if cacheKey in cache:
-       sys.stderr.write('cache hit '+cacheKey+'\n')
+       # sys.stderr.write('cache hit '+cacheKey+'\n')
        # add cachekey to cache for front end if it doesn't already exist
        if 'cacheKey' not in cache[cacheKey]:
            cache.set(cacheKey, {**cache[cacheKey], 'cacheKey': cacheKey})
@@ -3191,7 +3203,7 @@ def coral_type_graph():
                 if n.startswith('SDT_'):
                     n = n[4:]
                     if n not in nodeMap:
-                        sys.stderr.write('adding static node '+n+'\n')
+                        # sys.stderr.write('adding static node '+n+'\n')
                         nodes.append(
                             {
                                 'index': index,
@@ -3216,7 +3228,7 @@ def coral_type_graph():
         if len(froms)>1 or len(tos)>1:
             # make intermediate node
             intermed = index
-            sys.stderr.write('adding intermediate node\n')
+            # sys.stderr.write('adding intermediate node\n')
             nodes.append(
                 {
                     'index': intermed,
@@ -3292,7 +3304,7 @@ def coral_type_graph():
             if 'DDT_' in to:
                 to = to[4:]
                 node_to = index
-                sys.stderr.write('adding dynamic node '+to+'\n')
+                # sys.stderr.write('adding dynamic node '+to+'\n')
                 nodes.append(
                     {
                         'index': node_to,
@@ -3375,7 +3387,7 @@ def coral_type_graph():
         MAX_DYNAMIC_NODES = 2
         if len(linkedDDTNodes) > MAX_DYNAMIC_NODES:
             num = 0
-            sys.stderr.write('adding cluster node\n')
+            # sys.stderr.write('adding cluster node\n')
             newDDTNodes = []
             for i in linkedDDTNodes:
                 num += nodes[i]['count']
@@ -3716,7 +3728,7 @@ def coral_core_type_metadata(obj_id):
             if query is not None and 'format' in query and query['format'] == 'CSV':
                 return_format = CSV
         
-        sys.stderr.write('obj_id = '+str(obj_id)+'\n')
+        # sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)
         typedef = svs['typedef'].get_type_def(obj_type)
         doc = dp.core_types[obj_type].find_one({'id':obj_id})

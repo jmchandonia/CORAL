@@ -51,6 +51,8 @@ _WEB_SERVICE = __CONFIG['WebService']
 _PROJECT_ROOT = __CONFIG['WebService']['project_root']
 _PLOT_TYPES_FILE = os.path.join(__PACKAGE_DIR, 'var/' + _WEB_SERVICE['plot_types_file'])
 
+_DEMO_MODE = __CONFIG['WebService']['demo_mode']
+
 arango_service = None
 
 def _init_db_connection():
