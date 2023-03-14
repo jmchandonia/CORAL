@@ -320,7 +320,7 @@ API private key."
 
 _load in the data from a jupyter notebook:_
 
-_copy example data and ontologies into data import directory, or convert some real data into the same json format ast the examples__
+_copy example data and ontologies into data import directory, or convert some real data into the same json format as the examples__
 
 _define your process type and all other static types in /home/coral/prod/modules/var/typedef.json_
 
@@ -350,12 +350,13 @@ _make var/config.json based on the following template:_
   "WebService": {
     "port": 8082,
     "https": true,
+    "demo_mode": false,
     "cert_pem": "PATH_TO_FULLCHAIN.PEM file",
     "key_pem": "PATH_TO_PRIVKEY.PEM file",
     "plot_types_file": "plot_types.json",
     "auth_private": "PATH_TO_DATA_ACCESS_API_PRIVATE_KEY",
     "auth_public": "PATH_TO_DATA_ACCESS_API_PUBLIC_KEY",
-    "project_root": "/home/coral/prod",
+    "project_root": "/home/coral/prod/",
     "users": "/path/to/users.json",
     "google_auth_file": "/path/to/google_auth_file"
     "captcha_secret_key": "YOUR_GOOGLE_RECAPTCHA_SECRET_KEY",
@@ -409,6 +410,8 @@ There can be any number of users added to the users.json array. `username`, `ema
 
 If you want to give upload privileges for all types in your system to a user, you can set the `allowed_upload_types` field to '*' rather than listing out all the types.
 
+If you set "demo_mode" to be true in config.json (above) then ANY user with a Google account can log in, and uploading through the web interface will be disabled.  You still need users.json, but you don't have to include any users.
+
 #### Setting up Auth
 
 Once you have configured your users.json file, you will need to generate Google OAuth2 credentials for login. Read the section below for information on how to obtain and configure your google OAuth credentials.
@@ -444,6 +447,7 @@ When you have moved on, It will ask you for Authorized JavaScript origins as wel
 For Authorized Redirect URIs, for each domain that you want to host CORAL on, you will need 2 URLs: 1 for the web service and one for the jupyterhub. the web service url is `https://<YOUR_DOMAIN>/coral/google_auth_code_store` and the jupyterhub endpoint is `https://<YOUR_DOMAIN>/jupyterhub/hub/oauth_callback`. Make sure that you do not end either endpoint with a trailing slash.
 
 _Tip: If you ever find yourself in a part of the developer portal where you can't find the Credentials page, Click the hamburger menu on the top left and make sure the selected option is "APIs & Services"._
+
 #### Adding Auth to web services
 
 Once you have configured your settings correctly, you can download a json file containing all the important information needed for google to authenticate. The 2 most important fields are the Client ID and the Client secret. It should go without saying that you should never share these insecurely or incorporate them into the codebase directly.
@@ -462,7 +466,7 @@ The other main issue that can happen is that the front end will receive an error
 
 Setting up User registration requires google reCaptcha V2 credentials, which can be obtained [here](https://www.google.com/recaptcha/about/). When you have received your google credentials, you will want to store your secret key in the `WebService.captcha_secret_key` field of your `config.json`. Since the public sitekey will be sent to the client side, you must add it as a string value to the "GOOGLE_CAPTCHA_SITE_KEY" field of your environment.ts.
 
-For sending automated emails when a user requests registration, it is recommended to set up a new gmail account with the "allow less secure apps to access this email" setting turned on ([More Info Here](https://support.google.com/accounts/answer/6010255?hl=en)). This will allow web_services.py to send an email to your admin's account when a user has successfully registered after validating that they're not a robot.
+For sending automated email when a user requests registration, it is recommended to set up a new gmail account with the "allow less secure apps to access this email" setting turned on ([More Info Here](https://support.google.com/accounts/answer/6010255?hl=en)). This will allow web_services.py to send an email to your admin's account when a user has successfully registered after validating that they're not a robot.
 
 Make sure to add your newly created email account to the `WebService.project_email` and the admin's email to the `WebService.admin_email` of your `config.json`.
 
@@ -710,6 +714,7 @@ toolx.init_system()
 _NOTE: On MacOS, if the import fails with `[Errno 49] Can't assign requested address`, check in /etc/hosts to make sure that 127.0.0.1 is set to localhost. If you are still getting this error, restarting your computer should fix the issue. This is a bug with MacOS._
 
 - Once the data import has completed, you can visit localhost:8529 to view the database and make sure everything has imported properly. You can also view the imported data via the Arango Shell.
+
 ### Install UI
 
 See README.md in front\_end directory

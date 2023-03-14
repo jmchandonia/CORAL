@@ -34,7 +34,9 @@ Once the program is installed, you will need to configure environment variables 
 
 `GOOGLE_CAPTCHA_SITE_KEY` - Required for setting up user registration. Generates a captcha for preventing site abuse. This option is not required, if you prefer to not use the user registration feature, you must leave this option as an empty string `''`. This will simply prevent the captcha from loading, so if you do have the backend configured with an email for user registration, it would be wise to deconfigure it.
 
-Please note that without these variables declared as keys within your `environment.*.ts` file(s), the application will fail to compile. The `environment.ts` that lives in the repo is built so that the app won't fail at the compilation step, but will still require the fields to be populated with a valid value, notably the `baseURL` and the `GOOGL_OAUTH2_CLIENT_KEY` variables.
+`DEMO_MODE` - If set to true, allows ANY user with a Google account to log in and explore data.  The registration button will not be shown.  Uploading new datasets through the web interface will be disabled.  The default is false, meaning authorized users must be configured in users.json (see back end documentation for details).
+
+Please note that without these variables declared as keys within your `environment.*.ts` file(s), the application will fail to compile. The `environment.ts` that lives in the repo is built so that the app won't fail at the compilation step, but will still require the fields to be populated with a valid value, notably the `baseURL` and the `GOOGLE_OAUTH2_CLIENT_KEY` variables.
 
 
 ## Deployment
