@@ -52,6 +52,12 @@
             "file": "generic_otu_id_zhou_100ws.json"
         }, {
             "file": "generic_otu_count_zhou_100ws.json"
+        }, {
+            "file": "generic_field_insitu_hach_hazen.json"
+        }, {
+            "file": "generic_field_insitu_hazen.json"
+        }, {
+            "file": "generic_field_data_adams.json"
         }
     ],
     "entities": [
@@ -88,6 +94,15 @@
         }, {
             "file": "process_filter_100ws.tsv",
             "ptype": "Filter"
+        }, {
+            "file": "process_environmental_measurements_hazen.tsv",
+            "ptype": "Assay Environment"
+        }, {
+            "file": "process_environmental_measurements_hach_hazen.tsv",
+            "ptype": "Assay Geochemistry"
+        }, {
+            "file": "process_environmental_measurements_adams.tsv",
+            "ptype": "Assay Environment"
         }, {
             "file": "process_otu_inference_zhou_100ws.tsv",
             "ptype": "Classify OTUs"
