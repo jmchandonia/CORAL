@@ -1,6 +1,16 @@
 {
     "plot_types":[
         {
+            "name": "Map",
+            "description": "Map",
+            "n_dimensions": 1,
+            "image_tag": "<i class=\"material-icons dropdown-icon\">map</i>",
+            "map": true,
+            "plotly_trace": {},
+            "plotly_layout": {},
+            "axis_data": []
+        },
+        {
             "name":"Vertical Barchart",
             "description": "1D Vertical Barchart",
             "image_tag": "<i class=\"material-icons dropdown-icon\">insert_chart</i>",
@@ -121,7 +131,8 @@
             "image_tag": "<i class=\"material-icons dropdown-icon\">gradient</i>",
             "n_dimensions": 2,
             "plotly_trace": {
-                "type": "heatmap"
+                "type": "heatmap",
+                "colorscale": "Viridis"
             },
             "plotly_layout": {},
             "axis_blocks": [
@@ -138,11 +149,11 @@
             "axis_data": {
                 "x": {
                     "title": "X axis",
-                    "numeric_only": true
+                    "numeric_only": false
                 },
                 "y": {
                     "title": "Y axis",
-                    "numeric_only": true
+                    "numeric_only": false
                 },
                 "z": {
                     "title": "Series",
@@ -151,14 +162,24 @@
             }
         },
         {
-            "name": "Map",
-            "description": "Map",
+            "name": "1D Heatmap",
+            "description": "1D Heatmap",
+            "image_tag": "<i class=\"material-icons dropdown-icon\">blur_linear</i>",
             "n_dimensions": 1,
-            "image_tag": "<i class=\"material-icons dropdown-icon\">map</i>",
-            "map": true,
-            "plotly_trace": {},
+            "plotly_trace": {
+                "type": "heatmap"
+            },
             "plotly_layout": {},
-            "axis_data": []
+            "axis_data": {
+                "x": {
+                    "title": "X axis",
+                    "numeric_only": false
+                },
+                "y": {
+                    "title": "Y axis",
+                    "numeric_only": true
+                }
+            }
         }
     ]
 }
