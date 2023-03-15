@@ -3851,7 +3851,7 @@ def generate_brick_template():
 
         return send_file(utp_file_name, 
             as_attachment=True,
-            attachment_filename='data_template.xlsx',
+            download_name='data_template.xlsx',
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     except Exception as e:
         return _err_response(e, traceback=True)
