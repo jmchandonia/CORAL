@@ -3660,13 +3660,13 @@ def append_with_children(res,children,term_dict,term_id):
     try:
         term = term_dict.pop(term_id)
     except KeyError:
-        sys.stderr.write("already printed: "+term_id+"\n")
+        # sys.stderr.write("already printed: "+term_id+"\n")
         return
-    if term.is_hidden:
-        sys.stderr.write("hidden term: "+term.term_id+"\n")
+    # if term.is_hidden:
+        # sys.stderr.write("hidden term: "+term.term_id+"\n")
     # don't print hidden and root terms:
     if ((not term.is_hidden) and (len(term.parent_ids)>0)):
-        sys.stderr.write("printing term: "+term.term_id+"\n")
+        # sys.stderr.write("printing term: "+term.term_id+"\n")
         term_desc = term.term_def;
         if (len(term.synonyms) > 0):
             term_desc += ' ['+', '.join(term.synonyms)+']'
@@ -3689,7 +3689,7 @@ def append_with_children(res,children,term_dict,term_id):
             'mt_parent_term_ids': term.parent_ids
         })
     for child in children[term_id]:
-        sys.stderr.write("process child: "+child+"\n")
+        # sys.stderr.write("process child: "+child+"\n")
         append_with_children(res,children,term_dict,child)
     return
 
