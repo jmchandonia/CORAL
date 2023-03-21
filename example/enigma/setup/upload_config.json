@@ -53,9 +53,11 @@
         }, {
             "file": "generic_otu_count_zhou_100ws.json"
         }, {
-            "file": "generic_field_insitu_hach_hazen.json"
+            "file": "generic_field_data_hazen.json"
         }, {
             "file": "generic_field_insitu_hazen.json"
+        }, {
+            "file": "generic_field_insitu_hach_hazen.json"
         }, {
             "file": "generic_field_data_adams.json"
         }
@@ -96,6 +98,9 @@
             "ptype": "Filter"
         }, {
             "file": "process_environmental_measurements_hazen.tsv",
+            "ptype": "Assay Environment"
+        }, {
+            "file": "process_environmental_measurements_2_hazen.tsv",
             "ptype": "Assay Environment"
         }, {
             "file": "process_environmental_measurements_hach_hazen.tsv",
