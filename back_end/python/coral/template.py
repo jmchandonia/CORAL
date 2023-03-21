@@ -1,4 +1,4 @@
-
+import sys
 import numpy as np
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Font
@@ -781,7 +781,7 @@ def parse_brick_interlace_data(brick_ds, sheet):
                                    max_row=start_row + dims[0]['size'] - 1,
                                    min_col=start_col,
                                    max_col=start_col + len_cols - 1):
-            dv_row = [cell.value for ci, cell in enumerate(row) if (ci + di) % len(brick_ds['dataValues']) == 0]
+            dv_row = [cell.value for ci, cell in enumerate(row) if (ci - di) % len(brick_ds['dataValues']) == 0]
            # _data_vars.append(_get_nd_interlace_data(dv_row, dims[1:]))
             if len(dims) == 1:
                 _data_vars.append(dv_row[0])
@@ -1038,7 +1038,7 @@ def parse_brick_tab_dim(brick_ds, book):
                                    max_row=data_start_row + dims[0]['size'] - 1,
                                    min_col=data_ci,
                                    max_col=data_ci + len_cols - 1):
-            dv_row = [cell.value for ci, cell in enumerate(row) if (ci + ri) % len(brick_ds['dataValues']) == 0]
+            dv_row = [cell.value for ci, cell in enumerate(row) if (ci - ri) % len(brick_ds['dataValues']) == 0]
             _data_vars.append(_get_nd_interlace_data(dv_row, dims[1:]))
         _data_vars_xr = xr.DataArray(_data_vars)
         for _sheet in book.worksheets[1:dims[-1]['size']]:
@@ -1047,7 +1047,7 @@ def parse_brick_tab_dim(brick_ds, book):
                                         max_row=data_start_row + dims[0]['size'] - 1,
                                         min_col=data_ci,
                                         max_col=data_ci + len_cols - 1):
-                dv_row = [cell.value for ci, cell in enumerate(row) if (ci + ri) % len(brick_ds['dataValues']) == 0]
+                dv_row = [cell.value for ci, cell in enumerate(row) if (ci - ri) % len(brick_ds['dataValues']) == 0]
                 _data_vars_concat.append(_get_nd_interlace_data(dv_row, dims[1:]))
             _data_vars_concat_xr = xr.DataArray(_data_vars_concat)
             _data_vars_xr = xr.concat([_data_vars_xr, _data_vars_concat_xr], dim='dim_%d' % (len(dims) - 1))
@@ -1073,4 +1073,3 @@ def _get_nd_interlace_data(row, dims):
     for i in range(0, len(row), n_intervals):
         interlace_row.append(_get_nd_interlace_data(row[i:i + n_intervals], dims[1:]))
     return interlace_row
-
