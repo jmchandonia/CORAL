@@ -380,7 +380,7 @@ class Brick:
             else: 
                 if np.isscalar(selector):
                     if dim.var_count > 1:
-                        raise ValueError('Selector[%s] must sepcify the name of the variable since there are more than one variables in this dimension' % dim_index)            
+                        raise ValueError('Selector[%s] must specify the name of the variable since there is more than one variable in this dimension' % dim_index)            
                 else:
                     raise ValueError('Selector[%s] must be either scalar or dict' % dim_index)            
 
