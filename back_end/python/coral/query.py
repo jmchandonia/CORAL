@@ -660,7 +660,6 @@ class Query:
                 ' '.join( a['aql'] for a in var_aqls ),
                 aql_return
             )
-
         
         # sys.stderr.write('aql = '+aql+'\n')
         # sys.stderr.write('aql_bind = '+str(aql_bind)+'\n')
