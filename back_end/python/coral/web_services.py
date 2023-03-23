@@ -537,7 +537,7 @@ def get_brick(brick_id):
             bp = dp._get_type_provider('Brick')
             br = bp.load(brick_id)
             res = br.to_dict()
-        else:
+        else: # this one really returns CSV:
             res = _brick_to_csv(brick_id)
         
         return json.dumps( {
@@ -552,12 +552,15 @@ def get_brick(brick_id):
 @auth_ro_required
 def get_process(process_id):
     try:
-        (JSON, CSV) = range(2)
+
+        # note that the API says CSV, but really returns TSV
+        (JSON, TSV) = range(2)
         return_format = JSON
-        if request.method == "POST":
+        if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'CSV':
-                return_format = CSV
+            if query is not None and 'format' in query and (query['format'] == 'CSV' or
+                                                            query['format'] == 'TSV') :
+                return_format = TSV
 
         aql = 'FOR x IN @@collection FILTER x.id == @id RETURN x'
         aql_bind = {
@@ -570,7 +573,7 @@ def get_process(process_id):
         if return_format == JSON:
             response = {k: v for k, v in result.items() if not k.startswith('_')}
             return _ok_response(response)
-        else:
+        else: # TSV
             # Convert separate term fields into combined format (term_name <term_id>)
             formatted_data = []
             formatted_headers = []
@@ -1467,7 +1470,6 @@ def _brick_to_csv(brick_id):
 
 def _csv_to_brick(file_name_csv, file_name_json):
     # for uploading CSVs as bricks, stored in /tmp directory
-
     cmd = os.path.join(cns['_PROJECT_ROOT'], 'bin', 'ConvertGeneric.sh') + ' ' + file_name_csv + ' ' + file_name_json
     sys.stderr.write('running '+cmd+'\n')
     output = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=None, shell=True, cwd=os.path.join(cns['_PROJECT_ROOT'],'bin'))
@@ -2258,13 +2260,15 @@ def coral_search():
         provider = dp._get_type_provider(query_match['dataModel'])
         q = provider.query()
 
-        # s = pprint.pformat(search_data)
-        # sys.stderr.write('search_data = '+s+'\n')
+        s = pprint.pformat(search_data)
+        sys.stderr.write('debug: search_data = '+s+'\n')
 
-        (JSON, CSV) = range(2)
+        # note that the API says CSV, but really returns TSV
+        (JSON, TSV) = range(2)
         return_format = JSON
-        if 'format' in search_data and search_data['format'] == 'CSV':
-            return_format = CSV
+        if 'format' in search_data and (search_data['format'] == 'CSV' or
+                                        search_data['format'] == 'TSV') :
+            return_format = TSV
 
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
@@ -2345,6 +2349,14 @@ def coral_search():
                 #empty_cols.append(column)
             if len(empty_cols) > 0:
                 res_df.drop(columns=empty_cols, inplace=True)
+            # if too many "value_types", truncate
+            if 'value_types' in res_df.columns:
+                for i, row in res_df.iterrows():
+                    vals = row['value_types']
+                    if len(vals) > 10:
+                        new_vals = vals[:9]
+                        new_vals.append('and '+str(len(vals)-9)+' more')
+                        res_df.at[i,'value_types'] = new_vals
             # return result as json table
             res = res_df.to_json(orient="table", index=False)
         else: # TSV
@@ -3721,12 +3733,14 @@ def coral_core_type_metadata(obj_id):
 
     obj_type = ''
     try:
-        (JSON, CSV) = range(2)
+        # note that the API says CSV, but really returns TSV
+        (JSON, TSV) = range(2)
         return_format = JSON
         if request.method == 'POST':
             query = request.json
-            if query is not None and 'format' in query and query['format'] == 'CSV':
-                return_format = CSV
+            if query is not None and 'format' in query and (query['format'] == 'CSV' or
+                                                            query['format'] == 'TSV') :
+                return_format = TSV
         
         # sys.stderr.write('obj_id = '+str(obj_id)+'\n')
         obj_type = to_object_type(obj_id)

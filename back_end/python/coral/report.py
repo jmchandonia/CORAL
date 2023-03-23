@@ -28,7 +28,7 @@ class ReportBuilderService:
 
     @property
     def brick_data_var_types(self):
-        return self.__brick_term_stat_report( 'Data value types of bricks', 'value_type' )
+        return self.__brick_term_stat_report( 'Data value types of bricks', 'value_types' )
 
 
     @property
@@ -129,6 +129,7 @@ class ReportBuilderService:
                 del extraCounts[term_id]
             else:
                 new_term_counts.append(term_count)
+                
         # add in extra parent terms that weren't in original list
         term_ids_hash = services.ontology.all.find_ids_hash(list(extraCounts.keys()))
         for term_id in extraCounts.keys():

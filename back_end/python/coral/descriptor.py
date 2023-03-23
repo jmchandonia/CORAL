@@ -211,14 +211,14 @@ class BrickDescriptor(EntityDescriptor):
         data['brick_name'] = data['name']
         data['brick_type'] = data['data_type_term_name']
         data['dim_types'] = data['dim_type_term_names']
-        data['value_type'] = data['value_type_term_name']
+        data['value_types'] = data['value_type_term_names']
         data['shape'] = data['dim_sizes']
 
         super().__init__( services.indexdef.get_type_def(TYPE_NAME_BRICK), data)
 
     def table_view_properties(self):
         return ['brick_id', 'brick_type', 'shape',
-                'dim_types', 'value_type', 'brick_name']
+                'dim_types', 'value_types', 'brick_name']
 
     @property
     def full_type(self):
@@ -272,7 +272,7 @@ class BrickIndexDocumnet:
             'description': 'text',
             'n_dimensions': 'int',
             'data_type': 'term',
-            'value_type': 'term',
+            'value_types': '[term]',
             'dim_types': '[term]',
             'dim_sizes': '[int]',
             'all_terms': '[term]',
@@ -291,10 +291,10 @@ class BrickIndexDocumnet:
         self.data_type_term_id = brick.type_term.term_id
         self.data_type_term_name = brick.type_term.term_name
 
-        data_var = brick.data_vars[0]
-        self.value_type_term_id = data_var.type_term.term_id
-        self.value_type_term_name = data_var.type_term.term_name
-
+        self.value_type_term_ids = [
+            d.type_term.term_id for d in brick.data_vars]
+        self.value_type_term_names = [
+            d.type_term.term_name for d in brick.data_vars]
         self.dim_type_term_ids = [
             d.type_term.term_id for d in brick.dims]
         self.dim_type_term_names = [
