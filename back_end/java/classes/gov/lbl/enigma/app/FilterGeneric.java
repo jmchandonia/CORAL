@@ -367,6 +367,8 @@ public class FilterGeneric {
                 Long hetIndex = new Long(1L);
                 ArrayList<Long> dLengthsFix = dLengths;
                 if (GenericsUtilCommon.isHeterogeneous(hnda)) {
+                    if (fixedIndices.get(0)==null)
+                        throw new Exception("If getting data from heterogeneous matrix, the heterogeneous dimension can't be the X axis");
                     Iterator<Long> iter = fixedIndices.get(0).iterator();
                     if (iter==null)
                         throw new Exception("If getting data from heterogeneous matrix, the heterogeneous dimension can't be the X axis");
