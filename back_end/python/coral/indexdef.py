@@ -1,6 +1,6 @@
 import traceback
 from .typedef import TYPE_CATEGORY_STATIC, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_SYSTEM, TYPE_CATEGORY_ONTOLOGY, TYPE_NAME_BRICK, TYPE_NAME_PROCESS
-from .descriptor import BrickIndexDocumnet
+from .descriptor import BrickIndexDocument
 from . import services
 
 
@@ -107,7 +107,7 @@ class IndexTypeDefService:
 
         # do dynamic types: Brick
         index_prop_defs = []
-        for prop_name, prop_scalar_type in BrickIndexDocumnet.properties().items():
+        for prop_name, prop_scalar_type in BrickIndexDocument.properties().items():
             index_prop_defs.append( IndexPropertyDef(prop_name, prop_scalar_type) )
         index_type_def = IndexTypeDef(TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC, True, index_prop_defs)
         self.__type_defs.append(index_type_def)

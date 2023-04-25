@@ -1,7 +1,7 @@
 import pandas as pd
 from .typedef import TYPE_NAME_BRICK, TYPE_NAME_PROCESS, TYPE_CATEGORY_DYNAMIC, TYPE_CATEGORY_STATIC
 from .ontology import Term
-from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor, IndexDocument, BrickIndexDocumnet
+from .descriptor import DataDescriptorCollection, ProcessDescriptor, EntityDescriptor, IndexDocument, BrickIndexDocument
 import sys
 import pprint
 from . import services
@@ -50,7 +50,7 @@ class ArangoService:
 
 
     def index_brick(self, data_holder):
-        bid = BrickIndexDocumnet(data_holder.brick)
+        bid = BrickIndexDocument(data_holder.brick)
         doc = vars(bid)
         self.index_doc(doc, TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC)
 
