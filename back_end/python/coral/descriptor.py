@@ -263,7 +263,7 @@ class IndexDocument:
 
         return doc
 
-class BrickIndexDocumnet:
+class BrickIndexDocument:
     @staticmethod
     def properties():
         return { 
