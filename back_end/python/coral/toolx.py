@@ -9,6 +9,7 @@ from . import services
 from .workspace import EntityDataHolder, ProcessDataHolder, BrickDataHolder
 from .typedef import TYPE_NAME_PROCESS, TYPE_NAME_BRICK, TYPE_CATEGORY_STATIC
 from .brick import Brick
+from .dataprovider import DataProvider
 import csv
 
 def init_system(argv=None):
@@ -109,6 +110,29 @@ def upload_bricks(argv=None):
     for file_def in doc['bricks']:
         if 'ignore' in file_def: continue
         upload_brick(file_def['file'])
+
+def reindex_bricks(argv=None):
+    services._init_services()
+
+    itd = services.indexdef.get_type_def(TYPE_NAME_BRICK)
+    itd._ensure_init_index()
+
+    # find all bricks
+    dp = DataProvider()
+    bp = dp.genx_types.Brick
+    q = bp.query()
+    rs = q.find()
+
+    for item in rs.items:
+        print('examining brick '+str(item['brick_id']))
+        props = item.properties
+        if 'value_types' in props:
+            print(' has value_types, already updated')
+        elif 'value_type' in props:
+            print(' has value_type, needs reindexing')
+            br = bp.load(item['brick_id'])
+            data_holder = BrickDataHolder(br)
+            services.arango_service.reindex_brick(data_holder)
 
 def update_core(file_name, type_name):
     try:
