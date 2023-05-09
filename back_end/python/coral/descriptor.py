@@ -211,7 +211,10 @@ class BrickDescriptor(EntityDescriptor):
         data['brick_name'] = data['name']
         data['brick_type'] = data['data_type_term_name']
         data['dim_types'] = data['dim_type_term_names']
-        data['value_types'] = data['value_type_term_names']
+        if 'value_type_term_names' in data:
+            data['value_types'] = data['value_type_term_names']
+        elif 'value_type_term_name' in data:
+            data['value_type'] = data['value_type_term_name']
         data['shape'] = data['dim_sizes']
 
         super().__init__( services.indexdef.get_type_def(TYPE_NAME_BRICK), data)

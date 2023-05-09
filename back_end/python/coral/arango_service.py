@@ -54,6 +54,14 @@ class ArangoService:
         doc = vars(bid)
         self.index_doc(doc, TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC)
 
+    def reindex_brick(self, data_holder):
+        bid = BrickIndexDocument(data_holder.brick)
+        doc = vars(bid)
+        # sys.stderr.write('doc = '+str(doc)+'\n')
+        self.upsert_doc(
+            {
+                services.indexdef.PK_PROPERTY_NAME : doc[services.indexdef.PK_PROPERTY_NAME]
+            }, doc, TYPE_NAME_BRICK, TYPE_CATEGORY_DYNAMIC)
 
     def index_data(self, data_holder):
         type_name = data_holder.type_def.name 
