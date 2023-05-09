@@ -715,6 +715,23 @@ _NOTE: On MacOS, if the import fails with `[Errno 49] Can't assign requested add
 
 - Once the data import has completed, you can visit localhost:8529 to view the database and make sure everything has imported properly. You can also view the imported data via the Arango Shell.
 
+### Notes on Upgrading
+
+If you have an installation from prior to v0.1.3, the brick collection
+in Arango has been updated in v0.1.3 to index all value types in
+bricks, not just the first one.  If you want to keep existing data, you
+will need to tell CORAL to reindex all existing bricks, as follows:
+
+_make a "reindex bricks" notebook to reindex old bricks, then run it._
+
+_sample "reindex bricks" notebook contents (e.g., in /home/coral/prod/notebooks/reindex_bricks.ipynb):_
+
+```
+from coral.dataprovider import DataProvider
+from coral import toolx
+toolx.reindex_bricks()
+```
+
 ### Install UI
 
 See README.md in front\_end directory
