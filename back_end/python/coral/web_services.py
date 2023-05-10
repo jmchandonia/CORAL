@@ -2372,8 +2372,9 @@ def _fmt_download_df(df):
     # formats Core TSVs into format that can be uploaded again
     # converts x_term_name and x_term_id fields into 'x' with format 'term_name <term_id>'
 
-    # drop internal ID column
-    df.drop('id', axis=1, inplace=True)
+    # drop internal ID column, if it exists
+    if 'id' in df.columns:
+        df.drop('id', axis=1, inplace=True)
 
     # get term_name term_id pairs
     merge_columns = []

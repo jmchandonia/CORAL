@@ -9,6 +9,7 @@ import datetime
 import time
 import base64
 import pprint
+import hashlib
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
@@ -41,7 +42,7 @@ class dataAccessAPITest(unittest.TestCase):
         return self.cns['_AUTH_PUBLIC']
 
     def get_key_data_secret(self):
-        return self.cns['_AUTH_SECRET']    
+        return hashlib.md5(self.cns['_AUTH_SECRET']).hexdigest()
 
     def get_key_public(self):
         data = self.get_key_data_public()
@@ -120,7 +121,7 @@ class dataAccessAPITest(unittest.TestCase):
         headers = {'Authorization': 'JwToken' + ' ' + new_jwt, 'content-type': 'application/json'}
 
         # this method is @auth_required, so should fail
-        r = requests.get(self.url+'data_types', headers=headers, verify=False)
+        r = requests.get(self.url+'search_operations', headers=headers, verify=False)
         self.assertEqual(r.status_code,401)
         
 
