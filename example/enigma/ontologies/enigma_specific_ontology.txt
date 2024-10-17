@@ -140,7 +140,7 @@ ENIGMA
       Trent Northen
       Ben Bowen
       Yan Chen
-      Marcus de Raad
+      Markus de Raad
       Amber Golini
       La Zhen Han
       Suzanne Kosina
@@ -183,6 +183,7 @@ ENIGMA
       alias: Joe Zhou
       alias: Joe Jizhong Zhou
       Yupeng Fan
+      Ying Fu
       Megan Kempher
       Jonathan Michael
       David Needham

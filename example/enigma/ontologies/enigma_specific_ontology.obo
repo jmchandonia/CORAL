@@ -1010,9 +1010,9 @@ is_a: ENIGMA:0000070 ! Northen Lab
 
 [Term]
 id: ENIGMA:0000138
-name: Marcus de Raad
+name: Markus de Raad
 namespace: enigma.ontology
-def: "Marcus de Raad." []
+def: "Markus de Raad." []
 is_a: ENIGMA:0000070 ! Northen Lab
 
 [Term]
@@ -1219,6 +1219,13 @@ name: Environmental Atlas
 namespace: enigma.ontology
 def: "Environmental Atlas." []
 is_a: ENIGMA:0000002 ! ENIGMA Campaign
+
+[Term]
+id: ENIGMA:0000168
+name: Ying Fu
+namespace: enigma.ontology
+def: "Ying Fu." []
+is_a: ENIGMA:0000090 ! Zhou Lab
 
 [Typedef]
 id: is_a
