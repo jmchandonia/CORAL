@@ -7,6 +7,7 @@
       *-Condition ID (Ref: DA:0000045.Condition.name)
     *Method (String)
     *Algorithm Parameter (String)
+    *Index (Int, +count unit)
     *Date (String)
     *Time (String)
     *DateTime (String)
@@ -39,6 +40,7 @@
       Positive Polarity
       Negative Polarity
     *Barcode (String)
+    *Internal Standard (String)
     **Microplate
       Microplate Name (String)
       **Microplate Well
@@ -48,7 +50,7 @@
         alias: PMID
       *-PubMed Central ID (String)
         alias: PMCID
-  Mathematical Context
+  Mathematical Context:
     Normalized
     +Relative
     Increase
@@ -130,6 +132,7 @@
     *Detection Limit (Float)
     Organic (Boolean)
     *Molecular Weight (Float, +dalton)
+    *Exact Mass (Float, +dalton)
     Reference Compound
     *Isotope (ORef: CHEBI:24431)
     Redox
@@ -351,7 +354,7 @@
   *Isotope Ratio (Float, ratio, parts per notation unit, +percent)
   *Relative Abundance (Float, ratio)
   *Amount (Float, substance unit)
-  *Ion Intensity (Float, +relative luminescence unit)
+  *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
   *Relative Evolutionary Divergence (Float, +dimensionless unit)
   Binary (Boolean)
     *Growth
@@ -503,6 +506,8 @@
     is_a: UO:0000189
   fold concentration
     is_a: UO:0000051
+  relative ion intensity unit
+    is_a: UO:0000186
 
 -Molecules not in ChEBI:
   is_a: CHEBI:24431
