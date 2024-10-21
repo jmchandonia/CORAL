@@ -226,7 +226,12 @@ is_a: ME:0000209 ! Physical Context
 id: ME:0000018
 name: Mathematical Context
 namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
 def: "Microtypes that provide mathematical context." []
+xref: ORef: ME:0000018
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -4077,7 +4082,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "UO:0000313" xsd:string
+property_value: valid_units "ME:0000471 UO:0000313" xsd:string
 def: "Ion Intensity." []
 is_a: ME:0000120 ! Measurement
 
@@ -4847,6 +4852,56 @@ property_value: valid_units "UO:0000189" xsd:string
 property_value: valid_units_parent "UO:0000189" xsd:string
 def: "Read Coverage." []
 is_a: ME:0000463 ! Genome Quality
+
+[Term]
+id: ME:0000468
+name: Index
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Index." []
+is_a: ME:0000002 ! Experimental Context
+
+[Term]
+id: ME:0000469
+name: Internal Standard
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Standard." []
+is_a: ME:0000002 ! Experimental Context
+
+[Term]
+id: ME:0000470
+name: Exact Mass
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000221" xsd:string
+def: "Exact Mass." []
+is_a: ME:0000026 ! Chemical Context
+
+[Term]
+id: ME:0000471
+name: relative ion intensity unit
+namespace: measure.ontology
+def: "relative ion intensity unit." []
+is_a: ME:0000294 ! Units not in UO
+is_a: UO:0000186
 
 [Typedef]
 id: data_type
