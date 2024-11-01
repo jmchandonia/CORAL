@@ -1,3 +1,4 @@
+from json import JSONEncoder
 from flask import Flask, request, json, jsonify, send_file
 from flask import Response
 from flask import request
@@ -38,7 +39,7 @@ from .workspace import EntityDataWebUploader
 from . import template 
 
 
-class NpEncoder(json.JSONEncoder):
+class NpEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
