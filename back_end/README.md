@@ -64,10 +64,18 @@ pip3 install notebook
 ```
 
 _add jupyterhub as user on Linux:_
+
 ```
 useradd jupyterhub
 ```
-_remember to set shell to nologin, add to shadow group_
+
+_remember to set shell to nologin, add to shadow and ssl-cert group_
+
+```
+usermod -a -G shadow jupyterhub
+usermod -a -G ssl-cert jupyterhub
+```
+
 
 _set up /etc/jupyterhub and /srv/jupyterhub files as described in docs above, or copy from another installation._
 
@@ -145,9 +153,9 @@ _Follow directions from ArangoDB website; something like this:_
 
 ```
 cd /tmp
-curl -OL https://download.arangodb.com/arangodb37/DEBIAN/Release.key
+curl -OL https://download.arangodb.com/arangodb312/DEBIAN/Release.key
 apt-key add - < Release.key
-echo 'deb https://download.arangodb.com/arangodb37/DEBIAN/ /' | tee /etc/apt/sources.list.d/arangodb.list
+echo 'deb https://download.arangodb.com/arangodb312/DEBIAN/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 apt-get install apt-transport-https
 apt-get update
 apt-get install arangodb3
@@ -304,16 +312,16 @@ Sample code is in back_end/python/test/data_retrieval_test.py
 To generate a pair of keys, do:
 
 ```
-ssh-keygen -t rsa -b 4096 -P "" -f coral.key
+ssh-keygen -t rsa -b 4096 -P "" -f coral-data-access.key
 ```
 
-This will create a public key called "coral.key.pub" to give to
-application developers you want to have access to the CORAL API.
-We call this the "data access API public key."
+This will create a public key called "coral-data-access.key.pub" to
+give to application developers you want to have access to the CORAL
+API.  We call this the "data access API public key."
 
-Keep the private key "coral.key" on the server, and install it
-using the config.json file below.  We call this the "data access
-API private key."
+Keep the private key "coral-data-access.key" on the server, and
+install it using the config.json file below.  We call this the "data
+access API private key."
 
 
 ### Initial data, microtypes, and ontologies loading
