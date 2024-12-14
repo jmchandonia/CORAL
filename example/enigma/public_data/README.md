@@ -35,6 +35,15 @@ C. Hazen; mBio May 2015, 6 (3) e00326-15; DOI: 10.1128/mBio.00326-15
 
 * generic_otu_id_zhou_100ws.json = a Brick containing taxonomic assignments for each OTU
 
+* generic_field_data_adams.json = a Brick containing metals measurements for each sample
+
+* generic_field_data_hazen.json = a Brick containing geochemical measurements and AODC counts for each sample
+
+* generic_field_insitu_hach_hazen.json = a Brick containing in situ geochemical measurements for each sample
+
+* generic_field_insitu_hazen.json = a Brick containing in situ geochemical measurements for each sample that were collected using a Hach Kit
+
+
 ## Process data:
 
 * process_sampling_100ws.tsv = provenance of original sampling
@@ -45,6 +54,20 @@ C. Hazen; mBio May 2015, 6 (3) e00326-15; DOI: 10.1128/mBio.00326-15
 
 * process_otu_inference_zhou_100ws.tsv = provenance of OTU calling and classification
 
+* process_environmental_measurements_adams.tsv = provenance of Adams Lab measurements
+
+* process_environmental_measurements_hach_hazen.tsv = provenance of Hazen Lab Hach Kit measurements
+
+* process_environmental_measurements_hazen.tsv = provenance of Hazen Lab in situ measurements
+
+* process_environmental_measurements_2_hazen.tsv = provenance of Hazen Lab geochemistry and AODC measurements
+
+
 ## SETUP:
 
 * all the above files should be copied to /home/coral/prod/data_import/data/ (or whatever directories you chose for "entity_dir", "process_dir", and "brick_dir" in config.json) before running your reload data notebook.
+
+
+## Other Data Formats:
+
+* The directory "bricks_nc_format" contains all of the above Bricks in NetCDF4 format.  The directory "bricks_tsv_format" contains all of the above Bricks in TSV format.  Both directories have instructions on how the files were made.
