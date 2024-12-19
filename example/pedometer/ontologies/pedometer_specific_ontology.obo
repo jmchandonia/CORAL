@@ -1,0 +1,137 @@
+format-version: 1.4
+ontology:pedometer
+date: 17:12:2024 17:26
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: ME:0000001
+
+[Term]
+id: PEDOMETER:0000000
+name: term
+namespace: pedometer.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: PEDOMETER:0000001
+name: PEDOMETER
+namespace: pedometer.ontology
+def: "PEDOMETER." []
+is_a: ME:0000001
+is_a: PEDOMETER:0000000 ! term
+
+[Term]
+id: PEDOMETER:0000002
+name: PEDOMETER Labs and Personnel
+namespace: pedometer.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "PEDOMETER Labs and Personnel." []
+synonym: "PEDOMETER PI" EXACT []
+xref: ORef: PEDOMETER:0000002
+is_a: PEDOMETER:0000001 ! PEDOMETER
+
+[Term]
+id: PEDOMETER:0000003
+name: Tringe Lab
+namespace: pedometer.ontology
+def: "Tringe Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000004
+name: Susannah Tringe
+namespace: pedometer.ontology
+def: "Susannah Tringe." []
+is_a: PEDOMETER:0000003 ! Tringe Lab
+
+[Term]
+id: PEDOMETER:0000005
+name: Chakraborty Lab
+namespace: pedometer.ontology
+def: "Chakraborty Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000006
+name: Romy Chakraborty
+namespace: pedometer.ontology
+def: "Romy Chakraborty." []
+is_a: PEDOMETER:0000005 ! Chakraborty Lab
+
+[Term]
+id: PEDOMETER:0000007
+name: Mukhopadhyay Lab
+namespace: pedometer.ontology
+def: "Mukhopadhyay Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000008
+name: Aindrila Mukhopadhyay
+namespace: pedometer.ontology
+def: "Aindrila Mukhopadhyay." []
+is_a: PEDOMETER:0000007 ! Mukhopadhyay Lab
+
+[Term]
+id: PEDOMETER:0000009
+name: Zhalnina Lab
+namespace: pedometer.ontology
+def: "Zhalnina Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000010
+name: Kateryna Zhalnina
+namespace: pedometer.ontology
+def: "Kateryna Zhalnina." []
+is_a: PEDOMETER:0000009 ! Zhalnina Lab
+
+[Term]
+id: PEDOMETER:0000011
+name: Eudes Lab
+namespace: pedometer.ontology
+def: "Eudes Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000012
+name: Aymerick Eudes
+namespace: pedometer.ontology
+def: "Aymerick Eudes." []
+is_a: PEDOMETER:0000011 ! Eudes Lab
+
+[Term]
+id: PEDOMETER:0000013
+name: Mukundan Lab
+namespace: pedometer.ontology
+def: "Mukundan Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000014
+name: Harshini Mukundan
+namespace: pedometer.ontology
+def: "Harshini Mukundan." []
+is_a: PEDOMETER:0000013 ! Mukundan Lab
+
+[Term]
+id: PEDOMETER:0000015
+name: Chandonia Lab
+namespace: pedometer.ontology
+def: "Chandonia Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000016
+name: John-Marc Chandonia
+namespace: pedometer.ontology
+def: "John-Marc Chandonia." []
+is_a: PEDOMETER:0000015 ! Chandonia Lab
+
+[Typedef]
+id: is_a
+name: is_a

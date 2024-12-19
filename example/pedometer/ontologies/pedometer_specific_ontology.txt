@@ -1,0 +1,18 @@
+PEDOMETER
+  is_a: ME:0000001
+  PEDOMETER Labs and Personnel:
+    alias: PEDOMETER PI
+    Tringe Lab
+      Susannah Tringe
+    Chakraborty Lab
+      Romy Chakraborty
+    Mukhopadhyay Lab
+      Aindrila Mukhopadhyay
+    Zhalnina Lab
+      Kateryna Zhalnina
+    Eudes Lab
+      Aymerick Eudes
+    Mukundan Lab
+      Harshini Mukundan
+    Chandonia Lab
+      John-Marc Chandonia

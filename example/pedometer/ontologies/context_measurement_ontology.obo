@@ -1,0 +1,4662 @@
+format-version: 1.4
+ontology:me
+date: 27:08:2018 15:13
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: COMO:0000000
+name: term
+namespace: measure.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: COMO:0000001
+name: Context
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Root of all Context and Measurement Terms." []
+xref: ORef: COMO:0000001
+is_a: COMO:0000000 ! term
+
+[Term]
+id: COMO:0000002
+name: Experimental Context
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Context describing experimental design." []
+xref: ORef: COMO:0000002
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000003
+name: Series Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Context describing the purpose of a series." []
+xref: ORef: COMO:0000003
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000004
+name: Time Series
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "A time series, in which a series of measurements was taken at different timepoints." []
+is_a: COMO:0000003 ! Series Type
+
+[Term]
+id: COMO:0000005
+name: Replicate Series
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "A replicate series, e.g., biological or technical replicates." []
+is_a: COMO:0000003 ! Series Type
+
+[Term]
+id: COMO:0000006
+name: Condition
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A human-readable description of an experimental condition." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000007
+name: Method
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A description of one or more methods used in an experiment." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000008
+name: Algorithm Parameter
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A description of one or more algorithm parameters." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000009
+name: Date
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A date, formatted as YYYY-MM-DD." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000010
+name: Time
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A time, formatted as HH:MM (see DateTime to include the date)." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000011
+name: Comment
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A human-readable comment." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000012
+name: Instrument
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A description of instrument(s) used." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000013
+name: Category
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A human-readable description of a category." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000014
+name: Homogenized
+namespace: measure.ontology
+def: "Homogenized." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000015
+name: Anaerobic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Anaerobic." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000016
+name: Aerobic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Aerobic." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000017
+name: Undisturbed
+namespace: measure.ontology
+def: "Undisturbed." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000018
+name: Mathematical Context
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microtypes that provide mathematical context." []
+xref: ORef: COMO:0000018
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000019
+name: Normalized
+namespace: measure.ontology
+def: "Normalized; describe how in the Method or Protocol." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000020
+name: Relative
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Human-readable context saying what another microtype is measured relative to." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000021
+name: Increase
+namespace: measure.ontology
+def: "Increase." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000022
+name: Decrease
+namespace: measure.ontology
+def: "Decrease." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000023
+name: Gain
+namespace: measure.ontology
+def: "Gain." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000024
+name: Loss
+namespace: measure.ontology
+def: "Loss." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000025
+name: Nearest
+namespace: measure.ontology
+def: "Nearest." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000026
+name: Chemical Context
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Describes the context of a molecule in a chemical reaction or experiment." []
+xref: ORef: COMO:0000026
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000027
+name: Molecule
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Use when the type of molecule varies along a dimension." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000028
+name: Reaction
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Human-readable description of a chemical reaction." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000029
+name: Surface Type
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Human-readable description of a type of surface." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000030
+name: Bead Type
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Human-readable description of the type of bead used in a (geo)chemical experiment." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000031
+name: Bead Size
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Size of a bead used in a (geo)chemical experiment." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000032
+name: Thermodynamic Context
+namespace: measure.ontology
+def: "Thermodynamic context for a reaction." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000033
+name: delta-G
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000111" xsd:string
+def: "delta-G, a change in Gibbs Free Energy for a chemical reaction." []
+is_a: COMO:0000032 ! Thermodynamic Context
+
+[Term]
+id: COMO:0000034
+name: delta-H
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000111" xsd:string
+def: "delta-H, a change in enthalpy for a chemical reaction." []
+is_a: COMO:0000032 ! Thermodynamic Context
+
+[Term]
+id: COMO:0000035
+name: Specific Activity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Rate of reaction multiplied by the volume, divided by mass of protein." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000036
+name: Wavelength
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Wavelength of radiation." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000037
+name: State
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Human-readable context for the state or type of matter, e.g., dissolved, or in soil" []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000038
+name: Detection Limit
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Detection limit for an instrument or experiment." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000039
+name: Biological Context
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Biological Context." []
+xref: ORef: COMO:0000039
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000040
+name: Cell
+namespace: measure.ontology
+def: "Cell." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000041
+name: Colony
+namespace: measure.ontology
+def: "Colony." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000042
+name: Strain
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Strain of microbe, or isolate ID." []
+synonym: "Isolate" EXACT []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000043
+name: Strain Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Strain name, for microbes that are not ENIGMA isolates." []
+is_a: COMO:0000042 ! Strain
+
+[Term]
+id: COMO:0000044
+name: Strain ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use this to link to ENIGMA strains by their official strain name/ID." []
+synonym: "Isolate ID" EXACT []
+xref: Ref: DA:0000062.Strain.name
+is_a: COMO:0000042 ! Strain
+
+[Term]
+id: COMO:0000045
+name: Taxon
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Taxon." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000046
+name: Taxon Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use this to describe taxa by name (use Taxon ID instead if possible)." []
+is_a: COMO:0000045 ! Taxon
+
+[Term]
+id: COMO:0000047
+name: Taxon ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use this to link to defined ENIGMA taxa." []
+xref: Ref: DA:0000037.Taxon.name
+is_a: COMO:0000045 ! Taxon
+
+[Term]
+id: COMO:0000048
+name: Media
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Media type." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000049
+name: Media Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Media name." []
+is_a: COMO:0000048 ! Media
+
+[Term]
+id: COMO:0000050
+name: Media Composition
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Media composition." []
+is_a: COMO:0000048 ! Media
+
+[Term]
+id: COMO:0000052
+name: Media Addition
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Media addition." []
+is_a: COMO:0000048 ! Media
+
+[Term]
+id: COMO:0000053
+name: Metabolite
+namespace: measure.ontology
+def: "Metabolite." []
+is_a: COMO:0000027 ! Molecule
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000054
+name: Substrate
+namespace: measure.ontology
+def: "Substrate." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000055
+name: Carbon Source
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Carbon source used for microbial growth." []
+is_a: COMO:0000054 ! Substrate
+
+[Term]
+id: COMO:0000056
+name: Nitrogen Source
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Nitrogen source used for microbial growth." []
+is_a: COMO:0000054 ! Substrate
+
+[Term]
+id: COMO:0000057
+name: Electron Donor
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Electron donor used for microbial growth." []
+is_a: COMO:0000054 ! Substrate
+
+[Term]
+id: COMO:0000058
+name: Electron Acceptor
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Electron acceptor used for microbial growth." []
+is_a: COMO:0000054 ! Substrate
+
+[Term]
+id: COMO:0000059
+name: Gene
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Gene." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000060
+name: Gene Name
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Gene name, e.g., dsrA." []
+xref: Ref: DA:0000040.Gene.aliases
+is_a: COMO:0000059 ! Gene
+
+[Term]
+id: COMO:0000061
+name: Gene GI
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Gene GI." []
+is_a: COMO:0000059 ! Gene
+
+[Term]
+id: COMO:0000062
+name: Homologous Gene
+namespace: measure.ontology
+def: "Homologous Gene." []
+is_a: COMO:0000059 ! Gene
+
+[Term]
+id: COMO:0000063
+name: Orthologous Gene
+namespace: measure.ontology
+def: "Orthologous Gene." []
+is_a: COMO:0000062 ! Homologous Gene
+
+[Term]
+id: COMO:0000064
+name: Paralogous Gene
+namespace: measure.ontology
+def: "Paralogous Gene." []
+is_a: COMO:0000062 ! Homologous Gene
+
+[Term]
+id: COMO:0000065
+name: Essential Gene
+namespace: measure.ontology
+def: "Essential Gene." []
+is_a: COMO:0000059 ! Gene
+
+[Term]
+id: COMO:0000066
+name: Protein
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Protein." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000067
+name: Protein Annotation
+namespace: measure.ontology
+def: "Protein Annotation." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000068
+name: KEGG Subsystem
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "KEGG Subsystem." []
+xref: ORef: KEGG
+is_a: COMO:0000067 ! Protein Annotation
+
+[Term]
+id: COMO:0000069
+name: TIGR Role
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "TIGR Role." []
+xref: ORef: TIGR
+is_a: COMO:0000067 ! Protein Annotation
+
+[Term]
+id: COMO:0000070
+name: SEED Subsystem
+namespace: measure.ontology
+def: "SEED Subsystem." []
+is_a: COMO:0000067 ! Protein Annotation
+
+[Term]
+id: COMO:0000071
+name: SEED Subsystem ID
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "SEED Subsystem ID." []
+is_a: COMO:0000070 ! SEED Subsystem
+
+[Term]
+id: COMO:0000073
+name: Protein Domain
+namespace: measure.ontology
+def: "Protein Domain." []
+is_a: COMO:0000067 ! Protein Annotation
+
+[Term]
+id: COMO:0000074
+name: Pfam Domain
+namespace: measure.ontology
+def: "Pfam Domain." []
+is_a: COMO:0000073 ! Protein Domain
+
+[Term]
+id: COMO:0000075
+name: Pfam Domain Accession
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Pfam Domain Accession." []
+xref: ORef: Pfam
+is_a: COMO:0000074 ! Pfam Domain
+
+[Term]
+id: COMO:0000076
+name: Operon
+namespace: measure.ontology
+def: "Operon." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000077
+name: Ribosome
+namespace: measure.ontology
+def: "Ribosome." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000078
+name: Growth Parameter
+namespace: measure.ontology
+def: "Growth Parameter." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000079
+name: Growth Rate
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000280" xsd:string
+def: "Growth Rate." []
+is_a: COMO:0000078 ! Growth Parameter
+
+[Term]
+id: COMO:0000080
+name: Doubling Time
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "Doubling Time." []
+is_a: COMO:0000078 ! Growth Parameter
+
+[Term]
+id: COMO:0000081
+name: Time Since Inoculation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "Time Since Inoculation." []
+is_a: COMO:0000078 ! Growth Parameter
+
+[Term]
+id: COMO:0000082
+name: Growth Efficiency
+namespace: measure.ontology
+def: "Growth Efficiency." []
+is_a: COMO:0000078 ! Growth Parameter
+
+[Term]
+id: COMO:0000083
+name: Gene Regulation
+namespace: measure.ontology
+def: "Gene Regulation." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000084
+name: Up-regulated
+namespace: measure.ontology
+def: "Up-regulated." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000085
+name: Down-regulated
+namespace: measure.ontology
+def: "Down-regulated." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000086
+name: Transcription Factor
+namespace: measure.ontology
+def: "Transcription Factor." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000087
+name: Motif
+namespace: measure.ontology
+def: "Motif." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000088
+name: Binding Site
+namespace: measure.ontology
+def: "Binding Site." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000089
+name: Regulon
+namespace: measure.ontology
+def: "Regulon." []
+is_a: COMO:0000083 ! Gene Regulation
+
+[Term]
+id: COMO:0000090
+name: Taxonomic Level
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Taxonomic Level." []
+xref: ORef: COMO:0000090
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000091
+name: Strain Change
+namespace: measure.ontology
+def: "Strain Change." []
+synonym: "Mutation" EXACT []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000092
+name: Strain Change Effect
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Strain Change Effect." []
+xref: ORef: COMO:0000092
+is_a: COMO:0000091 ! Strain Change
+
+[Term]
+id: COMO:0000093
+name: Synonymous
+namespace: measure.ontology
+def: "Synonymous." []
+is_a: COMO:0000092 ! Strain Change Effect
+
+[Term]
+id: COMO:0000094
+name: Non-Synonymous
+namespace: measure.ontology
+def: "Non-Synonymous." []
+is_a: COMO:0000092 ! Strain Change Effect
+
+[Term]
+id: COMO:0000095
+name: Frameshift
+namespace: measure.ontology
+def: "Frameshift." []
+is_a: COMO:0000092 ! Strain Change Effect
+
+[Term]
+id: COMO:0000096
+name: Stop
+namespace: measure.ontology
+def: "Stop." []
+is_a: COMO:0000092 ! Strain Change Effect
+
+[Term]
+id: COMO:0000097
+name: Knockout
+namespace: measure.ontology
+def: "Knockout." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000098
+name: Environment
+namespace: measure.ontology
+def: "Environment." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000099
+name: Environmental Sample Location
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Sample Location." []
+synonym: "Borehole" EXACT []
+synonym: "Core" EXACT []
+synonym: "Well" EXACT []
+is_a: COMO:0000098 ! Environment
+
+[Term]
+id: COMO:0000100
+name: Environmental Sample
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Sample." []
+is_a: COMO:0000098 ! Environment
+
+[Term]
+id: COMO:0000101
+name: Environmental Sample Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Sample Name." []
+is_a: COMO:0000100 ! Environmental Sample
+
+[Term]
+id: COMO:0000102
+name: Environmental Sample ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sample ID, chosen from list of valid ENIGMA samples." []
+xref: Ref: DA:0000042.Sample.name
+is_a: COMO:0000100 ! Environmental Sample
+
+[Term]
+id: COMO:0000103
+name: Environmental Parameter
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Parameter." []
+is_a: COMO:0000098 ! Environment
+
+[Term]
+id: COMO:0000104
+name: Ecology
+namespace: measure.ontology
+def: "Ecology." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000105
+name: Community Assembly Process
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Community Assembly Process." []
+xref: ORef: COMO:0000105
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000106
+name: Variable Selection
+namespace: measure.ontology
+def: "Variable Selection." []
+is_a: COMO:0000105 ! Community Assembly Process
+
+[Term]
+id: COMO:0000107
+name: Homogenous Selection
+namespace: measure.ontology
+def: "Homogenous Selection." []
+is_a: COMO:0000105 ! Community Assembly Process
+
+[Term]
+id: COMO:0000108
+name: Dispersal Limitation
+namespace: measure.ontology
+def: "Dispersal Limitation." []
+is_a: COMO:0000105 ! Community Assembly Process
+
+[Term]
+id: COMO:0000109
+name: Homogenizing Dispersal
+namespace: measure.ontology
+def: "Homogenizing Dispersal." []
+is_a: COMO:0000105 ! Community Assembly Process
+
+[Term]
+id: COMO:0000110
+name: Undominated
+namespace: measure.ontology
+def: "Undominated." []
+is_a: COMO:0000105 ! Community Assembly Process
+
+[Term]
+id: COMO:0000111
+name: Sequencing
+namespace: measure.ontology
+def: "Sequencing." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000112
+name: Read Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Read Type." []
+xref: ORef: COMO:0000112
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000113
+name: Paired End Read
+namespace: measure.ontology
+def: "Paired End Read." []
+is_a: COMO:0000112 ! Read Type
+
+[Term]
+id: COMO:0000114
+name: Single End Read
+namespace: measure.ontology
+def: "Single End Read." []
+is_a: COMO:0000112 ! Read Type
+
+[Term]
+id: COMO:0000115
+name: Base Pair
+namespace: measure.ontology
+def: "Base Pair." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000116
+name: Sequencing Technology
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequencing Technology." []
+xref: ORef: COMO:0000116
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000117
+name: Illumina
+namespace: measure.ontology
+def: "Illumina." []
+is_a: COMO:0000116 ! Sequencing Technology
+
+[Term]
+id: COMO:0000118
+name: Pacbio
+namespace: measure.ontology
+def: "Pacbio." []
+is_a: COMO:0000116 ! Sequencing Technology
+
+[Term]
+id: COMO:0000119
+name: GC content
+namespace: measure.ontology
+def: "GC content." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000120
+name: Measurement
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Measurement." []
+xref: ORef: COMO:0000120
+is_a: COMO:0000000 ! term
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000121
+name: pH
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000196 UO:0000247" xsd:string
+def: "pH." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000122
+name: Time Elapsed
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "Time Elapsed." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000123
+name: Temperature
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000005" xsd:string
+def: "Temperature." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000124
+name: Conductivity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000262" xsd:string
+def: "Conductivity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000125
+name: Redox Potential
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000217" xsd:string
+def: "Redox Potential." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000126
+name: Count
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189 UO:0000200" xsd:string
+property_value: valid_units_parent "UO:0000189 UO:0000200" xsd:string
+def: "Count." []
+synonym: "Absolute Abundance" EXACT []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000127
+name: Optical Density
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+property_value: valid_units_parent "UO:0000186" xsd:string
+def: "Optical Density." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000128
+name: Size
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000095 UO:0000001" xsd:string
+def: "Size." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000129
+name: Concentration
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187 UO:0000322" xsd:string
+property_value: valid_units_parent "UO:0000051 UO:0000052 UO:0000166 UO:0000187" xsd:string
+def: "Concentration." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000130
+name: Hybridization Intensity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Hybridization Intensity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000131
+name: Expression Level
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Expression Level." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000132
+name: Enzyme Activity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Enzyme Activity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000133
+name: Absorbance
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Absorbance." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000134
+name: Heat
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Heat." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000135
+name: Mass
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000002" xsd:string
+def: "Mass." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000137
+name: Fitness Score
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000379" xsd:string
+def: "Fitness Score." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000138
+name: Genetic Interaction Score
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Genetic Interaction Score." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000139
+name: Stoichiometric Ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Stoichiometric Ratio." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000140
+name: Relative Abundance
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "Relative amounts of multiple categories of the same object." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000141
+name: Binary
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Binary." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000142
+name: Growth
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Boolean property indicating whether something (e.g., an isolate) grows." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000143
+name: Activity
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Boolean property indicating whether something (e.g., an isolate) is active." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000144
+name: Presence
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Boolean property indicating whether something (e.g., an isolate) is present." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000145
+name: Essentiality
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Boolean property indicating whether something (e.g., a gene) is essential." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000146
+name: Statistic
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Statistic." []
+xref: ORef: COMO:0000146
+is_a: COMO:0000000 ! term
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000147
+name: Average
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Average." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000148
+name: Difference
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Difference." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000149
+name: Standard Deviation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Standard Deviation." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000150
+name: Standard Error
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Standard Error." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000151
+name: Minimum
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Minimum." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000152
+name: Maximum
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Maximum." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000153
+name: Median
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Median." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000154
+name: Ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Ratio." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000155
+name: Log Ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Log Ratio." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000156
+name: p Value
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "p Value." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000157
+name: T Score
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "T Score." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000158
+name: Frequency
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Frequency." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000159
+name: Fold Enrichment
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Fold Enrichment." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000160
+name: Confidence
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "Confidence." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000161
+name: Evaluation
+namespace: measure.ontology
+def: "Evaluation." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000162
+name: Precision
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Precision." []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000163
+name: Recall
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Recall." []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000164
+name: True Positive
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "True Positive." []
+synonym: "TP" EXACT []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000165
+name: False Positive
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "False Positive." []
+synonym: "FP" EXACT []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000166
+name: True Negative
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "True Negative." []
+synonym: "TN" EXACT []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000167
+name: False Negative
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "False Negative." []
+synonym: "FN" EXACT []
+is_a: COMO:0000161 ! Evaluation
+
+[Term]
+id: COMO:0000168
+name: Correlation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Correlation." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000169
+name: Pearson
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Pearson." []
+is_a: COMO:0000168 ! Correlation
+
+[Term]
+id: COMO:0000170
+name: Spearman
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Spearman." []
+is_a: COMO:0000168 ! Correlation
+
+[Term]
+id: COMO:0000171
+name: Kendall tau
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Kendall tau." []
+is_a: COMO:0000168 ! Correlation
+
+[Term]
+id: COMO:0000172
+name: Goodman and Kruskal's gamma
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Goodman and Kruskal's gamma." []
+is_a: COMO:0000168 ! Correlation
+
+[Term]
+id: COMO:0000173
+name: Multivariate Analysis
+namespace: measure.ontology
+def: "Multivariate Analysis." []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000174
+name: Factor Analysis
+namespace: measure.ontology
+def: "Factor Analysis." []
+is_a: COMO:0000173 ! Multivariate Analysis
+
+[Term]
+id: COMO:0000175
+name: Factor
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Factor." []
+is_a: COMO:0000174 ! Factor Analysis
+
+[Term]
+id: COMO:0000176
+name: Factor Loading
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Factor Loading." []
+is_a: COMO:0000174 ! Factor Analysis
+
+[Term]
+id: COMO:0000177
+name: Principal Component Analysis
+namespace: measure.ontology
+def: "Principal Component Analysis." []
+is_a: COMO:0000173 ! Multivariate Analysis
+
+[Term]
+id: COMO:0000178
+name: Principal Component
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Principal Component." []
+is_a: COMO:0000177 ! Principal Component Analysis
+
+[Term]
+id: COMO:0000179
+name: Component Weight
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Component Weight." []
+is_a: COMO:0000177 ! Principal Component Analysis
+
+[Term]
+id: COMO:0000180
+name: DateTime
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "DateTime." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000181
+name: Pressure
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000109" xsd:string
+def: "Pressure." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000182
+name: Turbidity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000315" xsd:string
+property_value: valid_units_parent "UO:0000315" xsd:string
+def: "Turbidity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000183
+name: Reagent
+namespace: measure.ontology
+def: "Reagent." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000184
+name: OTU
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "OTU." []
+synonym: "Operational Taxonomic Unit" EXACT []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000185
+name: ESV
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "ESV." []
+synonym: "Exact Sequence Variant" EXACT []
+synonym: "Sub-OTU" EXACT []
+synonym: "Unique Sequence Variant" EXACT []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000186
+name: Strand
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Strand of DNA" []
+xref: ORef: COMO:0000186
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000187
+name: Forward
+namespace: measure.ontology
+def: "Forward." []
+is_a: COMO:0000186 ! Strand
+
+[Term]
+id: COMO:0000188
+name: Reverse Complement
+namespace: measure.ontology
+def: "Reverse Complement." []
+is_a: COMO:0000186 ! Strand
+
+[Term]
+id: COMO:0000189
+name: Sequence Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence Type." []
+xref: ORef: COMO:0000189
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000190
+name: 16S Sequence
+namespace: measure.ontology
+def: "16S Sequence." []
+is_a: COMO:0000189 ! Sequence Type
+
+[Term]
+id: COMO:0000191
+name: 18S Sequence
+namespace: measure.ontology
+def: "18S Sequence." []
+is_a: COMO:0000189 ! Sequence Type
+
+[Term]
+id: COMO:0000192
+name: ITS Sequence
+namespace: measure.ontology
+def: "ITS Sequence." []
+is_a: COMO:0000189 ! Sequence Type
+
+[Term]
+id: COMO:0000193
+name: ITS-1 Sequence
+namespace: measure.ontology
+def: "ITS-1 Sequence." []
+is_a: COMO:0000192 ! ITS Sequence
+
+[Term]
+id: COMO:0000194
+name: ITS-2 Sequence
+namespace: measure.ontology
+def: "ITS-2 Sequence." []
+is_a: COMO:0000192 ! ITS Sequence
+
+[Term]
+id: COMO:0000195
+name: Genome Sequence
+namespace: measure.ontology
+def: "Genome Sequence." []
+is_a: COMO:0000000 ! term
+is_a: COMO:0000189 ! Sequence Type
+
+[Term]
+id: COMO:0000196
+name: Insertion
+namespace: measure.ontology
+def: "Insertion." []
+is_a: COMO:0000091 ! Strain Change
+is_a: COMO:0000227 ! Strain Change Type
+
+[Term]
+id: COMO:0000197
+name: Deletion
+namespace: measure.ontology
+def: "Deletion." []
+is_a: COMO:0000091 ! Strain Change
+is_a: COMO:0000227 ! Strain Change Type
+
+[Term]
+id: COMO:0000198
+name: Substitution
+namespace: measure.ontology
+def: "Substitution." []
+is_a: COMO:0000091 ! Strain Change
+is_a: COMO:0000227 ! Strain Change Type
+
+[Term]
+id: COMO:0000200
+name: Condition ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Condition, chosen from list of defined experimental conditions in the Data Clearinghouse." []
+xref: Ref: DA:0000045.Condition.name
+is_a: COMO:0000006 ! Condition
+
+[Term]
+id: COMO:0000201
+name: Time Zone
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Time Zone, e.g., PDT" []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000202
+name: Description
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Description." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000203
+name: Link
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Link to other data, e.g., a DOI or URL." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000204
+name: Experimental Process
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Category of experimental process used to create a dataset." []
+xref: ORef: PROCESS:0000001
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000205
+name: Person
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Name of a person.  Note that ENIGMA people should be listed as 'ENIGMA personnel' instead." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000206
+name: Campaign
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Campaign." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000207
+name: Input
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Input." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000208
+name: Output
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Output." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000209
+name: Physical Context
+namespace: measure.ontology
+def: "Physical Context." []
+is_a: COMO:0000001 ! Context
+
+[Term]
+id: COMO:0000210
+name: Location
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Location." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000211
+name: Latitude
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000185" xsd:string
+def: "Latitude." []
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000212
+name: Longitude
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000185" xsd:string
+def: "Longitude." []
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000213
+name: Continent
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Continent." []
+xref: ORef: CONTINENT:0000001
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000214
+name: Country
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Country." []
+xref: ORef: COUNTRY:0000001
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000215
+name: Region
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Region." []
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000216
+name: Biome
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Biome." []
+xref: ORef: ENVO:01000254
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000217
+name: Environmental Feature
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Feature." []
+xref: ORef: ENVO:00002297
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000218
+name: Distance
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Distance.  Add context indicating reference points, e.g., From and To." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000219
+name: Depth
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Depth.  Add context indicating reference poitns, e.g., Top and Bottom." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000220
+name: Elevation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Elevation.  Add context indicating reference poitns, e.g., Top and Bottom." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000221
+name: OTU Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "OTU Name." []
+is_a: COMO:0000184 ! OTU
+
+[Term]
+id: COMO:0000222
+name: OTU ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "OTU ID, chosen from the list of defined OTUs in the Data Clearinghouse." []
+xref: Ref: DA:0000063.OTU.Name
+is_a: COMO:0000184 ! OTU
+
+[Term]
+id: COMO:0000223
+name: NCBI Taxon ID
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "NCBI Taxon, chosen from names in the NCBI taxonomy." []
+xref: ORef: NCBITaxon:1
+is_a: COMO:0000045 ! Taxon
+
+[Term]
+id: COMO:0000224
+name: Gene ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Gene, chosen from list of defined genes in the Data Clearinghouse." []
+xref: Ref: DA:0000040.Gene.gene_id
+is_a: COMO:0000059 ! Gene
+
+[Term]
+id: COMO:0000227
+name: Strain Change Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Strain Change Type." []
+xref: ORef: COMO:0000227
+is_a: COMO:0000091 ! Strain Change
+
+[Term]
+id: COMO:0000228
+name: Environmental Sample Location ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Well, borehole, or other defined ENIGMA location." []
+synonym: "Location ID" EXACT []
+xref: Ref: DA:0000041.Location.name
+is_a: COMO:0000099 ! Environmental Sample Location
+
+[Term]
+id: COMO:0000229
+name: Environment Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environment Type." []
+xref: ORef: MIxS:0000002
+is_a: COMO:0000098 ! Environment
+
+[Term]
+id: COMO:0000230
+name: Environmental Material
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Material." []
+xref: ORef: ENVO:00010483
+is_a: COMO:0000098 ! Environment
+
+[Term]
+id: COMO:0000231
+name: Community
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Community." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000232
+name: Community Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Community Name." []
+is_a: COMO:0000231 ! Community
+
+[Term]
+id: COMO:0000233
+name: Community ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Community ID, chosen from list of defined ENIGMA communities." []
+xref: Ref: DA:0000048.Community.name
+is_a: COMO:0000231 ! Community
+
+[Term]
+id: COMO:0000234
+name: Community Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Community Type." []
+xref: ORef: COMO:0000234
+is_a: COMO:0000231 ! Community
+
+[Term]
+id: COMO:0000235
+name: Isolate Community
+namespace: measure.ontology
+def: "Isolate Community." []
+is_a: COMO:0000234 ! Community Type
+
+[Term]
+id: COMO:0000236
+name: Enrichment
+namespace: measure.ontology
+def: "Enrichment." []
+is_a: COMO:0000234 ! Community Type
+
+[Term]
+id: COMO:0000237
+name: Active Fraction
+namespace: measure.ontology
+def: "Active Fraction." []
+is_a: COMO:0000236 ! Enrichment
+
+[Term]
+id: COMO:0000238
+name: Assemblage
+namespace: measure.ontology
+def: "Assemblage." []
+is_a: COMO:0000234 ! Community Type
+
+[Term]
+id: COMO:0000239
+name: Consortium
+namespace: measure.ontology
+def: "Consortium." []
+is_a: COMO:0000238 ! Assemblage
+
+[Term]
+id: COMO:0000240
+name: Contig
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Contig." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000241
+name: Sequence Position
+namespace: measure.ontology
+def: "Sequence Position." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000242
+name: Sequence Start
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000400" xsd:string
+def: "Sequence Start." []
+is_a: COMO:0000241 ! Sequence Position
+
+[Term]
+id: COMO:0000243
+name: Sequence Stop
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000400" xsd:string
+def: "Sequence Stop." []
+is_a: COMO:0000241 ! Sequence Position
+
+[Term]
+id: COMO:0000244
+name: Sequence Length
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000400" xsd:string
+def: "Sequence Length." []
+is_a: COMO:0000241 ! Sequence Position
+
+[Term]
+id: COMO:0000245
+name: Genome
+namespace: measure.ontology
+def: "Genome." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000246
+name: Genome ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Genome ID, chosen from list of annotated ENIGMA genomes." []
+xref: Ref: DA:0000039.Genome.name
+is_a: COMO:0000245 ! Genome
+
+[Term]
+id: COMO:0000247
+name: Read Set
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Read Set." []
+synonym: "Reads" EXACT []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000248
+name: Reads ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Reads ID, chosen from list of reads in the Data Clearinghouse." []
+xref: Ref: DA:0000054.Reads.name
+is_a: COMO:0000247 ! Read Set
+
+[Term]
+id: COMO:0000249
+name: Read
+namespace: measure.ontology
+def: "Read." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000250
+name: Gene Annotation
+namespace: measure.ontology
+def: "Gene Annotation." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000251
+name: Kingdom
+namespace: measure.ontology
+def: "Kingdom." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000252
+name: Phylum
+namespace: measure.ontology
+def: "Phylum." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000253
+name: Class
+namespace: measure.ontology
+def: "Class." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000254
+name: Order
+namespace: measure.ontology
+def: "Order." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000255
+name: Family
+namespace: measure.ontology
+def: "Family." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000256
+name: Genus
+namespace: measure.ontology
+def: "Genus." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000257
+name: Species
+namespace: measure.ontology
+def: "Species." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000258
+name: Environmental Chemical
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Chemical." []
+xref: ORef: CHEBI:24431
+is_a: COMO:0000103 ! Environmental Parameter
+
+[Term]
+id: COMO:0000259
+name: Environmental Measurement
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Environmental Measurement." []
+xref: ORef: COMO:0000120
+is_a: COMO:0000103 ! Environmental Parameter
+
+[Term]
+id: COMO:0000260
+name: Knockout Library
+namespace: measure.ontology
+def: "Knockout Library." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000261
+name: Tn-Seq Library
+namespace: measure.ontology
+def: "Tn-Seq Library." []
+is_a: COMO:0000260 ! Knockout Library
+
+[Term]
+id: COMO:0000262
+name: Tn-Seq Library Name
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Tn-Seq Library Name." []
+xref: Ref: DA:0000060.TnSeq_Library.name
+is_a: COMO:0000261 ! Tn-Seq Library
+
+[Term]
+id: COMO:0000263
+name: Tn-Seq Primers Model
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Tn-Seq Primers Model." []
+is_a: COMO:0000261 ! Tn-Seq Library
+
+[Term]
+id: COMO:0000264
+name: Rate
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Rate." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000279
+name: Assembly
+namespace: measure.ontology
+def: "Assembly." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000280
+name: Assembly ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Assembly ID, chosen from list of ENIGMA assemblies." []
+xref: Ref: DA:0000066.Assembly.name
+is_a: COMO:0000279 ! Assembly
+
+[Term]
+id: COMO:0000282
+name: Sequence
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000283
+name: Control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Control." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000284
+name: Negative Control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Negative Control." []
+is_a: COMO:0000283 ! Control
+
+[Term]
+id: COMO:0000285
+name: Positive Control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Positive Control." []
+is_a: COMO:0000283 ! Control
+
+[Term]
+id: COMO:0000286
+name: Replicate
+namespace: measure.ontology
+def: "Replicate." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000287
+name: Technical Replicate
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Technical Replicate." []
+is_a: COMO:0000286 ! Replicate
+
+[Term]
+id: COMO:0000288
+name: Biological Replicate
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Biological Replicate." []
+is_a: COMO:0000286 ! Replicate
+
+[Term]
+id: COMO:0000289
+name: Subsample
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Subsample." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000290
+name: Variable Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Variable Name." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000291
+name: Variable Type
+namespace: measure.ontology
+def: "Variable Type." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000292
+name: Dimension
+namespace: measure.ontology
+def: "Dimension." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000293
+name: Data Variables Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Data Variables Type." []
+xref: ORef: DA:0000000
+is_a: COMO:0000291 ! Variable Type
+
+[Term]
+id: COMO:0000294
+name: Units not in UO
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Units not in UO." []
+xref: ORef: COMO:0000294
+is_a: COMO:0000000 ! term
+is_a: UO:0000000
+
+[Term]
+id: COMO:0000295
+name: microsiemen per centimeter
+namespace: measure.ontology
+def: "microsiemen per centimeter." []
+synonym: "microsiemen per cm" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000262
+
+[Term]
+id: COMO:0000296
+name: pound per square inch
+namespace: measure.ontology
+def: "pound per square inch." []
+synonym: "PSI" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000109
+
+[Term]
+id: COMO:0000299
+name: Explained Variance
+namespace: measure.ontology
+def: "Explained Variance." []
+is_a: COMO:0000177 ! Principal Component Analysis
+
+[Term]
+id: COMO:0000300
+name: Phase
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Phase of matter, e.g., solid." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000301
+name: Specific Conductivity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000262" xsd:string
+def: "Specific Conductivity." []
+is_a: COMO:0000124 ! Conductivity
+
+[Term]
+id: COMO:0000302
+name: Salinity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "ME:0000378" xsd:string
+def: "Salinity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000303
+name: Resistivity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "ME:0000377" xsd:string
+def: "Resistivity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000304
+name: Saturation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "Saturation." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000305
+name: Density
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000182" xsd:string
+def: "Density." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000306
+name: Partial Pressure
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000109" xsd:string
+def: "Partial Pressure." []
+is_a: COMO:0000181 ! Pressure
+
+[Term]
+id: COMO:0000307
+name: torr
+namespace: measure.ontology
+def: "torr." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000109
+
+[Term]
+id: COMO:0000308
+name: ohm-cm
+namespace: measure.ontology
+def: "ohm-cm." []
+is_a: COMO:0000377 ! resistivity unit
+
+[Term]
+id: COMO:0000309
+name: practical salinity unit
+namespace: measure.ontology
+def: "practical salinity unit." []
+synonym: "PSU" EXACT []
+is_a: COMO:0000378 ! salinity unit
+
+[Term]
+id: COMO:0000310
+name: foot
+namespace: measure.ontology
+def: "foot." []
+synonym: "ft" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000001
+
+[Term]
+id: COMO:0000311
+name: Top
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use as context for locations, e.g., the top end of a depth measurement." []
+is_a: COMO:0000339 ! Position
+
+[Term]
+id: COMO:0000312
+name: Bottom
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use as context for locations, e.g., the bottom end of a depth measurement." []
+is_a: COMO:0000339 ! Position
+
+[Term]
+id: COMO:0000313
+name: Charge
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000217 UO:0000187" xsd:string
+def: "Charge." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000314
+name: Air Pressure
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000109" xsd:string
+def: "Air Pressure." []
+is_a: COMO:0000181 ! Pressure
+
+[Term]
+id: COMO:0000315
+name: Water Pressure
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000109" xsd:string
+def: "Water Pressure." []
+is_a: COMO:0000181 ! Pressure
+
+[Term]
+id: COMO:0000316
+name: Wind Speed
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000060" xsd:string
+def: "Wind Speed." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000317
+name: Gust Speed
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000060" xsd:string
+def: "Gust Speed." []
+is_a: COMO:0000316 ! Wind Speed
+
+[Term]
+id: COMO:0000318
+name: Solar Radiation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000154" xsd:string
+def: "Solar Radiation." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000319
+name: Rainfall
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Rainfall." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000320
+name: Wind Direction
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000185" xsd:string
+def: "Wind Direction." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000321
+name: Relative Humidity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "Relative Humidity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000322
+name: mile per hour
+namespace: measure.ontology
+def: "mile per hour." []
+synonym: "mph" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000060
+
+[Term]
+id: COMO:0000323
+name: inch
+namespace: measure.ontology
+def: "inch." []
+synonym: "in" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000001
+
+[Term]
+id: COMO:0000324
+name: m^3 per m^3
+namespace: measure.ontology
+def: "m^3 per m^3." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: COMO:0000325
+name: millibar
+namespace: measure.ontology
+def: "millibar." []
+synonym: "mbar" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000109
+
+[Term]
+id: COMO:0000326
+name: Environmental Community
+namespace: measure.ontology
+def: "Environmental Community." []
+is_a: COMO:0000234 ! Community Type
+
+[Term]
+id: COMO:0000327
+name: Protocol
+namespace: measure.ontology
+def: "Protocol." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000328
+name: Protocol ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Protocol, chosen from list of defined ENIGMA protocols." []
+xref: Ref: DA:0000073.Protocol.name
+is_a: COMO:0000327 ! Protocol
+
+[Term]
+id: COMO:0000329
+name: Bin
+namespace: measure.ontology
+def: "Bin (metagenomic)." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000330
+name: Bin ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Bin, chosen from metagenomic bins stored in the Data Clearinghouse." []
+xref: Ref: DA:0000072.Bin.name
+is_a: COMO:0000329 ! Bin
+
+[Term]
+id: COMO:0000333
+name: Availability
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Boolean property indicating whether something is available." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000334
+name: US State
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "US State." []
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000335
+name: State Plane Coordinate
+namespace: measure.ontology
+def: "State Plane Coordinate." []
+is_a: COMO:0000210 ! Location
+
+[Term]
+id: COMO:0000336
+name: Easting
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000008" xsd:string
+def: "Easting, in State Plane coordinates.  Add a State Plane Zone for context." []
+is_a: COMO:0000335 ! State Plane Coordinate
+
+[Term]
+id: COMO:0000337
+name: Northing
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000008" xsd:string
+def: "Northing, in State Plane coordinates.  Add a State Plane Zone for context." []
+is_a: COMO:0000335 ! State Plane Coordinate
+
+[Term]
+id: COMO:0000338
+name: State Plane Zone
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "State Plane Zone, e.g. '4100 - Tennessee'." []
+is_a: COMO:0000335 ! State Plane Coordinate
+
+[Term]
+id: COMO:0000339
+name: Position
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Position." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000340
+name: Upper
+namespace: measure.ontology
+def: "Upper." []
+is_a: COMO:0000339 ! Position
+
+[Term]
+id: COMO:0000341
+name: Lower
+namespace: measure.ontology
+def: "Lower." []
+is_a: COMO:0000339 ! Position
+
+[Term]
+id: COMO:0000342
+name: Middle
+namespace: measure.ontology
+def: "Middle." []
+is_a: COMO:0000339 ! Position
+
+[Term]
+id: COMO:0000343
+name: Diameter
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Diameter." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000344
+name: Inner Diameter
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Inner Diameter." []
+is_a: COMO:0000343 ! Diameter
+
+[Term]
+id: COMO:0000345
+name: Outer Diameter
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Outer Diameter." []
+is_a: COMO:0000343 ! Diameter
+
+[Term]
+id: COMO:0000346
+name: Organic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Use as context, for example, to label inorganic or organic carbon." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000347
+name: millimhos per centimeter
+namespace: measure.ontology
+def: "millimhos per centimeter." []
+synonym: "mmhos per cm" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000262
+
+[Term]
+id: COMO:0000348
+name: parts per million by volume
+namespace: measure.ontology
+def: "parts per million by volume." []
+synonym: "ppmv" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: COMO:0000349
+name: nanogram per liter
+namespace: measure.ontology
+def: "nanogram per liter." []
+synonym: "ng/L" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: COMO:0000350
+name: Molecular Weight
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000221" xsd:string
+def: "Molecular Weight." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000351
+name: Taxonomic Domain
+namespace: measure.ontology
+def: "Taxonomic Domain." []
+is_a: COMO:0000090 ! Taxonomic Level
+
+[Term]
+id: COMO:0000352
+name: milligram per gram
+namespace: measure.ontology
+def: "milligram per gram." []
+synonym: "mg/g" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: COMO:0000353
+name: millisiemen per centimeter
+namespace: measure.ontology
+def: "millisiemen per centimeter." []
+synonym: "millisiemen per cm" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000262
+
+[Term]
+id: COMO:0000354
+name: Image
+namespace: measure.ontology
+def: "Image." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000355
+name: Image ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Image, chosen from the list of images stored in the Data Clearinghouse." []
+xref: Ref: DA:0000074.Image.name
+is_a: COMO:0000354 ! Image
+
+[Term]
+id: COMO:0000357
+name: MIME type
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "MIME type." []
+is_a: COMO:0000013 ! Category
+
+[Term]
+id: COMO:0000358
+name: Coefficient of Variation
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Coefficient of Variation." []
+synonym: "CV" EXACT []
+is_a: COMO:0000146 ! Statistic
+
+[Term]
+id: COMO:0000359
+name: Weight
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000002" xsd:string
+def: "Weight." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000360
+name: Volume
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000095" xsd:string
+def: "Volume." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000361
+name: cells per gram
+namespace: measure.ontology
+def: "cells per gram." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000189
+
+[Term]
+id: COMO:0000362
+name: Above
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Above." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000363
+name: Below
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Below." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000365
+name: Molecules not in ChEBI
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Molecules not in ChEBI." []
+xref: ORef: COMO:0000365
+is_a: CHEBI:24431
+is_a: COMO:0000000 ! term
+
+[Term]
+id: COMO:0000366
+name: sodium oxide
+namespace: measure.ontology
+def: "sodium oxide." []
+synonym: "Na2O" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000367
+name: barium oxide
+namespace: measure.ontology
+def: "barium oxide." []
+synonym: "BaO" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000371
+name: Error Range
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Error Range." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000372
+name: manganese(II) oxide 
+namespace: measure.ontology
+def: "manganese(II) oxide ." []
+synonym: "MnO" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000373
+name: cobalt(II) oxide
+namespace: measure.ontology
+def: "cobalt(II) oxide." []
+synonym: "CoO" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000374
+name: nickel(II) oxide
+namespace: measure.ontology
+def: "nickel(II) oxide." []
+synonym: "NiO" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000375
+name: High
+namespace: measure.ontology
+def: "High." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000376
+name: Low
+namespace: measure.ontology
+def: "Low." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000377
+name: resistivity unit
+namespace: measure.ontology
+def: "resistivity unit." []
+is_a: COMO:0000294 ! Units not in UO
+
+[Term]
+id: COMO:0000378
+name: salinity unit
+namespace: measure.ontology
+def: "salinity unit." []
+is_a: COMO:0000294 ! Units not in UO
+
+[Term]
+id: COMO:0000379
+name: log ratio unit
+namespace: measure.ontology
+def: "log ratio unit." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000190
+
+[Term]
+id: COMO:0000380
+name: confidence unit
+namespace: measure.ontology
+def: "confidence units are a dimensionless unit, with range from 0 to 1" []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000190
+
+[Term]
+id: COMO:0000381
+name: Molecule from list
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Pick a molecule from a list of chemicals (preferred)." []
+xref: ORef: CHEBI:24431
+is_a: COMO:0000027 ! Molecule
+
+[Term]
+id: COMO:0000382
+name: PubChem Molecule Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Give the name of a molecule in PubChem (use list instead if possible)." []
+is_a: COMO:0000027 ! Molecule
+
+[Term]
+id: COMO:0000383
+name: Molecular Formula
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Describe a molecule using its molecular formula (use list instead if possible)." []
+is_a: COMO:0000027 ! Molecule
+
+[Term]
+id: COMO:0000384
+name: InChIKey
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Describe a molecule using its InChIKey (use list instead if possible)." []
+is_a: COMO:0000027 ! Molecule
+
+[Term]
+id: COMO:0000385
+name: Ionization Mode
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Ionization mode used in a mass spec experiment." []
+xref: ORef: COMO:0000385
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000386
+name: Positive Polarity
+namespace: measure.ontology
+def: "Positive Polarity (ionization mode for MS experiment)." []
+is_a: COMO:0000385 ! Ionization Mode
+
+[Term]
+id: COMO:0000387
+name: Negative Polarity
+namespace: measure.ontology
+def: "Negative Polarity (ionization mode for MS experiment)." []
+is_a: COMO:0000385 ! Ionization Mode
+
+[Term]
+id: COMO:0000388
+name: Usability
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Usability." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000389
+name: Reference Compound
+namespace: measure.ontology
+def: "Reference Compound." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000390
+name: Ion Intensity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000471 UO:0000313" xsd:string
+def: "Ion Intensity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000391
+name: Amount
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000006" xsd:string
+def: "Absolute amount of a substance, such as an element.  See also: concentration." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000392
+name: 1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine
+namespace: measure.ontology
+def: "1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine." []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000393
+name: objects per grid window
+namespace: measure.ontology
+def: "objects per grid window." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000189
+
+[Term]
+id: COMO:0000394
+name: Barcode
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Barcode." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000395
+name: Overexpression Library
+namespace: measure.ontology
+def: "Overexpression Library." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000396
+name: Dub-Seq Library
+namespace: measure.ontology
+def: "Dub-Seq Library." []
+is_a: COMO:0000395 ! Overexpression Library
+
+[Term]
+id: COMO:0000397
+name: Dub-Seq Library Name
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Dub-Seq Library Name." []
+xref: Ref: DA:0000075.DubSeq_Library.name
+is_a: COMO:0000396 ! Dub-Seq Library
+
+[Term]
+id: COMO:0000398
+name: Genomic Region
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Genomic Region." []
+is_a: COMO:0000111 ! Sequencing
+
+[Term]
+id: COMO:0000400
+name: base pairs
+namespace: measure.ontology
+def: "base pairs." []
+synonym: "bases" EXACT []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000189
+
+[Term]
+id: COMO:0000401
+name: Numerator
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Numerator." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000402
+name: Denominator
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Denominator." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000403
+name: Isotope Ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006 UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000166 UO:0000187" xsd:string
+def: "Isotope Ratio." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000404
+name: Geologic Zone
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Geologic Zone." []
+xref: ORef: COMO:0000404
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000405
+name: Vadose Zone
+namespace: measure.ontology
+def: "Vadose Zone." []
+synonym: "Unsaturated Zone" EXACT []
+is_a: COMO:0000404 ! Geologic Zone
+
+[Term]
+id: COMO:0000406
+name: Variably Saturated Zone
+namespace: measure.ontology
+def: "Variably Saturated Zone." []
+is_a: COMO:0000404 ! Geologic Zone
+
+[Term]
+id: COMO:0000407
+name: Saturated Zone
+namespace: measure.ontology
+def: "Saturated Zone." []
+synonym: "Phreatic Zone" EXACT []
+is_a: COMO:0000404 ! Geologic Zone
+
+[Term]
+id: COMO:0000408
+name: Isotope
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Isotope." []
+xref: ORef: CHEBI:24431
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000409
+name: Microplate Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microplate Name." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000411 ! Microplate
+
+[Term]
+id: COMO:0000410
+name: Microplate Well Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microplate Well Name." []
+is_a: COMO:0000002 ! Experimental Context
+is_a: COMO:0000412 ! Microplate Well
+
+[Term]
+id: COMO:0000411
+name: Microplate
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Microplate." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000412
+name: Microplate Well
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Microplate Well." []
+is_a: COMO:0000411 ! Microplate
+
+[Term]
+id: COMO:0000413
+name: fold concentration
+namespace: measure.ontology
+def: "fold concentration." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000051
+
+[Term]
+id: COMO:0000414
+name: adenine hydrochloride hydrate
+namespace: measure.ontology
+def: "adenine hydrochloride hydrate." []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000415
+name: Aphotic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Aphotic." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000416
+name: Growth Stage
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Growth Stage." []
+xref: ORef: COMO:0000416
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000417
+name: Preincubation
+namespace: measure.ontology
+def: "Preincubation." []
+is_a: COMO:0000416 ! Growth Stage
+
+[Term]
+id: COMO:0000418
+name: Inoculation
+namespace: measure.ontology
+def: "Inoculation." []
+is_a: COMO:0000416 ! Growth Stage
+
+[Term]
+id: COMO:0000419
+name: Lag Phase
+namespace: measure.ontology
+def: "Lag Phase." []
+is_a: COMO:0000416 ! Growth Stage
+
+[Term]
+id: COMO:0000420
+name: Exponential Phase
+namespace: measure.ontology
+def: "Exponential Phase." []
+is_a: COMO:0000416 ! Growth Stage
+
+[Term]
+id: COMO:0000421
+name: Stationary Phase
+namespace: measure.ontology
+def: "Stationary Phase." []
+is_a: COMO:0000416 ! Growth Stage
+
+[Term]
+id: COMO:0000422
+name: humic acid
+namespace: measure.ontology
+def: "humic acid." []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000423
+name: fulvic acid
+namespace: measure.ontology
+def: "fulvic acid." []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000424
+name: anthrahydroxyquinone-2,6-disulfonate
+namespace: measure.ontology
+def: "anthrahydroxyquinone-2,6-disulfonate." []
+synonym: "AHDS" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000425
+name: citric-disodium phosphate
+namespace: measure.ontology
+def: "citric-disodium phosphate." []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000426
+name: natural organic matter
+namespace: measure.ontology
+def: "natural organic matter." []
+synonym: "NOM" EXACT []
+is_a: COMO:0000365 ! Molecules not in ChEBI
+
+[Term]
+id: COMO:0000427
+name: Minimal Media
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Minimal Media." []
+is_a: COMO:0000048 ! Media
+
+[Term]
+id: COMO:0000428
+name: CAS Registry Number
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "CAS Registry Number." []
+is_a: COMO:0000027 ! Molecule
+
+[Term]
+id: COMO:0000429
+name: Sequence Identity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence Identity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000430
+name: Sequence Similarity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Sequence Similarity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000431
+name: Relative Evolutionary Divergence
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+property_value: valid_units_parent "UO:0000186" xsd:string
+def: "Relative Evolutionary Divergence." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000432
+name: Publication
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Publication." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000433
+name: PubMed ID
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+property_value: valid_units_parent "UO:0000186" xsd:string
+def: "PubMed ID." []
+synonym: "PMID" EXACT []
+is_a: COMO:0000432 ! Publication
+
+[Term]
+id: COMO:0000434
+name: PubMed Central ID
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "PubMed Central ID." []
+synonym: "PMCID" EXACT []
+is_a: COMO:0000432 ! Publication
+
+[Term]
+id: COMO:0000435
+name: Database
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Database." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000436
+name: Obsolete
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Obsolete." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000437
+name: Redox
+namespace: measure.ontology
+def: "Redox." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000438
+name: Reduction
+namespace: measure.ontology
+def: "Reduction." []
+is_a: COMO:0000437 ! Redox
+
+[Term]
+id: COMO:0000439
+name: Oxidation
+namespace: measure.ontology
+def: "Oxidation." []
+is_a: COMO:0000437 ! Redox
+
+[Term]
+id: COMO:0000440
+name: Height
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Height." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000441
+name: Length
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Length." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000442
+name: Width
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "Width." []
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000443
+name: Cell Morphology
+namespace: measure.ontology
+def: "Cell Morphology." []
+is_a: COMO:0000040 ! Cell
+
+[Term]
+id: COMO:0000444
+name: Cell Structure
+namespace: measure.ontology
+def: "Cell Structure." []
+is_a: COMO:0000443 ! Cell Morphology
+
+[Term]
+id: COMO:0000445
+name: Cellular Appendage
+namespace: measure.ontology
+def: "Cellular Appendage." []
+is_a: COMO:0000444 ! Cell Structure
+
+[Term]
+id: COMO:0000446
+name: Flagella
+namespace: measure.ontology
+def: "Flagella." []
+is_a: COMO:0000445 ! Cellular Appendage
+
+[Term]
+id: COMO:0000447
+name: Flagellar Arrangement
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Flagellar Arrangement." []
+xref: ORef: COMO:0000447
+is_a: COMO:0000446 ! Flagella
+
+[Term]
+id: COMO:0000448
+name: Monotrichous
+namespace: measure.ontology
+def: "A single flagellum extending from one end of the cell." []
+is_a: COMO:0000447 ! Flagellar Arrangement
+
+[Term]
+id: COMO:0000449
+name: Amphitrichous
+namespace: measure.ontology
+def: "Single or multiple flagella extending from both ends of the cell." []
+is_a: COMO:0000447 ! Flagellar Arrangement
+
+[Term]
+id: COMO:0000450
+name: Lophotrichous
+namespace: measure.ontology
+def: "Tuft of flagella extending from one end or both ends of the cell." []
+is_a: COMO:0000447 ! Flagellar Arrangement
+
+[Term]
+id: COMO:0000451
+name: Peritrichous
+namespace: measure.ontology
+def: "Multiple flagella distributed over the entire cell." []
+is_a: COMO:0000447 ! Flagellar Arrangement
+
+[Term]
+id: COMO:0000452
+name: Vessicle
+namespace: measure.ontology
+def: "Vessicle." []
+is_a: COMO:0000444 ! Cell Structure
+
+[Term]
+id: COMO:0000453
+name: S-layer
+namespace: measure.ontology
+def: "S-layer." []
+is_a: COMO:0000444 ! Cell Structure
+
+[Term]
+id: COMO:0000454
+name: Cell Membrane
+namespace: measure.ontology
+def: "Cell Membrane." []
+is_a: COMO:0000444 ! Cell Structure
+
+[Term]
+id: COMO:0000455
+name: Cell Shape
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Cell Shape." []
+xref: ORef: COMO:0000455
+is_a: COMO:0000443 ! Cell Morphology
+
+[Term]
+id: COMO:0000456
+name: Rod
+namespace: measure.ontology
+def: "Rod." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000457
+name: Rod-vibrio
+namespace: measure.ontology
+def: "Rod-vibrio." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000458
+name: Oval
+namespace: measure.ontology
+def: "Oval." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000459
+name: Irregular Oval
+namespace: measure.ontology
+def: "Irregular Oval." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000460
+name: Spherical
+namespace: measure.ontology
+def: "Spherical." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000461
+name: Pleomorphic
+namespace: measure.ontology
+def: "Pleomorphic." []
+is_a: COMO:0000455 ! Cell Shape
+
+[Term]
+id: COMO:0000462
+name: Observed
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Observed." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000463
+name: Genome Quality
+namespace: measure.ontology
+def: "Genome Quality." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000464
+name: Genome Completeness
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000187" xsd:string
+def: "Genome Completeness." []
+is_a: COMO:0000463 ! Genome Quality
+
+[Term]
+id: COMO:0000465
+name: Genome Contamination
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
+property_value: valid_units_parent "UO:0000187" xsd:string
+def: "Genome Contamination." []
+is_a: COMO:0000463 ! Genome Quality
+
+[Term]
+id: COMO:0000466
+name: Genome N50
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Genome N50." []
+is_a: COMO:0000463 ! Genome Quality
+
+[Term]
+id: COMO:0000467
+name: Read Coverage
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Read Coverage." []
+is_a: COMO:0000463 ! Genome Quality
+
+[Term]
+id: COMO:0000468
+name: Index
+namespace: measure.ontology
+property_value: data_type "int" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000189" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
+def: "Index." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000469
+name: Internal Standard
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Standard." []
+is_a: COMO:0000002 ! Experimental Context
+
+[Term]
+id: COMO:0000470
+name: Exact Mass
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000221" xsd:string
+def: "Exact Mass." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000471
+name: relative ion intensity unit
+namespace: measure.ontology
+def: "relative ion intensity unit." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000186
+
+[Typedef]
+id: data_type
+
+[Typedef]
+id: is_a

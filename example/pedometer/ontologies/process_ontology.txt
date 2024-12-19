@@ -1,0 +1,41 @@
+Process
+  -Add Condition
+  -Add Genome
+  -Add Taxon
+  -Add Microbial Strain
+  -Add Plant Transformant
+  -Add Protocol
+  Import Historic Data
+  -Assay
+    Assay Chemistry
+    Assay Growth
+    Assay Metabolites
+    Assay Fitness
+    Assay Microbial Activity
+  -Computation
+  -Enrichment
+    -Filter
+  -Isolation
+  -Build Defined Community
+  -Sequencing
+    16S Sequencing
+    Shotgun Sequencing
+      alias: WGS Sequencing
+      -Shotgun Sequencing and Assembly
+  -Reads Processing
+  Taxonomic Inference
+    Classify OTUs
+  -Assembly
+    -Genome Assembly
+    -Metagenome Assembly
+    -Refine Bin
+  -Annotation
+    -Genome Annotation
+    -Metagenome Annotation
+  -Functional Assignment
+  -Build TnSeq Library
+  -Binning
+  -Profiling
+    Taxonomic Profiling
+    Functional Profiling
+    Functional and Taxonomic Profiling

@@ -1,0 +1,588 @@
+format-version: 1.4
+ontology:da
+date: 18:12:2024 16:08
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: COMO:0000001
+
+[Term]
+id: DA:0000000
+name: term
+namespace: datatype.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: DA:0000001
+name: Dynamic Object
+namespace: datatype.ontology
+def: "Dynamic Object." []
+synonym: "Brick" EXACT []
+synonym: "Measurements and Processed Data" EXACT []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000002
+name: Physical Measurement
+namespace: datatype.ontology
+def: "Physical Measurement." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000003
+name: Chemical Measurement
+namespace: datatype.ontology
+def: "Chemical Measurement." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000004
+name: Metabolite Assay
+namespace: datatype.ontology
+def: "Metabolite Assay." []
+is_a: DA:0000003 ! Chemical Measurement
+
+[Term]
+id: DA:0000005
+name: Functional Genomics Data
+namespace: datatype.ontology
+def: "Functional Genomics Data." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000006
+name: Gene Fitness
+namespace: datatype.ontology
+def: "Gene Fitness." []
+is_a: DA:0000005 ! Functional Genomics Data
+
+[Term]
+id: DA:0000007
+name: Gene Knockout Fitness
+namespace: datatype.ontology
+def: "Gene Knockout Fitness." []
+is_a: DA:0000006 ! Gene Fitness
+
+[Term]
+id: DA:0000008
+name: Enzyme Activity
+namespace: datatype.ontology
+def: "Enzyme Activity." []
+is_a: DA:0000005 ! Functional Genomics Data
+
+[Term]
+id: DA:0000009
+name: Microbial Assay
+namespace: datatype.ontology
+def: "Microbial Assay." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000010
+name: Microbial Growth
+namespace: datatype.ontology
+def: "Microbial Growth." []
+is_a: DA:0000009 ! Microbial Assay
+
+[Term]
+id: DA:0000011
+name: Microbial Activity
+namespace: datatype.ontology
+def: "Microbial Activity." []
+is_a: DA:0000009 ! Microbial Assay
+
+[Term]
+id: DA:0000012
+name: Microbial Sequence
+namespace: datatype.ontology
+def: "Microbial Sequence." []
+is_a: DA:0000009 ! Microbial Assay
+
+[Term]
+id: DA:0000013
+name: Microbial Community Assay
+namespace: datatype.ontology
+def: "Microbial Community Assay." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000014
+name: Taxonomic Assignment
+namespace: datatype.ontology
+def: "Taxonomic Assignment." []
+is_a: DA:0000013 ! Microbial Community Assay
+
+[Term]
+id: DA:0000015
+name: Taxonomic Abundance
+namespace: datatype.ontology
+def: "Taxonomic Abundance." []
+is_a: DA:0000013 ! Microbial Community Assay
+
+[Term]
+id: DA:0000016
+name: Microbial Community Sequence
+namespace: datatype.ontology
+def: "Microbial Community Sequence." []
+is_a: DA:0000013 ! Microbial Community Assay
+
+[Term]
+id: DA:0000017
+name: Plant Assay
+namespace: datatype.ontology
+def: "Plant Assay." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000018
+name: Microbial Colonization Data
+namespace: datatype.ontology
+def: "Microbial Colonization Data." []
+is_a: DA:0000017 ! Plant Assay
+
+[Term]
+id: DA:0000019
+name: Metabolomics
+namespace: datatype.ontology
+def: "Metabolomics." []
+is_a: DA:0000001 ! Dynamic Object
+
+[Term]
+id: DA:0000020
+name: Association
+namespace: datatype.ontology
+def: "Association." []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000021
+name: Set
+namespace: datatype.ontology
+def: "Set." []
+synonym: "Cluster" EXACT []
+synonym: "Group" EXACT []
+is_a: DA:0000020 ! Association
+
+[Term]
+id: DA:0000022
+name: Bicluster
+namespace: datatype.ontology
+def: "Bicluster." []
+is_a: DA:0000020 ! Association
+
+[Term]
+id: DA:0000023
+name: Map
+namespace: datatype.ontology
+def: "Map." []
+is_a: DA:0000020 ! Association
+
+[Term]
+id: DA:0000024
+name: Correlation
+namespace: datatype.ontology
+def: "Correlation." []
+is_a: DA:0000020 ! Association
+
+[Term]
+id: DA:0000025
+name: Similarity
+namespace: datatype.ontology
+def: "Similarity." []
+is_a: DA:0000020 ! Association
+
+[Term]
+id: DA:0000026
+name: Static Object
+namespace: datatype.ontology
+def: "Static Object." []
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000027
+name: Plant Transformant
+namespace: datatype.ontology
+def: "Plant Transformant." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000028
+name: Microbial Strain
+namespace: datatype.ontology
+def: "Microbial Strain." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000029
+name: ASV
+namespace: datatype.ontology
+def: "ASV." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000030
+name: Taxon
+namespace: datatype.ontology
+def: "Taxon." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000031
+name: Assembly
+namespace: datatype.ontology
+def: "Assembly." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000032
+name: Bin
+namespace: datatype.ontology
+def: "Bin." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000033
+name: Genome
+namespace: datatype.ontology
+def: "Genome." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000034
+name: Gene
+namespace: datatype.ontology
+def: "Gene." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000035
+name: Media
+namespace: datatype.ontology
+def: "Media." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000036
+name: Condition
+namespace: datatype.ontology
+def: "Condition." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000037
+name: Isolation Condition
+namespace: datatype.ontology
+def: "Isolation Condition." []
+is_a: DA:0000036 ! Condition
+
+[Term]
+id: DA:0000038
+name: Enrichment Condition
+namespace: datatype.ontology
+def: "Enrichment Condition." []
+is_a: DA:0000036 ! Condition
+
+[Term]
+id: DA:0000039
+name: Community
+namespace: datatype.ontology
+def: "Community." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000040
+name: Assemblage
+namespace: datatype.ontology
+def: "Assemblage." []
+is_a: DA:0000039 ! Community
+
+[Term]
+id: DA:0000041
+name: Consortium
+namespace: datatype.ontology
+def: "Consortium." []
+is_a: DA:0000040 ! Assemblage
+
+[Term]
+id: DA:0000042
+name: Reads
+namespace: datatype.ontology
+def: "Reads." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000043
+name: Amplicon Reads
+namespace: datatype.ontology
+def: "Amplicon Reads." []
+is_a: DA:0000042 ! Reads
+
+[Term]
+id: DA:0000044
+name: 16S Reads
+namespace: datatype.ontology
+def: "16S Reads." []
+is_a: DA:0000043 ! Amplicon Reads
+
+[Term]
+id: DA:0000045
+name: 18S Reads
+namespace: datatype.ontology
+def: "18S Reads." []
+is_a: DA:0000043 ! Amplicon Reads
+
+[Term]
+id: DA:0000046
+name: WGS Reads
+namespace: datatype.ontology
+def: "WGS Reads." []
+is_a: DA:0000042 ! Reads
+
+[Term]
+id: DA:0000047
+name: Tn-Seq Library
+namespace: datatype.ontology
+def: "Tn-Seq Library." []
+synonym: "TnSeqLibrary" EXACT []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000048
+name: Process
+namespace: datatype.ontology
+def: "Process." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000049
+name: Protocol
+namespace: datatype.ontology
+def: "Protocol." []
+is_a: DA:0000026 ! Static Object
+
+[Term]
+id: DA:0000050
+name: Internal ID
+namespace: datatype.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal ID." []
+xref: ORef: DA:0000050
+is_a: COMO:0000001
+is_a: DA:0000000 ! term
+
+[Term]
+id: DA:0000051
+name: Internal Brick ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Brick ID." []
+xref: Ref: DA:0000001.Brick.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000052
+name: Internal Plant Transformant ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Plant Transformant ID." []
+xref: Ref: DA:0000027.Plant_Transformant.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000053
+name: Internal Microbial Strain ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Microbial Strain ID." []
+xref: Ref: DA:0000028.Microbial_Strain.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000054
+name: Internal ASV ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal ASV ID." []
+xref: Ref: DA:0000029.ASV.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000055
+name: Internal Taxon ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Taxon ID." []
+xref: Ref: DA:0000030.Taxon.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000056
+name: Internal Assembly ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Assembly ID." []
+xref: Ref: DA:0000031.Assembly.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000057
+name: Internal Bin ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Bin ID." []
+xref: Ref: DA:0000032.Bin.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000058
+name: Internal Genome ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Genome ID." []
+xref: Ref: DA:0000033.Genome.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000059
+name: Internal Gene ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Gene ID." []
+xref: Ref: DA:0000034.Gene.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000060
+name: Internal Media ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Media ID." []
+xref: Ref: DA:0000035.Media.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000061
+name: Internal Condition ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Condition ID." []
+xref: Ref: DA:0000036.Condition.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000062
+name: Internal Community ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Community ID." []
+xref: Ref: DA:0000039.Community.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000063
+name: Internal Reads ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Reads ID." []
+xref: Ref: DA:0000042.Reads.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000064
+name: Internal TnSeq_Library ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal TnSeq_Library ID." []
+xref: Ref: DA:0000047.TnSeq_Library.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000065
+name: Internal Process ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Process ID." []
+xref: Ref: DA:0000048.Process.id
+is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000066
+name: Internal Protocol ID
+namespace: datatype.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_hidden "true" xsd:boolean
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Internal Protocol ID." []
+xref: Ref: DA:0000049.Protocol.id
+is_a: DA:0000050 ! Internal ID
+
+[Typedef]
+id: is_a
+name: is_a

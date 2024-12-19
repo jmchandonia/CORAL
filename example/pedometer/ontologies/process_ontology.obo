@@ -1,0 +1,398 @@
+format-version: 1.4
+ontology:process
+date: 27:08:2018 15:37
+saved-by: jmc
+auto-generated-by: ONTO-PERL 1.45
+
+[Term]
+id: PROCESS:0000000
+name: term
+namespace: process.ontology
+def: "Root of all ontological terms." []
+
+[Term]
+id: PROCESS:0000001
+name: Process
+namespace: process.ontology
+def: "Process." []
+is_a: PROCESS:0000000 ! term
+
+[Term]
+id: PROCESS:0000002
+name: Sampling
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Sampling." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000003
+name: Assay
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Assay." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000004
+name: Assay Environment
+namespace: process.ontology
+def: "Assay Environment." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000005
+name: Assay Geochemistry
+namespace: process.ontology
+def: "Assay Geochemistry." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000006
+name: Assay Growth
+namespace: process.ontology
+def: "Assay Growth." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000007
+name: Assay Thermodynamics
+namespace: process.ontology
+def: "Assay Thermodynamics." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000008
+name: Assay Cell Counts
+namespace: process.ontology
+def: "Assay Cell Counts." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000009
+name: Assay Metabolites
+namespace: process.ontology
+def: "Assay Metabolites." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000010
+name: Assay Fitness
+namespace: process.ontology
+def: "Assay Fitness." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000011
+name: Enrichment
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Enrichment." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000012
+name: Filter
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Filter." []
+is_a: PROCESS:0000011 ! Enrichment
+
+[Term]
+id: PROCESS:0000013
+name: BONCAT Enrichment
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "BONCAT Enrichment." []
+is_a: PROCESS:0000011 ! Enrichment
+
+[Term]
+id: PROCESS:0000014
+name: DAPI Enrichment
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "DAPI Enrichment." []
+is_a: PROCESS:0000011 ! Enrichment
+
+[Term]
+id: PROCESS:0000015
+name: Isolation
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Isolation." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000016
+name: Build Defined Community
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Build Defined Community." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000017
+name: Sequencing
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Sequencing." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000018
+name: 18S Sequencing
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "18S Sequencing." []
+is_a: PROCESS:0000017 ! Sequencing
+
+[Term]
+id: PROCESS:0000019
+name: ITS Sequencing
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "ITS Sequencing." []
+is_a: PROCESS:0000017 ! Sequencing
+
+[Term]
+id: PROCESS:0000020
+name: 16S Sequencing
+namespace: process.ontology
+def: "16S Sequencing." []
+is_a: PROCESS:0000017 ! Sequencing
+
+[Term]
+id: PROCESS:0000021
+name: Shotgun Sequencing
+namespace: process.ontology
+def: "Shotgun Sequencing." []
+synonym: "WGS Sequencing" EXACT []
+is_a: PROCESS:0000017 ! Sequencing
+
+[Term]
+id: PROCESS:0000022
+name: Assembly
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Assembly." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000023
+name: Genome Assembly
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Genome Assembly." []
+is_a: PROCESS:0000022 ! Assembly
+
+[Term]
+id: PROCESS:0000024
+name: Metagenome Assembly
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Metagenome Assembly." []
+is_a: PROCESS:0000022 ! Assembly
+
+[Term]
+id: PROCESS:0000025
+name: Taxonomic Inference
+namespace: process.ontology
+def: "Taxonomic Inference." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000026
+name: Functional Assignment
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Functional Assignment." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000027
+name: Build TnSeq Library
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Build TnSeq Library." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000028
+name: Add Location
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Location." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000029
+name: Add Taxon
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Taxon." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000030
+name: Add Strain
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Strain." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000031
+name: Classify OTUs
+namespace: process.ontology
+def: "Classify OTUs." []
+is_a: PROCESS:0000025 ! Taxonomic Inference
+
+[Term]
+id: PROCESS:0000032
+name: Add Condition
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Condition." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000033
+name: Annotation
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Annotation." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000034
+name: Genome Annotation
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Genome Annotation." []
+is_a: PROCESS:0000033 ! Annotation
+
+[Term]
+id: PROCESS:0000035
+name: Metagenome Annotation
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Metagenome Annotation." []
+is_a: PROCESS:0000033 ! Annotation
+
+[Term]
+id: PROCESS:0000036
+name: Computation
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Computation." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000037
+name: Shotgun Sequencing and Assembly
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Shotgun Sequencing and Assembly." []
+is_a: PROCESS:0000021 ! Shotgun Sequencing
+
+[Term]
+id: PROCESS:0000038
+name: Reads Processing
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Reads Processing." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000039
+name: Binning
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Binning." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000040
+name: Profiling
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Profiling." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000041
+name: Taxonomic Profiling
+namespace: process.ontology
+def: "Taxonomic Profiling." []
+is_a: PROCESS:0000040 ! Profiling
+
+[Term]
+id: PROCESS:0000042
+name: Functional Profiling
+namespace: process.ontology
+def: "Functional Profiling." []
+is_a: PROCESS:0000040 ! Profiling
+
+[Term]
+id: PROCESS:0000043
+name: Functional and Taxonomic Profiling
+namespace: process.ontology
+def: "Functional and Taxonomic Profiling." []
+is_a: PROCESS:0000040 ! Profiling
+
+[Term]
+id: PROCESS:0000044
+name: Add Protocol
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Protocol." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000045
+name: Refine Bin
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Refine Bin." []
+is_a: PROCESS:0000022 ! Assembly
+
+[Term]
+id: PROCESS:0000046
+name: Import Historic Data
+namespace: process.ontology
+def: "Import Historic Data." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000047
+name: Image
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Image." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000048
+name: Assay Microbial Activity
+namespace: process.ontology
+def: "Assay Microbial Activity." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000049
+name: Build DubSeq Library
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Build DubSeq Library." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000050
+name: Add Genome
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Genome." []
+is_a: PROCESS:0000001 ! Process
+
+[Typedef]
+id: is_a

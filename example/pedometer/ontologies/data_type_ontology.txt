@@ -1,0 +1,77 @@
+Dynamic Object
+  alias: Measurements and Processed Data # likely Generic
+  alias: Brick
+  Physical Measurement
+  Chemical Measurement
+    Metabolite Assay
+  Functional Genomics Data
+    Gene Fitness
+      Gene Knockout Fitness
+    Enzyme Activity
+  Microbial Assay # assays that can be done on either isolates or communities
+    Microbial Growth # binary or quantitative (e.g., od, cell counts)
+    Microbial Activity
+    Microbial Sequence
+  Microbial Community Assay # only assays that must be done on communities
+    Taxonomic Assignment
+    Taxonomic Abundance
+    Microbial Community Sequence
+  Plant Assay
+    Microbial Colonization Data
+  Metabolomics
+
+Association
+  Set
+    alias: Group
+    alias: Cluster
+  Bicluster
+  Map
+  Correlation
+  Similarity
+
+Static Object
+  Plant Transformant
+  Microbial Strain
+  ASV
+  Taxon
+  Assembly
+  Bin
+  Genome
+  Gene
+  Media # from lab, includes defined media and complex media including extracts
+  Condition # lab-defined condition
+    # includes media plus other conditions like pH and temperature
+    Isolation Condition
+    Enrichment Condition
+  Community
+    Assemblage # linked to list of taxa
+      Consortium # need a special term to indicate symbiotic assemblage?
+  Reads # linked to community
+    Amplicon Reads
+      16S Reads
+      18S Reads
+    WGS Reads
+  Tn-Seq Library
+    alias: TnSeqLibrary
+  Process
+  Protocol
+
+-Internal ID:
+  is_a: COMO:0000001
+  -Internal Brick ID (Ref: DA:0000001.Brick.id)
+  -Internal Plant Transformant ID (Ref: DA:0000027.Plant_Transformant.id)
+  -Internal Microbial Strain ID (Ref: DA:0000028.Microbial_Strain.id)
+  -Internal ASV ID (Ref: DA:0000029.ASV.id)
+  -Internal Taxon ID (Ref: DA:0000030.Taxon.id)
+  -Internal Assembly ID (Ref: DA:0000031.Assembly.id)
+  -Internal Bin ID (Ref: DA:0000032.Bin.id)
+  -Internal Genome ID (Ref: DA:0000033.Genome.id)
+  -Internal Gene ID (Ref: DA:0000034.Gene.id)
+  -Internal Media ID (Ref: DA:0000035.Media.id)
+  -Internal Condition ID (Ref: DA:0000036.Condition.id)
+  -Internal Community ID (Ref: DA:0000039.Community.id)
+  -Internal Reads ID (Ref: DA:0000042.Reads.id)
+  -Internal TnSeq_Library ID (Ref: DA:0000047.TnSeq_Library.id)
+  -Internal Process ID (Ref: DA:0000048.Process.id)
+  -Internal Protocol ID (Ref: DA:0000049.Protocol.id)
+
