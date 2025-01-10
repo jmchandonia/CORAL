@@ -1,5 +1,5 @@
 format-version: 1.4
-ontology:me
+ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
 auto-generated-by: ONTO-PERL 1.45
@@ -484,7 +484,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Strain name, for microbes that are not ENIGMA isolates." []
+def: "Strain name, for microbes that are not PEDOMETER isolates." []
 is_a: COMO:0000042 ! Strain
 
 [Term]
@@ -496,7 +496,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Use this to link to ENIGMA strains by their official strain name/ID." []
+def: "Use this to link to PEDOMETER strains by their official strain name/ID." []
 synonym: "Isolate ID" EXACT []
 xref: Ref: DA:0000062.Strain.name
 is_a: COMO:0000042 ! Strain
@@ -531,7 +531,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Use this to link to defined ENIGMA taxa." []
+def: "Use this to link to defined PEDOMETER taxa." []
 xref: Ref: DA:0000037.Taxon.name
 is_a: COMO:0000045 ! Taxon
 
@@ -1042,7 +1042,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Sample ID, chosen from list of valid ENIGMA samples." []
+def: "Sample ID, chosen from list of valid PEDOMETER samples." []
 xref: Ref: DA:0000042.Sample.name
 is_a: COMO:0000100 ! Environmental Sample
 
@@ -2141,7 +2141,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Name of a person.  Note that ENIGMA people should be listed as 'ENIGMA personnel' instead." []
+def: "Name of a person.  Note that PEDOMETER people should be listed as 'PEDOMETER personnel' instead." []
 is_a: COMO:0000002 ! Experimental Context
 
 [Term]
@@ -2398,7 +2398,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Well, borehole, or other defined ENIGMA location." []
+def: "Well, borehole, or other defined PEDOMETER location." []
 synonym: "Location ID" EXACT []
 xref: Ref: DA:0000041.Location.name
 is_a: COMO:0000099 ! Environmental Sample Location
@@ -2460,7 +2460,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Community ID, chosen from list of defined ENIGMA communities." []
+def: "Community ID, chosen from list of defined PEDOMETER communities." []
 xref: Ref: DA:0000048.Community.name
 is_a: COMO:0000231 ! Community
 
@@ -2588,7 +2588,7 @@ property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Genome ID, chosen from list of annotated ENIGMA genomes." []
+def: "Genome ID, chosen from list of annotated PEDOMETER genomes." []
 xref: Ref: DA:0000039.Genome.name
 is_a: COMO:0000245 ! Genome
 
@@ -2773,7 +2773,7 @@ property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Assembly ID, chosen from list of ENIGMA assemblies." []
+def: "Assembly ID, chosen from list of PEDOMETER assemblies." []
 xref: Ref: DA:0000066.Assembly.name
 is_a: COMO:0000279 ! Assembly
 
@@ -3248,7 +3248,7 @@ property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Protocol, chosen from list of defined ENIGMA protocols." []
+def: "Protocol, chosen from list of defined PEDOMETER protocols." []
 xref: Ref: DA:0000073.Protocol.name
 is_a: COMO:0000327 ! Protocol
 
