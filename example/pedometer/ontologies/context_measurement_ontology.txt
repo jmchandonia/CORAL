@@ -436,9 +436,6 @@
   millisiemen per centimeter
     alias: millisiemen per cm
     is_a: UO:0000262
-  pound per square inch
-    alias: PSI
-    is_a: UO:0000109
   torr
     is_a: UO:0000109
   resistivity unit
@@ -446,12 +443,6 @@
   salinity unit
     practical salinity unit
       alias: PSU
-  inch
-    alias: in
-    is_a: UO:0000001
-  foot
-    alias: ft
-    is_a: UO:0000001
   mile per hour
     alias: mph
     is_a: UO:0000060
@@ -479,9 +470,6 @@
   confidence unit
     is_a: UO:0000190
   objects per grid window
-    is_a: UO:0000189
-  base pairs
-    alias: bases
     is_a: UO:0000189
   fold concentration
     is_a: UO:0000051

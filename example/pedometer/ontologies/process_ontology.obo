@@ -18,14 +18,6 @@ def: "Process." []
 is_a: PROCESS:0000000 ! term
 
 [Term]
-id: PROCESS:0000002
-name: Sampling
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Sampling." []
-is_a: PROCESS:0000001 ! Process
-
-[Term]
 id: PROCESS:0000003
 name: Assay
 namespace: process.ontology
@@ -34,38 +26,10 @@ def: "Assay." []
 is_a: PROCESS:0000001 ! Process
 
 [Term]
-id: PROCESS:0000004
-name: Assay Environment
-namespace: process.ontology
-def: "Assay Environment." []
-is_a: PROCESS:0000003 ! Assay
-
-[Term]
-id: PROCESS:0000005
-name: Assay Geochemistry
-namespace: process.ontology
-def: "Assay Geochemistry." []
-is_a: PROCESS:0000003 ! Assay
-
-[Term]
 id: PROCESS:0000006
 name: Assay Growth
 namespace: process.ontology
 def: "Assay Growth." []
-is_a: PROCESS:0000003 ! Assay
-
-[Term]
-id: PROCESS:0000007
-name: Assay Thermodynamics
-namespace: process.ontology
-def: "Assay Thermodynamics." []
-is_a: PROCESS:0000003 ! Assay
-
-[Term]
-id: PROCESS:0000008
-name: Assay Cell Counts
-namespace: process.ontology
-def: "Assay Cell Counts." []
 is_a: PROCESS:0000003 ! Assay
 
 [Term]
@@ -99,22 +63,6 @@ def: "Filter." []
 is_a: PROCESS:0000011 ! Enrichment
 
 [Term]
-id: PROCESS:0000013
-name: BONCAT Enrichment
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "BONCAT Enrichment." []
-is_a: PROCESS:0000011 ! Enrichment
-
-[Term]
-id: PROCESS:0000014
-name: DAPI Enrichment
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "DAPI Enrichment." []
-is_a: PROCESS:0000011 ! Enrichment
-
-[Term]
 id: PROCESS:0000015
 name: Isolation
 namespace: process.ontology
@@ -139,22 +87,6 @@ def: "Sequencing." []
 is_a: PROCESS:0000001 ! Process
 
 [Term]
-id: PROCESS:0000018
-name: 18S Sequencing
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "18S Sequencing." []
-is_a: PROCESS:0000017 ! Sequencing
-
-[Term]
-id: PROCESS:0000019
-name: ITS Sequencing
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "ITS Sequencing." []
-is_a: PROCESS:0000017 ! Sequencing
-
-[Term]
 id: PROCESS:0000020
 name: 16S Sequencing
 namespace: process.ontology
@@ -166,7 +98,6 @@ id: PROCESS:0000021
 name: Shotgun Sequencing
 namespace: process.ontology
 def: "Shotgun Sequencing." []
-synonym: "WGS Sequencing" EXACT []
 is_a: PROCESS:0000017 ! Sequencing
 
 [Term]
@@ -217,27 +148,11 @@ def: "Build TnSeq Library." []
 is_a: PROCESS:0000001 ! Process
 
 [Term]
-id: PROCESS:0000028
-name: Add Location
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Add Location." []
-is_a: PROCESS:0000001 ! Process
-
-[Term]
 id: PROCESS:0000029
 name: Add Taxon
 namespace: process.ontology
 property_value: is_hidden "true" xsd:boolean
 def: "Add Taxon." []
-is_a: PROCESS:0000001 ! Process
-
-[Term]
-id: PROCESS:0000030
-name: Add Strain
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Add Strain." []
 is_a: PROCESS:0000001 ! Process
 
 [Term]
@@ -286,14 +201,6 @@ namespace: process.ontology
 property_value: is_hidden "true" xsd:boolean
 def: "Computation." []
 is_a: PROCESS:0000001 ! Process
-
-[Term]
-id: PROCESS:0000037
-name: Shotgun Sequencing and Assembly
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Shotgun Sequencing and Assembly." []
-is_a: PROCESS:0000021 ! Shotgun Sequencing
 
 [Term]
 id: PROCESS:0000038
@@ -357,34 +264,11 @@ def: "Refine Bin." []
 is_a: PROCESS:0000022 ! Assembly
 
 [Term]
-id: PROCESS:0000046
-name: Import Historic Data
-namespace: process.ontology
-def: "Import Historic Data." []
-is_a: PROCESS:0000001 ! Process
-
-[Term]
-id: PROCESS:0000047
-name: Image
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Image." []
-is_a: PROCESS:0000001 ! Process
-
-[Term]
 id: PROCESS:0000048
 name: Assay Microbial Activity
 namespace: process.ontology
 def: "Assay Microbial Activity." []
 is_a: PROCESS:0000003 ! Assay
-
-[Term]
-id: PROCESS:0000049
-name: Build DubSeq Library
-namespace: process.ontology
-property_value: is_hidden "true" xsd:boolean
-def: "Build DubSeq Library." []
-is_a: PROCESS:0000001 ! Process
 
 [Term]
 id: PROCESS:0000050
@@ -393,6 +277,43 @@ namespace: process.ontology
 property_value: is_hidden "true" xsd:boolean
 def: "Add Genome." []
 is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000051
+name: Add Microbial Strain
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Microbial Strain." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000052
+name: Add Plant Transformant
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Add Plant Transformant." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000053
+name: Assay Chemistry
+namespace: process.ontology
+def: "Assay Chemistry." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000054
+name: Assay Microbial Colonization
+namespace: process.ontology
+def: "Assay Microbial Colonization." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000055
+name: Long Read Sequencing
+namespace: process.ontology
+def: "Long Read Sequencing." []
+is_a: PROCESS:0000017 ! Sequencing
 
 [Typedef]
 id: is_a

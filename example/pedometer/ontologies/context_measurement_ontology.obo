@@ -2927,15 +2927,6 @@ is_a: COMO:0000294 ! Units not in UO
 is_a: UO:0000262
 
 [Term]
-id: COMO:0000296
-name: pound per square inch
-namespace: measure.ontology
-def: "pound per square inch." []
-synonym: "PSI" EXACT []
-is_a: COMO:0000294 ! Units not in UO
-is_a: UO:0000109
-
-[Term]
 id: COMO:0000299
 name: Explained Variance
 namespace: measure.ontology
@@ -3059,15 +3050,6 @@ namespace: measure.ontology
 def: "practical salinity unit." []
 synonym: "PSU" EXACT []
 is_a: COMO:0000378 ! salinity unit
-
-[Term]
-id: COMO:0000310
-name: foot
-namespace: measure.ontology
-def: "foot." []
-synonym: "ft" EXACT []
-is_a: COMO:0000294 ! Units not in UO
-is_a: UO:0000001
 
 [Term]
 id: COMO:0000311
@@ -3226,15 +3208,6 @@ def: "mile per hour." []
 synonym: "mph" EXACT []
 is_a: COMO:0000294 ! Units not in UO
 is_a: UO:0000060
-
-[Term]
-id: COMO:0000323
-name: inch
-namespace: measure.ontology
-def: "inch." []
-synonym: "in" EXACT []
-is_a: COMO:0000294 ! Units not in UO
-is_a: UO:0000001
 
 [Term]
 id: COMO:0000324
@@ -3933,15 +3906,6 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genomic Region." []
 is_a: COMO:0000111 ! Sequencing
-
-[Term]
-id: COMO:0000400
-name: base pairs
-namespace: measure.ontology
-def: "base pairs." []
-synonym: "bases" EXACT []
-is_a: COMO:0000294 ! Units not in UO
-is_a: UO:0000189
 
 [Term]
 id: COMO:0000401

@@ -5,13 +5,13 @@ Process
   -Add Microbial Strain
   -Add Plant Transformant
   -Add Protocol
-  Import Historic Data
   -Assay
     Assay Chemistry
     Assay Growth
     Assay Metabolites
     Assay Fitness
     Assay Microbial Activity
+    Assay Microbial Colonization
   -Computation
   -Enrichment
     -Filter
@@ -20,8 +20,7 @@ Process
   -Sequencing
     16S Sequencing
     Shotgun Sequencing
-      alias: WGS Sequencing
-      -Shotgun Sequencing and Assembly
+    Long Read Sequencing
   -Reads Processing
   Taxonomic Inference
     Classify OTUs
