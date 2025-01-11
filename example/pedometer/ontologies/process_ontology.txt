@@ -23,7 +23,7 @@ Process
     Long Read Sequencing
   -Reads Processing
   Taxonomic Inference
-    Classify OTUs
+    Classify ASVs
   -Assembly
     -Genome Assembly
     -Metagenome Assembly

@@ -466,18 +466,18 @@ is_a: COMO:0000039 ! Biological Context
 
 [Term]
 id: COMO:0000042
-name: Strain
+name: Microbial Strain
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Strain of microbe, or isolate ID." []
-synonym: "Isolate" EXACT []
+synonym: "Microbial Isolate" EXACT []
 is_a: COMO:0000039 ! Biological Context
 
 [Term]
 id: COMO:0000043
-name: Strain Name
+name: Microbial Strain Name
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
@@ -485,21 +485,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain name, for microbes that are not PEDOMETER isolates." []
-is_a: COMO:0000042 ! Strain
-
-[Term]
-id: COMO:0000044
-name: Strain ID
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Use this to link to PEDOMETER strains by their official strain name/ID." []
-synonym: "Isolate ID" EXACT []
-xref: Ref: DA:0000062.Strain.name
-is_a: COMO:0000042 ! Strain
+is_a: COMO:0000042 ! Microbial Strain
 
 [Term]
 id: COMO:0000045
@@ -532,7 +518,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to link to defined PEDOMETER taxa." []
-xref: Ref: DA:0000037.Taxon.name
+xref: Ref: DA:0000030.Taxon.name
 is_a: COMO:0000045 ! Taxon
 
 [Term]
@@ -669,7 +655,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene name, e.g., dsrA." []
-xref: Ref: DA:0000040.Gene.aliases
+xref: Ref: DA:0000034.Gene.aliases
 is_a: COMO:0000059 ! Gene
 
 [Term]
@@ -1031,19 +1017,6 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Sample Name." []
-is_a: COMO:0000100 ! Environmental Sample
-
-[Term]
-id: COMO:0000102
-name: Environmental Sample ID
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Sample ID, chosen from list of valid PEDOMETER samples." []
-xref: Ref: DA:0000042.Sample.name
 is_a: COMO:0000100 ! Environmental Sample
 
 [Term]
@@ -1941,22 +1914,24 @@ name: OTU
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
 def: "OTU." []
 synonym: "Operational Taxonomic Unit" EXACT []
 is_a: COMO:0000039 ! Biological Context
 
 [Term]
 id: COMO:0000185
-name: ESV
+name: ASV
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "ESV." []
+def: "ASV." []
+synonym: "Amplicon Sequence Variant" EXACT []
+synonym: "ESV" EXACT []
 synonym: "Exact Sequence Variant" EXACT []
 synonym: "Sub-OTU" EXACT []
 synonym: "Unique Sequence Variant" EXACT []
@@ -2081,7 +2056,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Condition, chosen from list of defined experimental conditions in the Data Clearinghouse." []
-xref: Ref: DA:0000045.Condition.name
+xref: Ref: DA:0000036.Condition.name
 is_a: COMO:0000006 ! Condition
 
 [Term]
@@ -2338,19 +2313,6 @@ def: "OTU Name." []
 is_a: COMO:0000184 ! OTU
 
 [Term]
-id: COMO:0000222
-name: OTU ID
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "OTU ID, chosen from the list of defined OTUs in the Data Clearinghouse." []
-xref: Ref: DA:0000063.OTU.Name
-is_a: COMO:0000184 ! OTU
-
-[Term]
 id: COMO:0000223
 name: NCBI Taxon ID
 namespace: measure.ontology
@@ -2374,7 +2336,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene, chosen from list of defined genes in the Data Clearinghouse." []
-xref: Ref: DA:0000040.Gene.gene_id
+xref: Ref: DA:0000034.Gene.gene_id
 is_a: COMO:0000059 ! Gene
 
 [Term]
@@ -2388,20 +2350,6 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Strain Change Type." []
 xref: ORef: COMO:0000227
 is_a: COMO:0000091 ! Strain Change
-
-[Term]
-id: COMO:0000228
-name: Environmental Sample Location ID
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Well, borehole, or other defined PEDOMETER location." []
-synonym: "Location ID" EXACT []
-xref: Ref: DA:0000041.Location.name
-is_a: COMO:0000099 ! Environmental Sample Location
 
 [Term]
 id: COMO:0000229
@@ -2461,7 +2409,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community ID, chosen from list of defined PEDOMETER communities." []
-xref: Ref: DA:0000048.Community.name
+xref: Ref: DA:0000039.Community.name
 is_a: COMO:0000231 ! Community
 
 [Term]
@@ -2589,7 +2537,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genome ID, chosen from list of annotated PEDOMETER genomes." []
-xref: Ref: DA:0000039.Genome.name
+xref: Ref: DA:0000033.Genome.name
 is_a: COMO:0000245 ! Genome
 
 [Term]
@@ -2616,7 +2564,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Reads ID, chosen from list of reads in the Data Clearinghouse." []
-xref: Ref: DA:0000054.Reads.name
+xref: Ref: DA:0000042.Reads.name
 is_a: COMO:0000247 ! Read Set
 
 [Term]
@@ -2733,7 +2681,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Tn-Seq Library Name." []
-xref: Ref: DA:0000060.TnSeq_Library.name
+xref: Ref: DA:0000047.TnSeq_Library.name
 is_a: COMO:0000261 ! Tn-Seq Library
 
 [Term]
@@ -2774,7 +2722,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Assembly ID, chosen from list of PEDOMETER assemblies." []
-xref: Ref: DA:0000066.Assembly.name
+xref: Ref: DA:0000031.Assembly.name
 is_a: COMO:0000279 ! Assembly
 
 [Term]
@@ -3249,7 +3197,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Protocol, chosen from list of defined PEDOMETER protocols." []
-xref: Ref: DA:0000073.Protocol.name
+xref: Ref: DA:0000049.Protocol.name
 is_a: COMO:0000327 ! Protocol
 
 [Term]
@@ -3268,7 +3216,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Bin, chosen from metagenomic bins stored in the Data Clearinghouse." []
-xref: Ref: DA:0000072.Bin.name
+xref: Ref: DA:0000032.Bin.name
 is_a: COMO:0000329 ! Bin
 
 [Term]
@@ -3500,20 +3448,6 @@ name: Image
 namespace: measure.ontology
 def: "Image." []
 is_a: COMO:0000209 ! Physical Context
-
-[Term]
-id: COMO:0000355
-name: Image ID
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Image, chosen from the list of images stored in the Data Clearinghouse." []
-xref: Ref: DA:0000074.Image.name
-is_a: COMO:0000354 ! Image
 
 [Term]
 id: COMO:0000357
@@ -3879,20 +3813,6 @@ name: Dub-Seq Library
 namespace: measure.ontology
 def: "Dub-Seq Library." []
 is_a: COMO:0000395 ! Overexpression Library
-
-[Term]
-id: COMO:0000397
-name: Dub-Seq Library Name
-namespace: measure.ontology
-property_value: data_type "object_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Dub-Seq Library Name." []
-xref: Ref: DA:0000075.DubSeq_Library.name
-is_a: COMO:0000396 ! Dub-Seq Library
 
 [Term]
 id: COMO:0000398
@@ -4618,6 +4538,44 @@ namespace: measure.ontology
 def: "relative ion intensity unit." []
 is_a: COMO:0000294 ! Units not in UO
 is_a: UO:0000186
+
+[Term]
+id: COMO:0000472
+name: Micobial Strain ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Micobial Strain ID." []
+synonym: "Isolate ID" EXACT []
+xref: Ref: DA:0000028.Strain.name
+is_a: COMO:0000042 ! Microbial Strain
+
+[Term]
+id: COMO:0000473
+name: ASV Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "ASV Name." []
+is_a: COMO:0000185 ! ASV
+
+[Term]
+id: COMO:0000474
+name: ASV ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "ASV ID." []
+xref: Ref: DA:0000029.ASV.Name
+is_a: COMO:0000185 ! ASV
 
 [Typedef]
 id: data_type

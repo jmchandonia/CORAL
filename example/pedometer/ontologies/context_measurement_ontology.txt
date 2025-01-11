@@ -4,7 +4,7 @@
       *Time Series (Float, time unit)
       *Replicate Series (Int, +count unit)
     *Condition (String)
-      *-Condition ID (Ref: DA:0000045.Condition.name)
+      *-Condition ID (Ref: DA:0000036.Condition.name)
     *Method (String)
     *Algorithm Parameter (String)
     *Index (Int, +count unit)
@@ -31,7 +31,7 @@
       +Biological Replicate
     +Subsample
     Protocol
-      Protocol ID (Ref: DA:0000073.Protocol.name)
+      Protocol ID (Ref: DA:0000049.Protocol.name)
     Database (String)
     *Availability (Boolean)
     *Usability (Boolean)
@@ -104,7 +104,6 @@
     Undisturbed
     Phase (String)
     Image
-      *Image ID (Ref: DA:0000074.Image.name)
     *Geologic Zone:
       Vadose Zone
         alias: Unsaturated Zone
@@ -160,22 +159,25 @@
           Spherical
           Pleomorphic
     Colony
-    **Strain
-      alias: Isolate
-      *-Strain Name (String)
-      *-Strain ID (Ref: DA:0000062.Strain.name)
+    **Microbial Strain
+      alias: Microbial Isolate
+      *-Microbial Strain Name (String)
+      *-Micobial Strain ID (Ref: DA:0000028.Strain.name)
         alias: Isolate ID
-    **OTU
+    *OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
-      *-OTU ID (Ref: DA:0000063.OTU.Name)
-    *ESV (String)
+    **ASV
+      alias: Amplicon Sequence Variant
       alias: Exact Sequence Variant
       alias: Unique Sequence Variant
+      alias: ESV
       alias: Sub-OTU
+      ASV Name (String)
+      *-ASV ID (Ref: DA:0000029.ASV.Name)
     **Taxon
       Taxon Name (String)
-      *-Taxon ID (Ref: DA:0000037.Taxon.name)
+      *-Taxon ID (Ref: DA:0000030.Taxon.name)
       *NCBI Taxon ID (ORef: NCBITaxon:1)
     **Media
       *Media Name (String)
@@ -190,8 +192,8 @@
       *+Electron Donor
       *+Electron Acceptor
     **Gene
-      *-Gene ID (Ref: DA:0000040.Gene.gene_id)
-      *-Gene Name (Ref: DA:0000040.Gene.aliases)
+      *-Gene ID (Ref: DA:0000034.Gene.gene_id)
+      *-Gene Name (Ref: DA:0000034.Gene.aliases)
       *-Gene GI (Int)
       Homologous Gene
         Orthologous Gene
@@ -199,11 +201,11 @@
       Essential Gene
     Gene Annotation
     Genome
-      Genome ID (Ref: DA:0000039.Genome.name)
+      Genome ID (Ref: DA:0000033.Genome.name)
     Assembly
-      Assembly ID (Ref: DA:0000066.Assembly.name)
+      Assembly ID (Ref: DA:0000031.Assembly.name)
     Bin
-      Bin ID (Ref: DA:0000072.Bin.name)
+      Bin ID (Ref: DA:0000032.Bin.name)
     *+Protein
     Protein Annotation
       KEGG Subsystem (ORef: KEGG)
@@ -256,21 +258,17 @@
     Knockout
     Knockout Library
       Tn-Seq Library
-        *Tn-Seq Library Name (Ref: DA:0000060.TnSeq_Library.name)
+        *Tn-Seq Library Name (Ref: DA:0000047.TnSeq_Library.name)
         Tn-Seq Primers Model (String)
     Overexpression Library
       Dub-Seq Library
-        *Dub-Seq Library Name (Ref: DA:0000075.DubSeq_Library.name)
     Environment
       *Environmental Sample Location (String)
         alias: Well
         alias: Core
         alias: Borehole
-        *-Environmental Sample Location ID (Ref: DA:0000041.Location.name)
-          alias: Location ID
       *Environmental Sample
         *Environmental Sample Name (String)
-        *-Environmental Sample ID (Ref: DA:0000042.Sample.name)
       *Environmental Parameter
         *-Environmental Chemical (ORef: CHEBI:24431)
         *-Environmental Measurement (ORef: COMO:0000120)
@@ -278,7 +276,7 @@
       +Environmental Material (ORef: ENVO:00010483)
     *Community
       Community Name (String)
-      *-Community ID (Ref: DA:0000048.Community.name)
+      *-Community ID (Ref: DA:0000039.Community.name)
       Community Type:
         Isolate Community
         Environmental Community
@@ -300,7 +298,7 @@
         Single End Read
       *Read Set
         alias: Reads
-        *-Reads ID (Ref: DA:0000054.Reads.name)
+        *-Reads ID (Ref: DA:0000042.Reads.name)
       *Contig
       *Genomic Region
       Sequence Position

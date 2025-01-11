@@ -157,9 +157,9 @@ is_a: PROCESS:0000001 ! Process
 
 [Term]
 id: PROCESS:0000031
-name: Classify OTUs
+name: Classify ASVs
 namespace: process.ontology
-def: "Classify OTUs." []
+def: "Classify ASVs." []
 is_a: PROCESS:0000025 ! Taxonomic Inference
 
 [Term]
