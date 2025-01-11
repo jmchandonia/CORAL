@@ -1,0 +1,636 @@
+{
+  "system_types":[
+    {
+      "name": "Process",
+      "term": "DA:0000048",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000065",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "process",
+          "type_term": "DA:0000048",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "PROCESS:0000001"
+        },
+        {
+          "name": "person",
+          "type_term": "PEDOMETER:0000002",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "PEDOMETER:0000002"
+        },
+        {
+          "name": "protocol",
+          "type_term": "COMO:0000327",
+          "scalar_type": "text",
+          "FK": "Protocol.name"
+        },
+        {
+          "name": "date_start",
+          "type_term": "COMO:0000009",
+          "scalar_type": "text",
+          "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
+          "comment": "YYYY[-MM[-DD]]"
+        },
+        {
+          "name": "date_end",
+          "type_term": "COMO:0000009",
+          "scalar_type": "text",
+          "constraint": "\\d\\d\\d\\d(-\\d\\d(-\\d\\d)?)?",
+          "comment": "YYYY[-MM[-DD]]"
+        },
+        {
+          "name": "input_objects",
+          "type_term": "COMO:0000207",
+          "scalar_type": "[ref]",
+          "required": true,
+          "constraint": "[Entity|Brick]"
+        },
+        {
+          "name": "output_objects",
+          "type_term": "COMO:0000208",
+          "scalar_type": "[ref]",
+          "required": true,
+          "constraint": "[Entity|Brick]"
+        }
+      ]
+    }  
+  ],
+  "static_types":[
+    {
+      "name": "PEDOMETER",
+      "fields": []
+    },
+    {
+      "name": "Taxon",
+      "term": "DA:0000030",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000055",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000046",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "ncbi_taxid",
+          "type_term": "COMO:0000223",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000029"],
+      "process_inputs": [["PEDOMETER"]]
+    },
+    {
+      "name": "ASV",
+      "term": "DA:0000029",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000054",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000474",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        }
+      ],
+      "process_types": ["PROCESS:0000031"],
+      "process_inputs": [["Reads"]]
+    },
+    { 
+      "name": "Condition",
+      "term": "DA:0000036",
+      "used_for_provenance": false,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000061",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000200",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        }
+      ],
+      "process_types": ["PROCESS:0000032"],
+      "process_inputs": [["PEDOMETER"]]
+    },
+    {
+      "name": "Microbial Strain",
+      "term": "DA:0000028",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000053",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000472",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "COMO:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "genome",
+          "type_term": "COMO:0000246",
+          "scalar_type": "text",
+          "FK": "Genome.name",
+          "comment": "genome object for sequenced, WT strains"
+        },
+        {
+          "name": "derived_from",
+          "type_term": "COMO:0000472",
+          "scalar_type": "text",
+          "FK": "Microbial Strain.name"
+        },
+        {
+          "name": "genes_changed",
+          "type_term": "COMO:0000091",
+          "scalar_type": "[text]",
+          "FK": "[Gene.gene_id]"
+        }
+      ],
+      "process_types": ["PROCESS:0000015", "PROCESS:0000051"],
+      "process_inputs": [["PEDOMETER"], ["Microbial Strain"]]
+    },
+    {
+      "name": "Plant Transformant",
+      "term": "DA:0000027",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000052",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000477",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "COMO:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "derived_from",
+          "type_term": "COMO:0000477",
+          "scalar_type": "text",
+          "FK": "Plant Transformant.name"
+        },
+        {
+          "name": "genes_changed",
+          "type_term": "COMO:0000091",
+          "scalar_type": "[text]",
+          "FK": "[Gene.gene_id]"
+        }
+      ],
+      "process_types": ["PROCESS:0000052", "PROCESS:0000052"],
+      "process_inputs": [["PEDOMETER"], ["Plant Tranformant"]]
+    },
+    { 
+      "name": "Community",
+      "term": "DA:0000039",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000062",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000233",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "community_type",
+          "type_term": "COMO:0000234",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "COMO:0000234"
+        },
+        {
+          "name": "parent_community",
+          "type_term": "COMO:0000233",
+          "scalar_type": "text",
+          "FK": "Community.name"
+        },
+        {
+          "name": "condition",
+          "type_term": "COMO:0000200",
+          "scalar_type": "text",
+          "FK": "Condition.name"
+        },
+        {
+          "name": "defined_strains",
+          "type_term": "COMO:0000472",
+          "scalar_type": "[text]",
+          "FK": "[Microbial Strain.Name]"
+        },
+        {
+          "name": "description",
+          "type_term": "COMO:0000202",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000015", "PROCESS:0000016", "PROCESS:0000011"],
+      "process_inputs": [["PEDOMETER"], ["Community"]]
+    },
+    {
+      "name": "Reads",
+      "term": "DA:0000042",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000063",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000248",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "read_count",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "read_type",
+          "type_term": "COMO:0000112",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "COMO:0000112"
+        },
+        {
+          "name": "sequencing_technology",
+          "type_term": "COMO:0000116",
+          "scalar_type": "term",
+          "required": true,
+          "constraint": "COMO:0000116"
+        },
+        {
+          "name": "link",
+          "type_term": "COMO:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000017"],
+      "process_inputs": [["Microbial Strain"], ["Community"]]
+    },
+    {
+      "name": "Assembly",
+      "term": "DA:0000031",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000056",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000280",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "strain",
+          "type_term": "COMO:0000472",
+          "scalar_type": "text",
+          "FK": "Microbial Strain.name"
+        },
+        {
+          "name": "n_contigs",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "link",
+          "type_term": "COMO:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000023","PROCESS:0000024"],
+      "process_inputs": [["Reads"],["Reads"]]
+    },
+    {
+      "name": "Genome",
+      "term": "DA:0000033",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000058",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "strain",
+          "type_term": "COMO:0000472",
+          "scalar_type": "text",
+          "FK": "Microbial Strain.name"
+        },
+        {
+          "name": "n_contigs",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_features",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "link",
+          "type_term": "COMO:0000203",
+          "scalar_type": "text",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000034", "PROCESS:0000045"],
+      "process_inputs": [["Assembly"],["Bin"]]
+    },
+    {
+      "name": "Gene",
+      "term": "DA:0000034",
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000059",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "gene_id",
+          "type_term": "COMO:0000224",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "COMO:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome.name"
+        },
+        {
+          "name": "aliases",
+          "type_term": "COMO:0000060",
+          "scalar_type": "[text]"
+        },
+        {
+          "name": "contig_number",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "required": true,
+          "comment": "indexed starting at 1, as in KBase",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "strand",
+          "type_term": "COMO:0000186",
+          "scalar_type": "text",
+          "required": true,
+          "constraint": "[+-]"
+        },
+        {
+          "name": "start",
+          "type_term": "COMO:0000242",
+          "scalar_type": "int",
+          "required": true,
+          "comment": "indexed starting at 1, as in KBase",
+          "units_term": "UO:0000244"
+        },
+        {
+          "name": "stop",
+          "type_term": "COMO:0000243",
+          "scalar_type": "int",
+          "required": true,
+          "units_term": "UO:0000244"
+        },
+        {
+          "name": "function",
+          "type_term": "COMO:0000250",
+          "scalar_type": "text"
+        }
+      ],
+      "process_types": ["PROCESS:0000034"],
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Bin",
+      "term": "DA:0000032",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000057",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000330",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "assembly",
+          "type_term": "COMO:0000280",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Assembly.name"
+        },
+        {
+          "name": "contigs",
+          "type_term": "COMO:0000240",
+          "scalar_type": "[text]",
+          "required": true
+        }
+      ],
+      "process_types": ["PROCESS:0000039"],
+      "process_inputs": [["Assembly"]]
+    },
+    {
+      "name": "Protocol",
+      "term": "DA:0000050",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000066",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000328",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "description",
+          "type_term": "COMO:0000202",
+          "scalar_type": "text"
+        },
+        {
+          "name": "link",
+          "type_term": "COMO:0000203",
+          "scalar_type": "text",
+          "constraint": "http.*"
+        }
+      ],
+      "process_types": ["PROCESS:0000044"],
+      "process_inputs": [["PEDOMETER"]]
+    },
+    {
+      "name": "TnSeq_Library",
+      "term": "DA:0000047",
+      "used_for_provenance": true,
+      "fields": [
+        {
+          "name": "id",
+          "type_term": "DA:0000064",
+          "scalar_type": "text",
+          "required": true,
+          "PK": true
+        },
+        {
+          "name": "name",
+          "type_term": "COMO:0000262",
+          "scalar_type": "text",
+          "required": true,
+          "UPK": true
+        },
+        {
+          "name": "genome",
+          "type_term": "COMO:0000246",
+          "scalar_type": "text",
+          "required": true,
+          "FK": "Genome.name"
+        },
+        {
+          "name": "primers_model",
+          "type_term": "COMO:0000263",
+          "scalar_type": "text",
+          "required": true
+        },
+        {
+          "name": "n_mapped_reads",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_barcodes",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_usable_barcodes",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "n_insertion_locations",
+          "type_term": "COMO:0000126",
+          "scalar_type": "int",
+          "units_term": "UO:0000189"
+        },
+        {
+          "name": "hit_rate_essential",
+          "type_term": "COMO:0000264",
+          "scalar_type": "float",
+          "units_term": "UO:0000190"
+        },
+        {
+          "name": "hit_rate_other",
+          "type_term": "COMO:0000264",
+          "scalar_type": "float",
+          "units_term": "UO:0000190"
+        }
+      ],
+      "process_types": ["PROCESS:0000027"],
+      "process_inputs": [["Genome"]]
+    }
+  ]
+}
