@@ -4550,7 +4550,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Micobial Strain ID." []
 synonym: "Isolate ID" EXACT []
-xref: Ref: DA:0000028.Strain.name
+xref: Ref: DA:0000028.Microbial Strain.name
 is_a: COMO:0000042 ! Microbial Strain
 
 [Term]
@@ -4576,6 +4576,41 @@ property_value: is_valid_property "true" xsd:boolean
 def: "ASV ID." []
 xref: Ref: DA:0000029.ASV.Name
 is_a: COMO:0000185 ! ASV
+
+[Term]
+id: COMO:0000475
+name: Plant Transformant
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "Plant Transformant." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000476
+name: Plant Transformant Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Plant Transformant Name." []
+is_a: COMO:0000475 ! Plant Transformant
+
+[Term]
+id: COMO:0000477
+name: Plant Transformant ID
+namespace: measure.ontology
+property_value: data_type "object_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Plant Transformant ID." []
+xref: Ref: DA:0000027.Plant Transformant.name
+is_a: COMO:0000475 ! Plant Transformant
 
 [Typedef]
 id: data_type

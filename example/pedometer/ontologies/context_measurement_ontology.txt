@@ -162,8 +162,11 @@
     **Microbial Strain
       alias: Microbial Isolate
       *-Microbial Strain Name (String)
-      *-Micobial Strain ID (Ref: DA:0000028.Strain.name)
+      *-Micobial Strain ID (Ref: DA:0000028.Microbial Strain.name)
         alias: Isolate ID
+    **Plant Transformant
+      *-Plant Transformant Name (String)
+      *-Plant Transformant ID (Ref: DA:0000027.Plant Transformant.name)
     *OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
