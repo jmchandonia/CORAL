@@ -2019,7 +2019,6 @@ id: COMO:0000195
 name: Genome Sequence
 namespace: measure.ontology
 def: "Genome Sequence." []
-is_a: COMO:0000000 ! term
 is_a: COMO:0000189 ! Sequence Type
 
 [Term]
