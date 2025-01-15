@@ -266,10 +266,14 @@ CORAL Resources
 
 ### ArangoDB Config
 
-Now that you can get at ArangoDB through Apache, log in and
-create databases.  You need at least a "production" database,
-but you could have "test" or other versions for development.
-They can be called whatever you want.
+Now that you can get at ArangoDB through Apache, log in and create
+databases.  You need at least a "production" database, but you could
+have "test" or other versions for development.  They can be called
+whatever you want.
+
+Look in /var/log/arangodb3/arangod.log.  You will see WARNING messages
+asking you to adjust some system settings, with instructions on how
+to do so.  Follow these.
 
 ### More setup of directory structure
 
@@ -331,6 +335,9 @@ _load in the data from a jupyter notebook:_
 _copy example data and ontologies into data import directory, or convert some real data into the same json format as the examples__
 
 _define your process type and all other static types in /home/coral/prod/modules/var/typedef.json_
+
+Note that static types can't have spaces in thier names.  See example
+typedef.json files under example/
 
 _set up /home/coral/prod/modules/var/upload_config.json with all the filenames of all ontologies, bricks, entities, and processes that you want to load._
 
