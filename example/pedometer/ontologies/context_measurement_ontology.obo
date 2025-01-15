@@ -1379,7 +1379,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "ME:0000379" xsd:string
+property_value: valid_units "COMO:0000379" xsd:string
 def: "Fitness Score." []
 is_a: COMO:0000120 ! Measurement
 
@@ -2204,24 +2204,22 @@ is_a: COMO:0000210 ! Location
 id: COMO:0000213
 name: Continent
 namespace: measure.ontology
-property_value: data_type "oterm_ref" xsd:string
+property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Continent." []
-xref: ORef: CONTINENT:0000001
 is_a: COMO:0000210 ! Location
 
 [Term]
 id: COMO:0000214
 name: Country
 namespace: measure.ontology
-property_value: data_type "oterm_ref" xsd:string
+property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Country." []
-xref: ORef: COUNTRY:0000001
 is_a: COMO:0000210 ! Location
 
 [Term]
@@ -2352,18 +2350,6 @@ xref: ORef: COMO:0000227
 is_a: COMO:0000091 ! Strain Change
 
 [Term]
-id: COMO:0000229
-name: Environment Type
-namespace: measure.ontology
-property_value: data_type "oterm_ref" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Environment Type." []
-xref: ORef: MIxS:0000002
-is_a: COMO:0000098 ! Environment
-
-[Term]
 id: COMO:0000230
 name: Environmental Material
 namespace: measure.ontology
@@ -2489,7 +2475,8 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "ME:0000400" xsd:string
+property_value: valid_units "UO:0000244" xsd:string
+property_value: valid_units_parent "UO:0000244" xsd:string
 def: "Sequence Start." []
 is_a: COMO:0000241 ! Sequence Position
 
@@ -2503,7 +2490,8 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "ME:0000400" xsd:string
+property_value: valid_units "UO:0000244" xsd:string
+property_value: valid_units_parent "UO:0000244" xsd:string
 def: "Sequence Stop." []
 is_a: COMO:0000241 ! Sequence Position
 
@@ -2517,7 +2505,8 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "ME:0000400" xsd:string
+property_value: valid_units "UO:0000244" xsd:string
+property_value: valid_units_parent "UO:0000244" xsd:string
 def: "Sequence Length." []
 is_a: COMO:0000241 ! Sequence Position
 
@@ -2916,7 +2905,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units_parent "ME:0000378" xsd:string
+property_value: valid_units_parent "COMO:0000378" xsd:string
 def: "Salinity." []
 is_a: COMO:0000120 ! Measurement
 
@@ -2930,7 +2919,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units_parent "ME:0000377" xsd:string
+property_value: valid_units_parent "COMO:0000377" xsd:string
 def: "Resistivity." []
 is_a: COMO:0000120 ! Measurement
 
@@ -3754,7 +3743,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "ME:0000471 UO:0000313" xsd:string
+property_value: valid_units "COMO:0000471 UO:0000313" xsd:string
 def: "Ion Intensity." []
 is_a: COMO:0000120 ! Measurement
 
@@ -4550,7 +4539,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Micobial Strain ID." []
 synonym: "Isolate ID" EXACT []
-xref: Ref: DA:0000028.Microbial Strain.name
+xref: Ref: DA:0000028.Microbial_Strain.name
 is_a: COMO:0000042 ! Microbial Strain
 
 [Term]
@@ -4609,7 +4598,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Plant Transformant ID." []
-xref: Ref: DA:0000027.Plant Transformant.name
+xref: Ref: DA:0000027.Plant_Transformant.name
 is_a: COMO:0000475 ! Plant Transformant
 
 [Typedef]

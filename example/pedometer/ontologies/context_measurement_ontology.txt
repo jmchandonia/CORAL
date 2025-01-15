@@ -70,8 +70,8 @@
     *+Location
       *Latitude (Float, degree)
       *Longitude (Float, degree)
-      Continent (ORef: CONTINENT:0000001)
-      Country (ORef: COUNTRY:0000001)
+      Continent (String)
+      Country (String)
       +Region
       +Biome (ORef: ENVO:01000254)
       +Environmental Feature (ORef: ENVO:00002297)
@@ -162,11 +162,11 @@
     **Microbial Strain
       alias: Microbial Isolate
       *-Microbial Strain Name (String)
-      *-Micobial Strain ID (Ref: DA:0000028.Microbial Strain.name)
+      *-Micobial Strain ID (Ref: DA:0000028.Microbial_Strain.name)
         alias: Isolate ID
     **Plant Transformant
       *-Plant Transformant Name (String)
-      *-Plant Transformant ID (Ref: DA:0000027.Plant Transformant.name)
+      *-Plant Transformant ID (Ref: DA:0000027.Plant_Transformant.name)
     *OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
@@ -275,7 +275,6 @@
       *Environmental Parameter
         *-Environmental Chemical (ORef: CHEBI:24431)
         *-Environmental Measurement (ORef: COMO:0000120)
-      +Environment Type (ORef: MIxS:0000002)
       +Environmental Material (ORef: ENVO:00010483)
     *Community
       Community Name (String)
@@ -305,9 +304,9 @@
       *Contig
       *Genomic Region
       Sequence Position
-        *Sequence Start (Int, +base pairs)
-        *Sequence Stop (Int, +base pairs)
-        *Sequence Length (Int, +base pairs)
+        *Sequence Start (Int, +base pair)
+        *Sequence Stop (Int, +base pair)
+        *Sequence Length (Int, +base pair)
       Base Pair
       Sequencing Technology:
         Illumina
