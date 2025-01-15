@@ -141,7 +141,7 @@
       "process_inputs": [["PEDOMETER"]]
     },
     {
-      "name": "Microbial Strain",
+      "name": "Microbial_Strain",
       "term": "DA:0000028",
       "used_for_provenance": true,
       "fields": [
@@ -175,7 +175,7 @@
           "name": "derived_from",
           "type_term": "COMO:0000472",
           "scalar_type": "text",
-          "FK": "Microbial Strain.name"
+          "FK": "Microbial_Strain.name"
         },
         {
           "name": "genes_changed",
@@ -185,10 +185,10 @@
         }
       ],
       "process_types": ["PROCESS:0000015", "PROCESS:0000051"],
-      "process_inputs": [["PEDOMETER"], ["Microbial Strain"]]
+      "process_inputs": [["PEDOMETER"], ["Microbial_Strain"]]
     },
     {
-      "name": "Plant Transformant",
+      "name": "Plant_Transformant",
       "term": "DA:0000027",
       "used_for_provenance": true,
       "fields": [
@@ -215,7 +215,7 @@
           "name": "derived_from",
           "type_term": "COMO:0000477",
           "scalar_type": "text",
-          "FK": "Plant Transformant.name"
+          "FK": "Plant_Transformant.name"
         },
         {
           "name": "genes_changed",
@@ -225,7 +225,7 @@
         }
       ],
       "process_types": ["PROCESS:0000052", "PROCESS:0000052"],
-      "process_inputs": [["PEDOMETER"], ["Plant Tranformant"]]
+      "process_inputs": [["PEDOMETER"], ["Plant_Transformant"]]
     },
     { 
       "name": "Community",
@@ -269,7 +269,7 @@
           "name": "defined_strains",
           "type_term": "COMO:0000472",
           "scalar_type": "[text]",
-          "FK": "[Microbial Strain.Name]"
+          "FK": "[Microbial_Strain.Name]"
         },
         {
           "name": "description",
@@ -328,7 +328,7 @@
         }
       ],
       "process_types": ["PROCESS:0000017"],
-      "process_inputs": [["Microbial Strain"], ["Community"]]
+      "process_inputs": [["Microbial_Strain"], ["Community"]]
     },
     {
       "name": "Assembly",
@@ -353,7 +353,7 @@
           "name": "strain",
           "type_term": "COMO:0000472",
           "scalar_type": "text",
-          "FK": "Microbial Strain.name"
+          "FK": "Microbial_Strain.name"
         },
         {
           "name": "n_contigs",
@@ -395,7 +395,7 @@
           "name": "strain",
           "type_term": "COMO:0000472",
           "scalar_type": "text",
-          "FK": "Microbial Strain.name"
+          "FK": "Microbial_Strain.name"
         },
         {
           "name": "n_contigs",

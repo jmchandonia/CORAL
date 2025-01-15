@@ -1,0 +1,48 @@
+{
+    "version": 1,
+    "ontologies": [
+
+        {
+            "name": "chebi",
+            "file_name": "chebi.obo"
+        },
+        {
+            "name": "units",
+            "file_name": "uo.obo"
+        },
+        {
+            "name": "context_measurement",
+            "file_name": "context_measurement_ontology.obo"
+        },
+        {
+            "name": "dtype",
+            "file_name": "data_type_ontology.obo"
+        },
+        {
+            "name": "pedometer",
+            "file_name": "pedometer_specific_ontology.obo"
+        },
+        {
+            "name": "envo",
+            "file_name": "envo.obo"
+        },
+        {
+            "name": "process",
+            "file_name": "process_ontology.obo"
+        },
+        {
+            "name": "taxonomy",
+            "file_name": "ncbitaxon.obo"
+        }
+    ],
+    "bricks": [
+    ],
+    "entities": [
+        {
+            "file": "strains.tsv",
+            "dtype": "Microbial_Strain"
+        }
+    ],
+    "processes": [
+    ]    
+}
