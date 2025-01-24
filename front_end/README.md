@@ -5,14 +5,18 @@ on our system that can be challenging for data producers and data consumers alik
 
 ## Installation
 
-To get started, make sure you have npm and Angular installed. This app is built with Angular version
-11.2.9.
+To get started, make sure you have npm and Angular installed.  This
+app doesn't build with node.js versions 17 or higher, so it is likely
+that the nodejs and npm versions installed on your linux will not
+work.  To install node.js version 16, download
+https://nodejs.org/dist/latest-v16.x/ (get the file ending in
+linux-x64.tar.gz) and install the contents under /usr/local/.
 
-`npm install -g @angular/cli`
+This app is built with Angular version 11.2.9.  To install 11.2.9, do:
+
+`npm install -g @angular/cli@11.2.9`
 
 Fork and clone a repo and then install all the necessary dependencies in package.json. The command `npm ci` is recommended over `npm install`, as `install` will make updates to the package-lock.json file and may cause complications with conflicting files. `npm install` should only be used if a new dependency needs to be added to the repo.
-
-If you run into dependency problems you can't resolve, try installing an older version of @angular/cli.  This app has been successfully deployed with Angular version 11.2.9. It is also important to note that you must use a version of node earlier than v17 to successfully build the application, or you will get an error when attempting to run any npm/node commands.
 
 To run a development server, use the `ng serve` command and open your preferred browser to localhost:4200. To use a specific environment (e.g. production, development) with which to serve the app, you can pass the `configuration` flag to the serve command like so:
 
