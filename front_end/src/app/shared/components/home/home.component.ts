@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public dynamicTypes: any;
   navigateToResults = false;
   public demoMode = false;
+  public myProject = 'ENIGMA';
 
   query: QueryBuilder;
 
@@ -35,7 +36,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if (environment.DEMO_MODE) {
        this.demoMode = true;
-    }         
+    }
+
+    this.myProject = environment.PROJECT_NAME;
 
     this.homeService.getFilterValues()
       .subscribe((res: any) => {
