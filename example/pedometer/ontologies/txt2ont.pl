@@ -8,6 +8,7 @@ use OBO::Core::Dbxref;
 use OBO::Core::Synonym;
 use Data::Dumper;
 use File::Temp qw(tempfile tempdir);
+use POSIX qw(strftime);
 use strict;
 
 my $ontology = shift;
@@ -398,5 +399,9 @@ foreach $term (@terms) {
 	$ont->delete_term($term);
     }
 }
+
+# version it with today's date
+my $today = strftime('%Y-%m-%d', localtime);
+$ont->data_version($today);
 
 $ont->export('obo', \*STDOUT);
