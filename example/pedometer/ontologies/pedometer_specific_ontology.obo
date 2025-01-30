@@ -5,7 +5,7 @@ saved-by: jmc
 auto-generated-by: ONTO-PERL 1.45
 
 [Term]
-id: ME:0000001
+id: COMO:0000001
 
 [Term]
 id: PEDOMETER:0000000
@@ -18,7 +18,7 @@ id: PEDOMETER:0000001
 name: PEDOMETER
 namespace: pedometer.ontology
 def: "PEDOMETER." []
-is_a: ME:0000001
+is_a: COMO:0000001
 is_a: PEDOMETER:0000000 ! term
 
 [Term]

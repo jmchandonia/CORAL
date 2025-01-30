@@ -1,5 +1,5 @@
 PEDOMETER
-  is_a: ME:0000001
+  is_a: COMO:0000001
   PEDOMETER Labs and Personnel:
     alias: PEDOMETER PI
     Tringe Lab
