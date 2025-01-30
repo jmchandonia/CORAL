@@ -1,4 +1,5 @@
 format-version: 1.4
+data-version:2025-01-29
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -185,7 +186,6 @@ id: COMO:0000014
 name: Homogenized
 namespace: measure.ontology
 def: "Homogenized." []
-is_a: COMO:0000002 ! Experimental Context
 is_a: COMO:0000209 ! Physical Context
 
 [Term]
@@ -199,7 +199,6 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Anaerobic." []
-is_a: COMO:0000002 ! Experimental Context
 is_a: COMO:0000209 ! Physical Context
 
 [Term]
@@ -211,7 +210,6 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Aerobic." []
-is_a: COMO:0000002 ! Experimental Context
 is_a: COMO:0000209 ! Physical Context
 
 [Term]
@@ -219,7 +217,6 @@ id: COMO:0000017
 name: Undisturbed
 namespace: measure.ontology
 def: "Undisturbed." []
-is_a: COMO:0000002 ! Experimental Context
 is_a: COMO:0000209 ! Physical Context
 
 [Term]
