@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version:2025-01-29
+data-version:2025-05-08
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -3907,6 +3907,8 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Name." []
 is_a: COMO:0000002 ! Experimental Context
@@ -3919,6 +3921,8 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Well Name." []
 is_a: COMO:0000002 ! Experimental Context
@@ -4526,14 +4530,14 @@ is_a: UO:0000186
 
 [Term]
 id: COMO:0000472
-name: Micobial Strain ID
+name: Microbial Strain ID
 namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Micobial Strain ID." []
+def: "Microbial Strain ID." []
 synonym: "Isolate ID" EXACT []
 xref: Ref: DA:0000028.Microbial_Strain.name
 is_a: COMO:0000042 ! Microbial Strain
@@ -4596,6 +4600,86 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Plant Transformant ID." []
 xref: Ref: DA:0000027.Plant_Transformant.name
 is_a: COMO:0000475 ! Plant Transformant
+
+[Term]
+id: COMO:0000478
+name: DNA Construct
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+def: "DNA Construct." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000479
+name: DNA Construct Name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "DNA Construct Name." []
+is_a: COMO:0000478 ! DNA Construct
+
+[Term]
+id: COMO:0000480
+name: Jukes-Cantor Distance
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "COMO:0000481" xsd:string
+def: "Jukes-Cantor Distance." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000481
+name: substitutions per site
+namespace: measure.ontology
+def: "substitutions per site." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000186
+
+[Term]
+id: COMO:0000482
+name: Tissue
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Tissue." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000483
+name: Genotype
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Genotype." []
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000484
+name: Collected
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Collected." []
+is_a: COMO:0000141 ! Binary
 
 [Typedef]
 id: data_type

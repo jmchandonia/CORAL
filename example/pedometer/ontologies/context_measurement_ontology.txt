@@ -42,9 +42,9 @@
     *Barcode (String)
     *Internal Standard (String)
     **Microplate
-      Microplate Name (String)
+      *Microplate Name (String)
       **Microplate Well
-        Microplate Well Name (String)
+        *Microplate Well Name (String)
     **Publication (String)
       *-PubMed ID (Int, +dimensionless unit)
         alias: PMID
@@ -159,10 +159,11 @@
           Spherical
           Pleomorphic
     Colony
+    Tissue (String)
     **Microbial Strain
       alias: Microbial Isolate
       *-Microbial Strain Name (String)
-      *-Micobial Strain ID (Ref: DA:0000028.Microbial_Strain.name)
+      *-Microbial Strain ID (Ref: DA:0000028.Microbial_Strain.name)
         alias: Isolate ID
     **Plant Transformant
       *-Plant Transformant Name (String)
@@ -202,9 +203,12 @@
         Orthologous Gene
         Paralogous Gene
       Essential Gene
+    **DNA Construct
+      *DNA Construct Name (String)
     Gene Annotation
     Genome
       Genome ID (Ref: DA:0000033.Genome.name)
+    Genotype (String)
     Assembly
       Assembly ID (Ref: DA:0000031.Assembly.name)
     Bin
@@ -356,6 +360,7 @@
   *Amount (Float, substance unit)
   *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
   *Relative Evolutionary Divergence (Float, +dimensionless unit)
+  *Jukes-Cantor Distance (Float, +substitutions per site)
   Binary (Boolean)
     *Growth
     *Activity
@@ -364,6 +369,7 @@
     *Above
     *Below
     *Observed
+    *Collected
   *Pressure (Float, pressure unit)
     *Partial Pressure
     *Air Pressure
@@ -474,6 +480,8 @@
   fold concentration
     is_a: UO:0000051
   relative ion intensity unit
+    is_a: UO:0000186
+  substitutions per site
     is_a: UO:0000186
 
 -Molecules not in ChEBI:
