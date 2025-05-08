@@ -12,6 +12,7 @@ Process
     Assay Fitness
     Assay Microbial Activity
     Assay Microbial Colonization
+    Assay Plant Genotype
   -Computation
   -Enrichment
     -Filter
