@@ -1,11 +1,9 @@
 format-version: 1.4
+data-version:2025-04-18
 ontology:da
 date: 18:12:2024 16:08
 saved-by: jmc
 auto-generated-by: ONTO-PERL 1.45
-
-[Term]
-id: COMO:0000001
 
 [Term]
 id: DA:0000000

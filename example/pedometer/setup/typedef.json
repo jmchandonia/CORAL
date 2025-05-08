@@ -207,21 +207,10 @@
           "UPK": true
         },
         {
-          "name": "description",
-          "type_term": "COMO:0000202",
-          "scalar_type": "text"
-        },
-        {
-          "name": "derived_from",
-          "type_term": "COMO:0000477",
+          "name": "construct",
+          "type_term": "COMO:0000479",
           "scalar_type": "text",
-          "FK": "Plant_Transformant.name"
-        },
-        {
-          "name": "genes_changed",
-          "type_term": "COMO:0000091",
-          "scalar_type": "[text]",
-          "FK": "[Gene.gene_id]"
+          "required": true
         }
       ],
       "process_types": ["PROCESS:0000052", "PROCESS:0000052"],
