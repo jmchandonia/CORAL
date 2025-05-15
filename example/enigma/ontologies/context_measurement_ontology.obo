@@ -4903,6 +4903,28 @@ def: "relative ion intensity unit." []
 is_a: ME:0000294 ! Units not in UO
 is_a: UO:0000186
 
+[Term]
+id: ME:0000472
+name: Jukes-Cantor Distance
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000473" xsd:string
+def: "Jukes-Cantor Distance." []
+is_a: ME:0000120 ! Measurement
+
+[Term]
+id: ME:0000473
+name: substitutions per site
+namespace: measure.ontology
+def: "substitutions per site." []
+is_a: ME:0000294 ! Units not in UO
+is_a: UO:0000186
+
 [Typedef]
 id: data_type
 

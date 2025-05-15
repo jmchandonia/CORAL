@@ -356,6 +356,7 @@
   *Amount (Float, substance unit)
   *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
   *Relative Evolutionary Divergence (Float, +dimensionless unit)
+  *Jukes-Cantor Distance (Float, +substitutions per site)
   Binary (Boolean)
     *Growth
     *Activity
@@ -507,6 +508,8 @@
   fold concentration
     is_a: UO:0000051
   relative ion intensity unit
+    is_a: UO:0000186
+  substitutions per site
     is_a: UO:0000186
 
 -Molecules not in ChEBI:
