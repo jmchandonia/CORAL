@@ -1843,7 +1843,10 @@ class BrickVariable:
         type_def = services.typedef.get_type_def_with_upk_id(term_id)
         index_def = services.indexdef.get_type_def(type_def.name)
         query = Query(index_def)
-        query.linked_up_to_item_with_properties(properties)
+        try:
+            query.linked_up_to_item_with_properties(properties)
+        except Exception as e:
+            return False
         return query.find().size > 0
         
     def __eq__(self,val):
@@ -2159,6 +2162,8 @@ class BrickTemplateProvider:
 
     def upgrade_templates(self):
         custom_template_id = 1
+        if 'types' not in self.__templates:
+            return
         for btype in self.__templates['types']:
             data_type_term_id = btype['data_type']
             data_type_term = services.term_provider.get_term(data_type_term_id)

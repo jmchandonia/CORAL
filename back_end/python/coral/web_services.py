@@ -69,9 +69,10 @@ TMP_DIR =  os.path.join(cns['_DATA_DIR'], 'tmp')
 IMAGE_DIR =  os.path.join(cns['_DATA_DIR'], 'images')
 THUMBS_DIR =  os.path.join(IMAGE_DIR, 'thumbs')
 
-_PERSONNEL_PARENT_TERM_ID = 'ENIGMA:0000029'
-_CAMPAIGN_PARENT_TERM_ID = 'ENIGMA:0000002'
-_PROCESS_PARENT_TERM_ID = 'PROCESS:0000001'
+_PERSONNEL_PARENT_TERM_ID = cns['_PERSONNEL_PARENT_TERM_ID']
+_CAMPAIGN_PARENT_TERM_ID = cns['_CAMPAIGN_PARENT_TERM_ID']
+_PROCESS_PARENT_TERM_ID = cns['_PROCESS_PARENT_TERM_ID']
+_ROOT_OBJ = cns['_ROOT_OBJ']
 
 _UPLOAD_TEMPLATE_PREFIX = 'utp_'
 _UPLOAD_DATA_STRUCTURE_PREFIX = 'uds_'
@@ -192,10 +193,12 @@ def test_brick_upload():
 
     br = _create_brick(brick_ds, brick_data)        
 
-    # process_term = _get_term(brick_ds['process'])
-    # person_term = _get_term(brick_ds['personnel'])
-    # campaign_term = _get_term(brick_ds['campaign'])
-    # input_obj_ids = br.get_fk_refs(process_ufk=True)
+    process_term = _get_term(brick_ds['process'])
+    person_term = _get_term(brick_ds['personnel'])
+    campaign_term = False
+    if _CAMPAIGN_PARENT_TERM_ID is not False:
+        campaign_term = _get_term(brick_ds['campaign'])
+    input_obj_ids = br.get_fk_refs(process_ufk=True)
 
     s = br.to_json()
     s = pprint.pformat(json.loads(s))
@@ -403,7 +406,10 @@ def get_personnel_oterms():
 
 @app.route("/coral/get_campaign_oterms", methods=['GET'])
 def get_campaign_oterms():
-    return _get_oterms(svs['ontology'].all,parent_term_ids=[_CAMPAIGN_PARENT_TERM_ID])
+    if _CAMPAIGN_PARENT_TERM_ID is False:
+        return []
+    else:
+        return _get_oterms(svs['ontology'].all,parent_term_ids=[_CAMPAIGN_PARENT_TERM_ID])
 
 @app.route("/coral/get_process_oterms", methods=['GET'])
 def get_process_oterms():
@@ -453,7 +459,10 @@ def _get_oterms(ontology, term_ids=None,  parent_term_ids=None):
 def brick_type_templates():
     try:
         templates = svs['brick_template_provider'].templates
-        return _ok_response(templates['types'])
+        if 'types' in templates:
+            return _ok_response(templates['types'])
+        else:
+            return _ok_response([])
     except Exception as e:
         return _err_response(e, traceback=True)
 
@@ -720,7 +729,9 @@ def create_brick():
 
         process_term = _get_term(brick_ds['process'])
         person_term = _get_term(brick_ds['personnel'])
-        campaign_term = _get_term(brick_ds['campaign'])
+        campaign_term = False
+        if _CAMPAIGN_PARENT_TERM_ID is not False:
+            campaign_term = _get_term(brick_ds['campaign'])
         input_obj_ids = br.get_fk_refs(process_ufk=True)
 
         if (cns['_DEMO_MODE']):
@@ -1348,7 +1359,7 @@ def upload_csv():
 @auth_ro_required
 def get_core_type_names():
     type_def_names = svs['typedef'].get_type_names()
-    return _ok_response([name for name in type_def_names if name != 'ENIGMA'])
+    return _ok_response([name for name in type_def_names if name != _ROOT_OBJ])
 
 @app.route('/coral/get_provenance/<type_name>')
 @auth_required
@@ -1360,12 +1371,11 @@ def get_provenance(type_name):
 
     requires_processes = False
     # check if entity is "top-level" and requires no input processes
-    # TODO: remove specific checks for 'ENIGMA' and create is_root property
     for process_list in type_def.process_input_type_defs:
         if requires_processes:
             break
         for process in process_list:
-            if process != 'ENIGMA':
+            if process != __ROOT_OBJ:
                 requires_processes = True
                 break
     return _ok_response({'requires_processes': requires_processes})
@@ -1556,7 +1566,8 @@ def _create_brick(brick_ds, brick_data):
     is_heterogeneous = (len(brick_data_vars)>1)
     if is_heterogeneous:
         # must have "data variables type"
-        brick_properties.append({'type':{'id':'ME:0000293'},
+        data_variables_term_id = svs['ontology'].all.find_name('Data Variables Type').term_id
+        brick_properties.append({'type':{'id':data_varables_term_id},
                                  'units':None,
                                  'value':brick_ds['type']})
 
@@ -1745,7 +1756,7 @@ def coral_data_types():
     # Core types
     type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     for td in type_defs:
-        if td.name == 'ENIGMA': continue
+        if td.name == _ROOT_OBJ: continue
         res.append({
             'dataType': td.name, 
             'dataModel': td.name,
@@ -2073,7 +2084,7 @@ def _get_core_plot_data(search_data):
             q.is_output_of_process({prop_name: {operation: prop_value}})
             # hack to search all people in labs
             if operation == '=' and prop_name == 'person' and 'term' in criterion:
-                children = svs['ontology'].enigma.find_id(criterion['term']).children
+                children = svs['ontology'].project_specific_ontology.find_id(criterion['term']).children
                 for x in children:
                     q.is_output_of_process({prop_name: {operation: x.term_name}})
                     
@@ -2285,7 +2296,7 @@ def coral_search():
                 q.is_output_of_process({prop_name: {operation: prop_value}})
                 # hack to search all people in labs
                 if operation == '=' and prop_name == 'person' and 'term' in criterion:
-                    children = svs['ontology'].enigma.find_id(criterion['term']).children
+                    children = svs['ontology'].project_specific_ontology.find_id(criterion['term']).children
                     for x in children:
                         q.is_output_of_process({prop_name: {operation: x.term_name}})
                     
@@ -2432,8 +2443,10 @@ def coral_plot_types():
 def coral_report_plot_data(report_id):
     reports_map = {
         'report1': 'brick_types',
-        'report2': 'process_campaigns'
     }
+
+    if _CAMPAIGN_PARENT_TERM_ID is not False:
+        reports_map['report2'] = 'process_campaigns'
 
     try:
         report = getattr(svs['reports'], reports_map[report_id])
@@ -2486,12 +2499,13 @@ def coral_reports():
         {
             'name': 'Data Uploaded by Lab & Person',
             'id': 'process_persons'
-        },
-        {
+        }
+    ]
+    if _CAMPAIGN_PARENT_TERM_ID is not False:
+        reports.append({
             'name': 'Data Uploaded by Campaign',
             'id': 'process_campaigns'
-        }
-    ]        
+        })
     return _ok_response(reports)
 
 @app.route("/coral/reports/<id>", methods=['GET'])
@@ -2512,18 +2526,21 @@ def coral_report(id):
 def coral_filters():
     reports = svs['reports']
 
-    df_campaign = reports.process_campaigns.to_df()
-    df_persons = reports.process_persons.to_df()
-    res = [
+    res = []
+    if _CAMPAIGN_PARENT_TERM_ID is not False:
+        df_campaign = reports.process_campaigns.to_df()
+        res.append(
         {
-            'categoryName': 'ENIGMA Campaigns',
+            'categoryName': _ROOT_OBJ+' Campaigns',
             'items': _get_category_items(df_campaign, 'campaign' )
-        },
+        })
+    if _PERSONNEL_PARENT_TERM_ID is not False:
+        df_persons = reports.process_persons.to_df()
+        res.append(
         {
-            'categoryName': 'ENIGMA Labs/People',
+            'categoryName': _ROOT_OBJ+' Labs/People',
             'items': _get_category_items(df_persons, 'person')
-        },
-    ]
+        })
     # s = pprint.pformat(res)
     # return s
     return _ok_response(res)
@@ -2532,7 +2549,7 @@ def _get_category_items(process_stat_df, attr):
     term_ids = []
     for _, row in process_stat_df.sort_values('Term Name').iterrows():
         term_ids.append(row['Term ID'])
-    term_ids_hash = svs['ontology'].enigma.find_ids_hash(term_ids)
+    term_ids_hash = svs['ontology'].project_specific_ontology.find_ids_hash(term_ids)
     res = []
     # hack to sort labs before people:
     for term_id in sorted(term_ids,
@@ -2571,7 +2588,7 @@ def coral_type_stat():
     stat_type_items = []
     type_defs = svs['indexdef'].get_type_defs(category=TYPE_CATEGORY_STATIC)
     for td in type_defs:
-        if td.name == 'ENIGMA':
+        if td.name == _ROOT_OBJ:
             continue
         # sys.stderr.write('name '+td.name+'\n')
         stat_type_items.append(
@@ -2831,6 +2848,8 @@ def assign_xy_dynamic(nodes, usedPos):
 
 # use NetworkX to lay out nodes, spring layout
 def reposition_spring(nodes, edges, k):
+    if (len(nodes) < 2) or (len(edges) < 1):
+        return
     G = nx.Graph()
     G_fixed = []
     G_pos = {}
@@ -3041,7 +3060,7 @@ def coral_type_graph():
                 filterPersonnel.add(q['term'])                
                 filtering = True
                 # expand labs to all people in the lab
-                children = svs['ontology'].enigma.find_id(q['term']).children
+                children = svs['ontology'].project_specific_ontology.find_id(q['term']).children
                 for x in children:
                     filterPersonnel.add(x.term_id)
             else:
@@ -3053,7 +3072,7 @@ def coral_type_graph():
        # add cachekey to cache for front end if it doesn't already exist
        if 'cacheKey' not in cache[cacheKey]:
            cache.set(cacheKey, {**cache[cacheKey], 'cacheKey': cacheKey})
-       return  _ok_response(cache[cacheKey])
+        # return  _ok_response(cache[cacheKey])
     else:
        sys.stderr.write('cache miss '+cacheKey+'\n')
 
@@ -3084,13 +3103,18 @@ def coral_type_graph():
                     'name': td.name,
                     'dataModel': td.name,
                     'dataType': td.name,
-                    'count': count,
+                    'count': count
                 }
             )
             # sys.stderr.write('added static node '+td.name+'\n')
             nodeMap[td.name] = nodes[index]
             nodeMap[index] = nodes[index]
             index+=1
+
+        # hack for one data type:
+        if (len(nodes)==1):
+            nodes[0]['x'] = 0
+            nodes[0]['isParent'] = True
 
     # Dynamic types and processes
     rows = arango_service.get_process_type_count(filterCampaigns=filterCampaigns, filterPersonnel=filterPersonnel)
@@ -3377,7 +3401,7 @@ def coral_type_graph():
         for i in unused:
             if not 'isParent' in nodes[i]:
                 nodes[i]['unused'] = True
-                # sys.stderr.write('unused node '+nodes[i]['name']+'\n')
+                sys.stderr.write('unused node '+nodes[i]['name']+'\n')
 
     # cluster ddt nodes from same sdt
     clusterNodes = []
@@ -3513,6 +3537,11 @@ def coral_type_graph():
             if 'unused' in n:
                 nodes.remove(n)
 
+    # hack for one data type:
+    if (len(nodes)==1):
+        if 'isParent' in nodes[0]:
+            del nodes[0]['isParent']                
+
     # combine everything and return graph
     res = {
         'nodes' : nodes,
@@ -3520,7 +3549,8 @@ def coral_type_graph():
         'cacheKey': cacheKey
     }
 
-    # s = pprint.pformat(res,width=999)
+    s = pprint.pformat(res,width=999)
+    sys.stderr.write('returning '+s)
     # return s
     cache[cacheKey] = res
     return  _ok_response(res)
@@ -3621,17 +3651,29 @@ def _to_process_docs(rows):
                 'description': description
             })
 
-        process_docs.append({
-            'process': {
-                'id':process['id'], 
-                'process': process['process_term_name'], 
-                'person': process['person_term_name'], 
-                'campaign': process['campaign_term_name'], 
-                'date_start' : process['date_start'], 
-                'date_end': process['date_end']
-            },
-            'docs' : docs
-        })
+        if _CAMPAIGN_PARENT_TERM_ID is False:
+            process_docs.append({
+                'process': {
+                    'id':process['id'], 
+                    'process': process['process_term_name'], 
+                    'person': process['person_term_name'], 
+                    'date_start' : process['date_start'], 
+                    'date_end': process['date_end']
+                },
+                'docs' : docs
+            })
+        else:
+            process_docs.append({
+                'process': {
+                    'id':process['id'], 
+                    'process': process['process_term_name'], 
+                    'person': process['person_term_name'], 
+                    'campaign': process['campaign_term_name'], 
+                    'date_start' : process['date_start'], 
+                    'date_end': process['date_end']
+                },
+                'docs' : docs
+            })
     return process_docs
 
 
@@ -3645,7 +3687,7 @@ def coral_microtypes():
         # we want these sorted into tree
         term_dict = dict()
         for term in term_collection:
-            # sys.stderr.write(term.term_id+"\n")
+            sys.stderr.write(term.term_id+"\n")
             term_dict[term.term_id] = term
         
         # store children for each term in a dict
@@ -3658,7 +3700,7 @@ def coral_microtypes():
             for parent in term.parent_ids:
                 try:
                     children[parent].append(term.term_id)
-                except KeyError: # requrired because some parents don't exist
+                except KeyError: # required because some parents don't exist
                     pass
 
         # next, print any "root" terms:

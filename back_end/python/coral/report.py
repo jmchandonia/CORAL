@@ -16,7 +16,7 @@ class ReportBuilderService:
 
     @property
     def process_campaigns(self):
-        return self.__process_term_stat_report( 'Data Uploaded by Campaign', 'campaign' )
+        return self.__process_term_stat_report( 'Data Uploaded by Lab & Person', 'person' )
 
     @property
     def brick_types(self):
@@ -115,7 +115,7 @@ class ReportBuilderService:
             term = term_count[0]
             parent_ids = term.parent_ids
             for parent in parent_ids:
-                if parent != 'ENIGMA:0000029':
+                if parent != services._PERSONNEL_PARENT_TERM_ID:
                     if parent in extraCounts:
                         extraCounts[parent] += term_count[1]
                     else:
@@ -203,8 +203,7 @@ class PlainReport:
         
         names = self.__prop_names.copy()
         names.append(self.__prop_count_name)
-        return pd.DataFrame(rows)[names]
-
+        return pd.DataFrame(rows, columns=names)
 
 class GroupReport:
     def __init__(self, report_name, group_prop_names, group_prop_count_name, prop_names, prop_count_name, group_items):

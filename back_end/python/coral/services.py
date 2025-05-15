@@ -53,6 +53,11 @@ _PLOT_TYPES_FILE = os.path.join(__PACKAGE_DIR, 'var/' + _WEB_SERVICE['plot_types
 
 _DEMO_MODE = __CONFIG['WebService']['demo_mode']
 
+_ROOT_OBJ = __CONFIG['Workspace']['root_obj']
+_PERSONNEL_PARENT_TERM_ID = __CONFIG['Workspace']['personnel_parent_term_id']
+_CAMPAIGN_PARENT_TERM_ID = __CONFIG['Workspace']['campaign_parent_term_id']
+_PROCESS_PARENT_TERM_ID = __CONFIG['Workspace']['process_parent_term_id']
+
 arango_service = None
 
 def _init_db_connection():

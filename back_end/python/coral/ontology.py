@@ -6,7 +6,6 @@ import sys
 from .utils import to_var_name
 from . import services
 
-
 OTERM_TYPE = 'OTerm'
 TYPE_CATEGORY_ONTOLOGY = ''
 OTERM_COLLECTION_NAME = TYPE_CATEGORY_ONTOLOGY + OTERM_TYPE
@@ -287,8 +286,8 @@ class OntologyService:
         return Ontology(self.__arango_service, 'dtype')
 
     @property
-    def enigma(self):
-        return Ontology(self.__arango_service, 'enigma')
+    def project_specific_ontology(self):
+        return Ontology(self.__arango_service, services._ROOT_OBJ.lower())
 
     @property
     def all(self):
@@ -465,7 +464,7 @@ class Ontology:
         aql_bind = {}
         # aql_filter = 'x.is_microtype == true'
         # we want parents also, so hack for now:
-        aql_filter = 'x.ontology_id == "enigma" || x.ontology_id == "context_measurement"'
+        aql_filter = 'x.ontology_id == "'+services._ROOT_OBJ.lower()+'" || x.ontology_id == "context_measurement"'
         mtc = self.__find_terms(aql_filter, aql_bind, size=size)
 
         # filter to include only microtypes and parents of microtypes.

@@ -57,7 +57,11 @@ class DataProvider:
             '_USERS': services._USERS,
             '_GOOGLE_RECAPTCHA_SECRET': services._GOOGLE_RECAPTCHA_SECRET,
             '_COORDS_CRITERIA': services._COORDS_CRITERIA,
-            '_DEMO_MODE': services._DEMO_MODE
+            '_DEMO_MODE': services._DEMO_MODE,
+            '_ROOT_OBJ': services._ROOT_OBJ,
+            '_PERSONNEL_PARENT_TERM_ID': services._PERSONNEL_PARENT_TERM_ID,
+            '_CAMPAIGN_PARENT_TERM_ID': services._CAMPAIGN_PARENT_TERM_ID,
+            '_PROCESS_PARENT_TERM_ID': services._PROCESS_PARENT_TERM_ID
         }
 
 class GenericsProvider:
