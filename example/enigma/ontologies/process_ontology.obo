@@ -394,5 +394,12 @@ property_value: is_hidden "true" xsd:boolean
 def: "Add Genome." []
 is_a: PROCESS:0000001 ! Process
 
+[Term]
+id: PROCESS:0000051
+name: Copy Data
+namespace: process.ontology
+def: "Copy Data." []
+is_a: PROCESS:0000001 ! Process
+
 [Typedef]
 id: is_a
