@@ -1227,6 +1227,13 @@ namespace: enigma.ontology
 def: "Ying Fu." []
 is_a: ENIGMA:0000090 ! Zhou Lab
 
+[Term]
+id: ENIGMA:0000169
+name: Zac Cooper
+namespace: enigma.ontology
+def: "Zac Cooper." []
+is_a: ENIGMA:0000081 ! Stahl Lab
+
 [Typedef]
 id: is_a
 name: is_a
