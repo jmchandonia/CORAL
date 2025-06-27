@@ -311,6 +311,7 @@
       Sequencing Technology:
         Illumina
         Pacbio
+        Oxford Nanopore
       GC content
       *Strand:
         Forward

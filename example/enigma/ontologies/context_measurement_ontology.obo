@@ -4925,6 +4925,13 @@ def: "substitutions per site." []
 is_a: ME:0000294 ! Units not in UO
 is_a: UO:0000186
 
+[Term]
+id: ME:0000474
+name: Oxford Nanopore
+namespace: measure.ontology
+def: "Oxford Nanopore." []
+is_a: ME:0000116 ! Sequencing Technology
+
 [Typedef]
 id: data_type
 
