@@ -43,7 +43,7 @@ if ($obo) {
 else {
     # create from scratch
     $ont = OBO::Core::Ontology->new();
-    $ont->saved_by("jmc");
+    $ont->saved_by(" jmc");
     my $lcp = lc($prefix);
     $ont->id($lcp);
 
@@ -402,6 +402,6 @@ foreach $term (@terms) {
 
 # version it with today's date
 my $today = strftime('%Y-%m-%d', localtime);
-$ont->data_version($today);
+$ont->data_version(" ".$today);
 
 $ont->export('obo', \*STDOUT);

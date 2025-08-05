@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version:2025-05-08
+data-version: 2025-08-05
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -4680,6 +4680,466 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Collected." []
 is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000485
+name: Soil Type
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Soil Type." []
+xref: ORef: COMO:0000485
+is_a: COMO:0000209 ! Physical Context
+
+[Term]
+id: COMO:0000486
+name: Clay
+namespace: measure.ontology
+def: "Clay." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000487
+name: Sand
+namespace: measure.ontology
+def: "Sand." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000488
+name: Silt
+namespace: measure.ontology
+def: "Silt." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000489
+name: Rock
+namespace: measure.ontology
+def: "Rock." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000490
+name: Humus
+namespace: measure.ontology
+def: "Humus." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000491
+name: Soil
+namespace: measure.ontology
+def: "Soil." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000492
+name: Soil Micropore
+namespace: measure.ontology
+def: "Soil Micropore." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000493
+name: Soil Macropore
+namespace: measure.ontology
+def: "Soil Macropore." []
+is_a: COMO:0000485 ! Soil Type
+
+[Term]
+id: COMO:0000494
+name: Equilibrium Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Equilibrium Constant." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000495
+name: Rate Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Rate Constant." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000496
+name: Specific Oxidation Rate
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Specific Oxidation Rate." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000497
+name: Precipitation Type
+namespace: measure.ontology
+def: "Precipitation Type." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000498
+name: Rain
+namespace: measure.ontology
+def: "Rain." []
+is_a: COMO:0000497 ! Precipitation Type
+
+[Term]
+id: COMO:0000499
+name: Snow
+namespace: measure.ontology
+def: "Snow." []
+is_a: COMO:0000497 ! Precipitation Type
+
+[Term]
+id: COMO:0000500
+name: Irrigation
+namespace: measure.ontology
+def: "Irrigation." []
+is_a: COMO:0000497 ! Precipitation Type
+
+[Term]
+id: COMO:0000501
+name: Plant Organ
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Plant Organ." []
+xref: ORef: COMO:0000501
+is_a: COMO:0000039 ! Biological Context
+
+[Term]
+id: COMO:0000502
+name: Plant Root
+namespace: measure.ontology
+def: "Plant Root." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000503
+name: Plant Stem
+namespace: measure.ontology
+def: "Plant Stem." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000504
+name: Plant Leaf
+namespace: measure.ontology
+def: "Plant Leaf." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000505
+name: Plant Canopy
+namespace: measure.ontology
+def: "Plant Canopy." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000506
+name: Plant Branch
+namespace: measure.ontology
+def: "Plant Branch." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000507
+name: Plant Shoot
+namespace: measure.ontology
+def: "Plant Shoot." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000508
+name: Plant Grain
+namespace: measure.ontology
+def: "Plant Grain." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000509
+name: Plant Stalk
+namespace: measure.ontology
+def: "Plant Stalk." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000510
+name: Plant Sheath
+namespace: measure.ontology
+def: "Plant Sheath." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000511
+name: Plant Husk
+namespace: measure.ontology
+def: "Plant Husk." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000512
+name: Plant Nodule
+namespace: measure.ontology
+def: "Plant Nodule." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000513
+name: Plant Ear
+namespace: measure.ontology
+def: "Plant Ear." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000514
+name: Plant Reserve
+namespace: measure.ontology
+def: "Plant Reserve." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000515
+name: Plant Litter
+namespace: measure.ontology
+def: "Plant Litter." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000516
+name: Growth Respiration Efficiency
+namespace: measure.ontology
+def: "Growth Respiration Efficiency." []
+is_a: COMO:0000082 ! Growth Efficiency
+
+[Term]
+id: COMO:0000517
+name: Growth Yield
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Growth Yield." []
+is_a: COMO:0000078 ! Growth Parameter
+
+[Term]
+id: COMO:0000518
+name: Nitrifier
+namespace: measure.ontology
+def: "Nitrifier." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000519
+name: Denitrifier
+namespace: measure.ontology
+def: "Denitrifier." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000520
+name: Ammonia Oxidizer
+namespace: measure.ontology
+def: "Ammonia Oxidizer." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000521
+name: Nitrite Oxidizer
+namespace: measure.ontology
+def: "Nitrite Oxidizer." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000522
+name: Methanotroph
+namespace: measure.ontology
+def: "Methanotroph." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000523
+name: Methanogen
+namespace: measure.ontology
+def: "Methanogen." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000524
+name: Acetotropic Methanogen
+namespace: measure.ontology
+def: "Acetotropic Methanogen." []
+is_a: COMO:0000523 ! Methanogen
+
+[Term]
+id: COMO:0000525
+name: Hydrogenotrophic Methanogen
+namespace: measure.ontology
+def: "Hydrogenotrophic Methanogen." []
+is_a: COMO:0000523 ! Methanogen
+
+[Term]
+id: COMO:0000526
+name: Heterotroph
+namespace: measure.ontology
+def: "Heterotroph." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000527
+name: Autotroph
+namespace: measure.ontology
+def: "Autotroph." []
+is_a: COMO:0000104 ! Ecology
+
+[Term]
+id: COMO:0000528
+name: Diffusivity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Diffusivity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000529
+name: Chemical Uptake
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Chemical Uptake." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000530
+name: Chemical Emission
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Chemical Emission." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000531
+name: Porosity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Porosity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000532
+name: Tortuosity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Tortuosity." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000533
+name: Heat Content
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Heat Content." []
+is_a: COMO:0000134 ! Heat
+
+[Term]
+id: COMO:0000534
+name: Heat Release
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Heat Release." []
+is_a: COMO:0000134 ! Heat
+
+[Term]
+id: COMO:0000535
+name: Heat Flux
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Heat Flux." []
+is_a: COMO:0000134 ! Heat
+
+[Term]
+id: COMO:0000536
+name: Area
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Area." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000537
+name: Absence
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Absence." []
+is_a: COMO:0000141 ! Binary
+
+[Term]
+id: COMO:0000538
+name: Precipitation Rate
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Precipitation Rate." []
+is_a: COMO:0000120 ! Measurement
 
 [Typedef]
 id: data_type

@@ -110,6 +110,15 @@
       Variably Saturated Zone
       Saturated Zone
         alias: Phreatic Zone
+    Soil Type:
+      Clay
+      Sand
+      Silt
+      Rock
+      Humus
+      Soil
+      Soil Micropore
+      Soil Macropore
   Chemical Context:
     **Molecule
       *-Molecule from list (ORef: CHEBI:24431)
@@ -126,6 +135,9 @@
       delta-G (Float, energy unit)
       delta-H (Float, energy unit)
     Specific Activity (Float)
+    Equilibrium Constant (Float)
+    Rate Constant (Float)
+    Specific Oxidation Rate (Float)
     Wavelength (Float, length unit)
     *State (String)
     *Detection Limit (Float)
@@ -137,6 +149,10 @@
     Redox
       Reduction
       Oxidation
+    Precipitation Type
+      Rain
+      Snow
+      Irrigation
   Biological Context:
     Cell
       Cell Morphology
@@ -168,6 +184,21 @@
     **Plant Transformant
       *-Plant Transformant Name (String)
       *-Plant Transformant ID (Ref: DA:0000027.Plant_Transformant.name)
+    Plant Organ:
+      Plant Root
+      Plant Stem
+      Plant Leaf
+      Plant Canopy
+      Plant Branch
+      Plant Shoot
+      Plant Grain
+      Plant Stalk
+      Plant Sheath
+      Plant Husk
+      Plant Nodule
+      Plant Ear
+      Plant Reserve
+      Plant Litter
     *OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
@@ -229,6 +260,8 @@
       Doubling Time (Float, time unit)
       *Time Since Inoculation (Float, time unit)
       Growth Efficiency
+        Growth Respiration Efficiency
+      Growth Yield (Float)
     Growth Stage:
       Preincubation
       Inoculation
@@ -297,6 +330,16 @@
         Dispersal Limitation
         Homogenizing Dispersal
         Undominated
+      Nitrifier
+      Denitrifier
+      Ammonia Oxidizer
+      Nitrite Oxidizer
+      Methanotroph
+      Methanogen
+        Acetotropic Methanogen
+        Hydrogenotrophic Methanogen
+      Heterotroph
+      Autotroph
     Sequencing
       Read
       Read Type:
@@ -332,6 +375,7 @@
   *pH (Float, ph, mV)
   Time Elapsed (Float, time unit)
   *Temperature (Float, temperature unit)
+  *Diffusivity (Float)
   *Conductivity (Float, electrical conduction unit)
     *Specific Conductivity
   *Salinity (Float, salinity unit)
@@ -348,9 +392,17 @@
   Hybridization Intensity (Float)
   Expression Level (Float)
   *Charge (Float, electric potential difference unit, +percent)
+  *Chemical Uptake (Float)
+  *Chemical Emission (Float)
   Enzyme Activity (Float)
   Absorbance (Float)
+  Porosity (Float)
+  Tortuosity (Float)
   Heat (Float)
+    Heat Content (Float)
+    Heat Release (Float)
+    Heat Flux (Float)
+  *Area (Float)
   *Mass (Float, mass unit)
   *Fitness Score (Float, +log ratio unit)
   Genetic Interaction Score (Float)
@@ -365,6 +417,7 @@
     *Growth
     *Activity
     *Presence
+    *Absence
     *Essentiality
     *Above
     *Below
@@ -380,6 +433,7 @@
     *Gust Speed
   *Solar Radiation (Float, irradiance unit)
   *Rainfall (Float, length unit)
+  *Precipitation Rate (Float)
   *Wind Direction (Float, degree)
   *Relative Humidity (Float, ratio)
   *Error Range (Float)
