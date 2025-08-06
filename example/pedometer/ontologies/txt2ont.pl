@@ -21,8 +21,8 @@ my @termsFound = ();
 
 # object holding the units ontology
 my $parser = OBO::Parser::OBOParser->new();
-my $uo = $parser->work("/home/coral/prod/data_import/ontologies/uo.obo");
-my $uo2 = $parser->work("/home/coral/prod/data_import/ontologies/context_measurement_ontology.obo");
+my $uo = $parser->work("./uo.obo");
+my $uo2 = $parser->work("./context_measurement_ontology.obo");
 
 # object holding the whole ontology
 my $ont;

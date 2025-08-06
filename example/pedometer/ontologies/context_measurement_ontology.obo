@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-05
+data-version: 2025-08-06
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -5140,6 +5140,28 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Precipitation Rate." []
 is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000539
+name: Dew Point
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000005" xsd:string
+def: "Dew Point." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000540
+name: inHg
+namespace: measure.ontology
+def: "inHg." []
+is_a: COMO:0000294 ! Units not in UO
+is_a: UO:0000109
 
 [Typedef]
 id: data_type

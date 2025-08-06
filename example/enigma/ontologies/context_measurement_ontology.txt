@@ -329,6 +329,7 @@
   *pH (Float, ph, mV)
   Time Elapsed (Float, time unit)
   *Temperature (Float, temperature unit)
+  *Dew Point (Float, temperature unit)
   *Conductivity (Float, electrical conduction unit)
     *Specific Conductivity
   *Salinity (Float, salinity unit)
@@ -461,6 +462,8 @@
     is_a: UO:0000262
   pound per square inch
     alias: PSI
+    is_a: UO:0000109
+  inHg
     is_a: UO:0000109
   torr
     is_a: UO:0000109

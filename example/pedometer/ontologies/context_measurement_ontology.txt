@@ -375,6 +375,7 @@
   *pH (Float, ph, mV)
   Time Elapsed (Float, time unit)
   *Temperature (Float, temperature unit)
+  *Dew Point (Float, temperature unit)
   *Diffusivity (Float)
   *Conductivity (Float, electrical conduction unit)
     *Specific Conductivity
@@ -496,6 +497,8 @@
   millisiemen per centimeter
     alias: millisiemen per cm
     is_a: UO:0000262
+  inHg
+    is_a: UO:0000109
   torr
     is_a: UO:0000109
   resistivity unit
