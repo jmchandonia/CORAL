@@ -60,6 +60,7 @@
     High
     Low
     Nearest
+    Cumulative
     Variable Name (String)
     Variable Type
       -Data Variables Type (ORef: DA:0000000)

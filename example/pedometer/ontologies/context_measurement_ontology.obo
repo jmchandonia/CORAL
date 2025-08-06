@@ -5159,9 +5159,16 @@ is_a: COMO:0000120 ! Measurement
 id: COMO:0000540
 name: inHg
 namespace: measure.ontology
-def: "inHg." []
+def: "inches of mercury." []
 is_a: COMO:0000294 ! Units not in UO
 is_a: UO:0000109
+
+[Term]
+id: COMO:0000541
+name: Cumulative
+namespace: measure.ontology
+def: "Cumulative." []
+is_a: COMO:0000018 ! Mathematical Context
 
 [Typedef]
 id: data_type

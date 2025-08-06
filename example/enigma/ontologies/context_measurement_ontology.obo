@@ -4954,6 +4954,13 @@ def: "inHg." []
 is_a: ME:0000294 ! Units not in UO
 is_a: UO:0000109
 
+[Term]
+id: ME:0000477
+name: Cumulative
+namespace: measure.ontology
+def: "Cumulative." []
+is_a: ME:0000018 ! Mathematical Context
+
 [Typedef]
 id: data_type
 
