@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-06
+data-version: 2025-08-08
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -5169,6 +5169,64 @@ name: Cumulative
 namespace: measure.ontology
 def: "Cumulative." []
 is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000542
+name: Michaelis Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Michaelis Constant." []
+is_a: COMO:0000495 ! Rate Constant
+
+[Term]
+id: COMO:0000543
+name: Catalytic Rate Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Catalytic Rate Constant." []
+is_a: COMO:0000495 ! Rate Constant
+
+[Term]
+id: COMO:0000544
+name: Dissociation Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Dissociation Constant." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000545
+name: Inhibition Constant
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Inhibition Constant." []
+is_a: COMO:0000544 ! Dissociation Constant
+
+[Term]
+id: COMO:0000546
+name: Fluorescence
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000314" xsd:string
+def: "Fluorescence." []
+is_a: COMO:0000120 ! Measurement
 
 [Typedef]
 id: data_type
