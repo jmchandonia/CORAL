@@ -330,6 +330,7 @@
   *pH (Float, ph, mV)
   Time Elapsed (Float, time unit)
   *Temperature (Float, temperature unit)
+  *Fluorescence (Float, +relative fluorescence unit)
   *Dew Point (Float, temperature unit)
   *Conductivity (Float, electrical conduction unit)
     *Specific Conductivity

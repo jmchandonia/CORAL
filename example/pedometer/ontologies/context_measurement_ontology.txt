@@ -67,6 +67,7 @@
     Dimension
     +Numerator
     +Denominator
+    Angle
   Physical Context
     *+Location
       *Latitude (Float, degree)
@@ -142,7 +143,10 @@
       Catalytic Rate Constant (Float)
     Dissociation Constant (Float)
       Inhibition Constant (Float)
+    Gapon Selectivity Coefficient (Float)
     Specific Oxidation Rate (Float)
+    Solubility Coefficient (Float)
+    Viscosity (Float)
     Wavelength (Float, length unit)
     *State (String)
     *Detection Limit (Float)
@@ -204,6 +208,7 @@
       Plant Ear
       Plant Reserve
       Plant Litter
+      Plant Cotyledon
     *OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
@@ -401,6 +406,7 @@
   *Charge (Float, electric potential difference unit, +percent)
   *Chemical Uptake (Float)
   *Chemical Emission (Float)
+  *Chemical Flux (Float)
   Enzyme Activity (Float)
   Absorbance (Float)
   Porosity (Float)
@@ -434,11 +440,13 @@
     *Partial Pressure
     *Air Pressure
     *Water Pressure
+    *Vapor Pressure
   *Turbidity (Float, +turbidity unit)
   *Sequence (String)
   *Wind Speed (Float, speed/velocity unit)
     *Gust Speed
   *Solar Radiation (Float, irradiance unit)
+  *Albedo (Float, ratio)
   *Rainfall (Float, length unit)
   *Precipitation Rate (Float)
   *Wind Direction (Float, degree)
@@ -455,6 +463,7 @@
 *Statistic:
   is_a: COMO:0000001
   *Average (Float)
+    alias: Mean
   Difference (Float)
   *Standard Deviation (Float)
   *Standard Error (Float)

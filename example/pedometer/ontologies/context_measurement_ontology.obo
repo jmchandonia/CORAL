@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-08
+data-version: 2025-08-13
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -1505,6 +1505,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Average." []
+synonym: "Mean" EXACT []
 is_a: COMO:0000146 ! Statistic
 
 [Term]
@@ -5226,6 +5227,94 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000314" xsd:string
 def: "Fluorescence." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000547
+name: Angle
+namespace: measure.ontology
+def: "Angle." []
+is_a: COMO:0000018 ! Mathematical Context
+
+[Term]
+id: COMO:0000548
+name: Gapon Selectivity Coefficient
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Gapon Selectivity Coefficient." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000549
+name: Solubility Coefficient
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Solubility Coefficient." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000550
+name: Viscosity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Viscosity." []
+is_a: COMO:0000026 ! Chemical Context
+
+[Term]
+id: COMO:0000551
+name: Plant Cotyledon
+namespace: measure.ontology
+def: "Plant Cotyledon." []
+is_a: COMO:0000501 ! Plant Organ
+
+[Term]
+id: COMO:0000552
+name: Chemical Flux
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Chemical Flux." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000553
+name: Vapor Pressure
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000109" xsd:string
+def: "Vapor Pressure." []
+is_a: COMO:0000181 ! Pressure
+
+[Term]
+id: COMO:0000554
+name: Albedo
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "Albedo." []
 is_a: COMO:0000120 ! Measurement
 
 [Typedef]

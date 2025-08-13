@@ -4961,6 +4961,20 @@ namespace: measure.ontology
 def: "Cumulative." []
 is_a: ME:0000018 ! Mathematical Context
 
+[Term]
+id: ME:0000478
+name: Fluorescence
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000314" xsd:string
+def: "Fluorescence." []
+is_a: ME:0000120 ! Measurement
+
 [Typedef]
 id: data_type
 
