@@ -8,6 +8,7 @@ PEDOMETER
       Romy Chakraborty
     Mukhopadhyay Lab
       Aindrila Mukhopadhyay
+      Thomas Eng
     Zhalnina Lab
       Kateryna Zhalnina
     Eudes Lab
@@ -16,3 +17,5 @@ PEDOMETER
       Harshini Mukundan
     Chandonia Lab
       John-Marc Chandonia
+    Arkin Lab
+      Lauren Lui

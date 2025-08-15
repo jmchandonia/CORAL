@@ -21,6 +21,7 @@ Process
   -Sequencing
     16S Sequencing
     Shotgun Sequencing
+      -Shotgun Sequencing and Assembly
     Long Read Sequencing
   -Reads Processing
   Taxonomic Inference

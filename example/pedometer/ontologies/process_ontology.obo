@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version:2025-05-08
+data-version: 2025-08-15
 ontology:process
 date: 27:08:2018 15:37
 saved-by: jmc
@@ -322,6 +322,14 @@ name: Assay Plant Genotype
 namespace: process.ontology
 def: "Assay Plant Genotype." []
 is_a: PROCESS:0000003 ! Assay
+
+[Term]
+id: PROCESS:0000057
+name: Shotgun Sequencing and Assembly
+namespace: process.ontology
+property_value: is_hidden "true" xsd:boolean
+def: "Shotgun Sequencing and Assembly." []
+is_a: PROCESS:0000021 ! Shotgun Sequencing
 
 [Typedef]
 id: is_a

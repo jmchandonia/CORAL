@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version:2025-04-18
+data-version: 2025-08-15
 ontology:pedometer
 date: 17:12:2024 17:26
 saved-by: jmc
@@ -129,6 +129,27 @@ name: John-Marc Chandonia
 namespace: pedometer.ontology
 def: "John-Marc Chandonia." []
 is_a: PEDOMETER:0000015 ! Chandonia Lab
+
+[Term]
+id: PEDOMETER:0000017
+name: Arkin Lab
+namespace: pedometer.ontology
+def: "Arkin Lab." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
+
+[Term]
+id: PEDOMETER:0000018
+name: Lauren Lui
+namespace: pedometer.ontology
+def: "Lauren Lui." []
+is_a: PEDOMETER:0000017 ! Arkin Lab
+
+[Term]
+id: PEDOMETER:0000019
+name: Thomas Eng
+namespace: pedometer.ontology
+def: "Thomas Eng." []
+is_a: PEDOMETER:0000007 ! Mukhopadhyay Lab
 
 [Typedef]
 id: is_a
