@@ -178,6 +178,7 @@ while (<INFILE>) {
 	my @xrefs = split(/ or /,$scalarType);
 	$scalarType = "";
 	foreach my $xref (@xrefs) {
+	    $xref =~ 's/ //';
 	    if ($xref =~ /Ref:/) {
 		$term->xref_set_as_string("$xref");
 		if ($xref =~ /ORef:/) {
@@ -206,7 +207,7 @@ while (<INFILE>) {
     push @parents, $id;
 
     if ($isSelfRef) {
-	$term->xref_set_as_string("ORef: ".$term->id());
+	$term->xref_set_as_string("ORef:".$term->id());
 	$scalarType = "oterm_ref";
     }
 

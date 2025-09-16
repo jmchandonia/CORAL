@@ -1,0 +1,8 @@
+format-version: 1.4
+ontology: CHEBI_stub_module
+
+namespace-id-rule: CHEBI http://purl.obolibrary.org/obo/CHEBI_%s
+idspace: CHEBI http://purl.obolibrary.org/obo/CHEBI_
+
+[Term]
+id: CHEBI:24431

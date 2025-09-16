@@ -4,7 +4,7 @@
       *Time Series (Float, time unit)
       *Replicate Series (Int, +count unit)
     *Condition (String)
-      *-Condition ID (Ref: DA:0000045.Condition.name)
+      *-Condition ID (Ref:DA:0000045.Condition.name)
     *Method (String)
     *Algorithm Parameter (String)
     *Index (Int, +count unit)
@@ -18,7 +18,7 @@
       MIME type
     *Description (String)
     *Link (String)
-    Experimental Process (ORef: PROCESS:0000001)
+    Experimental Process (ORef:PROCESS:0000001)
     +Person
     +Campaign
     +Input
@@ -31,7 +31,7 @@
       +Biological Replicate
     +Subsample
     Protocol
-      Protocol ID (Ref: DA:0000073.Protocol.name)
+      Protocol ID (Ref:DA:0000073.Protocol.name)
     Database (String)
     *Availability (Boolean)
     *Usability (Boolean)
@@ -63,7 +63,7 @@
     Cumulative
     Variable Name (String)
     Variable Type
-      -Data Variables Type (ORef: DA:0000000)
+      -Data Variables Type (ORef:DA:0000000)
     Dimension
     +Numerator
     +Denominator
@@ -71,11 +71,11 @@
     *+Location
       *Latitude (Float, degree)
       *Longitude (Float, degree)
-      Continent (ORef: CONTINENT:0000001)
-      Country (ORef: COUNTRY:0000001)
+      Continent (ORef:CONTINENT:0000001)
+      Country (ORef:COUNTRY:0000001)
       +Region
-      +Biome (ORef: ENVO:01000254)
-      +Environmental Feature (ORef: ENVO:00002297)
+      +Biome (ORef:ENVO:01000254)
+      +Environmental Feature (ORef:ENVO:00002297)
       +US State
       State Plane Coordinate
         *Easting (Float, meter)
@@ -105,7 +105,7 @@
     Undisturbed
     Phase (String)
     Image
-      *Image ID (Ref: DA:0000074.Image.name)
+      *Image ID (Ref:DA:0000074.Image.name)
     *Geologic Zone:
       Vadose Zone
         alias: Unsaturated Zone
@@ -114,7 +114,7 @@
         alias: Phreatic Zone
   Chemical Context:
     **Molecule
-      *-Molecule from list (ORef: CHEBI:24431)
+      *-Molecule from list (ORef:CHEBI:24431)
       *-PubChem Molecule Name (String)
       *-Molecular Formula (String)
       *-InChIKey (String)
@@ -135,7 +135,7 @@
     *Molecular Weight (Float, +dalton)
     *Exact Mass (Float, +dalton)
     Reference Compound
-    *Isotope (ORef: CHEBI:24431)
+    *Isotope (ORef:CHEBI:24431)
     Redox
       Reduction
       Oxidation
@@ -164,20 +164,20 @@
     **Strain
       alias: Isolate
       *-Strain Name (String)
-      *-Strain ID (Ref: DA:0000062.Strain.name)
+      *-Strain ID (Ref:DA:0000062.Strain.name)
         alias: Isolate ID
     **OTU
       alias: Operational Taxonomic Unit
       OTU Name (String)
-      *-OTU ID (Ref: DA:0000063.OTU.Name)
+      *-OTU ID (Ref:DA:0000063.OTU.Name)
     *ESV (String)
       alias: Exact Sequence Variant
       alias: Unique Sequence Variant
       alias: Sub-OTU
     **Taxon
       Taxon Name (String)
-      *-Taxon ID (Ref: DA:0000037.Taxon.name)
-      *NCBI Taxon ID (ORef: NCBITaxon:1)
+      *-Taxon ID (Ref:DA:0000037.Taxon.name)
+      *NCBI Taxon ID (ORef:NCBITaxon:1)
     **Media
       *Media Name (String)
       Media Composition (String)
@@ -191,8 +191,8 @@
       *+Electron Donor
       *+Electron Acceptor
     **Gene
-      *-Gene ID (Ref: DA:0000040.Gene.gene_id)
-      *-Gene Name (Ref: DA:0000040.Gene.aliases)
+      *-Gene ID (Ref:DA:0000040.Gene.gene_id)
+      *-Gene Name (Ref:DA:0000040.Gene.aliases)
       *-Gene GI (Int)
       Homologous Gene
         Orthologous Gene
@@ -200,20 +200,20 @@
       Essential Gene
     Gene Annotation
     Genome
-      Genome ID (Ref: DA:0000039.Genome.name)
+      Genome ID (Ref:DA:0000039.Genome.name)
     Assembly
-      Assembly ID (Ref: DA:0000066.Assembly.name)
+      Assembly ID (Ref:DA:0000066.Assembly.name)
     Bin
-      Bin ID (Ref: DA:0000072.Bin.name)
+      Bin ID (Ref:DA:0000072.Bin.name)
     *+Protein
     Protein Annotation
-      KEGG Subsystem (ORef: KEGG)
-      TIGR Role (ORef: TIGR)
+      KEGG Subsystem (ORef:KEGG)
+      TIGR Role (ORef:TIGR)
       SEED Subsystem
         SEED Subsystem ID (String)
       Protein Domain
         Pfam Domain
-          Pfam Domain Accession (ORef: Pfam)
+          Pfam Domain Accession (ORef:Pfam)
     Operon
     Ribosome
     Growth Parameter
@@ -257,29 +257,29 @@
     Knockout
     Knockout Library
       Tn-Seq Library
-        *Tn-Seq Library Name (Ref: DA:0000060.TnSeq_Library.name)
+        *Tn-Seq Library Name (Ref:DA:0000060.TnSeq_Library.name)
         Tn-Seq Primers Model (String)
     Overexpression Library
       Dub-Seq Library
-        *Dub-Seq Library Name (Ref: DA:0000075.DubSeq_Library.name)
+        *Dub-Seq Library Name (Ref:DA:0000075.DubSeq_Library.name)
     Environment
       *Environmental Sample Location (String)
         alias: Well
         alias: Core
         alias: Borehole
-        *-Environmental Sample Location ID (Ref: DA:0000041.Location.name)
+        *-Environmental Sample Location ID (Ref:DA:0000041.Location.name)
           alias: Location ID
       *Environmental Sample
         *Environmental Sample Name (String)
-        *-Environmental Sample ID (Ref: DA:0000042.Sample.name)
+        *-Environmental Sample ID (Ref:DA:0000042.Sample.name)
       *Environmental Parameter
-        *-Environmental Chemical (ORef: CHEBI:24431)
-        *-Environmental Measurement (ORef: ME:0000120)
-      +Environment Type (ORef: MIxS:0000002)
-      +Environmental Material (ORef: ENVO:00010483)
+        *-Environmental Chemical (ORef:CHEBI:24431)
+        *-Environmental Measurement (ORef:ME:0000120)
+      +Environment Type (ORef:MIxS:0000002)
+      +Environmental Material (ORef:ENVO:00010483)
     *Community
       Community Name (String)
-      *-Community ID (Ref: DA:0000048.Community.name)
+      *-Community ID (Ref:DA:0000048.Community.name)
       Community Type:
         Isolate Community
         Environmental Community
@@ -301,7 +301,7 @@
         Single End Read
       *Read Set
         alias: Reads
-        *-Reads ID (Ref: DA:0000054.Reads.name)
+        *-Reads ID (Ref:DA:0000054.Reads.name)
       *Contig
       *Genomic Region
       Sequence Position
@@ -435,24 +435,24 @@
 
 -Internal ID:
   is_a: ME:0000001
-  -Internal Location ID (Ref: DA:0000041.Location.id)
-  -Internal Sample ID (Ref: DA:0000042.Sample.id)
-  -Internal Taxon ID (Ref: DA:0000037.Taxon.id)
-  -Internal OTU ID (Ref: DA:0000063.OTU.id)
-  -Internal Condition ID (Ref: DA:0000045.Condition.id)
-  -Internal Strain ID (Ref: DA:0000062.Strain.id)
-  -Internal Community ID (Ref: DA:0000048.Community.id)
-  -Internal Reads ID (Ref: DA:0000054.Reads.id)
-  -Internal Assembly ID (Ref: DA:0000066.Assembly.id)
-  -Internal Genome ID (Ref: DA:0000039.Genome.id)
-  -Internal Gene ID (Ref: DA:0000040.Gene.id)
-  -Internal TnSeq_Library ID (Ref: DA:0000060.TnSeq_Library.id)
-  -Internal Process ID (Ref: DA:0000061.Process.id)
-  -Internal Brick ID (Ref: DA:0000001.Brick.id)
-  -Internal Bin ID (Ref: DA:0000072.Bin.id)
-  -Internal Protocol ID (Ref: DA:0000073.Protocol.id)
-  -Internal Image ID (Ref: DA:0000074.Image.id)
-  -Internal DubSeq_Library ID (Ref: DA:0000075.DubSeq_Library.id)
+  -Internal Location ID (Ref:DA:0000041.Location.id)
+  -Internal Sample ID (Ref:DA:0000042.Sample.id)
+  -Internal Taxon ID (Ref:DA:0000037.Taxon.id)
+  -Internal OTU ID (Ref:DA:0000063.OTU.id)
+  -Internal Condition ID (Ref:DA:0000045.Condition.id)
+  -Internal Strain ID (Ref:DA:0000062.Strain.id)
+  -Internal Community ID (Ref:DA:0000048.Community.id)
+  -Internal Reads ID (Ref:DA:0000054.Reads.id)
+  -Internal Assembly ID (Ref:DA:0000066.Assembly.id)
+  -Internal Genome ID (Ref:DA:0000039.Genome.id)
+  -Internal Gene ID (Ref:DA:0000040.Gene.id)
+  -Internal TnSeq_Library ID (Ref:DA:0000060.TnSeq_Library.id)
+  -Internal Process ID (Ref:DA:0000061.Process.id)
+  -Internal Brick ID (Ref:DA:0000001.Brick.id)
+  -Internal Bin ID (Ref:DA:0000072.Bin.id)
+  -Internal Protocol ID (Ref:DA:0000073.Protocol.id)
+  -Internal Image ID (Ref:DA:0000074.Image.id)
+  -Internal DubSeq_Library ID (Ref:DA:0000075.DubSeq_Library.id)
 
 -Units not in UO:
   is_a: UO:0000000

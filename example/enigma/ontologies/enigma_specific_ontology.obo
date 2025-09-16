@@ -3,6 +3,7 @@ ontology:enigma
 date: 27:08:2018 15:16
 saved-by: jmc
 auto-generated-by: ONTO-PERL 1.45
+import: context_measurement_ontology.obo
 
 [Term]
 id: ENIGMA:0000000
@@ -29,7 +30,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "ENIGMA Campaign." []
-xref: ORef: ENIGMA:0000002
+xref: ORef:ENIGMA:0000002
 is_a: ENIGMA:0000001 ! ENIGMA
 
 [Term]
@@ -238,7 +239,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "ENIGMA Labs and Personnel." []
 synonym: "ENIGMA PI" EXACT []
-xref: ORef: ENIGMA:0000029
+xref: ORef:ENIGMA:0000029
 is_a: ENIGMA:0000001 ! ENIGMA
 
 [Term]

@@ -1,0 +1,32 @@
+format-version: 1.4
+ontology: UO_stub_module
+
+namespace-id-rule: UO http://purl.obolibrary.org/obo/UO_%s
+idspace: UO http://purl.obolibrary.org/obo/UO_
+
+[Term]
+id: UO:0000000
+
+[Term]
+id: UO:0000001
+
+[Term]
+id: UO:0000051
+
+[Term]
+id: UO:0000060
+
+[Term]
+id: UO:0000109
+
+[Term]
+id: UO:0000186
+
+[Term]
+id: UO:0000189
+
+[Term]
+id: UO:0000190
+
+[Term]
+id: UO:0000262

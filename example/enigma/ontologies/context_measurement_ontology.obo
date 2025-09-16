@@ -3,6 +3,8 @@ ontology:me
 date: 27:08:2018 15:13
 saved-by: jmc
 auto-generated-by: ONTO-PERL 1.45
+import: chebi_stub_module.obo
+import: uo_stub_module.obo
 
 [Term]
 id: ME:0000000
@@ -20,7 +22,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Root of all Context and Measurement Terms." []
-xref: ORef: ME:0000001
+xref: ORef:ME:0000001
 is_a: ME:0000000 ! term
 
 [Term]
@@ -32,7 +34,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Context describing experimental design." []
-xref: ORef: ME:0000002
+xref: ORef:ME:0000002
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -44,7 +46,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Context describing the purpose of a series." []
-xref: ORef: ME:0000003
+xref: ORef:ME:0000003
 is_a: ME:0000002 ! Experimental Context
 
 [Term]
@@ -231,7 +233,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microtypes that provide mathematical context." []
-xref: ORef: ME:0000018
+xref: ORef:ME:0000018
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -296,7 +298,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Describes the context of a molecule in a chemical reaction or experiment." []
-xref: ORef: ME:0000026
+xref: ORef:ME:0000026
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -447,7 +449,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Biological Context." []
-xref: ORef: ME:0000039
+xref: ORef:ME:0000039
 is_a: ME:0000001 ! Context
 
 [Term]
@@ -498,7 +500,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to link to ENIGMA strains by their official strain name/ID." []
 synonym: "Isolate ID" EXACT []
-xref: Ref: DA:0000062.Strain.name
+xref: Ref:DA:0000062.Strain.name
 is_a: ME:0000042 ! Strain
 
 [Term]
@@ -532,7 +534,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to link to defined ENIGMA taxa." []
-xref: Ref: DA:0000037.Taxon.name
+xref: Ref:DA:0000037.Taxon.name
 is_a: ME:0000045 ! Taxon
 
 [Term]
@@ -669,7 +671,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene name, e.g., dsrA." []
-xref: Ref: DA:0000040.Gene.aliases
+xref: Ref:DA:0000040.Gene.aliases
 is_a: ME:0000059 ! Gene
 
 [Term]
@@ -741,7 +743,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "KEGG Subsystem." []
-xref: ORef: KEGG
+xref: ORef:KEGG
 is_a: ME:0000067 ! Protein Annotation
 
 [Term]
@@ -753,7 +755,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "TIGR Role." []
-xref: ORef: TIGR
+xref: ORef:TIGR
 is_a: ME:0000067 ! Protein Annotation
 
 [Term]
@@ -797,7 +799,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Pfam Domain Accession." []
-xref: ORef: Pfam
+xref: ORef:Pfam
 is_a: ME:0000074 ! Pfam Domain
 
 [Term]
@@ -926,7 +928,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Taxonomic Level." []
-xref: ORef: ME:0000090
+xref: ORef:ME:0000090
 is_a: ME:0000039 ! Biological Context
 
 [Term]
@@ -946,7 +948,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain Change Effect." []
-xref: ORef: ME:0000092
+xref: ORef:ME:0000092
 is_a: ME:0000091 ! Strain Change
 
 [Term]
@@ -1043,7 +1045,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sample ID, chosen from list of valid ENIGMA samples." []
-xref: Ref: DA:0000042.Sample.name
+xref: Ref:DA:0000042.Sample.name
 is_a: ME:0000100 ! Environmental Sample
 
 [Term]
@@ -1075,7 +1077,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community Assembly Process." []
-xref: ORef: ME:0000105
+xref: ORef:ME:0000105
 is_a: ME:0000104 ! Ecology
 
 [Term]
@@ -1129,7 +1131,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Read Type." []
-xref: ORef: ME:0000112
+xref: ORef:ME:0000112
 is_a: ME:0000111 ! Sequencing
 
 [Term]
@@ -1162,7 +1164,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequencing Technology." []
-xref: ORef: ME:0000116
+xref: ORef:ME:0000116
 is_a: ME:0000111 ! Sequencing
 
 [Term]
@@ -1197,7 +1199,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Measurement." []
-xref: ORef: ME:0000120
+xref: ORef:ME:0000120
 is_a: ME:0000000 ! term
 is_a: ME:0000001 ! Context
 
@@ -1520,7 +1522,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Statistic." []
-xref: ORef: ME:0000146
+xref: ORef:ME:0000146
 is_a: ME:0000000 ! term
 is_a: ME:0000001 ! Context
 
@@ -1973,7 +1975,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strand of DNA" []
-xref: ORef: ME:0000186
+xref: ORef:ME:0000186
 is_a: ME:0000111 ! Sequencing
 
 [Term]
@@ -2001,7 +2003,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequence Type." []
-xref: ORef: ME:0000189
+xref: ORef:ME:0000189
 is_a: ME:0000111 ! Sequencing
 
 [Term]
@@ -2081,7 +2083,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Condition, chosen from list of defined experimental conditions in the Data Clearinghouse." []
-xref: Ref: DA:0000045.Condition.name
+xref: Ref:DA:0000045.Condition.name
 is_a: ME:0000006 ! Condition
 
 [Term]
@@ -2130,7 +2132,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Category of experimental process used to create a dataset." []
-xref: ORef: PROCESS:0000001
+xref: ORef:PROCESS:0000001
 is_a: ME:0000002 ! Experimental Context
 
 [Term]
@@ -2234,7 +2236,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Continent." []
-xref: ORef: CONTINENT:0000001
+xref: ORef:CONTINENT:0000001
 is_a: ME:0000210 ! Location
 
 [Term]
@@ -2246,7 +2248,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Country." []
-xref: ORef: COUNTRY:0000001
+xref: ORef:COUNTRY:0000001
 is_a: ME:0000210 ! Location
 
 [Term]
@@ -2269,7 +2271,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Biome." []
-xref: ORef: ENVO:01000254
+xref: ORef:ENVO:01000254
 is_a: ME:0000210 ! Location
 
 [Term]
@@ -2281,7 +2283,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Feature." []
-xref: ORef: ENVO:00002297
+xref: ORef:ENVO:00002297
 is_a: ME:0000210 ! Location
 
 [Term]
@@ -2347,7 +2349,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "OTU ID, chosen from the list of defined OTUs in the Data Clearinghouse." []
-xref: Ref: DA:0000063.OTU.Name
+xref: Ref:DA:0000063.OTU.Name
 is_a: ME:0000184 ! OTU
 
 [Term]
@@ -2361,7 +2363,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "NCBI Taxon, chosen from names in the NCBI taxonomy." []
-xref: ORef: NCBITaxon:1
+xref: ORef:NCBITaxon:1
 is_a: ME:0000045 ! Taxon
 
 [Term]
@@ -2374,7 +2376,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene, chosen from list of defined genes in the Data Clearinghouse." []
-xref: Ref: DA:0000040.Gene.gene_id
+xref: Ref:DA:0000040.Gene.gene_id
 is_a: ME:0000059 ! Gene
 
 [Term]
@@ -2386,7 +2388,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain Change Type." []
-xref: ORef: ME:0000227
+xref: ORef:ME:0000227
 is_a: ME:0000091 ! Strain Change
 
 [Term]
@@ -2400,7 +2402,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Well, borehole, or other defined ENIGMA location." []
 synonym: "Location ID" EXACT []
-xref: Ref: DA:0000041.Location.name
+xref: Ref:DA:0000041.Location.name
 is_a: ME:0000099 ! Environmental Sample Location
 
 [Term]
@@ -2412,7 +2414,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environment Type." []
-xref: ORef: MIxS:0000002
+xref: ORef:MIxS:0000002
 is_a: ME:0000098 ! Environment
 
 [Term]
@@ -2424,7 +2426,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Material." []
-xref: ORef: ENVO:00010483
+xref: ORef:ENVO:00010483
 is_a: ME:0000098 ! Environment
 
 [Term]
@@ -2461,7 +2463,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community ID, chosen from list of defined ENIGMA communities." []
-xref: Ref: DA:0000048.Community.name
+xref: Ref:DA:0000048.Community.name
 is_a: ME:0000231 ! Community
 
 [Term]
@@ -2473,7 +2475,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community Type." []
-xref: ORef: ME:0000234
+xref: ORef:ME:0000234
 is_a: ME:0000231 ! Community
 
 [Term]
@@ -2589,7 +2591,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genome ID, chosen from list of annotated ENIGMA genomes." []
-xref: Ref: DA:0000039.Genome.name
+xref: Ref:DA:0000039.Genome.name
 is_a: ME:0000245 ! Genome
 
 [Term]
@@ -2616,7 +2618,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Reads ID, chosen from list of reads in the Data Clearinghouse." []
-xref: Ref: DA:0000054.Reads.name
+xref: Ref:DA:0000054.Reads.name
 is_a: ME:0000247 ! Read Set
 
 [Term]
@@ -2692,7 +2694,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Chemical." []
-xref: ORef: CHEBI:24431
+xref: ORef:CHEBI:24431
 is_a: ME:0000103 ! Environmental Parameter
 
 [Term]
@@ -2705,7 +2707,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Measurement." []
-xref: ORef: ME:0000120
+xref: ORef:ME:0000120
 is_a: ME:0000103 ! Environmental Parameter
 
 [Term]
@@ -2733,7 +2735,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Tn-Seq Library Name." []
-xref: Ref: DA:0000060.TnSeq_Library.name
+xref: Ref:DA:0000060.TnSeq_Library.name
 is_a: ME:0000261 ! Tn-Seq Library
 
 [Term]
@@ -2768,7 +2770,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal ID." []
-xref: ORef: ME:0000265
+xref: ORef:ME:0000265
 is_a: ME:0000000 ! term
 is_a: ME:0000001 ! Context
 
@@ -2782,7 +2784,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Location ID." []
-xref: Ref: DA:0000041.Location.id
+xref: Ref:DA:0000041.Location.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2795,7 +2797,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Sample ID." []
-xref: Ref: DA:0000042.Sample.id
+xref: Ref:DA:0000042.Sample.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2808,7 +2810,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Taxon ID." []
-xref: Ref: DA:0000037.Taxon.id
+xref: Ref:DA:0000037.Taxon.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2821,7 +2823,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal OTU ID." []
-xref: Ref: DA:0000063.OTU.id
+xref: Ref:DA:0000063.OTU.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2834,7 +2836,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Condition ID." []
-xref: Ref: DA:0000045.Condition.id
+xref: Ref:DA:0000045.Condition.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2847,7 +2849,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Strain ID." []
-xref: Ref: DA:0000062.Strain.id
+xref: Ref:DA:0000062.Strain.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2860,7 +2862,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Community ID." []
-xref: Ref: DA:0000048.Community.id
+xref: Ref:DA:0000048.Community.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2873,7 +2875,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Reads ID." []
-xref: Ref: DA:0000054.Reads.id
+xref: Ref:DA:0000054.Reads.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2886,7 +2888,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Genome ID." []
-xref: Ref: DA:0000039.Genome.id
+xref: Ref:DA:0000039.Genome.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2899,7 +2901,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Gene ID." []
-xref: Ref: DA:0000040.Gene.id
+xref: Ref:DA:0000040.Gene.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2912,7 +2914,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal TnSeq_Library ID." []
-xref: Ref: DA:0000060.TnSeq_Library.id
+xref: Ref:DA:0000060.TnSeq_Library.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2925,7 +2927,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Process ID." []
-xref: Ref: DA:0000061.Process.id
+xref: Ref:DA:0000061.Process.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2938,7 +2940,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Brick ID." []
-xref: Ref: DA:0000001.Brick.id
+xref: Ref:DA:0000001.Brick.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -2957,7 +2959,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Assembly ID, chosen from list of ENIGMA assemblies." []
-xref: Ref: DA:0000066.Assembly.name
+xref: Ref:DA:0000066.Assembly.name
 is_a: ME:0000279 ! Assembly
 
 [Term]
@@ -2970,7 +2972,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Assembly ID." []
-xref: Ref: DA:0000066.Assembly.id
+xref: Ref:DA:0000066.Assembly.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -3096,7 +3098,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Data Variables Type." []
-xref: ORef: DA:0000000
+xref: ORef:DA:0000000
 is_a: ME:0000291 ! Variable Type
 
 [Term]
@@ -3109,7 +3111,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Units not in UO." []
-xref: ORef: ME:0000294
+xref: ORef:ME:0000294
 is_a: ME:0000000 ! term
 is_a: UO:0000000
 
@@ -3472,7 +3474,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Protocol, chosen from list of defined ENIGMA protocols." []
-xref: Ref: DA:0000073.Protocol.name
+xref: Ref:DA:0000073.Protocol.name
 is_a: ME:0000327 ! Protocol
 
 [Term]
@@ -3491,7 +3493,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Bin, chosen from metagenomic bins stored in the Data Clearinghouse." []
-xref: Ref: DA:0000072.Bin.name
+xref: Ref:DA:0000072.Bin.name
 is_a: ME:0000329 ! Bin
 
 [Term]
@@ -3504,7 +3506,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Bin ID." []
-xref: Ref: DA:0000072.Bin.id
+xref: Ref:DA:0000072.Bin.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -3517,7 +3519,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Protocol ID." []
-xref: Ref: DA:0000073.Protocol.id
+xref: Ref:DA:0000073.Protocol.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -3761,7 +3763,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Image, chosen from the list of images stored in the Data Clearinghouse." []
-xref: Ref: DA:0000074.Image.name
+xref: Ref:DA:0000074.Image.name
 is_a: ME:0000354 ! Image
 
 [Term]
@@ -3774,7 +3776,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Image ID." []
-xref: Ref: DA:0000074.Image.id
+xref: Ref:DA:0000074.Image.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -3874,7 +3876,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Molecules not in ChEBI." []
-xref: ORef: ME:0000365
+xref: ORef:ME:0000365
 is_a: CHEBI:24431
 is_a: ME:0000000 ! term
 
@@ -3985,7 +3987,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Pick a molecule from a list of chemicals (preferred)." []
-xref: ORef: CHEBI:24431
+xref: ORef:CHEBI:24431
 is_a: ME:0000027 ! Molecule
 
 [Term]
@@ -4035,7 +4037,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Ionization mode used in a mass spec experiment." []
-xref: ORef: ME:0000385
+xref: ORef:ME:0000385
 is_a: ME:0000002 ! Experimental Context
 
 [Term]
@@ -4153,7 +4155,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Dub-Seq Library Name." []
-xref: Ref: DA:0000075.DubSeq_Library.name
+xref: Ref:DA:0000075.DubSeq_Library.name
 is_a: ME:0000396 ! Dub-Seq Library
 
 [Term]
@@ -4179,7 +4181,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal DubSeq_Library ID." []
-xref: Ref: DA:0000075.DubSeq_Library.id
+xref: Ref:DA:0000075.DubSeq_Library.id
 is_a: ME:0000265 ! Internal ID
 
 [Term]
@@ -4239,7 +4241,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Geologic Zone." []
-xref: ORef: ME:0000404
+xref: ORef:ME:0000404
 is_a: ME:0000209 ! Physical Context
 
 [Term]
@@ -4276,7 +4278,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Isotope." []
-xref: ORef: CHEBI:24431
+xref: ORef:CHEBI:24431
 is_a: ME:0000026 ! Chemical Context
 
 [Term]
@@ -4360,7 +4362,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Growth Stage." []
-xref: ORef: ME:0000416
+xref: ORef:ME:0000416
 is_a: ME:0000039 ! Biological Context
 
 [Term]
@@ -4665,7 +4667,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Flagellar Arrangement." []
-xref: ORef: ME:0000447
+xref: ORef:ME:0000447
 is_a: ME:0000446 ! Flagella
 
 [Term]
@@ -4728,7 +4730,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Cell Shape." []
-xref: ORef: ME:0000455
+xref: ORef:ME:0000455
 is_a: ME:0000443 ! Cell Morphology
 
 [Term]
