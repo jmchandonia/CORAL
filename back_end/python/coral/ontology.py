@@ -28,8 +28,8 @@ _TERM_IS_PROPERTY = re.compile(r'is_valid_property\s+"true"')
 _TERM_IS_HIDDEN = re.compile(r'is_hidden\s+"true"')
 _TERM_VALID_UNITS = re.compile(r'valid_units\s+"([\w+:\d+\s*]+)"')
 _TERM_VALID_UNITS_PARENT = re.compile(r'valid_units_parent\s+"([\w+:\d+\s*]+)"')
-_TERM_OREF = re.compile(r'ORef:\s+(\w+:\d+)')
-_TERM_REF = re.compile(r'Ref:\s+(\w+:\d+\.\w+\.\w+)')
+_TERM_OREF = re.compile(r'ORef:\s*(\w+:\d+)')
+_TERM_REF = re.compile(r'Ref:\s*(\w+:\d+\.\w+\.\w+)')
 _MICROTYPE_FK_PATTERN = re.compile(r'(\w+:\d+)\.(\w+)\.(\w+)')
 
 
