@@ -2283,7 +2283,7 @@ def coral_search():
                                         search_data['format'] == 'TSV') :
             return_format = TSV
 
-        if 'raw' in search_data and search_data['raw'] == 'True':
+        if search_data.get('raw') in (True, "True", "true"):
             raw = True
 
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
