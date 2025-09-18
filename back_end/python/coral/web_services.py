@@ -2271,6 +2271,7 @@ def coral_search():
         query_match = search_data['queryMatch']
         provider = dp._get_type_provider(query_match['dataModel'])
         q = provider.query()
+        raw = False
 
         s = pprint.pformat(search_data)
         sys.stderr.write('debug: search_data = '+s+'\n')
@@ -2281,6 +2282,9 @@ def coral_search():
         if 'format' in search_data and (search_data['format'] == 'CSV' or
                                         search_data['format'] == 'TSV') :
             return_format = TSV
+
+        if 'raw' in search_data and search_data['raw'] == 'True':
+            raw = True
 
         if query_match['dataModel'] == 'Brick' and query_match['dataType'] != 'NDArray':
             q.has({'data_type': {'=': query_match['dataType']}})
@@ -2340,35 +2344,36 @@ def coral_search():
         # do the search
         res_df = q.find().to_df()
         if return_format==JSON:
-            # remove term ids from result
-            term_cols = []
-            for column in res_df.columns:
-                if column.endswith('_term_id'):
-                    col = column[:-8]
-                    if (col+'_term_name') in res_df.columns:
-                        term_cols.append(column)
-            if len(term_cols) > 0:
-                res_df.drop(columns=term_cols, inplace=True)
-                col_map = {}
-                for column in term_cols:
-                    col = column[:-8]
-                    col_map[col+'_term_name'] = col
-                res_df.rename(columns=col_map, inplace=True)
-            # remove empty columns from search results
-            empty_cols = []
-            #for column in res_df.columns:
+            if raw==False:
+                # remove term ids from result
+                term_cols = []
+                for column in res_df.columns:
+                    if column.endswith('_term_id'):
+                        col = column[:-8]
+                        if (col+'_term_name') in res_df.columns:
+                            term_cols.append(column)
+                if len(term_cols) > 0:
+                    res_df.drop(columns=term_cols, inplace=True)
+                    col_map = {}
+                    for column in term_cols:
+                        col = column[:-8]
+                        col_map[col+'_term_name'] = col
+                        res_df.rename(columns=col_map, inplace=True)
+                # remove empty columns from search results
+                empty_cols = []
+                #for column in res_df.columns:
                 #if len(res_df[column].value_counts())==0:
                 #empty_cols.append(column)
-            if len(empty_cols) > 0:
-                res_df.drop(columns=empty_cols, inplace=True)
-            # if too many "value_types", truncate
-            if 'value_types' in res_df.columns:
-                for i, row in res_df.iterrows():
-                    vals = row['value_types']
-                    if len(vals) > 10:
-                        new_vals = vals[:9]
-                        new_vals.append('and '+str(len(vals)-9)+' more')
-                        res_df.at[i,'value_types'] = new_vals
+                if len(empty_cols) > 0:
+                    res_df.drop(columns=empty_cols, inplace=True)
+                # if too many "value_types", truncate
+                if 'value_types' in res_df.columns:
+                    for i, row in res_df.iterrows():
+                        vals = row['value_types']
+                        if len(vals) > 10:
+                            new_vals = vals[:9]
+                            new_vals.append('and '+str(len(vals)-9)+' more')
+                            res_df.at[i,'value_types'] = new_vals
             # return result as json table
             res = res_df.to_json(orient="table", index=False)
         else: # TSV
