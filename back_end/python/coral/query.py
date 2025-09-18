@@ -357,7 +357,7 @@ class Query:
         self.__search_all_up = False
 
 
-    def find(self, size = 10000):
+    def find(self, size = 1000000):
         var_name = 'x'
         aql_source, aql_filter, aql_bind = self.__build_aql_trio(self.__has_filters, self.__index_type_def, var_name)
         
