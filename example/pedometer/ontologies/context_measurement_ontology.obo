@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-13
+data-version: 2025-09-23
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -1413,6 +1413,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0010006" xsd:string
+property_value: valid_units_parent "UO:0000189" xsd:string
 def: "Relative amounts of multiple categories of the same object." []
 is_a: COMO:0000120 ! Measurement
 

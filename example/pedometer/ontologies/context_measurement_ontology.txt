@@ -421,7 +421,7 @@
   Genetic Interaction Score (Float)
   Stoichiometric Ratio (Float)
   *Isotope Ratio (Float, ratio, parts per notation unit, +percent)
-  *Relative Abundance (Float, ratio)
+  *Relative Abundance (Float, ratio, count)
   *Amount (Float, substance unit)
   *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
   *Relative Evolutionary Divergence (Float, +dimensionless unit)
