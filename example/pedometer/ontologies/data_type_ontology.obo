@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version:2025-04-18
+data-version: 2025-09-23
 ontology:da
 date: 18:12:2024 16:08
 saved-by: jmc
@@ -580,6 +580,13 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Internal Protocol ID." []
 xref: Ref: DA:0000049.Protocol.id
 is_a: DA:0000050 ! Internal ID
+
+[Term]
+id: DA:0000067
+name: Protein Abundance
+namespace: datatype.ontology
+def: "Protein Abundance." []
+is_a: DA:0000005 ! Functional Genomics Data
 
 [Typedef]
 id: is_a

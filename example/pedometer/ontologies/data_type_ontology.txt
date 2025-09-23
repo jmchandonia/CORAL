@@ -8,6 +8,7 @@ Dynamic Object
     Gene Fitness
       Gene Knockout Fitness
     Enzyme Activity
+    Protein Abundance
   Microbial Assay # assays that can be done on either isolates or communities
     Microbial Growth # binary or quantitative (e.g., od, cell counts)
     Microbial Activity
