@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-15
+data-version: 2025-09-23
 ontology:process
 date: 27:08:2018 15:37
 saved-by: jmc
@@ -330,6 +330,13 @@ namespace: process.ontology
 property_value: is_hidden "true" xsd:boolean
 def: "Shotgun Sequencing and Assembly." []
 is_a: PROCESS:0000021 ! Shotgun Sequencing
+
+[Term]
+id: PROCESS:0000058
+name: Proteomics Assay
+namespace: process.ontology
+def: "Proteomics Assay." []
+is_a: PROCESS:0000003 ! Assay
 
 [Typedef]
 id: is_a
