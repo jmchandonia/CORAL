@@ -1,0 +1,21 @@
+[project]
+name = "spark-minio"
+version = "0.1.0"
+description = "Export CORAL data to a spark/minio data lakehouse"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.40.34",
+    "diskcache>=5.6.3",
+    "dumper>=1.2.0",
+    "networkx>=3.5",
+    "openpyxl>=3.1.5",
+    "pronto>=2.7.0",
+    "pyarango>=2.1.1",
+    "pycryptodome>=3.23.0",
+    "pygraphviz>=1.14",
+    "pyjwt>=2.10.1",
+    "pyspark>=4.0.1",
+    "pytest>=8.4.2",
+    "xarray>=2025.9.0",
+]
