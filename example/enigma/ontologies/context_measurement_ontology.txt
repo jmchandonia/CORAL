@@ -199,12 +199,12 @@
         Paralogous Gene
       Essential Gene
     Gene Annotation
-    Genome
-      Genome ID (Ref:DA:0000039.Genome.name)
-    Assembly
-      Assembly ID (Ref:DA:0000066.Assembly.name)
-    Bin
-      Bin ID (Ref:DA:0000072.Bin.name)
+    **Genome
+      *-Genome ID (Ref:DA:0000039.Genome.name)
+    **Assembly
+      *-Assembly ID (Ref:DA:0000066.Assembly.name)
+    **Bin
+      *-Bin ID (Ref:DA:0000072.Bin.name)
     *+Protein
     Protein Annotation
       KEGG Subsystem (ORef:KEGG)

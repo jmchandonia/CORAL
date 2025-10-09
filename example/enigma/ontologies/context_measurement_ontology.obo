@@ -2579,6 +2579,9 @@ is_a: ME:0000241 ! Sequence Position
 id: ME:0000245
 name: Genome
 namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
 def: "Genome." []
 is_a: ME:0000039 ! Biological Context
 
@@ -2589,6 +2592,7 @@ namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genome ID, chosen from list of annotated ENIGMA genomes." []
 xref: Ref:DA:0000039.Genome.name
@@ -2947,6 +2951,9 @@ is_a: ME:0000265 ! Internal ID
 id: ME:0000279
 name: Assembly
 namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
 def: "Assembly." []
 is_a: ME:0000039 ! Biological Context
 
@@ -2957,6 +2964,7 @@ namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Assembly ID, chosen from list of ENIGMA assemblies." []
 xref: Ref:DA:0000066.Assembly.name
@@ -3481,6 +3489,9 @@ is_a: ME:0000327 ! Protocol
 id: ME:0000329
 name: Bin
 namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
 def: "Bin (metagenomic)." []
 is_a: ME:0000039 ! Biological Context
 
@@ -3491,6 +3502,7 @@ namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Bin, chosen from metagenomic bins stored in the Data Clearinghouse." []
 xref: Ref:DA:0000072.Bin.name
