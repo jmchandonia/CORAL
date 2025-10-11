@@ -373,8 +373,7 @@
         [
           "ENIGMA"
         ]
-      ],
-      "comment": "Stores distinct conditions, such as disease states or experimental treatments, for linking to related records."
+      ]
     },
     {
       "name": "Strain",
