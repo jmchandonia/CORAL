@@ -1,43 +1,49 @@
 {
-  "system_types":[
+  "system_types": [
     {
       "name": "Process",
       "term": "DA:0000061",
       "used_for_provenance": true,
+      "comment": "Records provenance of all data, linking the process type, responsible person or lab, protocol, dates, and the input and output objects",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000277",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for each process record (Primary key)"
         },
         {
           "name": "process",
           "type_term": "ME:0000204",
           "scalar_type": "term",
           "required": true,
-          "constraint": "PROCESS:0000001"
+          "constraint": "PROCESS:0000001",
+          "comment": "Reference to the specific process type used to generate the outputs"
         },
         {
           "name": "person",
           "type_term": "ME:0000205",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ENIGMA:0000029"
+          "constraint": "ENIGMA:0000029",
+          "comment": "Reference to the person or lab that performed the process"
         },
         {
           "name": "campaign",
           "type_term": "ME:0000206",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ENIGMA:0000002"
+          "constraint": "ENIGMA:0000002",
+          "comment": "Reference to the ENIGMA campaign under which the data were generated"
         },
         {
           "name": "protocol",
           "type_term": "ME:0000328",
           "scalar_type": "text",
-          "FK": "Protocol.name"
+          "FK": "Protocol.name",
+          "comment": "Protocol used in this process (foreign key to Protocol.name)"
         },
         {
           "name": "date_start",
@@ -58,134 +64,162 @@
           "type_term": "ME:0000207",
           "scalar_type": "[ref]",
           "required": true,
-          "constraint": "[Entity|Brick]"
+          "constraint": "[Entity|Brick]",
+          "comment": "List of references to data that were input to this process"
         },
         {
           "name": "output_objects",
           "type_term": "ME:0000208",
           "scalar_type": "[ref]",
           "required": true,
-          "constraint": "[Entity|Brick]"
+          "constraint": "[Entity|Brick]",
+          "comment": "List of references to data that were produced by this process"
         }
       ]
-    }  
+    }
   ],
-  "static_types":[
+  "static_types": [
     {
       "name": "ENIGMA",
+      "comment": "Root of all datasets in this project",
       "fields": []
     },
     {
       "name": "Location",
       "term": "DA:0000041",
       "used_for_provenance": true,
+      "comment": "Two dimensional location on Earth of a field site where samples are taken or measurements made",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000266",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the location (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000228",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name of the location"
         },
         {
           "name": "latitude",
           "type_term": "ME:0000211",
           "scalar_type": "float",
           "required": true,
-          "constraint": [-180, 180],
-          "units_term": "UO:0000185"
+          "constraint": [
+            -90,
+            90
+          ],
+          "units_term": "UO:0000185",
+          "comment": "Latitude of the location in decimal degrees"
         },
         {
           "name": "longitude",
           "type_term": "ME:0000212",
           "scalar_type": "float",
           "required": true,
-          "constraint": [-180, 180],
-          "units_term": "UO:0000185"
+          "constraint": [
+            -180,
+            180
+          ],
+          "units_term": "UO:0000185",
+          "comment": "Longitude of the location in decimal degrees"
         },
         {
           "name": "continent",
           "type_term": "ME:0000213",
           "scalar_type": "term",
           "required": true,
-          "constraint": "CONTINENT:0000001"
+          "constraint": "CONTINENT:0000001",
+          "comment": "Continent where the location is situated"
         },
         {
           "name": "country",
           "type_term": "ME:0000214",
           "scalar_type": "term",
           "required": true,
-          "constraint": "COUNTRY:0000001"
+          "constraint": "COUNTRY:0000001",
+          "comment": "Country of the location"
         },
         {
           "name": "region",
           "type_term": "ME:0000215",
           "scalar_type": "text",
           "required": true,
-          "comment": "specific local region name(s)"
+          "comment": "Specific local region name(s)"
         },
         {
           "name": "biome",
           "type_term": "ME:0000216",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ENVO:01000254"
+          "constraint": "ENVO:01000254",
+          "comment": "Biome classification of the location"
         },
         {
           "name": "feature",
           "type_term": "ME:0000217",
           "scalar_type": "term",
-          "constraint": "ENVO:00002297"
+          "constraint": "ENVO:00002297",
+          "comment": "Environmental or geographic feature at the location"
         }
       ],
-      "process_types": ["PROCESS:0000028"],
-      "process_inputs": [["ENIGMA"]]
+      "process_types": [
+        "PROCESS:0000028"
+      ],
+      "process_inputs": [
+        [
+          "ENIGMA"
+        ]
+      ]
     },
     {
-      "name":"Sample",
+      "name": "Sample",
       "term": "DA:0000042",
       "used_for_provenance": true,
+      "comment": "A sample of material collected from a field location on which further assays or experiments are performed",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000267",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the sample (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000102",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name of the sample"
         },
         {
           "name": "location",
           "type_term": "ME:0000228",
           "scalar_type": "text",
           "required": true,
-          "FK": "Location.name"
+          "FK": "Location.name",
+          "comment": "Location where the sample was collected (Foreign key)"
         },
         {
           "name": "depth",
           "type_term": "ME:0000219",
           "scalar_type": "float",
-          "comment": "in meters below ground level",
+          "comment": "For below-ground samples, the average distance below ground level in meters where the sample was taken",
           "units_term": "UO:0000008"
         },
         {
           "name": "elevation",
           "type_term": "ME:0000220",
           "scalar_type": "float",
-          "comment": "in meters above ground level",
+          "comment": "For above-ground samples, the average distance above ground level in meters where the sample was taken",
           "units_term": "UO:0000008"
         },
         {
@@ -213,379 +247,516 @@
           "name": "material",
           "type_term": "ME:0000230",
           "scalar_type": "term",
-          "constraint": "ENVO:00010483"
+          "constraint": "ENVO:00010483",
+          "comment": "Material type of the sample"
         },
         {
           "name": "env_package",
           "type_term": "ME:0000229",
           "scalar_type": "term",
           "required": true,
-          "constraint": "MIxS:0000002"
+          "constraint": "MIxS:0000002",
+          "comment": "MIxS environmental package classification of the sample"
         },
         {
           "name": "description",
           "type_term": "ME:0000202",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Free-form description or notes about the sample"
         }
       ],
-      "process_types": ["PROCESS:0000002"],
-      "process_inputs": [["Location"]]
+      "process_types": [
+        "PROCESS:0000002"
+      ],
+      "process_inputs": [
+        [
+          "Location"
+        ]
+      ]
     },
     {
       "name": "Taxon",
       "term": "DA:0000037",
+      "comment": "Taxonomic records, each with a unique identifier, the taxon's name, and optionally the corresponding NCBI taxonomy ID",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000268",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for a taxon record (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000047",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique taxon name, typically the scientific name"
         },
         {
           "name": "ncbi_taxid",
           "type_term": "ME:0000223",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "NCBI taxonomy identifier for the taxon, if available"
         }
       ],
-      "process_types": ["PROCESS:0000029"],
-      "process_inputs": [["ENIGMA"]]
+      "process_types": [
+        "PROCESS:0000029"
+      ],
+      "process_inputs": [
+        [
+          "ENIGMA"
+        ]
+      ]
     },
     {
       "name": "OTU",
       "term": "DA:0000063",
+      "preferred_name": "ASV",
+      "comment": "ASV (Amplicon Sequence Variant) or OTU (Operational Taxonomic Unit) for older datasets",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000269",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for each ASV/OTU (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000222",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name assigned to the ASV/OTU, usually md5sum"
         }
       ],
-      "process_types": ["PROCESS:0000031"],
-      "process_inputs": [["Reads"]]
+      "process_types": [
+        "PROCESS:0000031"
+      ],
+      "process_inputs": [
+        [
+          "Reads"
+        ]
+      ]
     },
-    { 
+    {
       "name": "Condition",
       "term": "DA:0000045",
       "used_for_provenance": false,
+      "comment": "A field or lab condition imposed by researchers, e.g., used for isolation or growth",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000270",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the condition (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000200",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique text name describing the condition"
         }
       ],
-      "process_types": ["PROCESS:0000032"],
-      "process_inputs": [["ENIGMA"]]
+      "process_types": [
+        "PROCESS:0000032"
+      ],
+      "process_inputs": [
+        [
+          "ENIGMA"
+        ]
+      ],
+      "comment": "Stores distinct conditions, such as disease states or experimental treatments, for linking to related records."
     },
     {
       "name": "Strain",
       "term": "DA:0000062",
       "used_for_provenance": true,
+      "comment": "Microbial strain, either a possibly genetically modified lab-grown strain or one that is found in the environment",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000271",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for each strain (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000044",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name of the strain"
         },
         {
           "name": "description",
           "type_term": "ME:0000202",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Free-text description of the strain"
         },
         {
           "name": "genome",
           "type_term": "ME:0000246",
           "scalar_type": "text",
           "FK": "Genome.name",
-          "comment": "genome object for sequenced, WT strains"
+          "comment": "Genome object for sequenced, wild type strains"
         },
         {
           "name": "derived_from",
           "type_term": "ME:0000044",
           "scalar_type": "text",
-          "FK": "Strain.name"
+          "FK": "Strain.name",
+          "comment": "Name of the parent strain from which this strain was derived, if created by genetic modification or similar process"
         },
         {
           "name": "genes_changed",
           "type_term": "ME:0000091",
           "scalar_type": "[text]",
-          "FK": "[Gene.gene_id]"
+          "FK": "[Gene.gene_id]",
+          "comment": "List of gene identifiers that have been altered in this strain, if created by genetic modification, if known"
         }
       ],
-      "process_types": ["PROCESS:0000015", "PROCESS:0000030"],
-      "process_inputs": [["Sample"], ["Strain"]]
+      "process_types": [
+        "PROCESS:0000015",
+        "PROCESS:0000030"
+      ],
+      "process_inputs": [
+        [
+          "Sample"
+        ],
+        [
+          "Strain"
+        ]
+      ]
     },
-    { 
+    {
       "name": "Community",
       "term": "DA:0000048",
       "used_for_provenance": true,
+      "comment": "A Microbial community, either defined or containing one or more unknown microbes",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000272",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique internal identifier for the community (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000233",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name of the community"
         },
         {
           "name": "community_type",
           "type_term": "ME:0000234",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ME:0000234"
+          "constraint": "ME:0000234",
+          "comment": "Type of community, e.g., isolate or enrichment"
         },
         {
           "name": "sample",
           "type_term": "ME:0000102",
           "scalar_type": "text",
-          "FK": "Sample.name"
+          "FK": "Sample.name",
+          "comment": "Reference to the Sample from which the community was obtained."
         },
         {
           "name": "parent_community",
           "type_term": "ME:0000233",
           "scalar_type": "text",
-          "FK": "Community.name"
+          "FK": "Community.name",
+          "comment": "Reference to the name of a parent community, establishing hierarchical relationships"
         },
         {
           "name": "condition",
           "type_term": "ME:0000200",
           "scalar_type": "text",
-          "FK": "Condition.name"
+          "FK": "Condition.name",
+          "comment": "Reference to the experimental or environmental condition associated with the community"
         },
         {
           "name": "defined_strains",
           "type_term": "ME:0000044",
           "scalar_type": "[text]",
-          "FK": "[Strain.Name]"
+          "FK": "[Strain.name]",
+          "comment": "List of strains that comprise the community, if the community is defined"
         },
         {
           "name": "description",
           "type_term": "ME:0000202",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Free-text field providing additional details or notes about the community"
         }
       ],
-      "process_types": ["PROCESS:0000015", "PROCESS:0000016", "PROCESS:0000011"],
-      "process_inputs": [["Sample"], ["Community"]]
+      "process_types": [
+        "PROCESS:0000015",
+        "PROCESS:0000016",
+        "PROCESS:0000011"
+      ],
+      "process_inputs": [
+        [
+          "Sample"
+        ],
+        [
+          "Strain"
+        ],
+        [
+          "Community"
+        ]
+      ]
     },
     {
       "name": "Reads",
       "term": "DA:0000054",
       "used_for_provenance": true,
+      "comment": "Reads from genome or metagenome sequencing, including count, type, technology, and related metadata",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000273",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for each reads dataset (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000248",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name for the reads"
         },
         {
           "name": "read_count",
           "type_term": "ME:0000126",
           "scalar_type": "int",
           "required": true,
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of reads"
         },
         {
           "name": "read_type",
           "type_term": "ME:0000112",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ME:0000112"
+          "constraint": "ME:0000112",
+          "comment": "Category of reads (e.g., single-end, paired-end)"
         },
         {
           "name": "sequencing_technology",
           "type_term": "ME:0000116",
           "scalar_type": "term",
           "required": true,
-          "constraint": "ME:0000116"
+          "constraint": "ME:0000116",
+          "comment": "Sequencing technology used (e.g., Illumina)"
         },
         {
           "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true
+          "required": true,
+          "comment": "Link to the reads file (e.g., fastq)"
         }
       ],
-      "process_types": ["PROCESS:0000017"],
-      "process_inputs": [["Sample"], ["Community"]]
+      "process_types": [
+        "PROCESS:0000017",
+        "PROCESS:0000017",
+        "PROCESS:0000017"
+      ],
+      "process_inputs": [
+        [
+          "Reads"
+        ],
+        [
+          "Sample"
+        ],
+        [
+          "Community"
+        ]
+      ]
     },
     {
       "name": "Assembly",
       "term": "DA:0000066",
       "used_for_provenance": true,
+      "comment": "A genome assembly, including only the contigs and not annotated genes",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000281",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique text identifier for the assembly (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000280",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name for the assembly"
         },
         {
           "name": "strain",
           "type_term": "ME:0000044",
           "scalar_type": "text",
-          "FK": "Strain.name"
+          "FK": "Strain.name",
+          "comment": "Strain name from which the assembly was derived (foreign key to Strain.name)."
         },
         {
           "name": "n_contigs",
           "type_term": "ME:0000126",
           "scalar_type": "int",
           "required": true,
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of contigs in the assembly"
         },
         {
           "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true
+          "required": true,
+          "comment": "Reference to the actual assembly data"
         }
       ],
-      "process_types": ["PROCESS:0000023","PROCESS:0000024"],
-      "process_inputs": [["Reads"],["Reads"]]
+      "process_types": [
+        "PROCESS:0000023",
+        "PROCESS:0000024"
+      ],
+      "process_inputs": [
+        [
+          "Reads"
+        ],
+        [
+          "Reads"
+        ]
+      ]
     },
     {
       "name": "Genome",
       "term": "DA:0000039",
       "used_for_provenance": true,
+      "comment": "Annotated genome, including summary metadata",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000274",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the genome (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000246",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name of the genome"
         },
         {
           "name": "strain",
           "type_term": "ME:0000044",
           "scalar_type": "text",
-          "FK": "Strain.name"
+          "FK": "Strain.name",
+          "comment": "Name of the microbial strain associated with the genome (foreign key)"
         },
         {
           "name": "n_contigs",
           "type_term": "ME:0000126",
           "scalar_type": "int",
           "required": true,
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of contigs in the genome assembly"
         },
         {
           "name": "n_features",
           "type_term": "ME:0000126",
           "scalar_type": "int",
           "required": true,
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of annotated features (e.g., genes) in the genome"
         },
         {
           "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "required": true
+          "required": true,
+          "comment": "Link to where the genome itself is actually stored"
         }
       ],
-      "process_types": ["PROCESS:0000034", "PROCESS:0000045"],
-      "process_inputs": [["Assembly"],["Bin"]]
+      "process_types": [
+        "PROCESS:0000034",
+        "PROCESS:0000045"
+      ],
+      "process_inputs": [
+        [
+          "Assembly"
+        ],
+        [
+          "Bin"
+        ]
+      ]
     },
     {
       "name": "Gene",
       "term": "DA:0000040",
+      "comment": "Genes with genomic coordinates, identifiers, and functional annotations for each genome",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000275",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique internal identifier for the gene (Primary key)"
         },
         {
           "name": "gene_id",
           "type_term": "ME:0000224",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique external identifier for the gene"
         },
         {
           "name": "genome",
           "type_term": "ME:0000246",
           "scalar_type": "text",
           "required": true,
-          "FK": "Genome"
+          "FK": "Genome",
+          "comment": "Name of the genome to which the gene belongs (foreign key)"
         },
         {
           "name": "aliases",
           "type_term": "ME:0000060",
-          "scalar_type": "[text]"
+          "scalar_type": "[text]",
+          "comment": "List of alternative names or identifiers for the gene"
         },
         {
           "name": "contig_number",
           "type_term": "ME:0000126",
           "scalar_type": "int",
           "required": true,
-          "comment": "indexed starting at 1, as in KBase",
+          "comment": "Contigs are indexed starting at 1, as in KBase",
           "units_term": "UO:0000189"
         },
         {
@@ -593,14 +764,15 @@
           "type_term": "ME:0000186",
           "scalar_type": "text",
           "required": true,
-          "constraint": "[+-]"
+          "constraint": "[+-]",
+          "comment": "DNA strand of the gene (+ for forward, - for reverse)"
         },
         {
           "name": "start",
           "type_term": "ME:0000242",
           "scalar_type": "int",
           "required": true,
-          "comment": "indexed starting at 1, as in KBase",
+          "comment": "Genomic start coordinate on the contig, indexed starting at 1 as in KBase",
           "units_term": "UO:0000244"
         },
         {
@@ -608,244 +780,316 @@
           "type_term": "ME:0000243",
           "scalar_type": "int",
           "required": true,
-          "units_term": "UO:0000244"
+          "units_term": "UO:0000244",
+          "comment": "Genomic stop coordinate in base pairs"
         },
         {
           "name": "function",
           "type_term": "ME:0000250",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Annotated biological function of the gene"
         }
       ],
-      "process_types": ["PROCESS:0000034"],
-      "process_inputs": [["Assembly"]]
+      "process_types": [
+        "PROCESS:0000034"
+      ],
+      "process_inputs": [
+        [
+          "Assembly"
+        ]
+      ]
     },
     {
       "name": "Bin",
       "term": "DA:0000072",
       "used_for_provenance": true,
+      "comment": "Binned contigs from a metagenomic assembly",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000331",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the bin (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000330",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Human-readable, unique name for the bin"
         },
         {
           "name": "assembly",
           "type_term": "ME:0000280",
           "scalar_type": "text",
           "required": true,
-          "FK": "Assembly"
+          "FK": "Assembly",
+          "comment": "Identifier of the metagenomic assembly that the bin belongs to (foreign key to Assembly.name)"
         },
         {
           "name": "contigs",
           "type_term": "ME:0000240",
           "scalar_type": "[text]",
-          "required": true
+          "required": true,
+          "comment": "Array of contig identifiers included in the bin"
         }
       ],
-      "process_types": ["PROCESS:0000039"],
-      "process_inputs": [["Assembly"]]
+      "process_types": [
+        "PROCESS:0000039"
+      ],
+      "process_inputs": [
+        [
+          "Assembly"
+        ]
+      ]
     },
     {
       "name": "Protocol",
       "term": "DA:0000073",
       "used_for_provenance": true,
+      "comment": "Protocol definitions used to describe experimental procedures and support provenance tracking",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000332",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for the protocol (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000328",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique, human-readable name of the protocol"
         },
         {
           "name": "description",
           "type_term": "ME:0000202",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Detailed description of the protocol"
         },
         {
           "name": "link",
           "type_term": "ME:0000203",
           "scalar_type": "text",
-          "constraint": "http.*"
+          "constraint": "http.*",
+          "comment": "URL linking to additional documentation of the protocol, such as protocols.io"
         }
       ],
-      "process_types": ["PROCESS:0000044"],
-      "process_inputs": [["ENIGMA"]]
+      "process_types": [
+        "PROCESS:0000044"
+      ],
+      "process_inputs": [
+        [
+          "ENIGMA"
+        ]
+      ]
     },
     {
       "name": "Image",
       "term": "DA:0000074",
       "used_for_provenance": true,
+      "comment": "File containing images or multidimensional image data",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000356",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique identifier for each image (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000355",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique name (e.g., filename) for the image."
         },
         {
           "name": "description",
           "type_term": "ME:0000202",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "Textual description of the image"
         },
         {
           "name": "MIME type",
           "type_term": "ME:0000357",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "MIME type specifying the image file format (e.g., image/jpeg)"
         },
         {
           "name": "size",
           "type_term": "ME:0000128",
           "scalar_type": "int",
-          "units_term": "UO:0000233"
+          "units_term": "UO:0000233",
+          "comment": "File size of the image measured in bytes"
         },
         {
           "name": "dimensions",
           "type_term": "ME:0000292",
           "scalar_type": "text",
-          "units_term": "UO:0000236"
+          "units_term": "UO:0000236",
+          "comment": "Image dimensions (e.g., width × height) expressed in pixels"
         },
         {
           "name": "link",
           "type_term": "ME:0000203",
-          "scalar_type": "text"
+          "scalar_type": "text",
+          "comment": "URL or file path linking to the stored image"
         }
       ],
-      "process_types": ["PROCESS:0000044"],
-      "process_inputs": [["ENIGMA"]]
+      "process_types": [
+        "PROCESS:0000044"
+      ],
+      "process_inputs": [
+        [
+          "ENIGMA"
+        ]
+      ]
     },
     {
       "name": "TnSeq_Library",
       "term": "DA:0000060",
       "used_for_provenance": true,
+      "comment": "Transposon Sequencing (TnSeq) library, including some quality metrics, metadata, and the genome used",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000276",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique TnSeq library identifier (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000262",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique, human-readable name of the TnSeq library"
         },
         {
           "name": "genome",
           "type_term": "ME:0000246",
           "scalar_type": "text",
           "required": true,
-          "FK": "Genome"
+          "FK": "Genome",
+          "comment": "Foreign key to the associated genome (Genome.name) from which the library was derived"
         },
         {
           "name": "primers_model",
           "type_term": "ME:0000263",
           "scalar_type": "text",
-          "required": true
+          "required": true,
+          "comment": "Type of primers used to generate the library"
         },
         {
           "name": "n_mapped_reads",
           "type_term": "ME:0000126",
           "scalar_type": "int",
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of reads that mapped to the reference genome"
         },
         {
           "name": "n_barcodes",
           "type_term": "ME:0000126",
           "scalar_type": "int",
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Total number of distinct barcode sequences detected in the library"
         },
         {
           "name": "n_usable_barcodes",
           "type_term": "ME:0000126",
           "scalar_type": "int",
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of barcodes deemed usable after quality filtering"
         },
         {
           "name": "n_insertion_locations",
           "type_term": "ME:0000126",
           "scalar_type": "int",
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of distinct transposon insertion sites identified in the library"
         },
         {
           "name": "hit_rate_essential",
           "type_term": "ME:0000264",
           "scalar_type": "float",
-          "units_term": "UO:0000190"
+          "units_term": "UO:0000190",
+          "comment": "Proportion of essential genes with at least one transposon insertion"
         },
         {
           "name": "hit_rate_other",
           "type_term": "ME:0000264",
           "scalar_type": "float",
-          "units_term": "UO:0000190"
+          "units_term": "UO:0000190",
+          "comment": "Proportion of non-essential (other) genes with at least one transposon insertion"
         }
       ],
-      "process_types": ["PROCESS:0000027"],
-      "process_inputs": [["Genome"]]
+      "process_types": [
+        "PROCESS:0000027"
+      ],
+      "process_inputs": [
+        [
+          "Genome"
+        ]
+      ]
     },
     {
       "name": "DubSeq_Library",
       "term": "DA:0000075",
       "used_for_provenance": true,
+      "comment": "Dual Barcoded Shotgun Expression Library Sequencing (DubSeq) library, including some quality metrics, metadata, and the genome used",
       "fields": [
         {
           "name": "id",
           "type_term": "ME:0000276",
           "scalar_type": "text",
           "required": true,
-          "PK": true
+          "PK": true,
+          "comment": "Unique DubSeq library identifier (Primary key)"
         },
         {
           "name": "name",
           "type_term": "ME:0000262",
           "scalar_type": "text",
           "required": true,
-          "UPK": true
+          "UPK": true,
+          "comment": "Unique, human-readable name of the DubSeq library"
         },
         {
           "name": "genome",
           "type_term": "ME:0000246",
           "scalar_type": "text",
           "required": true,
-          "FK": "Genome"
+          "FK": "Genome",
+          "comment": "Foreign key to the associated genome (Genome.name) from which the library was derived"
         },
         {
           "name": "n_fragments",
           "type_term": "ME:0000126",
           "scalar_type": "int",
-          "units_term": "UO:0000189"
+          "units_term": "UO:0000189",
+          "comment": "Number of unique DNA fragments in the library"
         }
       ],
-      "process_types": ["PROCESS:0000049"],
-      "process_inputs": [["Genome"]]
-    }  
+      "process_types": [
+        "PROCESS:0000049"
+      ],
+      "process_inputs": [
+        [
+          "Genome"
+        ]
+      ]
+    }
   ]
-  }
+}
