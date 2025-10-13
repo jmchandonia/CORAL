@@ -166,10 +166,12 @@
       *-Strain Name (String)
       *-Strain ID (Ref:DA:0000062.Strain.name)
         alias: Isolate ID
-    **OTU
+    **ASV
+      alias: Amplicon Sequence Variant
+      ASV Name (String)
+      *-ASV ID (Ref:DA:0000063.OTU.Name)
+    *OTU
       alias: Operational Taxonomic Unit
-      OTU Name (String)
-      *-OTU ID (Ref:DA:0000063.OTU.Name)
     *ESV (String)
       alias: Exact Sequence Variant
       alias: Unique Sequence Variant

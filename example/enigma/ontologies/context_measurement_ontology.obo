@@ -1939,13 +1939,13 @@ is_a: ME:0000026 ! Chemical Context
 
 [Term]
 id: ME:0000184
-name: OTU
+name: ASV
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
-def: "OTU." []
-synonym: "Operational Taxonomic Unit" EXACT []
+def: "Amplicon Sequence Variant." []
+synonym: "Amplicon Sequence Variant" EXACT []
 is_a: ME:0000039 ! Biological Context
 
 [Term]
@@ -2330,27 +2330,27 @@ is_a: ME:0000209 ! Physical Context
 
 [Term]
 id: ME:0000221
-name: OTU Name
+name: ASV Name
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "OTU Name." []
-is_a: ME:0000184 ! OTU
+def: "ASV Name." []
+is_a: ME:0000184 ! ASV
 
 [Term]
 id: ME:0000222
-name: OTU ID
+name: ASV ID
 namespace: measure.ontology
 property_value: data_type "object_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "OTU ID, chosen from the list of defined OTUs in the Data Clearinghouse." []
+def: "ASV/OTU ID, chosen from the list of defined ASVs/OTUs in the Data Clearinghouse." []
 xref: Ref:DA:0000063.OTU.Name
-is_a: ME:0000184 ! OTU
+is_a: ME:0000184 ! ASV
 
 [Term]
 id: ME:0000223
@@ -4988,6 +4988,20 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000314" xsd:string
 def: "Fluorescence." []
 is_a: ME:0000120 ! Measurement
+
+[Term]
+id: ME:0000479
+name: OTU
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "OTU." []
+synonym: "Operational Taxonomic Unit" EXACT []
+is_a: ME:0000039 ! Biological Context
 
 [Typedef]
 id: data_type
