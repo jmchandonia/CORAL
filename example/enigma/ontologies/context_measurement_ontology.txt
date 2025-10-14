@@ -188,10 +188,10 @@
     Metabolite
       is_a: ME:0000027
     Substrate
-      *+Carbon Source
-      *+Nitrogen Source
-      *+Electron Donor
-      *+Electron Acceptor
+      *+Carbon Source (ORef:CHEBI:24431)
+      *+Nitrogen Source (ORef:CHEBI:24431)
+      *+Electron Donor (ORef:CHEBI:24431)
+      *+Electron Acceptor (ORef:CHEBI:24431)
     **Gene
       *-Gene ID (Ref:DA:0000040.Gene.gene_id)
       *-Gene Name (Ref:DA:0000040.Gene.aliases)

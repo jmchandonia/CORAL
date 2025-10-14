@@ -603,52 +603,56 @@ is_a: ME:0000039 ! Biological Context
 id: ME:0000055
 name: Carbon Source
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Carbon source used for microbial growth." []
+xref: ORef:CHEBI:24431
 is_a: ME:0000054 ! Substrate
 
 [Term]
 id: ME:0000056
 name: Nitrogen Source
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Nitrogen source used for microbial growth." []
+xref: ORef:CHEBI:24431
 is_a: ME:0000054 ! Substrate
 
 [Term]
 id: ME:0000057
 name: Electron Donor
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron donor used for microbial growth." []
+xref: ORef:CHEBI:24431
 is_a: ME:0000054 ! Substrate
 
 [Term]
 id: ME:0000058
 name: Electron Acceptor
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron acceptor used for microbial growth." []
+xref: ORef:CHEBI:24431
 is_a: ME:0000054 ! Substrate
 
 [Term]
