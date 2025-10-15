@@ -2,28 +2,30 @@
 """
 convert_bricks.py
 
-Convert a CORAL NDArray CSV into a TSV file.  The TSV header and the data
-rows are derived from an OBO ontology.
+Convert a CORAL NDArray CSV into a TSV file whose header and data are
+derived from an OBO ontology.
 
-Key points
-----------
-* The CSV sections may appear in any order:
+Features
+--------
+* The CSV may contain the sections (in any order):
     1. one or more ``values`` lines (often before the ``size`` line)
-    2. a ``size`` line (dimension lengths)
-    3. any number of ``dmeta`` blocks – a ``dmeta`` line followed by L
-       value lines, where L is the length of the referenced dimension
-    4. a ``data`` line – everything after this line are ND‑Array rows
-* Column names follow the rules you supplied, including the column(s)
-  derived from a ``values`` line (e.g. ``relative_abundance_fraction``).
-* The columns created from the ``values`` line(s) are always placed **last**
-  in the TSV.
-* For each data row the script looks up the correct value for every
-  dimension‑variable column (using the indices supplied in the row) and
-  writes the measurement(s) from the ``values`` line(s) into the trailing
-  column(s).  For ORef data types the generated columns are
-  ``…_sys_oterm_id`` and ``…_sys_oterm_name``; the script now places the
-  OBO identifier in the ``_id`` column and the term name in the
-  ``_name`` column (the previous version had them swapped).
+    2. a ``size`` line giving the length of each dimension
+    3. any number of ``dmeta`` blocks – a ``dmeta`` line followed by *L*
+       value lines, where *L* is the length of the referenced dimension
+    4. a ``data`` line – everything after it are ND‑Array rows
+* If the file **does not contain a ``values`` line**, the variables that
+  are defined in the **first dimension** are treated as if they were
+  separate ``values`` lines:
+    – the ``dmeta`` line for dimension 1 is ignored (no column is created)
+    – each row that follows that ``dmeta`` line defines a measurement
+      column (or two columns for an ORef) that are placed at the **end**
+      of the TSV header
+    – rows that have the same indices for dimensions 2…N are merged
+      into a single TSV row – the first‑dimension index selects which
+      of the generated measurement columns receives the value from the
+      data line
+* Column names follow the rules you supplied, including the special
+  handling of ORef (order is ``*_sys_oterm_id`` then ``*_sys_oterm_name``).
 * Missing entries are written as ``n/a``.
 * No authentication code – it has been removed because it is not needed.
 """
@@ -41,7 +43,7 @@ import warnings
 from typing import Dict, List, Tuple, Union
 
 # ----------------------------------------------------------------------
-# Suppress noisy warnings (mirrors the original code)
+# Suppress noisy warnings
 # ----------------------------------------------------------------------
 warnings.simplefilter("ignore", ResourceWarning)
 warnings.simplefilter("ignore", DeprecationWarning)
@@ -65,7 +67,6 @@ def _parse_xref(xref: str) -> Union[str, Tuple[str, str], None]:
     * ``ORef:``  → ``("sys_oterm_id","sys_oterm_name")``
     """
     if xref.startswith("Ref:"):
-        # Example: Ref:DA:0000063.OTU.Name → sdt_otu_name
         parts = xref.split(".")
         if len(parts) >= 2:
             typ = parts[-2].lower()
@@ -99,9 +100,10 @@ def load_obo(
     with open(obo_path, "r", encoding="utf-8") as f:
         for raw_line in f:
             line = raw_line.strip()
-            if not line:                     # blank line → finish current term
+            if not line:                         # blank line → finish term
                 if cur_id:
-                    term_map[cur_id] = {"name": cur_name, "data_type": cur_data_type}
+                    term_map[cur_id] = {"name": cur_name,
+                                         "data_type": cur_data_type}
                     parent_map.setdefault(cur_id, [])
                     cur_id = cur_name = ""
                     cur_data_type = None
@@ -207,7 +209,8 @@ def column_names_for_var(
         dict with keys ``dim_name``, ``dim_id``, ``var_name``, ``var_id``,
         optional ``extra`` (list of ``{'name':…, 'id':…}``).
     is_value_line
-        ``True`` when the variable originates from a ``values`` line.
+        ``True`` when the variable originates from a ``values`` line (or
+        from the special first‑dimension handling).
     dim_lengths
         Mapping dimension index → its length (used only for validation).
     """
@@ -229,9 +232,7 @@ def column_names_for_var(
     entry = term_map.get(var_id)
     data_type = entry["data_type"] if entry else None
 
-    # --------------------------------------------------------------
     # Should we drop the dimension prefix?
-    # --------------------------------------------------------------
     omit_dim = False
     if not is_value_line and data_type is not None and dim_id:
         if is_descendant(var_id, dim_id, parent_map):
@@ -294,14 +295,13 @@ def extract_values(
     * null – return the original string unchanged.
     """
     if isinstance(data_type, tuple):
-        # ORef → id + name (swap order compared to previous version)
         name, term_id = _split_term(value_str)
-        return [term_id, name]
+        return [term_id, name]          # id first, then name
 
     if data_type is None:
         return [value_str]
 
-    # Ref – keep the name part only
+    # Ref – keep only the name part
     name, _ = _split_term(value_str)
     return [name]
 
@@ -323,18 +323,21 @@ def convert(
         * ``values``   → measurement columns (may appear before ``size``)
         * ``size``     → dimension lengths
         * ``dmeta``    → dimension variables + per‑index value block
-        * ``data``     → actual ND‑Array rows
+        * ``data``     → actual ND‑Array rows (merged when no ``values`` line)
     """
     # ------------------------------------------------------------------
     # Containers for the different parts of the header
     # ------------------------------------------------------------------
-    dmeta_header: List[str] = []          # columns coming from dmeta blocks
+    dmeta_header: List[str] = []          # columns from dmeta blocks (dim > 1)
     dmeta_vars: List[Dict] = []           # info needed to fill those columns
 
-    values_header: List[str] = []          # columns coming from values line(s)
-    values_vars: List[Dict] = []           # info needed to fill those columns
+    values_header: List[str] = []          # columns from real ``values`` lines
+    values_vars: List[Dict] = []           # info for real ``values`` (if any)
 
-    dim_lengths: Dict[int, int] = {}      # dimension index → length
+    first_dim_vars: Dict[int, Dict] = {}   # mapping first‑dim index → column info
+    dim_lengths: Dict[int, int] = {}       # dimension index → length
+
+    has_values_line = False                # true if we saw a ``values`` line
 
     # ------------------------------------------------------------------
     # PASS 1 – read metadata (values, size, dmeta) and build the header
@@ -348,12 +351,14 @@ def convert(
             token = row[0].strip()
 
             # --------------------------------------------------------------
-            # values line – defines measurement column(s)
+            # values line – explicit measurement columns
             # --------------------------------------------------------------
             if token == "values":
                 if len(row) < 2:
                     logging.warning("Malformed values line – skipping")
                     continue
+                has_values_line = True
+
                 var_type_raw = row[1].strip()
                 var_name, var_id = _split_term(var_type_raw)
 
@@ -373,30 +378,34 @@ def convert(
                 col_names, data_type = column_names_for_var(
                     var, term_map, parent_map, dim_lengths, is_value_line=True
                 )
-                # keep the column names for later – they will be appended after dmeta columns
+                col_start = len(values_header)
                 values_header.extend(col_names)
 
                 values_vars.append(
                     {
-                        "col_names": col_names,
+                        "col_start": col_start,
+                        "col_count": len(col_names),
                         "data_type": data_type,
+                        "col_names": col_names,
                     }
                 )
                 continue
 
             # --------------------------------------------------------------
-            # size line – gives the length of each dimension
+            # size line – dimension lengths
             # --------------------------------------------------------------
             if token == "size":
                 for idx, val in enumerate(row[1:], start=1):
                     try:
                         dim_lengths[idx] = int(val.strip())
                     except ValueError:
-                        logging.error(f"Invalid size value '{val}' for dimension {idx}")
+                        logging.error(
+                            f"Invalid size value '{val}' for dimension {idx}"
+                        )
                 continue
 
             # --------------------------------------------------------------
-            # dmeta block – dimension variable + its per‑index values
+            # dmeta block – variable definition + per‑index values
             # --------------------------------------------------------------
             if token == "dmeta":
                 if len(row) < 4:
@@ -407,6 +416,64 @@ def convert(
                 dim_type_raw = row[2].strip()
                 var_type_raw = row[3].strip()
 
+                # ----------------------------------------------------------
+                # Special handling: dimension 1 and NO explicit values line
+                # ----------------------------------------------------------
+                if dim_idx == 1 and not has_values_line:
+                    block_len = dim_lengths.get(dim_idx, 0)
+
+                    for _ in range(block_len):
+                        try:
+                            var_row = next(reader)
+                        except StopIteration:
+                            logging.error(
+                                "Unexpected EOF while reading first‑dimension variables"
+                            )
+                            break
+                        if not var_row:
+                            continue
+
+                        # var_row: index, var_name <id>, extra…
+                        var_type_raw = var_row[1].strip()
+                        var_name, var_id = _split_term(var_type_raw)
+
+                        extra_terms: List[Dict[str, str]] = []
+                        for extra_raw in var_row[2:]:
+                            e_name, e_id = _split_term(extra_raw.strip())
+                            extra_terms.append({"name": e_name, "id": e_id})
+
+                        var = {
+                            "dim_name": None,
+                            "dim_id": None,
+                            "var_name": var_name,
+                            "var_id": var_id,
+                            "extra": extra_terms,
+                        }
+
+                        col_names, data_type = column_names_for_var(
+                            var, term_map, parent_map, dim_lengths, is_value_line=True
+                        )
+                        col_start = len(values_header)
+                        values_header.extend(col_names)
+
+                        try:
+                            dim1_index = int(var_row[0].strip())
+                        except ValueError:
+                            logging.warning(
+                                f"Invalid index in first‑dimension variable row: {var_row}"
+                            )
+                            continue
+                        first_dim_vars[dim1_index] = {
+                            "col_start": col_start,
+                            "col_count": len(col_names),
+                            "data_type": data_type,
+                        }
+                    # The dmeta line for dimension 1 does *not* create a column.
+                    continue
+
+                # ----------------------------------------------------------
+                # Normal dmeta handling (dimensions >1 or when a values line exists)
+                # ----------------------------------------------------------
                 dim_name, dim_id = _split_term(dim_type_raw)
                 var_name, var_id = _split_term(var_type_raw)
 
@@ -447,7 +514,7 @@ def convert(
                     value_str = val_row[1].strip() if len(val_row) > 1 else ""
                     extracted = extract_values(value_str, data_type)
 
-                    # Pad in case the variable produces fewer columns than expected
+                    # Pad if the variable produced fewer columns than expected
                     while len(extracted) < len(col_names):
                         extracted.append("")
                     values_by_index[i] = extracted
@@ -467,8 +534,9 @@ def convert(
             # data marker – end of metadata, start of actual ND‑Array rows
             # --------------------------------------------------------------
             if token == "data":
-                # Header is complete; the reader is now positioned at the first
-                # data row (the line containing only "data" has been consumed).
+                # Header is now complete; the CSV pointer is positioned at the
+                # first data row (the line containing only "data" has been
+                # consumed).  Break out of the metadata loop.
                 break
 
             # --------------------------------------------------------------
@@ -476,18 +544,27 @@ def convert(
             # --------------------------------------------------------------
 
         # ------------------------------------------------------------------
-        # Assemble the final header: dmeta columns first, values columns last
+        # Assemble the final header: dmeta columns first, then all values‑derived
+        # columns (including the special first‑dimension variables, if any)
         # ------------------------------------------------------------------
         header = dmeta_header + values_header
 
-        # Assign column offsets for the values variables (they come after dmeta columns)
-        values_start = len(dmeta_header)
-        for vv in values_vars:
-            vv["col_start"] = values_start
-            vv["col_count"] = len(vv["col_names"])
-            values_start += vv["col_count"]
+        # ------------------------------------------------------------------
+        # Compute absolute column offsets for the values columns
+        # ------------------------------------------------------------------
+        values_offset_base = len(dmeta_header)          # where the values segment starts
 
-        # Number of dimension‑index columns = number of dimensions
+        for vv in values_vars:
+            vv["col_start"] = values_offset_base + vv["col_start"]
+            vv["col_count"] = len(vv["col_names"])
+
+        for fd in first_dim_vars.values():
+            fd["col_start"] = values_offset_base + fd["col_start"]
+            # col_count already correct
+
+        # ------------------------------------------------------------------
+        # Number of index columns = number of dimensions
+        # ------------------------------------------------------------------
         num_dims = len(dim_lengths)
 
         # ------------------------------------------------------------------
@@ -498,60 +575,128 @@ def convert(
             out_writer = csv.writer(out_f, delimiter="\t")
             out_writer.writerow(header)
 
-            for data_row in reader:
-                if not data_row:
-                    continue
-                if len(data_row) < num_dims + 1:
-                    logging.warning(
-                        f"Data row has fewer columns than expected (need {num_dims + 1}) – skipping"
-                    )
-                    continue
+            # --------------------------------------------------------------
+            # When there is *no* explicit ``values`` line we must merge rows
+            # that share the same indices for dimensions 2..N.
+            # --------------------------------------------------------------
+            if not has_values_line:
+                merged_rows: Dict[Tuple[int, ...], List[str]] = {}
 
-                # -------------------- indices --------------------------------
-                try:
-                    indices = [int(v.strip()) for v in data_row[:num_dims]]
-                except ValueError:
-                    logging.warning(
-                        f"Non‑integer index in row {data_row} – skipping"
-                    )
-                    continue
-
-                # -------------------- measurement values ----------------------
-                measurement_vals = data_row[num_dims:]  # may be more than one
-
-                # start with a row full of “n/a”
-                out_row = ["n/a"] * len(header)
-
-                # -------------------- dmeta variables -------------------------
-                for dv in dmeta_vars:
-                    dim_idx = dv["dim_idx"]
-                    idx_val = indices[dim_idx - 1]               # CSV uses 1‑based indices
-                    if idx_val < 1 or idx_val > len(dv["values_by_index"]):
+                for data_row in reader:
+                    if not data_row:
+                        continue
+                    if len(data_row) < num_dims + 1:
                         logging.warning(
-                            f"Index {idx_val} out of range for dimension {dim_idx}"
+                            f"Data row has fewer columns than expected (need {num_dims + 1}) – skipping"
                         )
                         continue
-                    vals = dv["values_by_index"][idx_val - 1]    # list of column values
-                    if vals is None:
+
+                    # indices (all dimensions)
+                    try:
+                        indices = [int(v.strip()) for v in data_row[:num_dims]]
+                    except ValueError:
+                        logging.warning(
+                            f"Non‑integer index in row {data_row} – skipping"
+                        )
                         continue
-                    for offset, v in enumerate(vals):
-                        out_row[dv["col_start"] + offset] = v if v != "" else "n/a"
 
-                # -------------------- values line(s) --------------------------
-                for vi, vv in enumerate(values_vars):
-                    raw_val = (
-                        measurement_vals[vi].strip()
-                        if vi < len(measurement_vals)
-                        else ""
-                    )
-                    extracted = extract_values(raw_val, vv["data_type"])
-                    # Pad for tuple case (two columns)
-                    while len(extracted) < vv["col_count"]:
-                        extracted.append("")
-                    for offset, v in enumerate(extracted):
-                        out_row[vv["col_start"] + offset] = v if v != "" else "n/a"
+                    # key = tuple of indices for dimensions 2..N (ignore first)
+                    key = tuple(indices[1:])
 
-                out_writer.writerow(out_row)
+                    # initialise merged row if we have not seen this key yet
+                    if key not in merged_rows:
+                        out_row = ["n/a"] * len(header)
+
+                        # fill dmeta columns (they are the same for all rows with this key)
+                        for dv in dmeta_vars:
+                            dim_idx = dv["dim_idx"]
+                            idx_val = indices[dim_idx - 1]               # 1‑based
+                            if idx_val < 1 or idx_val > len(dv["values_by_index"]):
+                                logging.warning(
+                                    f"Index {idx_val} out of range for dimension {dim_idx}"
+                                )
+                                continue
+                            vals = dv["values_by_index"][idx_val - 1]
+                            if vals is None:
+                                continue
+                            for off, v in enumerate(vals):
+                                out_row[dv["col_start"] + off] = v if v != "" else "n/a"
+
+                        merged_rows[key] = out_row
+                    else:
+                        out_row = merged_rows[key]
+
+                    # measurement value for the first‑dimension variable
+                    first_idx = indices[0]
+                    fd = first_dim_vars.get(first_idx)
+                    if fd:
+                        measurement_val = data_row[num_dims].strip() if len(data_row) > num_dims else ""
+                        extracted = extract_values(measurement_val, fd["data_type"])
+                        while len(extracted) < fd["col_count"]:
+                            extracted.append("")
+                        for off, v in enumerate(extracted):
+                            out_row[fd["col_start"] + off] = v if v != "" else "n/a"
+
+                # write merged rows in the order they were first created
+                for out_row in merged_rows.values():
+                    out_writer.writerow(out_row)
+
+            # --------------------------------------------------------------
+            # Normal case – there is at least one explicit ``values`` line.
+            # --------------------------------------------------------------
+            else:
+                for data_row in reader:
+                    if not data_row:
+                        continue
+                    if len(data_row) < num_dims + 1:
+                        logging.warning(
+                            f"Data row has fewer columns than expected (need {num_dims + 1}) – skipping"
+                        )
+                        continue
+
+                    # -------------------- indices --------------------------------
+                    try:
+                        indices = [int(v.strip()) for v in data_row[:num_dims]]
+                    except ValueError:
+                        logging.warning(
+                            f"Non‑integer index in row {data_row} – skipping"
+                        )
+                        continue
+
+                    measurement_vals = data_row[num_dims:]   # may be more than one
+
+                    # start with a row full of “n/a”
+                    out_row = ["n/a"] * len(header)
+
+                    # -------------------- dmeta variables -------------------------
+                    for dv in dmeta_vars:
+                        dim_idx = dv["dim_idx"]
+                        idx_val = indices[dim_idx - 1]               # CSV uses 1‑based indices
+                        if idx_val < 1 or idx_val > len(dv["values_by_index"]):
+                            logging.warning(
+                                f"Index {idx_val} out of range for dimension {dim_idx}"
+                            )
+                            continue
+                        vals = dv["values_by_index"][idx_val - 1]    # list of column values
+                        if vals is None:
+                            continue
+                        for off, v in enumerate(vals):
+                            out_row[dv["col_start"] + off] = v if v != "" else "n/a"
+
+                    # -------------------- values columns --------------------------
+                    for vi, vv in enumerate(values_vars):
+                        raw_val = (
+                            measurement_vals[vi].strip()
+                            if vi < len(measurement_vals)
+                            else ""
+                        )
+                        extracted = extract_values(raw_val, vv["data_type"])
+                        while len(extracted) < vv["col_count"]:
+                            extracted.append("")
+                        for off, v in enumerate(extracted):
+                            out_row[vv["col_start"] + off] = v if v != "" else "n/a"
+
+                    out_writer.writerow(out_row)
 
     logging.info(f"TSV written to {out_path}")
 
