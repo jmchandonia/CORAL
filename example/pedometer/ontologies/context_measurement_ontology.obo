@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-09-23
+data-version: 2025-10-17
 ontology:como
 date: 27:08:2018 15:13
 saved-by: jmc
@@ -5316,6 +5316,20 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0010006" xsd:string
 def: "Albedo." []
+is_a: COMO:0000120 ! Measurement
+
+[Term]
+id: COMO:0000555
+name: LC-MS Peak Area Ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0010006" xsd:string
+def: "LC-MS Peak Area Ratio." []
 is_a: COMO:0000120 ! Measurement
 
 [Typedef]

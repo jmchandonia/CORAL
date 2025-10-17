@@ -420,6 +420,7 @@
   *Fitness Score (Float, +log ratio unit)
   Genetic Interaction Score (Float)
   Stoichiometric Ratio (Float)
+  *LC-MS Peak Area Ratio (Float, ratio)
   *Isotope Ratio (Float, ratio, parts per notation unit, +percent)
   *Relative Abundance (Float, ratio, count)
   *Amount (Float, substance unit)
