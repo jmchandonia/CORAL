@@ -457,7 +457,6 @@
           "name": "n_contigs",
           "type_term": "COMO:0000126",
           "scalar_type": "int",
-          "required": true,
           "units_term": "UO:0000189",
           "comment": "Number of contigs in the assembly"
         },
@@ -465,7 +464,6 @@
           "name": "link",
           "type_term": "COMO:0000203",
           "scalar_type": "text",
-          "required": true,
           "comment": "Reference to the actual assembly data"
         }
       ],
@@ -515,7 +513,6 @@
           "name": "n_contigs",
           "type_term": "COMO:0000126",
           "scalar_type": "int",
-          "required": true,
           "units_term": "UO:0000189",
           "comment": "Number of contigs in the genome assembly"
         },
@@ -523,7 +520,6 @@
           "name": "n_features",
           "type_term": "COMO:0000126",
           "scalar_type": "int",
-          "required": true,
           "units_term": "UO:0000189",
           "comment": "Number of annotated features (e.g., genes) in the genome"
         },
@@ -531,7 +527,6 @@
           "name": "link",
           "type_term": "COMO:0000203",
           "scalar_type": "text",
-          "required": true,
           "comment": "Link to where the genome itself is actually stored"
         }
       ],
