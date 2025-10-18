@@ -587,7 +587,6 @@
           "name": "contig_number",
           "type_term": "COMO:0000126",
           "scalar_type": "int",
-          "required": true,
           "comment": "Contigs are indexed starting at 1, as in KBase",
           "units_term": "UO:0000189"
         },
@@ -595,7 +594,6 @@
           "name": "strand",
           "type_term": "COMO:0000186",
           "scalar_type": "text",
-          "required": true,
           "constraint": "[+-]",
           "comment": "DNA strand of the gene (+ for forward, - for reverse)"
         },
@@ -603,7 +601,6 @@
           "name": "start",
           "type_term": "COMO:0000242",
           "scalar_type": "int",
-          "required": true,
           "comment": "Genomic start coordinate on the contig, indexed starting at 1 as in KBase",
           "units_term": "UO:0000244"
         },
@@ -611,7 +608,6 @@
           "name": "stop",
           "type_term": "COMO:0000243",
           "scalar_type": "int",
-          "required": true,
           "units_term": "UO:0000244",
           "comment": "Genomic stop coordinate in base pairs"
         },

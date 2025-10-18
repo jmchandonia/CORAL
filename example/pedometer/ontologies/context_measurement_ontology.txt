@@ -247,8 +247,8 @@
     **DNA Construct
       *DNA Construct Name (String)
     Gene Annotation
-    Genome
-      Genome ID (Ref: DA:0000033.Genome.name)
+    **Genome
+      *-Genome ID (Ref: DA:0000033.Genome.name)
     Genotype (String)
     Assembly
       Assembly ID (Ref: DA:0000031.Assembly.name)
@@ -422,7 +422,7 @@
   Stoichiometric Ratio (Float)
   *LC-MS Peak Area Ratio (Float, ratio)
   *Isotope Ratio (Float, ratio, parts per notation unit, +percent)
-  *Relative Abundance (Float, ratio, count)
+  *Relative Abundance (Float, ratio, count, +percent)
   *Amount (Float, substance unit)
   *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
   *Relative Evolutionary Divergence (Float, +dimensionless unit)
