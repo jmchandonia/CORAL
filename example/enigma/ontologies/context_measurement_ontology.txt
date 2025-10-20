@@ -81,7 +81,7 @@
         *Easting (Float, meter)
         *Northing (Float, meter)
         +State Plane Zone
-    *+Position
+    *+Position:
       Upper
       Lower
       Middle
