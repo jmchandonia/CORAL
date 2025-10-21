@@ -1,39 +1,26 @@
 #!/usr/bin/env python3
 """
-convert_bricks.py
-
-Convert a CORAL NDArray CSV into a TSV file.  The TSV header and the data
-rows are derived from an OBO ontology.
+Convert a CORAL NDArray CSV into a TSV file.
 
 Features
 --------
-* The CSV sections may appear in any order:
-    1. one or more ``values`` lines (often before the ``size`` line)
-    2. a ``size`` line that gives the length of each dimension
-    3. any number of ``dmeta`` blocks – a ``dmeta`` line followed by
-       *L* value lines, where *L* is the length of the referenced dimension
-    4. a ``data`` line; everything after it are the ND‑Array rows
-* If the file **does not contain a ``values`` line**, the variables that
-  are defined in the **first dimension** are treated as if they were
-  separate ``values`` lines:
-      – the ``dmeta`` line for dimension 1 is ignored (no column is created)
-      – each row that follows that ``dmeta`` line defines a measurement
-        column (or two columns for an ORef) that are placed at the **end**
-        of the TSV header
-      – rows that have the same indices for dimensions 2…N are merged
-        into a single TSV row; the first‑dimension index selects which of
-        the generated measurement columns receives the value from the CSV
-* Missing values for a variable are allowed.  After a ``dmeta`` line the
-  block may contain fewer lines than the declared dimension length.
-  Only lines that start with a numeric index are parsed; the block ends
-  when a line whose first field is non‑numeric is encountered.  Missing
-  indices are left blank in the output TSV.
-* Column names follow the rules you gave (null → concatenated term names,
-  Ref → name only, ORef → ``*_sys_oterm_id`` then ``*_sys_oterm_name``).
-  When the ORef columns are written the identifier goes in the ``*_id``
-  column and the name in the ``*_name`` column.
-* Empty cells are written as empty strings (not “n/a”).
-* No authentication code – it has been removed because it is not needed.
+* Handles optional typedef.json – if a static type has a ``preferred_name``
+  the CDM table and every foreign‑key column that contains that name are
+  renamed.
+* Supports CSV files **with** and **without** a ``values`` line.
+  • When there is no ``values`` line the first‑dimension variables are
+    treated as measurement columns and rows that share the same indices
+    for dimensions 2…N are merged.
+* Allows missing values in a ``dmeta`` block: only rows whose first field
+  is numeric are parsed; the block ends when a non‑numeric first field is
+  encountered.  Missing indices are left empty (not “n/a”).
+* For **Ref** and **ORef** variables the column name now includes any
+  extra fields (columns 5 + on the ``dmeta`` line) – the same as for
+  null‑type variables.  When no extra fields are present the column name
+  is simply the data‑type (e.g. ``sdt_taxon_name`` or
+  ``sequence_type_sys_oterm_id``/``sequence_type_sys_oterm_name``).
+* Emits a warning when a variable has a null data type but the value looks
+  like ``term name <term id>``.
 """
 
 # ----------------------------------------------------------------------
@@ -41,6 +28,7 @@ Features
 # ----------------------------------------------------------------------
 import argparse
 import csv
+import json
 import logging
 import os
 import re
@@ -89,14 +77,7 @@ def load_obo(
     Dict[str, Dict[str, Union[str, Tuple[str, str], None]]],
     Dict[str, List[str]],
 ]:
-    """
-    Parse an OBO file.
-
-    Returns
-    -------
-    term_map   : term_id → {"name": str, "data_type": str|tuple|None}
-    parent_map : term_id → list[parent_term_id]   (is_a hierarchy)
-    """
+    """Parse an OBO file."""
     term_map: Dict[str, Dict[str, Union[str, Tuple[str, str], None]]] = {}
     parent_map: Dict[str, List[str]] = {}
 
@@ -108,10 +89,7 @@ def load_obo(
             line = raw_line.strip()
             if not line:                     # blank line → finish current term
                 if cur_id:
-                    term_map[cur_id] = {
-                        "name": cur_name,
-                        "data_type": cur_data_type,
-                    }
+                    term_map[cur_id] = {"name": cur_name, "data_type": cur_data_type}
                     parent_map.setdefault(cur_id, [])
                     cur_id = cur_name = ""
                     cur_data_type = None
@@ -124,9 +102,7 @@ def load_obo(
             elif line.startswith("name:"):
                 cur_name = line.split("name:", 1)[1].strip()
             elif line.startswith("xref:"):
-                cur_data_type = _parse_xref(
-                    line.split("xref:", 1)[1].strip()
-                )
+                cur_data_type = _parse_xref(line.split("xref:", 1)[1].strip())
             elif line.startswith("is_a:"):
                 parent_part = line.split("is_a:", 1)[1].strip()
                 parent_id = parent_part.split("!", 1)[0].strip().split()[0]
@@ -185,10 +161,7 @@ def _resolve_name(
     term_id: str,
     term_map: Dict[str, Dict[str, Union[str, Tuple[str, str], None]]],
 ) -> str:
-    """
-    Return the OBO name if the term id exists, otherwise the CSV name.
-    Emit a warning when they differ.
-    """
+    """Return the OBO name if the term id exists, otherwise the CSV name."""
     if term_id and term_id in term_map:
         obo_name = term_map[term_id]["name"]
         if csv_name != obo_name:
@@ -201,7 +174,42 @@ def _resolve_name(
 
 
 # ----------------------------------------------------------------------
-# 3️⃣  Column‑name generation (dmeta & values)
+# 3️⃣  Typedef handling (preferred names)
+# ----------------------------------------------------------------------
+def load_typedef(typedef_path: str) -> Dict[str, str]:
+    """Load typedef.json and return a mapping ``old_name → preferred_name``."""
+    try:
+        with open(typedef_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        logging.error(f"Failed to read typedef file '{typedef_path}': {e}")
+        return {}
+
+    mapping: Dict[str, str] = {}
+    for st in data.get("static_types", []):
+        name = st.get("name", "").lower()
+        pref = st.get("preferred_name")
+        if pref:
+            mapping[name] = pref.lower()
+        else:
+            mapping[name] = name
+    return mapping
+
+
+def apply_type_mapping(col_names: List[str], type_map: Dict[str, str]) -> List[str]:
+    """Replace any token in a column name that matches a static‑type name."""
+    if not type_map:
+        return col_names
+    new_cols: List[str] = []
+    for col in col_names:
+        parts = col.split("_")
+        parts = [type_map.get(p, p) for p in parts]
+        new_cols.append("_".join(parts))
+    return new_cols
+
+
+# ----------------------------------------------------------------------
+# 4️⃣  Column‑name generation (dmeta & values)
 # ----------------------------------------------------------------------
 def column_names_for_var(
     var: Dict[str, Union[str, List[Dict[str, str]]]],
@@ -209,20 +217,12 @@ def column_names_for_var(
     parent_map: Dict[str, List[str]],
     dim_lengths: Dict[int, int],
     is_value_line: bool = False,
+    type_map: Dict[str, str] = None,
 ) -> Tuple[List[str], Union[str, Tuple[str, str], None]]:
     """
     Produce column name(s) for a variable and return its data type.
 
-    Parameters
-    ----------
-    var
-        dict with keys ``dim_name``, ``dim_id``, ``var_name``, ``var_id``,
-        optional ``extra`` (list of ``{'name':…, 'id':…}``).
-    is_value_line
-        ``True`` when the variable originates from a ``values`` line
-        (or from the special first‑dimension handling).
-    dim_lengths
-        Mapping dimension index → its length (used only for validation).
+    ``type_map`` is the optional preferred‑name mapping from ``typedef.json``.
     """
     dim_name = var.get("dim_name")
     dim_id = var.get("dim_id")
@@ -240,11 +240,30 @@ def column_names_for_var(
     entry = term_map.get(var_id)
     data_type = entry["data_type"] if entry else None
 
+    # --------------------------------------------------------------
     # Should we drop the dimension prefix?
+    # --------------------------------------------------------------
     omit_dim = False
     if not is_value_line and data_type is not None and dim_id:
-        if is_descendant(var_id, dim_id, parent_map):
+        # Omit the dimension prefix only when the variable is a *different*
+        # descendant of the dimension term.
+        if is_descendant(var_id, dim_id, parent_map) and var_id != dim_id:
             omit_dim = True
+
+    # --------------------------------------------------------------
+    # Helper that builds the prefix used for Ref/ORef column names
+    # --------------------------------------------------------------
+    def _build_prefix() -> str:
+        parts: List[str] = []
+        if not is_value_line:
+            if not omit_dim and dim_norm:
+                parts.append(dim_norm)
+            if var_norm and (dim_norm != var_norm):
+                parts.append(var_norm)
+        for extra_term in extra:
+            extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
+            parts.append(_normalize(extra_name))
+        return "_".join(parts)
 
     # ------------------------------------------------------------------
     # 1️⃣  NULL data type – concatenate all term names on the line
@@ -255,12 +274,12 @@ def column_names_for_var(
             parts.append(dim_name)
         parts.append(var_name)
         for extra_term in extra:
-            extra_name = _resolve_name(
-                extra_term["name"], extra_term["id"], term_map
-            )
+            extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
             parts.append(extra_name)
         col_name = "_".join(_normalize(p) for p in parts)
-        return [col_name], data_type
+        col_names = [col_name]
+        col_names = apply_type_mapping(col_names, type_map or {})
+        return col_names, data_type
 
     # ------------------------------------------------------------------
     # 2️⃣  Tuple data type (ORef) – two columns
@@ -269,27 +288,29 @@ def column_names_for_var(
         if is_value_line:
             prefix = var_norm
         else:
-            if omit_dim or dim_norm == var_norm:
-                prefix = var_norm
-            else:
-                prefix = f"{dim_norm}_{var_norm}"
-        return [f"{prefix}_{data_type[0]}", f"{prefix}_{data_type[1]}"], data_type
+            prefix = _build_prefix()
+        col_names = [f"{prefix}_{data_type[0]}", f"{prefix}_{data_type[1]}"]
+        col_names = apply_type_mapping(col_names, type_map or {})
+        return col_names, data_type
 
     # ------------------------------------------------------------------
     # 3️⃣  Reference (Ref) – single column
     # ------------------------------------------------------------------
     if is_value_line:
-        col = data_type
+        col_name = data_type
     else:
-        if omit_dim or dim_norm == var_norm:
-            col = data_type
+        if extra:
+            prefix = _build_prefix()
+            col_name = f"{prefix}_{data_type}"
         else:
-            col = f"{dim_norm}_{data_type}"
-    return [col], data_type
+            col_name = data_type
+    col_names = [col_name]
+    col_names = apply_type_mapping(col_names, type_map or {})
+    return col_names, data_type
 
 
 # ----------------------------------------------------------------------
-# 4️⃣  Transform a raw CSV value into the list that fits the column(s)
+# 5️⃣  Transform a raw CSV value into the list that fits the column(s)
 # ----------------------------------------------------------------------
 def extract_values(
     value_str: str,
@@ -300,16 +321,20 @@ def extract_values(
     the TSV columns.
 
     * Ref  – keep only the name part (text before ``<``).
-    * ORef – return ``[id, name]`` (identifier first, then term name) to
-      match the ``*_sys_oterm_id`` / ``*_sys_oterm_name`` order.
-    * null – return the original string unchanged.
+    * ORef – return ``[id, name]`` (identifier first, then term name).
+    * null – return the original string unchanged **but** emit a warning
+      if the value looks like ``term name <term id>``.
     """
     if isinstance(data_type, tuple):
-        # ORef → id + name
         name, term_id = _split_term(value_str)
-        return [term_id, name]
+        return [term_id, name]          # id first, then name
 
     if data_type is None:
+        if value_str and _TERM_RE.match(value_str):
+            logging.warning(
+                f"Value '{value_str}' appears to be a term '<name> <id>' "
+                f"but the variable has a null data type."
+            )
         return [value_str]
 
     # Ref – keep the name part only
@@ -318,23 +343,24 @@ def extract_values(
 
 
 # ----------------------------------------------------------------------
-# 5️⃣  Main conversion routine (single‑pass over the CSV)
+# 6️⃣  Main conversion routine (single‑pass over the CSV)
 # ----------------------------------------------------------------------
 def convert(
     csv_path: str,
     out_path: str,
     term_map: Dict[str, Dict[str, Union[str, Tuple[str, str], None]]],
     parent_map: Dict[str, List[str]],
+    type_map: Dict[str, str],
 ) -> None:
     """
     Parse the CSV, build the header and write a TSV that contains **all**
     rows after the ``data`` line.
 
     The processing is done in a single pass:
-        * ``values``   → measurement columns (may appear before ``size``)
-        * ``size``     → dimension lengths
-        * ``dmeta``    → dimension variables + per‑index value block
-        * ``data``     → actual ND‑Array rows (merged when no ``values`` line)
+        * ``values``   – measurement columns (may appear before ``size``)
+        * ``size``     – dimension lengths
+        * ``dmeta``    – dimension variables + per‑index value block
+        * ``data``     – actual ND‑Array rows (merged when no ``values`` line)
     """
     # ------------------------------------------------------------------
     # Containers for the different parts of the header
@@ -342,13 +368,13 @@ def convert(
     dmeta_header: List[str] = []          # columns from dmeta blocks (dim > 1)
     dmeta_vars: List[Dict] = []           # info needed to fill those columns
 
-    values_header: List[str] = []          # columns from real ``values`` lines
+    values_header: List[str] = []          # columns that come from ``values`` lines
     values_vars: List[Dict] = []           # info for real ``values`` lines
 
     first_dim_vars: Dict[int, Dict] = {}   # first‑dimension variable → column info
     dim_lengths: Dict[int, int] = {}       # dimension index → length
 
-    has_values_line = False                # true when a ``values`` line is seen
+    has_values_line = False                # true if a ``values`` line was seen
 
     # ------------------------------------------------------------------
     # Helper: read the next row (or None) from the CSV iterator
@@ -396,7 +422,8 @@ def convert(
                 }
 
                 col_names, data_type = column_names_for_var(
-                    var, term_map, parent_map, dim_lengths, is_value_line=True
+                    var, term_map, parent_map, dim_lengths,
+                    is_value_line=True, type_map=type_map
                 )
                 col_start = len(values_header)
                 values_header.extend(col_names)
@@ -420,9 +447,7 @@ def convert(
                     try:
                         dim_lengths[idx] = int(val.strip())
                     except ValueError:
-                        logging.error(
-                            f"Invalid size value '{val}' for dimension {idx}"
-                        )
+                        logging.error(f"Invalid size value '{val}' for dimension {idx}")
                 row = _next_row(it)
                 continue
 
@@ -443,7 +468,7 @@ def convert(
                 # Special case: first dimension & no explicit values line
                 # ----------------------------------------------------------
                 if dim_idx == 1 and not has_values_line:
-                    # The lines that follow define the measurement columns.
+                    # Following lines define measurement columns.
                     while True:
                         next_row = _next_row(it)
                         if next_row is None:
@@ -453,7 +478,6 @@ def convert(
                             continue
                         first_field = next_row[0].strip()
                         if first_field.isdigit():
-                            # this line defines a variable for the first dimension
                             dim1_index = int(first_field)
                             var_type_raw = next_row[1].strip() if len(next_row) > 1 else ""
                             var_name, var_id = _split_term(var_type_raw)
@@ -472,11 +496,8 @@ def convert(
                             }
 
                             col_names, data_type = column_names_for_var(
-                                var,
-                                term_map,
-                                parent_map,
-                                dim_lengths,
-                                is_value_line=True,
+                                var, term_map, parent_map, dim_lengths,
+                                is_value_line=True, type_map=type_map
                             )
                             col_start = len(values_header)
                             values_header.extend(col_names)
@@ -486,13 +507,12 @@ def convert(
                                 "col_count": len(col_names),
                                 "data_type": data_type,
                             }
-                            # continue reading next possible variable row
                             continue
                         else:
-                            # non‑numeric line – start of next section
+                            # start of next section
                             row = next_row
                             break
-                    # skip normal dmeta handling for dimension 1
+                    # skip normal dmeta handling for dim 1
                     continue
 
                 # ----------------------------------------------------------
@@ -515,19 +535,20 @@ def convert(
                 }
 
                 col_names, data_type = column_names_for_var(
-                    var, term_map, parent_map, dim_lengths, is_value_line=False
+                    var, term_map, parent_map, dim_lengths,
+                    is_value_line=False, type_map=type_map
                 )
                 col_start = len(dmeta_header)
                 dmeta_header.extend(col_names)
 
+                # ---- read the value block that follows this dmeta line ----
                 block_len = dim_lengths.get(dim_idx, 0)
                 values_by_index: List[List[str]] = [None] * block_len
 
-                # read the value block – stop when first field is not numeric
+                # read block – stop when first field is not numeric
                 while True:
                     next_row = _next_row(it)
                     if next_row is None:
-                        # EOF – stop processing this block
                         break
                     if not next_row:
                         continue
@@ -548,9 +569,9 @@ def convert(
                             logging.warning(
                                 f"Index {idx} out of range for dimension {dim_idx}"
                             )
-                        continue   # keep reading block lines
+                        continue
                     else:
-                        # reached the start of a new section
+                        # start of a new section
                         row = next_row
                         break
 
@@ -569,7 +590,7 @@ def convert(
             # data marker – end of metadata, start of actual ND‑Array rows
             # --------------------------------------------------------------
             if token == "data":
-                # Header is complete; the iterator now points to the first data row.
+                # Header is complete; iterator now points to first data row.
                 break
 
             # --------------------------------------------------------------
@@ -578,16 +599,12 @@ def convert(
             row = _next_row(it)
 
         # ------------------------------------------------------------------
-        # Assemble the final header: dmeta columns first, then all values‑derived
-        # columns (including special first‑dimension variables, if any)
+        # Assemble final header
         # ------------------------------------------------------------------
         header = dmeta_header + values_header
 
-        # ------------------------------------------------------------------
-        # Compute absolute column offsets for the values segment
-        # ------------------------------------------------------------------
+        # Adjust column offsets for the values segment
         values_offset_base = len(dmeta_header)
-
         for vv in values_vars:
             vv["col_start"] = values_offset_base + vv["col_start"]
             vv["col_count"] = len(vv["col_names"])
@@ -596,13 +613,10 @@ def convert(
             fd["col_start"] = values_offset_base + fd["col_start"]
             # col_count already correct
 
-        # ------------------------------------------------------------------
-        # Number of index columns = number of dimensions
-        # ------------------------------------------------------------------
-        num_dims = len(dim_lengths)
+        num_dims = len(dim_lengths)   # number of index columns
 
         # ------------------------------------------------------------------
-        # Write the TSV (header + all data rows)
+        # Write the TSV (header + data rows)
         # ------------------------------------------------------------------
         os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
         with open(out_path, "w", newline="", encoding="utf-8") as out_f:
@@ -624,7 +638,6 @@ def convert(
                         )
                         continue
 
-                    # indices for all dimensions
                     try:
                         indices = [int(v.strip()) for v in data_row[:num_dims]]
                     except ValueError:
@@ -633,21 +646,16 @@ def convert(
                         )
                         continue
 
-                    # key for merging – dimensions 2..N
-                    key = tuple(indices[1:])
+                    key = tuple(indices[1:])   # dimensions 2..N
 
-                    # create a new output row if this is the first time we see this key
                     if key not in merged_rows:
                         out_row = [""] * len(header)
 
-                        # fill dmeta columns (same for all rows with this key)
+                        # Fill dmeta columns (same for all rows with this key)
                         for dv in dmeta_vars:
                             dim_idx = dv["dim_idx"]
                             idx_val = indices[dim_idx - 1]
-                            if (
-                                idx_val < 1
-                                or idx_val > len(dv["values_by_index"])
-                            ):
+                            if idx_val < 1 or idx_val > len(dv["values_by_index"]):
                                 logging.warning(
                                     f"Index {idx_val} out of range for dimension {dim_idx}"
                                 )
@@ -661,8 +669,6 @@ def convert(
                     else:
                         out_row = merged_rows[key]
 
-                    # place the measurement value into the column that belongs to the
-                    # first‑dimension index
                     first_idx = indices[0]
                     fd = first_dim_vars.get(first_idx)
                     if fd:
@@ -671,16 +677,12 @@ def convert(
                             if len(data_row) > num_dims
                             else ""
                         )
-                        extracted = extract_values(
-                            measurement_val, fd["data_type"]
-                        )
+                        extracted = extract_values(measurement_val, fd["data_type"])
                         while len(extracted) < fd["col_count"]:
                             extracted.append("")
                         for off, v in enumerate(extracted):
                             out_row[fd["col_start"] + off] = v
-                    # else: no column defined for this first‑dimension index → leave blank
 
-                # write merged rows in creation order
                 for out_row in merged_rows.values():
                     out_writer.writerow(out_row)
 
@@ -697,29 +699,23 @@ def convert(
                         )
                         continue
 
-                    # indices
                     try:
-                        indices = [
-                            int(v.strip()) for v in data_row[:num_dims]
-                        ]
+                        indices = [int(v.strip()) for v in data_row[:num_dims]]
                     except ValueError:
                         logging.warning(
                             f"Non‑integer index in row {data_row} – skipping"
                         )
                         continue
 
-                    measurement_vals = data_row[num_dims:]  # may be more than one
+                    measurement_vals = data_row[num_dims:]   # may be more than one
 
                     out_row = [""] * len(header)
 
-                    # dmeta variables
+                    # dmeta columns
                     for dv in dmeta_vars:
                         dim_idx = dv["dim_idx"]
                         idx_val = indices[dim_idx - 1]
-                        if (
-                            idx_val < 1
-                            or idx_val > len(dv["values_by_index"])
-                        ):
+                        if idx_val < 1 or idx_val > len(dv["values_by_index"]):
                             logging.warning(
                                 f"Index {idx_val} out of range for dimension {dim_idx}"
                             )
@@ -749,19 +745,24 @@ def convert(
 
 
 # ----------------------------------------------------------------------
-# 6️⃣  CLI entry point
+# 7️⃣  CLI entry point
 # ----------------------------------------------------------------------
 def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
-            "Convert a CORAL NDArray CSV into a TSV file whose header "
-            "and data are derived from an OBO ontology."
+            "Convert a CORAL NDArray CSV into a TSV file whose header and data "
+            "are derived from an OBO ontology."
         )
     )
     parser.add_argument("--obo", required=True, help="Path to the OBO ontology file.")
     parser.add_argument("--csv", required=True, help="Path to the input CSV file.")
     parser.add_argument(
         "--out", required=True, help="Path to the TSV file that will be created."
+    )
+    parser.add_argument(
+        "--typedef",
+        required=False,
+        help="Path to typedef.json file containing preferred static type names.",
     )
     parser.add_argument(
         "--force",
@@ -779,8 +780,20 @@ def main() -> None:
     logging.info("Parsing OBO file …")
     term_map, parent_map = load_obo(args.obo)
 
+    # ------------------------------------------------------------------
+    # Load typedef.json (if supplied) and create a preferred‑name map
+    # ------------------------------------------------------------------
+    type_map: Dict[str, str] = {}
+    if args.typedef:
+        logging.info(f"Loading typedef file '{args.typedef}' …")
+        type_map = load_typedef(args.typedef)
+        if type_map:
+            logging.info(f"Preferred‑name mapping loaded for {len(type_map)} static types.")
+        else:
+            logging.warning("Typedef file loaded but no preferred_name mappings found.")
+
     logging.info("Converting CSV to TSV …")
-    convert(args.csv, args.out, term_map, parent_map)
+    convert(args.csv, args.out, term_map, parent_map, type_map)
 
 
 if __name__ == "__main__":
