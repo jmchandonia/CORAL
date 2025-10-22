@@ -28,6 +28,7 @@
       +Positive Control
       +Low Control
       +High Control
+      *-Control Name
     Replicate
       +Technical Replicate
       +Biological Replicate
