@@ -23,6 +23,7 @@ Features
 * Emits a warning when a variable has a null data type but the value looks
   like ``term name <term id>``.
 * Supports multiple OBO files – terms from all files are merged.
+* Column names contain only lowercase letters, numbers, and underscores.
 """
 
 # ----------------------------------------------------------------------
@@ -203,8 +204,21 @@ def _split_term(term_str: str) -> Tuple[str, str]:
 
 
 def _normalize(txt: str) -> str:
-    """Lower‑case and replace whitespace with '_'."""
-    return re.sub(r"\s+", "_", txt.strip().lower())
+    """
+    Lower‑case, replace forbidden characters with underscores, and merge consecutive underscores.
+    
+    Forbidden characters (anything other than a-z, 0-9, or _) are converted to underscores.
+    Then consecutive underscores are merged into a single underscore.
+    """
+    # Convert to lowercase
+    txt = txt.strip().lower()
+    # Replace any character that is not a lowercase letter, digit, or underscore with underscore
+    txt = re.sub(r"[^a-z0-9_]", "_", txt)
+    # Merge consecutive underscores into a single underscore
+    txt = re.sub(r"_+", "_", txt)
+    # Strip leading/trailing underscores
+    txt = txt.strip("_")
+    return txt
 
 
 def _resolve_name(
@@ -295,7 +309,7 @@ def column_names_for_var(
     # Should we drop the dimension prefix?
     # --------------------------------------------------------------
     omit_dim = False
-    if not is_value_line and data_type is not None and dim_id:
+    if not is_value_line and dim_id:
         # Omit the dimension prefix only when the variable is the same
         # or a descendant of the dimension term.
         if is_descendant(var_id, dim_id, parent_map) or var_id == dim_id:
@@ -307,9 +321,9 @@ def column_names_for_var(
     def _build_prefix() -> str:
         parts: List[str] = []
         if not is_value_line:
-            if not omit_dim and dim_norm:
+            if not omit_dim and dim_norm and dim_norm != var_norm:
                 parts.append(dim_norm)
-            if var_norm and (dim_norm != var_norm):
+            if var_norm:
                 parts.append(var_norm)
         for extra_term in extra:
             extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
@@ -321,9 +335,13 @@ def column_names_for_var(
     # ------------------------------------------------------------------
     if data_type is None:
         parts: List[str] = []
-        if not is_value_line and dim_norm != var_norm:
-            parts.append(dim_name)
-        parts.append(var_name)
+        if not is_value_line:
+            if not omit_dim and dim_norm and dim_norm != var_norm:
+                parts.append(dim_name)
+            if var_norm:
+                parts.append(var_name)
+        else:
+            parts.append(var_name)
         for extra_term in extra:
             extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
             parts.append(extra_name)
@@ -343,11 +361,11 @@ def column_names_for_var(
             if extra:
                 prefix = _build_prefix()
             else:
-                # No extra fields: just use variable name (and dimension if applicable)
+                # No extra fields: use variable name (and dimension if applicable)
                 parts: List[str] = []
-                if not omit_dim and dim_norm:
+                if not omit_dim and dim_norm and dim_norm != var_norm:
                     parts.append(dim_norm)
-                if var_norm and (dim_norm != var_norm):
+                if var_norm:
                     parts.append(var_norm)
                 prefix = "_".join(parts) if parts else var_norm
         
