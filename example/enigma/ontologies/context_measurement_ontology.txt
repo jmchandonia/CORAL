@@ -23,9 +23,11 @@
     +Campaign
     +Input
     +Output
-    *Control
+    *Control:
       +Negative Control
       +Positive Control
+      +Low Control
+      +High Control
     Replicate
       +Technical Replicate
       +Biological Replicate

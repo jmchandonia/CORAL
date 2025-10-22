@@ -3004,13 +3004,14 @@ is_a: ME:0000120 ! Measurement
 id: ME:0000283
 name: Control
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
+property_value: data_type "oterm_ref" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Control." []
+xref: ORef:ME:0000283
 is_a: ME:0000002 ! Experimental Context
 
 [Term]
@@ -5007,6 +5008,28 @@ property_value: is_valid_property "true" xsd:boolean
 def: "OTU." []
 synonym: "Operational Taxonomic Unit" EXACT []
 is_a: ME:0000039 ! Biological Context
+
+[Term]
+id: ME:0000480
+name: Low Control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Low Control." []
+is_a: ME:0000283 ! Control
+
+[Term]
+id: ME:0000481
+name: High Control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "High Control." []
+is_a: ME:0000283 ! Control
 
 [Typedef]
 id: data_type
