@@ -10,17 +10,19 @@ Features
 * Supports CSV files **with** and **without** a ``values`` line.
   • When there is no ``values`` line the first‑dimension variables are
     treated as measurement columns and rows that share the same indices
-    for dimensions 2…N are merged.
+    for dimensions 2…N are merged.
 * Allows missing values in a ``dmeta`` block: only rows whose first field
   is numeric are parsed; the block ends when a non‑numeric first field is
-  encountered.  Missing indices are left empty (not “n/a”).
-* For **Ref** and **ORef** variables the column name now includes any
-  extra fields (columns 5 + on the ``dmeta`` line) – the same as for
-  null‑type variables.  When no extra fields are present the column name
-  is simply the data‑type (e.g. ``sdt_taxon_name`` or
+  encountered.  Missing indices are left empty (not "n/a").
+* For **Ref** and **ORef** variables the column name includes any
+  extra fields (columns 5 + on the ``dmeta`` line) when present – the same
+  as for null‑type variables.  When no extra fields are present the column
+  name is simply the data‑type (e.g. ``sdt_taxon_name``) for Ref or the
+  variable name with data type suffix for ORef (e.g.
   ``sequence_type_sys_oterm_id``/``sequence_type_sys_oterm_name``).
 * Emits a warning when a variable has a null data type but the value looks
   like ``term name <term id>``.
+* Supports multiple OBO files – terms from all files are merged.
 """
 
 # ----------------------------------------------------------------------
@@ -114,6 +116,55 @@ def load_obo(
         parent_map.setdefault(cur_id, [])
 
     return term_map, parent_map
+
+
+def load_multiple_obos(
+    obo_paths: List[str],
+) -> Tuple[
+    Dict[str, Dict[str, Union[str, Tuple[str, str], None]]],
+    Dict[str, List[str]],
+]:
+    """Parse multiple OBO files and merge their term and parent maps."""
+    merged_term_map: Dict[str, Dict[str, Union[str, Tuple[str, str], None]]] = {}
+    merged_parent_map: Dict[str, List[str]] = {}
+
+    for obo_path in obo_paths:
+        logging.info(f"Parsing OBO file: {obo_path}")
+        term_map, parent_map = load_obo(obo_path)
+        
+        # Merge term_map
+        for term_id, term_data in term_map.items():
+            if term_id in merged_term_map:
+                # Check for conflicts
+                existing = merged_term_map[term_id]
+                if existing["name"] != term_data["name"]:
+                    logging.warning(
+                        f"Term ID {term_id} has conflicting names: "
+                        f"'{existing['name']}' vs '{term_data['name']}'. "
+                        f"Keeping first occurrence."
+                    )
+                if existing["data_type"] != term_data["data_type"]:
+                    logging.warning(
+                        f"Term ID {term_id} has conflicting data types. "
+                        f"Keeping first occurrence."
+                    )
+            else:
+                merged_term_map[term_id] = term_data
+        
+        # Merge parent_map
+        for term_id, parents in parent_map.items():
+            if term_id in merged_parent_map:
+                # Merge parent lists, avoiding duplicates
+                existing_parents = set(merged_parent_map[term_id])
+                new_parents = set(parents)
+                merged_parent_map[term_id] = list(existing_parents | new_parents)
+            else:
+                merged_parent_map[term_id] = parents
+    
+    logging.info(
+        f"Loaded {len(merged_term_map)} terms from {len(obo_paths)} OBO file(s)"
+    )
+    return merged_term_map, merged_parent_map
 
 
 def is_descendant(
@@ -245,9 +296,9 @@ def column_names_for_var(
     # --------------------------------------------------------------
     omit_dim = False
     if not is_value_line and data_type is not None and dim_id:
-        # Omit the dimension prefix only when the variable is a *different*
-        # descendant of the dimension term.
-        if is_descendant(var_id, dim_id, parent_map) and var_id != dim_id:
+        # Omit the dimension prefix only when the variable is the same
+        # or a descendant of the dimension term.
+        if is_descendant(var_id, dim_id, parent_map) or var_id == dim_id:
             omit_dim = True
 
     # --------------------------------------------------------------
@@ -288,7 +339,18 @@ def column_names_for_var(
         if is_value_line:
             prefix = var_norm
         else:
-            prefix = _build_prefix()
+            # Only include extra fields if they exist
+            if extra:
+                prefix = _build_prefix()
+            else:
+                # No extra fields: just use variable name (and dimension if applicable)
+                parts: List[str] = []
+                if not omit_dim and dim_norm:
+                    parts.append(dim_norm)
+                if var_norm and (dim_norm != var_norm):
+                    parts.append(var_norm)
+                prefix = "_".join(parts) if parts else var_norm
+        
         col_names = [f"{prefix}_{data_type[0]}", f"{prefix}_{data_type[1]}"]
         col_names = apply_type_mapping(col_names, type_map or {})
         return col_names, data_type
@@ -299,11 +361,14 @@ def column_names_for_var(
     if is_value_line:
         col_name = data_type
     else:
+        # Only include extra fields if they exist
         if extra:
             prefix = _build_prefix()
             col_name = f"{prefix}_{data_type}"
         else:
+            # No extra fields: just use the data type
             col_name = data_type
+    
     col_names = [col_name]
     col_names = apply_type_mapping(col_names, type_map or {})
     return col_names, data_type
@@ -512,7 +577,7 @@ def convert(
                             # start of next section
                             row = next_row
                             break
-                    # skip normal dmeta handling for dim 1
+                    # skip normal dmeta handling for dim 1
                     continue
 
                 # ----------------------------------------------------------
@@ -521,6 +586,7 @@ def convert(
                 dim_name, dim_id = _split_term(dim_type_raw)
                 var_name, var_id = _split_term(var_type_raw)
 
+                # Extract extra terms from column 5 onwards (index 4+)
                 extra_terms: List[Dict[str, str]] = []
                 for extra_raw in row[4:]:
                     e_name, e_id = _split_term(extra_raw.strip())
@@ -754,7 +820,12 @@ def main() -> None:
             "are derived from an OBO ontology."
         )
     )
-    parser.add_argument("--obo", required=True, help="Path to the OBO ontology file.")
+    parser.add_argument(
+        "--obo",
+        required=True,
+        nargs='+',
+        help="Path(s) to one or more OBO ontology files."
+    )
     parser.add_argument("--csv", required=True, help="Path to the input CSV file.")
     parser.add_argument(
         "--out", required=True, help="Path to the TSV file that will be created."
@@ -777,8 +848,8 @@ def main() -> None:
         )
         sys.exit(1)
 
-    logging.info("Parsing OBO file …")
-    term_map, parent_map = load_obo(args.obo)
+    logging.info("Parsing OBO file(s) …")
+    term_map, parent_map = load_multiple_obos(args.obo)
 
     # ------------------------------------------------------------------
     # Load typedef.json (if supplied) and create a preferred‑name map
