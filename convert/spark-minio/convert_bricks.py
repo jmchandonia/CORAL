@@ -27,6 +27,8 @@ Features
 * Generates a Spark StructType schema for importing data into Delta tables.
 * Validates data types and maps to appropriate Spark types.
 * Ensures all column names are unique within a TSV file.
+* Generates sys_ddt_typedef.tsv with metadata about each column.
+* Parses Brick ID from filename.
 """
 
 # ----------------------------------------------------------------------
@@ -271,7 +273,7 @@ def _resolve_name(
 def _build_description_and_unit(
     var_name: str,
     extra: List[Dict[str, str]],
-) -> Tuple[str, Optional[str]]:
+) -> Tuple[str, Optional[str], Optional[str]]:
     """
     Build a description string for the column and extract the unit if present.
     
@@ -280,10 +282,11 @@ def _build_description_and_unit(
     If there's an unpaired field at the end, it's treated as the unit.
     
     Returns:
-        Tuple of (description, unit)
+        Tuple of (description, unit_name, unit_id)
     """
     parts = [var_name]
-    unit = None
+    unit_name = None
+    unit_id = None
     
     # Process extra fields in pairs
     i = 0
@@ -294,11 +297,12 @@ def _build_description_and_unit(
             i += 2
         else:
             # Unpaired field at the end - this is the unit
-            unit = extra[i]['name']
+            unit_name = extra[i]['name']
+            unit_id = extra[i]['id']
             i += 1
     
     description = ", ".join(parts)
-    return description, unit
+    return description, unit_name, unit_id
 
 
 # ----------------------------------------------------------------------
@@ -364,6 +368,17 @@ def make_column_names_unique(columns: List[str]) -> Tuple[List[str], Dict[str, s
     return unique_columns, old_to_new
 
 
+def extract_brick_id(csv_path: str) -> str:
+    """Extract Brick ID from filename (e.g., Brick0000356.csv -> Brick0000356)."""
+    filename = os.path.basename(csv_path)
+    match = re.match(r'(Brick\d+)', filename, re.IGNORECASE)
+    if match:
+        return match.group(1)
+    else:
+        # Default to filename without extension if pattern not found
+        return os.path.splitext(filename)[0]
+
+
 # ----------------------------------------------------------------------
 # 4️⃣  Column‑name generation (dmeta & values)
 # ----------------------------------------------------------------------
@@ -374,14 +389,14 @@ def column_names_for_var(
     dim_lengths: Dict[int, int],
     is_value_line: bool = False,
     type_map: Dict[str, str] = None,
-) -> Tuple[List[str], Union[str, Tuple[str, str], None], List[Dict[str, str]], Optional[str]]:
+) -> Tuple[List[str], Union[str, Tuple[str, str], None], List[Dict[str, str]], Optional[str], Optional[str], Optional[str]]:
     """
     Produce column name(s) for a variable and return its data type and metadata.
 
     ``type_map`` is the optional preferred‑name mapping from ``typedef.json``.
     
     Returns:
-        Tuple of (column_names, data_type, column_metadata_list, scalar_type)
+        Tuple of (column_names, data_type, column_metadata_list, scalar_type, unit_name, unit_id)
         where column_metadata_list is a list of dicts with keys:
         - description: str
         - unit: Optional[str]
@@ -399,7 +414,7 @@ def column_names_for_var(
     var_name = _resolve_name(var_name, var_id, term_map)
 
     # Build description and extract unit (without dimension name, just variable and extras)
-    description, unit = _build_description_and_unit(var_name, extra)
+    description, unit_name, unit_id = _build_description_and_unit(var_name, extra)
 
     dim_norm = _normalize(dim_name) if dim_name else ""
     var_norm = _normalize(var_name)
@@ -417,21 +432,6 @@ def column_names_for_var(
         # or a descendant of the dimension term.
         if is_descendant(var_id, dim_id, parent_map) or var_id == dim_id:
             omit_dim = True
-
-    # --------------------------------------------------------------
-    # Helper that builds the prefix used for Ref/ORef column names
-    # --------------------------------------------------------------
-    def _build_prefix() -> str:
-        parts: List[str] = []
-        if not is_value_line:
-            if not omit_dim and dim_norm and dim_norm != var_norm:
-                parts.append(dim_norm)
-            if var_norm:
-                parts.append(var_norm)
-        for extra_term in extra:
-            extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
-            parts.append(_normalize(extra_name))
-        return "_".join(parts)
 
     # ------------------------------------------------------------------
     # 1️⃣  NULL data type – concatenate all term names on the line
@@ -454,29 +454,31 @@ def column_names_for_var(
         
         # Build metadata
         metadata = [{"description": description}]
-        if unit:
-            metadata[0]["unit"] = unit
+        if unit_name:
+            metadata[0]["unit"] = unit_name
         
-        return col_names, data_type, metadata, scalar_type
+        return col_names, data_type, metadata, scalar_type, unit_name, unit_id
 
     # ------------------------------------------------------------------
     # 2️⃣  Tuple data type (ORef) – two columns
     # ------------------------------------------------------------------
     if isinstance(data_type, tuple):
-        if is_value_line:
-            prefix = var_norm
+        # Build prefix using variable name and extras for ORef
+        parts: List[str] = []
+        # Include variable name (unless it should be omitted)
+        if not is_value_line:
+            if not omit_dim and var_norm:
+                parts.append(var_norm)
         else:
-            # Only include extra fields if they exist
-            if extra:
-                prefix = _build_prefix()
-            else:
-                # No extra fields: use variable name (and dimension if applicable)
-                parts: List[str] = []
-                if not omit_dim and dim_norm and dim_norm != var_norm:
-                    parts.append(dim_norm)
-                if var_norm:
-                    parts.append(var_norm)
-                prefix = "_".join(parts) if parts else var_norm
+            if var_norm:
+                parts.append(var_norm)
+        
+        # Include all extra fields
+        for extra_term in extra:
+            extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
+            parts.append(_normalize(extra_name))
+        
+        prefix = "_".join(parts) if parts else var_norm
         
         col_names = [f"{prefix}_{data_type[0]}", f"{prefix}_{data_type[1]}"]
         col_names = apply_type_mapping(col_names, type_map or {})
@@ -484,7 +486,7 @@ def column_names_for_var(
         # Build metadata for both columns
         # Only the _id column is a foreign key, add "ontology term CURIE" to description
         metadata_id = {
-            "description": description + " ontology term CURIE",
+            "description": description + ", ontology term CURIE",
             "type": "foreign_key",
             "references": "sys_oterm.sys_oterm_id"
         }
@@ -492,27 +494,30 @@ def column_names_for_var(
             "description": description
         }
         
-        if unit:
-            metadata_id["unit"] = unit
-            metadata_name["unit"] = unit
+        if unit_name:
+            metadata_id["unit"] = unit_name
+            metadata_name["unit"] = unit_name
         
         metadata = [metadata_id, metadata_name]
         
-        return col_names, data_type, metadata, scalar_type
+        return col_names, data_type, metadata, scalar_type, unit_name, unit_id
 
     # ------------------------------------------------------------------
     # 3️⃣  Reference (Ref) – single column
     # ------------------------------------------------------------------
-    if is_value_line:
-        col_name = data_type
+    # For Ref types, build prefix using ONLY extra fields (NOT variable name)
+    parts: List[str] = []
+    for extra_term in extra:
+        extra_name = _resolve_name(extra_term["name"], extra_term["id"], term_map)
+        parts.append(_normalize(extra_name))
+    
+    prefix = "_".join(parts)
+    
+    if prefix:
+        col_name = f"{prefix}_{data_type}"
     else:
-        # Only include extra fields if they exist
-        if extra:
-            prefix = _build_prefix()
-            col_name = f"{prefix}_{data_type}"
-        else:
-            # No extra fields: just use the data type
-            col_name = data_type
+        # No prefix (no extras), use just the data type
+        col_name = data_type
     
     col_names = [col_name]
     col_names = apply_type_mapping(col_names, type_map or {})
@@ -543,12 +548,12 @@ def column_names_for_var(
         "references": reference
     }
     
-    if unit:
-        metadata_dict["unit"] = unit
+    if unit_name:
+        metadata_dict["unit"] = unit_name
     
     metadata = [metadata_dict]
     
-    return col_names, data_type, metadata, scalar_type
+    return col_names, data_type, metadata, scalar_type, unit_name, unit_id
 
 
 # ----------------------------------------------------------------------
@@ -587,16 +592,16 @@ def extract_values(
 # ----------------------------------------------------------------------
 # 6️⃣  Type inference and validation
 # ----------------------------------------------------------------------
-def infer_scalar_type(values: List[str]) -> str:
+def infer_scalar_type(values: List[str]) -> Optional[str]:
     """
     Infer the scalar type from actual data values.
     
-    Returns one of: "boolean", "integer", "double", "string"
+    Returns one of: "boolean", "integer", "double", "string", or None if all values are empty.
     """
     non_empty_values = [v for v in values if v.strip()]
     
     if not non_empty_values:
-        return "string"
+        return None  # Return None when all values are empty
     
     # Check for boolean
     boolean_values = {"true", "false", "yes", "no", "1", "0", "t", "f"}
@@ -680,19 +685,18 @@ def validate_and_infer_types(
         # Infer actual type from data
         inferred_type = infer_scalar_type(values)
         
-        if declared_type:
+        # If all values are empty (inferred_type is None), use declared type
+        if inferred_type is None:
+            if declared_type:
+                validated_types[col_name] = declared_type
+            else:
+                # No declared type and all values empty, default to string
+                validated_types[col_name] = "string"
+        elif declared_type:
             # Check if conversion is compatible
             if is_compatible_type_conversion(declared_type, inferred_type):
-                # Use the more specific type (prefer declared for compatible conversions)
-                # But normalize float->double and int->integer
-                if declared_type.lower() in ["float", "double"]:
-                    validated_types[col_name] = "double"
-                elif declared_type.lower() in ["int", "integer"]:
-                    validated_types[col_name] = "integer"
-                elif declared_type.lower() in ["oterm_ref", "object_ref"]:
-                    validated_types[col_name] = "string"
-                else:
-                    validated_types[col_name] = declared_type
+                # Use the declared type (keep original type names like oterm_ref, int, float)
+                validated_types[col_name] = declared_type
             else:
                 # Incompatible types - warn and use inferred
                 logging.warning(
@@ -770,7 +774,48 @@ def generate_spark_schema(
 
 
 # ----------------------------------------------------------------------
-# 8️⃣  Main conversion routine (single‑pass over the CSV)
+# 8️⃣  Generate typedef TSV
+# ----------------------------------------------------------------------
+def generate_typedef_tsv(
+    brick_id: str,
+    typedef_records: List[Dict[str, str]],
+    out_path: str,
+) -> None:
+    """Generate typedef TSV with column metadata based on output file name."""
+    # Build typedef filename from output TSV filename
+    base_name = os.path.splitext(os.path.basename(out_path))[0]
+    out_dir = os.path.dirname(out_path) or "."
+    typedef_path = os.path.join(out_dir, f"{base_name}_sys_ddt_typedef.tsv")
+    
+    # Define the header
+    header = [
+        "brick_id",
+        "cdm_column_name",
+        "cdm_column_data_type",
+        "scalar_type",
+        "fk",
+        "comment",
+        "unit_sys_oterm_id",
+        "unit_sys_oterm_name",
+        "dimension_number",
+        "dimension_oterm_id",
+        "dimension_oterm_name",
+        "variable_number",
+        "variable_oterm_id",
+        "variable_oterm_name",
+        "original_csv_string",
+    ]
+    
+    with open(typedef_path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=header, delimiter='\t')
+        writer.writeheader()
+        writer.writerows(typedef_records)
+    
+    logging.info(f"Typedef TSV written to {typedef_path}")
+
+
+# ----------------------------------------------------------------------
+# 9️⃣  Main conversion routine (single‑pass over the CSV)
 # ----------------------------------------------------------------------
 def convert(
     csv_path: str,
@@ -778,6 +823,7 @@ def convert(
     term_map: Dict[str, Dict[str, Union[str, Tuple[str, str], None]]],
     parent_map: Dict[str, List[str]],
     type_map: Dict[str, str],
+    brick_id: str,
 ) -> None:
     """
     Parse the CSV, build the header and write a TSV that contains **all**
@@ -803,6 +849,13 @@ def convert(
 
     column_metadata: Dict[str, Dict[str, str]] = {}   # column name → metadata mapping
     column_scalar_types: Dict[str, Optional[str]] = {}  # column name → scalar type from OBO
+    
+    # Typedef tracking
+    typedef_records: List[Dict[str, str]] = []  # Records for sys_ddt_typedef.tsv
+    
+    # Variable numbering
+    values_variable_counter = 0  # Counter for values lines
+    dimension_variable_counters: Dict[int, int] = {}  # Counter per dimension
 
     has_values_line = False                # true if a ``values`` line was seen
 
@@ -835,6 +888,12 @@ def convert(
                     continue
                 has_values_line = True
 
+                # Increment values variable counter
+                values_variable_counter += 1
+
+                # Store original CSV string
+                original_csv_string = ",".join(row)
+
                 var_type_raw = row[1].strip()
                 var_name, var_id = _split_term(var_type_raw)
 
@@ -851,17 +910,41 @@ def convert(
                     "extra": extra_terms,
                 }
 
-                col_names, data_type, metadata_list, scalar_type = column_names_for_var(
+                col_names, data_type, metadata_list, scalar_type, unit_name, unit_id = column_names_for_var(
                     var, term_map, parent_map, dim_lengths,
                     is_value_line=True, type_map=type_map
                 )
                 col_start = len(values_header)
                 values_header.extend(col_names)
 
+                # Resolve variable name from OBO
+                var_oterm_name = _resolve_name(var_name, var_id, term_map)
+
                 # Add metadata and scalar types for all generated columns
                 for col_name, metadata_dict in zip(col_names, metadata_list):
                     column_metadata[col_name] = metadata_dict
                     column_scalar_types[col_name] = scalar_type
+                    
+                    # Create typedef record
+                    fk = metadata_dict.get("references", "")
+                    typedef_record = {
+                        "brick_id": brick_id,
+                        "cdm_column_name": col_name,
+                        "cdm_column_data_type": "variable",
+                        "scalar_type": scalar_type if scalar_type else "",
+                        "fk": fk,
+                        "comment": metadata_dict.get("description", ""),
+                        "unit_sys_oterm_id": unit_id if unit_id else "",
+                        "unit_sys_oterm_name": unit_name if unit_name else "",
+                        "dimension_number": "",
+                        "dimension_oterm_id": "",
+                        "dimension_oterm_name": "",
+                        "variable_number": str(values_variable_counter),
+                        "variable_oterm_id": var_id,
+                        "variable_oterm_name": var_oterm_name,
+                        "original_csv_string": original_csv_string,
+                    }
+                    typedef_records.append(typedef_record)
 
                 values_vars.append(
                     {
@@ -899,11 +982,18 @@ def convert(
                 dim_type_raw = row[2].strip()
                 var_type_raw = row[3].strip()
 
+                # Initialize dimension variable counter if needed
+                if dim_idx not in dimension_variable_counters:
+                    dimension_variable_counters[dim_idx] = 0
+
                 # ----------------------------------------------------------
                 # Special case: first dimension & no explicit values line
                 # ----------------------------------------------------------
                 if dim_idx == 1 and not has_values_line:
                     # Following lines define measurement columns.
+                    # Parse the dimension info from the dmeta line
+                    dim_name, dim_id = _split_term(dim_type_raw)
+                    
                     while True:
                         next_row = _next_row(it)
                         if next_row is None:
@@ -914,9 +1004,18 @@ def convert(
                         first_field = next_row[0].strip()
                         if first_field.isdigit():
                             dim1_index = int(first_field)
+                            
+                            # Increment variable counter for this dimension
+                            dimension_variable_counters[1] += 1
+                            
+                            # Store original CSV string for this variable (the complete row)
+                            var_original_csv_string = ",".join(next_row)
+                            
+                            # Parse variable from position 1
                             var_type_raw = next_row[1].strip() if len(next_row) > 1 else ""
                             var_name, var_id = _split_term(var_type_raw)
 
+                            # Parse extra terms from position 2 onwards
                             extra_terms: List[Dict[str, str]] = []
                             for extra_raw in next_row[2:]:
                                 e_name, e_id = _split_term(extra_raw.strip())
@@ -930,17 +1029,41 @@ def convert(
                                 "extra": extra_terms,
                             }
 
-                            col_names, data_type, metadata_list, scalar_type = column_names_for_var(
+                            col_names, data_type, metadata_list, scalar_type, unit_name, unit_id = column_names_for_var(
                                 var, term_map, parent_map, dim_lengths,
                                 is_value_line=True, type_map=type_map
                             )
                             col_start = len(values_header)
                             values_header.extend(col_names)
 
+                            # Resolve variable name from OBO
+                            var_oterm_name = _resolve_name(var_name, var_id, term_map)
+
                             # Add metadata and scalar types for all generated columns
                             for col_name, metadata_dict in zip(col_names, metadata_list):
                                 column_metadata[col_name] = metadata_dict
                                 column_scalar_types[col_name] = scalar_type
+                                
+                                # Create typedef record (these are variables, not dimensions)
+                                fk = metadata_dict.get("references", "")
+                                typedef_record = {
+                                    "brick_id": brick_id,
+                                    "cdm_column_name": col_name,
+                                    "cdm_column_data_type": "variable",
+                                    "scalar_type": scalar_type if scalar_type else "",
+                                    "fk": fk,
+                                    "comment": metadata_dict.get("description", ""),
+                                    "unit_sys_oterm_id": unit_id if unit_id else "",
+                                    "unit_sys_oterm_name": unit_name if unit_name else "",
+                                    "dimension_number": "",
+                                    "dimension_oterm_id": "",
+                                    "dimension_oterm_name": "",
+                                    "variable_number": str(dimension_variable_counters[1]),
+                                    "variable_oterm_id": var_id,
+                                    "variable_oterm_name": var_oterm_name,
+                                    "original_csv_string": var_original_csv_string,
+                                }
+                                typedef_records.append(typedef_record)
 
                             first_dim_vars[dim1_index] = {
                                 "col_start": col_start,
@@ -958,6 +1081,12 @@ def convert(
                 # ----------------------------------------------------------
                 # Normal dmeta handling (dimensions >1 or when values line exists)
                 # ----------------------------------------------------------
+                # Increment variable counter for this dimension
+                dimension_variable_counters[dim_idx] += 1
+                
+                # Store original CSV string
+                original_csv_string = ",".join(row)
+                
                 dim_name, dim_id = _split_term(dim_type_raw)
                 var_name, var_id = _split_term(var_type_raw)
 
@@ -975,17 +1104,42 @@ def convert(
                     "extra": extra_terms,
                 }
 
-                col_names, data_type, metadata_list, scalar_type = column_names_for_var(
+                col_names, data_type, metadata_list, scalar_type, unit_name, unit_id = column_names_for_var(
                     var, term_map, parent_map, dim_lengths,
                     is_value_line=False, type_map=type_map
                 )
                 col_start = len(dmeta_header)
                 dmeta_header.extend(col_names)
 
+                # Resolve dimension and variable names from OBO
+                dim_oterm_name = _resolve_name(dim_name, dim_id, term_map)
+                var_oterm_name = _resolve_name(var_name, var_id, term_map)
+
                 # Add metadata and scalar types for all generated columns
                 for col_name, metadata_dict in zip(col_names, metadata_list):
                     column_metadata[col_name] = metadata_dict
                     column_scalar_types[col_name] = scalar_type
+                    
+                    # Create typedef record (these are dimensions)
+                    fk = metadata_dict.get("references", "")
+                    typedef_record = {
+                        "brick_id": brick_id,
+                        "cdm_column_name": col_name,
+                        "cdm_column_data_type": "dimension_variable",
+                        "scalar_type": scalar_type if scalar_type else "",
+                        "fk": fk,
+                        "comment": metadata_dict.get("description", ""),
+                        "unit_sys_oterm_id": unit_id if unit_id else "",
+                        "unit_sys_oterm_name": unit_name if unit_name else "",
+                        "dimension_number": str(dim_idx),
+                        "dimension_oterm_id": dim_id,
+                        "dimension_oterm_name": dim_oterm_name,
+                        "variable_number": str(dimension_variable_counters[dim_idx]),
+                        "variable_oterm_id": var_id,
+                        "variable_oterm_name": var_oterm_name,
+                        "original_csv_string": original_csv_string,
+                    }
+                    typedef_records.append(typedef_record)
 
                 # ---- read the value block that follows this dmeta line ----
                 block_len = dim_lengths.get(dim_idx, 0)
@@ -1045,12 +1199,21 @@ def convert(
             row = _next_row(it)
 
         # ------------------------------------------------------------------
+        # If there's no values line, reduce all dimension numbers by 1
+        # ------------------------------------------------------------------
+        if not has_values_line:
+            for record in typedef_records:
+                if record["dimension_number"]:
+                    dim_num = int(record["dimension_number"])
+                    record["dimension_number"] = str(dim_num - 1)
+
+        # ------------------------------------------------------------------
         # Assemble final header and make column names unique
         # ------------------------------------------------------------------
         header = dmeta_header + values_header
         header, col_name_mapping = make_column_names_unique(header)
         
-        # Update metadata and scalar_types dicts with new column names
+        # Update metadata, scalar_types, and typedef records with new column names
         new_column_metadata = {}
         new_column_scalar_types = {}
         for old_name, new_name in col_name_mapping.items():
@@ -1061,6 +1224,12 @@ def convert(
         
         column_metadata = new_column_metadata
         column_scalar_types = new_column_scalar_types
+        
+        # Update typedef records with new column names
+        for record in typedef_records:
+            old_col_name = record["cdm_column_name"]
+            if old_col_name in col_name_mapping:
+                record["cdm_column_name"] = col_name_mapping[old_col_name]
 
         # Adjust column offsets for the values segment
         values_offset_base = len(dmeta_header)
@@ -1214,15 +1383,26 @@ def convert(
     # ------------------------------------------------------------------
     logging.info("Validating and inferring data types...")
     validated_types = validate_and_infer_types(header, data_rows, column_scalar_types)
+    
+    # Update typedef records with validated types
+    for record in typedef_records:
+        col_name = record["cdm_column_name"]
+        if col_name in validated_types:
+            record["scalar_type"] = validated_types[col_name]
 
     # ------------------------------------------------------------------
     # Generate Spark schema
     # ------------------------------------------------------------------
     generate_spark_schema(header, column_metadata, validated_types, out_path)
+    
+    # ------------------------------------------------------------------
+    # Generate typedef TSV
+    # ------------------------------------------------------------------
+    generate_typedef_tsv(brick_id, typedef_records, out_path)
 
 
 # ----------------------------------------------------------------------
-# 9️⃣  CLI entry point
+# 🔟  CLI entry point
 # ----------------------------------------------------------------------
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -1274,8 +1454,14 @@ def main() -> None:
         else:
             logging.warning("Typedef file loaded but no preferred_name mappings found.")
 
+    # ------------------------------------------------------------------
+    # Extract brick ID from CSV filename
+    # ------------------------------------------------------------------
+    brick_id = extract_brick_id(args.csv)
+    logging.info(f"Extracted Brick ID: {brick_id}")
+
     logging.info("Converting CSV to TSV …")
-    convert(args.csv, args.out, term_map, parent_map, type_map)
+    convert(args.csv, args.out, term_map, parent_map, type_map, brick_id)
 
 
 if __name__ == "__main__":
