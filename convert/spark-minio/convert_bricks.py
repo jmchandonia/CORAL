@@ -24,6 +24,9 @@ Features
   like ``term name <term id>``.
 * Supports multiple OBO files – terms from all files are merged.
 * Column names contain only lowercase letters, numbers, and underscores.
+* Generates a Spark StructType schema for importing data into Delta tables.
+* Validates data types and maps to appropriate Spark types.
+* Ensures all column names are unique within a TSV file.
 """
 
 # ----------------------------------------------------------------------
@@ -37,7 +40,7 @@ import os
 import re
 import sys
 import warnings
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union, Optional, Set
 
 # ----------------------------------------------------------------------
 # Suppress noisy warnings (mirrors the original code)
@@ -55,7 +58,7 @@ logging.basicConfig(
 )
 
 # ----------------------------------------------------------------------
-# 1️⃣  OBO parsing (names, data types, parent relationships)
+# 1️⃣  OBO parsing (names, data types, parent relationships, scalar types)
 # ----------------------------------------------------------------------
 def _parse_xref(xref: str) -> Union[str, Tuple[str, str], None]:
     """Derive a data‑type from an OBO ``xref`` line.
@@ -74,6 +77,18 @@ def _parse_xref(xref: str) -> Union[str, Tuple[str, str], None]:
     return None
 
 
+def _parse_property_value(line: str) -> Optional[Tuple[str, str]]:
+    """Parse a property_value line to extract data_type.
+    
+    Example: property_value: data_type "boolean" xsd:string
+    Returns: ("data_type", "boolean")
+    """
+    match = re.match(r'property_value:\s+(\w+)\s+"([^"]+)"', line)
+    if match:
+        return match.group(1), match.group(2)
+    return None
+
+
 def load_obo(
     obo_path: str,
 ) -> Tuple[
@@ -86,16 +101,22 @@ def load_obo(
 
     cur_id = cur_name = ""
     cur_data_type: Union[str, Tuple[str, str], None] = None
+    cur_scalar_type: Optional[str] = None
 
     with open(obo_path, "r", encoding="utf-8") as f:
         for raw_line in f:
             line = raw_line.strip()
             if not line:                     # blank line → finish current term
                 if cur_id:
-                    term_map[cur_id] = {"name": cur_name, "data_type": cur_data_type}
+                    term_map[cur_id] = {
+                        "name": cur_name,
+                        "data_type": cur_data_type,
+                        "scalar_type": cur_scalar_type
+                    }
                     parent_map.setdefault(cur_id, [])
                     cur_id = cur_name = ""
                     cur_data_type = None
+                    cur_scalar_type = None
                 continue
 
             if line == "[Term]":
@@ -106,6 +127,10 @@ def load_obo(
                 cur_name = line.split("name:", 1)[1].strip()
             elif line.startswith("xref:"):
                 cur_data_type = _parse_xref(line.split("xref:", 1)[1].strip())
+            elif line.startswith("property_value:"):
+                prop_value = _parse_property_value(line)
+                if prop_value and prop_value[0] == "data_type":
+                    cur_scalar_type = prop_value[1]
             elif line.startswith("is_a:"):
                 parent_part = line.split("is_a:", 1)[1].strip()
                 parent_id = parent_part.split("!", 1)[0].strip().split()[0]
@@ -113,7 +138,11 @@ def load_obo(
 
     # final term (in case file does not end with a blank line)
     if cur_id:
-        term_map[cur_id] = {"name": cur_name, "data_type": cur_data_type}
+        term_map[cur_id] = {
+            "name": cur_name,
+            "data_type": cur_data_type,
+            "scalar_type": cur_scalar_type
+        }
         parent_map.setdefault(cur_id, [])
 
     return term_map, parent_map
@@ -138,7 +167,8 @@ def load_multiple_obos(
             if term_id in merged_term_map:
                 # Check for conflicts
                 existing = merged_term_map[term_id]
-                if existing["name"] != term_data["name"]:
+                # Don't warn about "is_a" having conflicting names
+                if existing["name"] != term_data["name"] and term_id != "is_a":
                     logging.warning(
                         f"Term ID {term_id} has conflicting names: "
                         f"'{existing['name']}' vs '{term_data['name']}'. "
@@ -238,6 +268,39 @@ def _resolve_name(
     return csv_name
 
 
+def _build_description_and_unit(
+    var_name: str,
+    extra: List[Dict[str, str]],
+) -> Tuple[str, Optional[str]]:
+    """
+    Build a description string for the column and extract the unit if present.
+    
+    Format: "Variable Name, Field1=Value1, Field2=Value2"
+    All consecutive pairs of extra fields are paired as name=value.
+    If there's an unpaired field at the end, it's treated as the unit.
+    
+    Returns:
+        Tuple of (description, unit)
+    """
+    parts = [var_name]
+    unit = None
+    
+    # Process extra fields in pairs
+    i = 0
+    while i < len(extra):
+        if i + 1 < len(extra):
+            # Pair this field with the next one
+            parts.append(f"{extra[i]['name']}={extra[i + 1]['name']}")
+            i += 2
+        else:
+            # Unpaired field at the end - this is the unit
+            unit = extra[i]['name']
+            i += 1
+    
+    description = ", ".join(parts)
+    return description, unit
+
+
 # ----------------------------------------------------------------------
 # 3️⃣  Typedef handling (preferred names)
 # ----------------------------------------------------------------------
@@ -273,6 +336,34 @@ def apply_type_mapping(col_names: List[str], type_map: Dict[str, str]) -> List[s
     return new_cols
 
 
+def make_column_names_unique(columns: List[str]) -> Tuple[List[str], Dict[str, str]]:
+    """
+    Ensure all column names are unique by adding _2, _3, etc. suffixes.
+    
+    Returns:
+        Tuple of (unique_columns, old_to_new_mapping)
+    """
+    seen: Dict[str, int] = {}
+    unique_columns: List[str] = []
+    old_to_new: Dict[str, str] = {}
+    
+    for col in columns:
+        original_col = col
+        if col in seen:
+            # Column name already exists, add suffix
+            seen[col] += 1
+            new_col = f"{col}_{seen[col]}"
+            unique_columns.append(new_col)
+            old_to_new[original_col] = new_col
+            logging.warning(f"Duplicate column name '{col}' renamed to '{new_col}'")
+        else:
+            seen[col] = 1
+            unique_columns.append(col)
+            old_to_new[original_col] = col
+    
+    return unique_columns, old_to_new
+
+
 # ----------------------------------------------------------------------
 # 4️⃣  Column‑name generation (dmeta & values)
 # ----------------------------------------------------------------------
@@ -283,11 +374,19 @@ def column_names_for_var(
     dim_lengths: Dict[int, int],
     is_value_line: bool = False,
     type_map: Dict[str, str] = None,
-) -> Tuple[List[str], Union[str, Tuple[str, str], None]]:
+) -> Tuple[List[str], Union[str, Tuple[str, str], None], List[Dict[str, str]], Optional[str]]:
     """
-    Produce column name(s) for a variable and return its data type.
+    Produce column name(s) for a variable and return its data type and metadata.
 
     ``type_map`` is the optional preferred‑name mapping from ``typedef.json``.
+    
+    Returns:
+        Tuple of (column_names, data_type, column_metadata_list, scalar_type)
+        where column_metadata_list is a list of dicts with keys:
+        - description: str
+        - unit: Optional[str]
+        - type: Optional[str] (e.g., "foreign_key")
+        - references: Optional[str] (e.g., "sys_oterm.sys_oterm_id")
     """
     dim_name = var.get("dim_name")
     dim_id = var.get("dim_id")
@@ -299,11 +398,15 @@ def column_names_for_var(
         dim_name = _resolve_name(dim_name, dim_id, term_map)
     var_name = _resolve_name(var_name, var_id, term_map)
 
+    # Build description and extract unit (without dimension name, just variable and extras)
+    description, unit = _build_description_and_unit(var_name, extra)
+
     dim_norm = _normalize(dim_name) if dim_name else ""
     var_norm = _normalize(var_name)
 
     entry = term_map.get(var_id)
     data_type = entry["data_type"] if entry else None
+    scalar_type = entry["scalar_type"] if entry else None
 
     # --------------------------------------------------------------
     # Should we drop the dimension prefix?
@@ -348,7 +451,13 @@ def column_names_for_var(
         col_name = "_".join(_normalize(p) for p in parts)
         col_names = [col_name]
         col_names = apply_type_mapping(col_names, type_map or {})
-        return col_names, data_type
+        
+        # Build metadata
+        metadata = [{"description": description}]
+        if unit:
+            metadata[0]["unit"] = unit
+        
+        return col_names, data_type, metadata, scalar_type
 
     # ------------------------------------------------------------------
     # 2️⃣  Tuple data type (ORef) – two columns
@@ -371,7 +480,25 @@ def column_names_for_var(
         
         col_names = [f"{prefix}_{data_type[0]}", f"{prefix}_{data_type[1]}"]
         col_names = apply_type_mapping(col_names, type_map or {})
-        return col_names, data_type
+        
+        # Build metadata for both columns
+        # Only the _id column is a foreign key, add "ontology term CURIE" to description
+        metadata_id = {
+            "description": description + " ontology term CURIE",
+            "type": "foreign_key",
+            "references": "sys_oterm.sys_oterm_id"
+        }
+        metadata_name = {
+            "description": description
+        }
+        
+        if unit:
+            metadata_id["unit"] = unit
+            metadata_name["unit"] = unit
+        
+        metadata = [metadata_id, metadata_name]
+        
+        return col_names, data_type, metadata, scalar_type
 
     # ------------------------------------------------------------------
     # 3️⃣  Reference (Ref) – single column
@@ -389,7 +516,39 @@ def column_names_for_var(
     
     col_names = [col_name]
     col_names = apply_type_mapping(col_names, type_map or {})
-    return col_names, data_type
+    
+    # Build metadata - extract table and column from data_type
+    # data_type format: "sdt_table_column"
+    # Apply type mapping to the reference as well
+    parts = data_type.split("_")
+    if len(parts) >= 3 and parts[0] == "sdt":
+        table_part = parts[1]
+        column_parts = parts[2:]
+        
+        # Apply type mapping to table and column parts
+        if type_map:
+            table_part = type_map.get(table_part, table_part)
+            column_parts = [type_map.get(p, p) for p in column_parts]
+        
+        table_name = f"sdt_{table_part}"
+        # Reconstruct the full column name with type mapping applied
+        full_column_name = f"sdt_{table_part}_{'_'.join(column_parts)}"
+        reference = f"{table_name}.{full_column_name}"
+    else:
+        reference = data_type
+    
+    metadata_dict = {
+        "description": description,
+        "type": "foreign_key",
+        "references": reference
+    }
+    
+    if unit:
+        metadata_dict["unit"] = unit
+    
+    metadata = [metadata_dict]
+    
+    return col_names, data_type, metadata, scalar_type
 
 
 # ----------------------------------------------------------------------
@@ -426,7 +585,192 @@ def extract_values(
 
 
 # ----------------------------------------------------------------------
-# 6️⃣  Main conversion routine (single‑pass over the CSV)
+# 6️⃣  Type inference and validation
+# ----------------------------------------------------------------------
+def infer_scalar_type(values: List[str]) -> str:
+    """
+    Infer the scalar type from actual data values.
+    
+    Returns one of: "boolean", "integer", "double", "string"
+    """
+    non_empty_values = [v for v in values if v.strip()]
+    
+    if not non_empty_values:
+        return "string"
+    
+    # Check for boolean
+    boolean_values = {"true", "false", "yes", "no", "1", "0", "t", "f"}
+    if all(v.lower() in boolean_values for v in non_empty_values):
+        return "boolean"
+    
+    # Check for integer
+    try:
+        for v in non_empty_values:
+            int(v)
+        return "integer"
+    except ValueError:
+        pass
+    
+    # Check for double/float
+    try:
+        for v in non_empty_values:
+            float(v)
+        return "double"
+    except ValueError:
+        pass
+    
+    return "string"
+
+
+def is_compatible_type_conversion(declared: str, inferred: str) -> bool:
+    """
+    Check if a type conversion is compatible and should not generate a warning.
+    
+    Compatible conversions:
+    - oterm_ref -> string
+    - object_ref -> string
+    - float -> double
+    - int -> integer
+    """
+    # Normalize type names
+    declared_norm = declared.lower()
+    inferred_norm = inferred.lower()
+    
+    # Exact match
+    if declared_norm == inferred_norm:
+        return True
+    
+    # oterm_ref to string
+    if declared_norm == "oterm_ref" and inferred_norm == "string":
+        return True
+    
+    # object_ref to string
+    if declared_norm == "object_ref" and inferred_norm == "string":
+        return True
+    
+    # float to double (they're the same)
+    if declared_norm in ["float", "double"] and inferred_norm in ["float", "double"]:
+        return True
+    
+    # int to integer (they're the same)
+    if declared_norm in ["int", "integer"] and inferred_norm in ["int", "integer"]:
+        return True
+    
+    return False
+
+
+def validate_and_infer_types(
+    header: List[str],
+    data_rows: List[List[str]],
+    column_scalar_types: Dict[str, Optional[str]],
+) -> Dict[str, str]:
+    """
+    Validate declared scalar types against actual data and infer types if needed.
+    
+    Returns a mapping of column_name -> validated_scalar_type
+    """
+    validated_types: Dict[str, str] = {}
+    
+    for col_idx, col_name in enumerate(header):
+        declared_type = column_scalar_types.get(col_name)
+        
+        # Extract values for this column
+        values = [row[col_idx] if col_idx < len(row) else "" for row in data_rows]
+        
+        # Infer actual type from data
+        inferred_type = infer_scalar_type(values)
+        
+        if declared_type:
+            # Check if conversion is compatible
+            if is_compatible_type_conversion(declared_type, inferred_type):
+                # Use the more specific type (prefer declared for compatible conversions)
+                # But normalize float->double and int->integer
+                if declared_type.lower() in ["float", "double"]:
+                    validated_types[col_name] = "double"
+                elif declared_type.lower() in ["int", "integer"]:
+                    validated_types[col_name] = "integer"
+                elif declared_type.lower() in ["oterm_ref", "object_ref"]:
+                    validated_types[col_name] = "string"
+                else:
+                    validated_types[col_name] = declared_type
+            else:
+                # Incompatible types - warn and use inferred
+                logging.warning(
+                    f"Column '{col_name}': declared type '{declared_type}' does not match "
+                    f"inferred type '{inferred_type}' from data. Using inferred type."
+                )
+                validated_types[col_name] = inferred_type
+        else:
+            # No declared type, use inferred
+            validated_types[col_name] = inferred_type
+    
+    return validated_types
+
+
+def scalar_type_to_spark_type(scalar_type: str) -> str:
+    """Map scalar type to Spark type."""
+    type_mapping = {
+        "boolean": "BooleanType()",
+        "integer": "IntegerType()",
+        "int": "IntegerType()",
+        "long": "LongType()",
+        "double": "DoubleType()",
+        "float": "DoubleType()",
+        "decimal": "DecimalType()",
+        "string": "StringType()",
+        "oterm_ref": "StringType()",
+        "object_ref": "StringType()",
+        "date": "DateType()",
+        "timestamp": "TimestampType()",
+    }
+    return type_mapping.get(scalar_type.lower(), "StringType()")
+
+
+# ----------------------------------------------------------------------
+# 7️⃣  Generate Spark schema
+# ----------------------------------------------------------------------
+def generate_spark_schema(
+    header: List[str],
+    column_metadata: Dict[str, Dict[str, str]],
+    column_types: Dict[str, str],
+    out_path: str,
+) -> None:
+    """Generate a Spark StructType schema file with JSON metadata."""
+    schema_path = out_path.replace('.tsv', '_schema.py')
+    
+    # Collect required imports
+    spark_types_needed = set()
+    for col_type in column_types.values():
+        # Extract the type name from the type call (e.g., "BooleanType()" -> "BooleanType")
+        type_name = col_type.replace("()", "")
+        spark_types_needed.add(type_name)
+    
+    with open(schema_path, 'w', encoding='utf-8') as f:
+        # Write imports
+        imports = ["StructType", "StructField"] + sorted(spark_types_needed)
+        f.write(f"from pyspark.sql.types import {', '.join(imports)}\n\n")
+        
+        f.write("schema = StructType([\n")
+        
+        for col in header:
+            metadata = column_metadata.get(col, {})
+            col_type = column_types.get(col, "string")
+            spark_type = scalar_type_to_spark_type(col_type)
+            
+            # Build JSON metadata
+            metadata_json = json.dumps(metadata)
+            # Escape for Python string
+            metadata_json = metadata_json.replace("\\", "\\\\").replace('"', '\\"')
+            
+            f.write(f'    StructField("{col}", {spark_type}, True, metadata={{"comment": "{metadata_json}"}}),\n')
+        
+        f.write("])\n")
+    
+    logging.info(f"Spark schema written to {schema_path}")
+
+
+# ----------------------------------------------------------------------
+# 8️⃣  Main conversion routine (single‑pass over the CSV)
 # ----------------------------------------------------------------------
 def convert(
     csv_path: str,
@@ -456,6 +800,9 @@ def convert(
 
     first_dim_vars: Dict[int, Dict] = {}   # first‑dimension variable → column info
     dim_lengths: Dict[int, int] = {}       # dimension index → length
+
+    column_metadata: Dict[str, Dict[str, str]] = {}   # column name → metadata mapping
+    column_scalar_types: Dict[str, Optional[str]] = {}  # column name → scalar type from OBO
 
     has_values_line = False                # true if a ``values`` line was seen
 
@@ -504,12 +851,17 @@ def convert(
                     "extra": extra_terms,
                 }
 
-                col_names, data_type = column_names_for_var(
+                col_names, data_type, metadata_list, scalar_type = column_names_for_var(
                     var, term_map, parent_map, dim_lengths,
                     is_value_line=True, type_map=type_map
                 )
                 col_start = len(values_header)
                 values_header.extend(col_names)
+
+                # Add metadata and scalar types for all generated columns
+                for col_name, metadata_dict in zip(col_names, metadata_list):
+                    column_metadata[col_name] = metadata_dict
+                    column_scalar_types[col_name] = scalar_type
 
                 values_vars.append(
                     {
@@ -578,12 +930,17 @@ def convert(
                                 "extra": extra_terms,
                             }
 
-                            col_names, data_type = column_names_for_var(
+                            col_names, data_type, metadata_list, scalar_type = column_names_for_var(
                                 var, term_map, parent_map, dim_lengths,
                                 is_value_line=True, type_map=type_map
                             )
                             col_start = len(values_header)
                             values_header.extend(col_names)
+
+                            # Add metadata and scalar types for all generated columns
+                            for col_name, metadata_dict in zip(col_names, metadata_list):
+                                column_metadata[col_name] = metadata_dict
+                                column_scalar_types[col_name] = scalar_type
 
                             first_dim_vars[dim1_index] = {
                                 "col_start": col_start,
@@ -618,12 +975,17 @@ def convert(
                     "extra": extra_terms,
                 }
 
-                col_names, data_type = column_names_for_var(
+                col_names, data_type, metadata_list, scalar_type = column_names_for_var(
                     var, term_map, parent_map, dim_lengths,
                     is_value_line=False, type_map=type_map
                 )
                 col_start = len(dmeta_header)
                 dmeta_header.extend(col_names)
+
+                # Add metadata and scalar types for all generated columns
+                for col_name, metadata_dict in zip(col_names, metadata_list):
+                    column_metadata[col_name] = metadata_dict
+                    column_scalar_types[col_name] = scalar_type
 
                 # ---- read the value block that follows this dmeta line ----
                 block_len = dim_lengths.get(dim_idx, 0)
@@ -683,9 +1045,22 @@ def convert(
             row = _next_row(it)
 
         # ------------------------------------------------------------------
-        # Assemble final header
+        # Assemble final header and make column names unique
         # ------------------------------------------------------------------
         header = dmeta_header + values_header
+        header, col_name_mapping = make_column_names_unique(header)
+        
+        # Update metadata and scalar_types dicts with new column names
+        new_column_metadata = {}
+        new_column_scalar_types = {}
+        for old_name, new_name in col_name_mapping.items():
+            if old_name in column_metadata:
+                new_column_metadata[new_name] = column_metadata[old_name]
+            if old_name in column_scalar_types:
+                new_column_scalar_types[new_name] = column_scalar_types[old_name]
+        
+        column_metadata = new_column_metadata
+        column_scalar_types = new_column_scalar_types
 
         # Adjust column offsets for the values segment
         values_offset_base = len(dmeta_header)
@@ -698,6 +1073,11 @@ def convert(
             # col_count already correct
 
         num_dims = len(dim_lengths)   # number of index columns
+
+        # ------------------------------------------------------------------
+        # Collect data rows for type validation
+        # ------------------------------------------------------------------
+        data_rows: List[List[str]] = []
 
         # ------------------------------------------------------------------
         # Write the TSV (header + data rows)
@@ -769,6 +1149,7 @@ def convert(
 
                 for out_row in merged_rows.values():
                     out_writer.writerow(out_row)
+                    data_rows.append(out_row)
 
             # --------------------------------------------------------------
             # CASE B – normal case (explicit ``values`` line present)
@@ -824,12 +1205,24 @@ def convert(
                             out_row[vv["col_start"] + off] = v
 
                     out_writer.writerow(out_row)
+                    data_rows.append(out_row)
 
     logging.info(f"TSV written to {out_path}")
 
+    # ------------------------------------------------------------------
+    # Validate and infer types from actual data
+    # ------------------------------------------------------------------
+    logging.info("Validating and inferring data types...")
+    validated_types = validate_and_infer_types(header, data_rows, column_scalar_types)
+
+    # ------------------------------------------------------------------
+    # Generate Spark schema
+    # ------------------------------------------------------------------
+    generate_spark_schema(header, column_metadata, validated_types, out_path)
+
 
 # ----------------------------------------------------------------------
-# 7️⃣  CLI entry point
+# 9️⃣  CLI entry point
 # ----------------------------------------------------------------------
 def main() -> None:
     parser = argparse.ArgumentParser(
