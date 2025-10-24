@@ -29,6 +29,7 @@ Features
 * Ensures all column names are unique within a TSV file.
 * Generates sys_ddt_typedef.tsv with metadata about each column.
 * Parses Brick ID from filename.
+* Generates ddt_ndarray.tsv with NDArray metadata.
 """
 
 # ----------------------------------------------------------------------
@@ -815,7 +816,66 @@ def generate_typedef_tsv(
 
 
 # ----------------------------------------------------------------------
-# 9️⃣  Main conversion routine (single‑pass over the CSV)
+# 9️⃣  Generate NDArray metadata TSV
+# ----------------------------------------------------------------------
+def generate_ndarray_tsv(
+    brick_id: str,
+    ndarray_metadata: Dict[str, any],
+    out_path: str,
+) -> None:
+    """Generate NDArray metadata TSV."""
+    # Build ndarray filename from brick ID
+    out_dir = os.path.dirname(out_path) or "."
+    ndarray_path = os.path.join(out_dir, f"{brick_id}_ddt_ndarray.tsv")
+    
+    # Define the header
+    header = [
+        "ddt_ndarray_id",
+        "ddt_ndarray_name",
+        "ddt_ndarray_description",
+        "ddt_ndarray_metadata",
+        "ddt_ndarray_type_sys_oterm_id",
+        "ddt_ndarray_type_sys_oterm_name",
+        "ddt_ndarray_shape",
+        "ddt_ndarray_dimension_types_sys_oterm_id",
+        "ddt_ndarray_dimension_types_sys_oterm_name",
+        "ddt_ndarray_dimension_variable_types_sys_oterm_id",
+        "ddt_ndarray_dimension_variable_types_sys_oterm_name",
+        "ddt_ndarray_variable_types_sys_oterm_id",
+        "ddt_ndarray_variable_types_sys_oterm_name",
+        "withdrawn_date",
+        "superceded_by_ddt_ndarray_id",
+    ]
+    
+    # Convert lists to JSON strings
+    record = {
+        "ddt_ndarray_id": brick_id,
+        "ddt_ndarray_name": ndarray_metadata.get("name", ""),
+        "ddt_ndarray_description": ndarray_metadata.get("description", ""),
+        "ddt_ndarray_metadata": json.dumps(ndarray_metadata.get("metadata", [])),
+        "ddt_ndarray_type_sys_oterm_id": ndarray_metadata.get("type_id", ""),
+        "ddt_ndarray_type_sys_oterm_name": ndarray_metadata.get("type_name", ""),
+        "ddt_ndarray_shape": json.dumps(ndarray_metadata.get("shape", [])),
+        "ddt_ndarray_dimension_types_sys_oterm_id": json.dumps(ndarray_metadata.get("dimension_types_id", [])),
+        "ddt_ndarray_dimension_types_sys_oterm_name": json.dumps(ndarray_metadata.get("dimension_types_name", [])),
+        "ddt_ndarray_dimension_variable_types_sys_oterm_id": json.dumps(ndarray_metadata.get("dimension_variable_types_id", [])),
+        "ddt_ndarray_dimension_variable_types_sys_oterm_name": json.dumps(ndarray_metadata.get("dimension_variable_types_name", [])),
+        "ddt_ndarray_variable_types_sys_oterm_id": json.dumps(ndarray_metadata.get("variable_types_id", [])),
+        "ddt_ndarray_variable_types_sys_oterm_name": json.dumps(ndarray_metadata.get("variable_types_name", [])),
+        "withdrawn_date": "",
+        "superceded_by_ddt_ndarray_id": "",
+    }
+    
+    with open(ndarray_path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=header, delimiter='\t')
+        writer.writeheader()
+        writer.writerow(record)
+    
+    logging.info(f"NDArray metadata TSV written to {ndarray_path}")
+
+
+# ----------------------------------------------------------------------
+# 🔟  Main conversion routine (single‑pass over the CSV)
 # ----------------------------------------------------------------------
 def convert(
     csv_path: str,
@@ -858,6 +918,25 @@ def convert(
     dimension_variable_counters: Dict[int, int] = {}  # Counter per dimension
 
     has_values_line = False                # true if a ``values`` line was seen
+    
+    # NDArray metadata tracking
+    ndarray_metadata: Dict[str, any] = {
+        "name": "",
+        "description": "",
+        "metadata": [],  # This will be a list of lists
+        "type_id": "",
+        "type_name": "",
+        "shape": [],
+        "dimension_types_id": [],
+        "dimension_types_name": [],
+        "dimension_variable_types_id": [],
+        "dimension_variable_types_name": [],
+        "variable_types_id": [],
+        "variable_types_name": [],
+    }
+    
+    # Track dimension info for ndarray metadata
+    dimension_info: Dict[int, Dict[str, any]] = {}  # dim_idx -> {type_id, type_name, var_types_id[], var_types_name[]}
 
     # ------------------------------------------------------------------
     # Helper: read the next row (or None) from the CSV iterator
@@ -879,6 +958,50 @@ def convert(
             token = row[0].strip()
 
             # --------------------------------------------------------------
+            # name line
+            # --------------------------------------------------------------
+            if token == "name":
+                if len(row) > 1:
+                    ndarray_metadata["name"] = row[1].strip()
+                row = _next_row(it)
+                continue
+
+            # --------------------------------------------------------------
+            # description line
+            # --------------------------------------------------------------
+            if token == "description":
+                if len(row) > 1:
+                    ndarray_metadata["description"] = row[1].strip()
+                row = _next_row(it)
+                continue
+
+            # --------------------------------------------------------------
+            # type line
+            # --------------------------------------------------------------
+            if token == "type":
+                if len(row) > 1:
+                    type_str = row[1].strip()
+                    type_name, type_id = _split_term(type_str)
+                    ndarray_metadata["type_id"] = type_id
+                    ndarray_metadata["type_name"] = _resolve_name(type_name, type_id, term_map)
+                row = _next_row(it)
+                continue
+
+            # --------------------------------------------------------------
+            # meta lines - collect values from each line as a separate list
+            # --------------------------------------------------------------
+            if token == "meta":
+                # Collect all meta values from this line into a list
+                meta_line_values = []
+                for meta_value in row[1:]:
+                    if meta_value.strip():
+                        meta_line_values.append(meta_value.strip())
+                if meta_line_values:  # Only append if there are values
+                    ndarray_metadata["metadata"].append(meta_line_values)
+                row = _next_row(it)
+                continue
+
+            # --------------------------------------------------------------
             # values line – defines measurement column(s)
             # --------------------------------------------------------------
             if token == "values":
@@ -896,6 +1019,11 @@ def convert(
 
                 var_type_raw = row[1].strip()
                 var_name, var_id = _split_term(var_type_raw)
+
+                # Track variable types for ndarray metadata
+                var_oterm_name = _resolve_name(var_name, var_id, term_map)
+                ndarray_metadata["variable_types_id"].append(var_id)
+                ndarray_metadata["variable_types_name"].append(var_oterm_name)
 
                 extra_terms: List[Dict[str, str]] = []
                 for extra_raw in row[2:]:
@@ -916,9 +1044,6 @@ def convert(
                 )
                 col_start = len(values_header)
                 values_header.extend(col_names)
-
-                # Resolve variable name from OBO
-                var_oterm_name = _resolve_name(var_name, var_id, term_map)
 
                 # Add metadata and scalar types for all generated columns
                 for col_name, metadata_dict in zip(col_names, metadata_list):
@@ -986,14 +1111,32 @@ def convert(
                 if dim_idx not in dimension_variable_counters:
                     dimension_variable_counters[dim_idx] = 0
 
+                # Parse dimension and variable info
+                dim_name, dim_id = _split_term(dim_type_raw)
+                var_name, var_id = _split_term(var_type_raw)
+                
+                # Resolve names
+                dim_oterm_name = _resolve_name(dim_name, dim_id, term_map)
+                var_oterm_name = _resolve_name(var_name, var_id, term_map)
+
+                # Track dimension info for ndarray metadata
+                if dim_idx not in dimension_info:
+                    dimension_info[dim_idx] = {
+                        "type_id": dim_id,
+                        "type_name": dim_oterm_name,
+                        "var_types_id": [],
+                        "var_types_name": [],
+                    }
+                
+                # Add variable type to this dimension
+                dimension_info[dim_idx]["var_types_id"].append(var_id)
+                dimension_info[dim_idx]["var_types_name"].append(var_oterm_name)
+
                 # ----------------------------------------------------------
                 # Special case: first dimension & no explicit values line
                 # ----------------------------------------------------------
                 if dim_idx == 1 and not has_values_line:
                     # Following lines define measurement columns.
-                    # Parse the dimension info from the dmeta line
-                    dim_name, dim_id = _split_term(dim_type_raw)
-                    
                     while True:
                         next_row = _next_row(it)
                         if next_row is None:
@@ -1015,6 +1158,11 @@ def convert(
                             var_type_raw = next_row[1].strip() if len(next_row) > 1 else ""
                             var_name, var_id = _split_term(var_type_raw)
 
+                            # Track variable types for ndarray metadata (from first dimension)
+                            var_oterm_name = _resolve_name(var_name, var_id, term_map)
+                            ndarray_metadata["variable_types_id"].append(var_id)
+                            ndarray_metadata["variable_types_name"].append(var_oterm_name)
+
                             # Parse extra terms from position 2 onwards
                             extra_terms: List[Dict[str, str]] = []
                             for extra_raw in next_row[2:]:
@@ -1035,9 +1183,6 @@ def convert(
                             )
                             col_start = len(values_header)
                             values_header.extend(col_names)
-
-                            # Resolve variable name from OBO
-                            var_oterm_name = _resolve_name(var_name, var_id, term_map)
 
                             # Add metadata and scalar types for all generated columns
                             for col_name, metadata_dict in zip(col_names, metadata_list):
@@ -1086,9 +1231,6 @@ def convert(
                 
                 # Store original CSV string
                 original_csv_string = ",".join(row)
-                
-                dim_name, dim_id = _split_term(dim_type_raw)
-                var_name, var_id = _split_term(var_type_raw)
 
                 # Extract extra terms from column 5 onwards (index 4+)
                 extra_terms: List[Dict[str, str]] = []
@@ -1110,10 +1252,6 @@ def convert(
                 )
                 col_start = len(dmeta_header)
                 dmeta_header.extend(col_names)
-
-                # Resolve dimension and variable names from OBO
-                dim_oterm_name = _resolve_name(dim_name, dim_id, term_map)
-                var_oterm_name = _resolve_name(var_name, var_id, term_map)
 
                 # Add metadata and scalar types for all generated columns
                 for col_name, metadata_dict in zip(col_names, metadata_list):
@@ -1197,6 +1335,30 @@ def convert(
             # any other line is ignored for header construction
             # --------------------------------------------------------------
             row = _next_row(it)
+
+        # ------------------------------------------------------------------
+        # Build ndarray shape - omit first dimension if no values line
+        # ------------------------------------------------------------------
+        shape = []
+        for dim_idx in sorted(dim_lengths.keys()):
+            if not has_values_line and dim_idx == 1:
+                # Skip first dimension if no values line
+                continue
+            shape.append(dim_lengths[dim_idx])
+        ndarray_metadata["shape"] = shape
+
+        # ------------------------------------------------------------------
+        # Build dimension type lists for ndarray metadata
+        # ------------------------------------------------------------------
+        for dim_idx in sorted(dimension_info.keys()):
+            if not has_values_line and dim_idx == 1:
+                # Skip first dimension if no values line
+                continue
+            dim_info = dimension_info[dim_idx]
+            ndarray_metadata["dimension_types_id"].append(dim_info["type_id"])
+            ndarray_metadata["dimension_types_name"].append(dim_info["type_name"])
+            ndarray_metadata["dimension_variable_types_id"].append(dim_info["var_types_id"])
+            ndarray_metadata["dimension_variable_types_name"].append(dim_info["var_types_name"])
 
         # ------------------------------------------------------------------
         # If there's no values line, reduce all dimension numbers by 1
@@ -1399,6 +1561,11 @@ def convert(
     # Generate typedef TSV
     # ------------------------------------------------------------------
     generate_typedef_tsv(brick_id, typedef_records, out_path)
+
+    # ------------------------------------------------------------------
+    # Generate ndarray TSV
+    # ------------------------------------------------------------------
+    generate_ndarray_tsv(brick_id, ndarray_metadata, out_path)
 
 
 # ----------------------------------------------------------------------
