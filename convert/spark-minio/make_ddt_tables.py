@@ -219,7 +219,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=False,
             metadata={"comment": json.dumps({
-                "description": "Primary key for DDT N-dimensional array",
+                "description": "Primary key for dynamic data type (N-dimensional array)",
                 "type": "primary_key"
             })}
         ),
@@ -228,7 +228,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Name of the DDT N-dimensional array",
+                "description": "Name of the data brick (N-dimensional array)",
                 "type": "unique_key"
             })}
         ),
@@ -237,7 +237,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Description of the DDT N-dimensional array"
+                "description": "Description of the data brick (N-dimensional array)"
             })}
         ),
         StructField(
@@ -245,7 +245,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Metadata for the DDT N-dimensional array"
+                "description": "Metadata for the data brick (N-dimensional array)"
             })}
         ),
         StructField(
@@ -253,7 +253,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Array type ontology term CURIE",
+                "description": "Data type for this data brick, ontology term CURIE",
                 "type": "foreign_key",
                 "references": "sys_oterm.sys_oterm_id"
             })}
@@ -263,7 +263,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Array type ontology term name"
+                "description": "Data type for this data brick"
             })}
         ),
         StructField(
@@ -271,7 +271,8 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Shape of the N-dimensional array"
+                "description": "Shape of the N-dimensional array, array with one integer per dimension",
+                "example": "[10,10]"
             })}
         ),
         StructField(
@@ -279,9 +280,9 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension types ontology term CURIEs",
+                "description": "Array of dimension data types, ontology term CURIEs",
                 "type": "foreign_key",
-                "references": "sys_oterm.sys_oterm_id"
+                "references": "[sys_oterm.sys_oterm_id]"
             })}
         ),
         StructField(
@@ -289,7 +290,7 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension types ontology term names"
+                "description": "Array of dimension data types"
             })}
         ),
         StructField(
@@ -297,9 +298,9 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension variable types ontology term CURIEs",
+                "description": "Array of dimension variable types, ontology term CURIEs",
                 "type": "foreign_key",
-                "references": "sys_oterm.sys_oterm_id"
+                "references": "[sys_oterm.sys_oterm_id]"
             })}
         ),
         StructField(
@@ -307,7 +308,7 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension variable types ontology term names"
+                "description": "Array of dimension variable types"
             })}
         ),
         StructField(
@@ -315,9 +316,9 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Variable types ontology term CURIEs",
+                "description": "Array of variable types, ontology term CURIEs",
                 "type": "foreign_key",
-                "references": "sys_oterm.sys_oterm_id"
+                "references": "[sys_oterm.sys_oterm_id]"
             })}
         ),
         StructField(
@@ -325,7 +326,7 @@ def build_ddt_ndarray_schema() -> StructType:
             ArrayType(StringType()),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Variable types ontology term names"
+                "description": "Array of variable types"
             })}
         ),
         StructField(
@@ -333,7 +334,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Date when this DDT was withdrawn"
+                "description": "Date when this dataset was withdrawn, or null if the dataset is currently valid"
             })}
         ),
         StructField(
@@ -341,7 +342,7 @@ def build_ddt_ndarray_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "DDT that supercedes this one",
+                "description": "Dataset that supercedes this one, if the dataset was withdrawn and replaced, or null if the dataset is currently valid",
                 "type": "foreign_key",
                 "references": "ddt_ndarray.ddt_ndarray_id"
             })}
@@ -360,7 +361,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=False,
             metadata={"comment": json.dumps({
-                "description": "Foreign key to ddt_ndarray",
+                "description": "Key for dynamic data type (N-dimensional array)",
                 "type": "foreign_key",
                 "references": "ddt_ndarray.ddt_ndarray_id"
             })}
@@ -378,7 +379,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "CDM column data type"
+                "description": "CDM column data type, variable or dimension_variable"
             })}
         ),
         StructField(
@@ -410,7 +411,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Unit ontology term CURIE",
+                "description": "Unit, ontology term CURIE",
                 "type": "foreign_key",
                 "references": "sys_oterm.sys_oterm_id"
             })}
@@ -420,7 +421,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Unit ontology term name"
+                "description": "Unit"
             })}
         ),
         StructField(
@@ -428,7 +429,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             IntegerType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension number"
+                "description": "Dimension number, starting at 1, for dimension variables"
             })}
         ),
         StructField(
@@ -436,7 +437,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension ontology term CURIE",
+                "description": "Dimension data type, ontology term CURIE",
                 "type": "foreign_key",
                 "references": "sys_oterm.sys_oterm_id"
             })}
@@ -446,7 +447,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Dimension ontology term name"
+                "description": "Dimension data type"
             })}
         ),
         StructField(
@@ -454,7 +455,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             IntegerType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Variable number"
+                "description": "Variable number within a dimension, numbered starting at 1"
             })}
         ),
         StructField(
@@ -462,7 +463,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Variable ontology term CURIE",
+                "description": "Dimension variable data type, ontology term CURIE",
                 "type": "foreign_key",
                 "references": "sys_oterm.sys_oterm_id"
             })}
@@ -472,7 +473,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Variable ontology term name"
+                "description": "Dimension variable data type"
             })}
         ),
         StructField(
@@ -480,7 +481,7 @@ def build_sys_ddt_typedef_schema() -> StructType:
             StringType(),
             nullable=True,
             metadata={"comment": json.dumps({
-                "description": "Original CSV string representation"
+                "description": "Original representation of this variable in the CORAL data dump CSV"
             })}
         ),
     ])
