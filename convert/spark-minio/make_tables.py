@@ -14,16 +14,16 @@ Key behaviours
   (e.g. ``OTU`` → ``ASV`` → table ``sdt_asv``).
 * Primary‑key column → ``<table>_id`` (values are rewritten to the
   preferred name when applicable).
-* Foreign‑key column → ``<referenced_table>_id`` (or ``_ids`` for arrays);
-  column names and the stored IDs are rewritten to the preferred name.
+* Foreign‑key column → ``<referenced_table>_name`` (or ``_names`` for arrays);
+  column names and the stored values reference the name field.
 * ``scalar_type == "term"`` fields are expanded **in place** into two
-  columns: ``<field>_sys_oterm_id`` (FK → ``sys_oterm``) and
+  columns: ``<field>_sys_oterm_id`` (FK → ``sys_oterm``) and
   ``<field>_sys_oterm_name`` (the term name)
 * All column names are lower‑case snake_case (underscores only)
 * Missing columns in a TSV are added as ``NULL`` so that the final schema
   can always be satisfied.
 * Before each table is written we log its schema and the first few rows
-  (up to 5) for debugging.
+  (up to 5) for debugging.
 * Each table is dropped first (``DROP TABLE IF EXISTS``) to guarantee a
   clean creation.
 * **Quoted strings that span multiple lines are now read correctly** – the
@@ -119,15 +119,15 @@ def rename_fk_column(original_name: str, ref_type: str, is_array: bool,
     normalise it to snake_case.
 
     * If the original column name contains the referenced type (singular or
-      plural), replace that part with the CDM table name and insert ``_id``
-      or ``_ids`` **before** any remaining suffix.
-      Example: ``genes_changed`` → ``sdt_gene_ids_changed``.
-    * If it does not contain the referenced type, append ``_<cdm_table>_id``
-      (or ``_ids``) to the original name.
-      Example: ``derived_from`` → ``derived_from_sdt_genome_id``.
+      plural), replace that part with the CDM table name and insert ``_name``
+      or ``_names`` **before** any remaining suffix.
+      Example: ``genes_changed`` → ``sdt_gene_names_changed``.
+    * If it does not contain the referenced type, append ``_<cdm_table>_name``
+      (or ``_names``) to the original name.
+      Example: ``derived_from`` → ``derived_from_sdt_genome_name``.
     """
     target_table = type_to_table.get(ref_type, ref_type.lower())
-    suffix = "_ids" if is_array else "_id"
+    suffix = "_names" if is_array else "_name"
 
     lower_orig = original_name.lower()
     ref_singular = ref_type.lower()
@@ -207,6 +207,40 @@ def _replace_id_prefix(df, col_name: str, old_prefix: str, new_prefix: str,
 
 
 # ------------------------------------------------------------------
+# Helper: build JSON comment with metadata
+# ------------------------------------------------------------------
+def _build_json_comment(field: Dict[str, Any], 
+                        description: str,
+                        fk: str = None,
+                        type_to_table: Dict[str, str] = None,
+                        is_pk: bool = False,
+                        is_upk: bool = False) -> str:
+    """
+    Build a JSON comment string with field metadata.
+    """
+    comment_dict = {"description": description}
+    
+    # Add units if present
+    if "units_term" in field and field["units_term"]:
+        comment_dict["unit_sys_oterm_id"] = field["units_term"]
+    
+    # Add type information
+    if is_pk:
+        comment_dict["type"] = "primary_key"
+    elif is_upk:
+        comment_dict["type"] = "unique_key"
+    elif fk:
+        comment_dict["type"] = "foreign_key"
+        # Parse the FK to get the table and column reference
+        ref_type, _ = parse_fk(fk)
+        ref_table = type_to_table.get(ref_type, ref_type.lower()) if type_to_table else ref_type.lower()
+        # Foreign keys now reference the _name column
+        comment_dict["references"] = f"{ref_table}.{ref_table}_name"
+    
+    return json.dumps(comment_dict)
+
+
+# ------------------------------------------------------------------
 # Process a single field – may produce one or two CDM columns
 # ------------------------------------------------------------------
 def process_field(field: Dict[str, Any],
@@ -225,15 +259,21 @@ def process_field(field: Dict[str, Any],
     def build(col_name: str,
               spark_type: DataType,
               nullable: bool,
-              comment: str,
-              fk: str = None) -> Tuple[StructField, Dict[str, Any]]:
+              plain_comment: str,
+              fk: str = None,
+              is_pk: bool = False,
+              is_upk: bool = False) -> Tuple[StructField, Dict[str, Any]]:
+        
+        # Build JSON comment for the table metadata
+        json_comment = _build_json_comment(field, plain_comment, fk, type_to_table, is_pk, is_upk)
+        
         metadata = {
             "orig_name": field.get("name"),
-            "type_term": field.get("type_term"),
+            "type_sys_oterm_id": field.get("type_term"),
             "required": field.get("required", False),
             "pk": field.get("PK", False),
             "upk": field.get("UPK", False),
-            "comment": comment,
+            "comment": json_comment,  # Include comment in metadata
         }
         if "constraint" in field:
             metadata["constraint"] = (
@@ -242,25 +282,31 @@ def process_field(field: Dict[str, Any],
                 else field["constraint"]
             )
         if "units_term" in field:
-            metadata["units_term"] = field["units_term"]
+            metadata["units_sys_oterm_id"] = field["units_term"]
         if fk:
             metadata["fk"] = fk
 
         struct = StructField(col_name, spark_type, nullable=nullable, metadata=metadata)
 
+        # Determine the final CDM column name for typedef table
+        # For UPK fields, use the table-specific name
+        final_cdm_name = col_name
+        if is_upk and col_name == "name":
+            final_cdm_name = f"{current_table}_name"
+
         typedef = {
             "type_name": type_name,
             "field_name": field.get("name"),
-            "cdm_column_name": col_name,
+            "cdm_column_name": final_cdm_name,  # Use final table-specific name
             "scalar_type": field.get("scalar_type", "text"),
             "required": field.get("required", False),
             "pk": field.get("PK", False),
             "upk": field.get("UPK", False),
             "fk": fk,
             "constraint": field.get("constraint"),
-            "comment": comment,
-            "units_term": field.get("units_term"),
-            "type_term": field.get("type_term"),
+            "comment": plain_comment,  # Store plain comment, not JSON
+            "units_sys_oterm_id": field.get("units_term"),
+            "type_sys_oterm_id": field.get("type_term"),
         }
         return struct, typedef
 
@@ -272,8 +318,17 @@ def process_field(field: Dict[str, Any],
         id_col = f"{base}_sys_oterm_id"
         name_col = f"{base}_sys_oterm_name"
 
-        id_comment = f"Foreign key to `sys_oterm` (term id for field `{field.get('name')}`)"
-        name_comment = f"Term name for field `{field.get('name')}`"
+        # Use the comment from typedef.json if present, otherwise use autogenerated comments
+        user_comment = field.get("comment")
+        
+        if user_comment:
+            # Use the user's comment for both id and name columns
+            id_comment = user_comment
+            name_comment = user_comment
+        else:
+            # Use autogenerated comments
+            id_comment = f"Foreign key to `sys_oterm` (term id for field `{field.get('name')}`)"
+            name_comment = f"Term name for field `{field.get('name')}`"
 
         id_field, id_typedef = build(
             id_col,
@@ -304,16 +359,24 @@ def process_field(field: Dict[str, Any],
     spark_type = map_scalar_type(field.get("scalar_type", "text"))
     nullable = not field.get("required", False)
 
+    # Determine the plain comment (from typedef.json or autogenerated)
     if field.get("PK", False):
-        comment = f"Primary key for table `{current_table}`"
+        plain_comment = field.get("comment") or f"Primary key for table `{current_table}`"
+        struct, typedef = build(col_name, spark_type, nullable, plain_comment,
+                               is_pk=True)
+    elif field.get("UPK", False):
+        plain_comment = field.get("comment") or f"User-defined unique key for table `{current_table}`"
+        struct, typedef = build(col_name, spark_type, nullable, plain_comment,
+                               is_upk=True)
     elif field.get("FK"):
         ref_type, _ = parse_fk(field["FK"])
-        comment = f"Foreign key to `{type_to_table.get(ref_type, ref_type.lower())}`"
+        plain_comment = field.get("comment") or f"Foreign key to `{type_to_table.get(ref_type, ref_type.lower())}`"
+        struct, typedef = build(col_name, spark_type, nullable, plain_comment,
+                               fk=field.get("FK"))
     else:
-        comment = field.get("comment") or f"Field `{field.get('name')}`"
-
-    struct, typedef = build(col_name, spark_type, nullable, comment,
-                           fk=field.get("FK") if field.get("FK") else None)
+        plain_comment = field.get("comment") or f"Field `{field.get('name')}`"
+        struct, typedef = build(col_name, spark_type, nullable, plain_comment)
+    
     return [struct], [typedef], []
 
 
@@ -345,26 +408,51 @@ def generate_schema(type_def: Dict[str, Any],
     # Ensure a primary‑key column exists (if not already added by a PK field)
     pk_name = f"{table_name}_id"
     if not any(sf.name == pk_name for sf in struct_fields):
+        plain_comment = f"Primary key for table `{table_name}`"
+        json_comment = json.dumps({"description": plain_comment, "type": "primary_key"})
         struct_fields.insert(
             0,
             StructField(
                 pk_name,
                 StringType(),
                 nullable=False,
-                metadata={"comment": f"Primary key for table `{table_name}`"},
+                metadata={"comment": json_comment},
             ),
+        )
+        # Add corresponding typedef row
+        typedef_rows.insert(
+            0,
+            {
+                "type_name": type_def.get("name"),
+                "field_name": "id",
+                "cdm_column_name": pk_name,
+                "scalar_type": "text",
+                "required": True,
+                "pk": True,
+                "upk": False,
+                "fk": None,
+                "constraint": None,
+                "comment": plain_comment,
+                "units_sys_oterm_id": None,
+                "type_sys_oterm_id": None,
+            }
         )
 
     # Add a ``name`` column for user‑primary‑key (UPK) if needed
     if any(r["upk"] for r in typedef_rows) and not any(sf.name == "name" for sf in struct_fields):
+        upk_name = f"{table_name}_name"
+        plain_comment = "User‑defined primary key (UPK)"
+        json_comment = json.dumps({"description": plain_comment, "type": "unique_key"})
         struct_fields.append(
             StructField(
                 "name",
                 StringType(),
                 nullable=False,
-                metadata={"comment": "User‑defined primary key (UPK)"},
+                metadata={"comment": json_comment},
             )
         )
+        # Note: typedef row for UPK should already be added by process_field
+        # with the correct cdm_column_name
 
     return StructType(struct_fields), typedef_rows, term_mappings
 
@@ -384,8 +472,8 @@ def build_typedefs_dataframe(spark, typedef_rows: List[Dict[str, Any]]):
         StructField("fk", StringType(), nullable=True),
         StructField("constraint", StringType(), nullable=True),
         StructField("comment", StringType(), nullable=True),
-        StructField("units_term", StringType(), nullable=True),
-        StructField("type_term", StringType(), nullable=True),
+        StructField("units_sys_oterm_id", StringType(), nullable=True),
+        StructField("type_sys_oterm_id", StringType(), nullable=True),
     ])
 
     rows = [
@@ -402,8 +490,8 @@ def build_typedefs_dataframe(spark, typedef_rows: List[Dict[str, Any]]):
             if isinstance(r["constraint"], (list, dict))
             else r["constraint"],
             r["comment"],
-            r["units_term"],
-            r["type_term"],
+            r["units_sys_oterm_id"],
+            r["type_sys_oterm_id"],
         )
         for r in typedef_rows
     ]
@@ -453,6 +541,65 @@ def _split_term_column(df,
     df = df.withColumn(id_col, id_extracted).withColumn(name_col, name_extracted)
     df = df.drop(orig_name)
     return df
+
+
+# ------------------------------------------------------------------
+# Helper: Create a nullable version of a schema
+# ------------------------------------------------------------------
+def _make_schema_nullable(schema: StructType) -> StructType:
+    """
+    Create a copy of the schema with all fields marked as nullable.
+    This is used when loading TSV data to handle missing or incomplete data.
+    """
+    nullable_fields = []
+    for field in schema.fields:
+        nullable_fields.append(
+            StructField(field.name, field.dataType, nullable=True, metadata=field.metadata)
+        )
+    return StructType(nullable_fields)
+
+
+# ------------------------------------------------------------------
+# Helper: Cast DataFrame columns to match schema types
+# ------------------------------------------------------------------
+def _cast_columns_to_schema(df, schema: StructType):
+    """
+    Cast DataFrame columns to match the types defined in the schema.
+    This is needed because TSV files are read with all string columns.
+    """
+    for field in schema.fields:
+        if field.name in df.columns:
+            df = df.withColumn(field.name, F.col(field.name).cast(field.dataType))
+    return df
+
+
+# ------------------------------------------------------------------
+# Helper: Apply schema with metadata to a DataFrame
+# ------------------------------------------------------------------
+def _apply_schema_with_metadata(spark, df, schema: StructType, make_nullable: bool = False):
+    """
+    Apply a schema with metadata (including comments) to a DataFrame.
+    This ensures that column comments are preserved when writing to Delta tables.
+    
+    Args:
+        spark: SparkSession
+        df: DataFrame to apply schema to
+        schema: Schema with metadata to apply
+        make_nullable: If True, makes all fields nullable before applying schema
+    """
+    # Use nullable schema if requested (for TSV loading)
+    target_schema = _make_schema_nullable(schema) if make_nullable else schema
+    
+    # Check if DataFrame is empty using rdd.isEmpty()
+    if df.rdd.isEmpty():
+        # For empty DataFrames, create directly with schema
+        return spark.createDataFrame([], target_schema)
+    
+    # Cast columns to match the target schema types
+    df = _cast_columns_to_schema(df, target_schema)
+    
+    # Convert DataFrame to RDD and back with the new schema to preserve metadata
+    return spark.createDataFrame(df.rdd, target_schema)
 
 
 # ------------------------------------------------------------------
@@ -566,19 +713,41 @@ def generate_cdm(spark,
                 )
 
                 # --------------------------------------------------------------
-                # 2) Rename NON‑TERM columns to their CDM names.
+                # 2) Build rename map for NON‑TERM columns.
+                #    We need to handle both:
+                #    a) Original field names (e.g., "location")
+                #    b) Old CDM names (e.g., "location_id" for FK fields)
                 # --------------------------------------------------------------
                 rename_map: Dict[str, str] = {}
+                
                 for f in tdef.get("fields", []):
                     if f.get("scalar_type") == "term":
                         continue                      # keep term column for now
+                    
                     orig = f["name"]
                     new_name = field_to_column_name(f, table_name, type_to_table)
+                    
+                    # Map original field name to new CDM name
                     rename_map[orig] = new_name
+                    
+                    # For FK fields, also map the old CDM convention (e.g., "location_id")
+                    # to the new convention (e.g., "sdt_location_name")
+                    fk_str = f.get("FK")
+                    if fk_str:
+                        ref_type, is_array = parse_fk(fk_str)
+                        # Old CDM convention used "<table>_id" or "<table>_ids"
+                        old_suffix = "_ids" if is_array else "_id"
+                        old_cdm_name = f"{ref_type.lower()}{old_suffix}"
+                        
+                        # Only add this mapping if it's different from the original field name
+                        if old_cdm_name != orig:
+                            rename_map[old_cdm_name] = new_name
 
-                for orig, new_name in rename_map.items():
-                    if orig in df.columns:
-                        df = df.withColumnRenamed(orig, new_name)
+                # Apply renames
+                for old_col, new_col in rename_map.items():
+                    if old_col in df.columns:
+                        df = df.withColumnRenamed(old_col, new_col)
+                        logging.debug(f"Renamed column '{old_col}' -> '{new_col}'")
 
                 # --------------------------------------------------------------
                 # 3) Convert ARRAY columns.
@@ -640,6 +809,12 @@ def generate_cdm(spark,
                 # --------------------------------------------------------------
                 df = df.select(*final_order)
 
+                # --------------------------------------------------------------
+                # 8) Apply the schema with metadata to preserve column comments
+                #    Use nullable=True to handle incomplete TSV data
+                # --------------------------------------------------------------
+                df = _apply_schema_with_metadata(spark, df, schema, make_nullable=True)
+
             except Exception as exc:  # pragma: no cover
                 logging.warning(
                     f"Could not load TSV for {coral_type_name} from {tsv_path}: {exc}"
@@ -655,8 +830,12 @@ def generate_cdm(spark,
         # ------------------------------------------------------------------
         if "name" in df.columns:
             df = df.withColumnRenamed("name", f"{table_name}_name")
+            # Reapply schema after renaming to preserve metadata
+            df = _apply_schema_with_metadata(spark, df, schema, make_nullable=True)
         if "description" in df.columns:
             df = df.withColumnRenamed("description", f"{table_name}_description")
+            # Reapply schema after renaming to preserve metadata
+            df = _apply_schema_with_metadata(spark, df, schema, make_nullable=True)
 
         # ------------------------------------------------------------------
         # Debug: show schema and a few rows before writing
