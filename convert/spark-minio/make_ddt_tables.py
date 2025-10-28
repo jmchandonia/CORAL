@@ -132,17 +132,28 @@ def list_objects_boto3(
 
 
 # ------------------------------------------------------------------
-# Helper: download a file from S3 to a temporary local file
+# Helper: download schema file and skip first line (imports)
 # ------------------------------------------------------------------
-def _download_to_temp(s3_client, bucket: str, key: str, suffix: str = ".py") -> str:
+def _download_schema_to_temp(s3_client, bucket: str, key: str) -> str:
     """
-    Download a file from MinIO to a temporary local file and
-    return the temporary file path.
+    Download a schema file from MinIO to a temporary local file,
+    skipping the first line (which contains imports).
+    Returns the temporary file path.
     """
     resp = s3_client.get_object(Bucket=bucket, Key=key)
-    body = resp["Body"].read()
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix, mode='wb')
-    tmp.write(body)
+    body = resp["Body"].read().decode('utf-8')
+    
+    # Split into lines and skip the first line (imports)
+    lines = body.split('\n')
+    if len(lines) > 1:
+        # Skip first line and join the rest
+        content = '\n'.join(lines[1:])
+    else:
+        content = body
+    
+    # Write to temp file
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.py', mode='w', encoding='utf-8')
+    tmp.write(content)
     tmp.close()
     return tmp.name
 
@@ -676,10 +687,10 @@ def generate_ddt_tables(spark,
             
             logging.info(f"Processing brick: {brick_name}")
             
-            # Download schema file to local temp location
+            # Download schema file to local temp location (skipping first line)
             tmp_schema_path = None
             try:
-                tmp_schema_path = _download_to_temp(s3_client, bucket, brick_schema_key, suffix='.py')
+                tmp_schema_path = _download_schema_to_temp(s3_client, bucket, brick_schema_key)
                 
                 # Load schema
                 brick_schema = load_schema_from_file(tmp_schema_path)
