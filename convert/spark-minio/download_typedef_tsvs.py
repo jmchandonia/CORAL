@@ -183,32 +183,57 @@ def field_to_column_name(field: Dict[str, Any]) -> str:
     return orig_name
 
 
-def get_column_names_for_type(type_def: Dict[str, Any]) -> List[str]:
+def get_column_names_and_mappings(type_def: Dict[str, Any]) -> Tuple[List[str], Dict[str, str], Dict[str, str]]:
     """
     Compute the ordered list of column names that the CORAL API will emit for
-    ``type_def`` (CDM ordering: PK → fields → name if UPK).
+    ``type_def`` (CDM ordering: PK → fields → name if UPK), along with mappings
+    to track original field names.
+    
+    Returns:
+        (column_names, column_to_field_map, term_columns)
+        
+        - column_names: ordered list of CDM column names
+        - column_to_field_map: maps CDM column name -> original field name (for non-Term fields)
+        - term_columns: maps CDM column name -> original field name (for Term fields only)
     """
     fields = type_def.get("fields", [])
     column_names: List[str] = []
+    column_to_field_map: Dict[str, str] = {}
+    term_columns: Dict[str, str] = {}
 
     has_pk = False
     has_upk = False
 
     for fld in fields:
         col_name = field_to_column_name(fld)
+        orig_name = fld.get("name")
+        
         column_names.append(col_name)
+
+        # Track the mapping from CDM column name to original field name
+        if fld.get("scalar_type") == "term":
+            # For term fields, we need the original name to look up _term_name and _term_id
+            term_columns[col_name] = orig_name
+        else:
+            # For all other fields, track the original name
+            column_to_field_map[col_name] = orig_name
 
         if fld.get("PK", False):
             has_pk = True
         if fld.get("UPK", False):
             has_upk = True
 
+    # Add auto-generated PK if needed
     if not has_pk:
         column_names.insert(0, "id")
+        column_to_field_map["id"] = "id"  # Usually "id" maps to "id" in the JSON
+    
+    # Add auto-generated UPK if needed
     if has_upk and "name" not in column_names:
         column_names.append("name")
+        column_to_field_map["name"] = "name"
 
-    return column_names
+    return column_names, column_to_field_map, term_columns
 
 
 # ----------------------------------------------------------------------
@@ -306,16 +331,9 @@ def download_json_and_write_tsv(
         return
 
     # ------------------------------------------------------------------
-    # 3️⃣  Determine column order and which columns are Term‑typed
+    # 3️⃣  Determine column order and field name mappings
     # ------------------------------------------------------------------
-    column_names = get_column_names_for_type(type_def)
-
-    # Mapping: CDM column name -> original field name (only for Term fields)
-    term_columns: Dict[str, str] = {}
-    for fld in type_def.get("fields", []):
-        if fld.get("scalar_type") == "term":
-            col_name = field_to_column_name(fld)
-            term_columns[col_name] = fld.get("name")   # original field name
+    column_names, column_to_field_map, term_columns = get_column_names_and_mappings(type_def)
 
     # ------------------------------------------------------------------
     # 4️⃣  Write TSV
@@ -348,12 +366,13 @@ def download_json_and_write_tsv(
 
                     row.append(combined)
                 else:
-                    # Regular scalar / list / dict handling (no quotes)
-                    raw_val = rec.get(col, "")
+                    # Regular field handling - look up the original field name
+                    orig_field = column_to_field_map.get(col, col)
+                    raw_val = rec.get(orig_field, "")
                     row.append(format_value(raw_val))
             writer.writerow(row)
 
-    logging.info(f"Saved TSV for '{datatype}' → {out_path}")
+    logging.info(f"Saved TSV for '{datatype}' → {out_path} ({len(records)} records)")
 
 
 # ----------------------------------------------------------------------
@@ -404,7 +423,18 @@ def main():
         default="/etc/ssl/certs/data_clearinghouse.pub",
         help="Path to the public RSA key (default: /etc/ssl/certs/data_clearinghouse.pub).",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging.",
+    )
     args = parser.parse_args()
+
+    # ------------------------------------------------------------------
+    # Set logging level
+    # ------------------------------------------------------------------
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
 
     # ------------------------------------------------------------------
     # Prepare output directory

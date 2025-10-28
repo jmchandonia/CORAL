@@ -7,6 +7,7 @@ intended to be executed inside a Jupyter notebook – no command‑line
 arguments are required.
 """
 
+import json
 import logging
 import os
 import re
@@ -280,49 +281,84 @@ def build_ontologies_dataframe(spark: SparkSession, ontologies):
                 "sys_oterm_id",
                 StringType(),
                 nullable=False,
-                metadata={"comment": "Term identifier, aka CURIE (Primary key)"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Term identifier, aka CURIE (Primary key)",
+                        "type": "primary_key"
+                    })
+                },
             ),
             StructField(
                 "parent_sys_oterm_id",
                 StringType(),
                 nullable=True,
-                metadata={"comment": "Parent term identifier (Foreign key to sys_oterm.sys_oterm_id)"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Parent term identifier",
+                        "type": "foreign_key",
+                        "references": "sys_oterm.sys_oterm_id"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_ontology",
                 StringType(),
                 nullable=False,
-                metadata={"comment": "Ontology that each term is from"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Ontology that each term is from"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_name",
                 StringType(),
                 nullable=True,
-                metadata={"comment": "Term name"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Term name"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_synonyms",
                 ArrayType(StringType()),
                 nullable=True,
-                metadata={"comment": "List of synonyms for a term"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "List of synonyms for a term"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_definition",
                 StringType(),
                 nullable=True,
-                metadata={"comment": "Term definition"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Term definition"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_links",
                 ArrayType(StringType()),
                 nullable=True,
-                metadata={"comment": "Indicates that values are links to other tables (Ref) or ontological terms (ORef)"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Indicates that values are links to other tables (Ref) or ontological terms (ORef)"
+                    })
+                },
             ),
             StructField(
                 "sys_oterm_properties",
                 MapType(StringType(), StringType()),
                 nullable=True,
-                metadata={"comment": "Semicolon‑separated map of properties to values for terms that are CORAL microtypes, including scalar data_type, is_valid_data_variable, is_valid_dimension, is_valid_data_variable, is_valid_dimension_variable, is_valid_property, valid_units, and valid_units_parent"},
+                metadata={
+                    "comment": json.dumps({
+                        "description": "Semicolon‑separated map of properties to values for terms that are CORAL microtypes, including scalar data_type, is_valid_data_variable, is_valid_dimension, is_valid_data_variable, is_valid_dimension_variable, is_valid_property, valid_units, and valid_units_parent"
+                    })
+                },
             ),
         ]
     )
@@ -360,5 +396,10 @@ spark.sql(f"USE {db_name}")
 ontologies = load_all_ontologies_from_minio()
 df = build_ontologies_dataframe(spark, ontologies)
 
-# Overwrite the Delta table with the freshly‑loaded data and add a table comment
+# Drop the table if it already exists
+spark.sql(f"DROP TABLE IF EXISTS {db_name}.{table_name}")
+
+# Write the Delta table with the freshly‑loaded data and add a table comment
 df.write.format("delta").option("comment", "Ontology terms used in CORAL").saveAsTable(f"{db_name}.{table_name}")
+
+logging.info(f"✅ Successfully created/updated table {db_name}.{table_name}")
