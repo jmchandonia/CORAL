@@ -162,11 +162,16 @@ def field_to_column_name(field: Dict[str, Any],
     if field.get("PK", False):
         return _normalize_name(f"{current_table}_id")
     if field.get("UPK", False):
-        return "name"                     # will be renamed later to <table>_name
+        return _normalize_name(f"{current_table}_name")
     fk = field.get("FK")
     if fk:
         ref_type, is_array = parse_fk(fk)
         return rename_fk_column(field["name"], ref_type, is_array, type_to_table)
+    
+    # Handle description field
+    if _normalize_name(field["name"]) == "description":
+        return _normalize_name(f"{current_table}_description")
+    
     return _normalize_name(field["name"])
 
 
@@ -222,7 +227,7 @@ def _build_json_comment(field: Dict[str, Any],
     
     # Add units if present
     if "units_term" in field and field["units_term"]:
-        comment_dict["unit_sys_oterm_id"] = field["units_term"]
+        comment_dict["unit"] = field["units_term"]
     
     # Add type information
     if is_pk:
@@ -273,7 +278,7 @@ def process_field(field: Dict[str, Any],
             "required": field.get("required", False),
             "pk": field.get("PK", False),
             "upk": field.get("UPK", False),
-            "comment": json_comment,  # Include comment in metadata
+            "comment": json_comment,
         }
         if "constraint" in field:
             metadata["constraint"] = (
@@ -288,23 +293,18 @@ def process_field(field: Dict[str, Any],
 
         struct = StructField(col_name, spark_type, nullable=nullable, metadata=metadata)
 
-        # Determine the final CDM column name for typedef table
-        # For UPK fields, use the table-specific name
-        final_cdm_name = col_name
-        if is_upk and col_name == "name":
-            final_cdm_name = f"{current_table}_name"
-
+        # cdm_column_name is already table-specific from field_to_column_name
         typedef = {
             "type_name": type_name,
             "field_name": field.get("name"),
-            "cdm_column_name": final_cdm_name,  # Use final table-specific name
+            "cdm_column_name": col_name,
             "scalar_type": field.get("scalar_type", "text"),
             "required": field.get("required", False),
             "pk": field.get("PK", False),
             "upk": field.get("UPK", False),
             "fk": fk,
             "constraint": field.get("constraint"),
-            "comment": plain_comment,  # Store plain comment, not JSON
+            "comment": plain_comment,
             "units_sys_oterm_id": field.get("units_term"),
             "type_sys_oterm_id": field.get("type_term"),
         }
@@ -438,22 +438,6 @@ def generate_schema(type_def: Dict[str, Any],
             }
         )
 
-    # Add a ``name`` column for user‑primary‑key (UPK) if needed
-    if any(r["upk"] for r in typedef_rows) and not any(sf.name == "name" for sf in struct_fields):
-        upk_name = f"{table_name}_name"
-        plain_comment = "User‑defined primary key (UPK)"
-        json_comment = json.dumps({"description": plain_comment, "type": "unique_key"})
-        struct_fields.append(
-            StructField(
-                "name",
-                StringType(),
-                nullable=False,
-                metadata={"comment": json_comment},
-            )
-        )
-        # Note: typedef row for UPK should already be added by process_field
-        # with the correct cdm_column_name
-
     return StructType(struct_fields), typedef_rows, term_mappings
 
 
@@ -580,25 +564,13 @@ def _apply_schema_with_metadata(spark, df, schema: StructType, make_nullable: bo
     """
     Apply a schema with metadata (including comments) to a DataFrame.
     This ensures that column comments are preserved when writing to Delta tables.
-    
-    Args:
-        spark: SparkSession
-        df: DataFrame to apply schema to
-        schema: Schema with metadata to apply
-        make_nullable: If True, makes all fields nullable before applying schema
     """
-    # Use nullable schema if requested (for TSV loading)
     target_schema = _make_schema_nullable(schema) if make_nullable else schema
     
-    # Check if DataFrame is empty using rdd.isEmpty()
     if df.rdd.isEmpty():
-        # For empty DataFrames, create directly with schema
         return spark.createDataFrame([], target_schema)
     
-    # Cast columns to match the target schema types
     df = _cast_columns_to_schema(df, target_schema)
-    
-    # Convert DataFrame to RDD and back with the new schema to preserve metadata
     return spark.createDataFrame(df.rdd, target_schema)
 
 
@@ -714,11 +686,22 @@ def generate_cdm(spark,
 
                 # --------------------------------------------------------------
                 # 2) Build rename map for NON‑TERM columns.
-                #    We need to handle both:
+                #    We need to handle:
                 #    a) Original field names (e.g., "location")
                 #    b) Old CDM names (e.g., "location_id" for FK fields)
+                #    c) Generic names like "name" and "description"
                 # --------------------------------------------------------------
                 rename_map: Dict[str, str] = {}
+                
+                # Add mapping for generic "name" column to table-specific name
+                name_col = f"{table_name}_name"
+                if "name" in df.columns and name_col in [f.name for f in schema.fields]:
+                    rename_map["name"] = name_col
+                
+                # Add mapping for generic "description" column to table-specific description
+                desc_col = f"{table_name}_description"
+                if "description" in df.columns and desc_col in [f.name for f in schema.fields]:
+                    rename_map["description"] = desc_col
                 
                 for f in tdef.get("fields", []):
                     if f.get("scalar_type") == "term":
@@ -726,6 +709,10 @@ def generate_cdm(spark,
                     
                     orig = f["name"]
                     new_name = field_to_column_name(f, table_name, type_to_table)
+                    
+                    # Skip if this is "name" or "description" - already handled above
+                    if orig in ["name", "description"]:
+                        continue
                     
                     # Map original field name to new CDM name
                     rename_map[orig] = new_name
@@ -824,18 +811,6 @@ def generate_cdm(spark,
         else:
             # No TSV loading – create an empty DataFrame with the final schema
             df = spark.createDataFrame([], schema)
-
-        # ------------------------------------------------------------------
-        # Rename generic columns to be table‑specific
-        # ------------------------------------------------------------------
-        if "name" in df.columns:
-            df = df.withColumnRenamed("name", f"{table_name}_name")
-            # Reapply schema after renaming to preserve metadata
-            df = _apply_schema_with_metadata(spark, df, schema, make_nullable=True)
-        if "description" in df.columns:
-            df = df.withColumnRenamed("description", f"{table_name}_description")
-            # Reapply schema after renaming to preserve metadata
-            df = _apply_schema_with_metadata(spark, df, schema, make_nullable=True)
 
         # ------------------------------------------------------------------
         # Debug: show schema and a few rows before writing
