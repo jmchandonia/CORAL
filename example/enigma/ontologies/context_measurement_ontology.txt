@@ -231,12 +231,12 @@
     Growth Stage:
       Enrichment Growth
         alias: Preincubation
-      Colony Formation
+      Colony Formation on Solid Media
       Inoculation
       Lag Phase
       Exponential Phase
       Stationary Phase
-      Growth in Liquid Media
+      Single Colony Growth in Liquid Media
     *Culture Vessel
     Gene Regulation
       Up-regulated

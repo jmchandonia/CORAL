@@ -5070,16 +5070,16 @@ is_a: ME:0000054 ! Substrate
 
 [Term]
 id: ME:0000485
-name: Colony Formation
+name: Colony Formation on Solid Media
 namespace: measure.ontology
-def: "Colony Formation." []
+def: "Colony Formation on Solid Media, for isolation." []
 is_a: ME:0000416 ! Growth Stage
 
 [Term]
 id: ME:0000486
-name: Growth in Liquid Media
+name: Single Colony Growth in Liquid Media
 namespace: measure.ontology
-def: "Growth in Liquid Media." []
+def: "Single Colony Growth in Liquid Media." []
 is_a: ME:0000416 ! Growth Stage
 
 [Term]
