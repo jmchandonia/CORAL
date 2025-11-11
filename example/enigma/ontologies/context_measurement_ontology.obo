@@ -416,7 +416,7 @@ is_a: ME:0000026 ! Chemical Context
 
 [Term]
 id: ME:0000037
-name: State
+name: Physiochemical State
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
@@ -4385,9 +4385,10 @@ is_a: ME:0000039 ! Biological Context
 
 [Term]
 id: ME:0000417
-name: Preincubation
+name: Enrichment Growth
 namespace: measure.ontology
-def: "Preincubation." []
+def: "Preincubation or enrichment of a microbial sample before plating for colony picking/isolation." []
+synonym: "Preincubation" EXACT []
 is_a: ME:0000416 ! Growth Stage
 
 [Term]
@@ -5042,6 +5043,57 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Control Name." []
 is_a: ME:0000283 ! Control
+
+[Term]
+id: ME:0000483
+name: Microaerobic
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Microaerobic." []
+is_a: ME:0000209 ! Physical Context
+
+[Term]
+id: ME:0000484
+name: Carbon Source Media
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Carbon Source Media." []
+is_a: ME:0000054 ! Substrate
+
+[Term]
+id: ME:0000485
+name: Colony Formation
+namespace: measure.ontology
+def: "Colony Formation." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000486
+name: Growth in Liquid Media
+namespace: measure.ontology
+def: "Growth in Liquid Media." []
+is_a: ME:0000416 ! Growth Stage
+
+[Term]
+id: ME:0000487
+name: Culture Vessel
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Culture Vessel." []
+is_a: ME:0000039 ! Biological Context
 
 [Typedef]
 id: data_type

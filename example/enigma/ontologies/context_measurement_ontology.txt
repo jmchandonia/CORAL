@@ -104,6 +104,7 @@
     Homogenized
     *Anaerobic (Boolean)
     Aerobic (Boolean)
+    Microaerobic (Boolean)
     *Aphotic (Boolean)
     Undisturbed
     Phase (String)
@@ -132,7 +133,7 @@
       delta-H (Float, energy unit)
     Specific Activity (Float)
     Wavelength (Float, length unit)
-    *State (String)
+    *Physiochemical State (String)
     *Detection Limit (Float)
     Organic (Boolean)
     *Molecular Weight (Float, +dalton)
@@ -191,6 +192,7 @@
     Metabolite
       is_a: ME:0000027
     Substrate
+      *+Carbon Source Media (String)
       *+Carbon Source (ORef:CHEBI:24431)
       *+Nitrogen Source (ORef:CHEBI:24431)
       *+Electron Donor (ORef:CHEBI:24431)
@@ -227,11 +229,15 @@
       *Time Since Inoculation (Float, time unit)
       Growth Efficiency
     Growth Stage:
-      Preincubation
+      Enrichment Growth
+        alias: Preincubation
+      Colony Formation
       Inoculation
       Lag Phase
       Exponential Phase
       Stationary Phase
+      Growth in Liquid Media
+    *Culture Vessel
     Gene Regulation
       Up-regulated
       Down-regulated
