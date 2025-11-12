@@ -191,8 +191,7 @@
       Minimal Media (Boolean)
     Metabolite
       is_a: ME:0000027
-    Substrate
-      *+Carbon Source Media (String)
+    Enzyme Substrate
       *+Carbon Source (ORef:CHEBI:24431)
       *+Nitrogen Source (ORef:CHEBI:24431)
       *+Electron Donor (ORef:CHEBI:24431)

@@ -594,9 +594,9 @@ is_a: ME:0000039 ! Biological Context
 
 [Term]
 id: ME:0000054
-name: Substrate
+name: Enzyme Substrate
 namespace: measure.ontology
-def: "Substrate." []
+def: "Enzyme Substrate." []
 is_a: ME:0000039 ! Biological Context
 
 [Term]
@@ -611,7 +611,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Carbon source used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Substrate
+is_a: ME:0000054 ! Enzyme Substrate
 
 [Term]
 id: ME:0000056
@@ -625,7 +625,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Nitrogen source used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Substrate
+is_a: ME:0000054 ! Enzyme Substrate
 
 [Term]
 id: ME:0000057
@@ -639,7 +639,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron donor used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Substrate
+is_a: ME:0000054 ! Enzyme Substrate
 
 [Term]
 id: ME:0000058
@@ -653,7 +653,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron acceptor used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Substrate
+is_a: ME:0000054 ! Enzyme Substrate
 
 [Term]
 id: ME:0000059
@@ -5057,33 +5057,20 @@ is_a: ME:0000209 ! Physical Context
 
 [Term]
 id: ME:0000484
-name: Carbon Source Media
+name: Colony Formation on Solid Media
 namespace: measure.ontology
-property_value: data_type "string" xsd:string
-property_value: is_microtype "true" xsd:boolean
-property_value: is_valid_data_variable "true" xsd:boolean
-property_value: is_valid_dimension "true" xsd:boolean
-property_value: is_valid_dimension_variable "true" xsd:boolean
-property_value: is_valid_property "true" xsd:boolean
-def: "Carbon Source Media." []
-is_a: ME:0000054 ! Substrate
+def: "Colony formation on solid media, during the process of microbial isolation" []
+is_a: ME:0000416 ! Growth Stage
 
 [Term]
 id: ME:0000485
-name: Colony Formation on Solid Media
+name: Single Colony Growth in Liquid Media
 namespace: measure.ontology
-def: "Colony Formation on Solid Media, for isolation." []
+def: "Single colony growth in liquid media, after microbial isolation" []
 is_a: ME:0000416 ! Growth Stage
 
 [Term]
 id: ME:0000486
-name: Single Colony Growth in Liquid Media
-namespace: measure.ontology
-def: "Single Colony Growth in Liquid Media." []
-is_a: ME:0000416 ! Growth Stage
-
-[Term]
-id: ME:0000487
 name: Culture Vessel
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
@@ -5092,7 +5079,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "Culture Vessel." []
+def: "Vessel or format in which microbes were grown, e.g., plates, tubes" []
 is_a: ME:0000039 ! Biological Context
 
 [Typedef]
