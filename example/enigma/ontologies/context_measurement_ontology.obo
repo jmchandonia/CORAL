@@ -35,7 +35,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Context describing experimental design." []
 xref: ORef:ME:0000002
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000003
@@ -47,7 +47,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Context describing the purpose of a series." []
 xref: ORef:ME:0000003
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000004
@@ -61,7 +61,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000003" xsd:string
 def: "A time series, in which a series of measurements was taken at different timepoints." []
-is_a: ME:0000003 ! Series Type
+is_a: ME:0000003 ! series type
 
 [Term]
 id: ME:0000005
@@ -76,7 +76,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000189" xsd:string
 property_value: valid_units_parent "UO:0000189" xsd:string
 def: "A replicate series, e.g., biological or technical replicates." []
-is_a: ME:0000003 ! Series Type
+is_a: ME:0000003 ! series type
 
 [Term]
 id: ME:0000006
@@ -89,7 +89,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A human-readable description of an experimental condition." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000007
@@ -102,7 +102,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A description of one or more methods used in an experiment." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000008
@@ -115,7 +115,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A description of one or more algorithm parameters." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000009
@@ -128,7 +128,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A date, formatted as YYYY-MM-DD." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000010
@@ -141,7 +141,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A time, formatted as HH:MM (see DateTime to include the date)." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000011
@@ -154,7 +154,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A human-readable comment." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000012
@@ -167,7 +167,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A description of instrument(s) used." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000013
@@ -180,15 +180,15 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "A human-readable description of a category." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000014
 name: homogenized
 namespace: measure.ontology
 def: "Homogenized." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000015
@@ -201,8 +201,8 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Anaerobic." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000016
@@ -213,16 +213,16 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Aerobic." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000017
 name: undisturbed
 namespace: measure.ontology
 def: "Undisturbed." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000018
@@ -234,14 +234,14 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microtypes that provide mathematical context." []
 xref: ORef:ME:0000018
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000019
 name: normalized
 namespace: measure.ontology
 def: "Normalized; describe how in the Method or Protocol." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000020
@@ -252,42 +252,42 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Human-readable context saying what another microtype is measured relative to." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000021
 name: increase
 namespace: measure.ontology
 def: "Increase." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000022
 name: decrease
 namespace: measure.ontology
 def: "Decrease." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000023
 name: gain
 namespace: measure.ontology
 def: "Gain." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000024
 name: loss
 namespace: measure.ontology
 def: "Loss." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000025
 name: nearest
 namespace: measure.ontology
 def: "Nearest." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000026
@@ -299,7 +299,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Describes the context of a molecule in a chemical reaction or experiment." []
 xref: ORef:ME:0000026
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000027
@@ -309,7 +309,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Use when the type of molecule varies along a dimension." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000028
@@ -322,7 +322,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Human-readable description of a chemical reaction." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000029
@@ -335,7 +335,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Human-readable description of a type of surface." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000030
@@ -346,7 +346,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Human-readable description of the type of bead used in a (geo)chemical experiment." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000031
@@ -358,14 +358,14 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Size of a bead used in a (geo)chemical experiment." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000032
 name: thermodynamic context
 namespace: measure.ontology
 def: "Thermodynamic context for a reaction." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000033
@@ -377,7 +377,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000111" xsd:string
 def: "delta-G, a change in Gibbs Free Energy for a chemical reaction." []
-is_a: ME:0000032 ! Thermodynamic Context
+is_a: ME:0000032 ! thermodynamic context
 
 [Term]
 id: ME:0000034
@@ -389,7 +389,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000111" xsd:string
 def: "delta-H, a change in enthalpy for a chemical reaction." []
-is_a: ME:0000032 ! Thermodynamic Context
+is_a: ME:0000032 ! thermodynamic context
 
 [Term]
 id: ME:0000035
@@ -400,7 +400,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Rate of reaction multiplied by the volume, divided by mass of protein." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000036
@@ -412,7 +412,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Wavelength of radiation." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000037
@@ -425,7 +425,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Human-readable context for the state or type of matter, e.g., dissolved, or in soil" []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000038
@@ -438,7 +438,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Detection limit for an instrument or experiment." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000039
@@ -450,21 +450,21 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Biological Context." []
 xref: ORef:ME:0000039
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000040
 name: cell
 namespace: measure.ontology
 def: "Cell." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000041
 name: colony
 namespace: measure.ontology
 def: "Colony." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000042
@@ -474,8 +474,8 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Strain of microbe, or isolate ID." []
-synonym: "Isolate" EXACT []
-is_a: ME:0000039 ! Biological Context
+synonym: "isolate" EXACT []
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000043
@@ -487,7 +487,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain name, for microbes that are not ENIGMA isolates." []
-is_a: ME:0000042 ! Strain
+is_a: ME:0000042 ! strain
 
 [Term]
 id: ME:0000044
@@ -499,9 +499,9 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to link to ENIGMA strains by their official strain name/ID." []
-synonym: "Isolate ID" EXACT []
+synonym: "isolate ID" EXACT []
 xref: Ref:DA:0000062.Strain.name
-is_a: ME:0000042 ! Strain
+is_a: ME:0000042 ! strain
 
 [Term]
 id: ME:0000045
@@ -511,7 +511,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Taxon." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000046
@@ -522,7 +522,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to describe taxa by name (use Taxon ID instead if possible)." []
-is_a: ME:0000045 ! Taxon
+is_a: ME:0000045 ! taxon
 
 [Term]
 id: ME:0000047
@@ -535,7 +535,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to link to defined ENIGMA taxa." []
 xref: Ref:DA:0000037.Taxon.name
-is_a: ME:0000045 ! Taxon
+is_a: ME:0000045 ! taxon
 
 [Term]
 id: ME:0000048
@@ -545,7 +545,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Media type." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000049
@@ -558,7 +558,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Media name." []
-is_a: ME:0000048 ! Media
+is_a: ME:0000048 ! media
 
 [Term]
 id: ME:0000050
@@ -569,7 +569,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Media composition." []
-is_a: ME:0000048 ! Media
+is_a: ME:0000048 ! media
 
 [Term]
 id: ME:0000052
@@ -582,22 +582,22 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Media addition." []
-is_a: ME:0000048 ! Media
+is_a: ME:0000048 ! media
 
 [Term]
 id: ME:0000053
 name: metabolite
 namespace: measure.ontology
 def: "Metabolite." []
-is_a: ME:0000027 ! Molecule
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000027 ! molecule
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000054
 name: enzyme substrate
 namespace: measure.ontology
 def: "Enzyme Substrate." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000055
@@ -611,7 +611,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Carbon source used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Enzyme Substrate
+is_a: ME:0000054 ! enzyme substrate
 
 [Term]
 id: ME:0000056
@@ -625,7 +625,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Nitrogen source used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Enzyme Substrate
+is_a: ME:0000054 ! enzyme substrate
 
 [Term]
 id: ME:0000057
@@ -639,7 +639,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron donor used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Enzyme Substrate
+is_a: ME:0000054 ! enzyme substrate
 
 [Term]
 id: ME:0000058
@@ -653,7 +653,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Electron acceptor used for microbial growth." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000054 ! Enzyme Substrate
+is_a: ME:0000054 ! enzyme substrate
 
 [Term]
 id: ME:0000059
@@ -663,7 +663,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Gene." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000060
@@ -676,7 +676,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene name, e.g., dsrA." []
 xref: Ref:DA:0000040.Gene.aliases
-is_a: ME:0000059 ! Gene
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000061
@@ -688,35 +688,35 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene GI." []
-is_a: ME:0000059 ! Gene
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000062
 name: homologous gene
 namespace: measure.ontology
 def: "Homologous Gene." []
-is_a: ME:0000059 ! Gene
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000063
 name: orthologous gene
 namespace: measure.ontology
 def: "Orthologous Gene." []
-is_a: ME:0000062 ! Homologous Gene
+is_a: ME:0000062 ! homologous gene
 
 [Term]
 id: ME:0000064
 name: paralogous gene
 namespace: measure.ontology
 def: "Paralogous Gene." []
-is_a: ME:0000062 ! Homologous Gene
+is_a: ME:0000062 ! homologous gene
 
 [Term]
 id: ME:0000065
 name: essential gene
 namespace: measure.ontology
 def: "Essential Gene." []
-is_a: ME:0000059 ! Gene
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000066
@@ -729,14 +729,14 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Protein." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000067
 name: protein annotation
 namespace: measure.ontology
 def: "Protein Annotation." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000068
@@ -748,7 +748,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "KEGG Subsystem." []
 xref: ORef:KEGG
-is_a: ME:0000067 ! Protein Annotation
+is_a: ME:0000067 ! protein annotation
 
 [Term]
 id: ME:0000069
@@ -760,14 +760,14 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "TIGR Role." []
 xref: ORef:TIGR
-is_a: ME:0000067 ! Protein Annotation
+is_a: ME:0000067 ! protein annotation
 
 [Term]
 id: ME:0000070
 name: SEED subsystem
 namespace: measure.ontology
 def: "SEED Subsystem." []
-is_a: ME:0000067 ! Protein Annotation
+is_a: ME:0000067 ! protein annotation
 
 [Term]
 id: ME:0000071
@@ -778,21 +778,21 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "SEED Subsystem ID." []
-is_a: ME:0000070 ! SEED Subsystem
+is_a: ME:0000070 ! SEED subsystem
 
 [Term]
 id: ME:0000073
 name: protein domain
 namespace: measure.ontology
 def: "Protein Domain." []
-is_a: ME:0000067 ! Protein Annotation
+is_a: ME:0000067 ! protein annotation
 
 [Term]
 id: ME:0000074
 name: Pfam domain
 namespace: measure.ontology
 def: "Pfam Domain." []
-is_a: ME:0000073 ! Protein Domain
+is_a: ME:0000073 ! protein domain
 
 [Term]
 id: ME:0000075
@@ -804,28 +804,28 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Pfam Domain Accession." []
 xref: ORef:Pfam
-is_a: ME:0000074 ! Pfam Domain
+is_a: ME:0000074 ! Pfam domain
 
 [Term]
 id: ME:0000076
 name: operon
 namespace: measure.ontology
 def: "Operon." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000077
 name: ribosome
 namespace: measure.ontology
 def: "Ribosome." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000078
 name: growth parameter
 namespace: measure.ontology
 def: "Growth Parameter." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000079
@@ -837,7 +837,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000280" xsd:string
 def: "Growth Rate." []
-is_a: ME:0000078 ! Growth Parameter
+is_a: ME:0000078 ! growth parameter
 
 [Term]
 id: ME:0000080
@@ -849,7 +849,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000003" xsd:string
 def: "Doubling Time." []
-is_a: ME:0000078 ! Growth Parameter
+is_a: ME:0000078 ! growth parameter
 
 [Term]
 id: ME:0000081
@@ -863,63 +863,63 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000003" xsd:string
 def: "Time Since Inoculation." []
-is_a: ME:0000078 ! Growth Parameter
+is_a: ME:0000078 ! growth parameter
 
 [Term]
 id: ME:0000082
 name: growth efficiency
 namespace: measure.ontology
 def: "Growth Efficiency." []
-is_a: ME:0000078 ! Growth Parameter
+is_a: ME:0000078 ! growth parameter
 
 [Term]
 id: ME:0000083
 name: gene regulation
 namespace: measure.ontology
 def: "Gene Regulation." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000084
 name: up-regulated
 namespace: measure.ontology
 def: "Up-regulated." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000085
 name: down-regulated
 namespace: measure.ontology
 def: "Down-regulated." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000086
 name: transcription factor
 namespace: measure.ontology
 def: "Transcription Factor." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000087
 name: motif
 namespace: measure.ontology
 def: "Motif." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000088
 name: binding site
 namespace: measure.ontology
 def: "Binding Site." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000089
 name: regulon
 namespace: measure.ontology
 def: "Regulon." []
-is_a: ME:0000083 ! Gene Regulation
+is_a: ME:0000083 ! gene regulation
 
 [Term]
 id: ME:0000090
@@ -933,15 +933,15 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Taxonomic Level." []
 xref: ORef:ME:0000090
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000091
 name: strain change
 namespace: measure.ontology
 def: "Strain Change." []
-synonym: "Mutation" EXACT []
-is_a: ME:0000039 ! Biological Context
+synonym: "mutation" EXACT []
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000092
@@ -953,49 +953,49 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain Change Effect." []
 xref: ORef:ME:0000092
-is_a: ME:0000091 ! Strain Change
+is_a: ME:0000091 ! strain change
 
 [Term]
 id: ME:0000093
 name: synonymous
 namespace: measure.ontology
 def: "Synonymous." []
-is_a: ME:0000092 ! Strain Change Effect
+is_a: ME:0000092 ! strain change effect
 
 [Term]
 id: ME:0000094
 name: non-synonymous
 namespace: measure.ontology
 def: "Non-Synonymous." []
-is_a: ME:0000092 ! Strain Change Effect
+is_a: ME:0000092 ! strain change effect
 
 [Term]
 id: ME:0000095
 name: frameshift
 namespace: measure.ontology
 def: "Frameshift." []
-is_a: ME:0000092 ! Strain Change Effect
+is_a: ME:0000092 ! strain change effect
 
 [Term]
 id: ME:0000096
 name: stop
 namespace: measure.ontology
 def: "Stop." []
-is_a: ME:0000092 ! Strain Change Effect
+is_a: ME:0000092 ! strain change effect
 
 [Term]
 id: ME:0000097
 name: knockout
 namespace: measure.ontology
 def: "Knockout." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000098
 name: environment
 namespace: measure.ontology
 def: "Environment." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000099
@@ -1008,10 +1008,10 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Sample Location." []
-synonym: "Borehole" EXACT []
-synonym: "Core" EXACT []
-synonym: "Well" EXACT []
-is_a: ME:0000098 ! Environment
+synonym: "borehole" EXACT []
+synonym: "core" EXACT []
+synonym: "well" EXACT []
+is_a: ME:0000098 ! environment
 
 [Term]
 id: ME:0000100
@@ -1024,7 +1024,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Sample." []
-is_a: ME:0000098 ! Environment
+is_a: ME:0000098 ! environment
 
 [Term]
 id: ME:0000101
@@ -1037,7 +1037,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Sample Name." []
-is_a: ME:0000100 ! Environmental Sample
+is_a: ME:0000100 ! environmental sample
 
 [Term]
 id: ME:0000102
@@ -1050,7 +1050,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sample ID, chosen from list of valid ENIGMA samples." []
 xref: Ref:DA:0000042.Sample.name
-is_a: ME:0000100 ! Environmental Sample
+is_a: ME:0000100 ! environmental sample
 
 [Term]
 id: ME:0000103
@@ -1063,14 +1063,14 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Parameter." []
-is_a: ME:0000098 ! Environment
+is_a: ME:0000098 ! environment
 
 [Term]
 id: ME:0000104
 name: ecology
 namespace: measure.ontology
 def: "Ecology." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000105
@@ -1082,49 +1082,49 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community Assembly Process." []
 xref: ORef:ME:0000105
-is_a: ME:0000104 ! Ecology
+is_a: ME:0000104 ! ecology
 
 [Term]
 id: ME:0000106
 name: variable selection
 namespace: measure.ontology
 def: "Variable Selection." []
-is_a: ME:0000105 ! Community Assembly Process
+is_a: ME:0000105 ! community assembly process
 
 [Term]
 id: ME:0000107
 name: homogenous selection
 namespace: measure.ontology
 def: "Homogenous Selection." []
-is_a: ME:0000105 ! Community Assembly Process
+is_a: ME:0000105 ! community assembly process
 
 [Term]
 id: ME:0000108
 name: dispersal limitation
 namespace: measure.ontology
 def: "Dispersal Limitation." []
-is_a: ME:0000105 ! Community Assembly Process
+is_a: ME:0000105 ! community assembly process
 
 [Term]
 id: ME:0000109
 name: homogenizing dispersal
 namespace: measure.ontology
 def: "Homogenizing Dispersal." []
-is_a: ME:0000105 ! Community Assembly Process
+is_a: ME:0000105 ! community assembly process
 
 [Term]
 id: ME:0000110
 name: undominated
 namespace: measure.ontology
 def: "Undominated." []
-is_a: ME:0000105 ! Community Assembly Process
+is_a: ME:0000105 ! community assembly process
 
 [Term]
 id: ME:0000111
 name: sequencing
 namespace: measure.ontology
 def: "Sequencing." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000112
@@ -1136,28 +1136,28 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Read Type." []
 xref: ORef:ME:0000112
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000113
 name: paired end read
 namespace: measure.ontology
 def: "Paired End Read." []
-is_a: ME:0000112 ! Read Type
+is_a: ME:0000112 ! read type
 
 [Term]
 id: ME:0000114
 name: single end read
 namespace: measure.ontology
 def: "Single End Read." []
-is_a: ME:0000112 ! Read Type
+is_a: ME:0000112 ! read type
 
 [Term]
 id: ME:0000115
 name: base pair
 namespace: measure.ontology
 def: "Base Pair." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000116
@@ -1169,28 +1169,28 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequencing Technology." []
 xref: ORef:ME:0000116
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000117
 name: Illumina
 namespace: measure.ontology
 def: "Illumina." []
-is_a: ME:0000116 ! Sequencing Technology
+is_a: ME:0000116 ! sequencing technology
 
 [Term]
 id: ME:0000118
 name: PacBio
 namespace: measure.ontology
 def: "PacBio." []
-is_a: ME:0000116 ! Sequencing Technology
+is_a: ME:0000116 ! sequencing technology
 
 [Term]
 id: ME:0000119
 name: GC content
 namespace: measure.ontology
 def: "GC content." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000120
@@ -1205,7 +1205,7 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Measurement." []
 xref: ORef:ME:0000120
 is_a: ME:0000000 ! term
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000121
@@ -1219,7 +1219,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000196 UO:0000247" xsd:string
 def: "pH." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000122
@@ -1231,7 +1231,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000003" xsd:string
 def: "Time Elapsed." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000123
@@ -1245,7 +1245,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000005" xsd:string
 def: "Temperature." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000124
@@ -1259,7 +1259,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000262" xsd:string
 def: "Conductivity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000125
@@ -1273,7 +1273,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000217" xsd:string
 def: "Redox Potential." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000126
@@ -1288,8 +1288,8 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000189 UO:0000200" xsd:string
 property_value: valid_units_parent "UO:0000189 UO:0000200" xsd:string
 def: "Count." []
-synonym: "Absolute Abundance" EXACT []
-is_a: ME:0000120 ! Measurement
+synonym: "absolute abundance" EXACT []
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000127
@@ -1304,7 +1304,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000186" xsd:string
 property_value: valid_units_parent "UO:0000186" xsd:string
 def: "Optical Density." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000128
@@ -1316,7 +1316,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000095 UO:0000001" xsd:string
 def: "Size." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000129
@@ -1331,7 +1331,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000187 UO:0000322" xsd:string
 property_value: valid_units_parent "UO:0000051 UO:0000052 UO:0000166 UO:0000187" xsd:string
 def: "Concentration." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000130
@@ -1342,7 +1342,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Hybridization Intensity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000131
@@ -1353,7 +1353,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Expression Level." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000132
@@ -1364,7 +1364,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Enzyme Activity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000133
@@ -1375,7 +1375,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Absorbance." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000134
@@ -1386,7 +1386,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Heat." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000135
@@ -1400,7 +1400,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000002" xsd:string
 def: "Mass." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000137
@@ -1414,7 +1414,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000379" xsd:string
 def: "Fitness Score." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000138
@@ -1425,7 +1425,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genetic Interaction Score." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000139
@@ -1436,7 +1436,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Stoichiometric Ratio." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000140
@@ -1450,7 +1450,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000190" xsd:string
 def: "Relative amounts of multiple categories of the same object." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000141
@@ -1461,7 +1461,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Binary." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000142
@@ -1474,7 +1474,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Boolean property indicating whether something (e.g., an isolate) grows." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000143
@@ -1487,7 +1487,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Boolean property indicating whether something (e.g., an isolate) is active." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000144
@@ -1500,7 +1500,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Boolean property indicating whether something (e.g., an isolate) is present." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000145
@@ -1513,7 +1513,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Boolean property indicating whether something (e.g., a gene) is essential." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000146
@@ -1528,7 +1528,7 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Statistic." []
 xref: ORef:ME:0000146
 is_a: ME:0000000 ! term
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000147
@@ -1541,7 +1541,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Average." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000148
@@ -1552,7 +1552,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Difference." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000149
@@ -1565,7 +1565,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Standard Deviation." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000150
@@ -1578,7 +1578,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Standard Error." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000151
@@ -1589,7 +1589,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Minimum." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000152
@@ -1600,7 +1600,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Maximum." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000153
@@ -1611,7 +1611,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Median." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000154
@@ -1622,7 +1622,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Ratio." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000155
@@ -1633,7 +1633,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Log Ratio." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000156
@@ -1644,7 +1644,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "p Value." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000157
@@ -1655,7 +1655,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "T Score." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000158
@@ -1666,7 +1666,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Frequency." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000159
@@ -1679,7 +1679,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Fold Enrichment." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000160
@@ -1693,14 +1693,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000190" xsd:string
 def: "Confidence." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000161
 name: evaluation
 namespace: measure.ontology
 def: "Evaluation." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000162
@@ -1711,7 +1711,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Precision." []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000163
@@ -1722,7 +1722,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Recall." []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000164
@@ -1734,7 +1734,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "True Positive." []
 synonym: "TP" EXACT []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000165
@@ -1746,7 +1746,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "False Positive." []
 synonym: "FP" EXACT []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000166
@@ -1758,7 +1758,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "True Negative." []
 synonym: "TN" EXACT []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000167
@@ -1770,7 +1770,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "False Negative." []
 synonym: "FN" EXACT []
-is_a: ME:0000161 ! Evaluation
+is_a: ME:0000161 ! evaluation
 
 [Term]
 id: ME:0000168
@@ -1781,7 +1781,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Correlation." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000169
@@ -1792,7 +1792,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Pearson." []
-is_a: ME:0000168 ! Correlation
+is_a: ME:0000168 ! correlation
 
 [Term]
 id: ME:0000170
@@ -1803,7 +1803,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Spearman." []
-is_a: ME:0000168 ! Correlation
+is_a: ME:0000168 ! correlation
 
 [Term]
 id: ME:0000171
@@ -1814,7 +1814,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Kendall tau." []
-is_a: ME:0000168 ! Correlation
+is_a: ME:0000168 ! correlation
 
 [Term]
 id: ME:0000172
@@ -1825,21 +1825,21 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Goodman and Kruskal's gamma." []
-is_a: ME:0000168 ! Correlation
+is_a: ME:0000168 ! correlation
 
 [Term]
 id: ME:0000173
 name: multivariate analysis
 namespace: measure.ontology
 def: "Multivariate Analysis." []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000174
 name: factor analysis
 namespace: measure.ontology
 def: "Factor Analysis." []
-is_a: ME:0000173 ! Multivariate Analysis
+is_a: ME:0000173 ! multivariate analysis
 
 [Term]
 id: ME:0000175
@@ -1850,7 +1850,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Factor." []
-is_a: ME:0000174 ! Factor Analysis
+is_a: ME:0000174 ! factor analysis
 
 [Term]
 id: ME:0000176
@@ -1861,14 +1861,14 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Factor Loading." []
-is_a: ME:0000174 ! Factor Analysis
+is_a: ME:0000174 ! factor analysis
 
 [Term]
 id: ME:0000177
 name: principal component analysis
 namespace: measure.ontology
 def: "Principal Component Analysis." []
-is_a: ME:0000173 ! Multivariate Analysis
+is_a: ME:0000173 ! multivariate analysis
 
 [Term]
 id: ME:0000178
@@ -1879,7 +1879,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Principal Component." []
-is_a: ME:0000177 ! Principal Component Analysis
+is_a: ME:0000177 ! principal component analysis
 
 [Term]
 id: ME:0000179
@@ -1890,7 +1890,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Component Weight." []
-is_a: ME:0000177 ! Principal Component Analysis
+is_a: ME:0000177 ! principal component analysis
 
 [Term]
 id: ME:0000180
@@ -1903,7 +1903,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "DateTime." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000181
@@ -1917,7 +1917,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000109" xsd:string
 def: "Pressure." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000182
@@ -1932,14 +1932,14 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000315" xsd:string
 property_value: valid_units_parent "UO:0000315" xsd:string
 def: "Turbidity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000183
 name: reagent
 namespace: measure.ontology
 def: "Reagent." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000184
@@ -1949,8 +1949,8 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Amplicon Sequence Variant." []
-synonym: "Amplicon Sequence Variant" EXACT []
-is_a: ME:0000039 ! Biological Context
+synonym: "amplicon sequence variant" EXACT []
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000185
@@ -1963,10 +1963,10 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "ESV." []
-synonym: "Exact Sequence Variant" EXACT []
-synonym: "Sub-OTU" EXACT []
-synonym: "Unique Sequence Variant" EXACT []
-is_a: ME:0000039 ! Biological Context
+synonym: "exact sequence variant" EXACT []
+synonym: "sub-OTU" EXACT []
+synonym: "unique sequence variant" EXACT []
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000186
@@ -1980,21 +1980,21 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strand of DNA" []
 xref: ORef:ME:0000186
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000187
 name: forward
 namespace: measure.ontology
 def: "Forward." []
-is_a: ME:0000186 ! Strand
+is_a: ME:0000186 ! strand
 
 [Term]
 id: ME:0000188
 name: reverse complement
 namespace: measure.ontology
 def: "Reverse Complement." []
-is_a: ME:0000186 ! Strand
+is_a: ME:0000186 ! strand
 
 [Term]
 id: ME:0000189
@@ -2008,42 +2008,42 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequence Type." []
 xref: ORef:ME:0000189
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000190
 name: 16S sequence
 namespace: measure.ontology
 def: "16S Sequence." []
-is_a: ME:0000189 ! Sequence Type
+is_a: ME:0000189 ! sequence type
 
 [Term]
 id: ME:0000191
 name: 18S sequence
 namespace: measure.ontology
 def: "18S Sequence." []
-is_a: ME:0000189 ! Sequence Type
+is_a: ME:0000189 ! sequence type
 
 [Term]
 id: ME:0000192
 name: ITS sequence
 namespace: measure.ontology
 def: "ITS Sequence." []
-is_a: ME:0000189 ! Sequence Type
+is_a: ME:0000189 ! sequence type
 
 [Term]
 id: ME:0000193
 name: ITS-1 sequence
 namespace: measure.ontology
 def: "ITS-1 Sequence." []
-is_a: ME:0000192 ! ITS Sequence
+is_a: ME:0000192 ! ITS sequence
 
 [Term]
 id: ME:0000194
 name: ITS-2 sequence
 namespace: measure.ontology
 def: "ITS-2 Sequence." []
-is_a: ME:0000192 ! ITS Sequence
+is_a: ME:0000192 ! ITS sequence
 
 [Term]
 id: ME:0000195
@@ -2051,31 +2051,31 @@ name: genome sequence
 namespace: measure.ontology
 def: "Genome Sequence." []
 is_a: ME:0000000 ! term
-is_a: ME:0000189 ! Sequence Type
+is_a: ME:0000189 ! sequence type
 
 [Term]
 id: ME:0000196
 name: insertion
 namespace: measure.ontology
 def: "Insertion." []
-is_a: ME:0000091 ! Strain Change
-is_a: ME:0000227 ! Strain Change Type
+is_a: ME:0000091 ! strain change
+is_a: ME:0000227 ! strain change type
 
 [Term]
 id: ME:0000197
 name: deletion
 namespace: measure.ontology
 def: "Deletion." []
-is_a: ME:0000091 ! Strain Change
-is_a: ME:0000227 ! Strain Change Type
+is_a: ME:0000091 ! strain change
+is_a: ME:0000227 ! strain change type
 
 [Term]
 id: ME:0000198
 name: substitution
 namespace: measure.ontology
 def: "Substitution." []
-is_a: ME:0000091 ! Strain Change
-is_a: ME:0000227 ! Strain Change Type
+is_a: ME:0000091 ! strain change
+is_a: ME:0000227 ! strain change type
 
 [Term]
 id: ME:0000200
@@ -2088,7 +2088,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Condition, chosen from list of defined experimental conditions in the Data Clearinghouse." []
 xref: Ref:DA:0000045.Condition.name
-is_a: ME:0000006 ! Condition
+is_a: ME:0000006 ! condition
 
 [Term]
 id: ME:0000201
@@ -2099,7 +2099,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Time Zone, e.g., PDT" []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000202
@@ -2112,7 +2112,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Description." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000203
@@ -2125,7 +2125,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Link to other data, e.g., a DOI or URL." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000204
@@ -2137,7 +2137,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Category of experimental process used to create a dataset." []
 xref: ORef:PROCESS:0000001
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000205
@@ -2148,7 +2148,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Name of a person.  Note that ENIGMA people should be listed as 'ENIGMA personnel' instead." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000206
@@ -2159,7 +2159,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Campaign." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000207
@@ -2170,7 +2170,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Input." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000208
@@ -2181,14 +2181,14 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Output." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000209
 name: physical context
 namespace: measure.ontology
 def: "Physical Context." []
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000210
@@ -2201,7 +2201,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Location." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000211
@@ -2215,7 +2215,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000185" xsd:string
 def: "Latitude." []
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000212
@@ -2229,7 +2229,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000185" xsd:string
 def: "Longitude." []
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000213
@@ -2241,7 +2241,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Continent." []
 xref: ORef:CONTINENT:0000001
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000214
@@ -2253,7 +2253,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Country." []
 xref: ORef:COUNTRY:0000001
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000215
@@ -2264,7 +2264,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Region." []
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000216
@@ -2276,7 +2276,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Biome." []
 xref: ORef:ENVO:01000254
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000217
@@ -2288,7 +2288,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Feature." []
 xref: ORef:ENVO:00002297
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000218
@@ -2302,7 +2302,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Distance.  Add context indicating reference points, e.g., From and To." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000219
@@ -2316,7 +2316,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Depth.  Add context indicating reference poitns, e.g., Top and Bottom." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000220
@@ -2330,7 +2330,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Elevation.  Add context indicating reference poitns, e.g., Top and Bottom." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000221
@@ -2368,7 +2368,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "NCBI Taxon, chosen from names in the NCBI taxonomy." []
 xref: ORef:NCBITaxon:1
-is_a: ME:0000045 ! Taxon
+is_a: ME:0000045 ! taxon
 
 [Term]
 id: ME:0000224
@@ -2381,7 +2381,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Gene, chosen from list of defined genes in the Data Clearinghouse." []
 xref: Ref:DA:0000040.Gene.gene_id
-is_a: ME:0000059 ! Gene
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000227
@@ -2393,7 +2393,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Strain Change Type." []
 xref: ORef:ME:0000227
-is_a: ME:0000091 ! Strain Change
+is_a: ME:0000091 ! strain change
 
 [Term]
 id: ME:0000228
@@ -2405,9 +2405,9 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Well, borehole, or other defined ENIGMA location." []
-synonym: "Location ID" EXACT []
+synonym: "location ID" EXACT []
 xref: Ref:DA:0000041.Location.name
-is_a: ME:0000099 ! Environmental Sample Location
+is_a: ME:0000099 ! environmental sample location
 
 [Term]
 id: ME:0000229
@@ -2419,7 +2419,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environment Type." []
 xref: ORef:MIxS:0000002
-is_a: ME:0000098 ! Environment
+is_a: ME:0000098 ! environment
 
 [Term]
 id: ME:0000230
@@ -2431,7 +2431,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Material." []
 xref: ORef:ENVO:00010483
-is_a: ME:0000098 ! Environment
+is_a: ME:0000098 ! environment
 
 [Term]
 id: ME:0000231
@@ -2444,7 +2444,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000232
@@ -2455,7 +2455,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community Name." []
-is_a: ME:0000231 ! Community
+is_a: ME:0000231 ! community
 
 [Term]
 id: ME:0000233
@@ -2468,7 +2468,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community ID, chosen from list of defined ENIGMA communities." []
 xref: Ref:DA:0000048.Community.name
-is_a: ME:0000231 ! Community
+is_a: ME:0000231 ! community
 
 [Term]
 id: ME:0000234
@@ -2480,42 +2480,42 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Community Type." []
 xref: ORef:ME:0000234
-is_a: ME:0000231 ! Community
+is_a: ME:0000231 ! community
 
 [Term]
 id: ME:0000235
 name: isolate community
 namespace: measure.ontology
 def: "Isolate Community." []
-is_a: ME:0000234 ! Community Type
+is_a: ME:0000234 ! community type
 
 [Term]
 id: ME:0000236
 name: enrichment
 namespace: measure.ontology
 def: "Enrichment." []
-is_a: ME:0000234 ! Community Type
+is_a: ME:0000234 ! community type
 
 [Term]
 id: ME:0000237
 name: active fraction
 namespace: measure.ontology
 def: "Active Fraction." []
-is_a: ME:0000236 ! Enrichment
+is_a: ME:0000236 ! enrichment
 
 [Term]
 id: ME:0000238
 name: assemblage
 namespace: measure.ontology
 def: "Assemblage." []
-is_a: ME:0000234 ! Community Type
+is_a: ME:0000234 ! community type
 
 [Term]
 id: ME:0000239
 name: consortium
 namespace: measure.ontology
 def: "Consortium." []
-is_a: ME:0000238 ! Assemblage
+is_a: ME:0000238 ! assemblage
 
 [Term]
 id: ME:0000240
@@ -2528,14 +2528,14 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Contig." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000241
 name: sequence position
 namespace: measure.ontology
 def: "Sequence Position." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000242
@@ -2549,7 +2549,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000400" xsd:string
 def: "Sequence Start." []
-is_a: ME:0000241 ! Sequence Position
+is_a: ME:0000241 ! sequence position
 
 [Term]
 id: ME:0000243
@@ -2563,7 +2563,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000400" xsd:string
 def: "Sequence Stop." []
-is_a: ME:0000241 ! Sequence Position
+is_a: ME:0000241 ! sequence position
 
 [Term]
 id: ME:0000244
@@ -2577,7 +2577,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000400" xsd:string
 def: "Sequence Length." []
-is_a: ME:0000241 ! Sequence Position
+is_a: ME:0000241 ! sequence position
 
 [Term]
 id: ME:0000245
@@ -2587,7 +2587,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Genome." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000246
@@ -2600,7 +2600,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genome ID, chosen from list of annotated ENIGMA genomes." []
 xref: Ref:DA:0000039.Genome.name
-is_a: ME:0000245 ! Genome
+is_a: ME:0000245 ! genome
 
 [Term]
 id: ME:0000247
@@ -2613,8 +2613,8 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Read Set." []
-synonym: "Reads" EXACT []
-is_a: ME:0000111 ! Sequencing
+synonym: "reads" EXACT []
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000248
@@ -2627,70 +2627,70 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Reads ID, chosen from list of reads in the Data Clearinghouse." []
 xref: Ref:DA:0000054.Reads.name
-is_a: ME:0000247 ! Read Set
+is_a: ME:0000247 ! read set
 
 [Term]
 id: ME:0000249
 name: read
 namespace: measure.ontology
 def: "Read." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000250
 name: gene annotation
 namespace: measure.ontology
 def: "Gene Annotation." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000251
 name: kingdom
 namespace: measure.ontology
 def: "Kingdom." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000252
 name: phylum
 namespace: measure.ontology
 def: "Phylum." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000253
 name: class
 namespace: measure.ontology
 def: "Class." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000254
 name: order
 namespace: measure.ontology
 def: "Order." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000255
 name: family
 namespace: measure.ontology
 def: "Family." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000256
 name: genus
 namespace: measure.ontology
 def: "Genus." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000257
 name: species
 namespace: measure.ontology
 def: "Species." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000258
@@ -2703,7 +2703,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Chemical." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000103 ! Environmental Parameter
+is_a: ME:0000103 ! environmental parameter
 
 [Term]
 id: ME:0000259
@@ -2716,21 +2716,21 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Environmental Measurement." []
 xref: ORef:ME:0000120
-is_a: ME:0000103 ! Environmental Parameter
+is_a: ME:0000103 ! environmental parameter
 
 [Term]
 id: ME:0000260
 name: knockout library
 namespace: measure.ontology
 def: "Knockout Library." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000261
 name: Tn-Seq library
 namespace: measure.ontology
 def: "Tn-Seq Library." []
-is_a: ME:0000260 ! Knockout Library
+is_a: ME:0000260 ! knockout library
 
 [Term]
 id: ME:0000262
@@ -2744,7 +2744,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Tn-Seq Library Name." []
 xref: Ref:DA:0000060.TnSeq_Library.name
-is_a: ME:0000261 ! Tn-Seq Library
+is_a: ME:0000261 ! Tn-Seq library
 
 [Term]
 id: ME:0000263
@@ -2755,7 +2755,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Tn-Seq Primers Model." []
-is_a: ME:0000261 ! Tn-Seq Library
+is_a: ME:0000261 ! Tn-Seq library
 
 [Term]
 id: ME:0000264
@@ -2766,7 +2766,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Rate." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000265
@@ -2780,7 +2780,7 @@ property_value: is_valid_property "true" xsd:boolean
 def: "Internal ID." []
 xref: ORef:ME:0000265
 is_a: ME:0000000 ! term
-is_a: ME:0000001 ! Context
+is_a: ME:0000001 ! context
 
 [Term]
 id: ME:0000266
@@ -2793,7 +2793,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Location ID." []
 xref: Ref:DA:0000041.Location.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000267
@@ -2806,7 +2806,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Sample ID." []
 xref: Ref:DA:0000042.Sample.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000268
@@ -2819,7 +2819,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Taxon ID." []
 xref: Ref:DA:0000037.Taxon.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000269
@@ -2832,7 +2832,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal OTU ID." []
 xref: Ref:DA:0000063.OTU.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000270
@@ -2845,7 +2845,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Condition ID." []
 xref: Ref:DA:0000045.Condition.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000271
@@ -2858,7 +2858,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Strain ID." []
 xref: Ref:DA:0000062.Strain.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000272
@@ -2871,7 +2871,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Community ID." []
 xref: Ref:DA:0000048.Community.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000273
@@ -2884,7 +2884,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Reads ID." []
 xref: Ref:DA:0000054.Reads.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000274
@@ -2897,7 +2897,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Genome ID." []
 xref: Ref:DA:0000039.Genome.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000275
@@ -2910,7 +2910,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Gene ID." []
 xref: Ref:DA:0000040.Gene.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000276
@@ -2923,7 +2923,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal TnSeq_Library ID." []
 xref: Ref:DA:0000060.TnSeq_Library.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000277
@@ -2936,7 +2936,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Process ID." []
 xref: Ref:DA:0000061.Process.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000278
@@ -2949,7 +2949,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Brick ID." []
 xref: Ref:DA:0000001.Brick.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000279
@@ -2959,7 +2959,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Assembly." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000280
@@ -2972,7 +2972,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Assembly ID, chosen from list of ENIGMA assemblies." []
 xref: Ref:DA:0000066.Assembly.name
-is_a: ME:0000279 ! Assembly
+is_a: ME:0000279 ! assembly
 
 [Term]
 id: ME:0000281
@@ -2985,7 +2985,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Assembly ID." []
 xref: Ref:DA:0000066.Assembly.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000282
@@ -2998,7 +2998,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequence." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000283
@@ -3012,7 +3012,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Control." []
 xref: ORef:ME:0000283
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000284
@@ -3023,7 +3023,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Negative Control." []
-is_a: ME:0000283 ! Control
+is_a: ME:0000283 ! control
 
 [Term]
 id: ME:0000285
@@ -3034,14 +3034,14 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Positive Control." []
-is_a: ME:0000283 ! Control
+is_a: ME:0000283 ! control
 
 [Term]
 id: ME:0000286
 name: replicate
 namespace: measure.ontology
 def: "Replicate." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000287
@@ -3052,7 +3052,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Technical Replicate." []
-is_a: ME:0000286 ! Replicate
+is_a: ME:0000286 ! replicate
 
 [Term]
 id: ME:0000288
@@ -3063,7 +3063,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Biological Replicate." []
-is_a: ME:0000286 ! Replicate
+is_a: ME:0000286 ! replicate
 
 [Term]
 id: ME:0000289
@@ -3074,7 +3074,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Subsample." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000290
@@ -3085,21 +3085,21 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Variable Name." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000291
 name: variable type
 namespace: measure.ontology
 def: "Variable Type." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000292
 name: dimension
 namespace: measure.ontology
 def: "Dimension." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000293
@@ -3112,7 +3112,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Data Variables Type." []
 xref: ORef:DA:0000000
-is_a: ME:0000291 ! Variable Type
+is_a: ME:0000291 ! variable type
 
 [Term]
 id: ME:0000294
@@ -3134,7 +3134,7 @@ name: microsiemen per centimeter
 namespace: measure.ontology
 def: "microsiemen per centimeter." []
 synonym: "microsiemen per cm" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000262
 
 [Term]
@@ -3143,7 +3143,7 @@ name: pound per square inch
 namespace: measure.ontology
 def: "pound per square inch." []
 synonym: "PSI" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
 [Term]
@@ -3151,7 +3151,7 @@ id: ME:0000299
 name: explained variance
 namespace: measure.ontology
 def: "Explained Variance." []
-is_a: ME:0000177 ! Principal Component Analysis
+is_a: ME:0000177 ! principal component analysis
 
 [Term]
 id: ME:0000300
@@ -3162,7 +3162,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Phase of matter, e.g., solid." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000301
@@ -3176,7 +3176,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000262" xsd:string
 def: "Specific Conductivity." []
-is_a: ME:0000124 ! Conductivity
+is_a: ME:0000124 ! conductivity
 
 [Term]
 id: ME:0000302
@@ -3190,7 +3190,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "ME:0000378" xsd:string
 def: "Salinity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000303
@@ -3204,7 +3204,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "ME:0000377" xsd:string
 def: "Resistivity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000304
@@ -3218,7 +3218,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000190" xsd:string
 def: "Saturation." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000305
@@ -3232,7 +3232,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000182" xsd:string
 def: "Density." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000306
@@ -3246,14 +3246,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000109" xsd:string
 def: "Partial Pressure." []
-is_a: ME:0000181 ! Pressure
+is_a: ME:0000181 ! pressure
 
 [Term]
 id: ME:0000307
 name: torr
 namespace: measure.ontology
 def: "torr." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
 [Term]
@@ -3277,7 +3277,7 @@ name: foot
 namespace: measure.ontology
 def: "foot." []
 synonym: "ft" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000001
 
 [Term]
@@ -3289,7 +3289,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use as context for locations, e.g., the top end of a depth measurement." []
-is_a: ME:0000339 ! Position
+is_a: ME:0000339 ! position
 
 [Term]
 id: ME:0000312
@@ -3300,7 +3300,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use as context for locations, e.g., the bottom end of a depth measurement." []
-is_a: ME:0000339 ! Position
+is_a: ME:0000339 ! position
 
 [Term]
 id: ME:0000313
@@ -3315,7 +3315,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000187" xsd:string
 property_value: valid_units_parent "UO:0000217 UO:0000187" xsd:string
 def: "Charge." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000314
@@ -3329,7 +3329,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000109" xsd:string
 def: "Air Pressure." []
-is_a: ME:0000181 ! Pressure
+is_a: ME:0000181 ! pressure
 
 [Term]
 id: ME:0000315
@@ -3343,7 +3343,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000109" xsd:string
 def: "Water Pressure." []
-is_a: ME:0000181 ! Pressure
+is_a: ME:0000181 ! pressure
 
 [Term]
 id: ME:0000316
@@ -3357,7 +3357,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000060" xsd:string
 def: "Wind Speed." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000317
@@ -3371,7 +3371,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000060" xsd:string
 def: "Gust Speed." []
-is_a: ME:0000316 ! Wind Speed
+is_a: ME:0000316 ! wind speed
 
 [Term]
 id: ME:0000318
@@ -3385,7 +3385,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000154" xsd:string
 def: "Solar Radiation." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000319
@@ -3399,7 +3399,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Rainfall." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000320
@@ -3413,7 +3413,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000185" xsd:string
 def: "Wind Direction." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000321
@@ -3427,7 +3427,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000190" xsd:string
 def: "Relative Humidity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000322
@@ -3435,7 +3435,7 @@ name: mile per hour
 namespace: measure.ontology
 def: "mile per hour." []
 synonym: "mph" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000060
 
 [Term]
@@ -3444,7 +3444,7 @@ name: inch
 namespace: measure.ontology
 def: "inch." []
 synonym: "in" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000001
 
 [Term]
@@ -3452,7 +3452,7 @@ id: ME:0000324
 name: m^3 per m^3
 namespace: measure.ontology
 def: "m^3 per m^3." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000051
 
 [Term]
@@ -3461,7 +3461,7 @@ name: millibar
 namespace: measure.ontology
 def: "millibar." []
 synonym: "mbar" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
 [Term]
@@ -3469,14 +3469,14 @@ id: ME:0000326
 name: environmental community
 namespace: measure.ontology
 def: "Environmental Community." []
-is_a: ME:0000234 ! Community Type
+is_a: ME:0000234 ! community type
 
 [Term]
 id: ME:0000327
 name: protocol
 namespace: measure.ontology
 def: "Protocol." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000328
@@ -3488,7 +3488,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Protocol, chosen from list of defined ENIGMA protocols." []
 xref: Ref:DA:0000073.Protocol.name
-is_a: ME:0000327 ! Protocol
+is_a: ME:0000327 ! protocol
 
 [Term]
 id: ME:0000329
@@ -3498,7 +3498,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Bin (metagenomic)." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000330
@@ -3511,7 +3511,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Bin, chosen from metagenomic bins stored in the Data Clearinghouse." []
 xref: Ref:DA:0000072.Bin.name
-is_a: ME:0000329 ! Bin
+is_a: ME:0000329 ! bin
 
 [Term]
 id: ME:0000331
@@ -3524,7 +3524,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Bin ID." []
 xref: Ref:DA:0000072.Bin.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000332
@@ -3537,7 +3537,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Protocol ID." []
 xref: Ref:DA:0000073.Protocol.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000333
@@ -3550,7 +3550,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Boolean property indicating whether something is available." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000334
@@ -3561,14 +3561,14 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "US State." []
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000335
 name: state plane coordinate
 namespace: measure.ontology
 def: "State Plane Coordinate." []
-is_a: ME:0000210 ! Location
+is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000336
@@ -3582,7 +3582,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000008" xsd:string
 def: "Easting, in State Plane coordinates.  Add a State Plane Zone for context." []
-is_a: ME:0000335 ! State Plane Coordinate
+is_a: ME:0000335 ! state plane coordinate
 
 [Term]
 id: ME:0000337
@@ -3596,7 +3596,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000008" xsd:string
 def: "Northing, in State Plane coordinates.  Add a State Plane Zone for context." []
-is_a: ME:0000335 ! State Plane Coordinate
+is_a: ME:0000335 ! state plane coordinate
 
 [Term]
 id: ME:0000338
@@ -3607,7 +3607,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "State Plane Zone, e.g. '4100 - Tennessee'." []
-is_a: ME:0000335 ! State Plane Coordinate
+is_a: ME:0000335 ! state plane coordinate
 
 [Term]
 id: ME:0000339
@@ -3621,28 +3621,28 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Position." []
 xref: ORef:ME:0000339
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000340
 name: upper
 namespace: measure.ontology
 def: "Upper." []
-is_a: ME:0000339 ! Position
+is_a: ME:0000339 ! position
 
 [Term]
 id: ME:0000341
 name: lower
 namespace: measure.ontology
 def: "Lower." []
-is_a: ME:0000339 ! Position
+is_a: ME:0000339 ! position
 
 [Term]
 id: ME:0000342
 name: middle
 namespace: measure.ontology
 def: "Middle." []
-is_a: ME:0000339 ! Position
+is_a: ME:0000339 ! position
 
 [Term]
 id: ME:0000343
@@ -3656,7 +3656,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Diameter." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000344
@@ -3670,7 +3670,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Inner Diameter." []
-is_a: ME:0000343 ! Diameter
+is_a: ME:0000343 ! diameter
 
 [Term]
 id: ME:0000345
@@ -3684,7 +3684,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Outer Diameter." []
-is_a: ME:0000343 ! Diameter
+is_a: ME:0000343 ! diameter
 
 [Term]
 id: ME:0000346
@@ -3695,7 +3695,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use as context, for example, to label inorganic or organic carbon." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000347
@@ -3703,7 +3703,7 @@ name: millimhos per centimeter
 namespace: measure.ontology
 def: "millimhos per centimeter." []
 synonym: "mmhos per cm" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000262
 
 [Term]
@@ -3712,7 +3712,7 @@ name: parts per million by volume
 namespace: measure.ontology
 def: "parts per million by volume." []
 synonym: "ppmv" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000051
 
 [Term]
@@ -3721,7 +3721,7 @@ name: nanogram per liter
 namespace: measure.ontology
 def: "nanogram per liter." []
 synonym: "ng/L" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000051
 
 [Term]
@@ -3736,14 +3736,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000221" xsd:string
 def: "Molecular Weight." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000351
 name: taxonomic domain
 namespace: measure.ontology
 def: "Taxonomic Domain." []
-is_a: ME:0000090 ! Taxonomic Level
+is_a: ME:0000090 ! taxonomic level
 
 [Term]
 id: ME:0000352
@@ -3751,7 +3751,7 @@ name: milligram per gram
 namespace: measure.ontology
 def: "milligram per gram." []
 synonym: "mg/g" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000051
 
 [Term]
@@ -3760,7 +3760,7 @@ name: millisiemen per centimeter
 namespace: measure.ontology
 def: "millisiemen per centimeter." []
 synonym: "millisiemen per cm" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000262
 
 [Term]
@@ -3768,7 +3768,7 @@ id: ME:0000354
 name: image
 namespace: measure.ontology
 def: "Image." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000355
@@ -3782,7 +3782,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Image, chosen from the list of images stored in the Data Clearinghouse." []
 xref: Ref:DA:0000074.Image.name
-is_a: ME:0000354 ! Image
+is_a: ME:0000354 ! image
 
 [Term]
 id: ME:0000356
@@ -3795,7 +3795,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Image ID." []
 xref: Ref:DA:0000074.Image.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000357
@@ -3806,7 +3806,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "MIME type." []
-is_a: ME:0000013 ! Category
+is_a: ME:0000013 ! category
 
 [Term]
 id: ME:0000358
@@ -3820,7 +3820,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Coefficient of Variation." []
 synonym: "CV" EXACT []
-is_a: ME:0000146 ! Statistic
+is_a: ME:0000146 ! statistic
 
 [Term]
 id: ME:0000359
@@ -3834,7 +3834,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000002" xsd:string
 def: "Weight." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000360
@@ -3848,14 +3848,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000095" xsd:string
 def: "Volume." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000361
 name: cells per gram
 namespace: measure.ontology
 def: "cells per gram." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000189
 
 [Term]
@@ -3869,7 +3869,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Above." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000363
@@ -3882,7 +3882,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Below." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000365
@@ -3904,7 +3904,7 @@ name: sodium oxide
 namespace: measure.ontology
 def: "sodium oxide." []
 synonym: "Na2O" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000367
@@ -3912,7 +3912,7 @@ name: barium oxide
 namespace: measure.ontology
 def: "barium oxide." []
 synonym: "BaO" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000371
@@ -3925,7 +3925,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Error Range." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000372
@@ -3933,7 +3933,7 @@ name: manganese(II) oxide
 namespace: measure.ontology
 def: "manganese(II) oxide ." []
 synonym: "MnO" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000373
@@ -3941,7 +3941,7 @@ name: cobalt(II) oxide
 namespace: measure.ontology
 def: "cobalt(II) oxide." []
 synonym: "CoO" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000374
@@ -3949,42 +3949,42 @@ name: nickel(II) oxide
 namespace: measure.ontology
 def: "nickel(II) oxide." []
 synonym: "NiO" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000375
 name: high
 namespace: measure.ontology
 def: "High." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000376
 name: low
 namespace: measure.ontology
 def: "Low." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000377
 name: resistivity unit
 namespace: measure.ontology
 def: "resistivity unit." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 
 [Term]
 id: ME:0000378
 name: salinity unit
 namespace: measure.ontology
 def: "salinity unit." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 
 [Term]
 id: ME:0000379
 name: log ratio unit
 namespace: measure.ontology
 def: "log ratio unit." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000190
 
 [Term]
@@ -3992,7 +3992,7 @@ id: ME:0000380
 name: confidence unit
 namespace: measure.ontology
 def: "confidence units are a dimensionless unit, with range from 0 to 1" []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000190
 
 [Term]
@@ -4006,7 +4006,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Pick a molecule from a list of chemicals (preferred)." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000027 ! Molecule
+is_a: ME:0000027 ! molecule
 
 [Term]
 id: ME:0000382
@@ -4018,7 +4018,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Give the name of a molecule in PubChem (use list instead if possible)." []
-is_a: ME:0000027 ! Molecule
+is_a: ME:0000027 ! molecule
 
 [Term]
 id: ME:0000383
@@ -4030,7 +4030,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Describe a molecule using its molecular formula (use list instead if possible)." []
-is_a: ME:0000027 ! Molecule
+is_a: ME:0000027 ! molecule
 
 [Term]
 id: ME:0000384
@@ -4042,7 +4042,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Describe a molecule using its InChIKey (use list instead if possible)." []
-is_a: ME:0000027 ! Molecule
+is_a: ME:0000027 ! molecule
 
 [Term]
 id: ME:0000385
@@ -4056,21 +4056,21 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Ionization mode used in a mass spec experiment." []
 xref: ORef:ME:0000385
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000386
 name: positive polarity
 namespace: measure.ontology
 def: "Positive Polarity (ionization mode for MS experiment)." []
-is_a: ME:0000385 ! Ionization Mode
+is_a: ME:0000385 ! ionization mode
 
 [Term]
 id: ME:0000387
 name: negative polarity
 namespace: measure.ontology
 def: "Negative Polarity (ionization mode for MS experiment)." []
-is_a: ME:0000385 ! Ionization Mode
+is_a: ME:0000385 ! ionization mode
 
 [Term]
 id: ME:0000388
@@ -4083,14 +4083,14 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Usability." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000389
 name: reference compound
 namespace: measure.ontology
 def: "Reference Compound." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000390
@@ -4104,7 +4104,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000471 UO:0000313" xsd:string
 def: "Ion Intensity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000391
@@ -4118,21 +4118,21 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000006" xsd:string
 def: "Absolute amount of a substance, such as an element.  See also: concentration." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000392
 name: 1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine
 namespace: measure.ontology
 def: "1,2-dipalmitoyl-rac-glycero-3-phosphoethanolamine." []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000393
 name: objects per grid window
 namespace: measure.ontology
 def: "objects per grid window." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000189
 
 [Term]
@@ -4146,21 +4146,21 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Barcode." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000395
 name: overexpression library
 namespace: measure.ontology
 def: "Overexpression Library." []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000396
 name: Dub-seq library
 namespace: measure.ontology
 def: "Dub-Seq Library." []
-is_a: ME:0000395 ! Overexpression Library
+is_a: ME:0000395 ! overexpression library
 
 [Term]
 id: ME:0000397
@@ -4174,7 +4174,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Dub-Seq Library Name." []
 xref: Ref:DA:0000075.DubSeq_Library.name
-is_a: ME:0000396 ! Dub-Seq Library
+is_a: ME:0000396 ! Dub-seq library
 
 [Term]
 id: ME:0000398
@@ -4187,7 +4187,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Genomic Region." []
-is_a: ME:0000111 ! Sequencing
+is_a: ME:0000111 ! sequencing
 
 [Term]
 id: ME:0000399
@@ -4200,7 +4200,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal DubSeq_Library ID." []
 xref: Ref:DA:0000075.DubSeq_Library.id
-is_a: ME:0000265 ! Internal ID
+is_a: ME:0000265 ! internal ID
 
 [Term]
 id: ME:0000400
@@ -4208,7 +4208,7 @@ name: base pairs
 namespace: measure.ontology
 def: "base pairs." []
 synonym: "bases" EXACT []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000189
 
 [Term]
@@ -4220,7 +4220,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Numerator." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000402
@@ -4231,7 +4231,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Denominator." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000403
@@ -4246,7 +4246,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000187" xsd:string
 property_value: valid_units_parent "UO:0000190 UO:0000166 UO:0000187" xsd:string
 def: "Isotope Ratio." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000404
@@ -4260,30 +4260,30 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Geologic Zone." []
 xref: ORef:ME:0000404
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000405
 name: vadose zone
 namespace: measure.ontology
 def: "Vadose Zone." []
-synonym: "Unsaturated Zone" EXACT []
-is_a: ME:0000404 ! Geologic Zone
+synonym: "unsaturated zone" EXACT []
+is_a: ME:0000404 ! geologic zone
 
 [Term]
 id: ME:0000406
 name: variably saturated zone
 namespace: measure.ontology
 def: "Variably Saturated Zone." []
-is_a: ME:0000404 ! Geologic Zone
+is_a: ME:0000404 ! geologic zone
 
 [Term]
 id: ME:0000407
 name: saturated zone
 namespace: measure.ontology
 def: "Saturated Zone." []
-synonym: "Phreatic Zone" EXACT []
-is_a: ME:0000404 ! Geologic Zone
+synonym: "phreatic zone" EXACT []
+is_a: ME:0000404 ! geologic zone
 
 [Term]
 id: ME:0000408
@@ -4297,7 +4297,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Isotope." []
 xref: ORef:CHEBI:24431
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000409
@@ -4308,8 +4308,8 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Name." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000411 ! Microplate
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000411 ! microplate
 
 [Term]
 id: ME:0000410
@@ -4320,8 +4320,8 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Well Name." []
-is_a: ME:0000002 ! Experimental Context
-is_a: ME:0000412 ! Microplate Well
+is_a: ME:0000002 ! experimental context
+is_a: ME:0000412 ! microplate well
 
 [Term]
 id: ME:0000411
@@ -4331,7 +4331,7 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Microplate." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000412
@@ -4341,14 +4341,14 @@ property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 def: "Microplate Well." []
-is_a: ME:0000411 ! Microplate
+is_a: ME:0000411 ! microplate
 
 [Term]
 id: ME:0000413
 name: fold concentration
 namespace: measure.ontology
 def: "fold concentration." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000051
 
 [Term]
@@ -4356,7 +4356,7 @@ id: ME:0000414
 name: adenine hydrochloride hydrate
 namespace: measure.ontology
 def: "adenine hydrochloride hydrate." []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000415
@@ -4369,7 +4369,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Aphotic." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000416
@@ -4380,59 +4380,59 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Growth Stage." []
-synonym: "Growth Phase" EXACT []
+synonym: "growth phase" EXACT []
 xref: ORef:ME:0000416
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000417
 name: enrichment growth
 namespace: measure.ontology
 def: "Preincubation or enrichment of a microbial sample before plating for colony picking/isolation." []
-synonym: "Preincubation" EXACT []
-is_a: ME:0000416 ! Growth Stage
+synonym: "preincubation" EXACT []
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000418
 name: inoculation
 namespace: measure.ontology
 def: "Inoculation." []
-is_a: ME:0000416 ! Growth Stage
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000419
 name: lag phase
 namespace: measure.ontology
 def: "Lag Phase." []
-is_a: ME:0000416 ! Growth Stage
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000420
 name: exponential phase
 namespace: measure.ontology
 def: "Exponential Phase." []
-is_a: ME:0000416 ! Growth Stage
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000421
 name: stationary phase
 namespace: measure.ontology
 def: "Stationary Phase." []
-is_a: ME:0000416 ! Growth Stage
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000422
 name: humic acid
 namespace: measure.ontology
 def: "humic acid." []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000423
 name: fulvic acid
 namespace: measure.ontology
 def: "fulvic acid." []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000424
@@ -4440,14 +4440,14 @@ name: anthrahydroxyquinone-2,6-disulfonate
 namespace: measure.ontology
 def: "anthrahydroxyquinone-2,6-disulfonate." []
 synonym: "AHDS" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000425
 name: citric-disodium phosphate
 namespace: measure.ontology
 def: "citric-disodium phosphate." []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000426
@@ -4455,7 +4455,7 @@ name: natural organic matter
 namespace: measure.ontology
 def: "natural organic matter." []
 synonym: "NOM" EXACT []
-is_a: ME:0000365 ! Molecules not in ChEBI
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Term]
 id: ME:0000427
@@ -4466,7 +4466,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Minimal Media." []
-is_a: ME:0000048 ! Media
+is_a: ME:0000048 ! media
 
 [Term]
 id: ME:0000428
@@ -4478,7 +4478,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "CAS Registry Number." []
-is_a: ME:0000027 ! Molecule
+is_a: ME:0000027 ! molecule
 
 [Term]
 id: ME:0000429
@@ -4491,7 +4491,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequence Identity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000430
@@ -4504,7 +4504,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Sequence Similarity." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000431
@@ -4519,7 +4519,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000186" xsd:string
 property_value: valid_units_parent "UO:0000186" xsd:string
 def: "Relative Evolutionary Divergence." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000432
@@ -4531,7 +4531,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Publication." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000433
@@ -4546,7 +4546,7 @@ property_value: valid_units "UO:0000186" xsd:string
 property_value: valid_units_parent "UO:0000186" xsd:string
 def: "PubMed ID." []
 synonym: "PMID" EXACT []
-is_a: ME:0000432 ! Publication
+is_a: ME:0000432 ! publication
 
 [Term]
 id: ME:0000434
@@ -4559,7 +4559,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "PubMed Central ID." []
 synonym: "PMCID" EXACT []
-is_a: ME:0000432 ! Publication
+is_a: ME:0000432 ! publication
 
 [Term]
 id: ME:0000435
@@ -4570,7 +4570,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Database." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000436
@@ -4583,28 +4583,28 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Obsolete." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000437
 name: redox
 namespace: measure.ontology
 def: "Redox." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000438
 name: reduction
 namespace: measure.ontology
 def: "Reduction." []
-is_a: ME:0000437 ! Redox
+is_a: ME:0000437 ! redox
 
 [Term]
 id: ME:0000439
 name: oxidation
 namespace: measure.ontology
 def: "Oxidation." []
-is_a: ME:0000437 ! Redox
+is_a: ME:0000437 ! redox
 
 [Term]
 id: ME:0000440
@@ -4618,7 +4618,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Height." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000441
@@ -4632,7 +4632,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Length." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000442
@@ -4646,35 +4646,35 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000001" xsd:string
 def: "Width." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000443
 name: cell morphology
 namespace: measure.ontology
 def: "Cell Morphology." []
-is_a: ME:0000040 ! Cell
+is_a: ME:0000040 ! cell
 
 [Term]
 id: ME:0000444
 name: cell structure
 namespace: measure.ontology
 def: "Cell Structure." []
-is_a: ME:0000443 ! Cell Morphology
+is_a: ME:0000443 ! cell morphology
 
 [Term]
 id: ME:0000445
 name: cellular appendage
 namespace: measure.ontology
 def: "Cellular Appendage." []
-is_a: ME:0000444 ! Cell Structure
+is_a: ME:0000444 ! cell structure
 
 [Term]
 id: ME:0000446
 name: flagella
 namespace: measure.ontology
 def: "Flagella." []
-is_a: ME:0000445 ! Cellular Appendage
+is_a: ME:0000445 ! cellular appendage
 
 [Term]
 id: ME:0000447
@@ -4688,56 +4688,56 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Flagellar Arrangement." []
 xref: ORef:ME:0000447
-is_a: ME:0000446 ! Flagella
+is_a: ME:0000446 ! flagella
 
 [Term]
 id: ME:0000448
 name: monotrichous
 namespace: measure.ontology
 def: "A single flagellum extending from one end of the cell." []
-is_a: ME:0000447 ! Flagellar Arrangement
+is_a: ME:0000447 ! flagellar arrangement
 
 [Term]
 id: ME:0000449
 name: amphitrichous
 namespace: measure.ontology
 def: "Single or multiple flagella extending from both ends of the cell." []
-is_a: ME:0000447 ! Flagellar Arrangement
+is_a: ME:0000447 ! flagellar arrangement
 
 [Term]
 id: ME:0000450
 name: lophotrichous
 namespace: measure.ontology
 def: "Tuft of flagella extending from one end or both ends of the cell." []
-is_a: ME:0000447 ! Flagellar Arrangement
+is_a: ME:0000447 ! flagellar arrangement
 
 [Term]
 id: ME:0000451
 name: peritrichous
 namespace: measure.ontology
 def: "Multiple flagella distributed over the entire cell." []
-is_a: ME:0000447 ! Flagellar Arrangement
+is_a: ME:0000447 ! flagellar arrangement
 
 [Term]
 id: ME:0000452
 name: vessicle
 namespace: measure.ontology
 def: "Vessicle." []
-is_a: ME:0000444 ! Cell Structure
+is_a: ME:0000444 ! cell structure
 
 [Term]
 id: ME:0000453
 name: S-layer
 namespace: measure.ontology
 def: "S-layer." []
-is_a: ME:0000444 ! Cell Structure
+is_a: ME:0000444 ! cell structure
 
 [Term]
 id: ME:0000454
 name: cell membrane
 namespace: measure.ontology
 def: "Cell Membrane." []
-is_a: ME:0000444 ! Cell Structure
+is_a: ME:0000444 ! cell structure
 
 [Term]
 id: ME:0000455
@@ -4751,49 +4751,49 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Cell Shape." []
 xref: ORef:ME:0000455
-is_a: ME:0000443 ! Cell Morphology
+is_a: ME:0000443 ! cell morphology
 
 [Term]
 id: ME:0000456
 name: rod
 namespace: measure.ontology
 def: "Rod." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000457
 name: rod-vibrio
 namespace: measure.ontology
 def: "Rod-vibrio." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000458
 name: oval
 namespace: measure.ontology
 def: "Oval." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000459
 name: irregular oval
 namespace: measure.ontology
 def: "Irregular Oval." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000460
 name: spherical
 namespace: measure.ontology
 def: "Spherical." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000461
 name: pleomorphic
 namespace: measure.ontology
 def: "Pleomorphic." []
-is_a: ME:0000455 ! Cell Shape
+is_a: ME:0000455 ! cell shape
 
 [Term]
 id: ME:0000462
@@ -4806,14 +4806,14 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Observed." []
-is_a: ME:0000141 ! Binary
+is_a: ME:0000141 ! binary
 
 [Term]
 id: ME:0000463
 name: genome quality
 namespace: measure.ontology
 def: "Genome Quality." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000464
@@ -4828,7 +4828,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000187" xsd:string
 property_value: valid_units_parent "UO:0000187" xsd:string
 def: "Genome Completeness." []
-is_a: ME:0000463 ! Genome Quality
+is_a: ME:0000463 ! genome quality
 
 [Term]
 id: ME:0000465
@@ -4843,7 +4843,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000187" xsd:string
 property_value: valid_units_parent "UO:0000187" xsd:string
 def: "Genome Contamination." []
-is_a: ME:0000463 ! Genome Quality
+is_a: ME:0000463 ! genome quality
 
 [Term]
 id: ME:0000466
@@ -4858,7 +4858,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000189" xsd:string
 property_value: valid_units_parent "UO:0000189" xsd:string
 def: "Genome N50." []
-is_a: ME:0000463 ! Genome Quality
+is_a: ME:0000463 ! genome quality
 
 [Term]
 id: ME:0000467
@@ -4873,7 +4873,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000189 UO:0000187" xsd:string
 property_value: valid_units_parent "UO:0000189 UO:0000187" xsd:string
 def: "Read Coverage." []
-is_a: ME:0000463 ! Genome Quality
+is_a: ME:0000463 ! genome quality
 
 [Term]
 id: ME:0000468
@@ -4888,7 +4888,7 @@ property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000189" xsd:string
 property_value: valid_units_parent "UO:0000189" xsd:string
 def: "Index." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000469
@@ -4901,7 +4901,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Internal Standard." []
-is_a: ME:0000002 ! Experimental Context
+is_a: ME:0000002 ! experimental context
 
 [Term]
 id: ME:0000470
@@ -4915,14 +4915,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000221" xsd:string
 def: "Exact Mass." []
-is_a: ME:0000026 ! Chemical Context
+is_a: ME:0000026 ! chemical context
 
 [Term]
 id: ME:0000471
 name: relative ion intensity unit
 namespace: measure.ontology
 def: "relative ion intensity unit." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000186
 
 [Term]
@@ -4937,14 +4937,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "ME:0000473" xsd:string
 def: "Jukes-Cantor Distance." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000473
 name: substitutions per site
 namespace: measure.ontology
 def: "substitutions per site." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000186
 
 [Term]
@@ -4952,7 +4952,7 @@ id: ME:0000474
 name: Oxford Nanopore
 namespace: measure.ontology
 def: "Oxford Nanopore." []
-is_a: ME:0000116 ! Sequencing Technology
+is_a: ME:0000116 ! sequencing technology
 
 [Term]
 id: ME:0000475
@@ -4966,14 +4966,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000005" xsd:string
 def: "Dew Point." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000476
 name: inHg
 namespace: measure.ontology
 def: "inHg." []
-is_a: ME:0000294 ! Units not in UO
+is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
 [Term]
@@ -4981,7 +4981,7 @@ id: ME:0000477
 name: cumulative
 namespace: measure.ontology
 def: "Cumulative." []
-is_a: ME:0000018 ! Mathematical Context
+is_a: ME:0000018 ! mathematical context
 
 [Term]
 id: ME:0000478
@@ -4995,7 +4995,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000314" xsd:string
 def: "Fluorescence." []
-is_a: ME:0000120 ! Measurement
+is_a: ME:0000120 ! measurement
 
 [Term]
 id: ME:0000479
@@ -5008,8 +5008,8 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "OTU." []
-synonym: "Operational Taxonomic Unit" EXACT []
-is_a: ME:0000039 ! Biological Context
+synonym: "operational taxonomic unit" EXACT []
+is_a: ME:0000039 ! biological context
 
 [Term]
 id: ME:0000480
@@ -5020,7 +5020,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Low Control." []
-is_a: ME:0000283 ! Control
+is_a: ME:0000283 ! control
 
 [Term]
 id: ME:0000481
@@ -5031,7 +5031,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "High Control." []
-is_a: ME:0000283 ! Control
+is_a: ME:0000283 ! control
 
 [Term]
 id: ME:0000482
@@ -5043,7 +5043,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Control Name." []
-is_a: ME:0000283 ! Control
+is_a: ME:0000283 ! control
 
 [Term]
 id: ME:0000483
@@ -5054,23 +5054,23 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microaerobic." []
-is_a: ME:0000209 ! Physical Context
+is_a: ME:0000209 ! physical context
 
 [Term]
 id: ME:0000484
 name: colony formation on solid media
 namespace: measure.ontology
 def: "Colony formation on solid media, during the process of microbial isolation" []
-is_a: ME:0000416 ! Growth Stage
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000485
 name: single colony growth in liquid media
 namespace: measure.ontology
 def: "Single colony growth in liquid media, after microbial isolation" []
-synonym: "Growth in Liquid Media" EXACT []
-synonym: "Single Colony Grown in Liquid Media" EXACT []
-is_a: ME:0000416 ! Growth Stage
+synonym: "growth in liquid media" EXACT []
+synonym: "single colony grown in liquid media" EXACT []
+is_a: ME:0000416 ! growth stage
 
 [Term]
 id: ME:0000486
@@ -5083,7 +5083,7 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Vessel or format in which microbes were grown, e.g., plates, tubes" []
-is_a: ME:0000039 ! Biological Context
+is_a: ME:0000039 ! biological context
 
 [Typedef]
 id: data_type
