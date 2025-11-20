@@ -4380,6 +4380,7 @@ property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Growth Stage." []
+synonym: "Growth Phase" EXACT []
 xref: ORef:ME:0000416
 is_a: ME:0000039 ! Biological Context
 
@@ -5067,6 +5068,8 @@ id: ME:0000485
 name: Single Colony Growth in Liquid Media
 namespace: measure.ontology
 def: "Single colony growth in liquid media, after microbial isolation" []
+synonym: "Growth in Liquid Media" EXACT []
+synonym: "Single Colony Grown in Liquid Media" EXACT []
 is_a: ME:0000416 ! Growth Stage
 
 [Term]

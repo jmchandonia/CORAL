@@ -228,6 +228,7 @@
       *Time Since Inoculation (Float, time unit)
       Growth Efficiency
     Growth Stage:
+      alias: Growth Phase
       Enrichment Growth
         alias: Preincubation
       Colony Formation on Solid Media
@@ -236,6 +237,8 @@
       Exponential Phase
       Stationary Phase
       Single Colony Growth in Liquid Media
+        alias: Growth in Liquid Media
+        alias: Single Colony Grown in Liquid Media
     *Culture Vessel
     Gene Regulation
       Up-regulated
