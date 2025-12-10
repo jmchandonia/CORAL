@@ -104,7 +104,7 @@
     homogenized
     *anaerobic (boolean)
     aerobic (boolean)
-    microaerobic (boolean)
+    *microaerobic (boolean)
     *aphotic (boolean)
     undisturbed
     phase (string)
