@@ -1,511 +1,523 @@
--Context:
-  Experimental Context:
-    Series Type:
-      *Time Series (Float, time unit)
-      *Replicate Series (Int, +count unit)
-    *Condition (String)
-      *-Condition ID (Ref: DA:0000036.Condition.name)
-    *Method (String)
-    *Algorithm Parameter (String)
-    *Index (Int, +count unit)
-    *Date (String)
-    *Time (String)
-    *DateTime (String)
-    Time Zone (String)
-    *Comment (String)
-    *Instrument (String)
-    *Category (String)
+-context:
+  experimental context:
+    series type:
+      *time series (float, time unit)
+      *replicate series (int, +count unit)
+    *condition (string)
+      *-condition ID (Ref: DA:0000036.Condition.name)
+    *method (string)
+    *algorithm parameter (string)
+    *index (int, +count unit)
+    *date (string)
+    *time (string)
+    *datetime (string)
+    time zone (string)
+    *comment (string)
+    *instrument (string)
+    *category (string)
       MIME type
-    *Description (String)
-    *Link (String)
-    Experimental Process (ORef: PROCESS:0000001)
-    +Person
-    +Campaign
-    +Input
-    +Output
-    *Control
-      +Negative Control
-      +Positive Control
-    Replicate
-      +Technical Replicate
-      +Biological Replicate
-    +Subsample
-    Protocol
-      Protocol ID (Ref: DA:0000049.Protocol.name)
-    Database (String)
-    *Availability (Boolean)
-    *Usability (Boolean)
-    *Obsolete (Boolean)
-    *Ionization Mode:
-      Positive Polarity
-      Negative Polarity
-    *Barcode (String)
-    *Internal Standard (String)
-    **Microplate
-      *Microplate Name (String)
-      **Microplate Well
-        *Microplate Well Name (String)
-    **Publication (String)
-      *-PubMed ID (Int, +dimensionless unit)
+    *description (string)
+    *link (string)
+    experimental process (ORef: PROCESS:0000001)
+    +person
+    +campaign
+    +input
+    +output
+    *control:
+      +negative control
+      +positive control
+      +low control
+      +high control
+      *-control name
+    replicate
+      +technical replicate
+      +biological replicate
+    +subsample
+    protocol
+      protocol ID (Ref: DA:0000049.Protocol.name)
+    database (string)
+    *availability (boolean)
+    *usability (boolean)
+    *obsolete (boolean)
+    *ionization mode:
+      positive polarity
+      negative polarity
+    *barcode (string)
+    *internal standard (string)
+    **microplate
+      *microplate name (string)
+      **microplate well
+        *microplate well name (string)
+    **publication (string)
+      *-PubMed ID (int, +dimensionless unit)
         alias: PMID
-      *-PubMed Central ID (String)
+      *-PubMed Central ID (string)
         alias: PMCID
-  Mathematical Context:
-    Normalized
-    +Relative
-    Increase
-    Decrease
-    Gain
-    Loss
-    High
-    Low
-    Nearest
-    Cumulative
-    Variable Name (String)
-    Variable Type
-      -Data Variables Type (ORef: DA:0000000)
-    Dimension
-    +Numerator
-    +Denominator
-    Angle
-  Physical Context
-    *+Location
-      *Latitude (Float, degree)
-      *Longitude (Float, degree)
-      Continent (String)
-      Country (String)
-      +Region
-      +Biome (ORef: ENVO:01000254)
-      +Environmental Feature (ORef: ENVO:00002297)
-      +US State
-      State Plane Coordinate
-        *Easting (Float, meter)
-        *Northing (Float, meter)
-        +State Plane Zone
-    *+Position
-      Upper
-      Lower
-      Middle
-      +Top
-      +Bottom
-    *Distance (Float, length unit)
-    *Depth (Float, length unit)
-    *Height (Float, length unit)
-    *Length (Float, length unit)
-    *Width (Float, length unit)
-    *Diameter (Float, length unit)
-      *Inner Diameter
-      *Outer Diameter
-    *Elevation (Float, length unit)
-    *Weight (Float, mass unit)
-    *Volume (Float, volume unit)
-    Homogenized
-    *Anaerobic (Boolean)
-    Aerobic (Boolean)
-    *Aphotic (Boolean)
-    Undisturbed
-    Phase (String)
-    Image
-    *Geologic Zone:
-      Vadose Zone
-        alias: Unsaturated Zone
-      Variably Saturated Zone
-      Saturated Zone
-        alias: Phreatic Zone
-    Soil Type:
-      Clay
-      Sand
-      Silt
-      Rock
-      Humus
-      Soil
-      Soil Micropore
-      Soil Macropore
-  Chemical Context:
-    **Molecule
-      *-Molecule from list (ORef: CHEBI:24431)
-      *-PubChem Molecule Name (String)
-      *-Molecular Formula (String)
-      *-InChIKey (String)
-      *-CAS Registry Number (String)
-    Reagent
-    *Reaction (String)
-    *Surface Type (String)
-    Bead Type (String)
-    Bead Size (Float, length unit)
-    Thermodynamic Context
-      delta-G (Float, energy unit)
-      delta-H (Float, energy unit)
-    Specific Activity (Float)
-    Equilibrium Constant (Float)
-    Rate Constant (Float)
-      Michaelis Constant (Float)
-      Catalytic Rate Constant (Float)
-    Dissociation Constant (Float)
-      Inhibition Constant (Float)
-    Gapon Selectivity Coefficient (Float)
-    Specific Oxidation Rate (Float)
-    Solubility Coefficient (Float)
-    Viscosity (Float)
-    Wavelength (Float, length unit)
-    *State (String)
-    *Detection Limit (Float)
-    Organic (Boolean)
-    *Molecular Weight (Float, +dalton)
-    *Exact Mass (Float, +dalton)
-    Reference Compound
-    *Isotope (ORef: CHEBI:24431)
-    Redox
-      Reduction
-      Oxidation
-    Precipitation Type
-      Rain
-      Snow
-      Irrigation
-  Biological Context:
-    Cell
-      Cell Morphology
-        Cell Structure
-          Cellular Appendage
-            Flagella
-              *Flagellar Arrangement:
-                Monotrichous
-                Amphitrichous
-                Lophotrichous
-                Peritrichous
-          Vessicle
+  mathematical context:
+    normalized
+    +relative
+    increase
+    decrease
+    gain
+    loss
+    high
+    low
+    nearest
+    cumulative
+    variable name (string)
+    variable type
+      -data variables type (ORef: DA:0000000)
+    dimension
+    +numerator
+    +denominator
+    angle
+  physical context
+    *+location
+      *latitude (float, degree)
+      *longitude (float, degree)
+      continent (string)
+      country (string)
+      +region
+      +biome (ORef: ENVO:01000254)
+      +environmental feature (ORef: ENVO:00002297)
+      +US state
+      state plane coordinate
+        *easting (float, meter)
+        *northing (float, meter)
+        +state plane zone
+    *+position
+      upper
+      lower
+      middle
+      +top
+      +bottom
+    *distance (float, length unit)
+    *depth (float, length unit)
+    *height (float, length unit)
+    *length (float, length unit)
+    *width (float, length unit)
+    *diameter (float, length unit)
+      *inner diameter
+      *outer diameter
+    *elevation (float, length unit)
+    *weight (float, mass unit)
+    *volume (float, volume unit)
+    homogenized
+    *anaerobic (boolean)
+    aerobic (boolean)
+    *microaerobic (boolean)
+    *aphotic (boolean)
+    undisturbed
+    phase (string)
+    image
+    *geologic zone:
+      vadose zone
+        alias: unsaturated zone
+      variably saturated zone
+      saturated zone
+        alias: phreatic zone
+    soil type:
+      clay
+      sand
+      silt
+      rock
+      humus
+      soil
+      soil micropore
+      soil macropore
+  chemical context:
+    **molecule
+      *-molecule from list (ORef: CHEBI:24431)
+      *-PubChem molecule name (string)
+      *-molecular formula (string)
+      *-InChIKey (string)
+      *-CAS registry number (string)
+    reagent
+    *reaction (string)
+    *surface type (string)
+    bead type (string)
+    bead size (float, length unit)
+    thermodynamic context
+      delta-G (float, energy unit)
+      delta-H (float, energy unit)
+    specific activity (float)
+    equilibrium constant (float)
+    rate constant (float)
+      michaelis constant (float)
+      catalytic rate constant (float)
+    dissociation constant (float)
+      inhibition constant (float)
+    gapon selectivity coefficient (float)
+    specific oxidation rate (float)
+    solubility coefficient (float)
+    viscosity (float)
+    wavelength (float, length unit)
+    *physiochemical state (string)
+    *detection limit (float)
+    organic (boolean)
+    *molecular weight (float, +dalton)
+    *exact mass (float, +dalton)
+    reference compound
+    *isotope (ORef: CHEBI:24431)
+    redox
+      reduction
+      oxidation
+    precipitation type
+      rain
+      snow
+      irrigation
+  biological context:
+    cell
+      cell morphology
+        cell structure
+          cellular appendage
+            flagella
+              *flagellar arrangement:
+                monotrichous
+                amphitrichous
+                lophotrichous
+                peritrichous
+          vessicle
           S-layer
-          Cell Membrane
-        *Cell Shape:
-          Rod
-          Rod-vibrio
-          Oval
-          Irregular Oval
-          Spherical
-          Pleomorphic
-    Colony
-    Tissue (String)
-    **Microbial Strain
-      alias: Microbial Isolate
-      *-Microbial Strain Name (String)
-      *-Microbial Strain ID (Ref: DA:0000028.Microbial_Strain.name)
-        alias: Isolate ID
-    **Plant Transformant
-      *-Plant Transformant Name (String)
-      *-Plant Transformant ID (Ref: DA:0000027.Plant_Transformant.name)
-    Plant Organ:
-      Plant Root
-      Plant Stem
-      Plant Leaf
-      Plant Canopy
-      Plant Branch
-      Plant Shoot
-      Plant Grain
-      Plant Stalk
-      Plant Sheath
-      Plant Husk
-      Plant Nodule
-      Plant Ear
-      Plant Reserve
-      Plant Litter
-      Plant Cotyledon
+          cell membrane
+        *cell shape:
+          rod
+          rod-vibrio
+          oval
+          irregular oval
+          spherical
+          pleomorphic
+    colony
+    tissue (string)
+    **microbial strain
+      alias: microbial isolate
+      *-microbial strain name (string)
+      *-microbial strain ID (Ref: DA:0000028.Microbial_Strain.name)
+        alias: isolate ID
+    **plant transformant
+      *-plant transformant name (string)
+      *-plant transformant ID (Ref: DA:0000027.Plant_Transformant.name)
+    plant organ:
+      plant root
+      plant stem
+      plant leaf
+      plant canopy
+      plant branch
+      plant shoot
+      plant grain
+      plant stalk
+      plant sheath
+      plant husk
+      plant nodule
+      plant ear
+      plant reserve
+      plant litter
+      plant cotyledon
     *OTU
-      alias: Operational Taxonomic Unit
-      OTU Name (String)
+      alias: operational taxonomic unit
+      OTU name (string)
     **ASV
-      alias: Amplicon Sequence Variant
-      alias: Exact Sequence Variant
-      alias: Unique Sequence Variant
+      alias: amplicon sequence variant
+      alias: exact sequence variant
+      alias: unique sequence variant
       alias: ESV
-      alias: Sub-OTU
-      ASV Name (String)
+      alias: sub-OTU
+      ASV name (string)
       *-ASV ID (Ref: DA:0000029.ASV.Name)
-    **Taxon
-      Taxon Name (String)
-      *-Taxon ID (Ref: DA:0000030.Taxon.name)
-      *NCBI Taxon ID (ORef: NCBITaxon:1)
-    **Media
-      *Media Name (String)
-      Media Composition (String)
-      *Media Addition (String)
-      Minimal Media (Boolean)
-    Metabolite
+    **taxon
+      taxon name (string)
+      *-taxon ID (Ref: DA:0000030.Taxon.name)
+      *NCBI taxon ID (ORef: NCBITaxon:1)
+    **media
+      *media name (string)
+      media composition (string)
+      *media addition (string)
+      minimal media (boolean)
+    metabolite
       is_a: COMO:0000027
-    Substrate
-      *+Carbon Source
-      *+Nitrogen Source
-      *+Electron Donor
-      *+Electron Acceptor
-    **Gene
-      *-Gene ID (Ref: DA:0000034.Gene.gene_id)
-      *-Gene Name (Ref: DA:0000034.Gene.aliases)
-      *-Gene GI (Int)
-      Homologous Gene
-        Orthologous Gene
-        Paralogous Gene
-      Essential Gene
-    **DNA Construct
-      *DNA Construct Name (String)
-    Gene Annotation
-    **Genome
-      *-Genome ID (Ref: DA:0000033.Genome.name)
-    Genotype (String)
-    Assembly
-      Assembly ID (Ref: DA:0000031.Assembly.name)
-    Bin
-      Bin ID (Ref: DA:0000032.Bin.name)
-    *+Protein
-    Protein Annotation
-      KEGG Subsystem (ORef: KEGG)
-      TIGR Role (ORef: TIGR)
-      SEED Subsystem
-        SEED Subsystem ID (String)
-      Protein Domain
-        Pfam Domain
-          Pfam Domain Accession (ORef: Pfam)
-    Operon
-    Ribosome
-    Growth Parameter
-      Growth Rate (Float, rate unit)
-      Doubling Time (Float, time unit)
-      *Time Since Inoculation (Float, time unit)
-      Growth Efficiency
-        Growth Respiration Efficiency
-      Growth Yield (Float)
-    Growth Stage:
-      Preincubation
-      Inoculation
-      Lag Phase
-      Exponential Phase
-      Stationary Phase
-    Gene Regulation
-      Up-regulated
-      Down-regulated
-      Transcription Factor
-      Motif
-      Binding Site
-      Regulon
-    *Taxonomic Level:
-      Taxonomic Domain
-      Kingdom
-      Phylum
-      Class
-      Order
-      Family
-      Genus
-      Species
-    Strain Change
-      alias: Mutation
-      Strain Change Type:
-        Insertion
-        Deletion
-        Substitution
-      Strain Change Effect:
-        Synonymous
-        Non-Synonymous
-        Frameshift
-        Stop
-    Knockout
-    Knockout Library
-      Tn-Seq Library
-        *Tn-Seq Library Name (Ref: DA:0000047.TnSeq_Library.name)
-        Tn-Seq Primers Model (String)
-    Overexpression Library
-      Dub-Seq Library
-    Environment
-      *Environmental Sample Location (String)
-        alias: Well
-        alias: Core
-        alias: Borehole
-      *Environmental Sample
-        *Environmental Sample Name (String)
-      *Environmental Parameter
-        *-Environmental Chemical (ORef: CHEBI:24431)
-        *-Environmental Measurement (ORef: COMO:0000120)
-      +Environmental Material (ORef: ENVO:00010483)
-    *Community
-      Community Name (String)
-      *-Community ID (Ref: DA:0000039.Community.name)
-      Community Type:
-        Isolate Community
-        Environmental Community
-        Enrichment
-          Active Fraction
-        Assemblage
-          Consortium
-    Ecology
-      Community Assembly Process:
-        Variable Selection
-        Homogenous Selection
-        Dispersal Limitation
-        Homogenizing Dispersal
-        Undominated
-      Nitrifier
-      Denitrifier
-      Ammonia Oxidizer
-      Nitrite Oxidizer
-      Methanotroph
-      Methanogen
-        Acetotropic Methanogen
-        Hydrogenotrophic Methanogen
-      Heterotroph
-      Autotroph
-    Sequencing
-      Read
-      Read Type:
-        Paired End Read
-        Single End Read
-      *Read Set
-        alias: Reads
-        *-Reads ID (Ref: DA:0000042.Reads.name)
-      *Contig
-      *Genomic Region
-      Sequence Position
-        *Sequence Start (Int, +base pair)
-        *Sequence Stop (Int, +base pair)
-        *Sequence Length (Int, +base pair)
-      Base Pair
-      Sequencing Technology:
+    enzyme substrate
+      *+carbon source (ORef:CHEBI:24431)
+      *+nitrogen source (ORef:CHEBI:24431)
+      *+electron donor (ORef:CHEBI:24431)
+      *+electron acceptor (ORef:CHEBI:24431)
+    **gene
+      *-gene ID (Ref: DA:0000034.Gene.gene_id)
+      *-gene name (Ref: DA:0000034.Gene.aliases)
+      *-gene GI (int)
+      homologous gene
+        orthologous gene
+        paralogous gene
+      essential gene
+    **DNA construct
+      *DNA construct name (string)
+    gene annotation
+    **genome
+      *-genome ID (Ref: DA:0000033.Genome.name)
+    genotype (string)
+    assembly
+      assembly ID (Ref: DA:0000031.Assembly.name)
+    bin
+      bin ID (Ref: DA:0000032.Bin.name)
+    *+protein
+    protein annotation
+      KEGG subsystem (ORef: KEGG)
+      TIGR role (ORef: TIGR)
+      SEED subsystem
+        SEED subsystem ID (string)
+      protein domain
+        Pfam domain
+          Pfam domain accession (ORef: Pfam)
+    operon
+    ribosome
+    growth parameter
+      growth rate (float, rate unit)
+      doubling time (float, time unit)
+      *time since inoculation (float, time unit)
+      growth efficiency
+        growth respiration efficiency
+      growth yield (float)
+    growth stage:
+      alias: growth phase
+      enrichment growth
+        alias: preincubation
+      colony formation on solid media
+      inoculation
+      lag phase
+      exponential phase
+      stationary phase
+      single colony growth in liquid media
+        alias: growth in liquid media
+        alias: single colony grown in liquid media
+    *culture vessel
+    gene regulation
+      up-regulated
+      down-regulated
+      transcription factor
+      motif
+      binding site
+      regulon
+    *taxonomic level:
+      taxonomic domain
+      kingdom
+      phylum
+      class
+      order
+      family
+      genus
+      species
+    strain change
+      alias: mutation
+      strain change type:
+        insertion
+        deletion
+        substitution
+      strain change effect:
+        synonymous
+        non-synonymous
+        frameshift
+        stop
+    knockout
+    knockout library
+      Tn-Seq library
+        *Tn-Seq library name (Ref: DA:0000047.TnSeq_Library.name)
+        Tn-Seq primers model (string)
+    overexpression library
+      Dub-seq library
+    environment
+      *environmental sample location (string)
+        alias: well
+        alias: core
+        alias: borehole
+      *environmental sample
+        *environmental sample name (string)
+      *environmental parameter
+        *-environmental chemical (ORef: CHEBI:24431)
+        *-environmental measurement (ORef: COMO:0000120)
+      +environmental material (ORef: ENVO:00010483)
+    *community
+      community name (string)
+      *-community ID (Ref: DA:0000039.Community.name)
+      community type:
+        isolate community
+        environmental community
+        enrichment
+          active fraction
+        assemblage
+          consortium
+    ecology
+      community assembly process:
+        variable selection
+        homogenous selection
+        dispersal limitation
+        homogenizing dispersal
+        undominated
+      nitrifier
+      denitrifier
+      ammonia oxidizer
+      nitrite oxidizer
+      methanotroph
+      methanogen
+        acetotropic methanogen
+        hydrogenotrophic methanogen
+      heterotroph
+      autotroph
+    sequencing
+      read
+      read type:
+        paired end read
+        single end read
+      *read set
+        alias: reads
+        *-reads ID (Ref: DA:0000042.Reads.name)
+      *contig
+      *genomic region
+      sequence position
+        *sequence start (int, +base pair)
+        *sequence stop (int, +base pair)
+        *sequence length (int, +base pair)
+      base pair
+      sequencing technology:
         Illumina
-        Pacbio
+        PacBio
+        Oxford Nanopore
       GC content
-      *Strand:
-        Forward
-        Reverse Complement
-      *Sequence Type:
-        16S Sequence
-        18S Sequence
-        ITS Sequence
-          ITS-1 Sequence
-          ITS-2 Sequence
-        Genome Sequence
+      *strand:
+        forward
+        reverse complement
+      *sequence type:
+        16S sequence
+        18S sequence
+        ITS sequence
+          ITS-1 sequence
+          ITS-2 sequence
+        genome sequence
 
-*Measurement:
+*measurement:
   is_a: COMO:0000001
-  *pH (Float, ph, mV)
-  Time Elapsed (Float, time unit)
-  *Temperature (Float, temperature unit)
-  *Fluorescence (Float, +relative fluorescence unit)
-  *Dew Point (Float, temperature unit)
-  *Diffusivity (Float)
-  *Conductivity (Float, electrical conduction unit)
-    *Specific Conductivity
-  *Salinity (Float, salinity unit)
-  *Resistivity (Float, resistivity unit)
-  *Saturation (Float, ratio)
-  *Redox Potential (Float, electric potential difference unit)
-  *Count (Int, +count unit, cell concentration unit)
-    alias: Absolute Abundance
-  Rate (Float)
-  *Optical Density (Float, +dimensionless unit)
-  *Density (Float, density unit)
-  Size (Float, volume unit, length unit)
-  *Concentration (Float, concentration unit, mass density unit, parts per notation unit, +percent, +fold dilution)
-  Hybridization Intensity (Float)
-  Expression Level (Float)
-  *Charge (Float, electric potential difference unit, +percent)
-  *Chemical Uptake (Float)
-  *Chemical Emission (Float)
-  *Chemical Flux (Float)
-  Enzyme Activity (Float)
-  Absorbance (Float)
-  Porosity (Float)
-  Tortuosity (Float)
-  Heat (Float)
-    Heat Content (Float)
-    Heat Release (Float)
-    Heat Flux (Float)
-  *Area (Float)
-  *Mass (Float, mass unit)
-  *Fitness Score (Float, +log ratio unit)
-  Genetic Interaction Score (Float)
-  Stoichiometric Ratio (Float)
-  *LC-MS Peak Area Ratio (Float, ratio)
-  *Isotope Ratio (Float, ratio, parts per notation unit, +percent)
-  *Relative Abundance (Float, ratio, count, +percent)
-  *Amount (Float, substance unit)
-  *Ion Intensity (Float, +relative ion intensity unit, +relative luminescence unit)
-  *Relative Evolutionary Divergence (Float, +dimensionless unit)
-  *Jukes-Cantor Distance (Float, +substitutions per site)
-  Binary (Boolean)
-    *Growth
-    *Activity
-    *Presence
-    *Absence
-    *Essentiality
-    *Above
-    *Below
-    *Observed
-    *Collected
-  *Pressure (Float, pressure unit)
-    *Partial Pressure
-    *Air Pressure
-    *Water Pressure
-    *Vapor Pressure
-  *Turbidity (Float, +turbidity unit)
-  *Sequence (String)
-  *Wind Speed (Float, speed/velocity unit)
-    *Gust Speed
-  *Solar Radiation (Float, irradiance unit)
-  *Albedo (Float, ratio)
-  *Rainfall (Float, length unit)
-  *Precipitation Rate (Float)
-  *Wind Direction (Float, degree)
-  *Relative Humidity (Float, ratio)
-  *Error Range (Float)
-  *Sequence Identity (Float)
-  *Sequence Similarity (Float)
-  Genome Quality
-    *Genome Completeness (Float, +percent)
-    *Genome Contamination (Float, +percent)
-    *Genome N50 (Int, +count unit)
-    *Read Coverage (Float, +count unit)
+  *pH (float, ph, mV)
+  time elapsed (float, time unit)
+  *temperature (float, temperature unit)
+  *fluorescence (float, +relative fluorescence unit)
+  *dew point (float, temperature unit)
+  *diffusivity (float)
+  *conductivity (float, electrical conduction unit)
+    *specific conductivity
+  *salinity (float, salinity unit)
+  *resistivity (float, resistivity unit)
+  *saturation (float, ratio)
+  *redox potential (float, electric potential difference unit)
+  *count (int, +count unit, cell concentration unit)
+    alias: absolute abundance
+  rate (float)
+  *optical density (float, +dimensionless unit)
+  *density (float, density unit)
+  size (float, volume unit, length unit)
+  *concentration (float, concentration unit, mass density unit, parts per notation unit, +percent, +fold dilution)
+  hybridization intensity (float)
+  expression level (float)
+  *charge (float, electric potential difference unit, +percent)
+  *chemical uptake (float)
+  *chemical emission (float)
+  *chemical flux (float)
+  enzyme activity (float)
+  absorbance (float)
+  porosity (float)
+  tortuosity (float)
+  heat (float)
+    heat content (float)
+    heat release (float)
+    heat flux (float)
+  *area (float)
+  *mass (float, mass unit)
+  *fitness score (float, +log ratio unit)
+  genetic interaction score (float)
+  stoichiometric ratio (float)
+  *LC-MS peak area ratio (float, ratio)
+  *isotope ratio (float, ratio, parts per notation unit, +percent)
+  *relative abundance (float, ratio, count)
+  *amount (float, substance unit)
+  *ion intensity (float, +relative ion intensity unit, +relative luminescence unit)
+  *relative evolutionary divergence (float, +dimensionless unit)
+  *Jukes-Cantor distance (float, +substitutions per site)
+  binary (boolean)
+    *growth
+    *activity
+    *presence
+    *absence
+    *essentiality
+    *above
+    *below
+    *observed
+    *collected
+  *pressure (float, pressure unit)
+    *partial pressure
+    *air pressure
+    *water pressure
+    *vapor pressure
+  *turbidity (float, +turbidity unit)
+  *sequence (string)
+  *wind speed (float, speed/velocity unit)
+    *gust speed
+  *solar radiation (float, irradiance unit)
+  *albedo (float, ratio)
+  *rainfall (float, length unit)
+  *precipitation rate (float)
+  *wind direction (float, degree)
+  *relative humidity (float, ratio)
+  *error range (float)
+  *sequence identity (float)
+  *sequence similarity (float)
+  genome quality
+    *genome completeness (float, +percent)
+    *genome contamination (float, +percent)
+    *genome N50 (int, +count unit)
+    *read coverage (float, +count unit, +percent)
 
-*Statistic:
+*statistic:
   is_a: COMO:0000001
-  *Average (Float)
-    alias: Mean
-  Difference (Float)
-  *Standard Deviation (Float)
-  *Standard Error (Float)
-  *Coefficient of Variation (Float)
+  *average (float)
+    alias: mean
+  difference (float)
+  *standard deviation (float)
+  *standard error (float)
+  *coefficient of variation (float)
     alias: CV
-  Minimum (Float)
-  Maximum (Float)
-  Median (Float)
-  Ratio (Float)
-  Log Ratio (Float)
-  p Value (Float)
-  T Score (Float)
-  Frequency (Float)
-  *Fold Enrichment (Float)
-  *Confidence (Float, ratio)
-  Evaluation
-    Precision (Float)
-    Recall (Float)
-    True Positive (Int)
+  minimum (float)
+  maximum (float)
+  median (float)
+  ratio (float)
+  log ratio (float)
+  p value (float)
+  T score (float)
+  frequency (float)
+  *fold enrichment (float)
+  *confidence (float, ratio)
+  evaluation
+    precision (float)
+    recall (float)
+    true positive (int)
       alias: TP
-    False Positive (Int)
+    false positive (int)
       alias: FP
-    True Negative (Int)
+    true negative (int)
       alias: TN
-    False Negative (Int)
+    false negative (int)
       alias: FN
-  Correlation (Float)
+  correlation (float)
     Pearson
     Spearman
     Kendall tau
     Goodman and Kruskal's gamma
-  Multivariate Analysis
-    Factor Analysis
-      Factor (Int)
-      Factor Loading (Float)
-    Principal Component Analysis
-      Principal Component (Int)
-      Component Weight (Float)
-      Explained Variance
+  multivariate analysis
+    factor analysis
+      factor (int)
+      factor loading (float)
+    principal component analysis
+      principal component (int)
+      component weight (float)
+      explained variance
 
--Units not in UO:
+-units not in UO:
   is_a: UO:0000000
   microsiemen per centimeter
     alias: microsiemen per cm
@@ -557,7 +569,7 @@
   substitutions per site
     is_a: UO:0000186
 
--Molecules not in ChEBI:
+-molecules not in ChEBI:
   is_a: CHEBI:24431
   sodium oxide
     alias: Na2O
