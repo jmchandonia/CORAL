@@ -1,5 +1,5 @@
 format-version: 1.4
-data-version: 2025-08-15
+data-version: 2025-10-17
 ontology:pedometer
 date: 17:12:2024 17:26
 saved-by: jmc
@@ -150,6 +150,13 @@ name: Thomas Eng
 namespace: pedometer.ontology
 def: "Thomas Eng." []
 is_a: PEDOMETER:0000007 ! Mukhopadhyay Lab
+
+[Term]
+id: PEDOMETER:0000020
+name: Ginkgo Bioworks
+namespace: pedometer.ontology
+def: "Ginkgo Bioworks." []
+is_a: PEDOMETER:0000002 ! PEDOMETER Labs and Personnel
 
 [Typedef]
 id: is_a

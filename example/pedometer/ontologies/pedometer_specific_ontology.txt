@@ -19,3 +19,4 @@ PEDOMETER
       John-Marc Chandonia
     Arkin Lab
       Lauren Lui
+    Ginkgo Bioworks
