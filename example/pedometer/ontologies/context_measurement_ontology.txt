@@ -152,7 +152,7 @@
     solubility coefficient (float)
     viscosity (float)
     wavelength (float, length unit)
-    *physiochemical state (string)
+    *physicochemical state (string)
     *detection limit (float)
     organic (boolean)
     *molecular weight (float, +dalton)

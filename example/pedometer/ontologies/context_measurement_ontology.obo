@@ -411,7 +411,7 @@ is_a: COMO:0000026 ! chemical context
 
 [Term]
 id: COMO:0000037
-name: physiochemical state
+name: physicochemical state
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
