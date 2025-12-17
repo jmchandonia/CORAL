@@ -154,7 +154,8 @@ def rename_fk_column(original_name: str, ref_type: str, is_array: bool,
 
 def field_to_column_name(field: Dict[str, Any],
                          current_table: str,
-                         type_to_table: Dict[str, str]) -> str:
+                         type_to_table: Dict[str, str],
+                         units_lookup: Dict[str, str] = None) -> str:
     """
     Derive the CDM column name for a field (non‑term fields only) and
     normalise it.
@@ -172,7 +173,17 @@ def field_to_column_name(field: Dict[str, Any],
     if _normalize_name(field["name"]) == "description":
         return _normalize_name(f"{current_table}_description")
     
-    return _normalize_name(field["name"])
+    base_name = _normalize_name(field["name"])
+    
+    # For numeric fields with units, append the unit name to the column name
+    scalar_type = field.get("scalar_type", "text").lower()
+    if scalar_type in ("int", "float", "double") and field.get("units_term") and units_lookup:
+        unit_name = units_lookup.get(field["units_term"])
+        if unit_name:
+            unit_normalized = _normalize_name(unit_name)
+            base_name = f"{base_name}_{unit_normalized}"
+    
+    return base_name
 
 
 # ------------------------------------------------------------------
@@ -251,7 +262,8 @@ def _build_json_comment(field: Dict[str, Any],
 def process_field(field: Dict[str, Any],
                   type_name: str,
                   current_table: str,
-                  type_to_table: Dict[str, str]) -> Tuple[
+                  type_to_table: Dict[str, str],
+                  units_lookup: Dict[str, str] = None) -> Tuple[
                       List[StructField],
                       List[Dict[str, Any]],
                       List[Dict[str, Any]]
@@ -275,9 +287,9 @@ def process_field(field: Dict[str, Any],
         metadata = {
             "orig_name": field.get("name"),
             "type_sys_oterm_id": field.get("type_term"),
-            "required": field.get("required", False),
-            "pk": field.get("PK", False),
-            "upk": field.get("UPK", False),
+            "is_required": field.get("required", False),
+            "is_pk": field.get("PK", False),
+            "is_upk": field.get("UPK", False),
             "comment": json_comment,
         }
         if "constraint" in field:
@@ -299,9 +311,9 @@ def process_field(field: Dict[str, Any],
             "field_name": field.get("name"),
             "cdm_column_name": col_name,
             "scalar_type": field.get("scalar_type", "text"),
-            "required": field.get("required", False),
-            "pk": field.get("PK", False),
-            "upk": field.get("UPK", False),
+            "is_required": field.get("required", False),
+            "is_pk": field.get("PK", False),
+            "is_upk": field.get("UPK", False),
             "fk": fk,
             "constraint": field.get("constraint"),
             "comment": plain_comment,
@@ -355,7 +367,7 @@ def process_field(field: Dict[str, Any],
     # ------------------------------------------------------------------
     # NON‑TERM fields – regular handling
     # ------------------------------------------------------------------
-    col_name = field_to_column_name(field, current_table, type_to_table)
+    col_name = field_to_column_name(field, current_table, type_to_table, units_lookup)
     spark_type = map_scalar_type(field.get("scalar_type", "text"))
     nullable = not field.get("required", False)
 
@@ -385,7 +397,8 @@ def process_field(field: Dict[str, Any],
 # ------------------------------------------------------------------
 def generate_schema(type_def: Dict[str, Any],
                     table_name: str,
-                    type_to_table: Dict[str, str]) -> Tuple[
+                    type_to_table: Dict[str, str],
+                    units_lookup: Dict[str, str] = None) -> Tuple[
                         StructType,
                         List[Dict[str, Any]],
                         List[Dict[str, Any]]
@@ -400,7 +413,7 @@ def generate_schema(type_def: Dict[str, Any],
     term_mappings: List[Dict[str, Any]] = []
 
     for f in type_def.get("fields", []):
-        fields, rows, terms = process_field(f, type_def.get("name"), table_name, type_to_table)
+        fields, rows, terms = process_field(f, type_def.get("name"), table_name, type_to_table, units_lookup)
         struct_fields.extend(fields)
         typedef_rows.extend(rows)
         term_mappings.extend(terms)
@@ -427,9 +440,9 @@ def generate_schema(type_def: Dict[str, Any],
                 "field_name": "id",
                 "cdm_column_name": pk_name,
                 "scalar_type": "text",
-                "required": True,
-                "pk": True,
-                "upk": False,
+                "is_required": True,
+                "is_pk": True,
+                "is_upk": False,
                 "fk": None,
                 "constraint": None,
                 "comment": plain_comment,
@@ -444,20 +457,22 @@ def generate_schema(type_def: Dict[str, Any],
 # ------------------------------------------------------------------
 # Build the auxiliary ``sys_typedef`` DataFrame
 # ------------------------------------------------------------------
-def build_typedefs_dataframe(spark, typedef_rows: List[Dict[str, Any]]):
+def build_typedefs_dataframe(spark, typedef_rows: List[Dict[str, Any]], sys_oterm_df):
     schema = StructType([
         StructField("type_name", StringType(), nullable=False),
         StructField("field_name", StringType(), nullable=False),
         StructField("cdm_column_name", StringType(), nullable=False),
         StructField("scalar_type", StringType(), nullable=True),
-        StructField("required", BooleanType(), nullable=True),
-        StructField("pk", BooleanType(), nullable=True),
-        StructField("upk", BooleanType(), nullable=True),
+        StructField("is_required", BooleanType(), nullable=True),
+        StructField("is_pk", BooleanType(), nullable=True),
+        StructField("is_upk", BooleanType(), nullable=True),
         StructField("fk", StringType(), nullable=True),
         StructField("constraint", StringType(), nullable=True),
         StructField("comment", StringType(), nullable=True),
         StructField("units_sys_oterm_id", StringType(), nullable=True),
+        StructField("units_sys_oterm_name", StringType(), nullable=True),
         StructField("type_sys_oterm_id", StringType(), nullable=True),
+        StructField("type_sys_oterm_name", StringType(), nullable=True),
     ])
 
     rows = [
@@ -466,20 +481,72 @@ def build_typedefs_dataframe(spark, typedef_rows: List[Dict[str, Any]]):
             r["field_name"],
             r["cdm_column_name"],
             r["scalar_type"],
-            r["required"],
-            r["pk"],
-            r["upk"],
+            r["is_required"],
+            r["is_pk"],
+            r["is_upk"],
             r["fk"],
             json.dumps(r["constraint"])
             if isinstance(r["constraint"], (list, dict))
             else r["constraint"],
             r["comment"],
             r["units_sys_oterm_id"],
+            None,  # units_sys_oterm_name - will be populated via join
             r["type_sys_oterm_id"],
+            None,  # type_sys_oterm_name - will be populated via join
         )
         for r in typedef_rows
     ]
-    return spark.createDataFrame(rows, schema)
+    df = spark.createDataFrame(rows, schema)
+    
+    # Join with sys_oterm to populate units_sys_oterm_name
+    df = df.alias("t").join(
+        sys_oterm_df.alias("u"),
+        F.col("t.units_sys_oterm_id") == F.col("u.sys_oterm_id"),
+        "left"
+    ).select(
+        "t.*",
+        F.col("u.sys_oterm_name").alias("units_name_temp")
+    )
+    
+    df = df.withColumn(
+        "units_sys_oterm_name",
+        F.col("units_name_temp")
+    ).drop("units_name_temp")
+    
+    # Join with sys_oterm to populate type_sys_oterm_name
+    df = df.alias("t").join(
+        sys_oterm_df.alias("ty"),
+        F.col("t.type_sys_oterm_id") == F.col("ty.sys_oterm_id"),
+        "left"
+    ).select(
+        "t.*",
+        F.col("ty.sys_oterm_name").alias("type_name_temp")
+    )
+    
+    df = df.withColumn(
+        "type_sys_oterm_name",
+        F.col("type_name_temp")
+    ).drop("type_name_temp")
+    
+    # Reorder columns to match schema
+    df = df.select(
+        "type_name",
+        "field_name",
+        "cdm_column_name",
+        "scalar_type",
+        "is_required",
+        "is_pk",
+        "is_upk",
+        "fk",
+        "constraint",
+        "comment",
+        "units_sys_oterm_id",
+        "units_sys_oterm_name",
+        "type_sys_oterm_id",
+        "type_sys_oterm_name"
+    )
+    
+    return df
 
 
 # ------------------------------------------------------------------
@@ -604,6 +671,19 @@ def generate_cdm(spark,
     data_prefix = f"{base_prefix.rstrip('/')}/data/data/"
 
     # ------------------------------------------------------------------
+    # Load sys_oterm table for unit lookups
+    # ------------------------------------------------------------------
+    try:
+        sys_oterm_df = spark.table(f"{db_name}.sys_oterm")
+        # Create lookup dictionary from sys_oterm_id to sys_oterm_name
+        units_lookup = {row["sys_oterm_id"]: row["sys_oterm_name"] 
+                       for row in sys_oterm_df.select("sys_oterm_id", "sys_oterm_name").collect()}
+    except Exception as e:
+        logging.warning(f"Could not load sys_oterm table for unit lookups: {e}")
+        sys_oterm_df = None
+        units_lookup = {}
+
+    # ------------------------------------------------------------------
     # Load typedef.json (multiline JSON)
     # ------------------------------------------------------------------
     typedef_path = f"s3a://{bucket}/{data_prefix}typedef.json"
@@ -660,7 +740,7 @@ def generate_cdm(spark,
 
         # -------------------- table naming --------------------
         table_name = type_to_table[coral_type_name]          # already incorporates preferred name
-        schema, typedef_rows, term_mappings = generate_schema(tdef, table_name, type_to_table)
+        schema, typedef_rows, term_mappings = generate_schema(tdef, table_name, type_to_table, units_lookup)
         all_typedef_rows.extend(typedef_rows)
 
         table_comment = f"CDM table for CORAL type `{coral_type_name}`"
@@ -708,7 +788,7 @@ def generate_cdm(spark,
                         continue                      # keep term column for now
                     
                     orig = f["name"]
-                    new_name = field_to_column_name(f, table_name, type_to_table)
+                    new_name = field_to_column_name(f, table_name, type_to_table, units_lookup)
                     
                     # Skip if this is "name" or "description" - already handled above
                     if orig in ["name", "description"]:
@@ -836,7 +916,15 @@ def generate_cdm(spark,
     # ------------------------------------------------------------------
     # Auxiliary table: sys_typedef
     # ------------------------------------------------------------------
-    sys_typedef_df = build_typedefs_dataframe(spark, all_typedef_rows)
+    if sys_oterm_df is None:
+        # If we couldn't load sys_oterm earlier, try again now
+        try:
+            sys_oterm_df = spark.table(f"{db_name}.sys_oterm")
+        except Exception as e:
+            logging.error(f"Cannot create sys_typedef without sys_oterm table: {e}")
+            raise
+    
+    sys_typedef_df = build_typedefs_dataframe(spark, all_typedef_rows, sys_oterm_df)
 
     logging.info(f"--- Schema for auxiliary table `{db_name}.sys_typedef` ---")
     sys_typedef_df.printSchema()
