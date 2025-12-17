@@ -215,7 +215,7 @@ def load_all_ontologies_from_minio() -> Dict[str, Dict[str, Any]]:
     # Resolve bucket & base prefix from the workspace
     # ------------------------------------------------------------------
     workspace = get_my_workspace()                     # <-- defined elsewhere
-    s3a_root = workspace.home_paths[0]                # e.g. "s3a://cdm-lake/users-general-warehouse/jmc"
+    s3a_root = workspace.home_paths[0]                # e.g. "s3a://cdm-lake/users-general-warehouse/jmc/coral"
     bucket, base_prefix = _parse_s3a_uri(s3a_root)
 
     # The ontologies live under <base_prefix>/data/ontologies/
@@ -229,7 +229,7 @@ def load_all_ontologies_from_minio() -> Dict[str, Dict[str, Any]]:
     # ------------------------------------------------------------------
     # Hard‑coded endpoint for the local MinIO server
     # ------------------------------------------------------------------
-    endpoint = "http://10.58.1.104:9002"
+    endpoint = "https://minio.minio.berdl.kbase.us"
 
     # ------------------------------------------------------------------
     # 1️⃣  List all OBO objects under the computed prefix
@@ -356,7 +356,7 @@ def build_ontologies_dataframe(spark: SparkSession, ontologies):
                 nullable=True,
                 metadata={
                     "comment": json.dumps({
-                        "description": "Semicolon‑separated map of properties to values for terms that are CORAL microtypes, including scalar data_type, is_valid_data_variable, is_valid_dimension, is_valid_data_variable, is_valid_dimension_variable, is_valid_property, valid_units, and valid_units_parent"
+                        "description": "Semicolon-separated map of properties to values for terms that are CORAL microtypes, including scalar data_type, is_valid_data_variable, is_valid_dimension, is_valid_data_variable, is_valid_dimension_variable, is_valid_property, valid_units, and valid_units_parent"
                     })
                 },
             ),
@@ -389,7 +389,7 @@ def build_ontologies_dataframe(spark: SparkSession, ontologies):
 # Execution (intended for a Jupyter notebook)
 # ------------------------------------------------------------------
 spark = get_spark_session()               # <-- defined elsewhere
-db_name = "jmc_coral"
+db_name = "u_jmc__coral"
 table_name = "sys_oterm"
 spark.sql(f"USE {db_name}")
 
