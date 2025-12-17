@@ -32,7 +32,7 @@ Key behaviours
 Run the script in a notebook as follows::
 
     spark = get_spark_session()               # <-- defined elsewhere
-    db_name = "jmc_coral"
+    db_name = "enigma_coral"
     spark.sql(f"USE {db_name}")
     generate_cdm(spark, db_name)
 """
@@ -634,18 +634,24 @@ def _apply_schema_with_metadata(spark, df, schema: StructType, make_nullable: bo
     """
     target_schema = _make_schema_nullable(schema) if make_nullable else schema
     
-    if df.rdd.isEmpty():
+    # Check if DataFrame is empty using count instead of rdd
+    if df.limit(1).count() == 0:
         return spark.createDataFrame([], target_schema)
     
+    # Cast columns to match schema types
     df = _cast_columns_to_schema(df, target_schema)
-    return spark.createDataFrame(df.rdd, target_schema)
+    
+    # Convert to pandas and back to apply schema with metadata
+    # This preserves the metadata in the StructFields
+    pandas_df = df.toPandas()
+    return spark.createDataFrame(pandas_df, schema=target_schema)
 
 
 # ------------------------------------------------------------------
 # Main entry point – to be called from a notebook
 # ------------------------------------------------------------------
 def generate_cdm(spark,
-                 db_name: str = "jmc_coral",
+                 db_name: str = "enigma_coral",
                  load_tsv: bool = True,
                  fmt: str = "delta"):
     """
@@ -667,8 +673,8 @@ def generate_cdm(spark,
     s3a_root = workspace.home_paths[0]                # e.g. "s3a://cdm‑lake/users‑general‑warehouse/jmc"
     bucket, base_prefix = _parse_s3a_uri(s3a_root)
 
-    # TSV and typedef files live under <base_prefix>/data/data/
-    data_prefix = f"{base_prefix.rstrip('/')}/data/data/"
+    # TSV and typedef files live under <base_prefix>/data/coral/data/
+    data_prefix = f"{base_prefix.rstrip('/')}/data/coral/data/"
 
     # ------------------------------------------------------------------
     # Load sys_oterm table for unit lookups
@@ -944,6 +950,6 @@ def generate_cdm(spark,
 # Execute when run inside a notebook
 # ------------------------------------------------------------------
 spark = get_spark_session()               # <-- defined elsewhere
-db_name = "jmc_coral"
+db_name = "enigma_coral"
 spark.sql(f"USE {db_name}")
 generate_cdm(spark, db_name)
