@@ -401,5 +401,19 @@ namespace: process.ontology
 def: "Copy Data." []
 is_a: PROCESS:0000001 ! Process
 
+[Term]
+id: PROCESS:0000052
+name: Withdraw Data
+namespace: process.ontology
+def: "Withdraw Data." []
+is_a: PROCESS:0000001 ! Process
+
+[Term]
+id: PROCESS:0000053
+name: Update Data
+namespace: process.ontology
+def: "Update Data." []
+is_a: PROCESS:0000001 ! Process
+
 [Typedef]
 id: is_a

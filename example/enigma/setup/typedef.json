@@ -63,7 +63,6 @@
           "name": "input_objects",
           "type_term": "ME:0000207",
           "scalar_type": "[ref]",
-          "required": true,
           "constraint": "[Entity|Brick]",
           "comment": "List of references to data that were input to this process"
         },
@@ -71,7 +70,6 @@
           "name": "output_objects",
           "type_term": "ME:0000208",
           "scalar_type": "[ref]",
-          "required": true,
           "constraint": "[Entity|Brick]",
           "comment": "List of references to data that were produced by this process"
         }

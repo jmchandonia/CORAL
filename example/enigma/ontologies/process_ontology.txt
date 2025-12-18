@@ -50,3 +50,5 @@ Process
     Functional Profiling
     Functional and Taxonomic Profiling
   -Image
+  Withdraw Data
+  Update Data
