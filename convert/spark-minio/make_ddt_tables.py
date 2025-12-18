@@ -12,7 +12,7 @@ The script follows the same conventions as make_tables.py.
 Run the script in a notebook as follows::
 
     spark = get_spark_session()               # <-- defined elsewhere
-    db_name = "jmc_coral"
+    db_name = "enigma_coral"
     spark.sql(f"USE {db_name}")
     generate_ddt_tables(spark, db_name)
 """
@@ -87,7 +87,7 @@ def _get_boto3_s3_client(credentials, endpoint: str):
     credentials : object
         Must expose ``access_key`` and ``secret_key`` attributes.
     endpoint : str
-        Full URL of the MinIO service, e.g. ``http://10.58.1.104:9002``.
+        Full URL of the MinIO service.
     """
     return boto3.client(
         "s3",
@@ -563,7 +563,7 @@ def load_tsv_with_schema(spark, tsv_path: str, schema: StructType) -> Any:
 # Main entry point
 # ------------------------------------------------------------------
 def generate_ddt_tables(spark,
-                        db_name: str = "jmc_coral",
+                        db_name: str = "enigma_coral",
                         fmt: str = "delta"):
     """
     Build the DDT tables:
@@ -585,7 +585,7 @@ def generate_ddt_tables(spark,
     # Get MinIO credentials and endpoint
     # ------------------------------------------------------------------
     cred = get_minio_credentials()  # <-- defined elsewhere
-    endpoint = "http://10.58.1.104:9002"
+    endpoint = "https://minio.minio.berdl.kbase.us"
     
     # ------------------------------------------------------------------
     # Initialize the target database
@@ -734,6 +734,6 @@ def generate_ddt_tables(spark,
 # Execute when run inside a notebook
 # ------------------------------------------------------------------
 spark = get_spark_session()               # <-- defined elsewhere
-db_name = "jmc_coral"
+db_name = "enigma_coral"
 spark.sql(f"USE {db_name}")
 generate_ddt_tables(spark, db_name)
