@@ -56,7 +56,7 @@ def build_type_mapping(spark) -> Dict[str, Tuple[str, str]]:
     typedef_df = spark.sql("""
         SELECT type_name, cdm_column_name 
         FROM sys_typedef 
-        WHERE pk = true
+        WHERE is_pk = true
     """)
     
     type_mapping = {}
@@ -390,6 +390,6 @@ def create_process_tables(spark, db_name: str = "jmc_coral"):
 # Execute
 # --------------------------------------------------------------
 spark = get_spark_session()  # <-- defined elsewhere
-db_name = "jmc_coral"
+db_name = "enigma_coral"
 spark.sql(f"USE {db_name}")
 create_process_tables(spark, db_name)

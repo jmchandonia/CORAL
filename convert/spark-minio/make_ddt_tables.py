@@ -198,11 +198,17 @@ def _apply_schema_with_metadata(spark, df, schema: StructType, make_nullable: bo
     """
     target_schema = _make_schema_nullable(schema) if make_nullable else schema
     
-    if df.rdd.isEmpty():
+    # Check if DataFrame is empty using count instead of rdd
+    if df.limit(1).count() == 0:
         return spark.createDataFrame([], target_schema)
     
+    # Cast columns to match schema types
     df = _cast_columns_to_schema(df, target_schema)
-    return spark.createDataFrame(df.rdd, target_schema)
+    
+    # Convert to pandas and back to apply schema with metadata
+    # This preserves the metadata in the StructFields
+    pandas_df = df.toPandas()
+    return spark.createDataFrame(pandas_df, schema=target_schema)
 
 
 # ------------------------------------------------------------------
@@ -578,14 +584,14 @@ def generate_ddt_tables(spark,
     s3a_root = workspace.home_paths[0]
     bucket, base_prefix = _parse_s3a_uri(s3a_root)
     
-    # DDT files live under <base_prefix>/data/data/
-    data_prefix = f"{base_prefix.rstrip('/')}/data/data/"
+    # DDT files live under <base_prefix>/data/coral/data/
+    data_prefix = f"{base_prefix.rstrip('/')}/data/coral/data/"
     
     # ------------------------------------------------------------------
     # Get MinIO credentials and endpoint
     # ------------------------------------------------------------------
     cred = get_minio_credentials()  # <-- defined elsewhere
-    endpoint = "https://minio.minio.berdl.kbase.us"
+    endpoint = "https://minio.berdl.kbase.us"
     
     # ------------------------------------------------------------------
     # Initialize the target database
