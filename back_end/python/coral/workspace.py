@@ -89,33 +89,34 @@ class ProcessDataHolder(DataHolder):
     def __update_object_ids(self, ids_prop_name):
         obj_ids = []
 
-        for _, input_object in enumerate(list(csv.reader([self.data[ids_prop_name]], delimiter=',', quotechar='"',skipinitialspace=True))[0]):
-            # was: self.data[ids_prop_name].split(',')):
-            type_name, upk_id = input_object.split(':',1)
-            type_name = type_name.strip()
-            upk_id = upk_id.strip()
+        if not pd.isna(self.data[ids_prop_name]):
+            for _, input_object in enumerate(list(csv.reader([self.data[ids_prop_name]], delimiter=',', quotechar='"',skipinitialspace=True))[0]):
+                # was: self.data[ids_prop_name].split(',')):
+                type_name, upk_id = input_object.split(':',1)
+                type_name = type_name.strip()
+                upk_id = upk_id.strip()
 
-            # hack for imported files
-            if type_name == 'Generic':
-                type_name = 'Brick'
+                # hack for imported files
+                if type_name == 'Generic':
+                    type_name = 'Brick'
 
-            # skip types not used for provenance
-            if not type_name.startswith('Brick'):
-                typedef = services.typedef.get_type_def(type_name)
-                if not typedef.for_provenance:
-                    continue
+                # skip types not used for provenance
+                if not type_name.startswith('Brick'):
+                    typedef = services.typedef.get_type_def(type_name)
+                    if not typedef.for_provenance:
+                        continue
 
-            # get pk
-            pk_id = services.workspace._get_pk_id(type_name, upk_id)
+                # get pk
+                pk_id = services.workspace._get_pk_id(type_name, upk_id)
 
-            # add data model term id to bricks
-            full_type_name = type_name
-            if type_name == 'Brick':
-                br = services.workspace.get_brick_data(pk_id)
-                full_type_name += '-'+str(br['data_type']['oterm_ref'])[3:]
-                # sys.stderr.write('full_type_name for '+str(pk_id)+' = '+str(full_type_name)+'\n')
+                # add data model term id to bricks
+                full_type_name = type_name
+                if type_name == 'Brick':
+                    br = services.workspace.get_brick_data(pk_id)
+                    full_type_name += '-'+str(br['data_type']['oterm_ref'])[3:]
+                    # sys.stderr.write('full_type_name for '+str(pk_id)+' = '+str(full_type_name)+'\n')
 
-            obj_ids.append('%s:%s' % (full_type_name, pk_id))
+                obj_ids.append('%s:%s' % (full_type_name, pk_id))
 
         self.data[ids_prop_name] = obj_ids
 
