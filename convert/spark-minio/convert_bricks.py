@@ -790,11 +790,11 @@ def generate_typedef_tsv(
     
     # Define the header
     header = [
-        "brick_id",
-        "cdm_column_name",
-        "cdm_column_data_type",
+        "ddt_ndarray_id",
+        "berdl_column_name",
+        "berdl_column_data_type",
         "scalar_type",
-        "fk",
+        "foreign_key",
         "comment",
         "unit_sys_oterm_id",
         "unit_sys_oterm_name",
@@ -1053,11 +1053,11 @@ def convert(
                     # Create typedef record
                     fk = metadata_dict.get("references", "")
                     typedef_record = {
-                        "brick_id": brick_id,
-                        "cdm_column_name": col_name,
-                        "cdm_column_data_type": "variable",
+                        "ddt_ndarray_id": brick_id,
+                        "berdl_column_name": col_name,
+                        "berdl_column_data_type": "variable",
                         "scalar_type": scalar_type if scalar_type else "",
-                        "fk": fk,
+                        "foreign_key": fk,
                         "comment": metadata_dict.get("description", ""),
                         "unit_sys_oterm_id": unit_id if unit_id else "",
                         "unit_sys_oterm_name": unit_name if unit_name else "",
@@ -1192,11 +1192,11 @@ def convert(
                                 # Create typedef record (these are variables, not dimensions)
                                 fk = metadata_dict.get("references", "")
                                 typedef_record = {
-                                    "brick_id": brick_id,
-                                    "cdm_column_name": col_name,
-                                    "cdm_column_data_type": "variable",
+                                    "ddt_ndarray_id": brick_id,
+                                    "berdl_column_name": col_name,
+                                    "berdl_column_data_type": "variable",
                                     "scalar_type": scalar_type if scalar_type else "",
-                                    "fk": fk,
+                                    "foreign_key": fk,
                                     "comment": metadata_dict.get("description", ""),
                                     "unit_sys_oterm_id": unit_id if unit_id else "",
                                     "unit_sys_oterm_name": unit_name if unit_name else "",
@@ -1261,11 +1261,11 @@ def convert(
                     # Create typedef record (these are dimensions)
                     fk = metadata_dict.get("references", "")
                     typedef_record = {
-                        "brick_id": brick_id,
-                        "cdm_column_name": col_name,
-                        "cdm_column_data_type": "dimension_variable",
+                        "ddt_ndarray_id": brick_id,
+                        "berdl_column_name": col_name,
+                        "berdl_column_data_type": "dimension_variable",
                         "scalar_type": scalar_type if scalar_type else "",
-                        "fk": fk,
+                        "foreign_key": fk,
                         "comment": metadata_dict.get("description", ""),
                         "unit_sys_oterm_id": unit_id if unit_id else "",
                         "unit_sys_oterm_name": unit_name if unit_name else "",
@@ -1389,9 +1389,9 @@ def convert(
         
         # Update typedef records with new column names
         for record in typedef_records:
-            old_col_name = record["cdm_column_name"]
+            old_col_name = record["berdl_column_name"]
             if old_col_name in col_name_mapping:
-                record["cdm_column_name"] = col_name_mapping[old_col_name]
+                record["berdl_column_name"] = col_name_mapping[old_col_name]
 
         # Adjust column offsets for the values segment
         values_offset_base = len(dmeta_header)
@@ -1548,7 +1548,7 @@ def convert(
     
     # Update typedef records with validated types
     for record in typedef_records:
-        col_name = record["cdm_column_name"]
+        col_name = record["berdl_column_name"]
         if col_name in validated_types:
             record["scalar_type"] = validated_types[col_name]
 
