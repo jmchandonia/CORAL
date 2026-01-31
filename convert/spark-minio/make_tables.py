@@ -56,6 +56,12 @@ from pyspark.sql.types import (
 )
 
 # ------------------------------------------------------------------
+# Constants: URL rewrites in raw TSV content
+# ------------------------------------------------------------------
+_URL_REWRITE_FROM = "https://genomics.lbl.gov/enigma-data/"
+_URL_REWRITE_TO = "enigma-data-repository/"
+
+# ------------------------------------------------------------------
 # Helper: parse an ``s3a://`` URI into bucket + prefix
 # ------------------------------------------------------------------
 def _parse_s3a_uri(s3a_uri: str) -> Tuple[str, str]:
@@ -219,6 +225,23 @@ def _replace_id_prefix(df, col_name: str, old_prefix: str, new_prefix: str,
                 F.regexp_replace(F.col(col_name), f"^{re.escape(old_prefix)}", new_prefix)
             ),
         )
+    return df
+
+
+# ------------------------------------------------------------------
+# Helper: replace a substring in all string columns
+# ------------------------------------------------------------------
+def _replace_text_in_string_cols(df, old_text: str, new_text: str):
+    """Apply a literal substring replacement across all string columns."""
+    if not old_text:
+        return df
+    old_regex = re.escape(old_text)
+    for field in df.schema.fields:
+        if isinstance(field.dataType, StringType):
+            df = df.withColumn(
+                field.name,
+                F.regexp_replace(F.col(field.name), old_regex, new_text),
+            )
     return df
 
 
@@ -780,6 +803,13 @@ def generate_cdm(spark,
                     .option("quote", "\"")               # default, kept for clarity
                     .option("escape", "\"")              # default escape character
                     .load(tsv_path)
+                )
+
+                # Replace legacy ENIGMA URLs before any column handling.
+                df = _replace_text_in_string_cols(
+                    df,
+                    _URL_REWRITE_FROM,
+                    _URL_REWRITE_TO,
                 )
 
                 # --------------------------------------------------------------
