@@ -211,6 +211,20 @@ def download_brick_csv(
         logging.error(f"Could not write CSV for brick {brick_id}: {exc}")
 
 # ----------------------------------------------------------------------
+# 3️⃣  DISCOVER ALREADY-DOWNLOADED BRICKS
+# ----------------------------------------------------------------------
+def get_existing_brick_ids(out_dir: str) -> set[str]:
+    """Return brick IDs already present as .csv files in out_dir."""
+    existing: set[str] = set()
+    try:
+        for name in os.listdir(out_dir):
+            if name.endswith(".csv"):
+                existing.add(os.path.splitext(name)[0])
+    except OSError as exc:
+        logging.warning(f"Could not list output directory {out_dir}: {exc}")
+    return existing
+
+# ----------------------------------------------------------------------
 # 4️⃣  MAIN DRIVER
 # ----------------------------------------------------------------------
 def main() -> None:
@@ -282,11 +296,19 @@ def main() -> None:
     # ------------------------------------------------------------------
     # 2️⃣  Download each brick as CSV
     # ------------------------------------------------------------------
+    existing_bricks = get_existing_brick_ids(args.out_dir)
+    if existing_bricks:
+        logging.info(f"Found {len(existing_bricks)} existing CSV(s) in {args.out_dir}")
+
     for brick_id in brick_ids:
         csv_path = os.path.join(args.out_dir, f"{brick_id}.csv")
-        if os.path.isfile(csv_path) and not args.force:
-            logging.info(f"Skipping {brick_id}: file already exists ({csv_path})")
-            continue
+        if brick_id in existing_bricks and not args.force:
+            try:
+                if os.path.getsize(csv_path) > 0:
+                    logging.info(f"Skipping {brick_id}: file already exists ({csv_path})")
+                    continue
+            except OSError:
+                pass
         download_brick_csv(brick_id, base_url, headers, args.out_dir)
 
     logging.info("All brick CSVs have been generated.")
