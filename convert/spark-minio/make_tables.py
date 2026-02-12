@@ -676,10 +676,22 @@ def _apply_schema_with_metadata(spark, df, schema: StructType, make_nullable: bo
     # Cast columns to match schema types
     df = _cast_columns_to_schema(df, target_schema)
     
-    # Convert to pandas and back to apply schema with metadata
-    # This preserves the metadata in the StructFields
-    pandas_df = df.toPandas()
-    return spark.createDataFrame(pandas_df, schema=target_schema)
+    # Build a projection that reapplies types and field metadata in pure Spark.
+    # This avoids pandas/Arrow conversion issues on large or irregular TSVs.
+    projected_cols = []
+    for field in target_schema.fields:
+        col_expr = F.col(field.name).cast(field.dataType)
+        if field.metadata:
+            try:
+                col_expr = col_expr.alias(field.name, metadata=field.metadata)
+            except TypeError:
+                # Older Spark/PySpark versions may not support alias(metadata=...).
+                col_expr = col_expr.alias(field.name)
+        else:
+            col_expr = col_expr.alias(field.name)
+        projected_cols.append(col_expr)
+
+    return df.select(*projected_cols)
 
 
 # ------------------------------------------------------------------
@@ -784,7 +796,12 @@ def generate_cdm(spark,
         schema, typedef_rows, term_mappings = generate_schema(tdef, table_name, type_to_table, units_lookup)
         all_typedef_rows.extend(typedef_rows)
 
-        table_comment = f"CDM table for CORAL type `{coral_type_name}`"
+        type_comment = (tdef.get("comment") or "").strip()
+        table_comment = (
+            type_comment
+            if type_comment
+            else f"CDM table for CORAL type `{coral_type_name}`"
+        )
 
         # -------------------- load TSV (if requested) --------------------
         if load_tsv:

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import csv
 import json
@@ -82,28 +84,60 @@ def append_tsv_to_csv(tsv_path, csv_path, skip_header=False):
                     continue
                 writer.writerow(row)
 
-def generate_comment_update_script(output_dir, table_comments):
+def load_brick_table_comments_from_ddt_ndarray(ddt_ndarray_csv_path):
+    """Build table-level comments for ddt_brick* tables from ddt_ndarray.csv."""
+    table_comments = {}
+    if not ddt_ndarray_csv_path.exists():
+        return table_comments
+
+    with open(ddt_ndarray_csv_path, "r", encoding="utf-8", newline="") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            ddt_ndarray_id = (row.get("ddt_ndarray_id") or "").strip()
+            if not ddt_ndarray_id.lower().startswith("brick"):
+                continue
+
+            table_name = f"ddt_{ddt_ndarray_id.lower()}"
+            ddt_ndarray_name = (row.get("ddt_ndarray_name") or "").strip()
+            ddt_ndarray_description = (row.get("ddt_ndarray_description") or "").strip()
+
+            parts = [p for p in [ddt_ndarray_name, ddt_ndarray_description] if p]
+            if not parts:
+                continue
+
+            table_comments[table_name] = " - ".join(parts)
+
+    return table_comments
+
+
+def generate_comment_update_script(output_dir, table_comments, brick_table_comments):
     """Generate a Python script to update table comments using Spark SQL."""
     script_path = output_dir / "update_brick_comments.py"
     database_name = "enigma_coral"
     
     with open(script_path, 'w', encoding='utf-8') as f:
-        f.write("""# Auto-generated script to update table column comments
-# This script uses Spark SQL ALTER TABLE commands to add comments to columns
+        f.write("""# Auto-generated script to update table and column comments.
+# Expects an existing `spark` session in scope.
 
-from spark_utils import get_spark_session
+print("DEBUG: starting comment updates")
 
-def update_comments(spark):
-    \"\"\"Update column comments for all tables.\"\"\"
-    
-    # Database name
-    database = "enigma_coral"
-    
 """)
         
         for table_name, columns in table_comments.items():
-            f.write(f"    # Update comments for table: {table_name}\n")
-            f.write(f"    print(f\"Updating comments for table: {table_name}\")\n")
+            f.write(f"# Update comments for table: {table_name}\n")
+            f.write(f"print(\"DEBUG: updating comments for table: {table_name}\")\n")
+
+            if table_name in brick_table_comments:
+                table_comment = brick_table_comments[table_name].replace("'", "\\'")
+                table_comment_stmt = (
+                    f"ALTER TABLE {database_name}.{table_name} "
+                    f"SET TBLPROPERTIES ('comment' = '{table_comment}')"
+                )
+                f.write("\n")
+                f.write("spark.sql(\"\"\"\n")
+                f.write(f"    {table_comment_stmt}\n")
+                f.write("\"\"\")\n")
+                f.write(f"print(\"DEBUG: updated table comment for {table_name}\")\n")
             
             for col in columns:
                 col_name = col['name']
@@ -113,28 +147,14 @@ def update_comments(spark):
                 # Use the database_name variable defined in this function
                 alter_stmt = f"ALTER TABLE {database_name}.{table_name} CHANGE COLUMN {col_name} {col_name} {col_type} COMMENT '{comment}'"
                 
-                f.write(f"    \n")
-                f.write(f"    spark.sql(\"\"\"\n")
-                f.write(f"        {alter_stmt}\n")
-                f.write(f"    \"\"\")\n")
+                f.write("\n")
+                f.write("spark.sql(\"\"\"\n")
+                f.write(f"    {alter_stmt}\n")
+                f.write("\"\"\")\n")
             
-            f.write(f"    print(f\"  Updated {len(columns)} columns for {table_name}\")\n")
-            f.write(f"    \n")
-        
-        f.write("""
-if __name__ == "__main__":
-    # Create Spark session
-    spark = get_spark_session()
-    
-    try:
-        update_comments(spark)
-        print("\\nSuccessfully updated all column comments!")
-    except Exception as e:
-        print(f"Error updating comments: {e}")
-        raise
-    finally:
-        spark.stop()
-""")
+            f.write(f"print(\"DEBUG: updated {len(columns)} columns for {table_name}\")\n\n")
+
+        f.write('print("DEBUG: finished comment updates")\n')
     
     print(f"Generated comment update script: {script_path}")
 
@@ -297,9 +317,12 @@ def main():
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(enigma_json, f, indent=2)
     
+    # Build table-level comments for ddt_brick* tables from generated ddt_ndarray.csv
+    brick_table_comments = load_brick_table_comments_from_ddt_ndarray(ddt_ndarray_csv)
+
     # Generate comment update script
     if table_comments:
-        generate_comment_update_script(output_dir, table_comments)
+        generate_comment_update_script(output_dir, table_comments, brick_table_comments)
     
     print(f"\nProcessed {len(brick_files)} Brick files")
     print(f"Created {len(tables)} table definitions in coral.json")
