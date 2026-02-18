@@ -70,6 +70,12 @@ def tsv_to_csv(tsv_path, csv_path):
             for row in reader:
                 writer.writerow(row)
 
+def is_output_newer_than_source(source_path, output_path):
+    """Return True when output exists and is newer than source."""
+    if not output_path.exists():
+        return False
+    return output_path.stat().st_mtime > source_path.stat().st_mtime
+
 def append_tsv_to_csv(tsv_path, csv_path, skip_header=False):
     """Append TSV content to a CSV file."""
     mode = 'a' if os.path.exists(csv_path) else 'w'
@@ -185,6 +191,8 @@ def main():
     
     tables = []
     table_comments = {}  # Store table comments for script generation
+    converted_count = 0
+    skipped_count = 0
     
     for brick_tsv in brick_files:
         brick_id = brick_tsv.stem # e.g., "Brick0000010"
@@ -192,8 +200,13 @@ def main():
         
         # Convert main TSV to CSV
         output_csv = output_dir / f"{brick_name}.csv"
-        tsv_to_csv(brick_tsv, output_csv)
-        print(f"Converted {brick_id}.tsv to CSV")
+        if is_output_newer_than_source(brick_tsv, output_csv):
+            skipped_count += 1
+            print(f"Skipping {brick_id}.tsv (output is newer than source)")
+        else:
+            tsv_to_csv(brick_tsv, output_csv)
+            converted_count += 1
+            print(f"Converted {brick_id}.tsv to CSV")
         
         # Parse schema file
         schema_file = input_dir / f"{brick_id}_schema.py"
@@ -325,6 +338,8 @@ def main():
         generate_comment_update_script(output_dir, table_comments, brick_table_comments)
     
     print(f"\nProcessed {len(brick_files)} Brick files")
+    print(f"Converted {converted_count} Brick files")
+    print(f"Skipped {skipped_count} Brick files (already up to date)")
     print(f"Created {len(tables)} table definitions in coral.json")
     print(f"Output written to: {output_dir}")
 
