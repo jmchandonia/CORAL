@@ -554,3 +554,4 @@
     alias: NOM
   2,2-(1,4-Diazepane-1,4-diyl)diethanesulfonic acid
     alias: Homo-PIPES
+  3-O-Methyl-D-glucopyranose

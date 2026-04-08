@@ -5097,6 +5097,13 @@ def: "2,2-(1,4-Diazepane-1,4-diyl)diethanesulfonic acid." []
 synonym: "Homo-PIPES" EXACT []
 is_a: ME:0000365 ! molecules not in ChEBI
 
+[Term]
+id: ME:0000488
+name: 3-O-Methyl-D-glucopyranose
+namespace: measure.ontology
+def: "3-O-Methyl-D-glucopyranose." []
+is_a: ME:0000365 ! molecules not in ChEBI
+
 [Typedef]
 id: data_type
 
