@@ -45,9 +45,9 @@
     *barcode (string)
     *internal standard (string)
     **microplate
-      microplate name (string)
+      *-microplate name (string)
       **microplate well
-        microplate well name (string)
+        *-microplate well name (string)
     **publication (string)
       *-PubMed ID (int, +dimensionless unit)
         alias: PMID
@@ -552,3 +552,5 @@
   citric-disodium phosphate
   natural organic matter
     alias: NOM
+  2,2-(1,4-Diazepane-1,4-diyl)diethanesulfonic acid
+    alias: Homo-PIPES

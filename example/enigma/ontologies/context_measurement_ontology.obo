@@ -4306,6 +4306,7 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Name." []
 is_a: ME:0000002 ! experimental context
@@ -4318,6 +4319,7 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Microplate Well Name." []
 is_a: ME:0000002 ! experimental context
@@ -5086,6 +5088,14 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Vessel or format in which microbes were grown, e.g., plates, tubes" []
 is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000487
+name: 2,2-(1,4-Diazepane-1,4-diyl)diethanesulfonic acid
+namespace: measure.ontology
+def: "2,2-(1,4-Diazepane-1,4-diyl)diethanesulfonic acid." []
+synonym: "Homo-PIPES" EXACT []
+is_a: ME:0000365 ! molecules not in ChEBI
 
 [Typedef]
 id: data_type
