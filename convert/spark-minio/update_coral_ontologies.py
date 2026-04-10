@@ -218,8 +218,8 @@ def load_all_ontologies_from_minio() -> Dict[str, Dict[str, Any]]:
     s3a_root = workspace.home_paths[0]                # e.g. "s3a://cdm-lake/users-general-warehouse/jmc/coral"
     bucket, base_prefix = _parse_s3a_uri(s3a_root)
 
-    # The ontologies live under <base_prefix>/data/ontologies/
-    prefix = f"{base_prefix.rstrip('/')}/data/ontologies/"
+    # The ontologies live under <base_prefix>/data/coral/ontologies/
+    prefix = f"{base_prefix.rstrip('/')}/data/coral/ontologies/"
 
     # ------------------------------------------------------------------
     # MinIO credentials (object with .access_key, .secret_key, .username)
@@ -229,7 +229,7 @@ def load_all_ontologies_from_minio() -> Dict[str, Dict[str, Any]]:
     # ------------------------------------------------------------------
     # Hard‑coded endpoint for the local MinIO server
     # ------------------------------------------------------------------
-    endpoint = "https://minio.minio.berdl.kbase.us"
+    endpoint = "https://minio.berdl.kbase.us"
 
     # ------------------------------------------------------------------
     # 1️⃣  List all OBO objects under the computed prefix
