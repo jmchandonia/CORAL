@@ -389,7 +389,7 @@ def build_ontologies_dataframe(spark: SparkSession, ontologies):
 # Execution (intended for a Jupyter notebook)
 # ------------------------------------------------------------------
 spark = get_spark_session()               # <-- defined elsewhere
-db_name = "u_jmc__coral"
+db_name = "enigma_coral"
 table_name = "sys_oterm"
 spark.sql(f"USE {db_name}")
 
