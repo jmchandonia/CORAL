@@ -12,10 +12,13 @@ OTERM_COLLECTION_NAME = TYPE_CATEGORY_ONTOLOGY + OTERM_TYPE
 
 ONTOLOGY_COLLECTION_NAME_PREFIX = 'coral-ont-'
 
-_TERM_PATTERN = re.compile(r'(.+)<(\w+:\d+)>')
-_TERM_ID_PATTERN = re.compile(r'\w+:\d+')
+# Term identifiers are PREFIX:LOCAL.  LOCAL is usually digits, but imported
+# ontologies such as MIBiG use record-versioned local parts
+# (mibig:BGC0000838.3), so the local part accepts word characters and dots.
+_TERM_PATTERN = re.compile(r'(.+)<(\w+:[\w.]+)>')
+_TERM_ID_PATTERN = re.compile(r'\w+:[\w.]+')
 
-_TERM_ID = re.compile(r'id:\s+(\w+:\d+)')
+_TERM_ID = re.compile(r'id:\s+(\w+:[\w.]+)')
 _TERM_NAME = re.compile(r'name:\s+(.+)')
 _TERM_DEF = re.compile(r'def:\s+"(.+)" \[.*?\]')
 _TERM_IS_A = re.compile(r'is_a:\s+(\w+:\d+)')
