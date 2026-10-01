@@ -529,6 +529,13 @@ def: "Image." []
 is_a: DA:0000036 ! Static Object
 
 [Term]
+id: DA:0000076
+name: Microbial Phenotype Prediction
+namespace: datatype.ontology
+def: "A computational prediction of a phenotype or biological capability for a microbial genome." []
+is_a: DA:0000017 ! Microbial Assay
+
+[Term]
 id: DA:0000075
 name: Dub-Seq Library
 namespace: datatype.ontology

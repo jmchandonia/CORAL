@@ -520,6 +520,7 @@ namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Use this to describe taxa by name (use Taxon ID instead if possible)." []
 is_a: ME:0000045 ! taxon
@@ -3565,9 +3566,9 @@ is_a: ME:0000210 ! location
 
 [Term]
 id: ME:0000335
-name: state plane coordinate
+name: projected coordinate
 namespace: measure.ontology
-def: "State Plane Coordinate." []
+def: "A pair of planar coordinates that identify a location in a projected or local coordinate system." []
 is_a: ME:0000210 ! location
 
 [Term]
@@ -3580,9 +3581,9 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "UO:0000008" xsd:string
-def: "Easting, in State Plane coordinates.  Add a State Plane Zone for context." []
-is_a: ME:0000335 ! state plane coordinate
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "The east-west coordinate in projected coordinate systems, measured in distance units from a reference meridian. Easting coordinates require associated coordinate system designation." []
+is_a: ME:0000335 ! projected coordinate
 
 [Term]
 id: ME:0000337
@@ -3594,20 +3595,20 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-property_value: valid_units "UO:0000008" xsd:string
-def: "Northing, in State Plane coordinates.  Add a State Plane Zone for context." []
-is_a: ME:0000335 ! state plane coordinate
+property_value: valid_units_parent "UO:0000001" xsd:string
+def: "The north-south coordinate in projected coordinate systems, measured in distance units from a reference meridian. Northing coordinates require associated coordinate system designation." []
+is_a: ME:0000335 ! projected coordinate
 
 [Term]
 id: ME:0000338
-name: state plane zone
+name: projected coordinate system
 namespace: measure.ontology
 property_value: data_type "string" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
-def: "State Plane Zone, e.g. '4100 - Tennessee'." []
-is_a: ME:0000335 ! state plane coordinate
+def: "A coordinate reference system that uses a map projection to represent locations on a curved surface as planar coordinates, enabling positions to be expressed as easting and northing values in linear units. A projected coordinate system includes a base geographic coordinate system, projection method, datum, linear unit, and projection parameters; examples include UTM Zone 13N and State Plane zones." []
+is_a: ME:0000335 ! projected coordinate
 
 [Term]
 id: ME:0000339
@@ -3743,6 +3744,7 @@ id: ME:0000351
 name: taxonomic domain
 namespace: measure.ontology
 def: "Taxonomic Domain." []
+synonym: "superkingdom" EXACT []
 is_a: ME:0000090 ! taxonomic level
 
 [Term]
@@ -4492,6 +4494,7 @@ property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000187" xsd:string
 def: "Sequence Identity." []
 is_a: ME:0000120 ! measurement
 
@@ -5103,6 +5106,216 @@ name: 3-O-Methyl-D-glucopyranose
 namespace: measure.ontology
 def: "3-O-Methyl-D-glucopyranose." []
 is_a: ME:0000365 ! molecules not in ChEBI
+
+[Term]
+id: ME:0000489
+name: agitated culture
+namespace: measure.ontology
+property_value: data_type "boolean" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "agitated culture." []
+is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000491
+name: version
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A version identifier for a tool, database, vocabulary, protocol, or other versioned resource used in a dataset." []
+is_a: ME:0000002 ! experimental context
+
+[Term]
+id: ME:0000492
+name: trait
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A characteristic of a biological entity represented by a source annotation." []
+is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000493
+name: pathway
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A series of linked biological reactions or processes represented by a source annotation." []
+is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000494
+name: function
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A biological function represented by a source annotation." []
+is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000495
+name: GapMind pathway completeness category
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A GapMind-defined categorical assessment of pathway completeness: all steps were found, may have a gap, or has a gap." []
+is_a: ME:0000013 ! category
+
+[Term]
+id: ME:0000496
+name: RGI model match category
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "An RGI-defined model-match category: Perfect, Strict, or Loose." []
+is_a: ME:0000013 ! category
+
+[Term]
+id: ME:0000497
+name: BacAnt antimicrobial resistance prediction category
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A BacAnt-defined antimicrobial-resistance prediction category: confirmed or possible." []
+is_a: ME:0000013 ! category
+
+[Term]
+id: ME:0000498
+name: completeness
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000190" xsd:string
+def: "The extent to which a defined whole, pathway, or feature is complete, expressed using an explicit ratio unit such as fraction or percent." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000499
+name: bit score
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000232" xsd:string
+def: "A normalized sequence or model match score expressed in bits." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000500
+name: biosynthetic gene cluster
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A contiguous or otherwise defined genomic region predicted to encode a biosynthetic pathway." []
+is_a: ME:0000398 ! genomic region
+
+[Term]
+id: ME:0000501
+name: ARO accession
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "An identifier for a term in the Antibiotic Resistance Ontology." []
+xref: ORef:ARO:1000001
+is_a: ME:0000067 ! protein annotation
+
+[Term]
+id: ME:0000502
+name: MIBiG accession
+namespace: measure.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A versioned accession for a biosynthetic gene cluster record in the MIBiG repository." []
+xref: ORef:mibig:0000000
+is_a: ME:0000500 ! biosynthetic gene cluster
+
+[Term]
+id: ME:0000503
+name: unranked
+namespace: measure.ontology
+def: "A taxonomic assignment without a formal rank." []
+synonym: "no rank" EXACT []
+synonym: "norank" EXACT []
+is_a: ME:0000090 ! taxonomic level
+
+[Term]
+id: ME:0000504
+name: sequence length ratio
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000190" xsd:string
+def: "The length of one sequence divided by the length of a reference sequence, expressed using an explicit ratio unit such as fraction or percent; values may exceed one complete reference length." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000505
+name: biosynthetic product class
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "A class of biosynthetic product predicted or observed for a biosynthetic pathway or genomic region." []
+is_a: ME:0000039 ! biological context
+
+[Term]
+id: ME:0000490
+name: reverse
+namespace: measure.ontology
+def: "reverse." []
+is_a: ME:0000186 ! strand
 
 [Typedef]
 id: data_type

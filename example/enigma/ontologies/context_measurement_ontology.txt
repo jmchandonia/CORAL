@@ -6,6 +6,7 @@
     *condition (string)
       *-condition ID (Ref:DA:0000045.Condition.name)
     *method (string)
+    *-version (string)
     *algorithm parameter (string)
     *index (int, +count unit)
     *date (string)
@@ -16,6 +17,9 @@
     *instrument (string)
     *category (string)
       MIME type
+      +GapMind pathway completeness category (string)
+      +RGI model match category (string)
+      +BacAnt antimicrobial resistance prediction category (string)
     *description (string)
     *link (string)
     experimental process (ORef:PROCESS:0000001)
@@ -80,10 +84,10 @@
       +biome (ORef:ENVO:01000254)
       +environmental feature (ORef:ENVO:00002297)
       +US state
-      state plane coordinate
-        *easting (float, meter)
-        *northing (float, meter)
-        +state plane zone
+      projected coordinate
+        *easting (float, length unit)
+        *northing (float, length unit)
+        +projected coordinate system
     *+position:
       upper
       lower
@@ -181,7 +185,7 @@
       alias: unique sequence variant
       alias: sub-OTU
     **taxon
-      taxon name (string)
+      *-taxon name (string)
       *-taxon ID (Ref:DA:0000037.Taxon.name)
       *NCBI taxon ID (ORef:NCBITaxon:1)
     **media
@@ -205,6 +209,10 @@
         paralogous gene
       essential gene
     gene annotation
+    *trait (string)
+    *pathway (string)
+    *function (string)
+    *biosynthetic product class (string)
     **genome
       *-genome ID (Ref:DA:0000039.Genome.name)
     **assembly
@@ -220,6 +228,7 @@
       protein domain
         Pfam domain
           Pfam domain accession (ORef:Pfam)
+      *-ARO accession (ORef:ARO:1000001)
     operon
     ribosome
     growth parameter
@@ -240,6 +249,7 @@
         alias: growth in liquid media
         alias: single colony grown in liquid media
     *culture vessel
+    *agitated culture (boolean)
     gene regulation
       up-regulated
       down-regulated
@@ -249,6 +259,10 @@
       regulon
     *taxonomic level:
       taxonomic domain
+        alias: superkingdom
+      unranked
+        alias: no rank
+        alias: norank
       kingdom
       phylum
       class
@@ -317,6 +331,8 @@
         *-reads ID (Ref:DA:0000054.Reads.name)
       *contig
       *genomic region
+        *biosynthetic gene cluster
+          *-MIBiG accession (ORef:mibig:0000000)
       sequence position
         *sequence start (int, +base pairs)
         *sequence stop (int, +base pairs)
@@ -329,6 +345,7 @@
       GC content
       *strand:
         forward
+        reverse
         reverse complement
       *sequence type:
         16S sequence
@@ -366,6 +383,9 @@
   heat (float)
   *mass (float, mass unit)
   *fitness score (float, +log ratio unit)
+  *completeness (float, ratio unit)
+  *bit score (float, +bit)
+  *sequence length ratio (float, ratio unit)
   genetic interaction score (float)
   stoichiometric ratio (float)
   *isotope ratio (float, ratio, parts per notation unit, +percent)
@@ -395,7 +415,7 @@
   *wind direction (float, degree)
   *relative humidity (float, ratio)
   *error range (float)
-  *sequence identity (float)
+  *sequence identity (float, percent)
   *sequence similarity (float)
   genome quality
     *genome completeness (float, +percent)

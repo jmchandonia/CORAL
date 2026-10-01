@@ -1,15 +1,31 @@
-Dynamic Object
+Generic
   alias: Measurements and Processed Data # likely Generic
   alias: Brick
   Physical Measurement
+    box: 3
+    data: well parameters linked to Environmental Sample Location (Terry)
+    data: temperature, pH, conductivity linked to Sample (Ji-Won/Terry)
+    data: micro-CT images linked to Sample (Peter)
+    data: boring logs linked to Sample (Erica/Judy)
   Small Molecule Measurement
     Environmental Measurement
+      box: 3
+      data: C/N/moisture linked to Sample (Sherry/Romy)
     Chemical Measurement
+      box: 3
+      data: extraction metal data linked to Sample (Michael/M Adams)
+      data: XRF data linked to Sample (Ji-Won/Terry)
+      data: anion/cation/organic acids linked to Sample (Ji-Won/Terry)
+      data: quantity and quality of DNA linked to Sample (Joe)
       Metabolite Assay
+        box: 3
+        data: metabolite data linked to Sample (Suzanne/Trent)
     Reaction Yield
   Functional Genomics Data
     Gene Fitness
       Gene Knockout Fitness
+        box: 11
+        data: fitness linked to Isolate, Media (Adam D)
       Gene Upregulation Fitness
       Genetic Interaction
     Gene Expression
@@ -17,24 +33,45 @@ Dynamic Object
     Protein Interaction
     Protein Function
   Microbial Assay # assays that can be done on either isolates or communities
+    Microbial Phenotype Prediction # computational phenotype or capability predictions for microbial genomes
     Microbial Abundance # combine with microbial growth?
+      box: 4, 5
+      data: AODC cell counts linked to Community (Dom/Terry)
+      data: DAPI cell counts linked to Active Fraction (Heidi/Fields)
+      data: BONCAT cell counts linked to Active Fraction (Heidi/Fields)
     Microbial Growth # binary or quantitative (e.g., od, cell counts)
+      box: 12
+      data: growth curves linked to Isolate, Media (Farris/M Adams)
     Microbial Mobility
     Microbial Thermodynamics
     Microbial Activity
+      box: 5
+      data: nitrate respiration linked to Active Fraction (Frederick/Stahl)
+      data: sulfate disappearance linked to Active Fraction (Erica/Judy)
+      data: sulfide production linked to Active Fraction (Erica/Judy)
+      data: silver wire corrosion linked to Active Fraction (Erica/Judy)
+      data: leu incorporation linked to Active Fraction (Heidi/Fields)
     Microbial Evolution
     Microbial Solute Permeability
     Metabolic Potential # combine with metagenomic gene abundance?
+      data: pathways linked to Communities (Alexey/Pavel)
     Microbial Sequence
   Microbial Community Assay # only assays that must be done on communities
     Metagenomic Gene Abundance
+      box: 16, 23
+      data: gene counts linked to Communities (Alexey/Pavel)
     Taxonomic Assignment
     Profile
       Taxonomic Profile
       Functional Profile
       Functional and Taxonomic Profile
     Taxonomic Abundance
+      box: 15, 21
+      data: tax abundance of communities and active fractions (Heidi/Fields)
+      data: OTU abundance and rarefaction curves linked to Community (Kara/Judy)
     Geochip Data # combination of gene and taxonomic abundance
+      box: 10
+      data: levels linked to Community (Daliang/Joe)
     Microbial Community Sequence
 
 Association
@@ -43,43 +80,63 @@ Association
     alias: Cluster
   Bicluster
   Map
+    box: 13 - Map <Isolate, Community>
+    box: 14 - Map <Taxon, Reads> # binned reads
+    box: 17 - Map <Gene, Condition, Binary Growth>
+    box: 19 - Map <Isolate, Taxon, Community>
+    box: 20 - Map <Metabolic Potential, Condition> # still unclear on this
+    box: 22 - Map <taxon, gene>, <taxon x condition>, etc.
   Correlation
+    box: 18 - Correlation <Condition, Sample>
   Similarity
+    box: 2 - Similarity <Isolation Condition, Sample>
 
-Static Object
+Complex Object # Data probably represented by KBase objects
   Strain # may have 16S or complete genome
+    data: isolate 16S list (Romy)
+    box: 6
+    data: related microbes imported from KBase
   OTU # may have 16S
+    box: 6
   Taxon
   Assembly
   Bin
   Genome
   Gene
   Image
-  Environmental Sample Location
-    alias: Well
-  Environmental Sample # linked to environmental sample location
-    alias: Sample
+  Location
+    alias: Environmental Sample Location # 2D or 3D location?  May need location group
+    data: well location spreadsheet (Terry)
+  Sample # linked to environmental sample location
+    data: samples (Terry)
   Reagent
   Media # from lab, includes defined media and complex media including extracts
+    # include groundwater linked to sample?
   Condition # lab-defined condition
     # includes media plus other conditions like pH and temperature
     Isolation Condition
+      box: 1
+      data: isolate list with conditions (Romy)
     Enrichment Condition
+      box: 1
   Community # linked to sample
     Isolate # linked to community, taxon and isolation condition
+      data: isolate list with conditions (Romy)
     Enrichment # linked to community and enrichment condition
       Active Fraction
     Assemblage # linked to list of taxa
       Consortium # need a special term to indicate symbiotic assemblage?
   Reads # linked to community
     Amplicon Reads
+      box: 8
       16S Reads
+        data: reads linked to Community (Joe)
       18S Reads
       ITS Reads
+        data: reads linked to Community (Joe)
     WGS Reads
+      box: 7, 9
   Tn-Seq Library
     alias: TnSeqLibrary
-  Dub-Seq Library
-    alias: DubSeqLibrary
   Process
   Protocol
