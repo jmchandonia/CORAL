@@ -43,6 +43,10 @@
             "file_name": "process_ontology.obo"
         },
         {
+            "name": "sbt",
+            "file_name": "robertson_soil_behavior_type.obo"
+        },
+        {
             "name": "taxonomy",
             "file_name": "ncbitaxon.obo"
         }

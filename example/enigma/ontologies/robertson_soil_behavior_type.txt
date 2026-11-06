@@ -1,0 +1,39 @@
+soil behavior type
+  is_a: ME:0000001
+  *soil behavior type classification:
+    Robertson 1986 soil behavior type
+      out of range (Robertson 1986 zone 0)
+      sensitive fine grained (Robertson 1986 zone 1)
+        alias: USCS OL-CH
+      organic material (Robertson 1986 zone 2)
+        alias: USCS OL-OH
+      clay (Robertson 1986 zone 3)
+        alias: USCS CH
+      silty clay to clay (Robertson 1986 zone 4)
+        alias: USCS CL-CH
+      clayey silt to silty clay (Robertson 1986 zone 5)
+        alias: USCS MH-CL
+      sandy silt to clayey silt (Robertson 1986 zone 6)
+        alias: USCS ML-MH
+      silty sand to sandy silt (Robertson 1986 zone 7)
+        alias: USCS SM-ML
+      sand to silty sand (Robertson 1986 zone 8)
+        alias: USCS SM-SP
+      sand (Robertson 1986 zone 9)
+        alias: USCS SW-SP
+      gravelly sand to sand (Robertson 1986 zone 10)
+        alias: USCS SW-GW
+      very stiff fine grained (Robertson 1986 zone 11)
+        alias: USCS CH-CL
+      sand to clayey sand (Robertson 1986 zone 12)
+        alias: USCS SC-SM
+    Robertson 1990 normalized soil behavior type
+      sensitive fine grained (Robertson 1990 zone 1)
+      organic soils, clay (Robertson 1990 zone 2)
+      clays, silty clay to clay (Robertson 1990 zone 3)
+      silt mixtures, clayey silt to silty clay (Robertson 1990 zone 4)
+      sand mixtures, silty sand to sandy silt (Robertson 1990 zone 5)
+      sands, clean sand to silty sand (Robertson 1990 zone 6)
+      gravelly sand to dense sand (Robertson 1990 zone 7)
+      very stiff sand to clayey sand (Robertson 1990 zone 8)
+      very stiff fine grained (Robertson 1990 zone 9)

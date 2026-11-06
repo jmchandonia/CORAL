@@ -32,6 +32,7 @@
       +positive control
       +low control
       +high control
+      +baseline control
       *-control name
     replicate
       +technical replicate
@@ -127,6 +128,7 @@
       *-molecular formula (string)
       *-InChIKey (string)
       *-CAS registry number (string)
+      *-spectral library compound name (string)
     reagent
     *reaction (string)
     *surface type (string)
@@ -142,6 +144,8 @@
     organic (boolean)
     *molecular weight (float, +dalton)
     *exact mass (float, +dalton)
+    *spectral library match ID (string)
+    *adduct (string)
     reference compound
     *isotope (ORef:CHEBI:24431)
     redox
@@ -358,7 +362,7 @@
 *measurement:
   is_a: ME:0000001
   *pH (float, ph, mV)
-  time elapsed (float, time unit)
+  *time elapsed (float, time unit)
   *temperature (float, temperature unit)
   *fluorescence (float, +relative fluorescence unit)
   *dew point (float, temperature unit)
@@ -371,6 +375,8 @@
   *count (int, +count unit, cell concentration unit)
     alias: absolute abundance
   rate (float)
+    *biomass production rate (float, +nanogram per milliliter per day)
+      alias: heterotrophic production
   *optical density (float, +dimensionless unit)
   *density (float, density unit)
   size (float, volume unit, length unit)
@@ -392,6 +398,12 @@
   *relative abundance (float, ratio)
   *amount (float, substance unit)
   *ion intensity (float, +relative ion intensity unit, +relative luminescence unit)
+  *retention time (float, time unit)
+  *time since sample collection (float, time unit)
+  *m/z (float, +dimensionless unit)
+    alias: mass-to-charge ratio
+  *spectral match score (float, +dimensionless unit)
+  *MS1 feature area (float, +dimensionless unit)
   *relative evolutionary divergence (float, +dimensionless unit)
   *Jukes-Cantor distance (float, +substitutions per site)
   binary (boolean)
@@ -498,6 +510,9 @@
   pound per square inch
     alias: PSI
     is_a: UO:0000109
+  ton per square foot
+    alias: tsf
+    is_a: UO:0000109
   inHg
     is_a: UO:0000109
   torr
@@ -527,6 +542,9 @@
   parts per million by volume
     alias: ppmv
     is_a: UO:0000051
+  liter per minute
+    alias: L/min
+    is_a: UO:0000270
   nanogram per liter
     alias: ng/L
     is_a: UO:0000051
@@ -535,6 +553,9 @@
     is_a: UO:0000051
   cells per gram
     is_a: UO:0000189
+  nanogram per milliliter per day
+    alias: ng/mL/day
+    is_a: UO:0000280
   log ratio unit
     is_a: UO:0000190
   confidence unit

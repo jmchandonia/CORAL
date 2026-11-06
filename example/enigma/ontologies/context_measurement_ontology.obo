@@ -1229,6 +1229,8 @@ namespace: measure.ontology
 property_value: data_type "float" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000003" xsd:string
 def: "Time Elapsed." []
@@ -3144,6 +3146,15 @@ name: pound per square inch
 namespace: measure.ontology
 def: "pound per square inch." []
 synonym: "PSI" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000109
+
+[Term]
+id: ME:0000518
+name: ton per square foot
+namespace: measure.ontology
+def: "US ton-force per square foot, the pressure unit of cone penetration test exports (1 tsf = 95.76 kPa = 13.89 psi)." []
+synonym: "tsf" EXACT []
 is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
@@ -5316,6 +5327,168 @@ name: reverse
 namespace: measure.ontology
 def: "reverse." []
 is_a: ME:0000186 ! strand
+
+[Term]
+id: ME:0000506
+name: retention time
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "A time interval from the start of chromatography when an analyte exits a chromatographic column (PSI-MS MS:1000894)." []
+xref: MS:1000894 "PSI-MS"
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000507
+name: m/z
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+def: "The mass of an ion in daltons divided by its charge number, a dimensionless value used as the abscissa of a mass spectrum (IUPAC 2013; PSI-MS MS:1000040). Not the physical ratio of mass to electric charge; the term mass-to-charge ratio and the unit thomson are deprecated for this quantity." []
+synonym: "mass-to-charge ratio" RELATED []
+xref: MS:1000040 "PSI-MS"
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000508
+name: spectral library compound name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Name of the compound whose reference spectrum in a spectral library matched an observed spectrum, as given by the library." []
+is_a: ME:0000027 ! molecule
+
+[Term]
+id: ME:0000509
+name: spectral library match ID
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Identifier of the reference spectrum in a spectral library that matched an observed spectrum, for example a GNPS spectrum ID." []
+is_a: ME:0000026 ! chemical context
+
+[Term]
+id: ME:0000510
+name: spectral match score
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+def: "Similarity score between an observed spectrum and a matched library spectrum, for example the GNPS MQScore (modified cosine)." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000511
+name: adduct
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Ion species formed from a molecule in mass spectrometry, for example M+H or M-H, written as given by the source." []
+is_a: ME:0000026 ! chemical context
+
+[Term]
+id: ME:0000512
+name: MS1 feature area
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000186" xsd:string
+def: "Area of an LC-MS MS1 feature: the ion intensity of the feature's m/z integrated over its chromatographic peak, in instrument arbitrary units (PSI-MS MS:1001844)." []
+synonym: "peak area" EXACT []
+xref: MS:1001844 "PSI-MS"
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000513
+name: nanogram per milliliter per day
+namespace: measure.ontology
+def: "nanogram per milliliter per day." []
+synonym: "ng/mL/day" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000280
+
+[Term]
+id: ME:0000514
+name: biomass production rate
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000513" xsd:string
+def: "Rate at which new microbial biomass is produced in a sample, as mass of an element (usually carbon) per volume per time; for example heterotrophic production estimated from 3H-leucine incorporation into protein." []
+synonym: "heterotrophic production" RELATED []
+is_a: ME:0000264 ! rate
+
+[Term]
+id: ME:0000515
+name: time since sample collection
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000003" xsd:string
+def: "Time between the collection of a sample and a later step applied to it, such as the start of an incubation, fixation or analysis." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000516
+name: baseline control
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Material or system measured before a treatment, incubation or deployment begins, and used as the reference state against which changes are assessed; it is not subtracted as a background. Use for reference material that is not itself a sample or community on the experiment's time axis." []
+synonym: "starting material control" EXACT []
+synonym: "background control" RELATED []
+synonym: "time-zero reference" RELATED []
+is_a: ME:0000283 ! control
+
+[Term]
+id: ME:0000517
+name: liter per minute
+namespace: measure.ontology
+def: "liter per minute." []
+synonym: "litre per minute" EXACT []
+synonym: "L/min" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000270
 
 [Typedef]
 id: data_type

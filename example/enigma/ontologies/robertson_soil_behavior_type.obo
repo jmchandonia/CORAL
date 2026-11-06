@@ -1,0 +1,236 @@
+format-version: 1.4
+ontology:sbt
+date: 04:11:2026 12:00
+saved-by: jmc
+auto-generated-by: hand-written (coral_import/ontology_update_20261104_cpt)
+import: context_measurement_ontology.obo
+
+[Term]
+id: SBT:0000000
+name: term
+namespace: sbt.ontology
+def: "Root of the soil behavior type ontology." []
+
+[Term]
+id: SBT:0000001
+name: soil behavior type
+namespace: sbt.ontology
+def: "Soil behavior type (SBT): classification of soil from its mechanical response in a cone penetration test (CPT), as defined by published charts. The values are the zones of a named chart, not direct grain-size measurements." []
+is_a: SBT:0000000 ! term
+is_a: ME:0000001
+
+[Term]
+id: SBT:0000002
+name: soil behavior type classification
+namespace: sbt.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Soil behavior type assigned to a CPT reading or depth interval; the value is a zone term of one of the Robertson charts below." []
+xref: ORef:SBT:0000002
+is_a: SBT:0000001 ! soil behavior type
+
+[Term]
+id: SBT:0000010
+name: Robertson 1986 soil behavior type
+namespace: sbt.ontology
+def: "Twelve-zone soil behavior type chart of Robertson, Campanella, Gillespie and Greig (1986), based on cone tip resistance and friction ratio; zone 0 is used by CPT software for readings outside the chart." []
+is_a: SBT:0000002 ! soil behavior type classification
+
+[Term]
+id: SBT:0000011
+name: out of range (Robertson 1986 zone 0)
+namespace: sbt.ontology
+property_value: zone_number "0" xsd:integer
+def: "Robertson 1986 soil behavior type zone 0: out of range, no classification: reading outside the chart or below the minimum tip resistance." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000012
+name: sensitive fine grained (Robertson 1986 zone 1)
+namespace: sbt.ontology
+property_value: zone_number "1" xsd:integer
+synonym: "USCS OL-CH" RELATED []
+def: "Robertson 1986 soil behavior type zone 1: sensitive fine grained. Typical USCS group symbols OL-CH." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000013
+name: organic material (Robertson 1986 zone 2)
+namespace: sbt.ontology
+property_value: zone_number "2" xsd:integer
+synonym: "USCS OL-OH" RELATED []
+def: "Robertson 1986 soil behavior type zone 2: organic material. Typical USCS group symbols OL-OH." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000014
+name: clay (Robertson 1986 zone 3)
+namespace: sbt.ontology
+property_value: zone_number "3" xsd:integer
+synonym: "USCS CH" RELATED []
+def: "Robertson 1986 soil behavior type zone 3: clay. Typical USCS group symbols CH." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000015
+name: silty clay to clay (Robertson 1986 zone 4)
+namespace: sbt.ontology
+property_value: zone_number "4" xsd:integer
+synonym: "USCS CL-CH" RELATED []
+def: "Robertson 1986 soil behavior type zone 4: silty clay to clay. Typical USCS group symbols CL-CH." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000016
+name: clayey silt to silty clay (Robertson 1986 zone 5)
+namespace: sbt.ontology
+property_value: zone_number "5" xsd:integer
+synonym: "USCS MH-CL" RELATED []
+def: "Robertson 1986 soil behavior type zone 5: clayey silt to silty clay. Typical USCS group symbols MH-CL." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000017
+name: sandy silt to clayey silt (Robertson 1986 zone 6)
+namespace: sbt.ontology
+property_value: zone_number "6" xsd:integer
+synonym: "USCS ML-MH" RELATED []
+def: "Robertson 1986 soil behavior type zone 6: sandy silt to clayey silt. Typical USCS group symbols ML-MH." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000018
+name: silty sand to sandy silt (Robertson 1986 zone 7)
+namespace: sbt.ontology
+property_value: zone_number "7" xsd:integer
+synonym: "USCS SM-ML" RELATED []
+def: "Robertson 1986 soil behavior type zone 7: silty sand to sandy silt. Typical USCS group symbols SM-ML." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000019
+name: sand to silty sand (Robertson 1986 zone 8)
+namespace: sbt.ontology
+property_value: zone_number "8" xsd:integer
+synonym: "USCS SM-SP" RELATED []
+def: "Robertson 1986 soil behavior type zone 8: sand to silty sand. Typical USCS group symbols SM-SP." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000020
+name: sand (Robertson 1986 zone 9)
+namespace: sbt.ontology
+property_value: zone_number "9" xsd:integer
+synonym: "USCS SW-SP" RELATED []
+def: "Robertson 1986 soil behavior type zone 9: sand. Typical USCS group symbols SW-SP." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000021
+name: gravelly sand to sand (Robertson 1986 zone 10)
+namespace: sbt.ontology
+property_value: zone_number "10" xsd:integer
+synonym: "USCS SW-GW" RELATED []
+def: "Robertson 1986 soil behavior type zone 10: gravelly sand to sand. Typical USCS group symbols SW-GW." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000022
+name: very stiff fine grained (Robertson 1986 zone 11)
+namespace: sbt.ontology
+property_value: zone_number "11" xsd:integer
+synonym: "USCS CH-CL" RELATED []
+def: "Robertson 1986 soil behavior type zone 11: very stiff fine grained, overconsolidated or cemented. Typical USCS group symbols CH-CL." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000023
+name: sand to clayey sand (Robertson 1986 zone 12)
+namespace: sbt.ontology
+property_value: zone_number "12" xsd:integer
+synonym: "USCS SC-SM" RELATED []
+def: "Robertson 1986 soil behavior type zone 12: sand to clayey sand, overconsolidated or cemented. Typical USCS group symbols SC-SM." []
+is_a: SBT:0000010 ! Robertson 1986 soil behavior type
+
+[Term]
+id: SBT:0000030
+name: Robertson 1990 normalized soil behavior type
+namespace: sbt.ontology
+def: "Nine-zone normalized soil behavior type (SBTn) chart of Robertson (1990), updated in Robertson (2009), based on normalized cone resistance Q_t and normalized friction ratio F_r." []
+is_a: SBT:0000002 ! soil behavior type classification
+
+[Term]
+id: SBT:0000031
+name: sensitive fine grained (Robertson 1990 zone 1)
+namespace: sbt.ontology
+property_value: zone_number "1" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 1: sensitive fine grained." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000032
+name: organic soils, clay (Robertson 1990 zone 2)
+namespace: sbt.ontology
+property_value: zone_number "2" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 2: organic soils, clay, peats and organic clays." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000033
+name: clays, silty clay to clay (Robertson 1990 zone 3)
+namespace: sbt.ontology
+property_value: zone_number "3" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 3: clays, silty clay to clay." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000034
+name: silt mixtures, clayey silt to silty clay (Robertson 1990 zone 4)
+namespace: sbt.ontology
+property_value: zone_number "4" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 4: silt mixtures, clayey silt to silty clay." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000035
+name: sand mixtures, silty sand to sandy silt (Robertson 1990 zone 5)
+namespace: sbt.ontology
+property_value: zone_number "5" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 5: sand mixtures, silty sand to sandy silt." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000036
+name: sands, clean sand to silty sand (Robertson 1990 zone 6)
+namespace: sbt.ontology
+property_value: zone_number "6" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 6: sands, clean sand to silty sand." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000037
+name: gravelly sand to dense sand (Robertson 1990 zone 7)
+namespace: sbt.ontology
+property_value: zone_number "7" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 7: gravelly sand to dense sand." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000038
+name: very stiff sand to clayey sand (Robertson 1990 zone 8)
+namespace: sbt.ontology
+property_value: zone_number "8" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 8: very stiff sand to clayey sand, heavily overconsolidated or cemented." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type
+
+[Term]
+id: SBT:0000039
+name: very stiff fine grained (Robertson 1990 zone 9)
+namespace: sbt.ontology
+property_value: zone_number "9" xsd:integer
+def: "Robertson 1990 normalized soil behavior type zone 9: very stiff fine grained, heavily overconsolidated or cemented." []
+is_a: SBT:0000030 ! Robertson 1990 normalized soil behavior type

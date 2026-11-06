@@ -37,6 +37,8 @@ Features
 # ----------------------------------------------------------------------
 import argparse
 import csv
+import itertools
+import math
 import json
 import logging
 import os
@@ -563,6 +565,7 @@ def column_names_for_var(
 def extract_values(
     value_str: str,
     data_type: Union[str, Tuple[str, str], None],
+    term_map: Optional[Dict[str, Dict[str, Union[str, Tuple[str, str], None]]]] = None,
 ) -> List[str]:
     """
     Convert a CSV value into the list of values that should be written to
@@ -575,6 +578,10 @@ def extract_values(
     """
     if isinstance(data_type, tuple):
         name, term_id = _split_term(value_str)
+        # CORAL's export names a term "null" when its running ontology index predates the term
+        # (e.g. an ontology file registered after the service started); take the OBO name instead.
+        if term_map is not None and term_id in term_map and name in ("", "null", "None"):
+            name = term_map[term_id]["name"]
         return [term_id, name]          # id first, then name
 
     if data_type is None:
@@ -609,10 +616,12 @@ def infer_scalar_type(values: List[str]) -> Optional[str]:
     if all(v.lower() in boolean_values for v in non_empty_values):
         return "boolean"
     
-    # Check for integer
+    # Check for integer; values beyond 32-bit need a long column (Spark's ANSI
+    # cast of e.g. a 12-digit tracking number to INT fails)
     try:
-        for v in non_empty_values:
-            int(v)
+        ints = [int(v) for v in non_empty_values]
+        if any(abs(i) > 2147483647 for i in ints):
+            return "long"
         return "integer"
     except ValueError:
         pass
@@ -658,8 +667,8 @@ def is_compatible_type_conversion(declared: str, inferred: str) -> bool:
     if declared_norm in ["float", "double"] and inferred_norm in ["float", "double"]:
         return True
     
-    # int to integer (they're the same)
-    if declared_norm in ["int", "integer"] and inferred_norm in ["int", "integer"]:
+    # int to integer (they're the same); int widened to long for 64-bit values
+    if declared_norm in ["int", "integer"] and inferred_norm in ["int", "integer", "long"]:
         return True
     
     return False
@@ -877,6 +886,80 @@ def generate_ndarray_tsv(
 # ----------------------------------------------------------------------
 # 🔟  Main conversion routine (single‑pass over the CSV)
 # ----------------------------------------------------------------------
+
+REPLICATE_SERIES = "ME:0000005"
+
+
+def _replicate_dims(dims: List[int], dimension_info: Dict[int, Dict], parent_map: Dict[str, List[str]]) -> List[int]:
+    """Dimensions whose data type is replicate series <ME:0000005> or a descendant of it."""
+    out = []
+    for d in dims:
+        tid = (dimension_info.get(d) or {}).get("type_id")
+        if tid and (tid == REPLICATE_SERIES or is_descendant(tid, REPLICATE_SERIES, parent_map)):
+            out.append(d)
+    return out
+
+
+def _absent_entries(
+    present: set,
+    dims: List[int],
+    dim_lengths: Dict[int, int],
+    rep_dims: List[int],
+) -> Tuple[List[Tuple[int, ...]], int]:
+    """Index tuples (over ``dims``) that CORAL's export left out and that get an all-null row.
+
+    An absent entry is skipped only when a replicate-series dimension ``r`` and
+    another dimension ``d`` exist such that no exported cell has the entry's
+    (d index, r index) pair: that replicate was never run for that sample,
+    community, condition..., and the table carries no row for it.  Every other
+    absent entry (an unmeasured sample, date, taxonomic rank, molecule...) is
+    written with empty value columns so the table keeps the brick's shape.
+    Returns (entries to write, entries skipped).
+    """
+    pos = {d: i for i, d in enumerate(dims)}
+    pairs: Dict[Tuple[int, int], set] = {(d, r): set() for r in rep_dims for d in dims if d != r}
+    for key in present:
+        for (d, r), seen_pairs in pairs.items():
+            seen_pairs.add((key[pos[d]], key[pos[r]]))
+    to_write: List[Tuple[int, ...]] = []
+    skipped = 0
+    for key in itertools.product(*(range(1, dim_lengths[d] + 1) for d in dims)):
+        if key in present:
+            continue
+        if any((key[pos[d]], key[pos[r]]) not in seen_pairs for (d, r), seen_pairs in pairs.items()):
+            skipped += 1
+            continue
+        to_write.append(key)
+    return to_write, skipped
+
+
+def _dmeta_only_row(
+    header_len: int,
+    dmeta_vars: List[Dict],
+    indices: List[int],
+    min_dim: int = 1,
+) -> List[str]:
+    """Row with only the dimension-variable columns filled (data columns empty).
+
+    CORAL's CSV export omits data cells that are null, so a dimension entry whose
+    every value is null never appears in the data block; the callers use this to
+    emit those entries so the table keeps the brick's full shape.
+    """
+    out_row = [""] * header_len
+    for dv in dmeta_vars:
+        dim_idx = dv["dim_idx"]
+        if dim_idx < min_dim:
+            continue
+        idx_val = indices[dim_idx - 1]
+        if idx_val < 1 or idx_val > len(dv["values_by_index"]):
+            continue
+        vals = dv["values_by_index"][idx_val - 1]
+        if vals is None:
+            continue
+        for off, v in enumerate(vals):
+            out_row[dv["col_start"] + off] = v
+    return out_row
+
 def convert(
     csv_path: str,
     out_path: str,
@@ -1299,7 +1382,7 @@ def convert(
                                 if len(next_row) > 1
                                 else ""
                             )
-                            extracted = extract_values(value_str, data_type)
+                            extracted = extract_values(value_str, data_type, term_map)
                             while len(extracted) < len(col_names):
                                 extracted.append("")
                             values_by_index[idx - 1] = extracted
@@ -1472,11 +1555,23 @@ def convert(
                             if len(data_row) > num_dims
                             else ""
                         )
-                        extracted = extract_values(measurement_val, fd["data_type"])
+                        extracted = extract_values(measurement_val, fd["data_type"], term_map)
                         while len(extracted) < fd["col_count"]:
                             extracted.append("")
                         for off, v in enumerate(extracted):
                             out_row[fd["col_start"] + off] = v
+
+                # dimension entries (dims 2..N) absent from the export = all values null
+                sub = [d for d in range(2, num_dims + 1) if d in dim_lengths]
+                missing = skipped = 0
+                if sub and len(sub) == num_dims - 1:
+                    rep_dims = _replicate_dims(sub, dimension_info, parent_map)
+                    entries, skipped = _absent_entries(set(merged_rows), sub, dim_lengths, rep_dims)
+                    for key in entries:
+                        merged_rows[key] = _dmeta_only_row(len(header), dmeta_vars, [1, *key], min_dim=2)
+                    missing = len(entries)
+                if missing or skipped:
+                    logging.info(f"{brick_id}: added {missing} all-null dimension entries; {skipped} left out as replicates not run")
 
                 for out_row in merged_rows.values():
                     out_writer.writerow(out_row)
@@ -1486,6 +1581,7 @@ def convert(
             # CASE B – normal case (explicit ``values`` line present)
             # --------------------------------------------------------------
             else:
+                seen: set = set()
                 for data_row in it:
                     if not data_row:
                         continue
@@ -1502,6 +1598,7 @@ def convert(
                             f"Non‑integer index in row {data_row} – skipping"
                         )
                         continue
+                    seen.add(tuple(indices))
 
                     measurement_vals = data_row[num_dims:]   # may be more than one
 
@@ -1529,7 +1626,7 @@ def convert(
                             if vi < len(measurement_vals)
                             else ""
                         )
-                        extracted = extract_values(raw_val, vv["data_type"])
+                        extracted = extract_values(raw_val, vv["data_type"], term_map)
                         while len(extracted) < vv["col_count"]:
                             extracted.append("")
                         for off, v in enumerate(extracted):
@@ -1537,6 +1634,20 @@ def convert(
 
                     out_writer.writerow(out_row)
                     data_rows.append(out_row)
+
+                # dimension entries absent from the export = all values null
+                dims = [d for d in range(1, num_dims + 1) if d in dim_lengths]
+                missing = skipped = 0
+                if dims and len(dims) == num_dims:
+                    rep_dims = _replicate_dims(dims, dimension_info, parent_map)
+                    entries, skipped = _absent_entries(seen, dims, dim_lengths, rep_dims)
+                    for key in entries:
+                        out_row = _dmeta_only_row(len(header), dmeta_vars, list(key))
+                        out_writer.writerow(out_row)
+                        data_rows.append(out_row)
+                    missing = len(entries)
+                if missing or skipped:
+                    logging.info(f"{brick_id}: added {missing} all-null dimension entries; {skipped} left out as replicates not run")
 
     logging.info(f"TSV written to {out_path}")
 
