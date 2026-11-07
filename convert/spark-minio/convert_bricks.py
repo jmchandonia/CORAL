@@ -654,6 +654,14 @@ def is_compatible_type_conversion(declared: str, inferred: str) -> bool:
     # Exact match
     if declared_norm == inferred_norm:
         return True
+
+    # A CORAL string variable holding "yes"/"no" (or "0"/"1", "t"/"f")
+    # stays a string column: the values are not written as true/false, so a
+    # BooleanType column would null or reject them in Spark. Numeric-looking
+    # string variables keep being narrowed to integer/double as before (many
+    # loaded comment/description columns depend on that).
+    if declared_norm == "string" and inferred_norm == "boolean":
+        return True
     
     # oterm_ref to string
     if declared_norm == "oterm_ref" and inferred_norm == "string":

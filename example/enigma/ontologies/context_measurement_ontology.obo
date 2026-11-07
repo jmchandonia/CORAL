@@ -1590,6 +1590,7 @@ namespace: measure.ontology
 property_value: data_type "float" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Minimum." []
 is_a: ME:0000146 ! statistic
@@ -1601,6 +1602,7 @@ namespace: measure.ontology
 property_value: data_type "float" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Maximum." []
 is_a: ME:0000146 ! statistic
@@ -1612,6 +1614,7 @@ namespace: measure.ontology
 property_value: data_type "float" xsd:string
 property_value: is_microtype "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Median." []
 is_a: ME:0000146 ! statistic
@@ -3159,6 +3162,44 @@ is_a: ME:0000294 ! units not in UO
 is_a: UO:0000109
 
 [Term]
+id: ME:0000519
+name: velocity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units_parent "UO:0000060" xsd:string
+def: "Magnitude of a rate of movement (speed), e.g. of groundwater, colloids or air; the direction, if measured, is a separate azimuth." []
+synonym: "speed" EXACT []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000520
+name: azimuth
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "UO:0000185" xsd:string
+def: "Horizontal angle measured clockwise from north, in degrees, giving the direction of a vector such as groundwater flow (direction of travel), a well deviation or wind." []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000521
+name: micrometer per second
+namespace: measure.ontology
+def: "Micrometre per second, a speed unit (1 um/s = 0.2835 ft/day)." []
+synonym: "um/s" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000060
+
+[Term]
 id: ME:0000299
 name: explained variance
 namespace: measure.ontology
@@ -3369,7 +3410,7 @@ property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units_parent "UO:0000060" xsd:string
 def: "Wind Speed." []
-is_a: ME:0000120 ! measurement
+is_a: ME:0000519 ! velocity
 
 [Term]
 id: ME:0000317
@@ -3424,8 +3465,8 @@ property_value: is_valid_dimension "true" xsd:boolean
 property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 property_value: valid_units "UO:0000185" xsd:string
-def: "Wind Direction." []
-is_a: ME:0000120 ! measurement
+def: "Wind Direction. By meteorological convention the direction the wind blows from." []
+is_a: ME:0000520 ! azimuth
 
 [Term]
 id: ME:0000321

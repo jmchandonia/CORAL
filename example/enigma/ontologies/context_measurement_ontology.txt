@@ -420,11 +420,14 @@
     *water pressure
   *turbidity (float, +turbidity unit)
   *sequence (string)
-  *wind speed (float, speed/velocity unit)
-    *gust speed
+  *velocity (float, speed/velocity unit)
+    alias: speed
+    *wind speed
+      *gust speed
   *solar radiation (float, irradiance unit)
   *rainfall (float, length unit)
-  *wind direction (float, degree)
+  *azimuth (float, degree)
+    *wind direction
   *relative humidity (float, ratio)
   *error range (float)
   *sequence identity (float, percent)
@@ -513,6 +516,9 @@
   ton per square foot
     alias: tsf
     is_a: UO:0000109
+  micrometer per second
+    alias: um/s
+    is_a: UO:0000060
   inHg
     is_a: UO:0000109
   torr
