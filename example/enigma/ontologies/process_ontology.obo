@@ -379,6 +379,13 @@ def: "Assay Microbial Activity." []
 is_a: PROCESS:0000003 ! Assay
 
 [Term]
+id: PROCESS:0000054
+name: Microarray Hybridization
+namespace: process.ontology
+def: "Hybridization of labeled community or genomic DNA to a microarray such as GeoChip, producing per-probe signal intensities." []
+is_a: PROCESS:0000003 ! Assay
+
+[Term]
 id: PROCESS:0000049
 name: Build DubSeq Library
 namespace: process.ontology

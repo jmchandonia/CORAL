@@ -1,0 +1,401 @@
+GeoChip functional gene category
+  is_a: ME:0000001
+  *GeoChip gene category:
+    Carbon Cycling
+      Carbon degradation
+        Camphor degradation
+          alias: Camphor
+        Cellulose degradation
+          alias: Cellulose
+        Chitin degradation
+          alias: Chitin
+        Cutin degradation
+          alias: Cutin
+        Glyoxylate cycle
+        Hemicellulose degradation
+          alias: Hemicellulose
+        Inulin degradation
+          alias: Inulin
+        Lactose degradation
+          alias: Lactose
+        Lignin degradation
+          alias: Lignin
+        Other carbon degradation
+          alias: Other
+        Pectin degradation
+          alias: Pectin
+        Phospholipid degradation
+          alias: Phospholipids
+        Starch degradation
+          alias: Starch
+        Tannin degradation
+          alias: Tannins
+        Terpene degradation
+          alias: Terpenes
+        Vanillin and lignin degradation
+          alias: Vanillin/Lignin
+        Protein degradation
+          alias: protein
+      Carbon fixation
+        3-hydroxypropionate bicycle
+        3-hydroxypropionate/4-hydroxybutyrate cycle
+        Bacterial Microcompartments
+        Calvin cycle
+        Dicarboxylate/4-hydroxybutyrate cycle
+        Reductive acetyl-CoA pathway
+        Reductive tricarboxylic acid cycle
+        Multiple carbon fixation systems
+          alias: multiple systems
+      Methane metabolism
+        alias: Methane
+        Methane oxidation
+        Methanogenesis
+      Major biomolecule synthesis
+        alias: major biomolecule
+        Chitin synthesis
+    Electron transfer
+      Energy Production
+    Metal Homeostasis
+      Aluminum homeostasis
+        alias: Aluminum
+        Aluminum transport
+          alias: Transport
+      Arsenic homeostasis
+        alias: Arsenic
+        Arsenic detoxification
+          alias: Detoxification
+        Arsenic transport
+          alias: Transport
+      Boron homeostasis
+        alias: Boron
+        Boron transport
+          alias: Transport
+      Cadmium homeostasis
+        alias: Cadmium
+        Cadmium sequestration
+          alias: Sequester
+        Cadmium transport
+          alias: Transport
+      Cadmium, cobalt and zinc homeostasis
+        alias: Cadmium,Cobalt,Zinc
+        Cadmium, cobalt and zinc transport
+          alias: Transport
+      Calcium homeostasis
+        alias: Calcium
+        Calcium transport
+          alias: Transport
+      Chromium homeostasis
+        alias: Chromium
+        Chromium detoxification
+          alias: Detoxification
+        Chromium transport
+          alias: Transport
+      Cobalt homeostasis
+        alias: Cobalt
+        Cobalt transport
+          alias: Transport
+      Cobalt and nickel homeostasis
+        alias: Cobalt,Nickel
+        Cobalt and nickel transport
+          alias: Transport
+      Cobalt and magnesium homeostasis
+        alias: Cobalt/Magnesium
+        Cobalt and magnesium transport
+          alias: Transport
+      Copper homeostasis
+        alias: Copper
+        Copper detoxification
+          alias: Detoxification
+        Copper transport
+          alias: Transport
+      Iron homeostasis
+        alias: Iron
+        Iron transport
+          alias: Transport
+        Iron oxidation
+          alias: oxidation
+        Iron storage
+          alias: storage
+      Lead homeostasis
+        alias: Lead
+        Lead transport
+          alias: Transport
+      Magnesium homeostasis
+        alias: Magnesium
+        Magnesium transport
+          alias: Transport
+      Manganese homeostasis
+        alias: Manganese
+        Manganese transport
+          alias: Transport
+      Mercury homeostasis
+        alias: Mercury
+        Mercury detoxification
+          alias: Detoxification
+        Mercury transport
+          alias: Transport
+      Multiple metal homeostasis
+        alias: Multiple metals
+        Multiple metal sequestration
+          alias: Sequester
+          alias: Sequestration
+        Multiple metal transport
+          alias: Transport
+      Nickel homeostasis
+        alias: Nickel
+        Nickel transport
+          alias: Transport
+      Potassium homeostasis
+        alias: Potassium
+        Potassium transport
+          alias: Transport
+      Selenium homeostasis
+        alias: Selenium
+        Selenium detoxification
+          alias: Detoxification
+      Silicon homeostasis
+        alias: Silicon
+        Silicon biosynthesis
+          alias: Biosynthesis
+        Silicon transport
+          alias: Transport
+      Silver homeostasis
+        alias: Silver
+        Silver transport
+          alias: Transport
+      Sodium homeostasis
+        alias: Sodium
+        Sodium transport
+          alias: Transport
+      Tellurium homeostasis
+        alias: Tellurium
+        Tellurium detoxification
+          alias: Detoxification
+        Tellurium transport
+          alias: Transport
+      Zinc homeostasis
+        alias: Zinc
+        Zinc transport
+          alias: Transport
+    Nitrogen
+      Ammonification
+      Anammox
+      Assimilatory N reduction
+      Denitrification
+      Dissimilatory N reduction
+      N assimilation
+        alias: Assimilation
+        alias: N Assimilation
+      Nitrification
+      Nitrogen fixation
+    Organic Remediation
+      Aromatic remediation
+        alias: Aromatics
+        Aromatic alpha hydroxy acid remediation
+          alias: Aromatic alpha hydroxy acid
+        Aromatic carboxylic acid remediation
+          alias: Aromatic carboxylic acid
+        BTEX and related aromatic remediation
+          alias: BTEX and related aromatics
+        Chlorinated aromatic remediation
+          alias: Chlorinated aromatics
+        Heterocyclic aromatic remediation
+          alias: Heterocyclic aromatics
+        Nitroaromatic remediation
+          alias: Nitroaromatics
+          alias: Nitoaromatics
+        Other aromatic remediation
+          alias: Other aromatics
+        Polycyclic aromatic remediation
+          alias: Polycyclic aromatics
+      Chlorinated solvent remediation
+        alias: Chlorinated solvents
+      Herbicide remediation
+        alias: Herbicides related compound
+      Other hydrocarbon remediation
+        alias: Other Hydrocarbons
+      Other organic remediation
+        alias: Others
+      Pesticide remediation
+        alias: Pesticides related compound
+      Halogenated compound remediation
+        alias: halogenated compounds
+    Other
+      CRISPR
+      Cell movement
+        alias: Movement
+      Phylogenetic marker
+        alias: Phylogenetic
+    Phosphorus
+      Phosphorus oxidation
+      Phytic acid hydrolysis
+      Polyphosphate degradation
+      Polyphosphate synthesis
+    Secondary metabolism
+      Other secondary metabolism
+        alias: Other
+        halogenation
+      Pigments
+        Bacteriochlorophyll
+        Bilin
+        Carotenoid
+        Chlorophyll
+        Photosynthesis
+        Rhodopsin
+      Antibiotic biosynthesis
+        alias: antibiotic
+        Pyoluteorin
+      antioxidant enzyme
+      plant hormone
+    Stress
+      Acidic shock
+      Alkaline shock
+      Anti-sigma factor (anti-E)
+      Cold shock
+      Envelope stress
+      Glucose limitation
+      Heat shock
+      Nitrogen limitation
+      Osmotic stress
+      Oxidative stress
+      Oxygen limitation
+      Phosphate limitation
+      Protein stress
+      Stress RNA-binding protein
+        alias: RNA-binding protein
+      Stringent response
+      anti-pathogen
+      drought tolerance
+      sigma factor
+      Other stress
+        alias: stress other
+    Sulfur
+      DMSP degradation
+      Sulfur reduction
+        alias: Reduction
+      Sulfide Oxidation
+      Sulfur Oxidation
+      adenylylsulfate reductase
+      sulfite reduction
+      sulfur assimilation
+      Other sulfur metabolism
+        alias: sulfur other
+    Virulence
+      Antibiotic resistance
+        Antibiotic degradation
+          alias: Degradation
+        Antibiotic resistance subunit modification
+          alias: subunit modification
+        Antibiotic resistance transporter
+          alias: transporter
+      DNA binding
+      ESX-1 secretion system
+      Virulence toxin
+        alias: Toxin
+        Enniatin
+        O-methylsterigmatocystin oxidoreductase
+        Saxitoxin
+        Ergot toxin
+          alias: ergot
+        hemolysin
+        microcystin/nodularin
+        Oomycete toxin
+          alias: oomycete
+        trichodiene
+      adherence (Virulence)
+        alias: adherence
+        alias: adhesion
+        colonization (adherence)
+          alias: colonization
+      antiphagocytosis
+        adherence (antiphagocytosis)
+          alias: adherence
+        immune evasion (antiphagocytosis)
+          alias: immune evasion
+      cell wall
+        spore (cell wall)
+          alias: spore
+      cellular metabolism
+      chemotaxis
+      colonization (Virulence)
+        alias: colonization
+      degradation (Virulence)
+        alias: degradation
+      drug resistance
+      effector protein
+        alias: effector
+        Oomycete effector protein
+          alias: oomycete
+      elicitor
+        Oomycete elicitor
+          alias: oomycete
+      exoenzyme
+      immune evasion (Virulence)
+        alias: immune evasion
+        biofilm formation
+        resistance to antimicrobial molecules
+      intracellular survival
+        heat shock protein (intracellular survival)
+          alias: heat shock protein
+        stress (intracellular survival)
+          alias: stress
+      Host invasion
+        alias: invasion
+      iron uptake
+      magnesium uptake
+      mitosis
+      nuclear uptake
+      oocyte wall protein
+      Virulence protease
+        alias: protease
+      Virulence regulation
+        alias: regulation
+        heat shock protein (regulation)
+          alias: heat shock protein
+        quorum sensing
+      serum resistance
+      serum response
+      signal transduction
+      type II secretion system
+      type III secretion system
+        alias: typr III secretion system
+        immune evasion (type III secretion system)
+          alias: immune evasion
+      type IV secretion system
+      type VI secretion system
+      type VII secretion system
+      Unclassified virulence
+        alias: unclassified
+        colonization (unclassified)
+          alias: colonization
+      virulence c degradation
+        Cyanide degradation
+          alias: Cyanide
+      virulence pigments
+        Melanin
+      virulence protein
+    Virus
+      Eukaryotic virus
+        alias: Eukaryotic
+        Eukaryotic virus infection
+          alias: Infection
+        Eukaryotic virus RNA silencing
+          alias: RNA silencing
+        Eukaryotic virus replication
+          alias: Replication
+        Eukaryotic virus structural protein
+          alias: Structural
+        Eukaryotic virus toxin
+          alias: Toxin
+        Eukaryotic virus movement protein
+          alias: movement protein
+      Prokaryotic virus
+        alias: Prokaryotic
+        Prokaryotic virus host recognition and structure
+          alias: HOST RECOGNITION/STRUCTURAL
+        Prokaryotic virus lysis
+          alias: LYSIS
+        Prokaryotic virus replication
+          alias: Replication
+        Prokaryotic virus structural protein
+          alias: Structural

@@ -1342,6 +1342,7 @@ name: hybridization intensity
 namespace: measure.ontology
 property_value: data_type "float" xsd:string
 property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
 property_value: is_valid_data_variable "true" xsd:boolean
 property_value: is_valid_property "true" xsd:boolean
 def: "Hybridization Intensity." []
@@ -3198,6 +3199,30 @@ def: "Micrometre per second, a speed unit (1 um/s = 0.2835 ft/day)." []
 synonym: "um/s" EXACT []
 is_a: ME:0000294 ! units not in UO
 is_a: UO:0000060
+
+[Term]
+id: ME:0000522
+name: microarray probe name
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Name of a microarray probe as assigned by the array's designer; for GeoChip the GenBank GI number or the IEG in-house identifier of the target gene." []
+is_a: ME:0000059 ! gene
+
+[Term]
+id: ME:0000523
+name: gene symbol
+namespace: measure.ontology
+property_value: data_type "string" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "Symbol of a gene or gene family as a string, e.g. dsrA, nikA; use gene name or gene ID to link a CORAL Gene." []
+is_a: ME:0000059 ! gene
 
 [Term]
 id: ME:0000299

@@ -208,6 +208,8 @@
       *-gene ID (Ref:DA:0000040.Gene.gene_id)
       *-gene name (Ref:DA:0000040.Gene.aliases)
       *-gene GI (int)
+      *-microarray probe name (string)
+      *-gene symbol (string)
       homologous gene
         orthologous gene
         paralogous gene

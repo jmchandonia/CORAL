@@ -17,6 +17,7 @@ Process
     Assay Metabolites
     Assay Fitness
     Assay Microbial Activity
+    Microarray Hybridization
   -Computation
   -Enrichment
     -Filter

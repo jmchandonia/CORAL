@@ -1,0 +1,1993 @@
+format-version: 1.4
+ontology:geochip
+date: 09:11:2026 12:00
+saved-by: jmc
+auto-generated-by: tools/build_geochip_category_ontology.py (coral_import/ontology_update_20261107_corepilot)
+import: context_measurement_ontology.obo
+
+[Term]
+id: GEOCHIP:0000000
+name: term
+namespace: geochip.ontology
+def: "Root of the GeoChip functional gene category ontology." []
+
+[Term]
+id: GEOCHIP:0000001
+name: GeoChip functional gene category
+namespace: geochip.ontology
+def: "Functional classification of the genes targeted by GeoChip probes: a category (e.g. Carbon Cycling), a subcategory (e.g. Carbon degradation) and, where the array designers gave one, a finer subcategory (e.g. Cellulose). Source: GeoChip 5.0 180K functional gene array probe classification (Institute for Environmental Genomics, University of Oklahoma; Zhou Lab), as given in the probe annotation of the ENIGMA 2017 Pilot Core GeoChip data file Pilot.core.GeoChip.T5S2.log.RA.csv." []
+is_a: GEOCHIP:0000000 ! term
+is_a: ME:0000001
+
+[Term]
+id: GEOCHIP:0000002
+name: GeoChip gene category
+namespace: geochip.ontology
+property_value: data_type "oterm_ref" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+def: "GeoChip functional gene category assigned to a probe or gene; the value is the deepest category term the array designers gave." []
+xref: ORef:GEOCHIP:0000002
+is_a: GEOCHIP:0000001 ! GeoChip functional gene category
+
+[Term]
+id: GEOCHIP:0000011
+name: Carbon Cycling
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Carbon Cycling'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000012
+name: Electron transfer
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Electron transfer'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000013
+name: Metal Homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Metal Homeostasis'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000014
+name: Nitrogen
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Nitrogen'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000015
+name: Organic Remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Organic Remediation'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000016
+name: Other
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Other'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000017
+name: Phosphorus
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Phosphorus'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000018
+name: Secondary metabolism
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Secondary metabolism'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000019
+name: Stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Stress'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000020
+name: Sulfur
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Sulfur'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000021
+name: Virulence
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Virulence'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000022
+name: Virus
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene category 'Virus'." []
+is_a: GEOCHIP:0000002 ! GeoChip gene category
+
+[Term]
+id: GEOCHIP:0000023
+name: Carbon degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Carbon degradation' of category 'Carbon Cycling'." []
+is_a: GEOCHIP:0000011 ! Carbon Cycling
+
+[Term]
+id: GEOCHIP:0000024
+name: Carbon fixation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Carbon fixation' of category 'Carbon Cycling'." []
+is_a: GEOCHIP:0000011 ! Carbon Cycling
+
+[Term]
+id: GEOCHIP:0000025
+name: Methane metabolism
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Methane' of category 'Carbon Cycling'." []
+synonym: "Methane" EXACT []
+xref: CHEBI:16183
+is_a: GEOCHIP:0000011 ! Carbon Cycling
+
+[Term]
+id: GEOCHIP:0000026
+name: Major biomolecule synthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'major biomolecule' of category 'Carbon Cycling'." []
+synonym: "major biomolecule" EXACT []
+is_a: GEOCHIP:0000011 ! Carbon Cycling
+
+[Term]
+id: GEOCHIP:0000027
+name: Energy Production
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Energy Production' of category 'Electron transfer'." []
+is_a: GEOCHIP:0000012 ! Electron transfer
+
+[Term]
+id: GEOCHIP:0000028
+name: Aluminum homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Aluminum' of category 'Metal Homeostasis'." []
+synonym: "Aluminum" EXACT []
+xref: CHEBI:28984
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000029
+name: Arsenic homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Arsenic' of category 'Metal Homeostasis'." []
+synonym: "Arsenic" EXACT []
+xref: CHEBI:27563
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000030
+name: Boron homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Boron' of category 'Metal Homeostasis'." []
+synonym: "Boron" EXACT []
+xref: CHEBI:27560
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000031
+name: Cadmium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cadmium' of category 'Metal Homeostasis'." []
+synonym: "Cadmium" EXACT []
+xref: CHEBI:22977
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000032
+name: Cadmium, cobalt and zinc homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cadmium,Cobalt,Zinc' of category 'Metal Homeostasis'." []
+synonym: "Cadmium,Cobalt,Zinc" EXACT []
+xref: CHEBI:22977
+xref: CHEBI:27638
+xref: CHEBI:27363
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000033
+name: Calcium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Calcium' of category 'Metal Homeostasis'." []
+synonym: "Calcium" EXACT []
+xref: CHEBI:22984
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000034
+name: Chromium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chromium' of category 'Metal Homeostasis'." []
+synonym: "Chromium" EXACT []
+xref: CHEBI:28073
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000035
+name: Cobalt homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cobalt' of category 'Metal Homeostasis'." []
+synonym: "Cobalt" EXACT []
+xref: CHEBI:27638
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000036
+name: Cobalt and nickel homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cobalt,Nickel' of category 'Metal Homeostasis'." []
+synonym: "Cobalt,Nickel" EXACT []
+xref: CHEBI:27638
+xref: CHEBI:28112
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000037
+name: Cobalt and magnesium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cobalt/Magnesium' of category 'Metal Homeostasis'." []
+synonym: "Cobalt/Magnesium" EXACT []
+xref: CHEBI:27638
+xref: CHEBI:25107
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000038
+name: Copper homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Copper' of category 'Metal Homeostasis'." []
+synonym: "Copper" EXACT []
+xref: CHEBI:28694
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000039
+name: Iron homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Iron' of category 'Metal Homeostasis'." []
+synonym: "Iron" EXACT []
+xref: CHEBI:18248
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000040
+name: Lead homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Lead' of category 'Metal Homeostasis'." []
+synonym: "Lead" EXACT []
+xref: CHEBI:25016
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000041
+name: Magnesium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Magnesium' of category 'Metal Homeostasis'." []
+synonym: "Magnesium" EXACT []
+xref: CHEBI:25107
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000042
+name: Manganese homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Manganese' of category 'Metal Homeostasis'." []
+synonym: "Manganese" EXACT []
+xref: CHEBI:18291
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000043
+name: Mercury homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Mercury' of category 'Metal Homeostasis'." []
+synonym: "Mercury" EXACT []
+xref: CHEBI:16170
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000044
+name: Multiple metal homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Multiple metals' of category 'Metal Homeostasis'." []
+synonym: "Multiple metals" EXACT []
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000045
+name: Nickel homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Nickel' of category 'Metal Homeostasis'." []
+synonym: "Nickel" EXACT []
+xref: CHEBI:28112
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000046
+name: Potassium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Potassium' of category 'Metal Homeostasis'." []
+synonym: "Potassium" EXACT []
+xref: CHEBI:26216
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000047
+name: Selenium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Selenium' of category 'Metal Homeostasis'." []
+synonym: "Selenium" EXACT []
+xref: CHEBI:27568
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000048
+name: Silicon homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Silicon' of category 'Metal Homeostasis'." []
+synonym: "Silicon" EXACT []
+xref: CHEBI:27573
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000049
+name: Silver homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Silver' of category 'Metal Homeostasis'." []
+synonym: "Silver" EXACT []
+xref: CHEBI:30512
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000050
+name: Sodium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Sodium' of category 'Metal Homeostasis'." []
+synonym: "Sodium" EXACT []
+xref: CHEBI:26708
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000051
+name: Tellurium homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Tellurium' of category 'Metal Homeostasis'." []
+synonym: "Tellurium" EXACT []
+xref: CHEBI:30452
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000052
+name: Zinc homeostasis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Zinc' of category 'Metal Homeostasis'." []
+synonym: "Zinc" EXACT []
+xref: CHEBI:27363
+is_a: GEOCHIP:0000013 ! Metal Homeostasis
+
+[Term]
+id: GEOCHIP:0000053
+name: Ammonification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Ammonification' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000054
+name: Anammox
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Anammox' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000055
+name: Assimilatory N reduction
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Assimilatory N reduction' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000056
+name: Denitrification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Denitrification' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000057
+name: Dissimilatory N reduction
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Dissimilatory N reduction' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000058
+name: N assimilation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'N assimilation' of category 'Nitrogen'." []
+synonym: "Assimilation" EXACT []
+synonym: "N Assimilation" EXACT []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000059
+name: Nitrification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Nitrification' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000060
+name: Nitrogen fixation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Nitrogen fixation' of category 'Nitrogen'." []
+is_a: GEOCHIP:0000014 ! Nitrogen
+
+[Term]
+id: GEOCHIP:0000061
+name: Aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Aromatics' of category 'Organic Remediation'." []
+synonym: "Aromatics" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000062
+name: Chlorinated solvent remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chlorinated solvents' of category 'Organic Remediation'." []
+synonym: "Chlorinated solvents" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000063
+name: Herbicide remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Herbicides related compound' of category 'Organic Remediation'." []
+synonym: "Herbicides related compound" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000064
+name: Other hydrocarbon remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Other Hydrocarbons' of category 'Organic Remediation'." []
+synonym: "Other Hydrocarbons" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000065
+name: Other organic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Others' of category 'Organic Remediation'." []
+synonym: "Others" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000066
+name: Pesticide remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Pesticides related compound' of category 'Organic Remediation'." []
+synonym: "Pesticides related compound" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000067
+name: Halogenated compound remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'halogenated compounds' of category 'Organic Remediation'." []
+synonym: "halogenated compounds" EXACT []
+is_a: GEOCHIP:0000015 ! Organic Remediation
+
+[Term]
+id: GEOCHIP:0000068
+name: CRISPR
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'CRISPR' of category 'Other'." []
+is_a: GEOCHIP:0000016 ! Other
+
+[Term]
+id: GEOCHIP:0000069
+name: Cell movement
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Movement' of category 'Other'." []
+synonym: "Movement" EXACT []
+is_a: GEOCHIP:0000016 ! Other
+
+[Term]
+id: GEOCHIP:0000070
+name: Phylogenetic marker
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Phylogenetic' of category 'Other'." []
+synonym: "Phylogenetic" EXACT []
+is_a: GEOCHIP:0000016 ! Other
+
+[Term]
+id: GEOCHIP:0000071
+name: Phosphorus oxidation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Phosphorus oxidation' of category 'Phosphorus'." []
+is_a: GEOCHIP:0000017 ! Phosphorus
+
+[Term]
+id: GEOCHIP:0000072
+name: Phytic acid hydrolysis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Phytic acid hydrolysis' of category 'Phosphorus'." []
+is_a: GEOCHIP:0000017 ! Phosphorus
+
+[Term]
+id: GEOCHIP:0000073
+name: Polyphosphate degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Polyphosphate degradation' of category 'Phosphorus'." []
+is_a: GEOCHIP:0000017 ! Phosphorus
+
+[Term]
+id: GEOCHIP:0000074
+name: Polyphosphate synthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Polyphosphate synthesis' of category 'Phosphorus'." []
+is_a: GEOCHIP:0000017 ! Phosphorus
+
+[Term]
+id: GEOCHIP:0000075
+name: Other secondary metabolism
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Other' of category 'Secondary metabolism'." []
+synonym: "Other" EXACT []
+is_a: GEOCHIP:0000018 ! Secondary metabolism
+
+[Term]
+id: GEOCHIP:0000076
+name: Pigments
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Pigments' of category 'Secondary metabolism'." []
+is_a: GEOCHIP:0000018 ! Secondary metabolism
+
+[Term]
+id: GEOCHIP:0000077
+name: Antibiotic biosynthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'antibiotic' of category 'Secondary metabolism'." []
+synonym: "antibiotic" EXACT []
+is_a: GEOCHIP:0000018 ! Secondary metabolism
+
+[Term]
+id: GEOCHIP:0000078
+name: antioxidant enzyme
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'antioxidant enzyme' of category 'Secondary metabolism'." []
+is_a: GEOCHIP:0000018 ! Secondary metabolism
+
+[Term]
+id: GEOCHIP:0000079
+name: plant hormone
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'plant hormone' of category 'Secondary metabolism'." []
+is_a: GEOCHIP:0000018 ! Secondary metabolism
+
+[Term]
+id: GEOCHIP:0000080
+name: Acidic shock
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Acidic shock' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000081
+name: Alkaline shock
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Alkaline shock' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000082
+name: Anti-sigma factor (anti-E)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Anti-sigma factor (anti-E)' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000083
+name: Cold shock
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cold shock' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000084
+name: Envelope stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Envelope stress' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000085
+name: Glucose limitation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Glucose limitation' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000086
+name: Heat shock
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Heat shock' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000087
+name: Nitrogen limitation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Nitrogen limitation' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000088
+name: Osmotic stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Osmotic stress' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000089
+name: Oxidative stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Oxidative stress' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000090
+name: Oxygen limitation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Oxygen limitation' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000091
+name: Phosphate limitation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Phosphate limitation' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000092
+name: Protein stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Protein stress' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000093
+name: Stress RNA-binding protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'RNA-binding protein' of category 'Stress'." []
+synonym: "RNA-binding protein" EXACT []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000094
+name: Stringent response
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Stringent response' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000095
+name: anti-pathogen
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'anti-pathogen' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000096
+name: drought tolerance
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'drought tolerance' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000097
+name: sigma factor
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'sigma factor' of category 'Stress'." []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000098
+name: Other stress
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'stress other' of category 'Stress'." []
+synonym: "stress other" EXACT []
+is_a: GEOCHIP:0000019 ! Stress
+
+[Term]
+id: GEOCHIP:0000099
+name: DMSP degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'DMSP degradation' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000100
+name: Sulfur reduction
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Reduction' of category 'Sulfur'." []
+synonym: "Reduction" EXACT []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000101
+name: Sulfide Oxidation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Sulfide Oxidation' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000102
+name: Sulfur Oxidation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Sulfur Oxidation' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000103
+name: adenylylsulfate reductase
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'adenylylsulfate reductase' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000104
+name: sulfite reduction
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'sulfite reduction' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000105
+name: sulfur assimilation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'sulfur assimilation' of category 'Sulfur'." []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000106
+name: Other sulfur metabolism
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'sulfur other' of category 'Sulfur'." []
+synonym: "sulfur other" EXACT []
+is_a: GEOCHIP:0000020 ! Sulfur
+
+[Term]
+id: GEOCHIP:0000107
+name: Antibiotic resistance
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Antibiotic resistance' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000108
+name: DNA binding
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'DNA binding' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000109
+name: ESX-1 secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'ESX-1 secretion system' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000110
+name: Virulence toxin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Toxin' of category 'Virulence'." []
+synonym: "Toxin" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000111
+name: adherence (Virulence)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'adherence' of category 'Virulence'." []
+synonym: "adherence" EXACT []
+synonym: "adhesion" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000112
+name: antiphagocytosis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'antiphagocytosis' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000113
+name: cell wall
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'cell wall' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000114
+name: cellular metabolism
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'cellular metabolism' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000115
+name: chemotaxis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'chemotaxis' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000116
+name: colonization (Virulence)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'colonization' of category 'Virulence'." []
+synonym: "colonization" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000117
+name: degradation (Virulence)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'degradation' of category 'Virulence'." []
+synonym: "degradation" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000118
+name: drug resistance
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'drug resistance' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000119
+name: effector protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'effector protein' of category 'Virulence'." []
+synonym: "effector" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000120
+name: elicitor
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'elicitor' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000121
+name: exoenzyme
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'exoenzyme' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000122
+name: immune evasion (Virulence)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'immune evasion' of category 'Virulence'." []
+synonym: "immune evasion" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000123
+name: intracellular survival
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'intracellular survival' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000124
+name: Host invasion
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'invasion' of category 'Virulence'." []
+synonym: "invasion" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000125
+name: iron uptake
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'iron uptake' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000126
+name: magnesium uptake
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'magnesium uptake' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000127
+name: mitosis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'mitosis' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000128
+name: nuclear uptake
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'nuclear uptake' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000129
+name: oocyte wall protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'oocyte wall protein' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000130
+name: Virulence protease
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'protease' of category 'Virulence'." []
+synonym: "protease" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000131
+name: Virulence regulation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'regulation' of category 'Virulence'." []
+synonym: "regulation" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000132
+name: serum resistance
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'serum resistance' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000133
+name: serum response
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'serum response' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000134
+name: signal transduction
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'signal transduction' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000135
+name: type II secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'type II secretion system' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000136
+name: type III secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'type III secretion system' of category 'Virulence'." []
+synonym: "typr III secretion system" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000137
+name: type IV secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'type IV secretion system' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000138
+name: type VI secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'type VI secretion system' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000139
+name: type VII secretion system
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'type VII secretion system' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000140
+name: Unclassified virulence
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'unclassified' of category 'Virulence'." []
+synonym: "unclassified" EXACT []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000141
+name: virulence c degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'virulence c degradation' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000142
+name: virulence pigments
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'virulence pigments' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000143
+name: virulence protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'virulence protein' of category 'Virulence'." []
+is_a: GEOCHIP:0000021 ! Virulence
+
+[Term]
+id: GEOCHIP:0000144
+name: Eukaryotic virus
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Eukaryotic' of category 'Virus'." []
+synonym: "Eukaryotic" EXACT []
+is_a: GEOCHIP:0000022 ! Virus
+
+[Term]
+id: GEOCHIP:0000145
+name: Prokaryotic virus
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Prokaryotic' of category 'Virus'." []
+synonym: "Prokaryotic" EXACT []
+is_a: GEOCHIP:0000022 ! Virus
+
+[Term]
+id: GEOCHIP:0000146
+name: Camphor degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Camphor' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Camphor" EXACT []
+xref: CHEBI:36773
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000147
+name: Cellulose degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cellulose' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Cellulose" EXACT []
+xref: CHEBI:18246
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000148
+name: Chitin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chitin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Chitin" EXACT []
+xref: CHEBI:17029
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000149
+name: Cutin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cutin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Cutin" EXACT []
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000150
+name: Glyoxylate cycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Glyoxylate cycle' of 'Carbon degradation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000151
+name: Hemicellulose degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Hemicellulose' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Hemicellulose" EXACT []
+xref: CHEBI:61266
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000152
+name: Inulin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Inulin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Inulin" EXACT []
+xref: CHEBI:15443
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000153
+name: Lactose degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Lactose' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Lactose" EXACT []
+xref: CHEBI:17716
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000154
+name: Lignin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Lignin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Lignin" EXACT []
+xref: CHEBI:6457
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000155
+name: Other carbon degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Other' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Other" EXACT []
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000156
+name: Pectin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Pectin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Pectin" EXACT []
+xref: CHEBI:17309
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000157
+name: Phospholipid degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Phospholipids' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Phospholipids" EXACT []
+xref: CHEBI:16247
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000158
+name: Starch degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Starch' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Starch" EXACT []
+xref: CHEBI:28017
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000159
+name: Tannin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Tannins' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Tannins" EXACT []
+xref: CHEBI:26848
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000160
+name: Terpene degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Terpenes' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Terpenes" EXACT []
+xref: CHEBI:35186
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000161
+name: Vanillin and lignin degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Vanillin/Lignin' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "Vanillin/Lignin" EXACT []
+xref: CHEBI:18346
+xref: CHEBI:6457
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000162
+name: Protein degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'protein' of 'Carbon degradation' (category 'Carbon Cycling')." []
+synonym: "protein" EXACT []
+is_a: GEOCHIP:0000023 ! Carbon degradation
+
+[Term]
+id: GEOCHIP:0000163
+name: 3-hydroxypropionate bicycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory '3-hydroxypropionate bicycle' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000164
+name: 3-hydroxypropionate/4-hydroxybutyrate cycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory '3-hydroxypropionate/4-hydroxybutyrate cycle' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000165
+name: Bacterial Microcompartments
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Bacterial Microcompartments' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000166
+name: Calvin cycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Calvin cycle' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000167
+name: Dicarboxylate/4-hydroxybutyrate cycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Dicarboxylate/4-hydroxybutyrate cycle' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000168
+name: Reductive acetyl-CoA pathway
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Reductive acetyl-CoA pathway' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000169
+name: Reductive tricarboxylic acid cycle
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Reductive tricarboxylic acid cycle' of 'Carbon fixation' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000170
+name: Multiple carbon fixation systems
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'multiple systems' of 'Carbon fixation' (category 'Carbon Cycling')." []
+synonym: "multiple systems" EXACT []
+is_a: GEOCHIP:0000024 ! Carbon fixation
+
+[Term]
+id: GEOCHIP:0000171
+name: Methane oxidation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Methane oxidation' of 'Methane' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000025 ! Methane metabolism
+
+[Term]
+id: GEOCHIP:0000172
+name: Methanogenesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Methanogenesis' of 'Methane' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000025 ! Methane metabolism
+
+[Term]
+id: GEOCHIP:0000173
+name: Chitin synthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chitin synthesis' of 'major biomolecule' (category 'Carbon Cycling')." []
+is_a: GEOCHIP:0000026 ! Major biomolecule synthesis
+
+[Term]
+id: GEOCHIP:0000174
+name: Aluminum transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Aluminum' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000028 ! Aluminum homeostasis
+
+[Term]
+id: GEOCHIP:0000175
+name: Arsenic detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Arsenic' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000029 ! Arsenic homeostasis
+
+[Term]
+id: GEOCHIP:0000176
+name: Arsenic transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Arsenic' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000029 ! Arsenic homeostasis
+
+[Term]
+id: GEOCHIP:0000177
+name: Boron transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Boron' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000030 ! Boron homeostasis
+
+[Term]
+id: GEOCHIP:0000178
+name: Cadmium sequestration
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Sequester' of 'Cadmium' (category 'Metal Homeostasis')." []
+synonym: "Sequester" EXACT []
+is_a: GEOCHIP:0000031 ! Cadmium homeostasis
+
+[Term]
+id: GEOCHIP:0000179
+name: Cadmium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Cadmium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000031 ! Cadmium homeostasis
+
+[Term]
+id: GEOCHIP:0000180
+name: Cadmium, cobalt and zinc transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Cadmium,Cobalt,Zinc' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000032 ! Cadmium, cobalt and zinc homeostasis
+
+[Term]
+id: GEOCHIP:0000181
+name: Calcium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Calcium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000033 ! Calcium homeostasis
+
+[Term]
+id: GEOCHIP:0000182
+name: Chromium detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Chromium' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000034 ! Chromium homeostasis
+
+[Term]
+id: GEOCHIP:0000183
+name: Chromium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Chromium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000034 ! Chromium homeostasis
+
+[Term]
+id: GEOCHIP:0000184
+name: Cobalt transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Cobalt' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000035 ! Cobalt homeostasis
+
+[Term]
+id: GEOCHIP:0000185
+name: Cobalt and nickel transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Cobalt,Nickel' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000036 ! Cobalt and nickel homeostasis
+
+[Term]
+id: GEOCHIP:0000186
+name: Cobalt and magnesium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Cobalt/Magnesium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000037 ! Cobalt and magnesium homeostasis
+
+[Term]
+id: GEOCHIP:0000187
+name: Copper detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Copper' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000038 ! Copper homeostasis
+
+[Term]
+id: GEOCHIP:0000188
+name: Copper transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Copper' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000038 ! Copper homeostasis
+
+[Term]
+id: GEOCHIP:0000189
+name: Iron transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Iron' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000039 ! Iron homeostasis
+
+[Term]
+id: GEOCHIP:0000190
+name: Iron oxidation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'oxidation' of 'Iron' (category 'Metal Homeostasis')." []
+synonym: "oxidation" EXACT []
+is_a: GEOCHIP:0000039 ! Iron homeostasis
+
+[Term]
+id: GEOCHIP:0000191
+name: Iron storage
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'storage' of 'Iron' (category 'Metal Homeostasis')." []
+synonym: "storage" EXACT []
+is_a: GEOCHIP:0000039 ! Iron homeostasis
+
+[Term]
+id: GEOCHIP:0000192
+name: Lead transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Lead' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000040 ! Lead homeostasis
+
+[Term]
+id: GEOCHIP:0000193
+name: Magnesium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Magnesium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000041 ! Magnesium homeostasis
+
+[Term]
+id: GEOCHIP:0000194
+name: Manganese transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Manganese' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000042 ! Manganese homeostasis
+
+[Term]
+id: GEOCHIP:0000195
+name: Mercury detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Mercury' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000043 ! Mercury homeostasis
+
+[Term]
+id: GEOCHIP:0000196
+name: Mercury transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Mercury' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000043 ! Mercury homeostasis
+
+[Term]
+id: GEOCHIP:0000197
+name: Multiple metal sequestration
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Sequester' of 'Multiple metals' (category 'Metal Homeostasis')." []
+synonym: "Sequester" EXACT []
+synonym: "Sequestration" EXACT []
+is_a: GEOCHIP:0000044 ! Multiple metal homeostasis
+
+[Term]
+id: GEOCHIP:0000198
+name: Multiple metal transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Multiple metals' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000044 ! Multiple metal homeostasis
+
+[Term]
+id: GEOCHIP:0000199
+name: Nickel transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Nickel' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000045 ! Nickel homeostasis
+
+[Term]
+id: GEOCHIP:0000200
+name: Potassium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Potassium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000046 ! Potassium homeostasis
+
+[Term]
+id: GEOCHIP:0000201
+name: Selenium detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Selenium' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000047 ! Selenium homeostasis
+
+[Term]
+id: GEOCHIP:0000202
+name: Silicon biosynthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Biosynthesis' of 'Silicon' (category 'Metal Homeostasis')." []
+synonym: "Biosynthesis" EXACT []
+is_a: GEOCHIP:0000048 ! Silicon homeostasis
+
+[Term]
+id: GEOCHIP:0000203
+name: Silicon transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Silicon' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000048 ! Silicon homeostasis
+
+[Term]
+id: GEOCHIP:0000204
+name: Silver transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Silver' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000049 ! Silver homeostasis
+
+[Term]
+id: GEOCHIP:0000205
+name: Sodium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Sodium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000050 ! Sodium homeostasis
+
+[Term]
+id: GEOCHIP:0000206
+name: Tellurium detoxification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Detoxification' of 'Tellurium' (category 'Metal Homeostasis')." []
+synonym: "Detoxification" EXACT []
+is_a: GEOCHIP:0000051 ! Tellurium homeostasis
+
+[Term]
+id: GEOCHIP:0000207
+name: Tellurium transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Tellurium' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000051 ! Tellurium homeostasis
+
+[Term]
+id: GEOCHIP:0000208
+name: Zinc transport
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Transport' of 'Zinc' (category 'Metal Homeostasis')." []
+synonym: "Transport" EXACT []
+is_a: GEOCHIP:0000052 ! Zinc homeostasis
+
+[Term]
+id: GEOCHIP:0000209
+name: Aromatic alpha hydroxy acid remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Aromatic alpha hydroxy acid' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Aromatic alpha hydroxy acid" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000210
+name: Aromatic carboxylic acid remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Aromatic carboxylic acid' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Aromatic carboxylic acid" EXACT []
+xref: CHEBI:33859
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000211
+name: BTEX and related aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'BTEX and related aromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "BTEX and related aromatics" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000212
+name: Chlorinated aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chlorinated aromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Chlorinated aromatics" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000213
+name: Heterocyclic aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Heterocyclic aromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Heterocyclic aromatics" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000214
+name: Nitroaromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Nitroaromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Nitroaromatics" EXACT []
+synonym: "Nitoaromatics" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000215
+name: Other aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Other aromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Other aromatics" EXACT []
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000216
+name: Polycyclic aromatic remediation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Polycyclic aromatics' of 'Aromatics' (category 'Organic Remediation')." []
+synonym: "Polycyclic aromatics" EXACT []
+xref: CHEBI:33848
+is_a: GEOCHIP:0000061 ! Aromatic remediation
+
+[Term]
+id: GEOCHIP:0000217
+name: halogenation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'halogenation' of 'Other' (category 'Secondary metabolism')." []
+is_a: GEOCHIP:0000075 ! Other secondary metabolism
+
+[Term]
+id: GEOCHIP:0000218
+name: Bacteriochlorophyll
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Bacteriochlorophyll' of 'Pigments' (category 'Secondary metabolism')." []
+xref: CHEBI:38201
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000219
+name: Bilin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Bilin' of 'Pigments' (category 'Secondary metabolism')." []
+xref: CHEBI:35799
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000220
+name: Carotenoid
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Carotenoid' of 'Pigments' (category 'Secondary metabolism')." []
+xref: CHEBI:23044
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000221
+name: Chlorophyll
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Chlorophyll' of 'Pigments' (category 'Secondary metabolism')." []
+xref: CHEBI:28966
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000222
+name: Photosynthesis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Photosynthesis' of 'Pigments' (category 'Secondary metabolism')." []
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000223
+name: Rhodopsin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Rhodopsin' of 'Pigments' (category 'Secondary metabolism')." []
+is_a: GEOCHIP:0000076 ! Pigments
+
+[Term]
+id: GEOCHIP:0000224
+name: Pyoluteorin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Pyoluteorin' of 'antibiotic' (category 'Secondary metabolism')." []
+xref: CHEBI:156453
+is_a: GEOCHIP:0000077 ! Antibiotic biosynthesis
+
+[Term]
+id: GEOCHIP:0000225
+name: Antibiotic degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Degradation' of 'Antibiotic resistance' (category 'Virulence')." []
+synonym: "Degradation" EXACT []
+is_a: GEOCHIP:0000107 ! Antibiotic resistance
+
+[Term]
+id: GEOCHIP:0000226
+name: Antibiotic resistance subunit modification
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'subunit modification' of 'Antibiotic resistance' (category 'Virulence')." []
+synonym: "subunit modification" EXACT []
+is_a: GEOCHIP:0000107 ! Antibiotic resistance
+
+[Term]
+id: GEOCHIP:0000227
+name: Antibiotic resistance transporter
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'transporter' of 'Antibiotic resistance' (category 'Virulence')." []
+synonym: "transporter" EXACT []
+is_a: GEOCHIP:0000107 ! Antibiotic resistance
+
+[Term]
+id: GEOCHIP:0000228
+name: Enniatin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Enniatin' of 'Toxin' (category 'Virulence')." []
+xref: CHEBI:64648
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000229
+name: O-methylsterigmatocystin oxidoreductase
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'O-methylsterigmatocystin oxidoreductase' of 'Toxin' (category 'Virulence')." []
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000230
+name: Saxitoxin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Saxitoxin' of 'Toxin' (category 'Virulence')." []
+xref: CHEBI:34970
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000231
+name: Ergot toxin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'ergot' of 'Toxin' (category 'Virulence')." []
+synonym: "ergot" EXACT []
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000232
+name: hemolysin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'hemolysin' of 'Toxin' (category 'Virulence')." []
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000233
+name: microcystin/nodularin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'microcystin/nodularin' of 'Toxin' (category 'Virulence')." []
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000234
+name: Oomycete toxin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'oomycete' of 'Toxin' (category 'Virulence')." []
+synonym: "oomycete" EXACT []
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000235
+name: trichodiene
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'trichodiene' of 'Toxin' (category 'Virulence')." []
+xref: CHEBI:15861
+is_a: GEOCHIP:0000110 ! Virulence toxin
+
+[Term]
+id: GEOCHIP:0000236
+name: colonization (adherence)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'colonization' of 'adherence' (category 'Virulence')." []
+synonym: "colonization" EXACT []
+is_a: GEOCHIP:0000111 ! adherence (Virulence)
+
+[Term]
+id: GEOCHIP:0000237
+name: adherence (antiphagocytosis)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'adherence' of 'antiphagocytosis' (category 'Virulence')." []
+synonym: "adherence" EXACT []
+is_a: GEOCHIP:0000112 ! antiphagocytosis
+
+[Term]
+id: GEOCHIP:0000238
+name: immune evasion (antiphagocytosis)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'immune evasion' of 'antiphagocytosis' (category 'Virulence')." []
+synonym: "immune evasion" EXACT []
+is_a: GEOCHIP:0000112 ! antiphagocytosis
+
+[Term]
+id: GEOCHIP:0000239
+name: spore (cell wall)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'spore' of 'cell wall' (category 'Virulence')." []
+synonym: "spore" EXACT []
+is_a: GEOCHIP:0000113 ! cell wall
+
+[Term]
+id: GEOCHIP:0000240
+name: Oomycete effector protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'oomycete' of 'effector protein' (category 'Virulence')." []
+synonym: "oomycete" EXACT []
+is_a: GEOCHIP:0000119 ! effector protein
+
+[Term]
+id: GEOCHIP:0000241
+name: Oomycete elicitor
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'oomycete' of 'elicitor' (category 'Virulence')." []
+synonym: "oomycete" EXACT []
+is_a: GEOCHIP:0000120 ! elicitor
+
+[Term]
+id: GEOCHIP:0000242
+name: biofilm formation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'biofilm formation' of 'immune evasion' (category 'Virulence')." []
+is_a: GEOCHIP:0000122 ! immune evasion (Virulence)
+
+[Term]
+id: GEOCHIP:0000243
+name: resistance to antimicrobial molecules
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'resistance to antimicrobial molecules' of 'immune evasion' (category 'Virulence')." []
+is_a: GEOCHIP:0000122 ! immune evasion (Virulence)
+
+[Term]
+id: GEOCHIP:0000244
+name: heat shock protein (intracellular survival)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'heat shock protein' of 'intracellular survival' (category 'Virulence')." []
+synonym: "heat shock protein" EXACT []
+is_a: GEOCHIP:0000123 ! intracellular survival
+
+[Term]
+id: GEOCHIP:0000245
+name: stress (intracellular survival)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'stress' of 'intracellular survival' (category 'Virulence')." []
+synonym: "stress" EXACT []
+is_a: GEOCHIP:0000123 ! intracellular survival
+
+[Term]
+id: GEOCHIP:0000246
+name: heat shock protein (regulation)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'heat shock protein' of 'regulation' (category 'Virulence')." []
+synonym: "heat shock protein" EXACT []
+is_a: GEOCHIP:0000131 ! Virulence regulation
+
+[Term]
+id: GEOCHIP:0000247
+name: quorum sensing
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'quorum sensing' of 'regulation' (category 'Virulence')." []
+is_a: GEOCHIP:0000131 ! Virulence regulation
+
+[Term]
+id: GEOCHIP:0000248
+name: immune evasion (type III secretion system)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'immune evasion' of 'type III secretion system' (category 'Virulence')." []
+synonym: "immune evasion" EXACT []
+is_a: GEOCHIP:0000136 ! type III secretion system
+
+[Term]
+id: GEOCHIP:0000249
+name: colonization (unclassified)
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'colonization' of 'unclassified' (category 'Virulence')." []
+synonym: "colonization" EXACT []
+is_a: GEOCHIP:0000140 ! Unclassified virulence
+
+[Term]
+id: GEOCHIP:0000250
+name: Cyanide degradation
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Cyanide' of 'virulence c degradation' (category 'Virulence')." []
+synonym: "Cyanide" EXACT []
+xref: CHEBI:17514
+is_a: GEOCHIP:0000141 ! virulence c degradation
+
+[Term]
+id: GEOCHIP:0000251
+name: Melanin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Melanin' of 'virulence pigments' (category 'Virulence')." []
+xref: CHEBI:89634
+is_a: GEOCHIP:0000142 ! virulence pigments
+
+[Term]
+id: GEOCHIP:0000252
+name: Eukaryotic virus infection
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Infection' of 'Eukaryotic' (category 'Virus')." []
+synonym: "Infection" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000253
+name: Eukaryotic virus RNA silencing
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'RNA silencing' of 'Eukaryotic' (category 'Virus')." []
+synonym: "RNA silencing" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000254
+name: Eukaryotic virus replication
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Replication' of 'Eukaryotic' (category 'Virus')." []
+synonym: "Replication" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000255
+name: Eukaryotic virus structural protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Structural' of 'Eukaryotic' (category 'Virus')." []
+synonym: "Structural" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000256
+name: Eukaryotic virus toxin
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Toxin' of 'Eukaryotic' (category 'Virus')." []
+synonym: "Toxin" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000257
+name: Eukaryotic virus movement protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'movement protein' of 'Eukaryotic' (category 'Virus')." []
+synonym: "movement protein" EXACT []
+is_a: GEOCHIP:0000144 ! Eukaryotic virus
+
+[Term]
+id: GEOCHIP:0000258
+name: Prokaryotic virus host recognition and structure
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'HOST RECOGNITION/STRUCTURAL' of 'Prokaryotic' (category 'Virus')." []
+synonym: "HOST RECOGNITION/STRUCTURAL" EXACT []
+is_a: GEOCHIP:0000145 ! Prokaryotic virus
+
+[Term]
+id: GEOCHIP:0000259
+name: Prokaryotic virus lysis
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'LYSIS' of 'Prokaryotic' (category 'Virus')." []
+synonym: "LYSIS" EXACT []
+is_a: GEOCHIP:0000145 ! Prokaryotic virus
+
+[Term]
+id: GEOCHIP:0000260
+name: Prokaryotic virus replication
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Replication' of 'Prokaryotic' (category 'Virus')." []
+synonym: "Replication" EXACT []
+is_a: GEOCHIP:0000145 ! Prokaryotic virus
+
+[Term]
+id: GEOCHIP:0000261
+name: Prokaryotic virus structural protein
+namespace: geochip.ontology
+def: "GeoChip 5.0 gene subcategory 'Structural' of 'Prokaryotic' (category 'Virus')." []
+synonym: "Structural" EXACT []
+is_a: GEOCHIP:0000145 ! Prokaryotic virus
