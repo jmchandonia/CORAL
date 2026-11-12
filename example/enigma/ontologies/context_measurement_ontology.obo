@@ -5556,6 +5556,54 @@ synonym: "L/min" EXACT []
 is_a: ME:0000294 ! units not in UO
 is_a: UO:0000270
 
+[Term]
+id: ME:0000524
+name: lime buffer capacity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000527" xsd:string
+def: "Soil lime buffer capacity: the amount of lime (as calcium carbonate) needed to raise the pH of a soil by one unit, from a single-addition titration (University of Georgia soil test)." []
+synonym: "LBC" EXACT []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000525
+name: cation exchange capacity
+namespace: measure.ontology
+property_value: data_type "float" xsd:string
+property_value: is_microtype "true" xsd:boolean
+property_value: is_valid_data_variable "true" xsd:boolean
+property_value: is_valid_dimension "true" xsd:boolean
+property_value: is_valid_dimension_variable "true" xsd:boolean
+property_value: is_valid_property "true" xsd:boolean
+property_value: valid_units "ME:0000526" xsd:string
+def: "Cation exchange capacity of a soil or sediment: the exchangeable cations it can hold per unit mass. State the method in context; soil-test laboratories often estimate it as extractable bases plus exchangeable acidity." []
+synonym: "CEC" EXACT []
+is_a: ME:0000120 ! measurement
+
+[Term]
+id: ME:0000526
+name: milliequivalent per 100 grams
+namespace: measure.ontology
+def: "Milliequivalents of charge per 100 grams of soil or sediment (equal to centimoles of charge per kilogram)." []
+synonym: "meq/100 g" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000051
+
+[Term]
+id: ME:0000527
+name: ppm calcium carbonate per pH unit
+namespace: measure.ontology
+def: "Milligrams of calcium carbonate per kilogram of soil per unit of pH change, the unit of lime buffer capacity." []
+synonym: "ppm CaCO3/pH" EXACT []
+is_a: ME:0000294 ! units not in UO
+is_a: UO:0000051
+
 [Typedef]
 id: data_type
 

@@ -422,6 +422,10 @@
     *water pressure
   *turbidity (float, +turbidity unit)
   *sequence (string)
+  *lime buffer capacity (float, +ppm calcium carbonate per pH unit)
+    alias: LBC
+  *cation exchange capacity (float, +milliequivalent per 100 grams)
+    alias: CEC
   *velocity (float, speed/velocity unit)
     alias: speed
     *wind speed
@@ -521,6 +525,12 @@
   micrometer per second
     alias: um/s
     is_a: UO:0000060
+  milliequivalent per 100 grams
+    alias: meq/100 g
+    is_a: UO:0000051
+  ppm calcium carbonate per pH unit
+    alias: ppm CaCO3/pH
+    is_a: UO:0000051
   inHg
     is_a: UO:0000109
   torr
