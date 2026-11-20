@@ -426,6 +426,8 @@
     alias: LBC
   *cation exchange capacity (float, +milliequivalent per 100 grams)
     alias: CEC
+  *flow rate (float, volumetric flow rate unit)
+    alias: volumetric flow rate
   *velocity (float, speed/velocity unit)
     alias: speed
     *wind speed
